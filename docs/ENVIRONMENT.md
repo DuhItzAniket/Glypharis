@@ -1,8 +1,10 @@
 # Development Environment
 
-Recorded during Phase 0 (repository discovery) on **2026-10-09**. Every value below was measured on the
-machine, not copied from a spec sheet. Re-run the diagnostics in Phase 1 (`scripts/env_report.py`, planned)
-and update this file whenever drivers, CUDA, or the Python stack change.
+Hardware and global software recorded during Phase 0 on **2026-10-09**; project environment set up in
+Phase 1 on **2026-10-10**. Every value below was measured on the machine, not copied from a spec sheet.
+The generated record is [`reports/environment/env_report.md`](../reports/environment/env_report.md):
+re-run `python scripts/env_report.py` and update this file whenever drivers, CUDA, or the Python stack
+change.
 
 ## Hardware
 
@@ -59,11 +61,41 @@ Already-present packages that the project will likely use (versions to be re-pin
 numpy 1.26.4, opencv-python 4.11.0.86, pillow 12.3.0, albumentations 2.0.8, mlflow 3.11.1,
 onnx 1.15.0, onnxruntime 1.24.4, pytest 9.0.3, ruff 0.16.8, torchmetrics 1.9.0.
 
-## Open environment items (carried into Phase 1)
+## Project environment (Phase 1)
 
-1. Create `.venv` (project) and decide whether to keep torch 2.5.1+cu121 or move to a newer
-   CUDA 12.x build that the 566.24 driver supports. Decision criterion: stable AMP + CTC on this GPU,
-   measured, not assumed.
-2. Separate environment for baselines (`.venv-baselines`) so PaddlePaddle does not conflict with PyTorch.
-3. Install Tesseract (UB Mannheim Windows build) — requires the user to run the installer.
-4. Optional: install `gh` to verify GitHub Actions runs from the terminal.
+The global interpreter is only used to create the virtual environment
+([ADR-0006](decisions/ADR-0006-isolated-environments.md)).
+
+```
+py -3.11 -m venv .venv
+.venv\Scripts\python -m pip install --upgrade pip
+.venv\Scripts\python -m pip install torch==2.14.1 torchvision==0.29.1 --index-url https://download.pytorch.org/whl/cu126
+.venv\Scripts\python -m pip install -r requirements/lock.txt
+.venv\Scripts\python -m pip install -e . --no-deps
+.venv\Scripts\python scripts/env_report.py
+```
+
+Checks before committing: `ruff check .`, `ruff format --check .`, `mypy`, `pytest`,
+`python scripts/validate_configs.py`. CI runs the same steps on Linux with the CPU build of the same
+torch version (`.github/workflows/ci.yml`).
+
+### PyTorch build decision
+
+| Option | Notes |
+|---|---|
+| 2.5.1 + cu121 (global install, Phase 0) | Known to work on this driver; about two years old; older ONNX exporter |
+| **2.14.1 + cu126 (chosen)** | Current release line; driver 566.24 supports CUDA runtimes up to 12.7, so cu126 wheels run without a driver update |
+
+Decision criterion (Phase 0): stable AMP and CTC on this GPU, measured. The measured checks (bf16/fp16
+autocast, CTC in fp32 under autocast, CPU bit-identical determinism, CUDA determinism within tolerance)
+are in the environment report. If a later phase hits a regression in this build, 2.5.1 + cu121 is the
+fallback; switching is a pin change plus a re-run of the report and the test suite.
+
+## Open environment items
+
+1. ~~Create `.venv` and decide the torch build~~ (done, Phase 1; see above).
+2. Separate environment for baselines (`.venv-baselines`) so PaddlePaddle does not conflict with PyTorch
+   (Phase 5).
+3. Install Tesseract (UB Mannheim Windows build) — requires the user to run the installer (before Phase 5).
+4. Optional: install `gh` to verify GitHub Actions runs from the terminal. Until then CI status is read
+   from the public GitHub API.
