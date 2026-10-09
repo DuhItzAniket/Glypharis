@@ -1,0 +1,27 @@
+# Risk Register
+
+Reviewed at every phase gate. L = likelihood, I = impact (H/M/L). "Trigger" is the observable signal that
+the risk is materialising.
+
+| ID | Risk | L | I | Mitigation | Trigger | Phase |
+|---|---|---|---|---|---|---|
+| R-01 | **VRAM budget.** Only ~4.5–5 GiB is free on the 6 GB laptop GPU (WDDM desktop + other apps). | H | M | bf16 autocast; width bucketing; gradient accumulation; mandatory 10-min dry run that records peak memory; OOM handler that saves state and exits cleanly | Peak VRAM > 4.5 GiB in dry run, or CUDA OOM | 1, 6, 8 |
+| R-02 | **RAM (16 GB) during data preparation.** Large annotation files and image decoding can exhaust memory. | M | M | Streaming conversion; process in chunks; pack crops into LMDB / shards; never load a whole dataset into memory | Swap usage spikes; MemoryError | 2–4 |
+| R-03 | **Disk.** SynthText is by far the largest download; extraction plus intermediate files could exceed budget. | M | M | Extract only the subsets needed (≤ 250K images); delete interim files after packing; track usage in manifests | Free space < 80 GB | 2, 4, 12 |
+| R-04 | **SynthText annotation file** is a single large MATLAB file that may not fit in RAM when loaded naively. | M | M | One-time streaming / chunked conversion to per-image JSON; verify counts against the paper | Conversion OOM | 2 |
+| R-05 | **Licensing.** Some datasets are non-commercial or share-alike, which restricts how trained weights can be released. | H | M | Licence recorded before download; final model card states the training-data terms; consider a permissive-data-only variant for any release that needs it | A dataset licence is unclear or incompatible with intended release | 2, 21, 23 |
+| R-06 | **Domain mismatch.** The main training sets are scene-text-oriented; the target is document pages. | H | H | GlyphSynth document synthetic data; GDC document test set; RQ2/RQ6 measure the gap explicitly | Large gap between HierText-val and GDC / document slices | 4, 12, 14 |
+| R-07 | **Test leakage / test overuse.** Repeated test evaluation or near-duplicates across splits inflate results. | M | H | Grouped splits; perceptual-hash dedup across splits; test access log; evaluation only in Phases 5, 14, 22 | Test access outside allowed phases; cross-split duplicates found | 3, 4, 14 |
+| R-08 | **Missing test ground truth** for a benchmark (e.g. withheld for a competition). | M | M | Use the official validation split as test and carve a new validation split from train (grouped); document the change | Download contains no test labels | 2, 4 |
+| R-09 | **Windows-specific training issues**: DataLoader `spawn` overhead, worker pickling, path handling, limited `torch.compile` support. | H | M | `if __name__ == "__main__"` guards; persistent workers; LMDB opened lazily per worker; `pathlib` everywhere; don't depend on `torch.compile` | Data loading is the bottleneck (GPU util < 70%) | 1, 6 |
+| R-10 | **Laptop thermals, sleep, or reboots** interrupt or slow long runs. | H | L | Checkpoint every epoch + mid-epoch step checkpoints; tested resume; log GPU temperature and clocks; disable sleep while training | Throughput drops > 20% mid-run; run killed | 6+ |
+| R-11 | **PaddleOCR on Windows** may be hard to install with GPU support. | M | L | Separate venv; CPU inference is acceptable for a baseline; WSL2 as a fallback | Install fails | 5 |
+| R-12 | **Tesseract** needs a system install (admin) on Windows. | L | L | User runs the UB Mannheim installer; path recorded in config | Not found on PATH | 5 |
+| R-13 | **CTC numerical issues** under mixed precision (inf/NaN loss, blank collapse). | M | H | CTC computed in fp32; `zero_infinity=True`; length checks (T ≥ needed frames); blank-ratio monitor; NaN guard that stops and dumps the batch | NaN/Inf loss; greedy output all blank | 6, 7 |
+| R-14 | **Reading order** for multi-column / mixed layouts is hard. | H | M | Scoped heuristic (XY-cut) with explicit tests; report page-level metrics both order-aware and order-agnostic; document limits honestly | Order-aware CER ≫ order-agnostic on GDC | 10, 14 |
+| R-15 | **Compute overrun**: the experiment matrix exceeds the laptop's realistic budget. | M | M | Core vs extended experiment tiers; re-budget at end of M3 with measured throughput; short-budget proxies for HPO | Cumulative GPU-h > 1.5× plan at a milestone | 6–13 |
+| R-16 | **Context loss / handover** between sessions or collaborators. | M | M | handoff notes kept current at every phase gate; decisions in ADRs; experiments in the registry | Handoff doc older than the latest phase tag | all |
+| R-17 | **GDC construction effort** (printing, scanning, photographing, verifying ground truth) needs manual work. | M | M | Start small (≈ 100 pages); print-and-capture keeps ground truth exact; manual transcription only for a small old-scan subset | GDC not frozen by end of Phase 4 | 4 |
+| R-18 | **Calibration does not transfer** across domains (fit on HierText-val, used on documents). | M | L | Report ECE per domain; keep raw confidence if calibration doesn't hold up | ECE on GDC worse after calibration | 10, 14 |
+| R-19 | **Weak ground truth** in some benchmarks (machine-generated OCR used as labels). | M | M | Use only human-verified ground truth for CER claims; machine-OCR datasets are reference-only | Dataset card shows labels from an OCR engine | 2, 14 |
+| R-20 | **Link rot / changed dataset hosting.** | M | L | Record URLs, versions, and hashes in manifests; note mirrors | Download URL fails | 2, 22 |
