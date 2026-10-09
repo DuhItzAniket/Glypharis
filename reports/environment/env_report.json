@@ -1,0 +1,98 @@
+{
+  "generated_utc": "2026-10-09T23:54:41+00:00",
+  "glypharis_version": "0.0.1",
+  "git": {
+    "commit": "a658c41edb722e8041dc31a0d740e327d21dcfc6",
+    "branch": "phase/01-environment",
+    "dirty": false
+  },
+  "system": {
+    "os": "Windows 11",
+    "os_version": "10.0.26300",
+    "machine": "AMD64",
+    "cpu_physical_cores": 16,
+    "cpu_logical_cores": 24,
+    "ram_total_gib": 15.71,
+    "python": "3.11.9",
+    "in_virtualenv": true
+  },
+  "torch": {
+    "torch": "2.14.1+cu126",
+    "cuda_runtime": "12.6",
+    "cudnn": 91002,
+    "cuda_available": true,
+    "device_count": 1,
+    "gpu": {
+      "name": "NVIDIA GeForce RTX 4050 Laptop GPU",
+      "compute_capability": "8.9",
+      "multiprocessors": 20,
+      "total_mib": 6140,
+      "free_mib_at_report": 5075,
+      "bf16_supported": true,
+      "driver": "566.24"
+    }
+  },
+  "packages": {
+    "torch": "2.14.1+cu126",
+    "torchvision": "0.29.1+cu126",
+    "numpy": "2.4.6",
+    "PyYAML": "6.0.3",
+    "psutil": "7.2.2",
+    "nvidia-ml-py": "13.615.71",
+    "pytest": "9.1.1",
+    "ruff": "0.17.0",
+    "mypy": "2.4.0"
+  },
+  "env": {
+    "CUBLAS_WORKSPACE_CONFIG": null,
+    "PYTHONHASHSEED": null
+  },
+  "checks": {
+    "amp": {
+      "bf16": {
+        "matmul_dtype": "torch.bfloat16",
+        "conv_dtype": "torch.bfloat16",
+        "finite": true,
+        "status": "pass"
+      },
+      "fp16": {
+        "matmul_dtype": "torch.float16",
+        "conv_dtype": "torch.float16",
+        "finite": true,
+        "status": "pass"
+      },
+      "status": "pass"
+    },
+    "ctc": {
+      "autocast_dtype": "torch.bfloat16",
+      "logits_dtype_under_autocast": "torch.bfloat16",
+      "loss_dtype": "torch.float32",
+      "loss_fp32_reference": 11.24345588684082,
+      "loss_amp_fp32_region": 11.243460655212402,
+      "relative_difference": 4.2410195139486286e-07,
+      "loss_finite": true,
+      "grad_finite": true,
+      "status": "pass"
+    },
+    "determinism": {
+      "steps": 50,
+      "cpu": {
+        "bit_identical": true,
+        "different_seed_differs": true,
+        "first_loss": 4.075746536254883,
+        "last_loss": 2.5939228534698486,
+        "status": "pass"
+      },
+      "cuda": {
+        "bit_identical": true,
+        "max_abs_difference": 0.0,
+        "max_rel_difference": 0.0,
+        "tolerance_rel": 0.0001,
+        "bf16_run_finite": true,
+        "bf16_last_loss": 2.593874931335449,
+        "status": "pass"
+      }
+    }
+  },
+  "overall": "pass"
+}
