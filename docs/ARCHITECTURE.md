@@ -105,14 +105,14 @@ model.
 ## 6. Public interface (target, Phase 18)
 
 ```python
-from glypharis import GlypharisOCR   # alias GLYPHARISOCR kept for the original spec
+from glypharis import GlypharisOCR  # alias GLYPHARISOCR kept for the original spec
 
 ocr = GlypharisOCR.from_pretrained("path/or/version")
-result = ocr.predict("page.png")          # path | PIL.Image | np.ndarray
+result = ocr.predict("page.png")  # path | PIL.Image | np.ndarray
 results = ocr.predict_batch([...])
 
 print(result.text)
-result.to_dict()   # JSON-serialisable
+result.to_dict()  # JSON-serialisable
 ```
 
 ```json
