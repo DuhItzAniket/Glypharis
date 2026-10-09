@@ -1,10 +1,20 @@
 # configs/
 
 Every hyperparameter lives in a YAML file here. Code reads values from the validated config object;
-it never hard-codes them. The loader and validator arrive in Phase 1, so for now this file documents
-the planned schema.
+it never hard-codes them.
 
-## Planned files
+The schema is `glypharis/config/schema.py`; the loader is `glypharis/config/loader.py`. A config file
+may `inherits:` one or more parents (paths relative to the file); mappings merge key by key, lists and
+scalars replace. Strings may reference other values as `${dotted.key}`. Unknown keys, wrong types and
+out-of-range values are errors. `python scripts/validate_configs.py` checks every file here (also in CI);
+files under `experiments/` must name an `experiment_id`, `task` and `model_name`.
+
+Every entry point accepts `--config PATH`, `--seed N`, `--device auto|cuda|cpu`, `--resume PATH` and any
+number of `--set key.path=value` overrides.
+
+Note: PyYAML reads `1e-3` (no decimal point) as text. Write floats as `1.0e-3`.
+
+## Files
 
 | File | Phase | Purpose |
 |---|---|---|

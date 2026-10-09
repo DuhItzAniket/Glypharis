@@ -191,3 +191,4 @@ choice; no per-benchmark tuning.
 | Date | Change | Reason | Affects |
 |---|---|---|---|
 | 2026-10-10 | Initial version (Phase 0) | — | — |
+| 2026-10-10 | CUDA reproducibility tolerance fixed at a maximum **relative** loss difference of 1e-4 between two seeded runs (toy check in `scripts/env_report.py`); CPU runs must be bit-identical | Phase 1 exit criterion needed a documented tolerance. CUDA CTC backward has no deterministic kernel, so exact equality is not guaranteed even though the Phase 1 measurement showed none (reports/environment/env_report.md) | All CUDA runs |
