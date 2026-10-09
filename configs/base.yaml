@@ -1,0 +1,21 @@
+# Shared defaults for every run. Experiment configs inherit from this file and only list the keys
+# they change. Values here are starting points, not tuned results.
+seed: 1337
+device: auto            # auto | cuda | cpu   (auto falls back to CPU)
+
+paths:
+  data_root: data
+  reports_dir: reports
+  runs_dir: runs
+
+logging:
+  level: INFO
+  log_every_n_steps: 50
+  monitor_resources: true
+
+train:
+  mixed_precision: bf16  # bf16 | fp16 | none  (bf16 → fp16 → fp32 fallback, CPU always fp32)
+  deterministic: true
+
+checkpoint:
+  dir: checkpoints/${experiment_id}
