@@ -360,7 +360,8 @@ def write_report(
         f"{th.text_max_images} images) covering ≥ {th.text_min_overlap:.0%} of the smaller image's",
         "distinctive lines. Pairs were checked by eye:",
         "`reports/data_quality/hiertext_duplicates.png` and `hiertext_text_overlap.png`",
-        "(the 12 largest overlaps).",
+        "(the 12 largest overlaps). The thumbnails are HierText images (Open Images, listed as",
+        "CC BY 2.0; HierText annotations CC BY-SA 4.0), shown for the audit with attribution.",
         "",
     ]
     if dup:
