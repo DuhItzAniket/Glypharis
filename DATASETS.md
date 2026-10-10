@@ -64,8 +64,15 @@ version, samples, annotation format, intended task, preprocessing, split usage.
   transcription, legibility and handwritten flags.
 - **Intended task here:** detector training (line polygons), recognizer training (line crops), E2E
   validation; test split only in Phases 5 / 14 / 22.
-- **Preprocessing (Phase 4):** illegible and handwritten lines excluded from recognizer training and marked
-  "don't care" for detection; counts reported, nothing silently dropped.
+- **Audit (Phase 3, `reports/data_quality_report.md`):** no missing, corrupt or wrongly sized images.
+  Exclusion list v1 removes 68 train and 9 validation images
+  that duplicate or share most of their text with an image in a higher-priority split (test is never
+  reduced for duplication), 3 train lines with broken boxes, and 1 empty "legible" test line from
+  recognizer use. HierText lines are mostly single words: median 1 word
+  and 7 characters per legible line, median height 14 px.
+- **Preprocessing (Phase 4):** apply the exclusion list; illegible and handwritten lines excluded from
+  recognizer training and marked "don't care" for detection; out-of-range vertices clipped; counts
+  reported, nothing silently dropped.
 - **Domain note:** mostly natural images containing text, with a share of document-like images. Not
   representative of scanned pages on its own (RISK_REGISTER R-06).
 

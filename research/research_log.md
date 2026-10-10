@@ -47,3 +47,23 @@ the bottom. Experiments get their full record in `experiments.md`; this log is t
 - Downloaded HierText (3.72 GiB). Image and annotation counts match the published split sizes; the
   published word count corresponds to legible words only. S3 throughput was the bottleneck (about
   0.3–0.8 MB/s per connection).
+
+### 2026-10-10 — Phase 3: data audit
+
+- HierText is technically clean: no missing, corrupt or mis-sized images; 3 broken line boxes; 30 lines
+  with control or private-use characters; 5.6K lines with vertices slightly outside the image (to clip).
+- **Leakage across the official splits.** Pixel hashes found only 4 near-identical cross-split pairs,
+  all "same template, different text". Comparing text found 87 cross-split pairs that share most of
+  their distinctive lines: the same product, sign, chart or map photographed again. Checked by eye.
+  Removed the lower-priority copy (68 train, 9 validation images); test untouched.
+  Lesson for the paper: for OCR, text-level overlap is the leakage that matters, and pixel hashes alone
+  underestimate it.
+- **Domain evidence (R-06).** HierText "lines" are short: median 1 word,
+  7 characters; 95th percentile 7 words and
+  40 characters. Book-page lines are usually much longer (assumption, to be measured on GDC), so HierText alone
+  under-represents long lines. This supports GlyphSynth and is a design input for the recognizer's
+  maximum width.
+- Characters: 955 distinct in train legible text, 99.4% of occurrences ASCII; 74 / 227 / 596 distinct
+  characters cover 99% / 99.9% / 99.99% of occurrences. Input for the Phase 4 charset.
+- Train, validation and test distributions (image size, brightness, contrast, blur, line geometry, text
+  length) are visually indistinguishable.
