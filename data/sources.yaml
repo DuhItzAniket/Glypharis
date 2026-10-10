@@ -43,3 +43,3353 @@ hiertext:
       filename: archives/test.tgz
       size: 537066598
       extract_to: images
+
+google_fonts:
+  title: Google Fonts (selected text families)
+  version: "github.com/google/fonts commit bd8f81ddb5c74d5c8897b36ad88b440266245103"
+  homepage: https://github.com/google/fonts
+  licence: per family, from the top-level folder (ofl/ SIL OFL 1.1, apache/ Apache 2.0, ufl/ Ubuntu Font Licence 1.0)
+  citation: none
+  role: GlyphSynth fonts (training and held-out validation families)
+  phase: 4
+  files:
+    # merriweather (serif)
+    - name: ofl_merriweather_merriweather_italic_opsz_wdth_wght_ttf
+      url: https://raw.githubusercontent.com/google/fonts/bd8f81ddb5c74d5c8897b36ad88b440266245103/ofl/merriweather/Merriweather-Italic%5Bopsz%2Cwdth%2Cwght%5D.ttf
+      filename: serif/ofl/merriweather/Merriweather-Italic[opsz,wdth,wght].ttf
+      size: 4591168
+    - name: ofl_merriweather_merriweather_opsz_wdth_wght_ttf
+      url: https://raw.githubusercontent.com/google/fonts/bd8f81ddb5c74d5c8897b36ad88b440266245103/ofl/merriweather/Merriweather%5Bopsz%2Cwdth%2Cwght%5D.ttf
+      filename: serif/ofl/merriweather/Merriweather[opsz,wdth,wght].ttf
+      size: 4628080
+    # lora (serif)
+    - name: ofl_lora_lora_italic_wght_ttf
+      url: https://raw.githubusercontent.com/google/fonts/bd8f81ddb5c74d5c8897b36ad88b440266245103/ofl/lora/Lora-Italic%5Bwght%5D.ttf
+      filename: serif/ofl/lora/Lora-Italic[wght].ttf
+      size: 221232
+    - name: ofl_lora_lora_wght_ttf
+      url: https://raw.githubusercontent.com/google/fonts/bd8f81ddb5c74d5c8897b36ad88b440266245103/ofl/lora/Lora%5Bwght%5D.ttf
+      filename: serif/ofl/lora/Lora[wght].ttf
+      size: 212196
+    # ptserif (serif)
+    - name: ofl_ptserif_pt_serif_web_bold_ttf
+      url: https://raw.githubusercontent.com/google/fonts/bd8f81ddb5c74d5c8897b36ad88b440266245103/ofl/ptserif/PT_Serif-Web-Bold.ttf
+      filename: serif/ofl/ptserif/PT_Serif-Web-Bold.ttf
+      size: 339996
+    - name: ofl_ptserif_pt_serif_web_bolditalic_ttf
+      url: https://raw.githubusercontent.com/google/fonts/bd8f81ddb5c74d5c8897b36ad88b440266245103/ofl/ptserif/PT_Serif-Web-BoldItalic.ttf
+      filename: serif/ofl/ptserif/PT_Serif-Web-BoldItalic.ttf
+      size: 337580
+    - name: ofl_ptserif_pt_serif_web_italic_ttf
+      url: https://raw.githubusercontent.com/google/fonts/bd8f81ddb5c74d5c8897b36ad88b440266245103/ofl/ptserif/PT_Serif-Web-Italic.ttf
+      filename: serif/ofl/ptserif/PT_Serif-Web-Italic.ttf
+      size: 375356
+    - name: ofl_ptserif_pt_serif_web_regular_ttf
+      url: https://raw.githubusercontent.com/google/fonts/bd8f81ddb5c74d5c8897b36ad88b440266245103/ofl/ptserif/PT_Serif-Web-Regular.ttf
+      filename: serif/ofl/ptserif/PT_Serif-Web-Regular.ttf
+      size: 359048
+    # sourceserif4 (serif)
+    - name: ofl_sourceserif4_sourceserif4_italic_opsz_wght_ttf
+      url: https://raw.githubusercontent.com/google/fonts/bd8f81ddb5c74d5c8897b36ad88b440266245103/ofl/sourceserif4/SourceSerif4-Italic%5Bopsz%2Cwght%5D.ttf
+      filename: serif/ofl/sourceserif4/SourceSerif4-Italic[opsz,wght].ttf
+      size: 855432
+    - name: ofl_sourceserif4_sourceserif4_opsz_wght_ttf
+      url: https://raw.githubusercontent.com/google/fonts/bd8f81ddb5c74d5c8897b36ad88b440266245103/ofl/sourceserif4/SourceSerif4%5Bopsz%2Cwght%5D.ttf
+      filename: serif/ofl/sourceserif4/SourceSerif4[opsz,wght].ttf
+      size: 1209508
+    # notoserif (serif)
+    - name: ofl_notoserif_notoserif_italic_wdth_wght_ttf
+      url: https://raw.githubusercontent.com/google/fonts/bd8f81ddb5c74d5c8897b36ad88b440266245103/ofl/notoserif/NotoSerif-Italic%5Bwdth%2Cwght%5D.ttf
+      filename: serif/ofl/notoserif/NotoSerif-Italic[wdth,wght].ttf
+      size: 2448496
+    - name: ofl_notoserif_notoserif_wdth_wght_ttf
+      url: https://raw.githubusercontent.com/google/fonts/bd8f81ddb5c74d5c8897b36ad88b440266245103/ofl/notoserif/NotoSerif%5Bwdth%2Cwght%5D.ttf
+      filename: serif/ofl/notoserif/NotoSerif[wdth,wght].ttf
+      size: 1887192
+    # librebaskerville (serif)
+    - name: ofl_librebaskerville_librebaskerville_italic_wght_ttf
+      url: https://raw.githubusercontent.com/google/fonts/bd8f81ddb5c74d5c8897b36ad88b440266245103/ofl/librebaskerville/LibreBaskerville-Italic%5Bwght%5D.ttf
+      filename: serif/ofl/librebaskerville/LibreBaskerville-Italic[wght].ttf
+      size: 167456
+    - name: ofl_librebaskerville_librebaskerville_wght_ttf
+      url: https://raw.githubusercontent.com/google/fonts/bd8f81ddb5c74d5c8897b36ad88b440266245103/ofl/librebaskerville/LibreBaskerville%5Bwght%5D.ttf
+      filename: serif/ofl/librebaskerville/LibreBaskerville[wght].ttf
+      size: 171900
+    # ebgaramond (serif)
+    - name: ofl_ebgaramond_ebgaramond_italic_wght_ttf
+      url: https://raw.githubusercontent.com/google/fonts/bd8f81ddb5c74d5c8897b36ad88b440266245103/ofl/ebgaramond/EBGaramond-Italic%5Bwght%5D.ttf
+      filename: serif/ofl/ebgaramond/EBGaramond-Italic[wght].ttf
+      size: 754468
+    - name: ofl_ebgaramond_ebgaramond_wght_ttf
+      url: https://raw.githubusercontent.com/google/fonts/bd8f81ddb5c74d5c8897b36ad88b440266245103/ofl/ebgaramond/EBGaramond%5Bwght%5D.ttf
+      filename: serif/ofl/ebgaramond/EBGaramond[wght].ttf
+      size: 851176
+    # crimsontext (serif)
+    - name: ofl_crimsontext_crimsontext_bold_ttf
+      url: https://raw.githubusercontent.com/google/fonts/bd8f81ddb5c74d5c8897b36ad88b440266245103/ofl/crimsontext/CrimsonText-Bold.ttf
+      filename: serif/ofl/crimsontext/CrimsonText-Bold.ttf
+      size: 112796
+    - name: ofl_crimsontext_crimsontext_bolditalic_ttf
+      url: https://raw.githubusercontent.com/google/fonts/bd8f81ddb5c74d5c8897b36ad88b440266245103/ofl/crimsontext/CrimsonText-BoldItalic.ttf
+      filename: serif/ofl/crimsontext/CrimsonText-BoldItalic.ttf
+      size: 115112
+    - name: ofl_crimsontext_crimsontext_italic_ttf
+      url: https://raw.githubusercontent.com/google/fonts/bd8f81ddb5c74d5c8897b36ad88b440266245103/ofl/crimsontext/CrimsonText-Italic.ttf
+      filename: serif/ofl/crimsontext/CrimsonText-Italic.ttf
+      size: 110216
+    - name: ofl_crimsontext_crimsontext_regular_ttf
+      url: https://raw.githubusercontent.com/google/fonts/bd8f81ddb5c74d5c8897b36ad88b440266245103/ofl/crimsontext/CrimsonText-Regular.ttf
+      filename: serif/ofl/crimsontext/CrimsonText-Regular.ttf
+      size: 107200
+    # crimsonpro (serif)
+    - name: ofl_crimsonpro_crimsonpro_italic_wght_ttf
+      url: https://raw.githubusercontent.com/google/fonts/bd8f81ddb5c74d5c8897b36ad88b440266245103/ofl/crimsonpro/CrimsonPro-Italic%5Bwght%5D.ttf
+      filename: serif/ofl/crimsonpro/CrimsonPro-Italic[wght].ttf
+      size: 253176
+    - name: ofl_crimsonpro_crimsonpro_wght_ttf
+      url: https://raw.githubusercontent.com/google/fonts/bd8f81ddb5c74d5c8897b36ad88b440266245103/ofl/crimsonpro/CrimsonPro%5Bwght%5D.ttf
+      filename: serif/ofl/crimsonpro/CrimsonPro[wght].ttf
+      size: 246324
+    # cormorantgaramond (serif)
+    - name: ofl_cormorantgaramond_cormorantgaramond_italic_wght_ttf
+      url: https://raw.githubusercontent.com/google/fonts/bd8f81ddb5c74d5c8897b36ad88b440266245103/ofl/cormorantgaramond/CormorantGaramond-Italic%5Bwght%5D.ttf
+      filename: serif/ofl/cormorantgaramond/CormorantGaramond-Italic[wght].ttf
+      size: 715644
+    - name: ofl_cormorantgaramond_cormorantgaramond_wght_ttf
+      url: https://raw.githubusercontent.com/google/fonts/bd8f81ddb5c74d5c8897b36ad88b440266245103/ofl/cormorantgaramond/CormorantGaramond%5Bwght%5D.ttf
+      filename: serif/ofl/cormorantgaramond/CormorantGaramond[wght].ttf
+      size: 1195560
+    # spectral (serif)
+    - name: ofl_spectral_spectral_bold_ttf
+      url: https://raw.githubusercontent.com/google/fonts/bd8f81ddb5c74d5c8897b36ad88b440266245103/ofl/spectral/Spectral-Bold.ttf
+      filename: serif/ofl/spectral/Spectral-Bold.ttf
+      size: 273220
+    - name: ofl_spectral_spectral_bolditalic_ttf
+      url: https://raw.githubusercontent.com/google/fonts/bd8f81ddb5c74d5c8897b36ad88b440266245103/ofl/spectral/Spectral-BoldItalic.ttf
+      filename: serif/ofl/spectral/Spectral-BoldItalic.ttf
+      size: 284356
+    - name: ofl_spectral_spectral_italic_ttf
+      url: https://raw.githubusercontent.com/google/fonts/bd8f81ddb5c74d5c8897b36ad88b440266245103/ofl/spectral/Spectral-Italic.ttf
+      filename: serif/ofl/spectral/Spectral-Italic.ttf
+      size: 270468
+    - name: ofl_spectral_spectral_regular_ttf
+      url: https://raw.githubusercontent.com/google/fonts/bd8f81ddb5c74d5c8897b36ad88b440266245103/ofl/spectral/Spectral-Regular.ttf
+      filename: serif/ofl/spectral/Spectral-Regular.ttf
+      size: 261088
+    # librecaslontext (serif)
+    - name: ofl_librecaslontext_librecaslontext_italic_wght_ttf
+      url: https://raw.githubusercontent.com/google/fonts/bd8f81ddb5c74d5c8897b36ad88b440266245103/ofl/librecaslontext/LibreCaslonText-Italic%5Bwght%5D.ttf
+      filename: serif/ofl/librecaslontext/LibreCaslonText-Italic[wght].ttf
+      size: 176200
+    - name: ofl_librecaslontext_librecaslontext_wght_ttf
+      url: https://raw.githubusercontent.com/google/fonts/bd8f81ddb5c74d5c8897b36ad88b440266245103/ofl/librecaslontext/LibreCaslonText%5Bwght%5D.ttf
+      filename: serif/ofl/librecaslontext/LibreCaslonText[wght].ttf
+      size: 126876
+    # oldstandardtt (serif)
+    - name: ofl_oldstandardtt_oldstandard_bold_ttf
+      url: https://raw.githubusercontent.com/google/fonts/bd8f81ddb5c74d5c8897b36ad88b440266245103/ofl/oldstandardtt/OldStandard-Bold.ttf
+      filename: serif/ofl/oldstandardtt/OldStandard-Bold.ttf
+      size: 267128
+    - name: ofl_oldstandardtt_oldstandard_italic_ttf
+      url: https://raw.githubusercontent.com/google/fonts/bd8f81ddb5c74d5c8897b36ad88b440266245103/ofl/oldstandardtt/OldStandard-Italic.ttf
+      filename: serif/ofl/oldstandardtt/OldStandard-Italic.ttf
+      size: 272692
+    - name: ofl_oldstandardtt_oldstandard_regular_ttf
+      url: https://raw.githubusercontent.com/google/fonts/bd8f81ddb5c74d5c8897b36ad88b440266245103/ofl/oldstandardtt/OldStandard-Regular.ttf
+      filename: serif/ofl/oldstandardtt/OldStandard-Regular.ttf
+      size: 249668
+    # gentiumbookplus (serif)
+    - name: ofl_gentiumbookplus_gentiumbookplus_bold_ttf
+      url: https://raw.githubusercontent.com/google/fonts/bd8f81ddb5c74d5c8897b36ad88b440266245103/ofl/gentiumbookplus/GentiumBookPlus-Bold.ttf
+      filename: serif/ofl/gentiumbookplus/GentiumBookPlus-Bold.ttf
+      size: 834852
+    - name: ofl_gentiumbookplus_gentiumbookplus_bolditalic_ttf
+      url: https://raw.githubusercontent.com/google/fonts/bd8f81ddb5c74d5c8897b36ad88b440266245103/ofl/gentiumbookplus/GentiumBookPlus-BoldItalic.ttf
+      filename: serif/ofl/gentiumbookplus/GentiumBookPlus-BoldItalic.ttf
+      size: 891412
+    - name: ofl_gentiumbookplus_gentiumbookplus_italic_ttf
+      url: https://raw.githubusercontent.com/google/fonts/bd8f81ddb5c74d5c8897b36ad88b440266245103/ofl/gentiumbookplus/GentiumBookPlus-Italic.ttf
+      filename: serif/ofl/gentiumbookplus/GentiumBookPlus-Italic.ttf
+      size: 882904
+    - name: ofl_gentiumbookplus_gentiumbookplus_regular_ttf
+      url: https://raw.githubusercontent.com/google/fonts/bd8f81ddb5c74d5c8897b36ad88b440266245103/ofl/gentiumbookplus/GentiumBookPlus-Regular.ttf
+      filename: serif/ofl/gentiumbookplus/GentiumBookPlus-Regular.ttf
+      size: 818952
+    # tinos (serif)
+    - name: ofl_tinos_tinos_bold_ttf
+      url: https://raw.githubusercontent.com/google/fonts/bd8f81ddb5c74d5c8897b36ad88b440266245103/ofl/tinos/Tinos-Bold.ttf
+      filename: serif/ofl/tinos/Tinos-Bold.ttf
+      size: 597880
+    - name: ofl_tinos_tinos_bolditalic_ttf
+      url: https://raw.githubusercontent.com/google/fonts/bd8f81ddb5c74d5c8897b36ad88b440266245103/ofl/tinos/Tinos-BoldItalic.ttf
+      filename: serif/ofl/tinos/Tinos-BoldItalic.ttf
+      size: 578976
+    - name: ofl_tinos_tinos_italic_ttf
+      url: https://raw.githubusercontent.com/google/fonts/bd8f81ddb5c74d5c8897b36ad88b440266245103/ofl/tinos/Tinos-Italic.ttf
+      filename: serif/ofl/tinos/Tinos-Italic.ttf
+      size: 565016
+    - name: ofl_tinos_tinos_regular_ttf
+      url: https://raw.githubusercontent.com/google/fonts/bd8f81ddb5c74d5c8897b36ad88b440266245103/ofl/tinos/Tinos-Regular.ttf
+      filename: serif/ofl/tinos/Tinos-Regular.ttf
+      size: 521588
+    # bitter (serif)
+    - name: ofl_bitter_bitter_italic_wght_ttf
+      url: https://raw.githubusercontent.com/google/fonts/bd8f81ddb5c74d5c8897b36ad88b440266245103/ofl/bitter/Bitter-Italic%5Bwght%5D.ttf
+      filename: serif/ofl/bitter/Bitter-Italic[wght].ttf
+      size: 317652
+    - name: ofl_bitter_bitter_wght_ttf
+      url: https://raw.githubusercontent.com/google/fonts/bd8f81ddb5c74d5c8897b36ad88b440266245103/ofl/bitter/Bitter%5Bwght%5D.ttf
+      filename: serif/ofl/bitter/Bitter[wght].ttf
+      size: 328636
+    # domine (serif)
+    - name: ofl_domine_domine_wght_ttf
+      url: https://raw.githubusercontent.com/google/fonts/bd8f81ddb5c74d5c8897b36ad88b440266245103/ofl/domine/Domine%5Bwght%5D.ttf
+      filename: serif/ofl/domine/Domine[wght].ttf
+      size: 101904
+    # cardo (serif)
+    - name: ofl_cardo_cardo_bold_ttf
+      url: https://raw.githubusercontent.com/google/fonts/bd8f81ddb5c74d5c8897b36ad88b440266245103/ofl/cardo/Cardo-Bold.ttf
+      filename: serif/ofl/cardo/Cardo-Bold.ttf
+      size: 348320
+    - name: ofl_cardo_cardo_italic_ttf
+      url: https://raw.githubusercontent.com/google/fonts/bd8f81ddb5c74d5c8897b36ad88b440266245103/ofl/cardo/Cardo-Italic.ttf
+      filename: serif/ofl/cardo/Cardo-Italic.ttf
+      size: 262388
+    - name: ofl_cardo_cardo_regular_ttf
+      url: https://raw.githubusercontent.com/google/fonts/bd8f81ddb5c74d5c8897b36ad88b440266245103/ofl/cardo/Cardo-Regular.ttf
+      filename: serif/ofl/cardo/Cardo-Regular.ttf
+      size: 400468
+    # alegreya (serif)
+    - name: ofl_alegreya_alegreya_italic_wght_ttf
+      url: https://raw.githubusercontent.com/google/fonts/bd8f81ddb5c74d5c8897b36ad88b440266245103/ofl/alegreya/Alegreya-Italic%5Bwght%5D.ttf
+      filename: serif/ofl/alegreya/Alegreya-Italic[wght].ttf
+      size: 425852
+    - name: ofl_alegreya_alegreya_wght_ttf
+      url: https://raw.githubusercontent.com/google/fonts/bd8f81ddb5c74d5c8897b36ad88b440266245103/ofl/alegreya/Alegreya%5Bwght%5D.ttf
+      filename: serif/ofl/alegreya/Alegreya[wght].ttf
+      size: 425288
+    # vollkorn (serif)
+    - name: ofl_vollkorn_vollkorn_italic_wght_ttf
+      url: https://raw.githubusercontent.com/google/fonts/bd8f81ddb5c74d5c8897b36ad88b440266245103/ofl/vollkorn/Vollkorn-Italic%5Bwght%5D.ttf
+      filename: serif/ofl/vollkorn/Vollkorn-Italic[wght].ttf
+      size: 441264
+    - name: ofl_vollkorn_vollkorn_wght_ttf
+      url: https://raw.githubusercontent.com/google/fonts/bd8f81ddb5c74d5c8897b36ad88b440266245103/ofl/vollkorn/Vollkorn%5Bwght%5D.ttf
+      filename: serif/ofl/vollkorn/Vollkorn[wght].ttf
+      size: 577864
+    # zillaslab (serif)
+    - name: ofl_zillaslab_zillaslab_bold_ttf
+      url: https://raw.githubusercontent.com/google/fonts/bd8f81ddb5c74d5c8897b36ad88b440266245103/ofl/zillaslab/ZillaSlab-Bold.ttf
+      filename: serif/ofl/zillaslab/ZillaSlab-Bold.ttf
+      size: 273044
+    - name: ofl_zillaslab_zillaslab_bolditalic_ttf
+      url: https://raw.githubusercontent.com/google/fonts/bd8f81ddb5c74d5c8897b36ad88b440266245103/ofl/zillaslab/ZillaSlab-BoldItalic.ttf
+      filename: serif/ofl/zillaslab/ZillaSlab-BoldItalic.ttf
+      size: 280236
+    - name: ofl_zillaslab_zillaslab_italic_ttf
+      url: https://raw.githubusercontent.com/google/fonts/bd8f81ddb5c74d5c8897b36ad88b440266245103/ofl/zillaslab/ZillaSlab-Italic.ttf
+      filename: serif/ofl/zillaslab/ZillaSlab-Italic.ttf
+      size: 277732
+    - name: ofl_zillaslab_zillaslab_regular_ttf
+      url: https://raw.githubusercontent.com/google/fonts/bd8f81ddb5c74d5c8897b36ad88b440266245103/ofl/zillaslab/ZillaSlab-Regular.ttf
+      filename: serif/ofl/zillaslab/ZillaSlab-Regular.ttf
+      size: 270104
+    # robotoslab (serif)
+    - name: apache_robotoslab_robotoslab_wght_ttf
+      url: https://raw.githubusercontent.com/google/fonts/bd8f81ddb5c74d5c8897b36ad88b440266245103/apache/robotoslab/RobotoSlab%5Bwght%5D.ttf
+      filename: serif/apache/robotoslab/RobotoSlab[wght].ttf
+      size: 251880
+    # noticiatext (serif)
+    - name: ofl_noticiatext_noticiatext_bold_ttf
+      url: https://raw.githubusercontent.com/google/fonts/bd8f81ddb5c74d5c8897b36ad88b440266245103/ofl/noticiatext/NoticiaText-Bold.ttf
+      filename: serif/ofl/noticiatext/NoticiaText-Bold.ttf
+      size: 113244
+    - name: ofl_noticiatext_noticiatext_bolditalic_ttf
+      url: https://raw.githubusercontent.com/google/fonts/bd8f81ddb5c74d5c8897b36ad88b440266245103/ofl/noticiatext/NoticiaText-BoldItalic.ttf
+      filename: serif/ofl/noticiatext/NoticiaText-BoldItalic.ttf
+      size: 86044
+    - name: ofl_noticiatext_noticiatext_italic_ttf
+      url: https://raw.githubusercontent.com/google/fonts/bd8f81ddb5c74d5c8897b36ad88b440266245103/ofl/noticiatext/NoticiaText-Italic.ttf
+      filename: serif/ofl/noticiatext/NoticiaText-Italic.ttf
+      size: 87392
+    - name: ofl_noticiatext_noticiatext_regular_ttf
+      url: https://raw.githubusercontent.com/google/fonts/bd8f81ddb5c74d5c8897b36ad88b440266245103/ofl/noticiatext/NoticiaText-Regular.ttf
+      filename: serif/ofl/noticiatext/NoticiaText-Regular.ttf
+      size: 115288
+    # frankruhllibre (serif)
+    - name: ofl_frankruhllibre_frankruhllibre_wght_ttf
+      url: https://raw.githubusercontent.com/google/fonts/bd8f81ddb5c74d5c8897b36ad88b440266245103/ofl/frankruhllibre/FrankRuhlLibre%5Bwght%5D.ttf
+      filename: serif/ofl/frankruhllibre/FrankRuhlLibre[wght].ttf
+      size: 178468
+    # ibmplexserif (serif)
+    - name: ofl_ibmplexserif_ibmplexserif_bold_ttf
+      url: https://raw.githubusercontent.com/google/fonts/bd8f81ddb5c74d5c8897b36ad88b440266245103/ofl/ibmplexserif/IBMPlexSerif-Bold.ttf
+      filename: serif/ofl/ibmplexserif/IBMPlexSerif-Bold.ttf
+      size: 163800
+    - name: ofl_ibmplexserif_ibmplexserif_bolditalic_ttf
+      url: https://raw.githubusercontent.com/google/fonts/bd8f81ddb5c74d5c8897b36ad88b440266245103/ofl/ibmplexserif/IBMPlexSerif-BoldItalic.ttf
+      filename: serif/ofl/ibmplexserif/IBMPlexSerif-BoldItalic.ttf
+      size: 173032
+    - name: ofl_ibmplexserif_ibmplexserif_italic_ttf
+      url: https://raw.githubusercontent.com/google/fonts/bd8f81ddb5c74d5c8897b36ad88b440266245103/ofl/ibmplexserif/IBMPlexSerif-Italic.ttf
+      filename: serif/ofl/ibmplexserif/IBMPlexSerif-Italic.ttf
+      size: 173004
+    - name: ofl_ibmplexserif_ibmplexserif_regular_ttf
+      url: https://raw.githubusercontent.com/google/fonts/bd8f81ddb5c74d5c8897b36ad88b440266245103/ofl/ibmplexserif/IBMPlexSerif-Regular.ttf
+      filename: serif/ofl/ibmplexserif/IBMPlexSerif-Regular.ttf
+      size: 163068
+    # literata (serif)
+    - name: ofl_literata_literata_italic_opsz_wght_ttf
+      url: https://raw.githubusercontent.com/google/fonts/bd8f81ddb5c74d5c8897b36ad88b440266245103/ofl/literata/Literata-Italic%5Bopsz%2Cwght%5D.ttf
+      filename: serif/ofl/literata/Literata-Italic[opsz,wght].ttf
+      size: 902728
+    - name: ofl_literata_literata_opsz_wght_ttf
+      url: https://raw.githubusercontent.com/google/fonts/bd8f81ddb5c74d5c8897b36ad88b440266245103/ofl/literata/Literata%5Bopsz%2Cwght%5D.ttf
+      filename: serif/ofl/literata/Literata[opsz,wght].ttf
+      size: 955132
+    # newsreader (serif)
+    - name: ofl_newsreader_newsreader_italic_opsz_wght_ttf
+      url: https://raw.githubusercontent.com/google/fonts/bd8f81ddb5c74d5c8897b36ad88b440266245103/ofl/newsreader/Newsreader-Italic%5Bopsz%2Cwght%5D.ttf
+      filename: serif/ofl/newsreader/Newsreader-Italic[opsz,wght].ttf
+      size: 495684
+    - name: ofl_newsreader_newsreader_opsz_wght_ttf
+      url: https://raw.githubusercontent.com/google/fonts/bd8f81ddb5c74d5c8897b36ad88b440266245103/ofl/newsreader/Newsreader%5Bopsz%2Cwght%5D.ttf
+      filename: serif/ofl/newsreader/Newsreader[opsz,wght].ttf
+      size: 451664
+    # playfairdisplay (serif)
+    - name: ofl_playfairdisplay_playfairdisplay_italic_wght_ttf
+      url: https://raw.githubusercontent.com/google/fonts/bd8f81ddb5c74d5c8897b36ad88b440266245103/ofl/playfairdisplay/PlayfairDisplay-Italic%5Bwght%5D.ttf
+      filename: serif/ofl/playfairdisplay/PlayfairDisplay-Italic[wght].ttf
+      size: 278688
+    - name: ofl_playfairdisplay_playfairdisplay_wght_ttf
+      url: https://raw.githubusercontent.com/google/fonts/bd8f81ddb5c74d5c8897b36ad88b440266245103/ofl/playfairdisplay/PlayfairDisplay%5Bwght%5D.ttf
+      filename: serif/ofl/playfairdisplay/PlayfairDisplay[wght].ttf
+      size: 300724
+    # arvo (serif)
+    - name: ofl_arvo_arvo_bold_ttf
+      url: https://raw.githubusercontent.com/google/fonts/bd8f81ddb5c74d5c8897b36ad88b440266245103/ofl/arvo/Arvo-Bold.ttf
+      filename: serif/ofl/arvo/Arvo-Bold.ttf
+      size: 37652
+    - name: ofl_arvo_arvo_bolditalic_ttf
+      url: https://raw.githubusercontent.com/google/fonts/bd8f81ddb5c74d5c8897b36ad88b440266245103/ofl/arvo/Arvo-BoldItalic.ttf
+      filename: serif/ofl/arvo/Arvo-BoldItalic.ttf
+      size: 36872
+    - name: ofl_arvo_arvo_italic_ttf
+      url: https://raw.githubusercontent.com/google/fonts/bd8f81ddb5c74d5c8897b36ad88b440266245103/ofl/arvo/Arvo-Italic.ttf
+      filename: serif/ofl/arvo/Arvo-Italic.ttf
+      size: 35156
+    - name: ofl_arvo_arvo_regular_ttf
+      url: https://raw.githubusercontent.com/google/fonts/bd8f81ddb5c74d5c8897b36ad88b440266245103/ofl/arvo/Arvo-Regular.ttf
+      filename: serif/ofl/arvo/Arvo-Regular.ttf
+      size: 38780
+    # josefinslab (serif)
+    - name: ofl_josefinslab_josefinslab_italic_wght_ttf
+      url: https://raw.githubusercontent.com/google/fonts/bd8f81ddb5c74d5c8897b36ad88b440266245103/ofl/josefinslab/JosefinSlab-Italic%5Bwght%5D.ttf
+      filename: serif/ofl/josefinslab/JosefinSlab-Italic[wght].ttf
+      size: 51020
+    - name: ofl_josefinslab_josefinslab_wght_ttf
+      url: https://raw.githubusercontent.com/google/fonts/bd8f81ddb5c74d5c8897b36ad88b440266245103/ofl/josefinslab/JosefinSlab%5Bwght%5D.ttf
+      filename: serif/ofl/josefinslab/JosefinSlab[wght].ttf
+      size: 48792
+    # ptserifcaption (serif)
+    - name: ofl_ptserifcaption_pt_serif_caption_web_italic_ttf
+      url: https://raw.githubusercontent.com/google/fonts/bd8f81ddb5c74d5c8897b36ad88b440266245103/ofl/ptserifcaption/PT_Serif-Caption-Web-Italic.ttf
+      filename: serif/ofl/ptserifcaption/PT_Serif-Caption-Web-Italic.ttf
+      size: 406612
+    - name: ofl_ptserifcaption_pt_serif_caption_web_regular_ttf
+      url: https://raw.githubusercontent.com/google/fonts/bd8f81ddb5c74d5c8897b36ad88b440266245103/ofl/ptserifcaption/PT_Serif-Caption-Web-Regular.ttf
+      filename: serif/ofl/ptserifcaption/PT_Serif-Caption-Web-Regular.ttf
+      size: 399840
+    # unna (serif)
+    - name: ofl_unna_unna_bold_ttf
+      url: https://raw.githubusercontent.com/google/fonts/bd8f81ddb5c74d5c8897b36ad88b440266245103/ofl/unna/Unna-Bold.ttf
+      filename: serif/ofl/unna/Unna-Bold.ttf
+      size: 79556
+    - name: ofl_unna_unna_bolditalic_ttf
+      url: https://raw.githubusercontent.com/google/fonts/bd8f81ddb5c74d5c8897b36ad88b440266245103/ofl/unna/Unna-BoldItalic.ttf
+      filename: serif/ofl/unna/Unna-BoldItalic.ttf
+      size: 84916
+    - name: ofl_unna_unna_italic_ttf
+      url: https://raw.githubusercontent.com/google/fonts/bd8f81ddb5c74d5c8897b36ad88b440266245103/ofl/unna/Unna-Italic.ttf
+      filename: serif/ofl/unna/Unna-Italic.ttf
+      size: 80320
+    - name: ofl_unna_unna_regular_ttf
+      url: https://raw.githubusercontent.com/google/fonts/bd8f81ddb5c74d5c8897b36ad88b440266245103/ofl/unna/Unna-Regular.ttf
+      filename: serif/ofl/unna/Unna-Regular.ttf
+      size: 71164
+    # gelasio (serif)
+    - name: ofl_gelasio_gelasio_italic_wght_ttf
+      url: https://raw.githubusercontent.com/google/fonts/bd8f81ddb5c74d5c8897b36ad88b440266245103/ofl/gelasio/Gelasio-Italic%5Bwght%5D.ttf
+      filename: serif/ofl/gelasio/Gelasio-Italic[wght].ttf
+      size: 174212
+    - name: ofl_gelasio_gelasio_wght_ttf
+      url: https://raw.githubusercontent.com/google/fonts/bd8f81ddb5c74d5c8897b36ad88b440266245103/ofl/gelasio/Gelasio%5Bwght%5D.ttf
+      filename: serif/ofl/gelasio/Gelasio[wght].ttf
+      size: 168556
+    # petrona (serif)
+    - name: ofl_petrona_petrona_italic_wght_ttf
+      url: https://raw.githubusercontent.com/google/fonts/bd8f81ddb5c74d5c8897b36ad88b440266245103/ofl/petrona/Petrona-Italic%5Bwght%5D.ttf
+      filename: serif/ofl/petrona/Petrona-Italic[wght].ttf
+      size: 230176
+    - name: ofl_petrona_petrona_wght_ttf
+      url: https://raw.githubusercontent.com/google/fonts/bd8f81ddb5c74d5c8897b36ad88b440266245103/ofl/petrona/Petrona%5Bwght%5D.ttf
+      filename: serif/ofl/petrona/Petrona[wght].ttf
+      size: 218572
+    # brygada1918 (serif)
+    - name: ofl_brygada1918_brygada1918_italic_wght_ttf
+      url: https://raw.githubusercontent.com/google/fonts/bd8f81ddb5c74d5c8897b36ad88b440266245103/ofl/brygada1918/Brygada1918-Italic%5Bwght%5D.ttf
+      filename: serif/ofl/brygada1918/Brygada1918-Italic[wght].ttf
+      size: 243716
+    - name: ofl_brygada1918_brygada1918_wght_ttf
+      url: https://raw.githubusercontent.com/google/fonts/bd8f81ddb5c74d5c8897b36ad88b440266245103/ofl/brygada1918/Brygada1918%5Bwght%5D.ttf
+      filename: serif/ofl/brygada1918/Brygada1918[wght].ttf
+      size: 242256
+    # besley (serif)
+    - name: ofl_besley_besley_italic_wght_ttf
+      url: https://raw.githubusercontent.com/google/fonts/bd8f81ddb5c74d5c8897b36ad88b440266245103/ofl/besley/Besley-Italic%5Bwght%5D.ttf
+      filename: serif/ofl/besley/Besley-Italic[wght].ttf
+      size: 112792
+    - name: ofl_besley_besley_wght_ttf
+      url: https://raw.githubusercontent.com/google/fonts/bd8f81ddb5c74d5c8897b36ad88b440266245103/ofl/besley/Besley%5Bwght%5D.ttf
+      filename: serif/ofl/besley/Besley[wght].ttf
+      size: 108640
+    # fraunces (serif)
+    - name: ofl_fraunces_fraunces_italic_soft_wonk_opsz_wght_ttf
+      url: https://raw.githubusercontent.com/google/fonts/bd8f81ddb5c74d5c8897b36ad88b440266245103/ofl/fraunces/Fraunces-Italic%5BSOFT%2CWONK%2Copsz%2Cwght%5D.ttf
+      filename: serif/ofl/fraunces/Fraunces-Italic[SOFT,WONK,opsz,wght].ttf
+      size: 414904
+    - name: ofl_fraunces_fraunces_soft_wonk_opsz_wght_ttf
+      url: https://raw.githubusercontent.com/google/fonts/bd8f81ddb5c74d5c8897b36ad88b440266245103/ofl/fraunces/Fraunces%5BSOFT%2CWONK%2Copsz%2Cwght%5D.ttf
+      filename: serif/ofl/fraunces/Fraunces[SOFT,WONK,opsz,wght].ttf
+      size: 360440
+    # rokkitt (serif)
+    - name: ofl_rokkitt_rokkitt_italic_wght_ttf
+      url: https://raw.githubusercontent.com/google/fonts/bd8f81ddb5c74d5c8897b36ad88b440266245103/ofl/rokkitt/Rokkitt-Italic%5Bwght%5D.ttf
+      filename: serif/ofl/rokkitt/Rokkitt-Italic[wght].ttf
+      size: 135840
+    - name: ofl_rokkitt_rokkitt_wght_ttf
+      url: https://raw.githubusercontent.com/google/fonts/bd8f81ddb5c74d5c8897b36ad88b440266245103/ofl/rokkitt/Rokkitt%5Bwght%5D.ttf
+      filename: serif/ofl/rokkitt/Rokkitt[wght].ttf
+      size: 133344
+    # sortsmillgoudy (serif)
+    - name: ofl_sortsmillgoudy_sortsmillgoudy_italic_ttf
+      url: https://raw.githubusercontent.com/google/fonts/bd8f81ddb5c74d5c8897b36ad88b440266245103/ofl/sortsmillgoudy/SortsMillGoudy-Italic.ttf
+      filename: serif/ofl/sortsmillgoudy/SortsMillGoudy-Italic.ttf
+      size: 105684
+    - name: ofl_sortsmillgoudy_sortsmillgoudy_regular_ttf
+      url: https://raw.githubusercontent.com/google/fonts/bd8f81ddb5c74d5c8897b36ad88b440266245103/ofl/sortsmillgoudy/SortsMillGoudy-Regular.ttf
+      filename: serif/ofl/sortsmillgoudy/SortsMillGoudy-Regular.ttf
+      size: 121372
+    # goudybookletter1911 (serif)
+    - name: ofl_goudybookletter1911_goudybookletter1911_ttf
+      url: https://raw.githubusercontent.com/google/fonts/bd8f81ddb5c74d5c8897b36ad88b440266245103/ofl/goudybookletter1911/GoudyBookletter1911.ttf
+      filename: serif/ofl/goudybookletter1911/GoudyBookletter1911.ttf
+      size: 73496
+    # baskervville (serif)
+    - name: ofl_baskervville_baskervville_italic_wght_ttf
+      url: https://raw.githubusercontent.com/google/fonts/bd8f81ddb5c74d5c8897b36ad88b440266245103/ofl/baskervville/Baskervville-Italic%5Bwght%5D.ttf
+      filename: serif/ofl/baskervville/Baskervville-Italic[wght].ttf
+      size: 114676
+    - name: ofl_baskervville_baskervville_wght_ttf
+      url: https://raw.githubusercontent.com/google/fonts/bd8f81ddb5c74d5c8897b36ad88b440266245103/ofl/baskervville/Baskervville%5Bwght%5D.ttf
+      filename: serif/ofl/baskervville/Baskervville[wght].ttf
+      size: 140076
+    # librebodoni (serif)
+    - name: ofl_librebodoni_librebodoni_italic_wght_ttf
+      url: https://raw.githubusercontent.com/google/fonts/bd8f81ddb5c74d5c8897b36ad88b440266245103/ofl/librebodoni/LibreBodoni-Italic%5Bwght%5D.ttf
+      filename: serif/ofl/librebodoni/LibreBodoni-Italic[wght].ttf
+      size: 112608
+    - name: ofl_librebodoni_librebodoni_wght_ttf
+      url: https://raw.githubusercontent.com/google/fonts/bd8f81ddb5c74d5c8897b36ad88b440266245103/ofl/librebodoni/LibreBodoni%5Bwght%5D.ttf
+      filename: serif/ofl/librebodoni/LibreBodoni[wght].ttf
+      size: 112160
+    # bodonimoda (serif)
+    - name: ofl_bodonimoda_bodonimoda_italic_opsz_wght_ttf
+      url: https://raw.githubusercontent.com/google/fonts/bd8f81ddb5c74d5c8897b36ad88b440266245103/ofl/bodonimoda/BodoniModa-Italic%5Bopsz%2Cwght%5D.ttf
+      filename: serif/ofl/bodonimoda/BodoniModa-Italic[opsz,wght].ttf
+      size: 176300
+    - name: ofl_bodonimoda_bodonimoda_opsz_wght_ttf
+      url: https://raw.githubusercontent.com/google/fonts/bd8f81ddb5c74d5c8897b36ad88b440266245103/ofl/bodonimoda/BodoniModa%5Bopsz%2Cwght%5D.ttf
+      filename: serif/ofl/bodonimoda/BodoniModa[opsz,wght].ttf
+      size: 162104
+    # caladea (serif)
+    - name: ofl_caladea_caladea_bold_ttf
+      url: https://raw.githubusercontent.com/google/fonts/bd8f81ddb5c74d5c8897b36ad88b440266245103/ofl/caladea/Caladea-Bold.ttf
+      filename: serif/ofl/caladea/Caladea-Bold.ttf
+      size: 84492
+    - name: ofl_caladea_caladea_bolditalic_ttf
+      url: https://raw.githubusercontent.com/google/fonts/bd8f81ddb5c74d5c8897b36ad88b440266245103/ofl/caladea/Caladea-BoldItalic.ttf
+      filename: serif/ofl/caladea/Caladea-BoldItalic.ttf
+      size: 83356
+    - name: ofl_caladea_caladea_italic_ttf
+      url: https://raw.githubusercontent.com/google/fonts/bd8f81ddb5c74d5c8897b36ad88b440266245103/ofl/caladea/Caladea-Italic.ttf
+      filename: serif/ofl/caladea/Caladea-Italic.ttf
+      size: 83780
+    - name: ofl_caladea_caladea_regular_ttf
+      url: https://raw.githubusercontent.com/google/fonts/bd8f81ddb5c74d5c8897b36ad88b440266245103/ofl/caladea/Caladea-Regular.ttf
+      filename: serif/ofl/caladea/Caladea-Regular.ttf
+      size: 81600
+    # roboto (sans)
+    - name: ofl_roboto_roboto_italic_wdth_wght_ttf
+      url: https://raw.githubusercontent.com/google/fonts/bd8f81ddb5c74d5c8897b36ad88b440266245103/ofl/roboto/Roboto-Italic%5Bwdth%2Cwght%5D.ttf
+      filename: sans/ofl/roboto/Roboto-Italic[wdth,wght].ttf
+      size: 530944
+    - name: ofl_roboto_roboto_wdth_wght_ttf
+      url: https://raw.githubusercontent.com/google/fonts/bd8f81ddb5c74d5c8897b36ad88b440266245103/ofl/roboto/Roboto%5Bwdth%2Cwght%5D.ttf
+      filename: sans/ofl/roboto/Roboto[wdth,wght].ttf
+      size: 488584
+    # opensans (sans)
+    - name: ofl_opensans_opensans_italic_wdth_wght_ttf
+      url: https://raw.githubusercontent.com/google/fonts/bd8f81ddb5c74d5c8897b36ad88b440266245103/ofl/opensans/OpenSans-Italic%5Bwdth%2Cwght%5D.ttf
+      filename: sans/ofl/opensans/OpenSans-Italic[wdth,wght].ttf
+      size: 583992
+    - name: ofl_opensans_opensans_wdth_wght_ttf
+      url: https://raw.githubusercontent.com/google/fonts/bd8f81ddb5c74d5c8897b36ad88b440266245103/ofl/opensans/OpenSans%5Bwdth%2Cwght%5D.ttf
+      filename: sans/ofl/opensans/OpenSans[wdth,wght].ttf
+      size: 532636
+    # lato (sans)
+    - name: ofl_lato_lato_bold_ttf
+      url: https://raw.githubusercontent.com/google/fonts/bd8f81ddb5c74d5c8897b36ad88b440266245103/ofl/lato/Lato-Bold.ttf
+      filename: sans/ofl/lato/Lato-Bold.ttf
+      size: 656544
+    - name: ofl_lato_lato_bolditalic_ttf
+      url: https://raw.githubusercontent.com/google/fonts/bd8f81ddb5c74d5c8897b36ad88b440266245103/ofl/lato/Lato-BoldItalic.ttf
+      filename: sans/ofl/lato/Lato-BoldItalic.ttf
+      size: 698364
+    - name: ofl_lato_lato_italic_ttf
+      url: https://raw.githubusercontent.com/google/fonts/bd8f81ddb5c74d5c8897b36ad88b440266245103/ofl/lato/Lato-Italic.ttf
+      filename: sans/ofl/lato/Lato-Italic.ttf
+      size: 722900
+    - name: ofl_lato_lato_regular_ttf
+      url: https://raw.githubusercontent.com/google/fonts/bd8f81ddb5c74d5c8897b36ad88b440266245103/ofl/lato/Lato-Regular.ttf
+      filename: sans/ofl/lato/Lato-Regular.ttf
+      size: 656568
+    # notosans (sans)
+    - name: ofl_notosans_notosans_italic_wdth_wght_ttf
+      url: https://raw.githubusercontent.com/google/fonts/bd8f81ddb5c74d5c8897b36ad88b440266245103/ofl/notosans/NotoSans-Italic%5Bwdth%2Cwght%5D.ttf
+      filename: sans/ofl/notosans/NotoSans-Italic[wdth,wght].ttf
+      size: 2322640
+    - name: ofl_notosans_notosans_wdth_wght_ttf
+      url: https://raw.githubusercontent.com/google/fonts/bd8f81ddb5c74d5c8897b36ad88b440266245103/ofl/notosans/NotoSans%5Bwdth%2Cwght%5D.ttf
+      filename: sans/ofl/notosans/NotoSans[wdth,wght].ttf
+      size: 2049096
+    # sourcesans3 (sans)
+    - name: ofl_sourcesans3_sourcesans3_italic_wght_ttf
+      url: https://raw.githubusercontent.com/google/fonts/bd8f81ddb5c74d5c8897b36ad88b440266245103/ofl/sourcesans3/SourceSans3-Italic%5Bwght%5D.ttf
+      filename: sans/ofl/sourcesans3/SourceSans3-Italic[wght].ttf
+      size: 395372
+    - name: ofl_sourcesans3_sourcesans3_wght_ttf
+      url: https://raw.githubusercontent.com/google/fonts/bd8f81ddb5c74d5c8897b36ad88b440266245103/ofl/sourcesans3/SourceSans3%5Bwght%5D.ttf
+      filename: sans/ofl/sourcesans3/SourceSans3[wght].ttf
+      size: 646340
+    # arimo (sans)
+    - name: ofl_arimo_arimo_italic_wght_ttf
+      url: https://raw.githubusercontent.com/google/fonts/bd8f81ddb5c74d5c8897b36ad88b440266245103/ofl/arimo/Arimo-Italic%5Bwght%5D.ttf
+      filename: sans/ofl/arimo/Arimo-Italic[wght].ttf
+      size: 543196
+    - name: ofl_arimo_arimo_wght_ttf
+      url: https://raw.githubusercontent.com/google/fonts/bd8f81ddb5c74d5c8897b36ad88b440266245103/ofl/arimo/Arimo%5Bwght%5D.ttf
+      filename: sans/ofl/arimo/Arimo[wght].ttf
+      size: 496268
+    # ptsans (sans)
+    - name: ofl_ptsans_pt_sans_web_bold_ttf
+      url: https://raw.githubusercontent.com/google/fonts/bd8f81ddb5c74d5c8897b36ad88b440266245103/ofl/ptsans/PT_Sans-Web-Bold.ttf
+      filename: sans/ofl/ptsans/PT_Sans-Web-Bold.ttf
+      size: 470240
+    - name: ofl_ptsans_pt_sans_web_bolditalic_ttf
+      url: https://raw.githubusercontent.com/google/fonts/bd8f81ddb5c74d5c8897b36ad88b440266245103/ofl/ptsans/PT_Sans-Web-BoldItalic.ttf
+      filename: sans/ofl/ptsans/PT_Sans-Web-BoldItalic.ttf
+      size: 375204
+    - name: ofl_ptsans_pt_sans_web_italic_ttf
+      url: https://raw.githubusercontent.com/google/fonts/bd8f81ddb5c74d5c8897b36ad88b440266245103/ofl/ptsans/PT_Sans-Web-Italic.ttf
+      filename: sans/ofl/ptsans/PT_Sans-Web-Italic.ttf
+      size: 436452
+    - name: ofl_ptsans_pt_sans_web_regular_ttf
+      url: https://raw.githubusercontent.com/google/fonts/bd8f81ddb5c74d5c8897b36ad88b440266245103/ofl/ptsans/PT_Sans-Web-Regular.ttf
+      filename: sans/ofl/ptsans/PT_Sans-Web-Regular.ttf
+      size: 442960
+    # firasans (sans)
+    - name: ofl_firasans_firasans_bold_ttf
+      url: https://raw.githubusercontent.com/google/fonts/bd8f81ddb5c74d5c8897b36ad88b440266245103/ofl/firasans/FiraSans-Bold.ttf
+      filename: sans/ofl/firasans/FiraSans-Bold.ttf
+      size: 489720
+    - name: ofl_firasans_firasans_bolditalic_ttf
+      url: https://raw.githubusercontent.com/google/fonts/bd8f81ddb5c74d5c8897b36ad88b440266245103/ofl/firasans/FiraSans-BoldItalic.ttf
+      filename: sans/ofl/firasans/FiraSans-BoldItalic.ttf
+      size: 506864
+    - name: ofl_firasans_firasans_italic_ttf
+      url: https://raw.githubusercontent.com/google/fonts/bd8f81ddb5c74d5c8897b36ad88b440266245103/ofl/firasans/FiraSans-Italic.ttf
+      filename: sans/ofl/firasans/FiraSans-Italic.ttf
+      size: 472396
+    - name: ofl_firasans_firasans_regular_ttf
+      url: https://raw.githubusercontent.com/google/fonts/bd8f81ddb5c74d5c8897b36ad88b440266245103/ofl/firasans/FiraSans-Regular.ttf
+      filename: sans/ofl/firasans/FiraSans-Regular.ttf
+      size: 456996
+    # ibmplexsans (sans)
+    - name: ofl_ibmplexsans_ibmplexsans_italic_wdth_wght_ttf
+      url: https://raw.githubusercontent.com/google/fonts/bd8f81ddb5c74d5c8897b36ad88b440266245103/ofl/ibmplexsans/IBMPlexSans-Italic%5Bwdth%2Cwght%5D.ttf
+      filename: sans/ofl/ibmplexsans/IBMPlexSans-Italic[wdth,wght].ttf
+      size: 599624
+    - name: ofl_ibmplexsans_ibmplexsans_wdth_wght_ttf
+      url: https://raw.githubusercontent.com/google/fonts/bd8f81ddb5c74d5c8897b36ad88b440266245103/ofl/ibmplexsans/IBMPlexSans%5Bwdth%2Cwght%5D.ttf
+      filename: sans/ofl/ibmplexsans/IBMPlexSans[wdth,wght].ttf
+      size: 537244
+    # inter (sans)
+    - name: ofl_inter_inter_italic_opsz_wght_ttf
+      url: https://raw.githubusercontent.com/google/fonts/bd8f81ddb5c74d5c8897b36ad88b440266245103/ofl/inter/Inter-Italic%5Bopsz%2Cwght%5D.ttf
+      filename: sans/ofl/inter/Inter-Italic[opsz,wght].ttf
+      size: 906596
+    - name: ofl_inter_inter_opsz_wght_ttf
+      url: https://raw.githubusercontent.com/google/fonts/bd8f81ddb5c74d5c8897b36ad88b440266245103/ofl/inter/Inter%5Bopsz%2Cwght%5D.ttf
+      filename: sans/ofl/inter/Inter[opsz,wght].ttf
+      size: 876576
+    # worksans (sans)
+    - name: ofl_worksans_worksans_italic_wght_ttf
+      url: https://raw.githubusercontent.com/google/fonts/bd8f81ddb5c74d5c8897b36ad88b440266245103/ofl/worksans/WorkSans-Italic%5Bwght%5D.ttf
+      filename: sans/ofl/worksans/WorkSans-Italic[wght].ttf
+      size: 336756
+    - name: ofl_worksans_worksans_wght_ttf
+      url: https://raw.githubusercontent.com/google/fonts/bd8f81ddb5c74d5c8897b36ad88b440266245103/ofl/worksans/WorkSans%5Bwght%5D.ttf
+      filename: sans/ofl/worksans/WorkSans[wght].ttf
+      size: 361072
+    # nunitosans (sans)
+    - name: ofl_nunitosans_nunitosans_italic_ytlc_opsz_wdth_wght_ttf
+      url: https://raw.githubusercontent.com/google/fonts/bd8f81ddb5c74d5c8897b36ad88b440266245103/ofl/nunitosans/NunitoSans-Italic%5BYTLC%2Copsz%2Cwdth%2Cwght%5D.ttf
+      filename: sans/ofl/nunitosans/NunitoSans-Italic[YTLC,opsz,wdth,wght].ttf
+      size: 558412
+    - name: ofl_nunitosans_nunitosans_ytlc_opsz_wdth_wght_ttf
+      url: https://raw.githubusercontent.com/google/fonts/bd8f81ddb5c74d5c8897b36ad88b440266245103/ofl/nunitosans/NunitoSans%5BYTLC%2Copsz%2Cwdth%2Cwght%5D.ttf
+      filename: sans/ofl/nunitosans/NunitoSans[YTLC,opsz,wdth,wght].ttf
+      size: 571240
+    # raleway (sans)
+    - name: ofl_raleway_raleway_italic_wght_ttf
+      url: https://raw.githubusercontent.com/google/fonts/bd8f81ddb5c74d5c8897b36ad88b440266245103/ofl/raleway/Raleway-Italic%5Bwght%5D.ttf
+      filename: sans/ofl/raleway/Raleway-Italic[wght].ttf
+      size: 318476
+    - name: ofl_raleway_raleway_wght_ttf
+      url: https://raw.githubusercontent.com/google/fonts/bd8f81ddb5c74d5c8897b36ad88b440266245103/ofl/raleway/Raleway%5Bwght%5D.ttf
+      filename: sans/ofl/raleway/Raleway[wght].ttf
+      size: 312352
+    # montserrat (sans)
+    - name: ofl_montserrat_montserrat_italic_wght_ttf
+      url: https://raw.githubusercontent.com/google/fonts/bd8f81ddb5c74d5c8897b36ad88b440266245103/ofl/montserrat/Montserrat-Italic%5Bwght%5D.ttf
+      filename: sans/ofl/montserrat/Montserrat-Italic[wght].ttf
+      size: 762376
+    - name: ofl_montserrat_montserrat_wght_ttf
+      url: https://raw.githubusercontent.com/google/fonts/bd8f81ddb5c74d5c8897b36ad88b440266245103/ofl/montserrat/Montserrat%5Bwght%5D.ttf
+      filename: sans/ofl/montserrat/Montserrat[wght].ttf
+      size: 744936
+    # ubuntu (sans)
+    - name: ufl_ubuntu_ubuntu_bold_ttf
+      url: https://raw.githubusercontent.com/google/fonts/bd8f81ddb5c74d5c8897b36ad88b440266245103/ufl/ubuntu/Ubuntu-Bold.ttf
+      filename: sans/ufl/ubuntu/Ubuntu-Bold.ttf
+      size: 331612
+    - name: ufl_ubuntu_ubuntu_bolditalic_ttf
+      url: https://raw.githubusercontent.com/google/fonts/bd8f81ddb5c74d5c8897b36ad88b440266245103/ufl/ubuntu/Ubuntu-BoldItalic.ttf
+      filename: sans/ufl/ubuntu/Ubuntu-BoldItalic.ttf
+      size: 354956
+    - name: ufl_ubuntu_ubuntu_italic_ttf
+      url: https://raw.githubusercontent.com/google/fonts/bd8f81ddb5c74d5c8897b36ad88b440266245103/ufl/ubuntu/Ubuntu-Italic.ttf
+      filename: sans/ufl/ubuntu/Ubuntu-Italic.ttf
+      size: 384408
+    - name: ufl_ubuntu_ubuntu_regular_ttf
+      url: https://raw.githubusercontent.com/google/fonts/bd8f81ddb5c74d5c8897b36ad88b440266245103/ufl/ubuntu/Ubuntu-Regular.ttf
+      filename: sans/ufl/ubuntu/Ubuntu-Regular.ttf
+      size: 351884
+    # cabin (sans)
+    - name: ofl_cabin_cabin_italic_wdth_wght_ttf
+      url: https://raw.githubusercontent.com/google/fonts/bd8f81ddb5c74d5c8897b36ad88b440266245103/ofl/cabin/Cabin-Italic%5Bwdth%2Cwght%5D.ttf
+      filename: sans/ofl/cabin/Cabin-Italic[wdth,wght].ttf
+      size: 155412
+    - name: ofl_cabin_cabin_wdth_wght_ttf
+      url: https://raw.githubusercontent.com/google/fonts/bd8f81ddb5c74d5c8897b36ad88b440266245103/ofl/cabin/Cabin%5Bwdth%2Cwght%5D.ttf
+      filename: sans/ofl/cabin/Cabin[wdth,wght].ttf
+      size: 165468
+    # karla (sans)
+    - name: ofl_karla_karla_italic_wght_ttf
+      url: https://raw.githubusercontent.com/google/fonts/bd8f81ddb5c74d5c8897b36ad88b440266245103/ofl/karla/Karla-Italic%5Bwght%5D.ttf
+      filename: sans/ofl/karla/Karla-Italic[wght].ttf
+      size: 96248
+    - name: ofl_karla_karla_wght_ttf
+      url: https://raw.githubusercontent.com/google/fonts/bd8f81ddb5c74d5c8897b36ad88b440266245103/ofl/karla/Karla%5Bwght%5D.ttf
+      filename: sans/ofl/karla/Karla[wght].ttf
+      size: 94016
+    # librefranklin (sans)
+    - name: ofl_librefranklin_librefranklin_italic_wght_ttf
+      url: https://raw.githubusercontent.com/google/fonts/bd8f81ddb5c74d5c8897b36ad88b440266245103/ofl/librefranklin/LibreFranklin-Italic%5Bwght%5D.ttf
+      filename: sans/ofl/librefranklin/LibreFranklin-Italic[wght].ttf
+      size: 206092
+    - name: ofl_librefranklin_librefranklin_wght_ttf
+      url: https://raw.githubusercontent.com/google/fonts/bd8f81ddb5c74d5c8897b36ad88b440266245103/ofl/librefranklin/LibreFranklin%5Bwght%5D.ttf
+      filename: sans/ofl/librefranklin/LibreFranklin[wght].ttf
+      size: 187436
+    # publicsans (sans)
+    - name: ofl_publicsans_publicsans_italic_wght_ttf
+      url: https://raw.githubusercontent.com/google/fonts/bd8f81ddb5c74d5c8897b36ad88b440266245103/ofl/publicsans/PublicSans-Italic%5Bwght%5D.ttf
+      filename: sans/ofl/publicsans/PublicSans-Italic[wght].ttf
+      size: 107940
+    - name: ofl_publicsans_publicsans_wght_ttf
+      url: https://raw.githubusercontent.com/google/fonts/bd8f81ddb5c74d5c8897b36ad88b440266245103/ofl/publicsans/PublicSans%5Bwght%5D.ttf
+      filename: sans/ofl/publicsans/PublicSans[wght].ttf
+      size: 103316
+    # barlow (sans)
+    - name: ofl_barlow_barlow_bold_ttf
+      url: https://raw.githubusercontent.com/google/fonts/bd8f81ddb5c74d5c8897b36ad88b440266245103/ofl/barlow/Barlow-Bold.ttf
+      filename: sans/ofl/barlow/Barlow-Bold.ttf
+      size: 108220
+    - name: ofl_barlow_barlow_bolditalic_ttf
+      url: https://raw.githubusercontent.com/google/fonts/bd8f81ddb5c74d5c8897b36ad88b440266245103/ofl/barlow/Barlow-BoldItalic.ttf
+      filename: sans/ofl/barlow/Barlow-BoldItalic.ttf
+      size: 111996
+    - name: ofl_barlow_barlow_italic_ttf
+      url: https://raw.githubusercontent.com/google/fonts/bd8f81ddb5c74d5c8897b36ad88b440266245103/ofl/barlow/Barlow-Italic.ttf
+      filename: sans/ofl/barlow/Barlow-Italic.ttf
+      size: 109624
+    - name: ofl_barlow_barlow_regular_ttf
+      url: https://raw.githubusercontent.com/google/fonts/bd8f81ddb5c74d5c8897b36ad88b440266245103/ofl/barlow/Barlow-Regular.ttf
+      filename: sans/ofl/barlow/Barlow-Regular.ttf
+      size: 104068
+    # archivo (sans)
+    - name: ofl_archivo_archivo_italic_wdth_wght_ttf
+      url: https://raw.githubusercontent.com/google/fonts/bd8f81ddb5c74d5c8897b36ad88b440266245103/ofl/archivo/Archivo-Italic%5Bwdth%2Cwght%5D.ttf
+      filename: sans/ofl/archivo/Archivo-Italic[wdth,wght].ttf
+      size: 741368
+    - name: ofl_archivo_archivo_wdth_wght_ttf
+      url: https://raw.githubusercontent.com/google/fonts/bd8f81ddb5c74d5c8897b36ad88b440266245103/ofl/archivo/Archivo%5Bwdth%2Cwght%5D.ttf
+      filename: sans/ofl/archivo/Archivo[wdth,wght].ttf
+      size: 658596
+    # oswald (sans)
+    - name: ofl_oswald_oswald_wght_ttf
+      url: https://raw.githubusercontent.com/google/fonts/bd8f81ddb5c74d5c8897b36ad88b440266245103/ofl/oswald/Oswald%5Bwght%5D.ttf
+      filename: sans/ofl/oswald/Oswald[wght].ttf
+      size: 172088
+    # robotocondensed (sans)
+    - name: ofl_robotocondensed_robotocondensed_italic_wght_ttf
+      url: https://raw.githubusercontent.com/google/fonts/bd8f81ddb5c74d5c8897b36ad88b440266245103/ofl/robotocondensed/RobotoCondensed-Italic%5Bwght%5D.ttf
+      filename: sans/ofl/robotocondensed/RobotoCondensed-Italic[wght].ttf
+      size: 388124
+    - name: ofl_robotocondensed_robotocondensed_wght_ttf
+      url: https://raw.githubusercontent.com/google/fonts/bd8f81ddb5c74d5c8897b36ad88b440266245103/ofl/robotocondensed/RobotoCondensed%5Bwght%5D.ttf
+      filename: sans/ofl/robotocondensed/RobotoCondensed[wght].ttf
+      size: 371616
+    # dmsans (sans)
+    - name: ofl_dmsans_dmsans_italic_opsz_wght_ttf
+      url: https://raw.githubusercontent.com/google/fonts/bd8f81ddb5c74d5c8897b36ad88b440266245103/ofl/dmsans/DMSans-Italic%5Bopsz%2Cwght%5D.ttf
+      filename: sans/ofl/dmsans/DMSans-Italic[opsz,wght].ttf
+      size: 285040
+    - name: ofl_dmsans_dmsans_opsz_wght_ttf
+      url: https://raw.githubusercontent.com/google/fonts/bd8f81ddb5c74d5c8897b36ad88b440266245103/ofl/dmsans/DMSans%5Bopsz%2Cwght%5D.ttf
+      filename: sans/ofl/dmsans/DMSans[opsz,wght].ttf
+      size: 240164
+    # manrope (sans)
+    - name: ofl_manrope_manrope_wght_ttf
+      url: https://raw.githubusercontent.com/google/fonts/bd8f81ddb5c74d5c8897b36ad88b440266245103/ofl/manrope/Manrope%5Bwght%5D.ttf
+      filename: sans/ofl/manrope/Manrope[wght].ttf
+      size: 164700
+    # mulish (sans)
+    - name: ofl_mulish_mulish_italic_wght_ttf
+      url: https://raw.githubusercontent.com/google/fonts/bd8f81ddb5c74d5c8897b36ad88b440266245103/ofl/mulish/Mulish-Italic%5Bwght%5D.ttf
+      filename: sans/ofl/mulish/Mulish-Italic[wght].ttf
+      size: 219548
+    - name: ofl_mulish_mulish_wght_ttf
+      url: https://raw.githubusercontent.com/google/fonts/bd8f81ddb5c74d5c8897b36ad88b440266245103/ofl/mulish/Mulish%5Bwght%5D.ttf
+      filename: sans/ofl/mulish/Mulish[wght].ttf
+      size: 211988
+    # hind (sans)
+    - name: ofl_hind_hind_bold_ttf
+      url: https://raw.githubusercontent.com/google/fonts/bd8f81ddb5c74d5c8897b36ad88b440266245103/ofl/hind/Hind-Bold.ttf
+      filename: sans/ofl/hind/Hind-Bold.ttf
+      size: 286604
+    - name: ofl_hind_hind_regular_ttf
+      url: https://raw.githubusercontent.com/google/fonts/bd8f81ddb5c74d5c8897b36ad88b440266245103/ofl/hind/Hind-Regular.ttf
+      filename: sans/ofl/hind/Hind-Regular.ttf
+      size: 299532
+    # assistant (sans)
+    - name: ofl_assistant_assistant_wght_ttf
+      url: https://raw.githubusercontent.com/google/fonts/bd8f81ddb5c74d5c8897b36ad88b440266245103/ofl/assistant/Assistant%5Bwght%5D.ttf
+      filename: sans/ofl/assistant/Assistant[wght].ttf
+      size: 99496
+    # heebo (sans)
+    - name: ofl_heebo_heebo_wght_ttf
+      url: https://raw.githubusercontent.com/google/fonts/bd8f81ddb5c74d5c8897b36ad88b440266245103/ofl/heebo/Heebo%5Bwght%5D.ttf
+      filename: sans/ofl/heebo/Heebo[wght].ttf
+      size: 122012
+    # overpass (sans)
+    - name: ofl_overpass_overpass_italic_wght_ttf
+      url: https://raw.githubusercontent.com/google/fonts/bd8f81ddb5c74d5c8897b36ad88b440266245103/ofl/overpass/Overpass-Italic%5Bwght%5D.ttf
+      filename: sans/ofl/overpass/Overpass-Italic[wght].ttf
+      size: 289328
+    - name: ofl_overpass_overpass_wght_ttf
+      url: https://raw.githubusercontent.com/google/fonts/bd8f81ddb5c74d5c8897b36ad88b440266245103/ofl/overpass/Overpass%5Bwght%5D.ttf
+      filename: sans/ofl/overpass/Overpass[wght].ttf
+      size: 318700
+    # asap (sans)
+    - name: ofl_asap_asap_italic_wdth_wght_ttf
+      url: https://raw.githubusercontent.com/google/fonts/bd8f81ddb5c74d5c8897b36ad88b440266245103/ofl/asap/Asap-Italic%5Bwdth%2Cwght%5D.ttf
+      filename: sans/ofl/asap/Asap-Italic[wdth,wght].ttf
+      size: 426484
+    - name: ofl_asap_asap_wdth_wght_ttf
+      url: https://raw.githubusercontent.com/google/fonts/bd8f81ddb5c74d5c8897b36ad88b440266245103/ofl/asap/Asap%5Bwdth%2Cwght%5D.ttf
+      filename: sans/ofl/asap/Asap[wdth,wght].ttf
+      size: 376764
+    # exo2 (sans)
+    - name: ofl_exo2_exo2_italic_wght_ttf
+      url: https://raw.githubusercontent.com/google/fonts/bd8f81ddb5c74d5c8897b36ad88b440266245103/ofl/exo2/Exo2-Italic%5Bwght%5D.ttf
+      filename: sans/ofl/exo2/Exo2-Italic[wght].ttf
+      size: 302556
+    - name: ofl_exo2_exo2_wght_ttf
+      url: https://raw.githubusercontent.com/google/fonts/bd8f81ddb5c74d5c8897b36ad88b440266245103/ofl/exo2/Exo2%5Bwght%5D.ttf
+      filename: sans/ofl/exo2/Exo2[wght].ttf
+      size: 303940
+    # titilliumweb (sans)
+    - name: ofl_titilliumweb_titilliumweb_bold_ttf
+      url: https://raw.githubusercontent.com/google/fonts/bd8f81ddb5c74d5c8897b36ad88b440266245103/ofl/titilliumweb/TitilliumWeb-Bold.ttf
+      filename: sans/ofl/titilliumweb/TitilliumWeb-Bold.ttf
+      size: 59884
+    - name: ofl_titilliumweb_titilliumweb_bolditalic_ttf
+      url: https://raw.githubusercontent.com/google/fonts/bd8f81ddb5c74d5c8897b36ad88b440266245103/ofl/titilliumweb/TitilliumWeb-BoldItalic.ttf
+      filename: sans/ofl/titilliumweb/TitilliumWeb-BoldItalic.ttf
+      size: 69772
+    - name: ofl_titilliumweb_titilliumweb_italic_ttf
+      url: https://raw.githubusercontent.com/google/fonts/bd8f81ddb5c74d5c8897b36ad88b440266245103/ofl/titilliumweb/TitilliumWeb-Italic.ttf
+      filename: sans/ofl/titilliumweb/TitilliumWeb-Italic.ttf
+      size: 72392
+    - name: ofl_titilliumweb_titilliumweb_regular_ttf
+      url: https://raw.githubusercontent.com/google/fonts/bd8f81ddb5c74d5c8897b36ad88b440266245103/ofl/titilliumweb/TitilliumWeb-Regular.ttf
+      filename: sans/ofl/titilliumweb/TitilliumWeb-Regular.ttf
+      size: 63660
+    # rubik (sans)
+    - name: ofl_rubik_rubik_italic_wght_ttf
+      url: https://raw.githubusercontent.com/google/fonts/bd8f81ddb5c74d5c8897b36ad88b440266245103/ofl/rubik/Rubik-Italic%5Bwght%5D.ttf
+      filename: sans/ofl/rubik/Rubik-Italic[wght].ttf
+      size: 354984
+    - name: ofl_rubik_rubik_wght_ttf
+      url: https://raw.githubusercontent.com/google/fonts/bd8f81ddb5c74d5c8897b36ad88b440266245103/ofl/rubik/Rubik%5Bwght%5D.ttf
+      filename: sans/ofl/rubik/Rubik[wght].ttf
+      size: 359804
+    # poppins (sans)
+    - name: ofl_poppins_poppins_bold_ttf
+      url: https://raw.githubusercontent.com/google/fonts/bd8f81ddb5c74d5c8897b36ad88b440266245103/ofl/poppins/Poppins-Bold.ttf
+      filename: sans/ofl/poppins/Poppins-Bold.ttf
+      size: 155996
+    - name: ofl_poppins_poppins_bolditalic_ttf
+      url: https://raw.githubusercontent.com/google/fonts/bd8f81ddb5c74d5c8897b36ad88b440266245103/ofl/poppins/Poppins-BoldItalic.ttf
+      filename: sans/ofl/poppins/Poppins-BoldItalic.ttf
+      size: 179108
+    - name: ofl_poppins_poppins_italic_ttf
+      url: https://raw.githubusercontent.com/google/fonts/bd8f81ddb5c74d5c8897b36ad88b440266245103/ofl/poppins/Poppins-Italic.ttf
+      filename: sans/ofl/poppins/Poppins-Italic.ttf
+      size: 184544
+    - name: ofl_poppins_poppins_regular_ttf
+      url: https://raw.githubusercontent.com/google/fonts/bd8f81ddb5c74d5c8897b36ad88b440266245103/ofl/poppins/Poppins-Regular.ttf
+      filename: sans/ofl/poppins/Poppins-Regular.ttf
+      size: 160316
+    # carlito (sans)
+    - name: ofl_carlito_carlito_bold_ttf
+      url: https://raw.githubusercontent.com/google/fonts/bd8f81ddb5c74d5c8897b36ad88b440266245103/ofl/carlito/Carlito-Bold.ttf
+      filename: sans/ofl/carlito/Carlito-Bold.ttf
+      size: 682468
+    - name: ofl_carlito_carlito_bolditalic_ttf
+      url: https://raw.githubusercontent.com/google/fonts/bd8f81ddb5c74d5c8897b36ad88b440266245103/ofl/carlito/Carlito-BoldItalic.ttf
+      filename: sans/ofl/carlito/Carlito-BoldItalic.ttf
+      size: 808508
+    - name: ofl_carlito_carlito_italic_ttf
+      url: https://raw.githubusercontent.com/google/fonts/bd8f81ddb5c74d5c8897b36ad88b440266245103/ofl/carlito/Carlito-Italic.ttf
+      filename: sans/ofl/carlito/Carlito-Italic.ttf
+      size: 615236
+    - name: ofl_carlito_carlito_regular_ttf
+      url: https://raw.githubusercontent.com/google/fonts/bd8f81ddb5c74d5c8897b36ad88b440266245103/ofl/carlito/Carlito-Regular.ttf
+      filename: sans/ofl/carlito/Carlito-Regular.ttf
+      size: 628032
+    # lexend (sans)
+    - name: ofl_lexend_lexend_wght_ttf
+      url: https://raw.githubusercontent.com/google/fonts/bd8f81ddb5c74d5c8897b36ad88b440266245103/ofl/lexend/Lexend%5Bwght%5D.ttf
+      filename: sans/ofl/lexend/Lexend[wght].ttf
+      size: 175756
+    # atkinsonhyperlegible (sans)
+    - name: ofl_atkinsonhyperlegible_atkinsonhyperlegible_bold_ttf
+      url: https://raw.githubusercontent.com/google/fonts/bd8f81ddb5c74d5c8897b36ad88b440266245103/ofl/atkinsonhyperlegible/AtkinsonHyperlegible-Bold.ttf
+      filename: sans/ofl/atkinsonhyperlegible/AtkinsonHyperlegible-Bold.ttf
+      size: 55256
+    - name: ofl_atkinsonhyperlegible_atkinsonhyperlegible_bolditalic_ttf
+      url: https://raw.githubusercontent.com/google/fonts/bd8f81ddb5c74d5c8897b36ad88b440266245103/ofl/atkinsonhyperlegible/AtkinsonHyperlegible-BoldItalic.ttf
+      filename: sans/ofl/atkinsonhyperlegible/AtkinsonHyperlegible-BoldItalic.ttf
+      size: 55288
+    - name: ofl_atkinsonhyperlegible_atkinsonhyperlegible_italic_ttf
+      url: https://raw.githubusercontent.com/google/fonts/bd8f81ddb5c74d5c8897b36ad88b440266245103/ofl/atkinsonhyperlegible/AtkinsonHyperlegible-Italic.ttf
+      filename: sans/ofl/atkinsonhyperlegible/AtkinsonHyperlegible-Italic.ttf
+      size: 54892
+    - name: ofl_atkinsonhyperlegible_atkinsonhyperlegible_regular_ttf
+      url: https://raw.githubusercontent.com/google/fonts/bd8f81ddb5c74d5c8897b36ad88b440266245103/ofl/atkinsonhyperlegible/AtkinsonHyperlegible-Regular.ttf
+      filename: sans/ofl/atkinsonhyperlegible/AtkinsonHyperlegible-Regular.ttf
+      size: 54348
+    # firasanscondensed (sans)
+    - name: ofl_firasanscondensed_firasanscondensed_bold_ttf
+      url: https://raw.githubusercontent.com/google/fonts/bd8f81ddb5c74d5c8897b36ad88b440266245103/ofl/firasanscondensed/FiraSansCondensed-Bold.ttf
+      filename: sans/ofl/firasanscondensed/FiraSansCondensed-Bold.ttf
+      size: 489176
+    - name: ofl_firasanscondensed_firasanscondensed_bolditalic_ttf
+      url: https://raw.githubusercontent.com/google/fonts/bd8f81ddb5c74d5c8897b36ad88b440266245103/ofl/firasanscondensed/FiraSansCondensed-BoldItalic.ttf
+      filename: sans/ofl/firasanscondensed/FiraSansCondensed-BoldItalic.ttf
+      size: 514400
+    - name: ofl_firasanscondensed_firasanscondensed_italic_ttf
+      url: https://raw.githubusercontent.com/google/fonts/bd8f81ddb5c74d5c8897b36ad88b440266245103/ofl/firasanscondensed/FiraSansCondensed-Italic.ttf
+      filename: sans/ofl/firasanscondensed/FiraSansCondensed-Italic.ttf
+      size: 471720
+    - name: ofl_firasanscondensed_firasanscondensed_regular_ttf
+      url: https://raw.githubusercontent.com/google/fonts/bd8f81ddb5c74d5c8897b36ad88b440266245103/ofl/firasanscondensed/FiraSansCondensed-Regular.ttf
+      filename: sans/ofl/firasanscondensed/FiraSansCondensed-Regular.ttf
+      size: 459804
+    # barlowcondensed (sans)
+    - name: ofl_barlowcondensed_barlowcondensed_bold_ttf
+      url: https://raw.githubusercontent.com/google/fonts/bd8f81ddb5c74d5c8897b36ad88b440266245103/ofl/barlowcondensed/BarlowCondensed-Bold.ttf
+      filename: sans/ofl/barlowcondensed/BarlowCondensed-Bold.ttf
+      size: 109912
+    - name: ofl_barlowcondensed_barlowcondensed_bolditalic_ttf
+      url: https://raw.githubusercontent.com/google/fonts/bd8f81ddb5c74d5c8897b36ad88b440266245103/ofl/barlowcondensed/BarlowCondensed-BoldItalic.ttf
+      filename: sans/ofl/barlowcondensed/BarlowCondensed-BoldItalic.ttf
+      size: 112196
+    - name: ofl_barlowcondensed_barlowcondensed_italic_ttf
+      url: https://raw.githubusercontent.com/google/fonts/bd8f81ddb5c74d5c8897b36ad88b440266245103/ofl/barlowcondensed/BarlowCondensed-Italic.ttf
+      filename: sans/ofl/barlowcondensed/BarlowCondensed-Italic.ttf
+      size: 109856
+    - name: ofl_barlowcondensed_barlowcondensed_regular_ttf
+      url: https://raw.githubusercontent.com/google/fonts/bd8f81ddb5c74d5c8897b36ad88b440266245103/ofl/barlowcondensed/BarlowCondensed-Regular.ttf
+      filename: sans/ofl/barlowcondensed/BarlowCondensed-Regular.ttf
+      size: 102480
+    # ptsansnarrow (sans)
+    - name: ofl_ptsansnarrow_pt_sans_narrow_web_bold_ttf
+      url: https://raw.githubusercontent.com/google/fonts/bd8f81ddb5c74d5c8897b36ad88b440266245103/ofl/ptsansnarrow/PT_Sans-Narrow-Web-Bold.ttf
+      filename: sans/ofl/ptsansnarrow/PT_Sans-Narrow-Web-Bold.ttf
+      size: 487720
+    - name: ofl_ptsansnarrow_pt_sans_narrow_web_regular_ttf
+      url: https://raw.githubusercontent.com/google/fonts/bd8f81ddb5c74d5c8897b36ad88b440266245103/ofl/ptsansnarrow/PT_Sans-Narrow-Web-Regular.ttf
+      filename: sans/ofl/ptsansnarrow/PT_Sans-Narrow-Web-Regular.ttf
+      size: 396212
+    # cousine (mono)
+    - name: ofl_cousine_cousine_bold_ttf
+      url: https://raw.githubusercontent.com/google/fonts/bd8f81ddb5c74d5c8897b36ad88b440266245103/ofl/cousine/Cousine-Bold.ttf
+      filename: mono/ofl/cousine/Cousine-Bold.ttf
+      size: 298048
+    - name: ofl_cousine_cousine_bolditalic_ttf
+      url: https://raw.githubusercontent.com/google/fonts/bd8f81ddb5c74d5c8897b36ad88b440266245103/ofl/cousine/Cousine-BoldItalic.ttf
+      filename: mono/ofl/cousine/Cousine-BoldItalic.ttf
+      size: 308292
+    - name: ofl_cousine_cousine_italic_ttf
+      url: https://raw.githubusercontent.com/google/fonts/bd8f81ddb5c74d5c8897b36ad88b440266245103/ofl/cousine/Cousine-Italic.ttf
+      filename: mono/ofl/cousine/Cousine-Italic.ttf
+      size: 306880
+    - name: ofl_cousine_cousine_regular_ttf
+      url: https://raw.githubusercontent.com/google/fonts/bd8f81ddb5c74d5c8897b36ad88b440266245103/ofl/cousine/Cousine-Regular.ttf
+      filename: mono/ofl/cousine/Cousine-Regular.ttf
+      size: 296856
+    # robotomono (mono)
+    - name: ofl_robotomono_robotomono_italic_wght_ttf
+      url: https://raw.githubusercontent.com/google/fonts/bd8f81ddb5c74d5c8897b36ad88b440266245103/ofl/robotomono/RobotoMono-Italic%5Bwght%5D.ttf
+      filename: mono/ofl/robotomono/RobotoMono-Italic[wght].ttf
+      size: 196792
+    - name: ofl_robotomono_robotomono_wght_ttf
+      url: https://raw.githubusercontent.com/google/fonts/bd8f81ddb5c74d5c8897b36ad88b440266245103/ofl/robotomono/RobotoMono%5Bwght%5D.ttf
+      filename: mono/ofl/robotomono/RobotoMono[wght].ttf
+      size: 183700
+    # sourcecodepro (mono)
+    - name: ofl_sourcecodepro_sourcecodepro_italic_wght_ttf
+      url: https://raw.githubusercontent.com/google/fonts/bd8f81ddb5c74d5c8897b36ad88b440266245103/ofl/sourcecodepro/SourceCodePro-Italic%5Bwght%5D.ttf
+      filename: mono/ofl/sourcecodepro/SourceCodePro-Italic[wght].ttf
+      size: 174852
+    - name: ofl_sourcecodepro_sourcecodepro_wght_ttf
+      url: https://raw.githubusercontent.com/google/fonts/bd8f81ddb5c74d5c8897b36ad88b440266245103/ofl/sourcecodepro/SourceCodePro%5Bwght%5D.ttf
+      filename: mono/ofl/sourcecodepro/SourceCodePro[wght].ttf
+      size: 212340
+    # ibmplexmono (mono)
+    - name: ofl_ibmplexmono_ibmplexmono_bold_ttf
+      url: https://raw.githubusercontent.com/google/fonts/bd8f81ddb5c74d5c8897b36ad88b440266245103/ofl/ibmplexmono/IBMPlexMono-Bold.ttf
+      filename: mono/ofl/ibmplexmono/IBMPlexMono-Bold.ttf
+      size: 137784
+    - name: ofl_ibmplexmono_ibmplexmono_bolditalic_ttf
+      url: https://raw.githubusercontent.com/google/fonts/bd8f81ddb5c74d5c8897b36ad88b440266245103/ofl/ibmplexmono/IBMPlexMono-BoldItalic.ttf
+      filename: mono/ofl/ibmplexmono/IBMPlexMono-BoldItalic.ttf
+      size: 144512
+    - name: ofl_ibmplexmono_ibmplexmono_italic_ttf
+      url: https://raw.githubusercontent.com/google/fonts/bd8f81ddb5c74d5c8897b36ad88b440266245103/ofl/ibmplexmono/IBMPlexMono-Italic.ttf
+      filename: mono/ofl/ibmplexmono/IBMPlexMono-Italic.ttf
+      size: 143920
+    - name: ofl_ibmplexmono_ibmplexmono_regular_ttf
+      url: https://raw.githubusercontent.com/google/fonts/bd8f81ddb5c74d5c8897b36ad88b440266245103/ofl/ibmplexmono/IBMPlexMono-Regular.ttf
+      filename: mono/ofl/ibmplexmono/IBMPlexMono-Regular.ttf
+      size: 135580
+    # courierprime (mono)
+    - name: ofl_courierprime_courierprime_bold_ttf
+      url: https://raw.githubusercontent.com/google/fonts/bd8f81ddb5c74d5c8897b36ad88b440266245103/ofl/courierprime/CourierPrime-Bold.ttf
+      filename: mono/ofl/courierprime/CourierPrime-Bold.ttf
+      size: 72856
+    - name: ofl_courierprime_courierprime_bolditalic_ttf
+      url: https://raw.githubusercontent.com/google/fonts/bd8f81ddb5c74d5c8897b36ad88b440266245103/ofl/courierprime/CourierPrime-BoldItalic.ttf
+      filename: mono/ofl/courierprime/CourierPrime-BoldItalic.ttf
+      size: 80872
+    - name: ofl_courierprime_courierprime_italic_ttf
+      url: https://raw.githubusercontent.com/google/fonts/bd8f81ddb5c74d5c8897b36ad88b440266245103/ofl/courierprime/CourierPrime-Italic.ttf
+      filename: mono/ofl/courierprime/CourierPrime-Italic.ttf
+      size: 79980
+    - name: ofl_courierprime_courierprime_regular_ttf
+      url: https://raw.githubusercontent.com/google/fonts/bd8f81ddb5c74d5c8897b36ad88b440266245103/ofl/courierprime/CourierPrime-Regular.ttf
+      filename: mono/ofl/courierprime/CourierPrime-Regular.ttf
+      size: 71188
+    # inconsolata (mono)
+    - name: ofl_inconsolata_inconsolata_wdth_wght_ttf
+      url: https://raw.githubusercontent.com/google/fonts/bd8f81ddb5c74d5c8897b36ad88b440266245103/ofl/inconsolata/Inconsolata%5Bwdth%2Cwght%5D.ttf
+      filename: mono/ofl/inconsolata/Inconsolata[wdth,wght].ttf
+      size: 347180
+    # firamono (mono)
+    - name: ofl_firamono_firamono_bold_ttf
+      url: https://raw.githubusercontent.com/google/fonts/bd8f81ddb5c74d5c8897b36ad88b440266245103/ofl/firamono/FiraMono-Bold.ttf
+      filename: mono/ofl/firamono/FiraMono-Bold.ttf
+      size: 206488
+    - name: ofl_firamono_firamono_regular_ttf
+      url: https://raw.githubusercontent.com/google/fonts/bd8f81ddb5c74d5c8897b36ad88b440266245103/ofl/firamono/FiraMono-Regular.ttf
+      filename: mono/ofl/firamono/FiraMono-Regular.ttf
+      size: 174596
+    # spacemono (mono)
+    - name: ofl_spacemono_spacemono_bold_ttf
+      url: https://raw.githubusercontent.com/google/fonts/bd8f81ddb5c74d5c8897b36ad88b440266245103/ofl/spacemono/SpaceMono-Bold.ttf
+      filename: mono/ofl/spacemono/SpaceMono-Bold.ttf
+      size: 98232
+    - name: ofl_spacemono_spacemono_bolditalic_ttf
+      url: https://raw.githubusercontent.com/google/fonts/bd8f81ddb5c74d5c8897b36ad88b440266245103/ofl/spacemono/SpaceMono-BoldItalic.ttf
+      filename: mono/ofl/spacemono/SpaceMono-BoldItalic.ttf
+      size: 111904
+    - name: ofl_spacemono_spacemono_italic_ttf
+      url: https://raw.githubusercontent.com/google/fonts/bd8f81ddb5c74d5c8897b36ad88b440266245103/ofl/spacemono/SpaceMono-Italic.ttf
+      filename: mono/ofl/spacemono/SpaceMono-Italic.ttf
+      size: 121396
+    - name: ofl_spacemono_spacemono_regular_ttf
+      url: https://raw.githubusercontent.com/google/fonts/bd8f81ddb5c74d5c8897b36ad88b440266245103/ofl/spacemono/SpaceMono-Regular.ttf
+      filename: mono/ofl/spacemono/SpaceMono-Regular.ttf
+      size: 99356
+    # notosansmono (mono)
+    - name: ofl_notosansmono_notosansmono_wdth_wght_ttf
+      url: https://raw.githubusercontent.com/google/fonts/bd8f81ddb5c74d5c8897b36ad88b440266245103/ofl/notosansmono/NotoSansMono%5Bwdth%2Cwght%5D.ttf
+      filename: mono/ofl/notosansmono/NotoSansMono[wdth,wght].ttf
+      size: 1708408
+    # ubuntumono (mono)
+    - name: ufl_ubuntumono_ubuntumono_bold_ttf
+      url: https://raw.githubusercontent.com/google/fonts/bd8f81ddb5c74d5c8897b36ad88b440266245103/ufl/ubuntumono/UbuntuMono-Bold.ttf
+      filename: mono/ufl/ubuntumono/UbuntuMono-Bold.ttf
+      size: 191400
+    - name: ufl_ubuntumono_ubuntumono_bolditalic_ttf
+      url: https://raw.githubusercontent.com/google/fonts/bd8f81ddb5c74d5c8897b36ad88b440266245103/ufl/ubuntumono/UbuntuMono-BoldItalic.ttf
+      filename: mono/ufl/ubuntumono/UbuntuMono-BoldItalic.ttf
+      size: 216208
+    - name: ufl_ubuntumono_ubuntumono_italic_ttf
+      url: https://raw.githubusercontent.com/google/fonts/bd8f81ddb5c74d5c8897b36ad88b440266245103/ufl/ubuntumono/UbuntuMono-Italic.ttf
+      filename: mono/ufl/ubuntumono/UbuntuMono-Italic.ttf
+      size: 210216
+    - name: ufl_ubuntumono_ubuntumono_regular_ttf
+      url: https://raw.githubusercontent.com/google/fonts/bd8f81ddb5c74d5c8897b36ad88b440266245103/ufl/ubuntumono/UbuntuMono-Regular.ttf
+      filename: mono/ufl/ubuntumono/UbuntuMono-Regular.ttf
+      size: 205748
+    # dmmono (mono)
+    - name: ofl_dmmono_dmmono_italic_ttf
+      url: https://raw.githubusercontent.com/google/fonts/bd8f81ddb5c74d5c8897b36ad88b440266245103/ofl/dmmono/DMMono-Italic.ttf
+      filename: mono/ofl/dmmono/DMMono-Italic.ttf
+      size: 51408
+    - name: ofl_dmmono_dmmono_regular_ttf
+      url: https://raw.githubusercontent.com/google/fonts/bd8f81ddb5c74d5c8897b36ad88b440266245103/ofl/dmmono/DMMono-Regular.ttf
+      filename: mono/ofl/dmmono/DMMono-Regular.ttf
+      size: 49744
+    # jetbrainsmono (mono)
+    - name: ofl_jetbrainsmono_jetbrainsmono_italic_wght_ttf
+      url: https://raw.githubusercontent.com/google/fonts/bd8f81ddb5c74d5c8897b36ad88b440266245103/ofl/jetbrainsmono/JetBrainsMono-Italic%5Bwght%5D.ttf
+      filename: mono/ofl/jetbrainsmono/JetBrainsMono-Italic[wght].ttf
+      size: 191556
+    - name: ofl_jetbrainsmono_jetbrainsmono_wght_ttf
+      url: https://raw.githubusercontent.com/google/fonts/bd8f81ddb5c74d5c8897b36ad88b440266245103/ofl/jetbrainsmono/JetBrainsMono%5Bwght%5D.ttf
+      filename: mono/ofl/jetbrainsmono/JetBrainsMono[wght].ttf
+      size: 187208
+    # anonymouspro (mono)
+    - name: ofl_anonymouspro_anonymouspro_bold_ttf
+      url: https://raw.githubusercontent.com/google/fonts/bd8f81ddb5c74d5c8897b36ad88b440266245103/ofl/anonymouspro/AnonymousPro-Bold.ttf
+      filename: mono/ofl/anonymouspro/AnonymousPro-Bold.ttf
+      size: 153616
+    - name: ofl_anonymouspro_anonymouspro_bolditalic_ttf
+      url: https://raw.githubusercontent.com/google/fonts/bd8f81ddb5c74d5c8897b36ad88b440266245103/ofl/anonymouspro/AnonymousPro-BoldItalic.ttf
+      filename: mono/ofl/anonymouspro/AnonymousPro-BoldItalic.ttf
+      size: 141924
+    - name: ofl_anonymouspro_anonymouspro_italic_ttf
+      url: https://raw.githubusercontent.com/google/fonts/bd8f81ddb5c74d5c8897b36ad88b440266245103/ofl/anonymouspro/AnonymousPro-Italic.ttf
+      filename: mono/ofl/anonymouspro/AnonymousPro-Italic.ttf
+      size: 144424
+    - name: ofl_anonymouspro_anonymouspro_regular_ttf
+      url: https://raw.githubusercontent.com/google/fonts/bd8f81ddb5c74d5c8897b36ad88b440266245103/ofl/anonymouspro/AnonymousPro-Regular.ttf
+      filename: mono/ofl/anonymouspro/AnonymousPro-Regular.ttf
+      size: 158100
+    # ptmono (mono)
+    - name: ofl_ptmono_ptm55ft_ttf
+      url: https://raw.githubusercontent.com/google/fonts/bd8f81ddb5c74d5c8897b36ad88b440266245103/ofl/ptmono/PTM55FT.ttf
+      filename: mono/ofl/ptmono/PTM55FT.ttf
+      size: 185912
+    # specialelite (mono)
+    - name: apache_specialelite_specialelite_regular_ttf
+      url: https://raw.githubusercontent.com/google/fonts/bd8f81ddb5c74d5c8897b36ad88b440266245103/apache/specialelite/SpecialElite-Regular.ttf
+      filename: mono/apache/specialelite/SpecialElite-Regular.ttf
+      size: 166180
+
+pg19:
+  title: PG-19 (DeepMind Project Gutenberg corpus)
+  version: "gs://deepmind-gutenberg, listed 2026-10-10"
+  homepage: https://github.com/google-deepmind/pg19
+  licence: Apache 2.0 (packaging); texts public domain in the US
+  citation: rae2020compressive
+  role: GlyphSynth text (validation and test books held out for GlyphSynth-val; 300 train books, seed 19)
+  phase: 4
+  files:
+    - name: validation_1022_txt
+      url: https://storage.googleapis.com/deepmind-gutenberg/validation/1022.txt
+      filename: validation/1022.txt
+      size: 68996
+      md5: 096923aa0cb49c8ea71a79dd044b4873
+    - name: validation_11155_txt
+      url: https://storage.googleapis.com/deepmind-gutenberg/validation/11155.txt
+      filename: validation/11155.txt
+      size: 502104
+      md5: 69c3173c3ca382aa579336967753f9c1
+    - name: validation_13089_txt
+      url: https://storage.googleapis.com/deepmind-gutenberg/validation/13089.txt
+      filename: validation/13089.txt
+      size: 576815
+      md5: 5b6aaec42ee1297a414159b29d142c20
+    - name: validation_16959_txt
+      url: https://storage.googleapis.com/deepmind-gutenberg/validation/16959.txt
+      filename: validation/16959.txt
+      size: 188790
+      md5: 7e8a6c240b41ed6044756227041f65fb
+    - name: validation_1925_txt
+      url: https://storage.googleapis.com/deepmind-gutenberg/validation/1925.txt
+      filename: validation/1925.txt
+      size: 325788
+      md5: e3650bb1259486e0ccea2e346d64d57a
+    - name: validation_2383_txt
+      url: https://storage.googleapis.com/deepmind-gutenberg/validation/2383.txt
+      filename: validation/2383.txt
+      size: 1701939
+      md5: 55cb736065651ab591491ecdc3c5c5ce
+    - name: validation_23956_txt
+      url: https://storage.googleapis.com/deepmind-gutenberg/validation/23956.txt
+      filename: validation/23956.txt
+      size: 172098
+      md5: e1d48f48a9351dbcce1f1529ba614cae
+    - name: validation_24360_txt
+      url: https://storage.googleapis.com/deepmind-gutenberg/validation/24360.txt
+      filename: validation/24360.txt
+      size: 855066
+      md5: 866072055b1a3fe80e2d8e2d588a455c
+    - name: validation_25066_txt
+      url: https://storage.googleapis.com/deepmind-gutenberg/validation/25066.txt
+      filename: validation/25066.txt
+      size: 554135
+      md5: 4b9ef48c9c22c3db6d44e921e8ae959e
+    - name: validation_27688_txt
+      url: https://storage.googleapis.com/deepmind-gutenberg/validation/27688.txt
+      filename: validation/27688.txt
+      size: 143662
+      md5: 3a7500a0de4843020ded56e4e8206c10
+    - name: validation_28213_txt
+      url: https://storage.googleapis.com/deepmind-gutenberg/validation/28213.txt
+      filename: validation/28213.txt
+      size: 50997
+      md5: 6c023df30ff128951b5691cf3536be25
+    - name: validation_28776_txt
+      url: https://storage.googleapis.com/deepmind-gutenberg/validation/28776.txt
+      filename: validation/28776.txt
+      size: 194567
+      md5: ee92faded1c203dc43f2b62e5b232e59
+    - name: validation_29981_txt
+      url: https://storage.googleapis.com/deepmind-gutenberg/validation/29981.txt
+      filename: validation/29981.txt
+      size: 696592
+      md5: 0d65763a94961e2732aec8d8ab3e8de5
+    - name: validation_32629_txt
+      url: https://storage.googleapis.com/deepmind-gutenberg/validation/32629.txt
+      filename: validation/32629.txt
+      size: 54554
+      md5: 631ce576b0e041a1196ab42f723af8b2
+    - name: validation_34016_txt
+      url: https://storage.googleapis.com/deepmind-gutenberg/validation/34016.txt
+      filename: validation/34016.txt
+      size: 56836
+      md5: c370c736ea14f7f98028912f97f93c8a
+    - name: validation_34056_txt
+      url: https://storage.googleapis.com/deepmind-gutenberg/validation/34056.txt
+      filename: validation/34056.txt
+      size: 61791
+      md5: fb7b736f15c6fbc0a00da250b0ea68d7
+    - name: validation_34100_txt
+      url: https://storage.googleapis.com/deepmind-gutenberg/validation/34100.txt
+      filename: validation/34100.txt
+      size: 357675
+      md5: 4ae28ceccfd30b3b986c33e1332383f1
+    - name: validation_356_txt
+      url: https://storage.googleapis.com/deepmind-gutenberg/validation/356.txt
+      filename: validation/356.txt
+      size: 217960
+      md5: dae1aa982429af49f0a7d0e3fd4c3cfd
+    - name: validation_35816_txt
+      url: https://storage.googleapis.com/deepmind-gutenberg/validation/35816.txt
+      filename: validation/35816.txt
+      size: 155932
+      md5: 2c66e43913d2abe3d0ccc2152a019759
+    - name: validation_36402_txt
+      url: https://storage.googleapis.com/deepmind-gutenberg/validation/36402.txt
+      filename: validation/36402.txt
+      size: 79138
+      md5: ebe8fdd50d2f6ce98841428190b4c23e
+    - name: validation_37833_txt
+      url: https://storage.googleapis.com/deepmind-gutenberg/validation/37833.txt
+      filename: validation/37833.txt
+      size: 343216
+      md5: 21a315057a8f81bd907879e07e37f9c2
+    - name: validation_38214_txt
+      url: https://storage.googleapis.com/deepmind-gutenberg/validation/38214.txt
+      filename: validation/38214.txt
+      size: 564922
+      md5: 5b7ec5dc0145baf80f00ecf1218cb64c
+    - name: validation_38403_txt
+      url: https://storage.googleapis.com/deepmind-gutenberg/validation/38403.txt
+      filename: validation/38403.txt
+      size: 266774
+      md5: 0c6df0a7ce97f4aa178e7d64c55a5d9c
+    - name: validation_4024_txt
+      url: https://storage.googleapis.com/deepmind-gutenberg/validation/4024.txt
+      filename: validation/4024.txt
+      size: 93433
+      md5: 9188497096c46b7cf212fc16a3b906c7
+    - name: validation_41074_txt
+      url: https://storage.googleapis.com/deepmind-gutenberg/validation/41074.txt
+      filename: validation/41074.txt
+      size: 339379
+      md5: 519bd3db093113474b5ce1e8acd9abc0
+    - name: validation_42067_txt
+      url: https://storage.googleapis.com/deepmind-gutenberg/validation/42067.txt
+      filename: validation/42067.txt
+      size: 926112
+      md5: 1115dc3bf2f9b17d3c846cbe047a01df
+    - name: validation_42142_txt
+      url: https://storage.googleapis.com/deepmind-gutenberg/validation/42142.txt
+      filename: validation/42142.txt
+      size: 233672
+      md5: 23b976a45321e2b6c5cfdf91cef4c1a0
+    - name: validation_42306_txt
+      url: https://storage.googleapis.com/deepmind-gutenberg/validation/42306.txt
+      filename: validation/42306.txt
+      size: 44891
+      md5: da6039636e2cb22319a21d4cb748f025
+    - name: validation_43423_txt
+      url: https://storage.googleapis.com/deepmind-gutenberg/validation/43423.txt
+      filename: validation/43423.txt
+      size: 503352
+      md5: 47d4827a21ff7fd3243192b81361d6fe
+    - name: validation_44896_txt
+      url: https://storage.googleapis.com/deepmind-gutenberg/validation/44896.txt
+      filename: validation/44896.txt
+      size: 914065
+      md5: d63da698394bd3876b434a7b59da1f6c
+    - name: validation_44912_txt
+      url: https://storage.googleapis.com/deepmind-gutenberg/validation/44912.txt
+      filename: validation/44912.txt
+      size: 371246
+      md5: a56579e9546c32a099d4d62de36fd462
+    - name: validation_4533_txt
+      url: https://storage.googleapis.com/deepmind-gutenberg/validation/4533.txt
+      filename: validation/4533.txt
+      size: 359131
+      md5: c83176416b85f129828a94ab8c05cca3
+    - name: validation_48089_txt
+      url: https://storage.googleapis.com/deepmind-gutenberg/validation/48089.txt
+      filename: validation/48089.txt
+      size: 415583
+      md5: 1ceb7735f178bc04ded3f69d86de574c
+    - name: validation_48461_txt
+      url: https://storage.googleapis.com/deepmind-gutenberg/validation/48461.txt
+      filename: validation/48461.txt
+      size: 411140
+      md5: 31580ef91b6f053b11e7b2918fb364b8
+    - name: validation_48677_txt
+      url: https://storage.googleapis.com/deepmind-gutenberg/validation/48677.txt
+      filename: validation/48677.txt
+      size: 327818
+      md5: 3ccc694a5f68f1f721002675929c5ae5
+    - name: validation_49091_txt
+      url: https://storage.googleapis.com/deepmind-gutenberg/validation/49091.txt
+      filename: validation/49091.txt
+      size: 184256
+      md5: ff31de23a066804fb35f17b3720ca484
+    - name: validation_50355_txt
+      url: https://storage.googleapis.com/deepmind-gutenberg/validation/50355.txt
+      filename: validation/50355.txt
+      size: 80516
+      md5: 1da5ae595a66321384dfbe17e12346a9
+    - name: validation_51859_txt
+      url: https://storage.googleapis.com/deepmind-gutenberg/validation/51859.txt
+      filename: validation/51859.txt
+      size: 228945
+      md5: 9d8f61c9da132b1b3afb26fe426e7a48
+    - name: validation_5195_txt
+      url: https://storage.googleapis.com/deepmind-gutenberg/validation/5195.txt
+      filename: validation/5195.txt
+      size: 308764
+      md5: e9978786c7f7cfb54087c67f63a928e1
+    - name: validation_5321_txt
+      url: https://storage.googleapis.com/deepmind-gutenberg/validation/5321.txt
+      filename: validation/5321.txt
+      size: 160373
+      md5: a0475832e19d82ae5f7a4ee0068167d7
+    - name: validation_53682_txt
+      url: https://storage.googleapis.com/deepmind-gutenberg/validation/53682.txt
+      filename: validation/53682.txt
+      size: 260344
+      md5: d2b86d9b0cafc43f173951906445ec49
+    - name: validation_54098_txt
+      url: https://storage.googleapis.com/deepmind-gutenberg/validation/54098.txt
+      filename: validation/54098.txt
+      size: 153699
+      md5: 4333aa5e7a0b36098e14f71731d64b1b
+    - name: validation_555_txt
+      url: https://storage.googleapis.com/deepmind-gutenberg/validation/555.txt
+      filename: validation/555.txt
+      size: 289989
+      md5: b78ba503cd89af016ba9ee0212b1f914
+    - name: validation_55658_txt
+      url: https://storage.googleapis.com/deepmind-gutenberg/validation/55658.txt
+      filename: validation/55658.txt
+      size: 437149
+      md5: 8bd452fed1c38b4566375937894e5392
+    - name: validation_56719_txt
+      url: https://storage.googleapis.com/deepmind-gutenberg/validation/56719.txt
+      filename: validation/56719.txt
+      size: 261676
+      md5: 726de2546687849dd1c0c24bab07e9e6
+    - name: validation_57843_txt
+      url: https://storage.googleapis.com/deepmind-gutenberg/validation/57843.txt
+      filename: validation/57843.txt
+      size: 153039
+      md5: 227bf4edb5939b3720b0e9701f0894f4
+    - name: validation_58093_txt
+      url: https://storage.googleapis.com/deepmind-gutenberg/validation/58093.txt
+      filename: validation/58093.txt
+      size: 410332
+      md5: 3db6334ed785bdd3ccf2b0829216f43b
+    - name: validation_6404_txt
+      url: https://storage.googleapis.com/deepmind-gutenberg/validation/6404.txt
+      filename: validation/6404.txt
+      size: 344265
+      md5: f9c371f758bb3cc05d7bad4c83232a7d
+    - name: validation_7510_txt
+      url: https://storage.googleapis.com/deepmind-gutenberg/validation/7510.txt
+      filename: validation/7510.txt
+      size: 424105
+      md5: ba1107b41594d223199e44c2cb3a1bca
+    - name: validation_8545_txt
+      url: https://storage.googleapis.com/deepmind-gutenberg/validation/8545.txt
+      filename: validation/8545.txt
+      size: 905381
+      md5: 0c6b846b2d67a9eff36fec630a9e5e02
+    - name: test_10146_txt
+      url: https://storage.googleapis.com/deepmind-gutenberg/test/10146.txt
+      filename: test/10146.txt
+      size: 253872
+      md5: 0bbe2569ea7d62f4f7cfb74e09ba3827
+    - name: test_10321_txt
+      url: https://storage.googleapis.com/deepmind-gutenberg/test/10321.txt
+      filename: test/10321.txt
+      size: 324979
+      md5: 1b8464003c946af01a1e66f57a942cca
+    - name: test_10356_txt
+      url: https://storage.googleapis.com/deepmind-gutenberg/test/10356.txt
+      filename: test/10356.txt
+      size: 314879
+      md5: 951b6477f43a7263939b17c3325f9ad1
+    - name: test_10762_txt
+      url: https://storage.googleapis.com/deepmind-gutenberg/test/10762.txt
+      filename: test/10762.txt
+      size: 348606
+      md5: d2888660518d460ef128fc1459a317f6
+    - name: test_12204_txt
+      url: https://storage.googleapis.com/deepmind-gutenberg/test/12204.txt
+      filename: test/12204.txt
+      size: 24408
+      md5: 85396b6b2f2a2e1f8a417ac6de27eb6b
+    - name: test_15562_txt
+      url: https://storage.googleapis.com/deepmind-gutenberg/test/15562.txt
+      filename: test/15562.txt
+      size: 222300
+      md5: 99c2a7dcb386971eb998976139c4f988
+    - name: test_22424_txt
+      url: https://storage.googleapis.com/deepmind-gutenberg/test/22424.txt
+      filename: test/22424.txt
+      size: 444287
+      md5: 1b120e9872a339fb484d9e367f0dd105
+    - name: test_24553_txt
+      url: https://storage.googleapis.com/deepmind-gutenberg/test/24553.txt
+      filename: test/24553.txt
+      size: 130627
+      md5: e1feb2a9e23c5f199b598a152b154873
+    - name: test_2544_txt
+      url: https://storage.googleapis.com/deepmind-gutenberg/test/2544.txt
+      filename: test/2544.txt
+      size: 352384
+      md5: e0f390d7ead75a38124cd52b492f2196
+    - name: test_25646_txt
+      url: https://storage.googleapis.com/deepmind-gutenberg/test/25646.txt
+      filename: test/25646.txt
+      size: 103323
+      md5: ec49975b82fdcc61cca240b068c74844
+    - name: test_25773_txt
+      url: https://storage.googleapis.com/deepmind-gutenberg/test/25773.txt
+      filename: test/25773.txt
+      size: 488162
+      md5: 9195d2c9af5d9e0433a25b73c0fe3362
+    - name: test_25830_txt
+      url: https://storage.googleapis.com/deepmind-gutenberg/test/25830.txt
+      filename: test/25830.txt
+      size: 123962
+      md5: 85ea16dc23cc6f0ed362194587eb6542
+    - name: test_26183_txt
+      url: https://storage.googleapis.com/deepmind-gutenberg/test/26183.txt
+      filename: test/26183.txt
+      size: 475456
+      md5: 774da4d0a2c1c9966e63ff2a4d204dd3
+    - name: test_26239_txt
+      url: https://storage.googleapis.com/deepmind-gutenberg/test/26239.txt
+      filename: test/26239.txt
+      size: 354117
+      md5: ec9ee99e1613a58700e4493c4667a8ac
+    - name: test_26493_txt
+      url: https://storage.googleapis.com/deepmind-gutenberg/test/26493.txt
+      filename: test/26493.txt
+      size: 562729
+      md5: 673439db9a661d8e8c4a143ca5724035
+    - name: test_26618_txt
+      url: https://storage.googleapis.com/deepmind-gutenberg/test/26618.txt
+      filename: test/26618.txt
+      size: 58957
+      md5: a84b05aaf5af2993f14444b66a6d6269
+    - name: test_27454_txt
+      url: https://storage.googleapis.com/deepmind-gutenberg/test/27454.txt
+      filename: test/27454.txt
+      size: 404307
+      md5: d2439eeb4039d83fb6860520a44670cd
+    - name: test_28444_txt
+      url: https://storage.googleapis.com/deepmind-gutenberg/test/28444.txt
+      filename: test/28444.txt
+      size: 335975
+      md5: cd53919aa546e4da4e0f38fc328632d0
+    - name: test_28988_txt
+      url: https://storage.googleapis.com/deepmind-gutenberg/test/28988.txt
+      filename: test/28988.txt
+      size: 737008
+      md5: ac699e90bfb3fc2b18669a35c5a76927
+    - name: test_29594_txt
+      url: https://storage.googleapis.com/deepmind-gutenberg/test/29594.txt
+      filename: test/29594.txt
+      size: 86075
+      md5: ffd7f4542412c1e0803ec081649302ae
+    - name: test_29973_txt
+      url: https://storage.googleapis.com/deepmind-gutenberg/test/29973.txt
+      filename: test/29973.txt
+      size: 168905
+      md5: f1aa598d80041885bf111f2c219b8d3e
+    - name: test_30312_txt
+      url: https://storage.googleapis.com/deepmind-gutenberg/test/30312.txt
+      filename: test/30312.txt
+      size: 2502293
+      md5: def92b3e4d336d5a292e9304a8e303e2
+    - name: test_30752_txt
+      url: https://storage.googleapis.com/deepmind-gutenberg/test/30752.txt
+      filename: test/30752.txt
+      size: 171844
+      md5: 2fb13b7e5f80fd6ef56eb131ca2e421b
+    - name: test_30754_txt
+      url: https://storage.googleapis.com/deepmind-gutenberg/test/30754.txt
+      filename: test/30754.txt
+      size: 916394
+      md5: 2fc43bab597bbc7dc9bac910e600ad04
+    - name: test_30909_txt
+      url: https://storage.googleapis.com/deepmind-gutenberg/test/30909.txt
+      filename: test/30909.txt
+      size: 190582
+      md5: 5833fe492b35d7312a862b625bfea05c
+    - name: test_30981_txt
+      url: https://storage.googleapis.com/deepmind-gutenberg/test/30981.txt
+      filename: test/30981.txt
+      size: 153798
+      md5: e85d59377b54f73f3846b3d462c67730
+    - name: test_31065_txt
+      url: https://storage.googleapis.com/deepmind-gutenberg/test/31065.txt
+      filename: test/31065.txt
+      size: 276227
+      md5: c5f9f60a877440ea9ec2c28940f0a6cd
+    - name: test_3129_txt
+      url: https://storage.googleapis.com/deepmind-gutenberg/test/3129.txt
+      filename: test/3129.txt
+      size: 82156
+      md5: 0a24f6fa0151c04ff7d16c67aedee955
+    - name: test_31974_txt
+      url: https://storage.googleapis.com/deepmind-gutenberg/test/31974.txt
+      filename: test/31974.txt
+      size: 14880
+      md5: bdf73c639df25d20ae3c2f6e5545ebc6
+    - name: test_3247_txt
+      url: https://storage.googleapis.com/deepmind-gutenberg/test/3247.txt
+      filename: test/3247.txt
+      size: 539667
+      md5: 7f2bdbec382101ed138f4e515c509a62
+    - name: test_32761_txt
+      url: https://storage.googleapis.com/deepmind-gutenberg/test/32761.txt
+      filename: test/32761.txt
+      size: 506070
+      md5: 71835af4069e0e8c30fab224011bc8e6
+    - name: test_3340_txt
+      url: https://storage.googleapis.com/deepmind-gutenberg/test/3340.txt
+      filename: test/3340.txt
+      size: 392865
+      md5: c839ee5d986d357070ea0c8ca996f746
+    - name: test_33426_txt
+      url: https://storage.googleapis.com/deepmind-gutenberg/test/33426.txt
+      filename: test/33426.txt
+      size: 465022
+      md5: c2fe4300b734c13ec34c9626d16a9e51
+    - name: test_33756_txt
+      url: https://storage.googleapis.com/deepmind-gutenberg/test/33756.txt
+      filename: test/33756.txt
+      size: 322011
+      md5: bb922c709ccfd83ab94f108af1080db4
+    - name: test_34467_txt
+      url: https://storage.googleapis.com/deepmind-gutenberg/test/34467.txt
+      filename: test/34467.txt
+      size: 207793
+      md5: 18ee3128ad445f3cbb5ed20637ef60a0
+    - name: test_35205_txt
+      url: https://storage.googleapis.com/deepmind-gutenberg/test/35205.txt
+      filename: test/35205.txt
+      size: 364651
+      md5: 47cc1edc3d8f67f60ced05087e5c5b15
+    - name: test_35246_txt
+      url: https://storage.googleapis.com/deepmind-gutenberg/test/35246.txt
+      filename: test/35246.txt
+      size: 228141
+      md5: fba8ba284f5ee067172e43fb8156652f
+    - name: test_3608_txt
+      url: https://storage.googleapis.com/deepmind-gutenberg/test/3608.txt
+      filename: test/3608.txt
+      size: 1434234
+      md5: 9cce17cc57d427ad6340f94508d3c6e2
+    - name: test_36256_txt
+      url: https://storage.googleapis.com/deepmind-gutenberg/test/36256.txt
+      filename: test/36256.txt
+      size: 100759
+      md5: 6a7cf1c33c4616c0d2d3c76b02cc7f8b
+    - name: test_37006_txt
+      url: https://storage.googleapis.com/deepmind-gutenberg/test/37006.txt
+      filename: test/37006.txt
+      size: 156555
+      md5: cbfe8582e023f9d76d1f9d348949dd9d
+    - name: test_37328_txt
+      url: https://storage.googleapis.com/deepmind-gutenberg/test/37328.txt
+      filename: test/37328.txt
+      size: 148769
+      md5: 227a0e4f72c946cf930a1f6ffce5e6e4
+    - name: test_37403_txt
+      url: https://storage.googleapis.com/deepmind-gutenberg/test/37403.txt
+      filename: test/37403.txt
+      size: 100089
+      md5: 94bae4c67a1644162e0aee89d76d4911
+    - name: test_37443_txt
+      url: https://storage.googleapis.com/deepmind-gutenberg/test/37443.txt
+      filename: test/37443.txt
+      size: 24491
+      md5: ca5c27398c99ed3183bec640744520e4
+    - name: test_3754_txt
+      url: https://storage.googleapis.com/deepmind-gutenberg/test/3754.txt
+      filename: test/3754.txt
+      size: 507933
+      md5: 389752a3086c448824dd94059835f699
+    - name: test_37702_txt
+      url: https://storage.googleapis.com/deepmind-gutenberg/test/37702.txt
+      filename: test/37702.txt
+      size: 892108
+      md5: f35295df99c3514ace1eb529fe5662b8
+    - name: test_38106_txt
+      url: https://storage.googleapis.com/deepmind-gutenberg/test/38106.txt
+      filename: test/38106.txt
+      size: 391972
+      md5: 6eecfceeb5279691903e78445f7eafa4
+    - name: test_3890_txt
+      url: https://storage.googleapis.com/deepmind-gutenberg/test/3890.txt
+      filename: test/3890.txt
+      size: 163873
+      md5: 08cc5a74804b659fb603f7180fe6b424
+    - name: test_38929_txt
+      url: https://storage.googleapis.com/deepmind-gutenberg/test/38929.txt
+      filename: test/38929.txt
+      size: 172077
+      md5: dea5fc482a1a7236c49be99f40fb0e97
+    - name: test_38955_txt
+      url: https://storage.googleapis.com/deepmind-gutenberg/test/38955.txt
+      filename: test/38955.txt
+      size: 282624
+      md5: 299b97248218669bb3642f6893e7abce
+    - name: test_4047_txt
+      url: https://storage.googleapis.com/deepmind-gutenberg/test/4047.txt
+      filename: test/4047.txt
+      size: 624607
+      md5: 644a03d998842e9d9ada7d4cad8c0039
+    - name: test_40579_txt
+      url: https://storage.googleapis.com/deepmind-gutenberg/test/40579.txt
+      filename: test/40579.txt
+      size: 355979
+      md5: 9f4972d88e3198733939750db56f214a
+    - name: test_40700_txt
+      url: https://storage.googleapis.com/deepmind-gutenberg/test/40700.txt
+      filename: test/40700.txt
+      size: 148045
+      md5: a7b71438f021c9395eb352a6bd05063a
+    - name: test_4128_txt
+      url: https://storage.googleapis.com/deepmind-gutenberg/test/4128.txt
+      filename: test/4128.txt
+      size: 95877
+      md5: 43764c3b7d9ca56ef7bee1bd936e6e32
+    - name: test_41603_txt
+      url: https://storage.googleapis.com/deepmind-gutenberg/test/41603.txt
+      filename: test/41603.txt
+      size: 274624
+      md5: a842650c12fa739ad89421b2acc30898
+    - name: test_41607_txt
+      url: https://storage.googleapis.com/deepmind-gutenberg/test/41607.txt
+      filename: test/41607.txt
+      size: 337917
+      md5: b165c07c9536d671ed6f53f9bda96d23
+    - name: test_42081_txt
+      url: https://storage.googleapis.com/deepmind-gutenberg/test/42081.txt
+      filename: test/42081.txt
+      size: 844569
+      md5: bcbf9bcb5c5c444c277cd201e74225f5
+    - name: test_42655_txt
+      url: https://storage.googleapis.com/deepmind-gutenberg/test/42655.txt
+      filename: test/42655.txt
+      size: 882218
+      md5: 6a32adbd2c02be5d8b81ff95f1aa7ce3
+    - name: test_43536_txt
+      url: https://storage.googleapis.com/deepmind-gutenberg/test/43536.txt
+      filename: test/43536.txt
+      size: 55719
+      md5: bf2bd9532eaf7879e9e0f5257adc9e06
+    - name: test_43845_txt
+      url: https://storage.googleapis.com/deepmind-gutenberg/test/43845.txt
+      filename: test/43845.txt
+      size: 57163
+      md5: 5c5c0a31a656e721da558e8277ca2f8c
+    - name: test_44099_txt
+      url: https://storage.googleapis.com/deepmind-gutenberg/test/44099.txt
+      filename: test/44099.txt
+      size: 147224
+      md5: 3d12a107b432d244d72aa1485b80620a
+    - name: test_44557_txt
+      url: https://storage.googleapis.com/deepmind-gutenberg/test/44557.txt
+      filename: test/44557.txt
+      size: 244883
+      md5: 7b1183805a2817defaf98606bda7c78c
+    - name: test_45313_txt
+      url: https://storage.googleapis.com/deepmind-gutenberg/test/45313.txt
+      filename: test/45313.txt
+      size: 4574066
+      md5: 5b743ab25aef91edf35c41dbbc883309
+    - name: test_45881_txt
+      url: https://storage.googleapis.com/deepmind-gutenberg/test/45881.txt
+      filename: test/45881.txt
+      size: 217753
+      md5: 4eefc91da0a52892631a0f9514a530d0
+    - name: test_45888_txt
+      url: https://storage.googleapis.com/deepmind-gutenberg/test/45888.txt
+      filename: test/45888.txt
+      size: 282211
+      md5: 4b30fba8155c5343edea8b165126fb53
+    - name: test_46915_txt
+      url: https://storage.googleapis.com/deepmind-gutenberg/test/46915.txt
+      filename: test/46915.txt
+      size: 429060
+      md5: 11b259270749a4191c8c41647775f01d
+    - name: test_47068_txt
+      url: https://storage.googleapis.com/deepmind-gutenberg/test/47068.txt
+      filename: test/47068.txt
+      size: 351283
+      md5: afc90dc92439cc4ef7998f742e29f98f
+    - name: test_47558_txt
+      url: https://storage.googleapis.com/deepmind-gutenberg/test/47558.txt
+      filename: test/47558.txt
+      size: 147889
+      md5: 3bc95a7cc12e47fddaf0478fb595daa8
+    - name: test_47581_txt
+      url: https://storage.googleapis.com/deepmind-gutenberg/test/47581.txt
+      filename: test/47581.txt
+      size: 74970
+      md5: 2551ed995313e720c9fd51bcc894fb1b
+    - name: test_47676_txt
+      url: https://storage.googleapis.com/deepmind-gutenberg/test/47676.txt
+      filename: test/47676.txt
+      size: 311749
+      md5: 1f5d10a67b02ca2e92db570b20355fae
+    - name: test_48693_txt
+      url: https://storage.googleapis.com/deepmind-gutenberg/test/48693.txt
+      filename: test/48693.txt
+      size: 410440
+      md5: 1d0aa40f775f1ab7d16da73c52b73b62
+    - name: test_49078_txt
+      url: https://storage.googleapis.com/deepmind-gutenberg/test/49078.txt
+      filename: test/49078.txt
+      size: 147677
+      md5: 85ce55fa0967c43b5bd3686ead6f5072
+    - name: test_49529_txt
+      url: https://storage.googleapis.com/deepmind-gutenberg/test/49529.txt
+      filename: test/49529.txt
+      size: 412383
+      md5: efcb29215b9dd941d71d7b793ff093db
+    - name: test_49596_txt
+      url: https://storage.googleapis.com/deepmind-gutenberg/test/49596.txt
+      filename: test/49596.txt
+      size: 97986
+      md5: b2baf69f54339fa32edce913d77ef55c
+    - name: test_50287_txt
+      url: https://storage.googleapis.com/deepmind-gutenberg/test/50287.txt
+      filename: test/50287.txt
+      size: 302777
+      md5: 3d62239d67bb200a01e6b8d8f4dd5b0f
+    - name: test_51410_txt
+      url: https://storage.googleapis.com/deepmind-gutenberg/test/51410.txt
+      filename: test/51410.txt
+      size: 349790
+      md5: da4537f73b1657b0e7ce610b379212b7
+    - name: test_53345_txt
+      url: https://storage.googleapis.com/deepmind-gutenberg/test/53345.txt
+      filename: test/53345.txt
+      size: 347642
+      md5: 72e47e22d5447e818dfaef8bf4dff3b2
+    - name: test_5396_txt
+      url: https://storage.googleapis.com/deepmind-gutenberg/test/5396.txt
+      filename: test/5396.txt
+      size: 956818
+      md5: 93a6e17660dbcb1e88740d900e3d2ff8
+    - name: test_54537_txt
+      url: https://storage.googleapis.com/deepmind-gutenberg/test/54537.txt
+      filename: test/54537.txt
+      size: 200630
+      md5: 99aae0d41a17e74df27b569e793ad8d7
+    - name: test_54624_txt
+      url: https://storage.googleapis.com/deepmind-gutenberg/test/54624.txt
+      filename: test/54624.txt
+      size: 70363
+      md5: fff6481949a16d2d216deec3bae8fb91
+    - name: test_55339_txt
+      url: https://storage.googleapis.com/deepmind-gutenberg/test/55339.txt
+      filename: test/55339.txt
+      size: 663065
+      md5: 5b3ede64215a9902424b078007aa237d
+    - name: test_55871_txt
+      url: https://storage.googleapis.com/deepmind-gutenberg/test/55871.txt
+      filename: test/55871.txt
+      size: 1448175
+      md5: ed9d4eb73f120b4cc144d9d78b5971b9
+    - name: test_56410_txt
+      url: https://storage.googleapis.com/deepmind-gutenberg/test/56410.txt
+      filename: test/56410.txt
+      size: 111994
+      md5: 8ab5aef97e9fe2ba66c79ab9a796e12b
+    - name: test_5734_txt
+      url: https://storage.googleapis.com/deepmind-gutenberg/test/5734.txt
+      filename: test/5734.txt
+      size: 581320
+      md5: 50a81789ec9b8babe7757c8bff22dd79
+    - name: test_5770_txt
+      url: https://storage.googleapis.com/deepmind-gutenberg/test/5770.txt
+      filename: test/5770.txt
+      size: 246697
+      md5: 20d485944d8a4eba45671ba3df2cea23
+    - name: test_57791_txt
+      url: https://storage.googleapis.com/deepmind-gutenberg/test/57791.txt
+      filename: test/57791.txt
+      size: 101957
+      md5: 95dc571797abd3f4f254babab619f123
+    - name: test_58473_txt
+      url: https://storage.googleapis.com/deepmind-gutenberg/test/58473.txt
+      filename: test/58473.txt
+      size: 150101
+      md5: 720ec6ba2f0796772e8f1ec6a447cbe1
+    - name: test_58553_txt
+      url: https://storage.googleapis.com/deepmind-gutenberg/test/58553.txt
+      filename: test/58553.txt
+      size: 211173
+      md5: 7f2f9db75f020faeaecc6ba79fd9d766
+    - name: test_58598_txt
+      url: https://storage.googleapis.com/deepmind-gutenberg/test/58598.txt
+      filename: test/58598.txt
+      size: 115036
+      md5: ad2af106da0c91f4bd5899c880601e18
+    - name: test_5956_txt
+      url: https://storage.googleapis.com/deepmind-gutenberg/test/5956.txt
+      filename: test/5956.txt
+      size: 260972
+      md5: e26342a58df7f9123f252b3a983d4061
+    - name: test_5962_txt
+      url: https://storage.googleapis.com/deepmind-gutenberg/test/5962.txt
+      filename: test/5962.txt
+      size: 459976
+      md5: 1a5f737d04f6f82fd40d4580a0f9871f
+    - name: test_6412_txt
+      url: https://storage.googleapis.com/deepmind-gutenberg/test/6412.txt
+      filename: test/6412.txt
+      size: 871566
+      md5: aa0be642d0fd8dda3af52f555c92d01a
+    - name: test_6941_txt
+      url: https://storage.googleapis.com/deepmind-gutenberg/test/6941.txt
+      filename: test/6941.txt
+      size: 1064483
+      md5: d35fd530d02e622c254d6231e7dce98d
+    - name: test_7412_txt
+      url: https://storage.googleapis.com/deepmind-gutenberg/test/7412.txt
+      filename: test/7412.txt
+      size: 955823
+      md5: 41738230031c0cc4331d824ab494d57c
+    - name: test_7987_txt
+      url: https://storage.googleapis.com/deepmind-gutenberg/test/7987.txt
+      filename: test/7987.txt
+      size: 1048869
+      md5: 49d9c07fcf2da325fa95a55a09d1aabe
+    - name: test_8197_txt
+      url: https://storage.googleapis.com/deepmind-gutenberg/test/8197.txt
+      filename: test/8197.txt
+      size: 137711
+      md5: 0e3948385c767363f3546ad9a4f24184
+    - name: test_8559_txt
+      url: https://storage.googleapis.com/deepmind-gutenberg/test/8559.txt
+      filename: test/8559.txt
+      size: 236569
+      md5: 90c17333dddef556c2a0e65b9e3d8708
+    - name: test_860_txt
+      url: https://storage.googleapis.com/deepmind-gutenberg/test/860.txt
+      filename: test/860.txt
+      size: 280293
+      md5: 74e50d18d37196a15ef45d6c16478b6d
+    - name: test_8788_txt
+      url: https://storage.googleapis.com/deepmind-gutenberg/test/8788.txt
+      filename: test/8788.txt
+      size: 19415
+      md5: 3b160af11490b01e7d8b0d2222044775
+    - name: test_9315_txt
+      url: https://storage.googleapis.com/deepmind-gutenberg/test/9315.txt
+      filename: test/9315.txt
+      size: 22463
+      md5: 5946106b8a937170e8b685e3facd9b6d
+    - name: test_9931_txt
+      url: https://storage.googleapis.com/deepmind-gutenberg/test/9931.txt
+      filename: test/9931.txt
+      size: 521935
+      md5: 7731d9ec62e09ecdad2884d2c7bd8875
+    - name: train_10104_txt
+      url: https://storage.googleapis.com/deepmind-gutenberg/train/10104.txt
+      filename: train/10104.txt
+      size: 121601
+      md5: 7aa1184767b9d74746bd9629f2e612b1
+    - name: train_1039_txt
+      url: https://storage.googleapis.com/deepmind-gutenberg/train/1039.txt
+      filename: train/1039.txt
+      size: 1750431
+      md5: 85fe9646ba0aaa688be25e5de4c12ab5
+    - name: train_10474_txt
+      url: https://storage.googleapis.com/deepmind-gutenberg/train/10474.txt
+      filename: train/10474.txt
+      size: 438464
+      md5: e3c7e1304c0d95f348d1949360243789
+    - name: train_10793_txt
+      url: https://storage.googleapis.com/deepmind-gutenberg/train/10793.txt
+      filename: train/10793.txt
+      size: 270171
+      md5: 3dd40a01b79d723409b935e974bed8ec
+    - name: train_10815_txt
+      url: https://storage.googleapis.com/deepmind-gutenberg/train/10815.txt
+      filename: train/10815.txt
+      size: 87243
+      md5: 955ece9593e2e4b6463983e4b64a9df5
+    - name: train_11059_txt
+      url: https://storage.googleapis.com/deepmind-gutenberg/train/11059.txt
+      filename: train/11059.txt
+      size: 91307
+      md5: f01e87cc5c1698587faa5f5b36e619e9
+    - name: train_11128_txt
+      url: https://storage.googleapis.com/deepmind-gutenberg/train/11128.txt
+      filename: train/11128.txt
+      size: 406372
+      md5: ee96e0f572a29a6736a322c0630d8ef0
+    - name: train_11190_txt
+      url: https://storage.googleapis.com/deepmind-gutenberg/train/11190.txt
+      filename: train/11190.txt
+      size: 23848
+      md5: 20cd5e3cc387d1a6b2339a4a10f1f809
+    - name: train_11585_txt
+      url: https://storage.googleapis.com/deepmind-gutenberg/train/11585.txt
+      filename: train/11585.txt
+      size: 255196
+      md5: ece58e1696f03cd4ccd15c8c9d472d73
+    - name: train_119_txt
+      url: https://storage.googleapis.com/deepmind-gutenberg/train/119.txt
+      filename: train/119.txt
+      size: 894680
+      md5: 85c14c05b0004d5cd2901e1b5c58f2d4
+    - name: train_12319_txt
+      url: https://storage.googleapis.com/deepmind-gutenberg/train/12319.txt
+      filename: train/12319.txt
+      size: 483736
+      md5: ad53b128f2f5cac510522827ec5cf883
+    - name: train_1282_txt
+      url: https://storage.googleapis.com/deepmind-gutenberg/train/1282.txt
+      filename: train/1282.txt
+      size: 236307
+      md5: 621357816b33e097bcd1beed1fddcacc
+    - name: train_12854_txt
+      url: https://storage.googleapis.com/deepmind-gutenberg/train/12854.txt
+      filename: train/12854.txt
+      size: 231774
+      md5: 91d44ba809591dd0f626452bbfa70992
+    - name: train_13114_txt
+      url: https://storage.googleapis.com/deepmind-gutenberg/train/13114.txt
+      filename: train/13114.txt
+      size: 201817
+      md5: 25dd5b4cb8e90dc010accc9dd8ef849e
+    - name: train_1356_txt
+      url: https://storage.googleapis.com/deepmind-gutenberg/train/1356.txt
+      filename: train/1356.txt
+      size: 656930
+      md5: 075f2e91ca4a80da63d376690e3250f6
+    - name: train_1395_txt
+      url: https://storage.googleapis.com/deepmind-gutenberg/train/1395.txt
+      filename: train/1395.txt
+      size: 181847
+      md5: c5ba881d4feb48068ba239978b734ea0
+    - name: train_14014_txt
+      url: https://storage.googleapis.com/deepmind-gutenberg/train/14014.txt
+      filename: train/14014.txt
+      size: 16028
+      md5: c6f8ceb98e6cbb8e28f04ce7711a216e
+    - name: train_14284_txt
+      url: https://storage.googleapis.com/deepmind-gutenberg/train/14284.txt
+      filename: train/14284.txt
+      size: 608417
+      md5: 42d366f9a5d1ca539d9da5357d82d829
+    - name: train_17864_txt
+      url: https://storage.googleapis.com/deepmind-gutenberg/train/17864.txt
+      filename: train/17864.txt
+      size: 96333
+      md5: 6e064b42b2b878f0b506fc9ba9a618c9
+    - name: train_1826_txt
+      url: https://storage.googleapis.com/deepmind-gutenberg/train/1826.txt
+      filename: train/1826.txt
+      size: 78838
+      md5: a53a4185069fbfbe213f80a2d7dd6310
+    - name: train_18595_txt
+      url: https://storage.googleapis.com/deepmind-gutenberg/train/18595.txt
+      filename: train/18595.txt
+      size: 633314
+      md5: 06c4b5ffd70a9c52995e7bdc3f2e8e14
+    - name: train_19044_txt
+      url: https://storage.googleapis.com/deepmind-gutenberg/train/19044.txt
+      filename: train/19044.txt
+      size: 62635
+      md5: 4eded68735c9282e389202146049a100
+    - name: train_19384_txt
+      url: https://storage.googleapis.com/deepmind-gutenberg/train/19384.txt
+      filename: train/19384.txt
+      size: 62535
+      md5: 9ab26556439cea8d1883ac34e96da2bc
+    - name: train_20075_txt
+      url: https://storage.googleapis.com/deepmind-gutenberg/train/20075.txt
+      filename: train/20075.txt
+      size: 1163510
+      md5: ed874e308776330157a6c7b653af0a1d
+    - name: train_20389_txt
+      url: https://storage.googleapis.com/deepmind-gutenberg/train/20389.txt
+      filename: train/20389.txt
+      size: 578578
+      md5: 91f95b4aac6e0d72b208e7825d34d33b
+    - name: train_20734_txt
+      url: https://storage.googleapis.com/deepmind-gutenberg/train/20734.txt
+      filename: train/20734.txt
+      size: 325278
+      md5: 13afa660c3fd6a07637f86a88e0fc244
+    - name: train_21079_txt
+      url: https://storage.googleapis.com/deepmind-gutenberg/train/21079.txt
+      filename: train/21079.txt
+      size: 48025
+      md5: 1f7db0d6ac03d493b88dca677c38770f
+    - name: train_2139_txt
+      url: https://storage.googleapis.com/deepmind-gutenberg/train/2139.txt
+      filename: train/2139.txt
+      size: 207532
+      md5: b80fd939eb4e1bf6135bf8d01c6540f4
+    - name: train_22809_txt
+      url: https://storage.googleapis.com/deepmind-gutenberg/train/22809.txt
+      filename: train/22809.txt
+      size: 79275
+      md5: 8b8834271baf9eb5a465c6eae6258da7
+    - name: train_23454_txt
+      url: https://storage.googleapis.com/deepmind-gutenberg/train/23454.txt
+      filename: train/23454.txt
+      size: 10605
+      md5: 7c5a7cd3b82d0ebc8c24b799531e14e4
+    - name: train_24030_txt
+      url: https://storage.googleapis.com/deepmind-gutenberg/train/24030.txt
+      filename: train/24030.txt
+      size: 299027
+      md5: 54b9b485ad373a5fe564b881a120563d
+    - name: train_24082_txt
+      url: https://storage.googleapis.com/deepmind-gutenberg/train/24082.txt
+      filename: train/24082.txt
+      size: 25870
+      md5: d334d5707ca9e8c92ecadfd3a3acc162
+    - name: train_24451_txt
+      url: https://storage.googleapis.com/deepmind-gutenberg/train/24451.txt
+      filename: train/24451.txt
+      size: 454856
+      md5: 0e5d73e9e854428047eaa3349b193643
+    - name: train_24492_txt
+      url: https://storage.googleapis.com/deepmind-gutenberg/train/24492.txt
+      filename: train/24492.txt
+      size: 148898
+      md5: eab4e198a6fb27bff792478cabc648ed
+    - name: train_2466_txt
+      url: https://storage.googleapis.com/deepmind-gutenberg/train/2466.txt
+      filename: train/2466.txt
+      size: 557010
+      md5: c22684f993543faaa635366cf88ebc45
+    - name: train_24697_txt
+      url: https://storage.googleapis.com/deepmind-gutenberg/train/24697.txt
+      filename: train/24697.txt
+      size: 224128
+      md5: 85e0e6bb1549432eea09edb96dbefb97
+    - name: train_24769_txt
+      url: https://storage.googleapis.com/deepmind-gutenberg/train/24769.txt
+      filename: train/24769.txt
+      size: 502602
+      md5: 5f0a087fb7992eb35d04e0bcb27f4960
+    - name: train_24785_txt
+      url: https://storage.googleapis.com/deepmind-gutenberg/train/24785.txt
+      filename: train/24785.txt
+      size: 106341
+      md5: 0a7395e03f67e7f4f720d8bcb5e1bbba
+    - name: train_24939_txt
+      url: https://storage.googleapis.com/deepmind-gutenberg/train/24939.txt
+      filename: train/24939.txt
+      size: 35271
+      md5: 06763471b4ce5628463f162c978e9836
+    - name: train_2504_txt
+      url: https://storage.googleapis.com/deepmind-gutenberg/train/2504.txt
+      filename: train/2504.txt
+      size: 56141
+      md5: c90637c93da931c8e5fcc34c56452e15
+    - name: train_25073_txt
+      url: https://storage.googleapis.com/deepmind-gutenberg/train/25073.txt
+      filename: train/25073.txt
+      size: 215651
+      md5: ca6aee7037e20eb1bfeae287eceef485
+    - name: train_25075_txt
+      url: https://storage.googleapis.com/deepmind-gutenberg/train/25075.txt
+      filename: train/25075.txt
+      size: 149809
+      md5: 6486acc4420d6f241aa074c82a46e178
+    - name: train_25076_txt
+      url: https://storage.googleapis.com/deepmind-gutenberg/train/25076.txt
+      filename: train/25076.txt
+      size: 319793
+      md5: 490d2a14518ba4fdbba66e02e81833db
+    - name: train_2537_txt
+      url: https://storage.googleapis.com/deepmind-gutenberg/train/2537.txt
+      filename: train/2537.txt
+      size: 259748
+      md5: 63dbd30ae2f601263a2248f6069833b4
+    - name: train_25463_txt
+      url: https://storage.googleapis.com/deepmind-gutenberg/train/25463.txt
+      filename: train/25463.txt
+      size: 940510
+      md5: 2651822f9b1fd180c29fa3b2f8d8bec1
+    - name: train_25470_txt
+      url: https://storage.googleapis.com/deepmind-gutenberg/train/25470.txt
+      filename: train/25470.txt
+      size: 204512
+      md5: e570dca143278e7d23a021e3921b4a05
+    - name: train_25553_txt
+      url: https://storage.googleapis.com/deepmind-gutenberg/train/25553.txt
+      filename: train/25553.txt
+      size: 5572
+      md5: 47b37191cf267f94700f2c58f7677ca6
+    - name: train_25765_txt
+      url: https://storage.googleapis.com/deepmind-gutenberg/train/25765.txt
+      filename: train/25765.txt
+      size: 249549
+      md5: 6444df5737dfafbcb91bf7313acf8412
+    - name: train_25808_txt
+      url: https://storage.googleapis.com/deepmind-gutenberg/train/25808.txt
+      filename: train/25808.txt
+      size: 45131
+      md5: c75fcbb54317f52622c8f687215bc516
+    - name: train_25848_txt
+      url: https://storage.googleapis.com/deepmind-gutenberg/train/25848.txt
+      filename: train/25848.txt
+      size: 333259
+      md5: 5aba387a7aa6acd6813e1ae5430a8c7a
+    - name: train_26058_txt
+      url: https://storage.googleapis.com/deepmind-gutenberg/train/26058.txt
+      filename: train/26058.txt
+      size: 136647
+      md5: bb0b0b22a534cfa64102ae4f9590ef99
+    - name: train_26136_txt
+      url: https://storage.googleapis.com/deepmind-gutenberg/train/26136.txt
+      filename: train/26136.txt
+      size: 137089
+      md5: ab1d50cda3fca71500a1abc05a911abf
+    - name: train_26139_txt
+      url: https://storage.googleapis.com/deepmind-gutenberg/train/26139.txt
+      filename: train/26139.txt
+      size: 460534
+      md5: c46bebf847dc8ca7ca6ef4129621e688
+    - name: train_26495_txt
+      url: https://storage.googleapis.com/deepmind-gutenberg/train/26495.txt
+      filename: train/26495.txt
+      size: 1131854
+      md5: 9e3f693e0b4fd160a5cb54e9e3e6fbb7
+    - name: train_26568_txt
+      url: https://storage.googleapis.com/deepmind-gutenberg/train/26568.txt
+      filename: train/26568.txt
+      size: 1277060
+      md5: 4912d8595253765cc46ce2cd35d09589
+    - name: train_26691_txt
+      url: https://storage.googleapis.com/deepmind-gutenberg/train/26691.txt
+      filename: train/26691.txt
+      size: 207769
+      md5: d9171b5a9881a9fd0211d73f0892f529
+    - name: train_26779_txt
+      url: https://storage.googleapis.com/deepmind-gutenberg/train/26779.txt
+      filename: train/26779.txt
+      size: 99770
+      md5: b4cc9c5cc6c4b40d2cbbdace658523dc
+    - name: train_27268_txt
+      url: https://storage.googleapis.com/deepmind-gutenberg/train/27268.txt
+      filename: train/27268.txt
+      size: 355057
+      md5: 5d55ec6246db8d5d4ec583e8449a298c
+    - name: train_27274_txt
+      url: https://storage.googleapis.com/deepmind-gutenberg/train/27274.txt
+      filename: train/27274.txt
+      size: 990260
+      md5: 568a3fee742386128eae62e5b1dfb339
+    - name: train_27550_txt
+      url: https://storage.googleapis.com/deepmind-gutenberg/train/27550.txt
+      filename: train/27550.txt
+      size: 144018
+      md5: 6b0627b599c3086fd4708003df7c3ecf
+    - name: train_2761_txt
+      url: https://storage.googleapis.com/deepmind-gutenberg/train/2761.txt
+      filename: train/2761.txt
+      size: 425317
+      md5: 458e7d89794b3c70e73c24c5b026f9de
+    - name: train_2782_txt
+      url: https://storage.googleapis.com/deepmind-gutenberg/train/2782.txt
+      filename: train/2782.txt
+      size: 200799
+      md5: 6b267b9948d9ad82e6a077c7d43f1995
+    - name: train_28172_txt
+      url: https://storage.googleapis.com/deepmind-gutenberg/train/28172.txt
+      filename: train/28172.txt
+      size: 41166
+      md5: e7d77d3ddcf49c615553845984881f0b
+    - name: train_28385_txt
+      url: https://storage.googleapis.com/deepmind-gutenberg/train/28385.txt
+      filename: train/28385.txt
+      size: 96805
+      md5: 45e255101f01e00d364dc358f86f1a3e
+    - name: train_28417_txt
+      url: https://storage.googleapis.com/deepmind-gutenberg/train/28417.txt
+      filename: train/28417.txt
+      size: 94000
+      md5: 6e308f8d23868ff3b9a5b5c9fbf84a25
+    - name: train_28420_txt
+      url: https://storage.googleapis.com/deepmind-gutenberg/train/28420.txt
+      filename: train/28420.txt
+      size: 559362
+      md5: b38ebfae8391b3f97652be2bd461db43
+    - name: train_28616_txt
+      url: https://storage.googleapis.com/deepmind-gutenberg/train/28616.txt
+      filename: train/28616.txt
+      size: 443904
+      md5: aed7f2f3ebe0dd9d98cdb2b9008c4427
+    - name: train_29108_txt
+      url: https://storage.googleapis.com/deepmind-gutenberg/train/29108.txt
+      filename: train/29108.txt
+      size: 88809
+      md5: f479763233fe71faa264e30a737d9319
+    - name: train_29294_txt
+      url: https://storage.googleapis.com/deepmind-gutenberg/train/29294.txt
+      filename: train/29294.txt
+      size: 917691
+      md5: b42badc355df62de2228bc0952f44621
+    - name: train_29524_txt
+      url: https://storage.googleapis.com/deepmind-gutenberg/train/29524.txt
+      filename: train/29524.txt
+      size: 608511
+      md5: 30972c322402d71df78d40b8501892dc
+    - name: train_29544_txt
+      url: https://storage.googleapis.com/deepmind-gutenberg/train/29544.txt
+      filename: train/29544.txt
+      size: 388277
+      md5: b82c8e4d25c15ff02639f740e137159c
+    - name: train_29849_txt
+      url: https://storage.googleapis.com/deepmind-gutenberg/train/29849.txt
+      filename: train/29849.txt
+      size: 572271
+      md5: fc911b802d82803e4c2b6cfc805ef6c7
+    - name: train_30020_txt
+      url: https://storage.googleapis.com/deepmind-gutenberg/train/30020.txt
+      filename: train/30020.txt
+      size: 7100
+      md5: 4c0c285adb4b2a91a94131fe0a9498ea
+    - name: train_30135_txt
+      url: https://storage.googleapis.com/deepmind-gutenberg/train/30135.txt
+      filename: train/30135.txt
+      size: 424089
+      md5: 6870d8f8c06d6445378fcea2131d9354
+    - name: train_30181_txt
+      url: https://storage.googleapis.com/deepmind-gutenberg/train/30181.txt
+      filename: train/30181.txt
+      size: 686846
+      md5: 2a6b85d8222cbf3dbf14f632e27055b1
+    - name: train_30190_txt
+      url: https://storage.googleapis.com/deepmind-gutenberg/train/30190.txt
+      filename: train/30190.txt
+      size: 881195
+      md5: 8887498633bf57188d0069f7218e5afd
+    - name: train_30431_txt
+      url: https://storage.googleapis.com/deepmind-gutenberg/train/30431.txt
+      filename: train/30431.txt
+      size: 354617
+      md5: 2d38ac8951787942b8d53fe3dbc0a732
+    - name: train_30530_txt
+      url: https://storage.googleapis.com/deepmind-gutenberg/train/30530.txt
+      filename: train/30530.txt
+      size: 307964
+      md5: 81833576049421b9c15297908fe5f0bd
+    - name: train_30609_txt
+      url: https://storage.googleapis.com/deepmind-gutenberg/train/30609.txt
+      filename: train/30609.txt
+      size: 346262
+      md5: e5bfa0e97d74b3737cdc915cdf1a4338
+    - name: train_30611_txt
+      url: https://storage.googleapis.com/deepmind-gutenberg/train/30611.txt
+      filename: train/30611.txt
+      size: 495836
+      md5: a1742f6c55685f00435ccdb0e5c24b96
+    - name: train_31338_txt
+      url: https://storage.googleapis.com/deepmind-gutenberg/train/31338.txt
+      filename: train/31338.txt
+      size: 464794
+      md5: ef12bf1c09b7e6dad5dcfe97200e3b68
+    - name: train_3149_txt
+      url: https://storage.googleapis.com/deepmind-gutenberg/train/3149.txt
+      filename: train/3149.txt
+      size: 224415
+      md5: 58a0195d8b9363199aca36ba68ba9860
+    - name: train_31828_txt
+      url: https://storage.googleapis.com/deepmind-gutenberg/train/31828.txt
+      filename: train/31828.txt
+      size: 378131
+      md5: 92bd54db6b060739f35803394425a3dc
+    - name: train_32477_txt
+      url: https://storage.googleapis.com/deepmind-gutenberg/train/32477.txt
+      filename: train/32477.txt
+      size: 45305
+      md5: e20d37b27f3c8a4c7d5c677506242c45
+    - name: train_32501_txt
+      url: https://storage.googleapis.com/deepmind-gutenberg/train/32501.txt
+      filename: train/32501.txt
+      size: 221899
+      md5: 22b739cf31597cb67e00f27356d357bc
+    - name: train_32776_txt
+      url: https://storage.googleapis.com/deepmind-gutenberg/train/32776.txt
+      filename: train/32776.txt
+      size: 706755
+      md5: cf348528c15b6511024536600c379409
+    - name: train_32945_txt
+      url: https://storage.googleapis.com/deepmind-gutenberg/train/32945.txt
+      filename: train/32945.txt
+      size: 818814
+      md5: 26f28aa7271c2dcb9f530ff732de30d8
+    - name: train_3324_txt
+      url: https://storage.googleapis.com/deepmind-gutenberg/train/3324.txt
+      filename: train/3324.txt
+      size: 168524
+      md5: 4fad0eabf815092ff3e8fdff0fb0e57e
+    - name: train_33241_txt
+      url: https://storage.googleapis.com/deepmind-gutenberg/train/33241.txt
+      filename: train/33241.txt
+      size: 76351
+      md5: b440a79ad30d602ab7dedad44a02e8e2
+    - name: train_33268_txt
+      url: https://storage.googleapis.com/deepmind-gutenberg/train/33268.txt
+      filename: train/33268.txt
+      size: 472985
+      md5: 61df005f16f3854226f35c96bcb7a7ff
+    - name: train_33271_txt
+      url: https://storage.googleapis.com/deepmind-gutenberg/train/33271.txt
+      filename: train/33271.txt
+      size: 435416
+      md5: 411d5190d235ded0d8863a30d75e2025
+    - name: train_33305_txt
+      url: https://storage.googleapis.com/deepmind-gutenberg/train/33305.txt
+      filename: train/33305.txt
+      size: 516978
+      md5: f533cc10d747301a695c0a3e86ed9e6b
+    - name: train_33347_txt
+      url: https://storage.googleapis.com/deepmind-gutenberg/train/33347.txt
+      filename: train/33347.txt
+      size: 132156
+      md5: 6d2c62fdc30a871b816ae9ec02296cea
+    - name: train_33420_txt
+      url: https://storage.googleapis.com/deepmind-gutenberg/train/33420.txt
+      filename: train/33420.txt
+      size: 774979
+      md5: 9fce111c3b2c801f0cc25c200fa9c734
+    - name: train_33583_txt
+      url: https://storage.googleapis.com/deepmind-gutenberg/train/33583.txt
+      filename: train/33583.txt
+      size: 929503
+      md5: 6714f1de40873e79c6223510e874575c
+    - name: train_33878_txt
+      url: https://storage.googleapis.com/deepmind-gutenberg/train/33878.txt
+      filename: train/33878.txt
+      size: 76676
+      md5: 3ef26c3092959c16283869962993e8c9
+    - name: train_3390_txt
+      url: https://storage.googleapis.com/deepmind-gutenberg/train/3390.txt
+      filename: train/3390.txt
+      size: 150682
+      md5: ba5f0623540d1d8bf9be02b9195a2c6f
+    - name: train_33999_txt
+      url: https://storage.googleapis.com/deepmind-gutenberg/train/33999.txt
+      filename: train/33999.txt
+      size: 822002
+      md5: a4bb5691ea436cef76d9f3755ed8bb19
+    - name: train_34153_txt
+      url: https://storage.googleapis.com/deepmind-gutenberg/train/34153.txt
+      filename: train/34153.txt
+      size: 537766
+      md5: 76570c36215347c697d5980481c3e3bb
+    - name: train_34267_txt
+      url: https://storage.googleapis.com/deepmind-gutenberg/train/34267.txt
+      filename: train/34267.txt
+      size: 71107
+      md5: 2d2f13b4ee6738d94823b86b1fb4b69c
+    - name: train_34370_txt
+      url: https://storage.googleapis.com/deepmind-gutenberg/train/34370.txt
+      filename: train/34370.txt
+      size: 518818
+      md5: ae31f1d82687b0e0c331c9c38abd0a2e
+    - name: train_34390_txt
+      url: https://storage.googleapis.com/deepmind-gutenberg/train/34390.txt
+      filename: train/34390.txt
+      size: 493252
+      md5: c64311af5865afda4ec9b5062bb71c7e
+    - name: train_34543_txt
+      url: https://storage.googleapis.com/deepmind-gutenberg/train/34543.txt
+      filename: train/34543.txt
+      size: 811252
+      md5: cd8e46ff8f9c6ef7c7b4e36108be5999
+    - name: train_34557_txt
+      url: https://storage.googleapis.com/deepmind-gutenberg/train/34557.txt
+      filename: train/34557.txt
+      size: 10416
+      md5: 4348992e26ccf3416537b0ed1d150203
+    - name: train_3458_txt
+      url: https://storage.googleapis.com/deepmind-gutenberg/train/3458.txt
+      filename: train/3458.txt
+      size: 1371268
+      md5: 896fcdb3e064fe8ea03e22ad6137a380
+    - name: train_34753_txt
+      url: https://storage.googleapis.com/deepmind-gutenberg/train/34753.txt
+      filename: train/34753.txt
+      size: 347790
+      md5: e15318123b34584d3d4e3f0e10716aaa
+    - name: train_34793_txt
+      url: https://storage.googleapis.com/deepmind-gutenberg/train/34793.txt
+      filename: train/34793.txt
+      size: 30352
+      md5: 3dde1420028d54731cc18abcf823c732
+    - name: train_34875_txt
+      url: https://storage.googleapis.com/deepmind-gutenberg/train/34875.txt
+      filename: train/34875.txt
+      size: 361630
+      md5: a1ce3451cf59b76a276460b148d6cf82
+    - name: train_35033_txt
+      url: https://storage.googleapis.com/deepmind-gutenberg/train/35033.txt
+      filename: train/35033.txt
+      size: 57865
+      md5: aa3cb56a9e05a1e41ed8f31d2bb23604
+    - name: train_35142_txt
+      url: https://storage.googleapis.com/deepmind-gutenberg/train/35142.txt
+      filename: train/35142.txt
+      size: 185317
+      md5: 958fbebdbf2712bb6bb7d371e17b2035
+    - name: train_35369_txt
+      url: https://storage.googleapis.com/deepmind-gutenberg/train/35369.txt
+      filename: train/35369.txt
+      size: 1779510
+      md5: 91a84e58f8c4a6ca4f28650dcd7fcf98
+    - name: train_35460_txt
+      url: https://storage.googleapis.com/deepmind-gutenberg/train/35460.txt
+      filename: train/35460.txt
+      size: 215726
+      md5: ced75a5ca35d6d8b7f4fde1f23b66741
+    - name: train_35562_txt
+      url: https://storage.googleapis.com/deepmind-gutenberg/train/35562.txt
+      filename: train/35562.txt
+      size: 256603
+      md5: 35af647956508ba22a23ef77fda3d618
+    - name: train_35570_txt
+      url: https://storage.googleapis.com/deepmind-gutenberg/train/35570.txt
+      filename: train/35570.txt
+      size: 335756
+      md5: 0967d657afb5ee39082bbfefa4d473b0
+    - name: train_35790_txt
+      url: https://storage.googleapis.com/deepmind-gutenberg/train/35790.txt
+      filename: train/35790.txt
+      size: 678516
+      md5: 6ab667f60eb71ca93665fa87a521d674
+    - name: train_35820_txt
+      url: https://storage.googleapis.com/deepmind-gutenberg/train/35820.txt
+      filename: train/35820.txt
+      size: 215251
+      md5: 74207b0373cad6c80d3028765444a27c
+    - name: train_361_txt
+      url: https://storage.googleapis.com/deepmind-gutenberg/train/361.txt
+      filename: train/361.txt
+      size: 443678
+      md5: cd0dd4e69892f6c101936083b523c513
+    - name: train_36134_txt
+      url: https://storage.googleapis.com/deepmind-gutenberg/train/36134.txt
+      filename: train/36134.txt
+      size: 360629
+      md5: 9e5d452b50411e974fd963689f845d01
+    - name: train_36138_txt
+      url: https://storage.googleapis.com/deepmind-gutenberg/train/36138.txt
+      filename: train/36138.txt
+      size: 749256
+      md5: 9e6bd752a766c311ad0e8dc52145ce2a
+    - name: train_36177_txt
+      url: https://storage.googleapis.com/deepmind-gutenberg/train/36177.txt
+      filename: train/36177.txt
+      size: 96698
+      md5: 7c19157e3fc6292e9b0b456d1295b800
+    - name: train_36257_txt
+      url: https://storage.googleapis.com/deepmind-gutenberg/train/36257.txt
+      filename: train/36257.txt
+      size: 97271
+      md5: 524839ecf570aa52ddd3d24cf73c8058
+    - name: train_36359_txt
+      url: https://storage.googleapis.com/deepmind-gutenberg/train/36359.txt
+      filename: train/36359.txt
+      size: 218565
+      md5: b9f4b4c04a568155915418d7ef8d580c
+    - name: train_36458_txt
+      url: https://storage.googleapis.com/deepmind-gutenberg/train/36458.txt
+      filename: train/36458.txt
+      size: 341723
+      md5: b5e8ef33e002524540897c5fbdec7516
+    - name: train_37115_txt
+      url: https://storage.googleapis.com/deepmind-gutenberg/train/37115.txt
+      filename: train/37115.txt
+      size: 721986
+      md5: f9143c1cdbe1b676ce4f2ab58c72f73d
+    - name: train_37517_txt
+      url: https://storage.googleapis.com/deepmind-gutenberg/train/37517.txt
+      filename: train/37517.txt
+      size: 107798
+      md5: 00f913734d11cbb7c76eb519db9f3c14
+    - name: train_37750_txt
+      url: https://storage.googleapis.com/deepmind-gutenberg/train/37750.txt
+      filename: train/37750.txt
+      size: 968513
+      md5: d9bcc263a60fd71f6759fbc837183f23
+    - name: train_37995_txt
+      url: https://storage.googleapis.com/deepmind-gutenberg/train/37995.txt
+      filename: train/37995.txt
+      size: 322394
+      md5: 299b96f3ab36a4b79a392b7e0dde15ff
+    - name: train_37996_txt
+      url: https://storage.googleapis.com/deepmind-gutenberg/train/37996.txt
+      filename: train/37996.txt
+      size: 324125
+      md5: 77c8f5c76967eec10ca67c66099f9850
+    - name: train_3809_txt
+      url: https://storage.googleapis.com/deepmind-gutenberg/train/3809.txt
+      filename: train/3809.txt
+      size: 247965
+      md5: 7085f85d0f3c4e007b313dca549c813f
+    - name: train_3810_txt
+      url: https://storage.googleapis.com/deepmind-gutenberg/train/3810.txt
+      filename: train/3810.txt
+      size: 377398
+      md5: 01d30c72a9e9c80a8d34394b5997061c
+    - name: train_38412_txt
+      url: https://storage.googleapis.com/deepmind-gutenberg/train/38412.txt
+      filename: train/38412.txt
+      size: 112824
+      md5: 2b22cb55db2ba7509c44a9c763e51b8a
+    - name: train_38534_txt
+      url: https://storage.googleapis.com/deepmind-gutenberg/train/38534.txt
+      filename: train/38534.txt
+      size: 262352
+      md5: 2ece94ed4ffb521634f2be9c373c2eee
+    - name: train_38766_txt
+      url: https://storage.googleapis.com/deepmind-gutenberg/train/38766.txt
+      filename: train/38766.txt
+      size: 94284
+      md5: 06bad94ff657db8a0c0b629a36264e96
+    - name: train_38927_txt
+      url: https://storage.googleapis.com/deepmind-gutenberg/train/38927.txt
+      filename: train/38927.txt
+      size: 61579
+      md5: c68c8d8b61c81cc26724023e1d7bb53c
+    - name: train_39001_txt
+      url: https://storage.googleapis.com/deepmind-gutenberg/train/39001.txt
+      filename: train/39001.txt
+      size: 774709
+      md5: 2bf8bac15d0f805e52257db42b621025
+    - name: train_39072_txt
+      url: https://storage.googleapis.com/deepmind-gutenberg/train/39072.txt
+      filename: train/39072.txt
+      size: 313937
+      md5: a5dad7a329d332d1d11b98d6ff99a814
+    - name: train_39138_txt
+      url: https://storage.googleapis.com/deepmind-gutenberg/train/39138.txt
+      filename: train/39138.txt
+      size: 666596
+      md5: fb3113963964b609e8ed92e9ff4040f3
+    - name: train_3925_txt
+      url: https://storage.googleapis.com/deepmind-gutenberg/train/3925.txt
+      filename: train/3925.txt
+      size: 154175
+      md5: 72db8f55de85a739a57499fc8236c20c
+    - name: train_39578_txt
+      url: https://storage.googleapis.com/deepmind-gutenberg/train/39578.txt
+      filename: train/39578.txt
+      size: 330908
+      md5: f3bf7166b21b7cac7096d12f4397c2f9
+    - name: train_39696_txt
+      url: https://storage.googleapis.com/deepmind-gutenberg/train/39696.txt
+      filename: train/39696.txt
+      size: 447619
+      md5: d2f0dfe5a3e0421f86a22a7a2f4b353f
+    - name: train_3992_txt
+      url: https://storage.googleapis.com/deepmind-gutenberg/train/3992.txt
+      filename: train/3992.txt
+      size: 79595
+      md5: 86ab0b251207a9db9c4870f70aa53ee4
+    - name: train_39978_txt
+      url: https://storage.googleapis.com/deepmind-gutenberg/train/39978.txt
+      filename: train/39978.txt
+      size: 531385
+      md5: de1d031ed5e6447c9b6258d5b56bdc91
+    - name: train_40032_txt
+      url: https://storage.googleapis.com/deepmind-gutenberg/train/40032.txt
+      filename: train/40032.txt
+      size: 601091
+      md5: 2d67fb531ced6bf0d34b7368ddbad6ec
+    - name: train_40297_txt
+      url: https://storage.googleapis.com/deepmind-gutenberg/train/40297.txt
+      filename: train/40297.txt
+      size: 652865
+      md5: 8e051f65adde60d62b263950de5b5201
+    - name: train_40410_txt
+      url: https://storage.googleapis.com/deepmind-gutenberg/train/40410.txt
+      filename: train/40410.txt
+      size: 594121
+      md5: 8cc72d057e1a3c6b3adad04b67816e16
+    - name: train_40628_txt
+      url: https://storage.googleapis.com/deepmind-gutenberg/train/40628.txt
+      filename: train/40628.txt
+      size: 563431
+      md5: 81bf2e0f5a2c7ea92e061fc6ffa52b1a
+    - name: train_40646_txt
+      url: https://storage.googleapis.com/deepmind-gutenberg/train/40646.txt
+      filename: train/40646.txt
+      size: 1286487
+      md5: 90457c993590c6988ad4ed887d0d0eb8
+    - name: train_40661_txt
+      url: https://storage.googleapis.com/deepmind-gutenberg/train/40661.txt
+      filename: train/40661.txt
+      size: 493693
+      md5: ccae76b27635b3c5c5fe210b900102f1
+    - name: train_40696_txt
+      url: https://storage.googleapis.com/deepmind-gutenberg/train/40696.txt
+      filename: train/40696.txt
+      size: 444099
+      md5: 685503c7b803471302f8988aabb59e56
+    - name: train_40933_txt
+      url: https://storage.googleapis.com/deepmind-gutenberg/train/40933.txt
+      filename: train/40933.txt
+      size: 224327
+      md5: 3727e9ffa0a3de8fdb6e7a008bb7966c
+    - name: train_40971_txt
+      url: https://storage.googleapis.com/deepmind-gutenberg/train/40971.txt
+      filename: train/40971.txt
+      size: 1083385
+      md5: 5e69f490c3244df5352bff456dd9b190
+    - name: train_40977_txt
+      url: https://storage.googleapis.com/deepmind-gutenberg/train/40977.txt
+      filename: train/40977.txt
+      size: 1268842
+      md5: 0cab1178609eac97474499ef24c22d9f
+    - name: train_41041_txt
+      url: https://storage.googleapis.com/deepmind-gutenberg/train/41041.txt
+      filename: train/41041.txt
+      size: 201062
+      md5: fd253750045c43fa5e13cf3ee05d1d87
+    - name: train_41118_txt
+      url: https://storage.googleapis.com/deepmind-gutenberg/train/41118.txt
+      filename: train/41118.txt
+      size: 202827
+      md5: f9225d2c6337b9cf8d42eaa8922cf638
+    - name: train_41271_txt
+      url: https://storage.googleapis.com/deepmind-gutenberg/train/41271.txt
+      filename: train/41271.txt
+      size: 536901
+      md5: 2c5013bdb02b6301211ec58c6376a62a
+    - name: train_41317_txt
+      url: https://storage.googleapis.com/deepmind-gutenberg/train/41317.txt
+      filename: train/41317.txt
+      size: 430932
+      md5: 1ca4bcb932aecb5a0e81942304d57a9b
+    - name: train_41479_txt
+      url: https://storage.googleapis.com/deepmind-gutenberg/train/41479.txt
+      filename: train/41479.txt
+      size: 749034
+      md5: 08ead138b4b90c3e12334057d472e29f
+    - name: train_415_txt
+      url: https://storage.googleapis.com/deepmind-gutenberg/train/415.txt
+      filename: train/415.txt
+      size: 1277192
+      md5: 95469ff774189902d4ca688bc02d53a5
+    - name: train_41553_txt
+      url: https://storage.googleapis.com/deepmind-gutenberg/train/41553.txt
+      filename: train/41553.txt
+      size: 197580
+      md5: 0a4c600b4924f092c458e551386be1c0
+    - name: train_4158_txt
+      url: https://storage.googleapis.com/deepmind-gutenberg/train/4158.txt
+      filename: train/4158.txt
+      size: 60536
+      md5: a695888f31d65b740d9c0adeeac13b2b
+    - name: train_41698_txt
+      url: https://storage.googleapis.com/deepmind-gutenberg/train/41698.txt
+      filename: train/41698.txt
+      size: 579885
+      md5: c9c2dc44a1e3bd11b101f6594e27e68c
+    - name: train_41743_txt
+      url: https://storage.googleapis.com/deepmind-gutenberg/train/41743.txt
+      filename: train/41743.txt
+      size: 287248
+      md5: 7f07bf4af13a3161e0066e7eba304d3b
+    - name: train_4183_txt
+      url: https://storage.googleapis.com/deepmind-gutenberg/train/4183.txt
+      filename: train/4183.txt
+      size: 79869
+      md5: eeb00591fceb8fbc8bfbde465d5f376d
+    - name: train_41835_txt
+      url: https://storage.googleapis.com/deepmind-gutenberg/train/41835.txt
+      filename: train/41835.txt
+      size: 59578
+      md5: 24974e38ec15b63a9a64cfdaa6c92b1e
+    - name: train_41847_txt
+      url: https://storage.googleapis.com/deepmind-gutenberg/train/41847.txt
+      filename: train/41847.txt
+      size: 286892
+      md5: 25e3a40cd7001ff1855ed079fc3630ed
+    - name: train_4197_txt
+      url: https://storage.googleapis.com/deepmind-gutenberg/train/4197.txt
+      filename: train/4197.txt
+      size: 129443
+      md5: 75ec0fb3f8ac3839a6e3d6f369f5294e
+    - name: train_42049_txt
+      url: https://storage.googleapis.com/deepmind-gutenberg/train/42049.txt
+      filename: train/42049.txt
+      size: 418994
+      md5: 96f471b9952c3d45ccf3ff8ba4b060c9
+    - name: train_42169_txt
+      url: https://storage.googleapis.com/deepmind-gutenberg/train/42169.txt
+      filename: train/42169.txt
+      size: 202478
+      md5: 4569c89a4a72fd67761818670a38f25e
+    - name: train_42204_txt
+      url: https://storage.googleapis.com/deepmind-gutenberg/train/42204.txt
+      filename: train/42204.txt
+      size: 103241
+      md5: b6f394729a39cd3f9f66de90eec3ae9b
+    - name: train_42214_txt
+      url: https://storage.googleapis.com/deepmind-gutenberg/train/42214.txt
+      filename: train/42214.txt
+      size: 685342
+      md5: e7f8c261951e4e6ed385517ea298ef7d
+    - name: train_4229_txt
+      url: https://storage.googleapis.com/deepmind-gutenberg/train/4229.txt
+      filename: train/4229.txt
+      size: 1241251
+      md5: 6c6ea0a8cf157646794c59c6987a8485
+    - name: train_42334_txt
+      url: https://storage.googleapis.com/deepmind-gutenberg/train/42334.txt
+      filename: train/42334.txt
+      size: 1019406
+      md5: 5c56e7c458f7d18915ae95113995a541
+    - name: train_42345_txt
+      url: https://storage.googleapis.com/deepmind-gutenberg/train/42345.txt
+      filename: train/42345.txt
+      size: 374264
+      md5: 0966536a04ff795af6ae1c5bbbc9c3eb
+    - name: train_42597_txt
+      url: https://storage.googleapis.com/deepmind-gutenberg/train/42597.txt
+      filename: train/42597.txt
+      size: 200436
+      md5: 728a37482534021611302a5acd676b0c
+    - name: train_42732_txt
+      url: https://storage.googleapis.com/deepmind-gutenberg/train/42732.txt
+      filename: train/42732.txt
+      size: 798360
+      md5: d8700916fb1ee5369ecb96db47782432
+    - name: train_42788_txt
+      url: https://storage.googleapis.com/deepmind-gutenberg/train/42788.txt
+      filename: train/42788.txt
+      size: 141615
+      md5: f4bda9255fbc37aa54d47d05879f7d88
+    - name: train_42801_txt
+      url: https://storage.googleapis.com/deepmind-gutenberg/train/42801.txt
+      filename: train/42801.txt
+      size: 498889
+      md5: dc56e4f226b5b544fbf9b3eb6cdfd133
+    - name: train_4338_txt
+      url: https://storage.googleapis.com/deepmind-gutenberg/train/4338.txt
+      filename: train/4338.txt
+      size: 180730
+      md5: 9022f223c4d5c4128a943a737cbdc7ad
+    - name: train_43406_txt
+      url: https://storage.googleapis.com/deepmind-gutenberg/train/43406.txt
+      filename: train/43406.txt
+      size: 51297
+      md5: 184f47fe4a823145debf343560d3ecba
+    - name: train_43645_txt
+      url: https://storage.googleapis.com/deepmind-gutenberg/train/43645.txt
+      filename: train/43645.txt
+      size: 10783
+      md5: 91b747ddcedc0382e681a013c0be6cc7
+    - name: train_43753_txt
+      url: https://storage.googleapis.com/deepmind-gutenberg/train/43753.txt
+      filename: train/43753.txt
+      size: 667110
+      md5: 7e81f4b6b885cbd766bb64aa40c91d18
+    - name: train_43785_txt
+      url: https://storage.googleapis.com/deepmind-gutenberg/train/43785.txt
+      filename: train/43785.txt
+      size: 448590
+      md5: 60e16a933e47dd579ffd96da383bc65e
+    - name: train_43864_txt
+      url: https://storage.googleapis.com/deepmind-gutenberg/train/43864.txt
+      filename: train/43864.txt
+      size: 334876
+      md5: 355bcaa411bb0882d7175834eebc786b
+    - name: train_43910_txt
+      url: https://storage.googleapis.com/deepmind-gutenberg/train/43910.txt
+      filename: train/43910.txt
+      size: 292891
+      md5: 8de65016c6fb2164c9591f667d7f425a
+    - name: train_44065_txt
+      url: https://storage.googleapis.com/deepmind-gutenberg/train/44065.txt
+      filename: train/44065.txt
+      size: 711379
+      md5: d89590e6b77f785bd1bfb1761e3aad4a
+    - name: train_44178_txt
+      url: https://storage.googleapis.com/deepmind-gutenberg/train/44178.txt
+      filename: train/44178.txt
+      size: 70977
+      md5: 257e65f8600c088f7f265b005228380b
+    - name: train_44237_txt
+      url: https://storage.googleapis.com/deepmind-gutenberg/train/44237.txt
+      filename: train/44237.txt
+      size: 623485
+      md5: 2a80ee66c541eb3f17b75cd3ae9ba704
+    - name: train_4425_txt
+      url: https://storage.googleapis.com/deepmind-gutenberg/train/4425.txt
+      filename: train/4425.txt
+      size: 174385
+      md5: f12b099941fac1dbbba7228cb77491d9
+    - name: train_44314_txt
+      url: https://storage.googleapis.com/deepmind-gutenberg/train/44314.txt
+      filename: train/44314.txt
+      size: 649338
+      md5: eea11903a09d9748240904dce58b5330
+    - name: train_44556_txt
+      url: https://storage.googleapis.com/deepmind-gutenberg/train/44556.txt
+      filename: train/44556.txt
+      size: 70995
+      md5: f208283558f41b3eca29c9db50cf3b49
+    - name: train_44566_txt
+      url: https://storage.googleapis.com/deepmind-gutenberg/train/44566.txt
+      filename: train/44566.txt
+      size: 1030874
+      md5: 14f5339e9e361843181ab7143ac89b2b
+    - name: train_4470_txt
+      url: https://storage.googleapis.com/deepmind-gutenberg/train/4470.txt
+      filename: train/4470.txt
+      size: 890427
+      md5: a345505883681ff0f0c4421426d7a2b3
+    - name: train_4491_txt
+      url: https://storage.googleapis.com/deepmind-gutenberg/train/4491.txt
+      filename: train/4491.txt
+      size: 386057
+      md5: fef5db8e78d473935c90c7626144b6c3
+    - name: train_44914_txt
+      url: https://storage.googleapis.com/deepmind-gutenberg/train/44914.txt
+      filename: train/44914.txt
+      size: 48458
+      md5: 05466d7b198920bc767cdfc4f450d5da
+    - name: train_4493_txt
+      url: https://storage.googleapis.com/deepmind-gutenberg/train/4493.txt
+      filename: train/4493.txt
+      size: 131610
+      md5: 6ea3f1a91df127e680c05eaf7f8e534f
+    - name: train_45479_txt
+      url: https://storage.googleapis.com/deepmind-gutenberg/train/45479.txt
+      filename: train/45479.txt
+      size: 55364
+      md5: 7fbb3263ae2a9900a382af2cf500cd8f
+    - name: train_45489_txt
+      url: https://storage.googleapis.com/deepmind-gutenberg/train/45489.txt
+      filename: train/45489.txt
+      size: 501592
+      md5: 7f4499e51a5e1869803e760a0815938b
+    - name: train_45510_txt
+      url: https://storage.googleapis.com/deepmind-gutenberg/train/45510.txt
+      filename: train/45510.txt
+      size: 250279
+      md5: 4e8a073cefbee31e817abeab2fc40fa6
+    - name: train_45646_txt
+      url: https://storage.googleapis.com/deepmind-gutenberg/train/45646.txt
+      filename: train/45646.txt
+      size: 54014
+      md5: e74baac1912f7b2306185e621332039a
+    - name: train_45659_txt
+      url: https://storage.googleapis.com/deepmind-gutenberg/train/45659.txt
+      filename: train/45659.txt
+      size: 460392
+      md5: 2733133bc7a7606d1ab403ebe6c7b796
+    - name: train_45674_txt
+      url: https://storage.googleapis.com/deepmind-gutenberg/train/45674.txt
+      filename: train/45674.txt
+      size: 249599
+      md5: 7ce448ea9949f056927a581f4e88a599
+    - name: train_45749_txt
+      url: https://storage.googleapis.com/deepmind-gutenberg/train/45749.txt
+      filename: train/45749.txt
+      size: 331308
+      md5: b82610f11a93b0d9a2d918f5c79b5026
+    - name: train_46068_txt
+      url: https://storage.googleapis.com/deepmind-gutenberg/train/46068.txt
+      filename: train/46068.txt
+      size: 259491
+      md5: 6a187ca96eca45f80098a4a8d2e5078d
+    - name: train_46400_txt
+      url: https://storage.googleapis.com/deepmind-gutenberg/train/46400.txt
+      filename: train/46400.txt
+      size: 707633
+      md5: 998123d14602e4791c56422ad3fbe327
+    - name: train_46735_txt
+      url: https://storage.googleapis.com/deepmind-gutenberg/train/46735.txt
+      filename: train/46735.txt
+      size: 504294
+      md5: b51e3b68e1aaf10231b576b6b298b37d
+    - name: train_46737_txt
+      url: https://storage.googleapis.com/deepmind-gutenberg/train/46737.txt
+      filename: train/46737.txt
+      size: 581014
+      md5: 607f26988d9a839c0088117830bf2da0
+    - name: train_46751_txt
+      url: https://storage.googleapis.com/deepmind-gutenberg/train/46751.txt
+      filename: train/46751.txt
+      size: 78548
+      md5: 216158bbbe63532a1d763324c8648153
+    - name: train_46800_txt
+      url: https://storage.googleapis.com/deepmind-gutenberg/train/46800.txt
+      filename: train/46800.txt
+      size: 109941
+      md5: 10d66ae9e56a552bcb6ac7499cabae58
+    - name: train_47117_txt
+      url: https://storage.googleapis.com/deepmind-gutenberg/train/47117.txt
+      filename: train/47117.txt
+      size: 641208
+      md5: 0f478aaa5c697352ded1f6a9b147872f
+    - name: train_47235_txt
+      url: https://storage.googleapis.com/deepmind-gutenberg/train/47235.txt
+      filename: train/47235.txt
+      size: 102996
+      md5: 226938f1b9588cb752836c1fb60bd016
+    - name: train_47498_txt
+      url: https://storage.googleapis.com/deepmind-gutenberg/train/47498.txt
+      filename: train/47498.txt
+      size: 63024
+      md5: 24b769d3780b9052fa92e84d7b6f2e9a
+    - name: train_4763_txt
+      url: https://storage.googleapis.com/deepmind-gutenberg/train/4763.txt
+      filename: train/4763.txt
+      size: 119769
+      md5: 8914044a9d77b18e244ba5b54bcc52f3
+    - name: train_47699_txt
+      url: https://storage.googleapis.com/deepmind-gutenberg/train/47699.txt
+      filename: train/47699.txt
+      size: 98651
+      md5: db93cf1a48c971c03ebfee14c944ed72
+    - name: train_47730_txt
+      url: https://storage.googleapis.com/deepmind-gutenberg/train/47730.txt
+      filename: train/47730.txt
+      size: 878262
+      md5: 59dcffe0d2704a99f4d002ff4d2ff2f7
+    - name: train_47794_txt
+      url: https://storage.googleapis.com/deepmind-gutenberg/train/47794.txt
+      filename: train/47794.txt
+      size: 648738
+      md5: a593c779c8ef2f3dce8bfed75d5870f5
+    - name: train_47905_txt
+      url: https://storage.googleapis.com/deepmind-gutenberg/train/47905.txt
+      filename: train/47905.txt
+      size: 722134
+      md5: db0b550e9ca89d670bde58b139c92783
+    - name: train_47934_txt
+      url: https://storage.googleapis.com/deepmind-gutenberg/train/47934.txt
+      filename: train/47934.txt
+      size: 13125
+      md5: c19fef1527f60fa92144a6694f7f9e88
+    - name: train_47968_txt
+      url: https://storage.googleapis.com/deepmind-gutenberg/train/47968.txt
+      filename: train/47968.txt
+      size: 530851
+      md5: d785d3cb3f11a6899814b4e6a4fdd031
+    - name: train_48055_txt
+      url: https://storage.googleapis.com/deepmind-gutenberg/train/48055.txt
+      filename: train/48055.txt
+      size: 165111
+      md5: 6557e4e3af1e3f6f88e7ec24d4a8e655
+    - name: train_48967_txt
+      url: https://storage.googleapis.com/deepmind-gutenberg/train/48967.txt
+      filename: train/48967.txt
+      size: 1167540
+      md5: aa48aff688d4fd4cfd0c5b867655ba8f
+    - name: train_49179_txt
+      url: https://storage.googleapis.com/deepmind-gutenberg/train/49179.txt
+      filename: train/49179.txt
+      size: 103935
+      md5: 452bfb6f7f56c62644d95763514c5f9f
+    - name: train_49190_txt
+      url: https://storage.googleapis.com/deepmind-gutenberg/train/49190.txt
+      filename: train/49190.txt
+      size: 254082
+      md5: 3ea4c7f30a2ff2011ba79610dfbbf588
+    - name: train_49304_txt
+      url: https://storage.googleapis.com/deepmind-gutenberg/train/49304.txt
+      filename: train/49304.txt
+      size: 189526
+      md5: 1e07ace8d23c79debdde83c82f1c303b
+    - name: train_49321_txt
+      url: https://storage.googleapis.com/deepmind-gutenberg/train/49321.txt
+      filename: train/49321.txt
+      size: 79130
+      md5: 9a0d81b6d36846303e634b4b15fb6e0b
+    - name: train_49614_txt
+      url: https://storage.googleapis.com/deepmind-gutenberg/train/49614.txt
+      filename: train/49614.txt
+      size: 342049
+      md5: 0e32ab30d29e7a4ce9c427b757f85a59
+    - name: train_4997_txt
+      url: https://storage.googleapis.com/deepmind-gutenberg/train/4997.txt
+      filename: train/4997.txt
+      size: 304508
+      md5: c030e440168065882f02fb958149b290
+    - name: train_50074_txt
+      url: https://storage.googleapis.com/deepmind-gutenberg/train/50074.txt
+      filename: train/50074.txt
+      size: 34358
+      md5: df2c4f080cf45aee82f45d617ca8e475
+    - name: train_50121_txt
+      url: https://storage.googleapis.com/deepmind-gutenberg/train/50121.txt
+      filename: train/50121.txt
+      size: 14082
+      md5: 01ae4cc60ffa22dc044956bbd7154e6d
+    - name: train_50123_txt
+      url: https://storage.googleapis.com/deepmind-gutenberg/train/50123.txt
+      filename: train/50123.txt
+      size: 306359
+      md5: dd20dba221a4e55fc058df14f6cfc68e
+    - name: train_50334_txt
+      url: https://storage.googleapis.com/deepmind-gutenberg/train/50334.txt
+      filename: train/50334.txt
+      size: 360011
+      md5: d68412e3e9dcc0de37e60b79b5ac809c
+    - name: train_5061_txt
+      url: https://storage.googleapis.com/deepmind-gutenberg/train/5061.txt
+      filename: train/5061.txt
+      size: 438842
+      md5: 8579b11e4dbe0faab2be5e2f000c88e4
+    - name: train_5075_txt
+      url: https://storage.googleapis.com/deepmind-gutenberg/train/5075.txt
+      filename: train/5075.txt
+      size: 607963
+      md5: a44f377d6ec1e55da97a26f784163bec
+    - name: train_50772_txt
+      url: https://storage.googleapis.com/deepmind-gutenberg/train/50772.txt
+      filename: train/50772.txt
+      size: 605516
+      md5: 07f1bb04da5f56c8a28b7dfbf6ff612c
+    - name: train_50970_txt
+      url: https://storage.googleapis.com/deepmind-gutenberg/train/50970.txt
+      filename: train/50970.txt
+      size: 300932
+      md5: d425079238f73258f8447ac4ab3aeb69
+    - name: train_50976_txt
+      url: https://storage.googleapis.com/deepmind-gutenberg/train/50976.txt
+      filename: train/50976.txt
+      size: 627801
+      md5: d7aeeb6a3835e5deffcdba2f7d8512e2
+    - name: train_51040_txt
+      url: https://storage.googleapis.com/deepmind-gutenberg/train/51040.txt
+      filename: train/51040.txt
+      size: 32287
+      md5: 83fb2b036707bbffea3ce08c35e9b6de
+    - name: train_51198_txt
+      url: https://storage.googleapis.com/deepmind-gutenberg/train/51198.txt
+      filename: train/51198.txt
+      size: 600239
+      md5: ec62d6d38d9e9393aaed8695bd129ae6
+    - name: train_51302_txt
+      url: https://storage.googleapis.com/deepmind-gutenberg/train/51302.txt
+      filename: train/51302.txt
+      size: 239074
+      md5: e5e33ba79b0ef8a8323c90876abdbadb
+    - name: train_51370_txt
+      url: https://storage.googleapis.com/deepmind-gutenberg/train/51370.txt
+      filename: train/51370.txt
+      size: 1118936
+      md5: bf531d606e925822b9422e0da38f82b9
+    - name: train_51685_txt
+      url: https://storage.googleapis.com/deepmind-gutenberg/train/51685.txt
+      filename: train/51685.txt
+      size: 690077
+      md5: 4f223165ba3151b206b372c51c90743d
+    - name: train_51924_txt
+      url: https://storage.googleapis.com/deepmind-gutenberg/train/51924.txt
+      filename: train/51924.txt
+      size: 108454
+      md5: 800b0a326120a323842d8525c4f2c504
+    - name: train_52338_txt
+      url: https://storage.googleapis.com/deepmind-gutenberg/train/52338.txt
+      filename: train/52338.txt
+      size: 320180
+      md5: 9a12a6ddf328a24bf90a2bb4803b71a4
+    - name: train_52411_txt
+      url: https://storage.googleapis.com/deepmind-gutenberg/train/52411.txt
+      filename: train/52411.txt
+      size: 221858
+      md5: bad00e5d121c6d6a6adff5096102e3d2
+    - name: train_52422_txt
+      url: https://storage.googleapis.com/deepmind-gutenberg/train/52422.txt
+      filename: train/52422.txt
+      size: 30517
+      md5: 59c40995819d014563d5d5f26ad4d373
+    - name: train_52634_txt
+      url: https://storage.googleapis.com/deepmind-gutenberg/train/52634.txt
+      filename: train/52634.txt
+      size: 339405
+      md5: 3b4b7cbc7f0faa68a4e406221b4a98fa
+    - name: train_527_txt
+      url: https://storage.googleapis.com/deepmind-gutenberg/train/527.txt
+      filename: train/527.txt
+      size: 295118
+      md5: d68012ec12b33f5573a4db327927806a
+    - name: train_52762_txt
+      url: https://storage.googleapis.com/deepmind-gutenberg/train/52762.txt
+      filename: train/52762.txt
+      size: 103036
+      md5: 8a5253323630b678173e8a1fd27624d6
+    - name: train_52868_txt
+      url: https://storage.googleapis.com/deepmind-gutenberg/train/52868.txt
+      filename: train/52868.txt
+      size: 572135
+      md5: 3d3a492cd4a3bc040d70ceaf4b35487d
+    - name: train_52935_txt
+      url: https://storage.googleapis.com/deepmind-gutenberg/train/52935.txt
+      filename: train/52935.txt
+      size: 51797
+      md5: 7a6d274b275827b95298119754c31aac
+    - name: train_53307_txt
+      url: https://storage.googleapis.com/deepmind-gutenberg/train/53307.txt
+      filename: train/53307.txt
+      size: 260663
+      md5: 950cede5033ca6f13972e0cca284fc16
+    - name: train_53368_txt
+      url: https://storage.googleapis.com/deepmind-gutenberg/train/53368.txt
+      filename: train/53368.txt
+      size: 106121
+      md5: e23225a8dcef4f4bfc27959e59e6a201
+    - name: train_53836_txt
+      url: https://storage.googleapis.com/deepmind-gutenberg/train/53836.txt
+      filename: train/53836.txt
+      size: 296081
+      md5: da652a2bf123b2413baccf2223380b0d
+    - name: train_53844_txt
+      url: https://storage.googleapis.com/deepmind-gutenberg/train/53844.txt
+      filename: train/53844.txt
+      size: 257005
+      md5: ac2a8df070943feea448ea94d5980f24
+    - name: train_54038_txt
+      url: https://storage.googleapis.com/deepmind-gutenberg/train/54038.txt
+      filename: train/54038.txt
+      size: 727053
+      md5: 1a236a8d5b2ab43c6c007dda7cf04203
+    - name: train_54259_txt
+      url: https://storage.googleapis.com/deepmind-gutenberg/train/54259.txt
+      filename: train/54259.txt
+      size: 485776
+      md5: ae83487714081f06d8eccb990907c7bb
+    - name: train_54294_txt
+      url: https://storage.googleapis.com/deepmind-gutenberg/train/54294.txt
+      filename: train/54294.txt
+      size: 300716
+      md5: 2c33c82e800d278ef006477fe891a50d
+    - name: train_54345_txt
+      url: https://storage.googleapis.com/deepmind-gutenberg/train/54345.txt
+      filename: train/54345.txt
+      size: 4519451
+      md5: 65bc69d57cb4952c036aa0769eaa99e6
+    - name: train_54383_txt
+      url: https://storage.googleapis.com/deepmind-gutenberg/train/54383.txt
+      filename: train/54383.txt
+      size: 847916
+      md5: f56373db06ed795d9ef0887b8f28d85a
+    - name: train_54534_txt
+      url: https://storage.googleapis.com/deepmind-gutenberg/train/54534.txt
+      filename: train/54534.txt
+      size: 69703
+      md5: 8159d126c362a021bc1fcc836fd11aff
+    - name: train_54755_txt
+      url: https://storage.googleapis.com/deepmind-gutenberg/train/54755.txt
+      filename: train/54755.txt
+      size: 354399
+      md5: b345c3a1c1cd355eedaddd57130d8363
+    - name: train_54900_txt
+      url: https://storage.googleapis.com/deepmind-gutenberg/train/54900.txt
+      filename: train/54900.txt
+      size: 477901
+      md5: d15fbdb7655aeef0624aecaecfadd1e3
+    - name: train_55016_txt
+      url: https://storage.googleapis.com/deepmind-gutenberg/train/55016.txt
+      filename: train/55016.txt
+      size: 150273
+      md5: aac36d642ffdbb33a4ca6d6e3cffa0aa
+    - name: train_55035_txt
+      url: https://storage.googleapis.com/deepmind-gutenberg/train/55035.txt
+      filename: train/55035.txt
+      size: 483187
+      md5: f673f5484aefdc9655e610ee90b0b60d
+    - name: train_55053_txt
+      url: https://storage.googleapis.com/deepmind-gutenberg/train/55053.txt
+      filename: train/55053.txt
+      size: 506119
+      md5: 3f1507e15159929b004d1e20ee6bbe29
+    - name: train_55137_txt
+      url: https://storage.googleapis.com/deepmind-gutenberg/train/55137.txt
+      filename: train/55137.txt
+      size: 510650
+      md5: 260d5e819de955435b8a61c523524f39
+    - name: train_55239_txt
+      url: https://storage.googleapis.com/deepmind-gutenberg/train/55239.txt
+      filename: train/55239.txt
+      size: 618784
+      md5: 8a8d786c9f14190256da98dd1038047f
+    - name: train_55342_txt
+      url: https://storage.googleapis.com/deepmind-gutenberg/train/55342.txt
+      filename: train/55342.txt
+      size: 337070
+      md5: 278e3f7b07af3d675dfb29b9522d8249
+    - name: train_55767_txt
+      url: https://storage.googleapis.com/deepmind-gutenberg/train/55767.txt
+      filename: train/55767.txt
+      size: 317858
+      md5: 9311befb54312beea725169b770a489c
+    - name: train_56063_txt
+      url: https://storage.googleapis.com/deepmind-gutenberg/train/56063.txt
+      filename: train/56063.txt
+      size: 252526
+      md5: 35456c4c5719e0f353086a1e8a9b3b90
+    - name: train_56087_txt
+      url: https://storage.googleapis.com/deepmind-gutenberg/train/56087.txt
+      filename: train/56087.txt
+      size: 507601
+      md5: e09b9feda6a4863047e8e5037724801a
+    - name: train_56263_txt
+      url: https://storage.googleapis.com/deepmind-gutenberg/train/56263.txt
+      filename: train/56263.txt
+      size: 268915
+      md5: 2284f7ad1ffbfb879a431a1fd6ab39c4
+    - name: train_56735_txt
+      url: https://storage.googleapis.com/deepmind-gutenberg/train/56735.txt
+      filename: train/56735.txt
+      size: 297772
+      md5: 68d779098905ff22e60dbb5021edf57d
+    - name: train_57156_txt
+      url: https://storage.googleapis.com/deepmind-gutenberg/train/57156.txt
+      filename: train/57156.txt
+      size: 232770
+      md5: 8ca0e91bf5fbeed0f3a9f7d4540ae18b
+    - name: train_5722_txt
+      url: https://storage.googleapis.com/deepmind-gutenberg/train/5722.txt
+      filename: train/5722.txt
+      size: 207250
+      md5: f5d50ef8cab0e75af6a140cdcb63f081
+    - name: train_5723_txt
+      url: https://storage.googleapis.com/deepmind-gutenberg/train/5723.txt
+      filename: train/5723.txt
+      size: 70651
+      md5: 95babf65be54cd94de84ee38c6f94f8c
+    - name: train_57748_txt
+      url: https://storage.googleapis.com/deepmind-gutenberg/train/57748.txt
+      filename: train/57748.txt
+      size: 363725
+      md5: 90287da0eb84b2e1aff0e81bc84dab3f
+    - name: train_58107_txt
+      url: https://storage.googleapis.com/deepmind-gutenberg/train/58107.txt
+      filename: train/58107.txt
+      size: 304923
+      md5: c3698007d791cf47d917a54ea9b69af2
+    - name: train_58557_txt
+      url: https://storage.googleapis.com/deepmind-gutenberg/train/58557.txt
+      filename: train/58557.txt
+      size: 521829
+      md5: e9b9cdb18741ff3537778812d2412e64
+    - name: train_58633_txt
+      url: https://storage.googleapis.com/deepmind-gutenberg/train/58633.txt
+      filename: train/58633.txt
+      size: 244655
+      md5: 093e9cd3416221f420ad8a2ec46c8696
+    - name: train_58658_txt
+      url: https://storage.googleapis.com/deepmind-gutenberg/train/58658.txt
+      filename: train/58658.txt
+      size: 1995170
+      md5: c093fcb394fbe24b88798bd2cae11701
+    - name: train_58694_txt
+      url: https://storage.googleapis.com/deepmind-gutenberg/train/58694.txt
+      filename: train/58694.txt
+      size: 845741
+      md5: 442414a3339dbd6fb6ef92de67e8f231
+    - name: train_6041_txt
+      url: https://storage.googleapis.com/deepmind-gutenberg/train/6041.txt
+      filename: train/6041.txt
+      size: 185398
+      md5: df4f5a0227baa143b5a8ceeccc6a19b7
+    - name: train_6987_txt
+      url: https://storage.googleapis.com/deepmind-gutenberg/train/6987.txt
+      filename: train/6987.txt
+      size: 462652
+      md5: 21b3db91c71875b061fd852466bbe749
+    - name: train_7074_txt
+      url: https://storage.googleapis.com/deepmind-gutenberg/train/7074.txt
+      filename: train/7074.txt
+      size: 29922
+      md5: 2bf8189c9b04524eed248729c2d34053
+    - name: train_7371_txt
+      url: https://storage.googleapis.com/deepmind-gutenberg/train/7371.txt
+      filename: train/7371.txt
+      size: 406418
+      md5: f24ab9e85174bcc282345e33561aac55
+    - name: train_7472_txt
+      url: https://storage.googleapis.com/deepmind-gutenberg/train/7472.txt
+      filename: train/7472.txt
+      size: 600797
+      md5: 43c38c0cca1735b7de68d7ce1fbb6864
+    - name: train_7502_txt
+      url: https://storage.googleapis.com/deepmind-gutenberg/train/7502.txt
+      filename: train/7502.txt
+      size: 449527
+      md5: b952ba55e091e6f5fa66be425b71cab6
+    - name: train_7639_txt
+      url: https://storage.googleapis.com/deepmind-gutenberg/train/7639.txt
+      filename: train/7639.txt
+      size: 1014987
+      md5: c23a4519870abbc06575176266feec71
+    - name: train_8094_txt
+      url: https://storage.googleapis.com/deepmind-gutenberg/train/8094.txt
+      filename: train/8094.txt
+      size: 69881
+      md5: 1bc404325ff93aa6525961946130229b
+    - name: train_820_txt
+      url: https://storage.googleapis.com/deepmind-gutenberg/train/820.txt
+      filename: train/820.txt
+      size: 1595598
+      md5: 813ca28cf4ceeb11e7d72ae50c1bbf1a
+    - name: train_8604_txt
+      url: https://storage.googleapis.com/deepmind-gutenberg/train/8604.txt
+      filename: train/8604.txt
+      size: 203838
+      md5: f8c9499b4e8f436d71922c84eb35d744
+    - name: train_8783_txt
+      url: https://storage.googleapis.com/deepmind-gutenberg/train/8783.txt
+      filename: train/8783.txt
+      size: 24068
+      md5: 79e89d37bee7aa6f97f850dfa3a43a6d
+    - name: train_8796_txt
+      url: https://storage.googleapis.com/deepmind-gutenberg/train/8796.txt
+      filename: train/8796.txt
+      size: 86748
+      md5: faf87269548267de5efa7a8bde75dd57
+    - name: train_8908_txt
+      url: https://storage.googleapis.com/deepmind-gutenberg/train/8908.txt
+      filename: train/8908.txt
+      size: 144334
+      md5: 5312ed217349371b262427ac4bc36c5c
+    - name: train_9218_txt
+      url: https://storage.googleapis.com/deepmind-gutenberg/train/9218.txt
+      filename: train/9218.txt
+      size: 23342
+      md5: 629070f66b8a2efadf52d976046f2dc2
+    - name: train_962_txt
+      url: https://storage.googleapis.com/deepmind-gutenberg/train/962.txt
+      filename: train/962.txt
+      size: 593820
+      md5: 52d236394c194130ca6c13a385816e58
+    - name: train_963_txt
+      url: https://storage.googleapis.com/deepmind-gutenberg/train/963.txt
+      filename: train/963.txt
+      size: 1917472
+      md5: a5595a979445c33cf36eae835c295100
+    - name: train_9813_txt
+      url: https://storage.googleapis.com/deepmind-gutenberg/train/9813.txt
+      filename: train/9813.txt
+      size: 732813
+      md5: 04c45e05abfc9a7f855bb128a4f01d6a
+    - name: train_9954_txt
+      url: https://storage.googleapis.com/deepmind-gutenberg/train/9954.txt
+      filename: train/9954.txt
+      size: 95305
+      md5: 39ee76e32d3750e4d31a4f621b603cf0
+    - name: train_9956_txt
+      url: https://storage.googleapis.com/deepmind-gutenberg/train/9956.txt
+      filename: train/9956.txt
+      size: 320874
+      md5: b2525e4a80c23b56f46a8b02d0fa6ab0
