@@ -1,0 +1,23 @@
+{
+ "sheets": 106,
+ "lines": 8606,
+ "conditions": {
+  "scan_app": 37,
+  "photo_angled": 16,
+  "curved": 8,
+  "rotated": 7,
+  "photo_flat": 16,
+  "low_light": 11,
+  "distant": 11
+ },
+ "layout": {
+  "dpi": 300,
+  "paper_in": [
+   8.27,
+   11.69
+  ],
+  "marker_in": 0.55
+ },
+ "sheets_gt_sha256": "1557f400ffd6e1605f68d212e64b4bee4cc4fdbd2f2fabd87ac0bdac9cb9cb2b",
+ "selection_sha256": "b4c82767250f846400d8f52b2a768163ebe0e4e9c59fa2108de8649a5cb929dc"
+}
