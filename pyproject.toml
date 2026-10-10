@@ -17,6 +17,9 @@ dependencies = [
     "pyyaml",
     "psutil",
     "nvidia-ml-py",
+    "pillow",
+    "matplotlib",
+    "fonttools",
 ]
 
 [project.optional-dependencies]
@@ -45,7 +48,7 @@ warn_redundant_casts = true
 strict_equality = true
 
 [[tool.mypy.overrides]]
-module = ["pynvml", "pynvml.*"]
+module = ["pynvml", "pynvml.*", "fontTools", "fontTools.*"]
 ignore_missing_imports = true
 
 [tool.pytest.ini_options]
