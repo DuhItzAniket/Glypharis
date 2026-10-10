@@ -12,6 +12,8 @@ from glypharis.data.gdc import (
     align_capture,
     compose_pack_page,
     extract_lines,
+    group_chars,
+    is_small_caps_font,
     project_polygons,
     render_page,
 )
@@ -53,7 +55,8 @@ def test_render_page_size(text_pdf):
 def _sheet(pack_page=7):
     page = Image.new("RGB", (600, 800), "white")
     lines = [PdfLine("hello world", (100, 100, 300, 130)), PdfLine("second", (100, 400, 250, 430))]
-    return compose_pack_page(page, lines, pack_page, f"GDC-{pack_page:04d}", LAYOUT)
+    sheet, gt, _ = compose_pack_page(page, lines, pack_page, f"GDC-{pack_page:04d}", LAYOUT)
+    return sheet, gt
 
 
 def _photo(sheet: Image.Image, H: np.ndarray, size=(1100, 1300)) -> Image.Image:
@@ -99,3 +102,86 @@ def test_no_markers_returns_none():
 def test_pack_page_range():
     with pytest.raises(ValueError):
         compose_pack_page(Image.new("RGB", (10, 10)), [], 250, "x", LAYOUT)
+
+
+# ---------------------------------------------------------------------------- line grouping
+
+
+def _chars(text, x0, y, w=5.0, h=10.0):
+    """Characters of one printed row: boxes (left, bottom, right, top), PDF coordinates."""
+    out = []
+    for i, ch in enumerate(text):
+        box = None if ch == " " else (x0 + i * w, y, x0 + (i + 1) * w, y + h)
+        out.append((ch, box, 0.0))
+    return out
+
+
+def test_group_chars_splits_after_end_of_line_hyphen():
+    chars = _chars("many in", 0, 100) + _chars("￾", 35, 100) + _chars("struments", 0, 85)
+    assert [t for t, _, _ in group_chars(chars)] == ["many in-", "struments"]
+
+
+def test_group_chars_splits_on_row_change_without_break():
+    chars = _chars("first row", 0, 100) + _chars("second row", 0, 85)
+    lines = group_chars(chars)
+    assert [t for t, _, _ in lines] == ["first row", "second row"]
+    assert lines[0][1][1] == 100 and lines[1][1][3] == 95
+
+
+def test_group_chars_keeps_superscripts_on_the_line():
+    chars = _chars("x", 0, 100) + _chars("2", 5, 104, h=6) + _chars(" + y", 10, 100)
+    assert [t for t, _, _ in group_chars(chars)] == ["x2 + y"]
+
+
+def test_group_chars_honours_generated_breaks():
+    breaks = [("\r", None, 0.0), ("\n", None, 0.0)]
+    chars = [*_chars("left col", 0, 100), *breaks, *_chars("right", 300, 100)]
+    assert [t for t, _, _ in group_chars(chars)] == ["left col", "right"]
+
+
+def test_group_chars_keeps_rotated_text_together():
+    # A margin stamp rotated by 270 degrees: glyphs stacked in one column, no generated break
+    # before it. The rotation change alone separates it from the body text.
+    rotated = [
+        (ch, (50.0, 200.0 - 8 * i, 58.0, 208.0 - 8 * i), 270.0) for i, ch in enumerate("arXiv")
+    ]
+    lines = group_chars([*_chars("body", 100, 300), *rotated])
+    assert [(t, v) for t, _, v in lines] == [("body", False), ("arXiv", True)]
+
+
+def test_footnote_mark_does_not_make_a_line_vertical():
+    # "VLP" followed by a raised footnote mark above the last letter, then more text on the row.
+    chars = [*_chars("models for VLP", 0, 100), ("1", (66.0, 107.0, 69.0, 113.0), 0.0),
+             *_chars(" and more", 70, 100)]  # fmt: skip
+    lines = group_chars(chars)
+    assert [(t, v) for t, _, v in lines] == [("models for VLP1 and more", False)]
+
+
+def test_ignore_regions_are_mapped_to_the_sheet():
+    page = Image.new("RGB", (600, 800), "white")
+    _, _, ignore = compose_pack_page(page, [], 1, "x", LAYOUT, [(0, 0, 600, 800)])
+    x0, y0, x1, y1 = LAYOUT.content_box
+    (ax, ay), _, (bx, by), _ = ignore[0]
+    assert x0 <= ax < bx <= x1 and y0 <= ay < by <= y1
+
+
+def test_group_chars_splits_at_wide_gaps_but_not_word_spaces():
+    # "Total" ... form field ... "12": a 40-unit gap with 10-unit glyphs. Word spaces stay.
+    chars = [*_chars("Tax-exempt interest . . .", 0, 100), *_chars("2a", 170, 100)]
+    assert [t for t, _, _ in group_chars(chars)] == ["Tax-exempt interest . . .", "2a"]
+
+
+@pytest.mark.parametrize(
+    ("name", "small_caps"),
+    [("SFCC1200", True), ("ABCDEF+CMCSC10", True), ("Garamond-SC", True),
+     ("LibreCaslon SmallCaps", True),
+     ("SFRM1200", False), ("CMR10", False), ("Times-Roman", False), ("ABCDEF+Arial-BoldMT", False)],
+)  # fmt: skip
+def test_small_caps_font_detection(name, small_caps):
+    assert is_small_caps_font(name) is small_caps
+
+
+def test_raised_quote_after_comma_stays_on_the_line():
+    chars = [*_chars('"changes of position', 0, 100), (",", (100.0, 98.0, 102.0, 101.0), 0.0),
+             ("”", (103.0, 107.0, 107.0, 110.0), 0.0), *_chars(" which", 108, 100)]  # fmt: skip
+    assert [t for t, _, _ in group_chars(chars)] == ['"changes of position,” which']
