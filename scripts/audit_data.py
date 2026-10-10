@@ -563,7 +563,7 @@ def audit_hiertext(root: Path, reports: Path, workers: int, use_cache: bool) -> 
     flag_csv = reports / "data_quality" / "hiertext_flags.csv"
     flag_csv.parent.mkdir(parents=True, exist_ok=True)
     with flag_csv.open("w", encoding="utf-8", newline="") as fh:
-        writer = csv.DictWriter(fh, fieldnames=FLAG_COLUMNS)
+        writer = csv.DictWriter(fh, fieldnames=FLAG_COLUMNS, lineterminator="\n")
         writer.writeheader()
         for f in flags:
             if f.spec.severity != "info":
