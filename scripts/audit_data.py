@@ -587,7 +587,7 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--dataset", required=True, choices=["hiertext"])
     parser.add_argument("--data-root", default="data")
     parser.add_argument("--reports", default="reports")
-    parser.add_argument("--workers", type=int, default=max(1, (os.cpu_count() or 2) - 2))
+    parser.add_argument("--workers", type=int, default=min(12, max(1, (os.cpu_count() or 2) - 2)))
     parser.add_argument("--no-cache", action="store_true")
     args = parser.parse_args(argv)
     setup_logging(Path(args.data_root) / "cache" / "logs", run_id="audit_data")
