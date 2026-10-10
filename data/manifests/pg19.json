@@ -1,0 +1,4076 @@
+{
+  "manifest_version": 1,
+  "dataset": "pg19",
+  "title": "PG-19 (DeepMind Project Gutenberg corpus)",
+  "version": "gs://deepmind-gutenberg, listed 2026-10-10",
+  "homepage": "https://github.com/google-deepmind/pg19",
+  "licence": "Apache 2.0 (packaging); texts public domain in the US",
+  "citation": "rae2020compressive",
+  "role": "GlyphSynth text (validation and test books held out for GlyphSynth-val; 300 train books, seed 19)",
+  "files": {
+    "test_10146_txt": {
+      "bytes": 253872,
+      "downloaded_utc": "2026-10-10T16:56:25+00:00",
+      "md5_published": "0bbe2569ea7d62f4f7cfb74e09ba3827",
+      "path": "raw/pg19/test/10146.txt",
+      "sha256": "f8dd4334fd8d422cd2f9153ffbff9b097611569592d7ca09fc6fe7881336d331",
+      "sha256_source": "computed",
+      "url": "https://storage.googleapis.com/deepmind-gutenberg/test/10146.txt"
+    },
+    "test_10321_txt": {
+      "bytes": 324979,
+      "downloaded_utc": "2026-10-10T16:56:27+00:00",
+      "md5_published": "1b8464003c946af01a1e66f57a942cca",
+      "path": "raw/pg19/test/10321.txt",
+      "sha256": "fedcb2723c2ad091f76d45eb98efd810977e7b906f6fd8cbd815734d1e90c456",
+      "sha256_source": "computed",
+      "url": "https://storage.googleapis.com/deepmind-gutenberg/test/10321.txt"
+    },
+    "test_10356_txt": {
+      "bytes": 314879,
+      "downloaded_utc": "2026-10-10T16:56:26+00:00",
+      "md5_published": "951b6477f43a7263939b17c3325f9ad1",
+      "path": "raw/pg19/test/10356.txt",
+      "sha256": "af4b57d358448588adbc6da962cad655bf586ae746dba21f62e956d36d97c88e",
+      "sha256_source": "computed",
+      "url": "https://storage.googleapis.com/deepmind-gutenberg/test/10356.txt"
+    },
+    "test_10762_txt": {
+      "bytes": 348606,
+      "downloaded_utc": "2026-10-10T16:56:31+00:00",
+      "md5_published": "d2888660518d460ef128fc1459a317f6",
+      "path": "raw/pg19/test/10762.txt",
+      "sha256": "fcc71b161311d4854a078f8cdda6e4381542536167145f6dfdda84bcad256d5f",
+      "sha256_source": "computed",
+      "url": "https://storage.googleapis.com/deepmind-gutenberg/test/10762.txt"
+    },
+    "test_12204_txt": {
+      "bytes": 24408,
+      "downloaded_utc": "2026-10-10T16:56:28+00:00",
+      "md5_published": "85396b6b2f2a2e1f8a417ac6de27eb6b",
+      "path": "raw/pg19/test/12204.txt",
+      "sha256": "e1c79655be744bc89fd291f84b77ddb1819d117f2bba142373f94d5ab309d0d0",
+      "sha256_source": "computed",
+      "url": "https://storage.googleapis.com/deepmind-gutenberg/test/12204.txt"
+    },
+    "test_15562_txt": {
+      "bytes": 222300,
+      "downloaded_utc": "2026-10-10T16:56:30+00:00",
+      "md5_published": "99c2a7dcb386971eb998976139c4f988",
+      "path": "raw/pg19/test/15562.txt",
+      "sha256": "90eae481a404688312d407918b07e649643ce6c934a16ad31040614221673ca1",
+      "sha256_source": "computed",
+      "url": "https://storage.googleapis.com/deepmind-gutenberg/test/15562.txt"
+    },
+    "test_22424_txt": {
+      "bytes": 444287,
+      "downloaded_utc": "2026-10-10T16:56:30+00:00",
+      "md5_published": "1b120e9872a339fb484d9e367f0dd105",
+      "path": "raw/pg19/test/22424.txt",
+      "sha256": "a3475140ed4763614c11c4f2e486e468ae5620bf539877bf769e16710d808a0d",
+      "sha256_source": "computed",
+      "url": "https://storage.googleapis.com/deepmind-gutenberg/test/22424.txt"
+    },
+    "test_24553_txt": {
+      "bytes": 130627,
+      "downloaded_utc": "2026-10-10T16:56:27+00:00",
+      "md5_published": "e1feb2a9e23c5f199b598a152b154873",
+      "path": "raw/pg19/test/24553.txt",
+      "sha256": "b188fef90522bd12a523906162d9c3df9987e662025183e3a14e731d866a831a",
+      "sha256_source": "computed",
+      "url": "https://storage.googleapis.com/deepmind-gutenberg/test/24553.txt"
+    },
+    "test_2544_txt": {
+      "bytes": 352384,
+      "downloaded_utc": "2026-10-10T16:56:28+00:00",
+      "md5_published": "e0f390d7ead75a38124cd52b492f2196",
+      "path": "raw/pg19/test/2544.txt",
+      "sha256": "0c79ceaf5bcc208b8c924037613c2c7fb1606de21ec8d99d5c446a516c4af787",
+      "sha256_source": "computed",
+      "url": "https://storage.googleapis.com/deepmind-gutenberg/test/2544.txt"
+    },
+    "test_25646_txt": {
+      "bytes": 103323,
+      "downloaded_utc": "2026-10-10T16:56:31+00:00",
+      "md5_published": "ec49975b82fdcc61cca240b068c74844",
+      "path": "raw/pg19/test/25646.txt",
+      "sha256": "04af5d410857dab7b4ef5a90d43bff622450b4bc9ee9abfc578487203f423d64",
+      "sha256_source": "computed",
+      "url": "https://storage.googleapis.com/deepmind-gutenberg/test/25646.txt"
+    },
+    "test_25773_txt": {
+      "bytes": 488162,
+      "downloaded_utc": "2026-10-10T16:56:30+00:00",
+      "md5_published": "9195d2c9af5d9e0433a25b73c0fe3362",
+      "path": "raw/pg19/test/25773.txt",
+      "sha256": "02dedc58fe901826fe05a6864f377ec2d38993bd8c4e27429152e5e047dd52c4",
+      "sha256_source": "computed",
+      "url": "https://storage.googleapis.com/deepmind-gutenberg/test/25773.txt"
+    },
+    "test_25830_txt": {
+      "bytes": 123962,
+      "downloaded_utc": "2026-10-10T16:56:31+00:00",
+      "md5_published": "85ea16dc23cc6f0ed362194587eb6542",
+      "path": "raw/pg19/test/25830.txt",
+      "sha256": "63a0e5ee09349c28a33fea6a19c88d741307731b2f1a68da9b3982aeda91694f",
+      "sha256_source": "computed",
+      "url": "https://storage.googleapis.com/deepmind-gutenberg/test/25830.txt"
+    },
+    "test_26183_txt": {
+      "bytes": 475456,
+      "downloaded_utc": "2026-10-10T16:56:31+00:00",
+      "md5_published": "774da4d0a2c1c9966e63ff2a4d204dd3",
+      "path": "raw/pg19/test/26183.txt",
+      "sha256": "b73ddfcfe10430b96635b021312cbe21eaa6227bf1614b39846d4234d9e12a66",
+      "sha256_source": "computed",
+      "url": "https://storage.googleapis.com/deepmind-gutenberg/test/26183.txt"
+    },
+    "test_26239_txt": {
+      "bytes": 354117,
+      "downloaded_utc": "2026-10-10T16:56:33+00:00",
+      "md5_published": "ec9ee99e1613a58700e4493c4667a8ac",
+      "path": "raw/pg19/test/26239.txt",
+      "sha256": "550798583dc17a1b7f7300591a6531d1f0a3440b6d530c331186814225a36344",
+      "sha256_source": "computed",
+      "url": "https://storage.googleapis.com/deepmind-gutenberg/test/26239.txt"
+    },
+    "test_26493_txt": {
+      "bytes": 562729,
+      "downloaded_utc": "2026-10-10T16:56:34+00:00",
+      "md5_published": "673439db9a661d8e8c4a143ca5724035",
+      "path": "raw/pg19/test/26493.txt",
+      "sha256": "f2088dc639475a627a830a819d2b4ade98e347a840a08980e0fdf35a7f836275",
+      "sha256_source": "computed",
+      "url": "https://storage.googleapis.com/deepmind-gutenberg/test/26493.txt"
+    },
+    "test_26618_txt": {
+      "bytes": 58957,
+      "downloaded_utc": "2026-10-10T16:56:31+00:00",
+      "md5_published": "a84b05aaf5af2993f14444b66a6d6269",
+      "path": "raw/pg19/test/26618.txt",
+      "sha256": "9352d2211b37f9e32ca13ea68027fbec101acf13718ff96c606e766f9144b677",
+      "sha256_source": "computed",
+      "url": "https://storage.googleapis.com/deepmind-gutenberg/test/26618.txt"
+    },
+    "test_27454_txt": {
+      "bytes": 404307,
+      "downloaded_utc": "2026-10-10T16:56:35+00:00",
+      "md5_published": "d2439eeb4039d83fb6860520a44670cd",
+      "path": "raw/pg19/test/27454.txt",
+      "sha256": "0f5a3efba148e8435ae9acc4a34e570369d493d635413d56a3044b08d70f6d9a",
+      "sha256_source": "computed",
+      "url": "https://storage.googleapis.com/deepmind-gutenberg/test/27454.txt"
+    },
+    "test_28444_txt": {
+      "bytes": 335975,
+      "downloaded_utc": "2026-10-10T16:56:35+00:00",
+      "md5_published": "cd53919aa546e4da4e0f38fc328632d0",
+      "path": "raw/pg19/test/28444.txt",
+      "sha256": "f7bd54971caf53bc3ca651cacbaaefae402812b56918f6c4b5dcaeb6a279864f",
+      "sha256_source": "computed",
+      "url": "https://storage.googleapis.com/deepmind-gutenberg/test/28444.txt"
+    },
+    "test_28988_txt": {
+      "bytes": 737008,
+      "downloaded_utc": "2026-10-10T16:56:34+00:00",
+      "md5_published": "ac699e90bfb3fc2b18669a35c5a76927",
+      "path": "raw/pg19/test/28988.txt",
+      "sha256": "5ba1eb22b96320155afd942871f76b1f040d4918d9871a1d4b854176c7015567",
+      "sha256_source": "computed",
+      "url": "https://storage.googleapis.com/deepmind-gutenberg/test/28988.txt"
+    },
+    "test_29594_txt": {
+      "bytes": 86075,
+      "downloaded_utc": "2026-10-10T16:56:33+00:00",
+      "md5_published": "ffd7f4542412c1e0803ec081649302ae",
+      "path": "raw/pg19/test/29594.txt",
+      "sha256": "f4590fbca52dedf54ce45d1ef6ad6d01875d8cde22796213c40dd01dc971696a",
+      "sha256_source": "computed",
+      "url": "https://storage.googleapis.com/deepmind-gutenberg/test/29594.txt"
+    },
+    "test_29973_txt": {
+      "bytes": 168905,
+      "downloaded_utc": "2026-10-10T16:56:34+00:00",
+      "md5_published": "f1aa598d80041885bf111f2c219b8d3e",
+      "path": "raw/pg19/test/29973.txt",
+      "sha256": "349ac4532773414f8da1723d38f09ffad5911018fb380365022e6e76e48abf46",
+      "sha256_source": "computed",
+      "url": "https://storage.googleapis.com/deepmind-gutenberg/test/29973.txt"
+    },
+    "test_30312_txt": {
+      "bytes": 2502293,
+      "downloaded_utc": "2026-10-10T16:56:38+00:00",
+      "md5_published": "def92b3e4d336d5a292e9304a8e303e2",
+      "path": "raw/pg19/test/30312.txt",
+      "sha256": "4d9c0b401a9fd85b169a744d76c9e88e1d2a4b5d9a690c40fa2bf98164823032",
+      "sha256_source": "computed",
+      "url": "https://storage.googleapis.com/deepmind-gutenberg/test/30312.txt"
+    },
+    "test_30752_txt": {
+      "bytes": 171844,
+      "downloaded_utc": "2026-10-10T16:56:38+00:00",
+      "md5_published": "2fb13b7e5f80fd6ef56eb131ca2e421b",
+      "path": "raw/pg19/test/30752.txt",
+      "sha256": "14f951b46330ff912bf29fe4888d668fc4693cd05b9d87f0c2fd0d985f3c29de",
+      "sha256_source": "computed",
+      "url": "https://storage.googleapis.com/deepmind-gutenberg/test/30752.txt"
+    },
+    "test_30754_txt": {
+      "bytes": 916394,
+      "downloaded_utc": "2026-10-10T16:56:38+00:00",
+      "md5_published": "2fc43bab597bbc7dc9bac910e600ad04",
+      "path": "raw/pg19/test/30754.txt",
+      "sha256": "f01af5df32ed5c8c4f5e99121f85d25667d45579da31856e9d572fd09810dd50",
+      "sha256_source": "computed",
+      "url": "https://storage.googleapis.com/deepmind-gutenberg/test/30754.txt"
+    },
+    "test_30909_txt": {
+      "bytes": 190582,
+      "downloaded_utc": "2026-10-10T16:56:38+00:00",
+      "md5_published": "5833fe492b35d7312a862b625bfea05c",
+      "path": "raw/pg19/test/30909.txt",
+      "sha256": "1eebeea3739f55afd5d47e989fca2657022e72829abcab070af599cefa62dc92",
+      "sha256_source": "computed",
+      "url": "https://storage.googleapis.com/deepmind-gutenberg/test/30909.txt"
+    },
+    "test_30981_txt": {
+      "bytes": 153798,
+      "downloaded_utc": "2026-10-10T16:56:37+00:00",
+      "md5_published": "e85d59377b54f73f3846b3d462c67730",
+      "path": "raw/pg19/test/30981.txt",
+      "sha256": "c77512286586b2c9367f8ad0e493e947c42f03fb5cb4d20f84db78c1eaac4dfe",
+      "sha256_source": "computed",
+      "url": "https://storage.googleapis.com/deepmind-gutenberg/test/30981.txt"
+    },
+    "test_31065_txt": {
+      "bytes": 276227,
+      "downloaded_utc": "2026-10-10T16:56:36+00:00",
+      "md5_published": "c5f9f60a877440ea9ec2c28940f0a6cd",
+      "path": "raw/pg19/test/31065.txt",
+      "sha256": "9d8228e48a41bef67408a097a3598588325bc70d5e2f6b00c96372783029d05f",
+      "sha256_source": "computed",
+      "url": "https://storage.googleapis.com/deepmind-gutenberg/test/31065.txt"
+    },
+    "test_3129_txt": {
+      "bytes": 82156,
+      "downloaded_utc": "2026-10-10T16:56:38+00:00",
+      "md5_published": "0a24f6fa0151c04ff7d16c67aedee955",
+      "path": "raw/pg19/test/3129.txt",
+      "sha256": "7e561c6b6d4fa20f508b9484f56a9703a88d469e7c2d7a47d91e74431e4c6ff0",
+      "sha256_source": "computed",
+      "url": "https://storage.googleapis.com/deepmind-gutenberg/test/3129.txt"
+    },
+    "test_31974_txt": {
+      "bytes": 14880,
+      "downloaded_utc": "2026-10-10T16:56:38+00:00",
+      "md5_published": "bdf73c639df25d20ae3c2f6e5545ebc6",
+      "path": "raw/pg19/test/31974.txt",
+      "sha256": "9b4f3142b8512a98e0e245140f6aaad36bd50eac5d1684d04513ead2a7fc1df0",
+      "sha256_source": "computed",
+      "url": "https://storage.googleapis.com/deepmind-gutenberg/test/31974.txt"
+    },
+    "test_3247_txt": {
+      "bytes": 539667,
+      "downloaded_utc": "2026-10-10T16:56:39+00:00",
+      "md5_published": "7f2bdbec382101ed138f4e515c509a62",
+      "path": "raw/pg19/test/3247.txt",
+      "sha256": "aa97806b530ffb25b5678e4c562e49055715eb5734c533c0b244537734b6a59c",
+      "sha256_source": "computed",
+      "url": "https://storage.googleapis.com/deepmind-gutenberg/test/3247.txt"
+    },
+    "test_32761_txt": {
+      "bytes": 506070,
+      "downloaded_utc": "2026-10-10T16:56:43+00:00",
+      "md5_published": "71835af4069e0e8c30fab224011bc8e6",
+      "path": "raw/pg19/test/32761.txt",
+      "sha256": "cd0c0c4cb9508cbabd73f90673c63363bf03e2d72aa87de2e86ed895689c3c13",
+      "sha256_source": "computed",
+      "url": "https://storage.googleapis.com/deepmind-gutenberg/test/32761.txt"
+    },
+    "test_3340_txt": {
+      "bytes": 392865,
+      "downloaded_utc": "2026-10-10T16:56:43+00:00",
+      "md5_published": "c839ee5d986d357070ea0c8ca996f746",
+      "path": "raw/pg19/test/3340.txt",
+      "sha256": "0d3bea08577a6bde3265827ddf5e688d8aa8ce1ab4ff4243075358c19709d788",
+      "sha256_source": "computed",
+      "url": "https://storage.googleapis.com/deepmind-gutenberg/test/3340.txt"
+    },
+    "test_33426_txt": {
+      "bytes": 465022,
+      "downloaded_utc": "2026-10-10T16:56:43+00:00",
+      "md5_published": "c2fe4300b734c13ec34c9626d16a9e51",
+      "path": "raw/pg19/test/33426.txt",
+      "sha256": "5f241da148e653140f9cafab7c93a0ff0f3e1d214077137b85fe8668a0bd522f",
+      "sha256_source": "computed",
+      "url": "https://storage.googleapis.com/deepmind-gutenberg/test/33426.txt"
+    },
+    "test_33756_txt": {
+      "bytes": 322011,
+      "downloaded_utc": "2026-10-10T16:56:43+00:00",
+      "md5_published": "bb922c709ccfd83ab94f108af1080db4",
+      "path": "raw/pg19/test/33756.txt",
+      "sha256": "636bea04db47134816380f2d03d735d46970fe214a0e11bd87d97f270d237cf4",
+      "sha256_source": "computed",
+      "url": "https://storage.googleapis.com/deepmind-gutenberg/test/33756.txt"
+    },
+    "test_34467_txt": {
+      "bytes": 207793,
+      "downloaded_utc": "2026-10-10T16:56:42+00:00",
+      "md5_published": "18ee3128ad445f3cbb5ed20637ef60a0",
+      "path": "raw/pg19/test/34467.txt",
+      "sha256": "32d9cc33391e172ebaf885e574b365ee9738fa0041537a5c8a9859e7d84b6181",
+      "sha256_source": "computed",
+      "url": "https://storage.googleapis.com/deepmind-gutenberg/test/34467.txt"
+    },
+    "test_35205_txt": {
+      "bytes": 364651,
+      "downloaded_utc": "2026-10-10T16:56:42+00:00",
+      "md5_published": "47cc1edc3d8f67f60ced05087e5c5b15",
+      "path": "raw/pg19/test/35205.txt",
+      "sha256": "05440b6f4c77d4204facc7c8ec5ebea3df8fef5782f03cb041f2accd184265f9",
+      "sha256_source": "computed",
+      "url": "https://storage.googleapis.com/deepmind-gutenberg/test/35205.txt"
+    },
+    "test_35246_txt": {
+      "bytes": 228141,
+      "downloaded_utc": "2026-10-10T16:56:41+00:00",
+      "md5_published": "fba8ba284f5ee067172e43fb8156652f",
+      "path": "raw/pg19/test/35246.txt",
+      "sha256": "4362445794452e6df50919837f9aa851539a11eaed673b8eb3ed613ac0b1a84b",
+      "sha256_source": "computed",
+      "url": "https://storage.googleapis.com/deepmind-gutenberg/test/35246.txt"
+    },
+    "test_3608_txt": {
+      "bytes": 1434234,
+      "downloaded_utc": "2026-10-10T16:56:45+00:00",
+      "md5_published": "9cce17cc57d427ad6340f94508d3c6e2",
+      "path": "raw/pg19/test/3608.txt",
+      "sha256": "acfd0b06c2fea46583b113cf10df45d83f24f3b85bf2d8ccd22d2f0a1127dc9a",
+      "sha256_source": "computed",
+      "url": "https://storage.googleapis.com/deepmind-gutenberg/test/3608.txt"
+    },
+    "test_36256_txt": {
+      "bytes": 100759,
+      "downloaded_utc": "2026-10-10T16:56:43+00:00",
+      "md5_published": "6a7cf1c33c4616c0d2d3c76b02cc7f8b",
+      "path": "raw/pg19/test/36256.txt",
+      "sha256": "84ec4641bc67f1c91c19be710e42f6009dec808e5f174fede2ef65d00e5d2a92",
+      "sha256_source": "computed",
+      "url": "https://storage.googleapis.com/deepmind-gutenberg/test/36256.txt"
+    },
+    "test_37006_txt": {
+      "bytes": 156555,
+      "downloaded_utc": "2026-10-10T16:56:47+00:00",
+      "md5_published": "cbfe8582e023f9d76d1f9d348949dd9d",
+      "path": "raw/pg19/test/37006.txt",
+      "sha256": "1680b3efa53c5f1267a6fb0bebd30c4f224093e1ccaa8af2f7c179b5f95c4bb2",
+      "sha256_source": "computed",
+      "url": "https://storage.googleapis.com/deepmind-gutenberg/test/37006.txt"
+    },
+    "test_37328_txt": {
+      "bytes": 148769,
+      "downloaded_utc": "2026-10-10T16:56:45+00:00",
+      "md5_published": "227a0e4f72c946cf930a1f6ffce5e6e4",
+      "path": "raw/pg19/test/37328.txt",
+      "sha256": "5adf5e9ded08c343b60cb66b553a696a27e3724d9f4410839333d37699063ffe",
+      "sha256_source": "computed",
+      "url": "https://storage.googleapis.com/deepmind-gutenberg/test/37328.txt"
+    },
+    "test_37403_txt": {
+      "bytes": 100089,
+      "downloaded_utc": "2026-10-10T16:56:45+00:00",
+      "md5_published": "94bae4c67a1644162e0aee89d76d4911",
+      "path": "raw/pg19/test/37403.txt",
+      "sha256": "071262841d7a577585a182101d028fa7bd79683c99bf27c2db3b570e6d24d101",
+      "sha256_source": "computed",
+      "url": "https://storage.googleapis.com/deepmind-gutenberg/test/37403.txt"
+    },
+    "test_37443_txt": {
+      "bytes": 24491,
+      "downloaded_utc": "2026-10-10T16:56:45+00:00",
+      "md5_published": "ca5c27398c99ed3183bec640744520e4",
+      "path": "raw/pg19/test/37443.txt",
+      "sha256": "398fec2e5baf93fb4614b7a8ae5f425a59f5b6fc1182f47336e641520826c4a5",
+      "sha256_source": "computed",
+      "url": "https://storage.googleapis.com/deepmind-gutenberg/test/37443.txt"
+    },
+    "test_3754_txt": {
+      "bytes": 507933,
+      "downloaded_utc": "2026-10-10T16:56:46+00:00",
+      "md5_published": "389752a3086c448824dd94059835f699",
+      "path": "raw/pg19/test/3754.txt",
+      "sha256": "05c3b16201f534fd6ab8643feb9b1c59e482a913c9a47fd513255791d9e67f60",
+      "sha256_source": "computed",
+      "url": "https://storage.googleapis.com/deepmind-gutenberg/test/3754.txt"
+    },
+    "test_37702_txt": {
+      "bytes": 892108,
+      "downloaded_utc": "2026-10-10T16:56:49+00:00",
+      "md5_published": "f35295df99c3514ace1eb529fe5662b8",
+      "path": "raw/pg19/test/37702.txt",
+      "sha256": "30bd8b5ca13be6439e231389f94f4d2d7fdf3b15cf0b0202842cee38c5f17260",
+      "sha256_source": "computed",
+      "url": "https://storage.googleapis.com/deepmind-gutenberg/test/37702.txt"
+    },
+    "test_38106_txt": {
+      "bytes": 391972,
+      "downloaded_utc": "2026-10-10T16:56:48+00:00",
+      "md5_published": "6eecfceeb5279691903e78445f7eafa4",
+      "path": "raw/pg19/test/38106.txt",
+      "sha256": "c30406db957f15aecdbafc1d9a2a4c2186f1e9762ccb0042ea1011cbc66c814c",
+      "sha256_source": "computed",
+      "url": "https://storage.googleapis.com/deepmind-gutenberg/test/38106.txt"
+    },
+    "test_3890_txt": {
+      "bytes": 163873,
+      "downloaded_utc": "2026-10-10T16:56:49+00:00",
+      "md5_published": "08cc5a74804b659fb603f7180fe6b424",
+      "path": "raw/pg19/test/3890.txt",
+      "sha256": "3163b5e7a5ee8ca3eb44e7e647872b433cefc10877ad1299478acdf074a581fa",
+      "sha256_source": "computed",
+      "url": "https://storage.googleapis.com/deepmind-gutenberg/test/3890.txt"
+    },
+    "test_38929_txt": {
+      "bytes": 172077,
+      "downloaded_utc": "2026-10-10T16:56:47+00:00",
+      "md5_published": "dea5fc482a1a7236c49be99f40fb0e97",
+      "path": "raw/pg19/test/38929.txt",
+      "sha256": "ad532648088c15a70d19ff3d66482e9c3a401c8cf399c44e6b2e7694c835f1d3",
+      "sha256_source": "computed",
+      "url": "https://storage.googleapis.com/deepmind-gutenberg/test/38929.txt"
+    },
+    "test_38955_txt": {
+      "bytes": 282624,
+      "downloaded_utc": "2026-10-10T16:56:48+00:00",
+      "md5_published": "299b97248218669bb3642f6893e7abce",
+      "path": "raw/pg19/test/38955.txt",
+      "sha256": "540fa42d430263cc4662caa95b33e5e5c8babbdedda671f800a2db65ff25a485",
+      "sha256_source": "computed",
+      "url": "https://storage.googleapis.com/deepmind-gutenberg/test/38955.txt"
+    },
+    "test_4047_txt": {
+      "bytes": 624607,
+      "downloaded_utc": "2026-10-10T16:56:52+00:00",
+      "md5_published": "644a03d998842e9d9ada7d4cad8c0039",
+      "path": "raw/pg19/test/4047.txt",
+      "sha256": "a1126b6bec29256f9e92fb120c71520623694813d3a9772853c09ad1c5f75f8a",
+      "sha256_source": "computed",
+      "url": "https://storage.googleapis.com/deepmind-gutenberg/test/4047.txt"
+    },
+    "test_40579_txt": {
+      "bytes": 355979,
+      "downloaded_utc": "2026-10-10T16:56:51+00:00",
+      "md5_published": "9f4972d88e3198733939750db56f214a",
+      "path": "raw/pg19/test/40579.txt",
+      "sha256": "6564c4b893231d7b39a195e10d734a53506350fb6c2af16105a67365eded11cc",
+      "sha256_source": "computed",
+      "url": "https://storage.googleapis.com/deepmind-gutenberg/test/40579.txt"
+    },
+    "test_40700_txt": {
+      "bytes": 148045,
+      "downloaded_utc": "2026-10-10T16:56:51+00:00",
+      "md5_published": "a7b71438f021c9395eb352a6bd05063a",
+      "path": "raw/pg19/test/40700.txt",
+      "sha256": "c8dbe3563ca688278bcfa09b673bd177e2500ecb243cfb34a00690823b113c9c",
+      "sha256_source": "computed",
+      "url": "https://storage.googleapis.com/deepmind-gutenberg/test/40700.txt"
+    },
+    "test_4128_txt": {
+      "bytes": 95877,
+      "downloaded_utc": "2026-10-10T16:56:49+00:00",
+      "md5_published": "43764c3b7d9ca56ef7bee1bd936e6e32",
+      "path": "raw/pg19/test/4128.txt",
+      "sha256": "23a359e1c8734cf74372442fbedc6ec6bf9ecaf47e6936628cb6dba90fb6409b",
+      "sha256_source": "computed",
+      "url": "https://storage.googleapis.com/deepmind-gutenberg/test/4128.txt"
+    },
+    "test_41603_txt": {
+      "bytes": 274624,
+      "downloaded_utc": "2026-10-10T16:56:53+00:00",
+      "md5_published": "a842650c12fa739ad89421b2acc30898",
+      "path": "raw/pg19/test/41603.txt",
+      "sha256": "f24c812cb32ad195a0a5d779d43579179a4e8e5add019d49de3536d9163ae3c6",
+      "sha256_source": "computed",
+      "url": "https://storage.googleapis.com/deepmind-gutenberg/test/41603.txt"
+    },
+    "test_41607_txt": {
+      "bytes": 337917,
+      "downloaded_utc": "2026-10-10T16:56:51+00:00",
+      "md5_published": "b165c07c9536d671ed6f53f9bda96d23",
+      "path": "raw/pg19/test/41607.txt",
+      "sha256": "d630ebc88f0a16f42c770d581e05cee96ae444d84039eeb46c025f7da51fc09e",
+      "sha256_source": "computed",
+      "url": "https://storage.googleapis.com/deepmind-gutenberg/test/41607.txt"
+    },
+    "test_42081_txt": {
+      "bytes": 844569,
+      "downloaded_utc": "2026-10-10T16:56:51+00:00",
+      "md5_published": "bcbf9bcb5c5c444c277cd201e74225f5",
+      "path": "raw/pg19/test/42081.txt",
+      "sha256": "70f8bdb8a20026f5651b800e58b5210d501852cdd99ee637084ebc85dd99584a",
+      "sha256_source": "computed",
+      "url": "https://storage.googleapis.com/deepmind-gutenberg/test/42081.txt"
+    },
+    "test_42655_txt": {
+      "bytes": 882218,
+      "downloaded_utc": "2026-10-10T16:56:54+00:00",
+      "md5_published": "6a32adbd2c02be5d8b81ff95f1aa7ce3",
+      "path": "raw/pg19/test/42655.txt",
+      "sha256": "06b9d5036c9191b9ab7008931096f40ddcf467f98b1dd03accea1617aca495e6",
+      "sha256_source": "computed",
+      "url": "https://storage.googleapis.com/deepmind-gutenberg/test/42655.txt"
+    },
+    "test_43536_txt": {
+      "bytes": 55719,
+      "downloaded_utc": "2026-10-10T16:56:50+00:00",
+      "md5_published": "bf2bd9532eaf7879e9e0f5257adc9e06",
+      "path": "raw/pg19/test/43536.txt",
+      "sha256": "2d3b016b1ad7e5d81a96d1094800996fb1c97e32ad34e2f344bdca760cea3b65",
+      "sha256_source": "computed",
+      "url": "https://storage.googleapis.com/deepmind-gutenberg/test/43536.txt"
+    },
+    "test_43845_txt": {
+      "bytes": 57163,
+      "downloaded_utc": "2026-10-10T16:56:53+00:00",
+      "md5_published": "5c5c0a31a656e721da558e8277ca2f8c",
+      "path": "raw/pg19/test/43845.txt",
+      "sha256": "a02e28569346e8e561b4574ab60a6f4dd01dd9f9ddccca2241fe961f9c186537",
+      "sha256_source": "computed",
+      "url": "https://storage.googleapis.com/deepmind-gutenberg/test/43845.txt"
+    },
+    "test_44099_txt": {
+      "bytes": 147224,
+      "downloaded_utc": "2026-10-10T16:56:51+00:00",
+      "md5_published": "3d12a107b432d244d72aa1485b80620a",
+      "path": "raw/pg19/test/44099.txt",
+      "sha256": "496ccf8a9235dc7f820271404a48d00e5cb4a1faf9842fa86160df56261281cc",
+      "sha256_source": "computed",
+      "url": "https://storage.googleapis.com/deepmind-gutenberg/test/44099.txt"
+    },
+    "test_44557_txt": {
+      "bytes": 244883,
+      "downloaded_utc": "2026-10-10T16:56:55+00:00",
+      "md5_published": "7b1183805a2817defaf98606bda7c78c",
+      "path": "raw/pg19/test/44557.txt",
+      "sha256": "35a78d3b4dcdd964ba3e36d1ce662941a2d9410f4bb7a7b04880a9379468e217",
+      "sha256_source": "computed",
+      "url": "https://storage.googleapis.com/deepmind-gutenberg/test/44557.txt"
+    },
+    "test_45313_txt": {
+      "bytes": 4574066,
+      "downloaded_utc": "2026-10-10T16:56:59+00:00",
+      "md5_published": "5b743ab25aef91edf35c41dbbc883309",
+      "path": "raw/pg19/test/45313.txt",
+      "sha256": "f91cd91b6af593ffa0cbe969bf220350bcafd613e3f982f415e7ffe5f45e45bf",
+      "sha256_source": "computed",
+      "url": "https://storage.googleapis.com/deepmind-gutenberg/test/45313.txt"
+    },
+    "test_45881_txt": {
+      "bytes": 217753,
+      "downloaded_utc": "2026-10-10T16:56:54+00:00",
+      "md5_published": "4eefc91da0a52892631a0f9514a530d0",
+      "path": "raw/pg19/test/45881.txt",
+      "sha256": "0679c4e2815a953073365d556046421bad38c561d9389375b2d874eab195fa33",
+      "sha256_source": "computed",
+      "url": "https://storage.googleapis.com/deepmind-gutenberg/test/45881.txt"
+    },
+    "test_45888_txt": {
+      "bytes": 282211,
+      "downloaded_utc": "2026-10-10T16:56:56+00:00",
+      "md5_published": "4b30fba8155c5343edea8b165126fb53",
+      "path": "raw/pg19/test/45888.txt",
+      "sha256": "86385daf220051742b03c4835c426b3fdb6fc4493fec31f390725ad80212439f",
+      "sha256_source": "computed",
+      "url": "https://storage.googleapis.com/deepmind-gutenberg/test/45888.txt"
+    },
+    "test_46915_txt": {
+      "bytes": 429060,
+      "downloaded_utc": "2026-10-10T16:56:54+00:00",
+      "md5_published": "11b259270749a4191c8c41647775f01d",
+      "path": "raw/pg19/test/46915.txt",
+      "sha256": "4786e48c791bb791957b629eee30de504a8e03fb35fa0092bef278c8ed10ee83",
+      "sha256_source": "computed",
+      "url": "https://storage.googleapis.com/deepmind-gutenberg/test/46915.txt"
+    },
+    "test_47068_txt": {
+      "bytes": 351283,
+      "downloaded_utc": "2026-10-10T16:56:58+00:00",
+      "md5_published": "afc90dc92439cc4ef7998f742e29f98f",
+      "path": "raw/pg19/test/47068.txt",
+      "sha256": "5b3ac02939097187672f624d0c440388292e70bdb4a721001cb5991db4d65de4",
+      "sha256_source": "computed",
+      "url": "https://storage.googleapis.com/deepmind-gutenberg/test/47068.txt"
+    },
+    "test_47558_txt": {
+      "bytes": 147889,
+      "downloaded_utc": "2026-10-10T16:56:58+00:00",
+      "md5_published": "3bc95a7cc12e47fddaf0478fb595daa8",
+      "path": "raw/pg19/test/47558.txt",
+      "sha256": "1233554c460bac754d1483649bb26c02ecccc5293bea2748b97c156e7b18f316",
+      "sha256_source": "computed",
+      "url": "https://storage.googleapis.com/deepmind-gutenberg/test/47558.txt"
+    },
+    "test_47581_txt": {
+      "bytes": 74970,
+      "downloaded_utc": "2026-10-10T16:56:55+00:00",
+      "md5_published": "2551ed995313e720c9fd51bcc894fb1b",
+      "path": "raw/pg19/test/47581.txt",
+      "sha256": "6c5056dc6c3b1f04ff44c4e7ed081c699fdce974bde23443c9a67902b7710757",
+      "sha256_source": "computed",
+      "url": "https://storage.googleapis.com/deepmind-gutenberg/test/47581.txt"
+    },
+    "test_47676_txt": {
+      "bytes": 311749,
+      "downloaded_utc": "2026-10-10T16:56:57+00:00",
+      "md5_published": "1f5d10a67b02ca2e92db570b20355fae",
+      "path": "raw/pg19/test/47676.txt",
+      "sha256": "f343ccc3e34d5cc819fb4eb11b59f2ec7d4a8c2a67ec59eef2e9f614f5e680fd",
+      "sha256_source": "computed",
+      "url": "https://storage.googleapis.com/deepmind-gutenberg/test/47676.txt"
+    },
+    "test_48693_txt": {
+      "bytes": 410440,
+      "downloaded_utc": "2026-10-10T16:56:57+00:00",
+      "md5_published": "1d0aa40f775f1ab7d16da73c52b73b62",
+      "path": "raw/pg19/test/48693.txt",
+      "sha256": "68fa97ed43ba3245cfb9329d9875d6d40b5e776aeb47eba94bef976baf4008ab",
+      "sha256_source": "computed",
+      "url": "https://storage.googleapis.com/deepmind-gutenberg/test/48693.txt"
+    },
+    "test_49078_txt": {
+      "bytes": 147677,
+      "downloaded_utc": "2026-10-10T16:56:57+00:00",
+      "md5_published": "85ce55fa0967c43b5bd3686ead6f5072",
+      "path": "raw/pg19/test/49078.txt",
+      "sha256": "84a2b672270646dd6f517d4331853256dd80b68d317e5574eb04cec9efd3b5e5",
+      "sha256_source": "computed",
+      "url": "https://storage.googleapis.com/deepmind-gutenberg/test/49078.txt"
+    },
+    "test_49529_txt": {
+      "bytes": 412383,
+      "downloaded_utc": "2026-10-10T16:56:58+00:00",
+      "md5_published": "efcb29215b9dd941d71d7b793ff093db",
+      "path": "raw/pg19/test/49529.txt",
+      "sha256": "d7887877fe2e794196b741c6c122c605df89818d9a7c37e7406ae234acc8d329",
+      "sha256_source": "computed",
+      "url": "https://storage.googleapis.com/deepmind-gutenberg/test/49529.txt"
+    },
+    "test_49596_txt": {
+      "bytes": 97986,
+      "downloaded_utc": "2026-10-10T16:56:58+00:00",
+      "md5_published": "b2baf69f54339fa32edce913d77ef55c",
+      "path": "raw/pg19/test/49596.txt",
+      "sha256": "514b46b3b4b6b98886ad099f8876c518fd9210de49c1ac7e7cf6914b2c8170bc",
+      "sha256_source": "computed",
+      "url": "https://storage.googleapis.com/deepmind-gutenberg/test/49596.txt"
+    },
+    "test_50287_txt": {
+      "bytes": 302777,
+      "downloaded_utc": "2026-10-10T16:56:59+00:00",
+      "md5_published": "3d62239d67bb200a01e6b8d8f4dd5b0f",
+      "path": "raw/pg19/test/50287.txt",
+      "sha256": "30dd0fd8115a489b316e7e4585b3ba3ef54a80590d5ee0b20dea3cad8adbd6c6",
+      "sha256_source": "computed",
+      "url": "https://storage.googleapis.com/deepmind-gutenberg/test/50287.txt"
+    },
+    "test_51410_txt": {
+      "bytes": 349790,
+      "downloaded_utc": "2026-10-10T16:57:00+00:00",
+      "md5_published": "da4537f73b1657b0e7ce610b379212b7",
+      "path": "raw/pg19/test/51410.txt",
+      "sha256": "b6a0f83faf217077d871f4607ec6edf2c0da7d4e61692edfe4a6bdd3f4ebe39c",
+      "sha256_source": "computed",
+      "url": "https://storage.googleapis.com/deepmind-gutenberg/test/51410.txt"
+    },
+    "test_53345_txt": {
+      "bytes": 347642,
+      "downloaded_utc": "2026-10-10T16:57:02+00:00",
+      "md5_published": "72e47e22d5447e818dfaef8bf4dff3b2",
+      "path": "raw/pg19/test/53345.txt",
+      "sha256": "bfb2a98da02fbb42f1f8394ee09119cdffe75ab98fbfcd383a4b1fe86efc3382",
+      "sha256_source": "computed",
+      "url": "https://storage.googleapis.com/deepmind-gutenberg/test/53345.txt"
+    },
+    "test_5396_txt": {
+      "bytes": 956818,
+      "downloaded_utc": "2026-10-10T16:57:03+00:00",
+      "md5_published": "93a6e17660dbcb1e88740d900e3d2ff8",
+      "path": "raw/pg19/test/5396.txt",
+      "sha256": "ff10a13b1a0007d7c1a06ebc5c5e85990063c43bbc44af62059455631f62dc42",
+      "sha256_source": "computed",
+      "url": "https://storage.googleapis.com/deepmind-gutenberg/test/5396.txt"
+    },
+    "test_54537_txt": {
+      "bytes": 200630,
+      "downloaded_utc": "2026-10-10T16:57:02+00:00",
+      "md5_published": "99aae0d41a17e74df27b569e793ad8d7",
+      "path": "raw/pg19/test/54537.txt",
+      "sha256": "0d117fc278fee172617e45f38b1c60b45dde0af22bd11837c18a94412c0ce345",
+      "sha256_source": "computed",
+      "url": "https://storage.googleapis.com/deepmind-gutenberg/test/54537.txt"
+    },
+    "test_54624_txt": {
+      "bytes": 70363,
+      "downloaded_utc": "2026-10-10T16:56:59+00:00",
+      "md5_published": "fff6481949a16d2d216deec3bae8fb91",
+      "path": "raw/pg19/test/54624.txt",
+      "sha256": "8c7c0d63e4253003d93727e5d9dfe1245ecfef2ac71fc4b48969f685d150e6e8",
+      "sha256_source": "computed",
+      "url": "https://storage.googleapis.com/deepmind-gutenberg/test/54624.txt"
+    },
+    "test_55339_txt": {
+      "bytes": 663065,
+      "downloaded_utc": "2026-10-10T16:57:02+00:00",
+      "md5_published": "5b3ede64215a9902424b078007aa237d",
+      "path": "raw/pg19/test/55339.txt",
+      "sha256": "016fc415740042c97a07ef87779facf1ac5f73adbd87f5f733a92767aa7c9e59",
+      "sha256_source": "computed",
+      "url": "https://storage.googleapis.com/deepmind-gutenberg/test/55339.txt"
+    },
+    "test_55871_txt": {
+      "bytes": 1448175,
+      "downloaded_utc": "2026-10-10T16:57:00+00:00",
+      "md5_published": "ed9d4eb73f120b4cc144d9d78b5971b9",
+      "path": "raw/pg19/test/55871.txt",
+      "sha256": "f2f9d8771c2d07a2f669daf07311340413b93c3340feeaaf1457d00c7cbe28c1",
+      "sha256_source": "computed",
+      "url": "https://storage.googleapis.com/deepmind-gutenberg/test/55871.txt"
+    },
+    "test_56410_txt": {
+      "bytes": 111994,
+      "downloaded_utc": "2026-10-10T16:57:03+00:00",
+      "md5_published": "8ab5aef97e9fe2ba66c79ab9a796e12b",
+      "path": "raw/pg19/test/56410.txt",
+      "sha256": "5a0dfe99fad39f1b18ab1cc051527ccfdef12e214a22cc27264f25b21bd8c154",
+      "sha256_source": "computed",
+      "url": "https://storage.googleapis.com/deepmind-gutenberg/test/56410.txt"
+    },
+    "test_5734_txt": {
+      "bytes": 581320,
+      "downloaded_utc": "2026-10-10T16:57:03+00:00",
+      "md5_published": "50a81789ec9b8babe7757c8bff22dd79",
+      "path": "raw/pg19/test/5734.txt",
+      "sha256": "ebec4c08c5dd799ce02f3ff91e380242f50d79e8700310ec5f57d66fd38bdd09",
+      "sha256_source": "computed",
+      "url": "https://storage.googleapis.com/deepmind-gutenberg/test/5734.txt"
+    },
+    "test_5770_txt": {
+      "bytes": 246697,
+      "downloaded_utc": "2026-10-10T16:57:02+00:00",
+      "md5_published": "20d485944d8a4eba45671ba3df2cea23",
+      "path": "raw/pg19/test/5770.txt",
+      "sha256": "1f04507f01f6d19e871095037ff4742745bda5a1583ee792f6a386d1228b32ff",
+      "sha256_source": "computed",
+      "url": "https://storage.googleapis.com/deepmind-gutenberg/test/5770.txt"
+    },
+    "test_57791_txt": {
+      "bytes": 101957,
+      "downloaded_utc": "2026-10-10T16:57:02+00:00",
+      "md5_published": "95dc571797abd3f4f254babab619f123",
+      "path": "raw/pg19/test/57791.txt",
+      "sha256": "f8117b124fc2da28f823a9add2a69a4d528a8b7a649573f864df442740dd537d",
+      "sha256_source": "computed",
+      "url": "https://storage.googleapis.com/deepmind-gutenberg/test/57791.txt"
+    },
+    "test_58473_txt": {
+      "bytes": 150101,
+      "downloaded_utc": "2026-10-10T16:57:04+00:00",
+      "md5_published": "720ec6ba2f0796772e8f1ec6a447cbe1",
+      "path": "raw/pg19/test/58473.txt",
+      "sha256": "adbe37933adf00031d0fa3a243556b9d7ff12e7de9933b67883e1eb64b3e1ae2",
+      "sha256_source": "computed",
+      "url": "https://storage.googleapis.com/deepmind-gutenberg/test/58473.txt"
+    },
+    "test_58553_txt": {
+      "bytes": 211173,
+      "downloaded_utc": "2026-10-10T16:57:03+00:00",
+      "md5_published": "7f2f9db75f020faeaecc6ba79fd9d766",
+      "path": "raw/pg19/test/58553.txt",
+      "sha256": "6ee7e3af2b427cdb48132e8debd6d0013927b31d0980aa505832b0f85666f489",
+      "sha256_source": "computed",
+      "url": "https://storage.googleapis.com/deepmind-gutenberg/test/58553.txt"
+    },
+    "test_58598_txt": {
+      "bytes": 115036,
+      "downloaded_utc": "2026-10-10T16:57:04+00:00",
+      "md5_published": "ad2af106da0c91f4bd5899c880601e18",
+      "path": "raw/pg19/test/58598.txt",
+      "sha256": "e6b356ae9cd31ec1d719b4e2f5ce7c74e35a367668974407fd8e7d735455fb20",
+      "sha256_source": "computed",
+      "url": "https://storage.googleapis.com/deepmind-gutenberg/test/58598.txt"
+    },
+    "test_5956_txt": {
+      "bytes": 260972,
+      "downloaded_utc": "2026-10-10T16:57:07+00:00",
+      "md5_published": "e26342a58df7f9123f252b3a983d4061",
+      "path": "raw/pg19/test/5956.txt",
+      "sha256": "c1c1981b187036d4a00f0ba9c2fd65c06c43663a4593a1ce7bd01bbe8125bd19",
+      "sha256_source": "computed",
+      "url": "https://storage.googleapis.com/deepmind-gutenberg/test/5956.txt"
+    },
+    "test_5962_txt": {
+      "bytes": 459976,
+      "downloaded_utc": "2026-10-10T16:57:07+00:00",
+      "md5_published": "1a5f737d04f6f82fd40d4580a0f9871f",
+      "path": "raw/pg19/test/5962.txt",
+      "sha256": "c19a6febe9781833f02598cf157fc1c45b65d8994f2674e88410cd00eea7ad6d",
+      "sha256_source": "computed",
+      "url": "https://storage.googleapis.com/deepmind-gutenberg/test/5962.txt"
+    },
+    "test_6412_txt": {
+      "bytes": 871566,
+      "downloaded_utc": "2026-10-10T16:57:06+00:00",
+      "md5_published": "aa0be642d0fd8dda3af52f555c92d01a",
+      "path": "raw/pg19/test/6412.txt",
+      "sha256": "11c74dd875e9e5659b587ce8705acea74227ca19ed0afa184ab9f450d9dd3a95",
+      "sha256_source": "computed",
+      "url": "https://storage.googleapis.com/deepmind-gutenberg/test/6412.txt"
+    },
+    "test_6941_txt": {
+      "bytes": 1064483,
+      "downloaded_utc": "2026-10-10T16:57:06+00:00",
+      "md5_published": "d35fd530d02e622c254d6231e7dce98d",
+      "path": "raw/pg19/test/6941.txt",
+      "sha256": "1f7197a758f44b85bd0b279387c74753fe8c5afdcd9531ec9247c4fd5cedd0ca",
+      "sha256_source": "computed",
+      "url": "https://storage.googleapis.com/deepmind-gutenberg/test/6941.txt"
+    },
+    "test_7412_txt": {
+      "bytes": 955823,
+      "downloaded_utc": "2026-10-10T16:57:06+00:00",
+      "md5_published": "41738230031c0cc4331d824ab494d57c",
+      "path": "raw/pg19/test/7412.txt",
+      "sha256": "2dd3367161538f4a6546ea30c18e772160c84927710bebba3e7f5ea8a6ffd42b",
+      "sha256_source": "computed",
+      "url": "https://storage.googleapis.com/deepmind-gutenberg/test/7412.txt"
+    },
+    "test_7987_txt": {
+      "bytes": 1048869,
+      "downloaded_utc": "2026-10-10T16:57:09+00:00",
+      "md5_published": "49d9c07fcf2da325fa95a55a09d1aabe",
+      "path": "raw/pg19/test/7987.txt",
+      "sha256": "cae86a95f8467d55800af340ee360c83a97f0ee35536ad9ff4d9a0132617fd2a",
+      "sha256_source": "computed",
+      "url": "https://storage.googleapis.com/deepmind-gutenberg/test/7987.txt"
+    },
+    "test_8197_txt": {
+      "bytes": 137711,
+      "downloaded_utc": "2026-10-10T16:57:05+00:00",
+      "md5_published": "0e3948385c767363f3546ad9a4f24184",
+      "path": "raw/pg19/test/8197.txt",
+      "sha256": "68d02bd36db0180bf70c7f95afc54541f588618b25c59a39cc60018f51070ca3",
+      "sha256_source": "computed",
+      "url": "https://storage.googleapis.com/deepmind-gutenberg/test/8197.txt"
+    },
+    "test_8559_txt": {
+      "bytes": 236569,
+      "downloaded_utc": "2026-10-10T16:57:05+00:00",
+      "md5_published": "90c17333dddef556c2a0e65b9e3d8708",
+      "path": "raw/pg19/test/8559.txt",
+      "sha256": "eed15b11e09b418eee4e8b38bd324b805934abbb22c340c7561514a89be4b981",
+      "sha256_source": "computed",
+      "url": "https://storage.googleapis.com/deepmind-gutenberg/test/8559.txt"
+    },
+    "test_860_txt": {
+      "bytes": 280293,
+      "downloaded_utc": "2026-10-10T16:57:09+00:00",
+      "md5_published": "74e50d18d37196a15ef45d6c16478b6d",
+      "path": "raw/pg19/test/860.txt",
+      "sha256": "4b52c996d63bfeb3c942fff20b6b2298d3455be8954d44a3350022c3187dd584",
+      "sha256_source": "computed",
+      "url": "https://storage.googleapis.com/deepmind-gutenberg/test/860.txt"
+    },
+    "test_8788_txt": {
+      "bytes": 19415,
+      "downloaded_utc": "2026-10-10T16:57:08+00:00",
+      "md5_published": "3b160af11490b01e7d8b0d2222044775",
+      "path": "raw/pg19/test/8788.txt",
+      "sha256": "5e76554a61fcfb22932070305961f737c573134363f96ae18971b2428e2f7874",
+      "sha256_source": "computed",
+      "url": "https://storage.googleapis.com/deepmind-gutenberg/test/8788.txt"
+    },
+    "test_9315_txt": {
+      "bytes": 22463,
+      "downloaded_utc": "2026-10-10T16:57:07+00:00",
+      "md5_published": "5946106b8a937170e8b685e3facd9b6d",
+      "path": "raw/pg19/test/9315.txt",
+      "sha256": "0be37609fae1df19c234b8e5c54ea41f538d6963554fad9bc55ae073b3dec79b",
+      "sha256_source": "computed",
+      "url": "https://storage.googleapis.com/deepmind-gutenberg/test/9315.txt"
+    },
+    "test_9931_txt": {
+      "bytes": 521935,
+      "downloaded_utc": "2026-10-10T16:57:11+00:00",
+      "md5_published": "7731d9ec62e09ecdad2884d2c7bd8875",
+      "path": "raw/pg19/test/9931.txt",
+      "sha256": "23935eb122717a05d7153e7c6ab95a9000c116139fa5af4b403513ead6f0c61a",
+      "sha256_source": "computed",
+      "url": "https://storage.googleapis.com/deepmind-gutenberg/test/9931.txt"
+    },
+    "train_10104_txt": {
+      "bytes": 121601,
+      "downloaded_utc": "2026-10-10T16:57:10+00:00",
+      "md5_published": "7aa1184767b9d74746bd9629f2e612b1",
+      "path": "raw/pg19/train/10104.txt",
+      "sha256": "d95bc9f26ed7265d7a8cec34538ce558da18704fa6048ca2eb687c087ce9074f",
+      "sha256_source": "computed",
+      "url": "https://storage.googleapis.com/deepmind-gutenberg/train/10104.txt"
+    },
+    "train_1039_txt": {
+      "bytes": 1750431,
+      "downloaded_utc": "2026-10-10T16:57:10+00:00",
+      "md5_published": "85fe9646ba0aaa688be25e5de4c12ab5",
+      "path": "raw/pg19/train/1039.txt",
+      "sha256": "c34cfe16e539a2ea1a08733e6a8d2393858963a9bc4b2f5cdd4c05aa86071911",
+      "sha256_source": "computed",
+      "url": "https://storage.googleapis.com/deepmind-gutenberg/train/1039.txt"
+    },
+    "train_10474_txt": {
+      "bytes": 438464,
+      "downloaded_utc": "2026-10-10T16:57:10+00:00",
+      "md5_published": "e3c7e1304c0d95f348d1949360243789",
+      "path": "raw/pg19/train/10474.txt",
+      "sha256": "2f1db20bfc62781a4aa2c03198761fdf9996df9c8484a2673da8ebe2e08af76f",
+      "sha256_source": "computed",
+      "url": "https://storage.googleapis.com/deepmind-gutenberg/train/10474.txt"
+    },
+    "train_10793_txt": {
+      "bytes": 270171,
+      "downloaded_utc": "2026-10-10T16:57:12+00:00",
+      "md5_published": "3dd40a01b79d723409b935e974bed8ec",
+      "path": "raw/pg19/train/10793.txt",
+      "sha256": "fedf6f51cc3e1b2a230b192c0f938d7761d1121b3228a314ccdea34909042fb2",
+      "sha256_source": "computed",
+      "url": "https://storage.googleapis.com/deepmind-gutenberg/train/10793.txt"
+    },
+    "train_10815_txt": {
+      "bytes": 87243,
+      "downloaded_utc": "2026-10-10T16:57:09+00:00",
+      "md5_published": "955ece9593e2e4b6463983e4b64a9df5",
+      "path": "raw/pg19/train/10815.txt",
+      "sha256": "ff68a82d93b986c977f8774e60583c32723d548f268bb71a62f872d62c757fed",
+      "sha256_source": "computed",
+      "url": "https://storage.googleapis.com/deepmind-gutenberg/train/10815.txt"
+    },
+    "train_11059_txt": {
+      "bytes": 91307,
+      "downloaded_utc": "2026-10-10T16:57:10+00:00",
+      "md5_published": "f01e87cc5c1698587faa5f5b36e619e9",
+      "path": "raw/pg19/train/11059.txt",
+      "sha256": "0cba932a83384f356faae20615ea4d158be676fb6cbc545e18559e3264403b2e",
+      "sha256_source": "computed",
+      "url": "https://storage.googleapis.com/deepmind-gutenberg/train/11059.txt"
+    },
+    "train_11128_txt": {
+      "bytes": 406372,
+      "downloaded_utc": "2026-10-10T16:57:12+00:00",
+      "md5_published": "ee96e0f572a29a6736a322c0630d8ef0",
+      "path": "raw/pg19/train/11128.txt",
+      "sha256": "76cde5b8cfb2013501ee0f0e8cd2a0a49f00c61964bc4234bdec13ceec3f1159",
+      "sha256_source": "computed",
+      "url": "https://storage.googleapis.com/deepmind-gutenberg/train/11128.txt"
+    },
+    "train_11190_txt": {
+      "bytes": 23848,
+      "downloaded_utc": "2026-10-10T16:57:12+00:00",
+      "md5_published": "20cd5e3cc387d1a6b2339a4a10f1f809",
+      "path": "raw/pg19/train/11190.txt",
+      "sha256": "7608e6d1afe28dd402384a42d37dcfdd949e0ce378b7b004e324beb53fa4bbf6",
+      "sha256_source": "computed",
+      "url": "https://storage.googleapis.com/deepmind-gutenberg/train/11190.txt"
+    },
+    "train_11585_txt": {
+      "bytes": 255196,
+      "downloaded_utc": "2026-10-10T16:57:12+00:00",
+      "md5_published": "ece58e1696f03cd4ccd15c8c9d472d73",
+      "path": "raw/pg19/train/11585.txt",
+      "sha256": "0c174a6b7a82b74204eba4c4d457a64a964dce021dffa942f1baa50a8340ddf6",
+      "sha256_source": "computed",
+      "url": "https://storage.googleapis.com/deepmind-gutenberg/train/11585.txt"
+    },
+    "train_119_txt": {
+      "bytes": 894680,
+      "downloaded_utc": "2026-10-10T16:57:13+00:00",
+      "md5_published": "85c14c05b0004d5cd2901e1b5c58f2d4",
+      "path": "raw/pg19/train/119.txt",
+      "sha256": "9ab12ccec85ca946027871cb81a31200522d07072f38859798edf0774ffe47c6",
+      "sha256_source": "computed",
+      "url": "https://storage.googleapis.com/deepmind-gutenberg/train/119.txt"
+    },
+    "train_12319_txt": {
+      "bytes": 483736,
+      "downloaded_utc": "2026-10-10T16:57:13+00:00",
+      "md5_published": "ad53b128f2f5cac510522827ec5cf883",
+      "path": "raw/pg19/train/12319.txt",
+      "sha256": "6cec5dcb8c7458cfdda8da6145b235b3eaecf762badfb38ef1d8660b779c184b",
+      "sha256_source": "computed",
+      "url": "https://storage.googleapis.com/deepmind-gutenberg/train/12319.txt"
+    },
+    "train_1282_txt": {
+      "bytes": 236307,
+      "downloaded_utc": "2026-10-10T16:57:13+00:00",
+      "md5_published": "621357816b33e097bcd1beed1fddcacc",
+      "path": "raw/pg19/train/1282.txt",
+      "sha256": "98b98b66913832c7e6fa7ee89c669f4d74052aa4b1b6489e94c0af502e651f3a",
+      "sha256_source": "computed",
+      "url": "https://storage.googleapis.com/deepmind-gutenberg/train/1282.txt"
+    },
+    "train_12854_txt": {
+      "bytes": 231774,
+      "downloaded_utc": "2026-10-10T16:57:15+00:00",
+      "md5_published": "91d44ba809591dd0f626452bbfa70992",
+      "path": "raw/pg19/train/12854.txt",
+      "sha256": "2dc630c8f9b12c075c865fec7e7e84855768e1ba87b8b598455bdb786ac9ff70",
+      "sha256_source": "computed",
+      "url": "https://storage.googleapis.com/deepmind-gutenberg/train/12854.txt"
+    },
+    "train_13114_txt": {
+      "bytes": 201817,
+      "downloaded_utc": "2026-10-10T16:57:14+00:00",
+      "md5_published": "25dd5b4cb8e90dc010accc9dd8ef849e",
+      "path": "raw/pg19/train/13114.txt",
+      "sha256": "4bc9a8bcb1f2846a337d569d2482639fce0037d413d3296e30f409037c7e17ae",
+      "sha256_source": "computed",
+      "url": "https://storage.googleapis.com/deepmind-gutenberg/train/13114.txt"
+    },
+    "train_1356_txt": {
+      "bytes": 656930,
+      "downloaded_utc": "2026-10-10T16:57:15+00:00",
+      "md5_published": "075f2e91ca4a80da63d376690e3250f6",
+      "path": "raw/pg19/train/1356.txt",
+      "sha256": "069cf73a52d62a7d6345a66749ad5f2d4ac6320173df6e32c7033f4842d886fa",
+      "sha256_source": "computed",
+      "url": "https://storage.googleapis.com/deepmind-gutenberg/train/1356.txt"
+    },
+    "train_1395_txt": {
+      "bytes": 181847,
+      "downloaded_utc": "2026-10-10T16:57:14+00:00",
+      "md5_published": "c5ba881d4feb48068ba239978b734ea0",
+      "path": "raw/pg19/train/1395.txt",
+      "sha256": "ef9eb0982fccddf15a61c3140c8c267183ef9e07aa61d09743205fe5d56b1a6c",
+      "sha256_source": "computed",
+      "url": "https://storage.googleapis.com/deepmind-gutenberg/train/1395.txt"
+    },
+    "train_14014_txt": {
+      "bytes": 16028,
+      "downloaded_utc": "2026-10-10T16:57:13+00:00",
+      "md5_published": "c6f8ceb98e6cbb8e28f04ce7711a216e",
+      "path": "raw/pg19/train/14014.txt",
+      "sha256": "c66308961293de56a581686775df793408bf7d8067d2d9f5fb3b9a736ff8b55b",
+      "sha256_source": "computed",
+      "url": "https://storage.googleapis.com/deepmind-gutenberg/train/14014.txt"
+    },
+    "train_14284_txt": {
+      "bytes": 608417,
+      "downloaded_utc": "2026-10-10T16:57:18+00:00",
+      "md5_published": "42d366f9a5d1ca539d9da5357d82d829",
+      "path": "raw/pg19/train/14284.txt",
+      "sha256": "aec408e7a8a18efa91249e4d7c501b5d01f5523d72c02564e86914dc15346e36",
+      "sha256_source": "computed",
+      "url": "https://storage.googleapis.com/deepmind-gutenberg/train/14284.txt"
+    },
+    "train_17864_txt": {
+      "bytes": 96333,
+      "downloaded_utc": "2026-10-10T16:57:16+00:00",
+      "md5_published": "6e064b42b2b878f0b506fc9ba9a618c9",
+      "path": "raw/pg19/train/17864.txt",
+      "sha256": "b71d2205c34ef69d34868d300874e2d4c6081feb6604946b2223408417e8f653",
+      "sha256_source": "computed",
+      "url": "https://storage.googleapis.com/deepmind-gutenberg/train/17864.txt"
+    },
+    "train_1826_txt": {
+      "bytes": 78838,
+      "downloaded_utc": "2026-10-10T16:57:16+00:00",
+      "md5_published": "a53a4185069fbfbe213f80a2d7dd6310",
+      "path": "raw/pg19/train/1826.txt",
+      "sha256": "6e5d71966dd0140246964729c6f6ea4fbe8a7c0370cec4a84e4f74f4a2f9e1b1",
+      "sha256_source": "computed",
+      "url": "https://storage.googleapis.com/deepmind-gutenberg/train/1826.txt"
+    },
+    "train_18595_txt": {
+      "bytes": 633314,
+      "downloaded_utc": "2026-10-10T16:57:16+00:00",
+      "md5_published": "06c4b5ffd70a9c52995e7bdc3f2e8e14",
+      "path": "raw/pg19/train/18595.txt",
+      "sha256": "9e0c35d44eafdfb97c0c6e4286b6dcc86d04cec8d5deae574c115a6f869c1a3b",
+      "sha256_source": "computed",
+      "url": "https://storage.googleapis.com/deepmind-gutenberg/train/18595.txt"
+    },
+    "train_19044_txt": {
+      "bytes": 62635,
+      "downloaded_utc": "2026-10-10T16:57:16+00:00",
+      "md5_published": "4eded68735c9282e389202146049a100",
+      "path": "raw/pg19/train/19044.txt",
+      "sha256": "f80d9e6da3f0cff56e9eff5d47b408f14bf08fc66a84e2139b77469fdbe46620",
+      "sha256_source": "computed",
+      "url": "https://storage.googleapis.com/deepmind-gutenberg/train/19044.txt"
+    },
+    "train_19384_txt": {
+      "bytes": 62535,
+      "downloaded_utc": "2026-10-10T16:57:17+00:00",
+      "md5_published": "9ab26556439cea8d1883ac34e96da2bc",
+      "path": "raw/pg19/train/19384.txt",
+      "sha256": "e808d6f4ea4fe25e4aa5a037ceaa4040de107dbd3b415f6ff0503bd473be0bc4",
+      "sha256_source": "computed",
+      "url": "https://storage.googleapis.com/deepmind-gutenberg/train/19384.txt"
+    },
+    "train_20075_txt": {
+      "bytes": 1163510,
+      "downloaded_utc": "2026-10-10T16:57:18+00:00",
+      "md5_published": "ed874e308776330157a6c7b653af0a1d",
+      "path": "raw/pg19/train/20075.txt",
+      "sha256": "9abe310eb7daeedc160fc3ef084558e02581542d5a89f72a685888b4d62bb45a",
+      "sha256_source": "computed",
+      "url": "https://storage.googleapis.com/deepmind-gutenberg/train/20075.txt"
+    },
+    "train_20389_txt": {
+      "bytes": 578578,
+      "downloaded_utc": "2026-10-10T16:57:18+00:00",
+      "md5_published": "91f95b4aac6e0d72b208e7825d34d33b",
+      "path": "raw/pg19/train/20389.txt",
+      "sha256": "73cffef5a421f412de957a7dfda1fd7772b4b8020a7c9346c1cc19a154484982",
+      "sha256_source": "computed",
+      "url": "https://storage.googleapis.com/deepmind-gutenberg/train/20389.txt"
+    },
+    "train_20734_txt": {
+      "bytes": 325278,
+      "downloaded_utc": "2026-10-10T16:57:20+00:00",
+      "md5_published": "13afa660c3fd6a07637f86a88e0fc244",
+      "path": "raw/pg19/train/20734.txt",
+      "sha256": "44b6a9e92e7c8abcc8cfcc0f6f7c8e5441aaa360ee0150d1c3c1245197c152c7",
+      "sha256_source": "computed",
+      "url": "https://storage.googleapis.com/deepmind-gutenberg/train/20734.txt"
+    },
+    "train_21079_txt": {
+      "bytes": 48025,
+      "downloaded_utc": "2026-10-10T16:57:20+00:00",
+      "md5_published": "1f7db0d6ac03d493b88dca677c38770f",
+      "path": "raw/pg19/train/21079.txt",
+      "sha256": "a7edd4318b0af39c33ce281817f1ba4cab691b0c54b62ff8529f440ec1ffb010",
+      "sha256_source": "computed",
+      "url": "https://storage.googleapis.com/deepmind-gutenberg/train/21079.txt"
+    },
+    "train_2139_txt": {
+      "bytes": 207532,
+      "downloaded_utc": "2026-10-10T16:57:19+00:00",
+      "md5_published": "b80fd939eb4e1bf6135bf8d01c6540f4",
+      "path": "raw/pg19/train/2139.txt",
+      "sha256": "171eb5903435155124cc81459c611ca3ffe44a92ffc29487c0f98243d9ee9a90",
+      "sha256_source": "computed",
+      "url": "https://storage.googleapis.com/deepmind-gutenberg/train/2139.txt"
+    },
+    "train_22809_txt": {
+      "bytes": 79275,
+      "downloaded_utc": "2026-10-10T16:57:20+00:00",
+      "md5_published": "8b8834271baf9eb5a465c6eae6258da7",
+      "path": "raw/pg19/train/22809.txt",
+      "sha256": "f7e452569f34d95bd9093828e19999e1a885fd8cf1950748e2e1a20943570448",
+      "sha256_source": "computed",
+      "url": "https://storage.googleapis.com/deepmind-gutenberg/train/22809.txt"
+    },
+    "train_23454_txt": {
+      "bytes": 10605,
+      "downloaded_utc": "2026-10-10T16:57:18+00:00",
+      "md5_published": "7c5a7cd3b82d0ebc8c24b799531e14e4",
+      "path": "raw/pg19/train/23454.txt",
+      "sha256": "156fd389ac8ef9b6983961c7263f88158522d88eec0388fd4f674d0bff089077",
+      "sha256_source": "computed",
+      "url": "https://storage.googleapis.com/deepmind-gutenberg/train/23454.txt"
+    },
+    "train_24030_txt": {
+      "bytes": 299027,
+      "downloaded_utc": "2026-10-10T16:57:22+00:00",
+      "md5_published": "54b9b485ad373a5fe564b881a120563d",
+      "path": "raw/pg19/train/24030.txt",
+      "sha256": "bf41eec210a47b8f0aec4fe89f59a283e7641da6bd62f0cbbe4d92146278f4e5",
+      "sha256_source": "computed",
+      "url": "https://storage.googleapis.com/deepmind-gutenberg/train/24030.txt"
+    },
+    "train_24082_txt": {
+      "bytes": 25870,
+      "downloaded_utc": "2026-10-10T16:57:19+00:00",
+      "md5_published": "d334d5707ca9e8c92ecadfd3a3acc162",
+      "path": "raw/pg19/train/24082.txt",
+      "sha256": "1b536a6ccce4512e499055b231a96dd5ae7fc4dc3236ca74c76b93c4598bcaff",
+      "sha256_source": "computed",
+      "url": "https://storage.googleapis.com/deepmind-gutenberg/train/24082.txt"
+    },
+    "train_24451_txt": {
+      "bytes": 454856,
+      "downloaded_utc": "2026-10-10T16:57:23+00:00",
+      "md5_published": "0e5d73e9e854428047eaa3349b193643",
+      "path": "raw/pg19/train/24451.txt",
+      "sha256": "f453ee4ace96b640f7b7eebce8c0d24114246b4facb24fb6dfbf920c5b17d00c",
+      "sha256_source": "computed",
+      "url": "https://storage.googleapis.com/deepmind-gutenberg/train/24451.txt"
+    },
+    "train_24492_txt": {
+      "bytes": 148898,
+      "downloaded_utc": "2026-10-10T16:57:20+00:00",
+      "md5_published": "eab4e198a6fb27bff792478cabc648ed",
+      "path": "raw/pg19/train/24492.txt",
+      "sha256": "fe5c10791691d071123d2493b4b33bdd75b98966b519efe6990995bf7d6023ce",
+      "sha256_source": "computed",
+      "url": "https://storage.googleapis.com/deepmind-gutenberg/train/24492.txt"
+    },
+    "train_2466_txt": {
+      "bytes": 557010,
+      "downloaded_utc": "2026-10-10T16:57:22+00:00",
+      "md5_published": "c22684f993543faaa635366cf88ebc45",
+      "path": "raw/pg19/train/2466.txt",
+      "sha256": "93ad50f92d8a0237816722fac8ddd50185a0b1881ddcd2c6c284f70d1497e69b",
+      "sha256_source": "computed",
+      "url": "https://storage.googleapis.com/deepmind-gutenberg/train/2466.txt"
+    },
+    "train_24697_txt": {
+      "bytes": 224128,
+      "downloaded_utc": "2026-10-10T16:57:22+00:00",
+      "md5_published": "85e0e6bb1549432eea09edb96dbefb97",
+      "path": "raw/pg19/train/24697.txt",
+      "sha256": "18f8c6c36498c254ad61807d7dc161e07be1cec1871c622e5218b56759b87863",
+      "sha256_source": "computed",
+      "url": "https://storage.googleapis.com/deepmind-gutenberg/train/24697.txt"
+    },
+    "train_24769_txt": {
+      "bytes": 502602,
+      "downloaded_utc": "2026-10-10T16:57:23+00:00",
+      "md5_published": "5f0a087fb7992eb35d04e0bcb27f4960",
+      "path": "raw/pg19/train/24769.txt",
+      "sha256": "f8e20cecb3fb65ec80205a0561a7bb99070d24b92c8c140f3c679cb19e46aff1",
+      "sha256_source": "computed",
+      "url": "https://storage.googleapis.com/deepmind-gutenberg/train/24769.txt"
+    },
+    "train_24785_txt": {
+      "bytes": 106341,
+      "downloaded_utc": "2026-10-10T16:57:24+00:00",
+      "md5_published": "0a7395e03f67e7f4f720d8bcb5e1bbba",
+      "path": "raw/pg19/train/24785.txt",
+      "sha256": "14afa91ccec9e7a47621db639a8728fea0b6d5eaf4e6d7a0c8d7e7c1fa405746",
+      "sha256_source": "computed",
+      "url": "https://storage.googleapis.com/deepmind-gutenberg/train/24785.txt"
+    },
+    "train_24939_txt": {
+      "bytes": 35271,
+      "downloaded_utc": "2026-10-10T16:57:21+00:00",
+      "md5_published": "06763471b4ce5628463f162c978e9836",
+      "path": "raw/pg19/train/24939.txt",
+      "sha256": "6d35be42142679009307897745caed7fd92a659a2df599fa6eef5a063a92b2f4",
+      "sha256_source": "computed",
+      "url": "https://storage.googleapis.com/deepmind-gutenberg/train/24939.txt"
+    },
+    "train_2504_txt": {
+      "bytes": 56141,
+      "downloaded_utc": "2026-10-10T16:57:22+00:00",
+      "md5_published": "c90637c93da931c8e5fcc34c56452e15",
+      "path": "raw/pg19/train/2504.txt",
+      "sha256": "07e8585b9f0c561f5d1a68998cb32acd937b8441a3ecdc808018a176547345f5",
+      "sha256_source": "computed",
+      "url": "https://storage.googleapis.com/deepmind-gutenberg/train/2504.txt"
+    },
+    "train_25073_txt": {
+      "bytes": 215651,
+      "downloaded_utc": "2026-10-10T16:57:25+00:00",
+      "md5_published": "ca6aee7037e20eb1bfeae287eceef485",
+      "path": "raw/pg19/train/25073.txt",
+      "sha256": "efa4ff9ba46131c17b3f1bf6ee69576acd4aeae979f96ad07eae1d1012cc3fa4",
+      "sha256_source": "computed",
+      "url": "https://storage.googleapis.com/deepmind-gutenberg/train/25073.txt"
+    },
+    "train_25075_txt": {
+      "bytes": 149809,
+      "downloaded_utc": "2026-10-10T16:57:25+00:00",
+      "md5_published": "6486acc4420d6f241aa074c82a46e178",
+      "path": "raw/pg19/train/25075.txt",
+      "sha256": "b32570561367da5948bed9031f2218c072cc56456c6ff8cf79a8e1c26a5f365e",
+      "sha256_source": "computed",
+      "url": "https://storage.googleapis.com/deepmind-gutenberg/train/25075.txt"
+    },
+    "train_25076_txt": {
+      "bytes": 319793,
+      "downloaded_utc": "2026-10-10T16:57:25+00:00",
+      "md5_published": "490d2a14518ba4fdbba66e02e81833db",
+      "path": "raw/pg19/train/25076.txt",
+      "sha256": "2bd38b9dc97de33f1af2f6ffa47a219fca8c7a829a5aa22a5c0f3dd57c03a17b",
+      "sha256_source": "computed",
+      "url": "https://storage.googleapis.com/deepmind-gutenberg/train/25076.txt"
+    },
+    "train_2537_txt": {
+      "bytes": 259748,
+      "downloaded_utc": "2026-10-10T16:57:25+00:00",
+      "md5_published": "63dbd30ae2f601263a2248f6069833b4",
+      "path": "raw/pg19/train/2537.txt",
+      "sha256": "db4682076dd6430524e6973dce806110c4b669f8b82c1348d3dad5a79c18115c",
+      "sha256_source": "computed",
+      "url": "https://storage.googleapis.com/deepmind-gutenberg/train/2537.txt"
+    },
+    "train_25463_txt": {
+      "bytes": 940510,
+      "downloaded_utc": "2026-10-10T16:57:26+00:00",
+      "md5_published": "2651822f9b1fd180c29fa3b2f8d8bec1",
+      "path": "raw/pg19/train/25463.txt",
+      "sha256": "5e38311bc9e65063f5ba5d8afdd46ad707b9fa0fb5d06a8d639fe631d344390e",
+      "sha256_source": "computed",
+      "url": "https://storage.googleapis.com/deepmind-gutenberg/train/25463.txt"
+    },
+    "train_25470_txt": {
+      "bytes": 204512,
+      "downloaded_utc": "2026-10-10T16:57:27+00:00",
+      "md5_published": "e570dca143278e7d23a021e3921b4a05",
+      "path": "raw/pg19/train/25470.txt",
+      "sha256": "816c2efd82690967ab865bb28c0311280488735b9eaf8f4f709fb69279ad6f46",
+      "sha256_source": "computed",
+      "url": "https://storage.googleapis.com/deepmind-gutenberg/train/25470.txt"
+    },
+    "train_25553_txt": {
+      "bytes": 5572,
+      "downloaded_utc": "2026-10-10T16:57:24+00:00",
+      "md5_published": "47b37191cf267f94700f2c58f7677ca6",
+      "path": "raw/pg19/train/25553.txt",
+      "sha256": "deeab57fc3a80a5dec42b6b1d34706c10954119bc87aaade5a307983e0bbf6e4",
+      "sha256_source": "computed",
+      "url": "https://storage.googleapis.com/deepmind-gutenberg/train/25553.txt"
+    },
+    "train_25765_txt": {
+      "bytes": 249549,
+      "downloaded_utc": "2026-10-10T16:57:26+00:00",
+      "md5_published": "6444df5737dfafbcb91bf7313acf8412",
+      "path": "raw/pg19/train/25765.txt",
+      "sha256": "0a3d4364b2dc04d8e6b842c9570ad5aacdf1a2f363d4a58760ff18c24a38e034",
+      "sha256_source": "computed",
+      "url": "https://storage.googleapis.com/deepmind-gutenberg/train/25765.txt"
+    },
+    "train_25808_txt": {
+      "bytes": 45131,
+      "downloaded_utc": "2026-10-10T16:57:25+00:00",
+      "md5_published": "c75fcbb54317f52622c8f687215bc516",
+      "path": "raw/pg19/train/25808.txt",
+      "sha256": "25d9fb984833e035a6b213a259136f0e9b4f4f824a8ce9caed455c527a87df3f",
+      "sha256_source": "computed",
+      "url": "https://storage.googleapis.com/deepmind-gutenberg/train/25808.txt"
+    },
+    "train_25848_txt": {
+      "bytes": 333259,
+      "downloaded_utc": "2026-10-10T16:57:27+00:00",
+      "md5_published": "5aba387a7aa6acd6813e1ae5430a8c7a",
+      "path": "raw/pg19/train/25848.txt",
+      "sha256": "4c0164bd97e31240356354987f47949c6183138a2054dbb465476ab54a2de1f9",
+      "sha256_source": "computed",
+      "url": "https://storage.googleapis.com/deepmind-gutenberg/train/25848.txt"
+    },
+    "train_26058_txt": {
+      "bytes": 136647,
+      "downloaded_utc": "2026-10-10T16:57:27+00:00",
+      "md5_published": "bb0b0b22a534cfa64102ae4f9590ef99",
+      "path": "raw/pg19/train/26058.txt",
+      "sha256": "7f6a0a29d08944a0f68f2d13b8c6ce488bde6a416562cc2dbdb5574ecd640c61",
+      "sha256_source": "computed",
+      "url": "https://storage.googleapis.com/deepmind-gutenberg/train/26058.txt"
+    },
+    "train_26136_txt": {
+      "bytes": 137089,
+      "downloaded_utc": "2026-10-10T16:57:29+00:00",
+      "md5_published": "ab1d50cda3fca71500a1abc05a911abf",
+      "path": "raw/pg19/train/26136.txt",
+      "sha256": "bf19e06b9d3326b1b6345fd934c324d6beff4a944515cc702f47d3a9ffc91bbf",
+      "sha256_source": "computed",
+      "url": "https://storage.googleapis.com/deepmind-gutenberg/train/26136.txt"
+    },
+    "train_26139_txt": {
+      "bytes": 460534,
+      "downloaded_utc": "2026-10-10T16:57:30+00:00",
+      "md5_published": "c46bebf847dc8ca7ca6ef4129621e688",
+      "path": "raw/pg19/train/26139.txt",
+      "sha256": "76686d7e8795d40efba2997c8a9200384f8f453be4f32cc3cba9c692b37b9c22",
+      "sha256_source": "computed",
+      "url": "https://storage.googleapis.com/deepmind-gutenberg/train/26139.txt"
+    },
+    "train_26495_txt": {
+      "bytes": 1131854,
+      "downloaded_utc": "2026-10-10T16:57:29+00:00",
+      "md5_published": "9e3f693e0b4fd160a5cb54e9e3e6fbb7",
+      "path": "raw/pg19/train/26495.txt",
+      "sha256": "f260c611a49c68dbccea541a53de3b553de891d770b124b5b12e5f305cdebb24",
+      "sha256_source": "computed",
+      "url": "https://storage.googleapis.com/deepmind-gutenberg/train/26495.txt"
+    },
+    "train_26568_txt": {
+      "bytes": 1277060,
+      "downloaded_utc": "2026-10-10T16:57:29+00:00",
+      "md5_published": "4912d8595253765cc46ce2cd35d09589",
+      "path": "raw/pg19/train/26568.txt",
+      "sha256": "7873b7129b1ba1e96c02e045f3b22ada873d05dca5e42d8615ef2d4968060738",
+      "sha256_source": "computed",
+      "url": "https://storage.googleapis.com/deepmind-gutenberg/train/26568.txt"
+    },
+    "train_26691_txt": {
+      "bytes": 207769,
+      "downloaded_utc": "2026-10-10T16:57:29+00:00",
+      "md5_published": "d9171b5a9881a9fd0211d73f0892f529",
+      "path": "raw/pg19/train/26691.txt",
+      "sha256": "3d85042f612edf53839f82a5477436914244f16dc578be005b5fcec9aae602af",
+      "sha256_source": "computed",
+      "url": "https://storage.googleapis.com/deepmind-gutenberg/train/26691.txt"
+    },
+    "train_26779_txt": {
+      "bytes": 99770,
+      "downloaded_utc": "2026-10-10T16:57:30+00:00",
+      "md5_published": "b4cc9c5cc6c4b40d2cbbdace658523dc",
+      "path": "raw/pg19/train/26779.txt",
+      "sha256": "256039682a8788162696df84c236c6b265c830d390e04b3f725ee6097a4a99c6",
+      "sha256_source": "computed",
+      "url": "https://storage.googleapis.com/deepmind-gutenberg/train/26779.txt"
+    },
+    "train_27268_txt": {
+      "bytes": 355057,
+      "downloaded_utc": "2026-10-10T16:57:30+00:00",
+      "md5_published": "5d55ec6246db8d5d4ec583e8449a298c",
+      "path": "raw/pg19/train/27268.txt",
+      "sha256": "fbad819480a54cd67ab65e944c2b8791fa95e36343ea8669e7bc9c20702b127d",
+      "sha256_source": "computed",
+      "url": "https://storage.googleapis.com/deepmind-gutenberg/train/27268.txt"
+    },
+    "train_27274_txt": {
+      "bytes": 990260,
+      "downloaded_utc": "2026-10-10T16:57:31+00:00",
+      "md5_published": "568a3fee742386128eae62e5b1dfb339",
+      "path": "raw/pg19/train/27274.txt",
+      "sha256": "e66d3e5eff6a79693f6a93b142e2b4677d19522f5d08b789b167eb0e1ce8b2aa",
+      "sha256_source": "computed",
+      "url": "https://storage.googleapis.com/deepmind-gutenberg/train/27274.txt"
+    },
+    "train_27550_txt": {
+      "bytes": 144018,
+      "downloaded_utc": "2026-10-10T16:57:32+00:00",
+      "md5_published": "6b0627b599c3086fd4708003df7c3ecf",
+      "path": "raw/pg19/train/27550.txt",
+      "sha256": "e542bce3181a8e17681d975c1e27ea6558eb5f054189c8db464fe6d22e4f0918",
+      "sha256_source": "computed",
+      "url": "https://storage.googleapis.com/deepmind-gutenberg/train/27550.txt"
+    },
+    "train_2761_txt": {
+      "bytes": 425317,
+      "downloaded_utc": "2026-10-10T16:57:32+00:00",
+      "md5_published": "458e7d89794b3c70e73c24c5b026f9de",
+      "path": "raw/pg19/train/2761.txt",
+      "sha256": "03572b429dbf49358e038424543aeb7fe8d16c70b36f5472243980b843af7f94",
+      "sha256_source": "computed",
+      "url": "https://storage.googleapis.com/deepmind-gutenberg/train/2761.txt"
+    },
+    "train_2782_txt": {
+      "bytes": 200799,
+      "downloaded_utc": "2026-10-10T16:57:33+00:00",
+      "md5_published": "6b267b9948d9ad82e6a077c7d43f1995",
+      "path": "raw/pg19/train/2782.txt",
+      "sha256": "8ce6c77ae1308d58b0ba50272a9c156c7daeaa4589ea59cf89770c3159bb8bce",
+      "sha256_source": "computed",
+      "url": "https://storage.googleapis.com/deepmind-gutenberg/train/2782.txt"
+    },
+    "train_28172_txt": {
+      "bytes": 41166,
+      "downloaded_utc": "2026-10-10T16:57:32+00:00",
+      "md5_published": "e7d77d3ddcf49c615553845984881f0b",
+      "path": "raw/pg19/train/28172.txt",
+      "sha256": "301c2ce5b26c97e740f9ac4af60b84e45560caa7fe7ca32a57cfb1c97893fc75",
+      "sha256_source": "computed",
+      "url": "https://storage.googleapis.com/deepmind-gutenberg/train/28172.txt"
+    },
+    "train_28385_txt": {
+      "bytes": 96805,
+      "downloaded_utc": "2026-10-10T16:57:32+00:00",
+      "md5_published": "45e255101f01e00d364dc358f86f1a3e",
+      "path": "raw/pg19/train/28385.txt",
+      "sha256": "846e8e87be2835939e16366b5972cbd613ffb3626414bfeb3736c8a3c03ec6bd",
+      "sha256_source": "computed",
+      "url": "https://storage.googleapis.com/deepmind-gutenberg/train/28385.txt"
+    },
+    "train_28417_txt": {
+      "bytes": 94000,
+      "downloaded_utc": "2026-10-10T16:57:34+00:00",
+      "md5_published": "6e308f8d23868ff3b9a5b5c9fbf84a25",
+      "path": "raw/pg19/train/28417.txt",
+      "sha256": "7d0bd953b8b0cac3485a83ea27f5811577de7bbbb5d4607af680f15ccfdf4dbe",
+      "sha256_source": "computed",
+      "url": "https://storage.googleapis.com/deepmind-gutenberg/train/28417.txt"
+    },
+    "train_28420_txt": {
+      "bytes": 559362,
+      "downloaded_utc": "2026-10-10T16:57:33+00:00",
+      "md5_published": "b38ebfae8391b3f97652be2bd461db43",
+      "path": "raw/pg19/train/28420.txt",
+      "sha256": "1ac6ddce43057148a1afa15352a618febc134be8fd808e1505373b2918603611",
+      "sha256_source": "computed",
+      "url": "https://storage.googleapis.com/deepmind-gutenberg/train/28420.txt"
+    },
+    "train_28616_txt": {
+      "bytes": 443904,
+      "downloaded_utc": "2026-10-10T16:57:34+00:00",
+      "md5_published": "aed7f2f3ebe0dd9d98cdb2b9008c4427",
+      "path": "raw/pg19/train/28616.txt",
+      "sha256": "eb83efd0e73f97fe6dff78223d648aa48f6cfa440a822c20f72a2f78238be58b",
+      "sha256_source": "computed",
+      "url": "https://storage.googleapis.com/deepmind-gutenberg/train/28616.txt"
+    },
+    "train_29108_txt": {
+      "bytes": 88809,
+      "downloaded_utc": "2026-10-10T16:57:33+00:00",
+      "md5_published": "f479763233fe71faa264e30a737d9319",
+      "path": "raw/pg19/train/29108.txt",
+      "sha256": "7ec2437112bcdf2fc7437c60e4593d4c89e8f803826dcf6985f929abe9ca4360",
+      "sha256_source": "computed",
+      "url": "https://storage.googleapis.com/deepmind-gutenberg/train/29108.txt"
+    },
+    "train_29294_txt": {
+      "bytes": 917691,
+      "downloaded_utc": "2026-10-10T16:57:35+00:00",
+      "md5_published": "b42badc355df62de2228bc0952f44621",
+      "path": "raw/pg19/train/29294.txt",
+      "sha256": "4f4177a3f3e456713283f90f67655ec45baba157f92954adc5eb2da0089b5557",
+      "sha256_source": "computed",
+      "url": "https://storage.googleapis.com/deepmind-gutenberg/train/29294.txt"
+    },
+    "train_29524_txt": {
+      "bytes": 608511,
+      "downloaded_utc": "2026-10-10T16:57:35+00:00",
+      "md5_published": "30972c322402d71df78d40b8501892dc",
+      "path": "raw/pg19/train/29524.txt",
+      "sha256": "114ed1fa9154a70734cfab2c7673014907d72aec9e093e0f37e016ececd9a5fa",
+      "sha256_source": "computed",
+      "url": "https://storage.googleapis.com/deepmind-gutenberg/train/29524.txt"
+    },
+    "train_29544_txt": {
+      "bytes": 388277,
+      "downloaded_utc": "2026-10-10T16:57:35+00:00",
+      "md5_published": "b82c8e4d25c15ff02639f740e137159c",
+      "path": "raw/pg19/train/29544.txt",
+      "sha256": "f59bd6f7268300f9ab33006730c78d4dca21e0fea6070ac521cf5df683d0033d",
+      "sha256_source": "computed",
+      "url": "https://storage.googleapis.com/deepmind-gutenberg/train/29544.txt"
+    },
+    "train_29849_txt": {
+      "bytes": 572271,
+      "downloaded_utc": "2026-10-10T16:57:36+00:00",
+      "md5_published": "fc911b802d82803e4c2b6cfc805ef6c7",
+      "path": "raw/pg19/train/29849.txt",
+      "sha256": "41a9e08d76e826dcaf9519949dfa5aadd825c965f11c019c15f80f65beac6a3e",
+      "sha256_source": "computed",
+      "url": "https://storage.googleapis.com/deepmind-gutenberg/train/29849.txt"
+    },
+    "train_30020_txt": {
+      "bytes": 7100,
+      "downloaded_utc": "2026-10-10T16:57:34+00:00",
+      "md5_published": "4c0c285adb4b2a91a94131fe0a9498ea",
+      "path": "raw/pg19/train/30020.txt",
+      "sha256": "04cb26c6185875cc7c583f19ae0c079945000a94bdf5ba626abda4793369b293",
+      "sha256_source": "computed",
+      "url": "https://storage.googleapis.com/deepmind-gutenberg/train/30020.txt"
+    },
+    "train_30135_txt": {
+      "bytes": 424089,
+      "downloaded_utc": "2026-10-10T16:57:38+00:00",
+      "md5_published": "6870d8f8c06d6445378fcea2131d9354",
+      "path": "raw/pg19/train/30135.txt",
+      "sha256": "4ae3e13654a9b8fd2b2949adc4c7cf50d7c74fba14f2e47fee815e43e46dcf86",
+      "sha256_source": "computed",
+      "url": "https://storage.googleapis.com/deepmind-gutenberg/train/30135.txt"
+    },
+    "train_30181_txt": {
+      "bytes": 686846,
+      "downloaded_utc": "2026-10-10T16:57:37+00:00",
+      "md5_published": "2a6b85d8222cbf3dbf14f632e27055b1",
+      "path": "raw/pg19/train/30181.txt",
+      "sha256": "1889de3b2ebabb468231b294e60e1777dbea9dc21b885c8cb45b2e08d2509f57",
+      "sha256_source": "computed",
+      "url": "https://storage.googleapis.com/deepmind-gutenberg/train/30181.txt"
+    },
+    "train_30190_txt": {
+      "bytes": 881195,
+      "downloaded_utc": "2026-10-10T16:57:39+00:00",
+      "md5_published": "8887498633bf57188d0069f7218e5afd",
+      "path": "raw/pg19/train/30190.txt",
+      "sha256": "ac8eeca3533e0b6859b72c4974c57d78c6f730a53bc34717404825e965252b5a",
+      "sha256_source": "computed",
+      "url": "https://storage.googleapis.com/deepmind-gutenberg/train/30190.txt"
+    },
+    "train_30431_txt": {
+      "bytes": 354617,
+      "downloaded_utc": "2026-10-10T16:57:37+00:00",
+      "md5_published": "2d38ac8951787942b8d53fe3dbc0a732",
+      "path": "raw/pg19/train/30431.txt",
+      "sha256": "5aa5c35123f321bb69f9b29e2cf0747a1165238bc36e9819dffce7a98239d38b",
+      "sha256_source": "computed",
+      "url": "https://storage.googleapis.com/deepmind-gutenberg/train/30431.txt"
+    },
+    "train_30530_txt": {
+      "bytes": 307964,
+      "downloaded_utc": "2026-10-10T16:57:38+00:00",
+      "md5_published": "81833576049421b9c15297908fe5f0bd",
+      "path": "raw/pg19/train/30530.txt",
+      "sha256": "53d240669ee3b64883fa918dc353b596aac9f0c0afceb7f22f02f23363b070c8",
+      "sha256_source": "computed",
+      "url": "https://storage.googleapis.com/deepmind-gutenberg/train/30530.txt"
+    },
+    "train_30609_txt": {
+      "bytes": 346262,
+      "downloaded_utc": "2026-10-10T16:57:38+00:00",
+      "md5_published": "e5bfa0e97d74b3737cdc915cdf1a4338",
+      "path": "raw/pg19/train/30609.txt",
+      "sha256": "e6568613adc07efb9f37296cbdeafa7e4d1941d53410aa5c4c64fc88a1e27938",
+      "sha256_source": "computed",
+      "url": "https://storage.googleapis.com/deepmind-gutenberg/train/30609.txt"
+    },
+    "train_30611_txt": {
+      "bytes": 495836,
+      "downloaded_utc": "2026-10-10T16:57:40+00:00",
+      "md5_published": "a1742f6c55685f00435ccdb0e5c24b96",
+      "path": "raw/pg19/train/30611.txt",
+      "sha256": "c14b44b593e5a7fa11f8454a0294a447c6680265450039f521f3a60a7ff4e621",
+      "sha256_source": "computed",
+      "url": "https://storage.googleapis.com/deepmind-gutenberg/train/30611.txt"
+    },
+    "train_31338_txt": {
+      "bytes": 464794,
+      "downloaded_utc": "2026-10-10T16:57:39+00:00",
+      "md5_published": "ef12bf1c09b7e6dad5dcfe97200e3b68",
+      "path": "raw/pg19/train/31338.txt",
+      "sha256": "b8762d5491a47fd903f2d898f5824d14d3b7ad15d312bfcf4dbf0e847e222880",
+      "sha256_source": "computed",
+      "url": "https://storage.googleapis.com/deepmind-gutenberg/train/31338.txt"
+    },
+    "train_3149_txt": {
+      "bytes": 224415,
+      "downloaded_utc": "2026-10-10T16:57:41+00:00",
+      "md5_published": "58a0195d8b9363199aca36ba68ba9860",
+      "path": "raw/pg19/train/3149.txt",
+      "sha256": "d7d2d64dd20a0517cc31bd9905de6f64544d3cae009bb5212a4c2e7ea31477d7",
+      "sha256_source": "computed",
+      "url": "https://storage.googleapis.com/deepmind-gutenberg/train/3149.txt"
+    },
+    "train_31828_txt": {
+      "bytes": 378131,
+      "downloaded_utc": "2026-10-10T16:57:40+00:00",
+      "md5_published": "92bd54db6b060739f35803394425a3dc",
+      "path": "raw/pg19/train/31828.txt",
+      "sha256": "50294d9d2ab788ce8547fe25159cec09e93d09a2e0f51db011f14f30651e62f3",
+      "sha256_source": "computed",
+      "url": "https://storage.googleapis.com/deepmind-gutenberg/train/31828.txt"
+    },
+    "train_32477_txt": {
+      "bytes": 45305,
+      "downloaded_utc": "2026-10-10T16:57:39+00:00",
+      "md5_published": "e20d37b27f3c8a4c7d5c677506242c45",
+      "path": "raw/pg19/train/32477.txt",
+      "sha256": "911339351170591a54d2c0eb587d55116fa44d28bae1c0003fa1a1bb67d1e11f",
+      "sha256_source": "computed",
+      "url": "https://storage.googleapis.com/deepmind-gutenberg/train/32477.txt"
+    },
+    "train_32501_txt": {
+      "bytes": 221899,
+      "downloaded_utc": "2026-10-10T16:57:40+00:00",
+      "md5_published": "22b739cf31597cb67e00f27356d357bc",
+      "path": "raw/pg19/train/32501.txt",
+      "sha256": "06d8e81b0861357b1391840771be90e26f0d1a2dc881500d2b10564698aed05d",
+      "sha256_source": "computed",
+      "url": "https://storage.googleapis.com/deepmind-gutenberg/train/32501.txt"
+    },
+    "train_32776_txt": {
+      "bytes": 706755,
+      "downloaded_utc": "2026-10-10T16:57:41+00:00",
+      "md5_published": "cf348528c15b6511024536600c379409",
+      "path": "raw/pg19/train/32776.txt",
+      "sha256": "213f2b1bdf98d8b7b723243cd87bd33ce376e413e9a0494e512ff81c9d9582df",
+      "sha256_source": "computed",
+      "url": "https://storage.googleapis.com/deepmind-gutenberg/train/32776.txt"
+    },
+    "train_32945_txt": {
+      "bytes": 818814,
+      "downloaded_utc": "2026-10-10T16:57:44+00:00",
+      "md5_published": "26f28aa7271c2dcb9f530ff732de30d8",
+      "path": "raw/pg19/train/32945.txt",
+      "sha256": "2c1ffd9d4d409fe3f65559800354359f1f5208e2e2c7e258cd29ae012caf5f38",
+      "sha256_source": "computed",
+      "url": "https://storage.googleapis.com/deepmind-gutenberg/train/32945.txt"
+    },
+    "train_33241_txt": {
+      "bytes": 76351,
+      "downloaded_utc": "2026-10-10T16:57:41+00:00",
+      "md5_published": "b440a79ad30d602ab7dedad44a02e8e2",
+      "path": "raw/pg19/train/33241.txt",
+      "sha256": "aed7f31b6865e302e1b3c09260dd54a38e9c722ac08396d4da44d1d0f9f47200",
+      "sha256_source": "computed",
+      "url": "https://storage.googleapis.com/deepmind-gutenberg/train/33241.txt"
+    },
+    "train_3324_txt": {
+      "bytes": 168524,
+      "downloaded_utc": "2026-10-10T16:57:41+00:00",
+      "md5_published": "4fad0eabf815092ff3e8fdff0fb0e57e",
+      "path": "raw/pg19/train/3324.txt",
+      "sha256": "dd69b23895c8f099551ae7c89a36de3612e86ceb0585e75e67ddfc90d1a53a1b",
+      "sha256_source": "computed",
+      "url": "https://storage.googleapis.com/deepmind-gutenberg/train/3324.txt"
+    },
+    "train_33268_txt": {
+      "bytes": 472985,
+      "downloaded_utc": "2026-10-10T16:57:43+00:00",
+      "md5_published": "61df005f16f3854226f35c96bcb7a7ff",
+      "path": "raw/pg19/train/33268.txt",
+      "sha256": "1da9ff4eb3edf1ef1be255ec05f991fefe7977ae204fbc0b321bc5c865265ffd",
+      "sha256_source": "computed",
+      "url": "https://storage.googleapis.com/deepmind-gutenberg/train/33268.txt"
+    },
+    "train_33271_txt": {
+      "bytes": 435416,
+      "downloaded_utc": "2026-10-10T16:57:43+00:00",
+      "md5_published": "411d5190d235ded0d8863a30d75e2025",
+      "path": "raw/pg19/train/33271.txt",
+      "sha256": "7caf0f146bbc4738f829a94ade5ace73d50a59ddbeff858a1b045100715c34c4",
+      "sha256_source": "computed",
+      "url": "https://storage.googleapis.com/deepmind-gutenberg/train/33271.txt"
+    },
+    "train_33305_txt": {
+      "bytes": 516978,
+      "downloaded_utc": "2026-10-10T16:57:43+00:00",
+      "md5_published": "f533cc10d747301a695c0a3e86ed9e6b",
+      "path": "raw/pg19/train/33305.txt",
+      "sha256": "bb81ec3a28a22f7465f8b72747846eeb881e85844555aaacb56a1467c38dca6a",
+      "sha256_source": "computed",
+      "url": "https://storage.googleapis.com/deepmind-gutenberg/train/33305.txt"
+    },
+    "train_33347_txt": {
+      "bytes": 132156,
+      "downloaded_utc": "2026-10-10T16:57:43+00:00",
+      "md5_published": "6d2c62fdc30a871b816ae9ec02296cea",
+      "path": "raw/pg19/train/33347.txt",
+      "sha256": "de93e27051e4ffec877e4cbf9c510c89dd509970d7c979b514bc469bc657ac64",
+      "sha256_source": "computed",
+      "url": "https://storage.googleapis.com/deepmind-gutenberg/train/33347.txt"
+    },
+    "train_33420_txt": {
+      "bytes": 774979,
+      "downloaded_utc": "2026-10-10T16:57:48+00:00",
+      "md5_published": "9fce111c3b2c801f0cc25c200fa9c734",
+      "path": "raw/pg19/train/33420.txt",
+      "sha256": "5c5f423f703034897a92008d810561e7d312037647b7d80205c958b198715c0b",
+      "sha256_source": "computed",
+      "url": "https://storage.googleapis.com/deepmind-gutenberg/train/33420.txt"
+    },
+    "train_33583_txt": {
+      "bytes": 929503,
+      "downloaded_utc": "2026-10-10T16:57:45+00:00",
+      "md5_published": "6714f1de40873e79c6223510e874575c",
+      "path": "raw/pg19/train/33583.txt",
+      "sha256": "80e292595c3f4afb6daae11d5b2e7cf23db3ea5dff1de84b5ee367505dcc4aa7",
+      "sha256_source": "computed",
+      "url": "https://storage.googleapis.com/deepmind-gutenberg/train/33583.txt"
+    },
+    "train_33878_txt": {
+      "bytes": 76676,
+      "downloaded_utc": "2026-10-10T16:57:45+00:00",
+      "md5_published": "3ef26c3092959c16283869962993e8c9",
+      "path": "raw/pg19/train/33878.txt",
+      "sha256": "5c343d7c788ed9349a61725c4c5371835539011d96a46f781e886e24b3c490c4",
+      "sha256_source": "computed",
+      "url": "https://storage.googleapis.com/deepmind-gutenberg/train/33878.txt"
+    },
+    "train_3390_txt": {
+      "bytes": 150682,
+      "downloaded_utc": "2026-10-10T16:57:46+00:00",
+      "md5_published": "ba5f0623540d1d8bf9be02b9195a2c6f",
+      "path": "raw/pg19/train/3390.txt",
+      "sha256": "ad696b0440917c1f35a4effb2afe216f501ec79095ff6b1112f5d230ec9ac406",
+      "sha256_source": "computed",
+      "url": "https://storage.googleapis.com/deepmind-gutenberg/train/3390.txt"
+    },
+    "train_33999_txt": {
+      "bytes": 822002,
+      "downloaded_utc": "2026-10-10T16:57:46+00:00",
+      "md5_published": "a4bb5691ea436cef76d9f3755ed8bb19",
+      "path": "raw/pg19/train/33999.txt",
+      "sha256": "84dc22219ce1f964e3ac49fc33962ece797569bfad76df02042c97fcc4c5a768",
+      "sha256_source": "computed",
+      "url": "https://storage.googleapis.com/deepmind-gutenberg/train/33999.txt"
+    },
+    "train_34153_txt": {
+      "bytes": 537766,
+      "downloaded_utc": "2026-10-10T16:57:46+00:00",
+      "md5_published": "76570c36215347c697d5980481c3e3bb",
+      "path": "raw/pg19/train/34153.txt",
+      "sha256": "4466775e2920cff99650008af32875fba4211522274b199444016e9fd234897e",
+      "sha256_source": "computed",
+      "url": "https://storage.googleapis.com/deepmind-gutenberg/train/34153.txt"
+    },
+    "train_34267_txt": {
+      "bytes": 71107,
+      "downloaded_utc": "2026-10-10T16:57:45+00:00",
+      "md5_published": "2d2f13b4ee6738d94823b86b1fb4b69c",
+      "path": "raw/pg19/train/34267.txt",
+      "sha256": "7d5a65da8b0a787c6d4799e1a23e3b22f7cc945d3debf01a027dfba89b66c95d",
+      "sha256_source": "computed",
+      "url": "https://storage.googleapis.com/deepmind-gutenberg/train/34267.txt"
+    },
+    "train_34370_txt": {
+      "bytes": 518818,
+      "downloaded_utc": "2026-10-10T16:57:47+00:00",
+      "md5_published": "ae31f1d82687b0e0c331c9c38abd0a2e",
+      "path": "raw/pg19/train/34370.txt",
+      "sha256": "65af64ba3fc1c1f393bdf7424a0ba417a071db5372c6dde87264f64b544a74b3",
+      "sha256_source": "computed",
+      "url": "https://storage.googleapis.com/deepmind-gutenberg/train/34370.txt"
+    },
+    "train_34390_txt": {
+      "bytes": 493252,
+      "downloaded_utc": "2026-10-10T16:57:48+00:00",
+      "md5_published": "c64311af5865afda4ec9b5062bb71c7e",
+      "path": "raw/pg19/train/34390.txt",
+      "sha256": "eca3eef5754d3b6e3c96fe2335ef45467948cf28bc1e7c663b2fa6dbf5e53042",
+      "sha256_source": "computed",
+      "url": "https://storage.googleapis.com/deepmind-gutenberg/train/34390.txt"
+    },
+    "train_34543_txt": {
+      "bytes": 811252,
+      "downloaded_utc": "2026-10-10T16:57:48+00:00",
+      "md5_published": "cd8e46ff8f9c6ef7c7b4e36108be5999",
+      "path": "raw/pg19/train/34543.txt",
+      "sha256": "1304f0a84140e1802a7530a0976e00dabe5f9639555d2374cc508bd2102210cd",
+      "sha256_source": "computed",
+      "url": "https://storage.googleapis.com/deepmind-gutenberg/train/34543.txt"
+    },
+    "train_34557_txt": {
+      "bytes": 10416,
+      "downloaded_utc": "2026-10-10T16:57:46+00:00",
+      "md5_published": "4348992e26ccf3416537b0ed1d150203",
+      "path": "raw/pg19/train/34557.txt",
+      "sha256": "7dbc32271feefcda5c021f08fb76d44cddbdb5cb7773b8d267e451dde5003877",
+      "sha256_source": "computed",
+      "url": "https://storage.googleapis.com/deepmind-gutenberg/train/34557.txt"
+    },
+    "train_3458_txt": {
+      "bytes": 1371268,
+      "downloaded_utc": "2026-10-10T16:57:49+00:00",
+      "md5_published": "896fcdb3e064fe8ea03e22ad6137a380",
+      "path": "raw/pg19/train/3458.txt",
+      "sha256": "3b1d8639d4896b40683c073a1d5b3bd98d048323fd2a3b78b67ba052bec58a80",
+      "sha256_source": "computed",
+      "url": "https://storage.googleapis.com/deepmind-gutenberg/train/3458.txt"
+    },
+    "train_34753_txt": {
+      "bytes": 347790,
+      "downloaded_utc": "2026-10-10T16:57:50+00:00",
+      "md5_published": "e15318123b34584d3d4e3f0e10716aaa",
+      "path": "raw/pg19/train/34753.txt",
+      "sha256": "c8ded1d02d80404635eb7d48dffd6f9638c29ffceb9a9352a49d2d61d3015a62",
+      "sha256_source": "computed",
+      "url": "https://storage.googleapis.com/deepmind-gutenberg/train/34753.txt"
+    },
+    "train_34793_txt": {
+      "bytes": 30352,
+      "downloaded_utc": "2026-10-10T16:57:47+00:00",
+      "md5_published": "3dde1420028d54731cc18abcf823c732",
+      "path": "raw/pg19/train/34793.txt",
+      "sha256": "b673844ef8425da9ae1e20f9e8473d1fcbc84be7e36c0e8eb8dfbc9fc6d8d3ff",
+      "sha256_source": "computed",
+      "url": "https://storage.googleapis.com/deepmind-gutenberg/train/34793.txt"
+    },
+    "train_34875_txt": {
+      "bytes": 361630,
+      "downloaded_utc": "2026-10-10T16:57:49+00:00",
+      "md5_published": "a1ce3451cf59b76a276460b148d6cf82",
+      "path": "raw/pg19/train/34875.txt",
+      "sha256": "c33f150f02da6ca2242193a5d3628f4e8410550dee2623e935434e3514fadf73",
+      "sha256_source": "computed",
+      "url": "https://storage.googleapis.com/deepmind-gutenberg/train/34875.txt"
+    },
+    "train_35033_txt": {
+      "bytes": 57865,
+      "downloaded_utc": "2026-10-10T16:57:48+00:00",
+      "md5_published": "aa3cb56a9e05a1e41ed8f31d2bb23604",
+      "path": "raw/pg19/train/35033.txt",
+      "sha256": "7582f467700f50609c20ea20101bf499e8546bc6f3370d16bee24619b1fbb4c1",
+      "sha256_source": "computed",
+      "url": "https://storage.googleapis.com/deepmind-gutenberg/train/35033.txt"
+    },
+    "train_35142_txt": {
+      "bytes": 185317,
+      "downloaded_utc": "2026-10-10T16:57:51+00:00",
+      "md5_published": "958fbebdbf2712bb6bb7d371e17b2035",
+      "path": "raw/pg19/train/35142.txt",
+      "sha256": "b0d8799948ecbc73f50d3e09ba20e9897090cb72b6f03229afa955a4624951be",
+      "sha256_source": "computed",
+      "url": "https://storage.googleapis.com/deepmind-gutenberg/train/35142.txt"
+    },
+    "train_35369_txt": {
+      "bytes": 1779510,
+      "downloaded_utc": "2026-10-10T16:57:52+00:00",
+      "md5_published": "91a84e58f8c4a6ca4f28650dcd7fcf98",
+      "path": "raw/pg19/train/35369.txt",
+      "sha256": "c312f6edc2c7a00528c3f8d0606a400ca2d51a88252f687ae4f27e4a6b380498",
+      "sha256_source": "computed",
+      "url": "https://storage.googleapis.com/deepmind-gutenberg/train/35369.txt"
+    },
+    "train_35460_txt": {
+      "bytes": 215726,
+      "downloaded_utc": "2026-10-10T16:57:50+00:00",
+      "md5_published": "ced75a5ca35d6d8b7f4fde1f23b66741",
+      "path": "raw/pg19/train/35460.txt",
+      "sha256": "cb6c13d92702a59c28463d5a6f1e8c877a8141e916fa9ece9d18cd2577b23cb8",
+      "sha256_source": "computed",
+      "url": "https://storage.googleapis.com/deepmind-gutenberg/train/35460.txt"
+    },
+    "train_35562_txt": {
+      "bytes": 256603,
+      "downloaded_utc": "2026-10-10T16:57:52+00:00",
+      "md5_published": "35af647956508ba22a23ef77fda3d618",
+      "path": "raw/pg19/train/35562.txt",
+      "sha256": "11ee83592ef4a96daf0b5b3bb442cc6e3f64551eb9de19350a7223efbac7fc11",
+      "sha256_source": "computed",
+      "url": "https://storage.googleapis.com/deepmind-gutenberg/train/35562.txt"
+    },
+    "train_35570_txt": {
+      "bytes": 335756,
+      "downloaded_utc": "2026-10-10T16:57:51+00:00",
+      "md5_published": "0967d657afb5ee39082bbfefa4d473b0",
+      "path": "raw/pg19/train/35570.txt",
+      "sha256": "40380e68aef9d77fd9463972b33178e1d8273a79c85d06c300b87570c556f40e",
+      "sha256_source": "computed",
+      "url": "https://storage.googleapis.com/deepmind-gutenberg/train/35570.txt"
+    },
+    "train_35790_txt": {
+      "bytes": 678516,
+      "downloaded_utc": "2026-10-10T16:57:52+00:00",
+      "md5_published": "6ab667f60eb71ca93665fa87a521d674",
+      "path": "raw/pg19/train/35790.txt",
+      "sha256": "d99136896ac35b6a25ccb3dc4a29adcddf44cce898c023425dbe2cc46eb8e3a5",
+      "sha256_source": "computed",
+      "url": "https://storage.googleapis.com/deepmind-gutenberg/train/35790.txt"
+    },
+    "train_35820_txt": {
+      "bytes": 215251,
+      "downloaded_utc": "2026-10-10T16:57:52+00:00",
+      "md5_published": "74207b0373cad6c80d3028765444a27c",
+      "path": "raw/pg19/train/35820.txt",
+      "sha256": "eb26ee848abc05b55b5e4140bb9d9bec3887d238bb0e1fb3cdf57a6ed11af90e",
+      "sha256_source": "computed",
+      "url": "https://storage.googleapis.com/deepmind-gutenberg/train/35820.txt"
+    },
+    "train_36134_txt": {
+      "bytes": 360629,
+      "downloaded_utc": "2026-10-10T16:57:55+00:00",
+      "md5_published": "9e5d452b50411e974fd963689f845d01",
+      "path": "raw/pg19/train/36134.txt",
+      "sha256": "ce72c5624f8822c7d03d0dd46e4620ca5949a8f74402db0b724c046e48977c1d",
+      "sha256_source": "computed",
+      "url": "https://storage.googleapis.com/deepmind-gutenberg/train/36134.txt"
+    },
+    "train_36138_txt": {
+      "bytes": 749256,
+      "downloaded_utc": "2026-10-10T16:57:54+00:00",
+      "md5_published": "9e6bd752a766c311ad0e8dc52145ce2a",
+      "path": "raw/pg19/train/36138.txt",
+      "sha256": "a9b73988bc08d9ae3c08adae808c1695d77857f2a036baa3adbeeb3e9e53c973",
+      "sha256_source": "computed",
+      "url": "https://storage.googleapis.com/deepmind-gutenberg/train/36138.txt"
+    },
+    "train_36177_txt": {
+      "bytes": 96698,
+      "downloaded_utc": "2026-10-10T16:57:55+00:00",
+      "md5_published": "7c19157e3fc6292e9b0b456d1295b800",
+      "path": "raw/pg19/train/36177.txt",
+      "sha256": "d596faf55c4ad922ba6104b5615ae200d3a99bd5129fd19f649f48e64ed10ec6",
+      "sha256_source": "computed",
+      "url": "https://storage.googleapis.com/deepmind-gutenberg/train/36177.txt"
+    },
+    "train_361_txt": {
+      "bytes": 443678,
+      "downloaded_utc": "2026-10-10T16:57:53+00:00",
+      "md5_published": "cd0dd4e69892f6c101936083b523c513",
+      "path": "raw/pg19/train/361.txt",
+      "sha256": "b2c6bd97b43349bbb23fd1968df422aa3824d7f21eb9ba650cab29c215f402dc",
+      "sha256_source": "computed",
+      "url": "https://storage.googleapis.com/deepmind-gutenberg/train/361.txt"
+    },
+    "train_36257_txt": {
+      "bytes": 97271,
+      "downloaded_utc": "2026-10-10T16:57:54+00:00",
+      "md5_published": "524839ecf570aa52ddd3d24cf73c8058",
+      "path": "raw/pg19/train/36257.txt",
+      "sha256": "f7d17d17a45ccd55aa2f3c2f0e502bc195bf833c177911576435986c24c4ef0f",
+      "sha256_source": "computed",
+      "url": "https://storage.googleapis.com/deepmind-gutenberg/train/36257.txt"
+    },
+    "train_36359_txt": {
+      "bytes": 218565,
+      "downloaded_utc": "2026-10-10T16:57:54+00:00",
+      "md5_published": "b9f4b4c04a568155915418d7ef8d580c",
+      "path": "raw/pg19/train/36359.txt",
+      "sha256": "01e0449554c1f9e244b3f70004c245dd9107d70525eb56697d1ae10c79bfe3a3",
+      "sha256_source": "computed",
+      "url": "https://storage.googleapis.com/deepmind-gutenberg/train/36359.txt"
+    },
+    "train_36458_txt": {
+      "bytes": 341723,
+      "downloaded_utc": "2026-10-10T16:57:55+00:00",
+      "md5_published": "b5e8ef33e002524540897c5fbdec7516",
+      "path": "raw/pg19/train/36458.txt",
+      "sha256": "4b10355a61911f817ec470ebb6f787e188afd01da53bf92db6286bd331306d37",
+      "sha256_source": "computed",
+      "url": "https://storage.googleapis.com/deepmind-gutenberg/train/36458.txt"
+    },
+    "train_37115_txt": {
+      "bytes": 721986,
+      "downloaded_utc": "2026-10-10T16:57:56+00:00",
+      "md5_published": "f9143c1cdbe1b676ce4f2ab58c72f73d",
+      "path": "raw/pg19/train/37115.txt",
+      "sha256": "0bf7d5b29195f0e9bd549e310a2e3e1ba144dd33773405d82b68d808fb86904d",
+      "sha256_source": "computed",
+      "url": "https://storage.googleapis.com/deepmind-gutenberg/train/37115.txt"
+    },
+    "train_37517_txt": {
+      "bytes": 107798,
+      "downloaded_utc": "2026-10-10T16:57:55+00:00",
+      "md5_published": "00f913734d11cbb7c76eb519db9f3c14",
+      "path": "raw/pg19/train/37517.txt",
+      "sha256": "add4a45488922ce79e729f0c6e0f4f92d90938df6190a392149c77730ed780cf",
+      "sha256_source": "computed",
+      "url": "https://storage.googleapis.com/deepmind-gutenberg/train/37517.txt"
+    },
+    "train_37750_txt": {
+      "bytes": 968513,
+      "downloaded_utc": "2026-10-10T16:57:57+00:00",
+      "md5_published": "d9bcc263a60fd71f6759fbc837183f23",
+      "path": "raw/pg19/train/37750.txt",
+      "sha256": "893921889c9fd497035dbe3306beb729e344f1f9bbcd03c9ed36a21c7a6292e8",
+      "sha256_source": "computed",
+      "url": "https://storage.googleapis.com/deepmind-gutenberg/train/37750.txt"
+    },
+    "train_37995_txt": {
+      "bytes": 322394,
+      "downloaded_utc": "2026-10-10T16:57:59+00:00",
+      "md5_published": "299b96f3ab36a4b79a392b7e0dde15ff",
+      "path": "raw/pg19/train/37995.txt",
+      "sha256": "e6298d2ba38ab1722b9242929894684ab9899dcc5e1653b1f84666f5f9670177",
+      "sha256_source": "computed",
+      "url": "https://storage.googleapis.com/deepmind-gutenberg/train/37995.txt"
+    },
+    "train_37996_txt": {
+      "bytes": 324125,
+      "downloaded_utc": "2026-10-10T16:57:59+00:00",
+      "md5_published": "77c8f5c76967eec10ca67c66099f9850",
+      "path": "raw/pg19/train/37996.txt",
+      "sha256": "c4e321d258897eb36ba042d1b7a170d7fb1e135e08d20d365ca5ea90086f869a",
+      "sha256_source": "computed",
+      "url": "https://storage.googleapis.com/deepmind-gutenberg/train/37996.txt"
+    },
+    "train_3809_txt": {
+      "bytes": 247965,
+      "downloaded_utc": "2026-10-10T16:57:59+00:00",
+      "md5_published": "7085f85d0f3c4e007b313dca549c813f",
+      "path": "raw/pg19/train/3809.txt",
+      "sha256": "bb2f9a1e4acd544e0ecaa382cdae42904f1ddde898709ae13eaec6979f0627b5",
+      "sha256_source": "computed",
+      "url": "https://storage.googleapis.com/deepmind-gutenberg/train/3809.txt"
+    },
+    "train_3810_txt": {
+      "bytes": 377398,
+      "downloaded_utc": "2026-10-10T16:57:58+00:00",
+      "md5_published": "01d30c72a9e9c80a8d34394b5997061c",
+      "path": "raw/pg19/train/3810.txt",
+      "sha256": "7bad257d225eb8194748e3b498bfa6f01a2ac6ca7fa71484b1b855ef739a2b8f",
+      "sha256_source": "computed",
+      "url": "https://storage.googleapis.com/deepmind-gutenberg/train/3810.txt"
+    },
+    "train_38412_txt": {
+      "bytes": 112824,
+      "downloaded_utc": "2026-10-10T16:57:59+00:00",
+      "md5_published": "2b22cb55db2ba7509c44a9c763e51b8a",
+      "path": "raw/pg19/train/38412.txt",
+      "sha256": "a08003be52237617dfc454a9a6dde65b50fd62fbfb5c7ec7a68941ccc1037625",
+      "sha256_source": "computed",
+      "url": "https://storage.googleapis.com/deepmind-gutenberg/train/38412.txt"
+    },
+    "train_38534_txt": {
+      "bytes": 262352,
+      "downloaded_utc": "2026-10-10T16:57:59+00:00",
+      "md5_published": "2ece94ed4ffb521634f2be9c373c2eee",
+      "path": "raw/pg19/train/38534.txt",
+      "sha256": "8bec278340d26c275ea1314c7672207d8722492fe180eec6ccc2ac72db473790",
+      "sha256_source": "computed",
+      "url": "https://storage.googleapis.com/deepmind-gutenberg/train/38534.txt"
+    },
+    "train_38766_txt": {
+      "bytes": 94284,
+      "downloaded_utc": "2026-10-10T16:58:00+00:00",
+      "md5_published": "06bad94ff657db8a0c0b629a36264e96",
+      "path": "raw/pg19/train/38766.txt",
+      "sha256": "0d7ec439be7442c5f8ae72f273d49e41310c50af474ca62500be0b9f4495963f",
+      "sha256_source": "computed",
+      "url": "https://storage.googleapis.com/deepmind-gutenberg/train/38766.txt"
+    },
+    "train_38927_txt": {
+      "bytes": 61579,
+      "downloaded_utc": "2026-10-10T16:57:59+00:00",
+      "md5_published": "c68c8d8b61c81cc26724023e1d7bb53c",
+      "path": "raw/pg19/train/38927.txt",
+      "sha256": "331301b665348664cdd58c31975f7b3cbba4458467abc1799188dab0fb00c824",
+      "sha256_source": "computed",
+      "url": "https://storage.googleapis.com/deepmind-gutenberg/train/38927.txt"
+    },
+    "train_39001_txt": {
+      "bytes": 774709,
+      "downloaded_utc": "2026-10-10T16:58:01+00:00",
+      "md5_published": "2bf8bac15d0f805e52257db42b621025",
+      "path": "raw/pg19/train/39001.txt",
+      "sha256": "ef957c02de76b09d708b950c3218884b6a015d71df5e3e1d9c633cf2694aaf07",
+      "sha256_source": "computed",
+      "url": "https://storage.googleapis.com/deepmind-gutenberg/train/39001.txt"
+    },
+    "train_39072_txt": {
+      "bytes": 313937,
+      "downloaded_utc": "2026-10-10T16:58:01+00:00",
+      "md5_published": "a5dad7a329d332d1d11b98d6ff99a814",
+      "path": "raw/pg19/train/39072.txt",
+      "sha256": "a946609cd3ad4d5773bc184368c10d72defe9755bc04a67956e8ff4eb6b04fe8",
+      "sha256_source": "computed",
+      "url": "https://storage.googleapis.com/deepmind-gutenberg/train/39072.txt"
+    },
+    "train_39138_txt": {
+      "bytes": 666596,
+      "downloaded_utc": "2026-10-10T16:58:02+00:00",
+      "md5_published": "fb3113963964b609e8ed92e9ff4040f3",
+      "path": "raw/pg19/train/39138.txt",
+      "sha256": "c2f9357adc099c7cbb806892c75a6c8ffac2c1df0f23e2f3444a9458990c8c1e",
+      "sha256_source": "computed",
+      "url": "https://storage.googleapis.com/deepmind-gutenberg/train/39138.txt"
+    },
+    "train_3925_txt": {
+      "bytes": 154175,
+      "downloaded_utc": "2026-10-10T16:58:01+00:00",
+      "md5_published": "72db8f55de85a739a57499fc8236c20c",
+      "path": "raw/pg19/train/3925.txt",
+      "sha256": "d5f131b201a9c3c4b93a265af4cc1d7dc01f1860da1c6c6ca1d48af65658b3fd",
+      "sha256_source": "computed",
+      "url": "https://storage.googleapis.com/deepmind-gutenberg/train/3925.txt"
+    },
+    "train_39578_txt": {
+      "bytes": 330908,
+      "downloaded_utc": "2026-10-10T16:58:03+00:00",
+      "md5_published": "f3bf7166b21b7cac7096d12f4397c2f9",
+      "path": "raw/pg19/train/39578.txt",
+      "sha256": "5773eef25bc892e68df69bdb0cc0a81c6cdb2db435fb618bae68001b67994f16",
+      "sha256_source": "computed",
+      "url": "https://storage.googleapis.com/deepmind-gutenberg/train/39578.txt"
+    },
+    "train_39696_txt": {
+      "bytes": 447619,
+      "downloaded_utc": "2026-10-10T16:58:04+00:00",
+      "md5_published": "d2f0dfe5a3e0421f86a22a7a2f4b353f",
+      "path": "raw/pg19/train/39696.txt",
+      "sha256": "6733bb29aa04b3d11b9a4ce4677d37abfb04a088426ede95e68135a8ee8ead94",
+      "sha256_source": "computed",
+      "url": "https://storage.googleapis.com/deepmind-gutenberg/train/39696.txt"
+    },
+    "train_3992_txt": {
+      "bytes": 79595,
+      "downloaded_utc": "2026-10-10T16:58:01+00:00",
+      "md5_published": "86ab0b251207a9db9c4870f70aa53ee4",
+      "path": "raw/pg19/train/3992.txt",
+      "sha256": "9248115947b000d9a8f7b8ae2093f349e33ef6d09b3a02df69fbb2e6b9044401",
+      "sha256_source": "computed",
+      "url": "https://storage.googleapis.com/deepmind-gutenberg/train/3992.txt"
+    },
+    "train_39978_txt": {
+      "bytes": 531385,
+      "downloaded_utc": "2026-10-10T16:58:03+00:00",
+      "md5_published": "de1d031ed5e6447c9b6258d5b56bdc91",
+      "path": "raw/pg19/train/39978.txt",
+      "sha256": "789a60ab8284beba05d1dd68dca4f1e1d95925f58270cf83518517c96e09afdb",
+      "sha256_source": "computed",
+      "url": "https://storage.googleapis.com/deepmind-gutenberg/train/39978.txt"
+    },
+    "train_40032_txt": {
+      "bytes": 601091,
+      "downloaded_utc": "2026-10-10T16:58:04+00:00",
+      "md5_published": "2d67fb531ced6bf0d34b7368ddbad6ec",
+      "path": "raw/pg19/train/40032.txt",
+      "sha256": "701a1005dba3383e631544f3332171955b8d9362cb12fd60ff5760cf9e9803cc",
+      "sha256_source": "computed",
+      "url": "https://storage.googleapis.com/deepmind-gutenberg/train/40032.txt"
+    },
+    "train_40297_txt": {
+      "bytes": 652865,
+      "downloaded_utc": "2026-10-10T16:58:04+00:00",
+      "md5_published": "8e051f65adde60d62b263950de5b5201",
+      "path": "raw/pg19/train/40297.txt",
+      "sha256": "908d638bf418c375bc2f190a343a7c2bbc642cebc3923c9fc9da356588d74345",
+      "sha256_source": "computed",
+      "url": "https://storage.googleapis.com/deepmind-gutenberg/train/40297.txt"
+    },
+    "train_40410_txt": {
+      "bytes": 594121,
+      "downloaded_utc": "2026-10-10T16:58:05+00:00",
+      "md5_published": "8cc72d057e1a3c6b3adad04b67816e16",
+      "path": "raw/pg19/train/40410.txt",
+      "sha256": "cb2c37e532ec143a3021225c7875f883193ae4957a63cb8208be15bfb58b37ba",
+      "sha256_source": "computed",
+      "url": "https://storage.googleapis.com/deepmind-gutenberg/train/40410.txt"
+    },
+    "train_40628_txt": {
+      "bytes": 563431,
+      "downloaded_utc": "2026-10-10T16:58:04+00:00",
+      "md5_published": "81bf2e0f5a2c7ea92e061fc6ffa52b1a",
+      "path": "raw/pg19/train/40628.txt",
+      "sha256": "eb81eca55ec41c57793772a2be16dc0f61a86b6c9c62362aff0de9bb03a072f3",
+      "sha256_source": "computed",
+      "url": "https://storage.googleapis.com/deepmind-gutenberg/train/40628.txt"
+    },
+    "train_40646_txt": {
+      "bytes": 1286487,
+      "downloaded_utc": "2026-10-10T16:58:05+00:00",
+      "md5_published": "90457c993590c6988ad4ed887d0d0eb8",
+      "path": "raw/pg19/train/40646.txt",
+      "sha256": "9a5943e01e7eab77e29021fbb840d77b57fa44c41179d739e956cca0d3233bb1",
+      "sha256_source": "computed",
+      "url": "https://storage.googleapis.com/deepmind-gutenberg/train/40646.txt"
+    },
+    "train_40661_txt": {
+      "bytes": 493693,
+      "downloaded_utc": "2026-10-10T16:58:08+00:00",
+      "md5_published": "ccae76b27635b3c5c5fe210b900102f1",
+      "path": "raw/pg19/train/40661.txt",
+      "sha256": "501c6efc4aee0338ffab82f4cb13fc24e9ce9f2bdbe979a3fb91409492918ae0",
+      "sha256_source": "computed",
+      "url": "https://storage.googleapis.com/deepmind-gutenberg/train/40661.txt"
+    },
+    "train_40696_txt": {
+      "bytes": 444099,
+      "downloaded_utc": "2026-10-10T16:58:07+00:00",
+      "md5_published": "685503c7b803471302f8988aabb59e56",
+      "path": "raw/pg19/train/40696.txt",
+      "sha256": "563c38644cae06f29778e1b033cb6ea69b3653ac030548741591c1fef664ea32",
+      "sha256_source": "computed",
+      "url": "https://storage.googleapis.com/deepmind-gutenberg/train/40696.txt"
+    },
+    "train_40933_txt": {
+      "bytes": 224327,
+      "downloaded_utc": "2026-10-10T16:58:06+00:00",
+      "md5_published": "3727e9ffa0a3de8fdb6e7a008bb7966c",
+      "path": "raw/pg19/train/40933.txt",
+      "sha256": "c91480eff337b2d764d6d90eb3309ee4273cdfbffd7d78d3913d76ec5deb3f60",
+      "sha256_source": "computed",
+      "url": "https://storage.googleapis.com/deepmind-gutenberg/train/40933.txt"
+    },
+    "train_40971_txt": {
+      "bytes": 1083385,
+      "downloaded_utc": "2026-10-10T16:58:08+00:00",
+      "md5_published": "5e69f490c3244df5352bff456dd9b190",
+      "path": "raw/pg19/train/40971.txt",
+      "sha256": "526b8659ca7dc6d7ad6532f09cc7f33ce16812ed0be2d0455d15ccc0365c322a",
+      "sha256_source": "computed",
+      "url": "https://storage.googleapis.com/deepmind-gutenberg/train/40971.txt"
+    },
+    "train_40977_txt": {
+      "bytes": 1268842,
+      "downloaded_utc": "2026-10-10T16:58:08+00:00",
+      "md5_published": "0cab1178609eac97474499ef24c22d9f",
+      "path": "raw/pg19/train/40977.txt",
+      "sha256": "c273970294a0e0b19456855b7a7f949e856eb117c3e26663a6fd2c971b386389",
+      "sha256_source": "computed",
+      "url": "https://storage.googleapis.com/deepmind-gutenberg/train/40977.txt"
+    },
+    "train_41041_txt": {
+      "bytes": 201062,
+      "downloaded_utc": "2026-10-10T16:58:07+00:00",
+      "md5_published": "fd253750045c43fa5e13cf3ee05d1d87",
+      "path": "raw/pg19/train/41041.txt",
+      "sha256": "5295e12b5e7b79100b89552678f021bbce6fee212ef7880ee594f9bf31e26b68",
+      "sha256_source": "computed",
+      "url": "https://storage.googleapis.com/deepmind-gutenberg/train/41041.txt"
+    },
+    "train_41118_txt": {
+      "bytes": 202827,
+      "downloaded_utc": "2026-10-10T16:58:07+00:00",
+      "md5_published": "f9225d2c6337b9cf8d42eaa8922cf638",
+      "path": "raw/pg19/train/41118.txt",
+      "sha256": "cd22929bc8e5af0c0bbff8708ad26da65cc48d1ec4918305a3ba56afd75e235a",
+      "sha256_source": "computed",
+      "url": "https://storage.googleapis.com/deepmind-gutenberg/train/41118.txt"
+    },
+    "train_41271_txt": {
+      "bytes": 536901,
+      "downloaded_utc": "2026-10-10T16:58:08+00:00",
+      "md5_published": "2c5013bdb02b6301211ec58c6376a62a",
+      "path": "raw/pg19/train/41271.txt",
+      "sha256": "66064757f6f2b6ad9e3d13602fb59af8008b5dd0e0e91a84c9bcfccf1049a95e",
+      "sha256_source": "computed",
+      "url": "https://storage.googleapis.com/deepmind-gutenberg/train/41271.txt"
+    },
+    "train_41317_txt": {
+      "bytes": 430932,
+      "downloaded_utc": "2026-10-10T16:58:09+00:00",
+      "md5_published": "1ca4bcb932aecb5a0e81942304d57a9b",
+      "path": "raw/pg19/train/41317.txt",
+      "sha256": "d64471f2d80ba1b6097acfcf26e6ee778fb46001880ecb9d82f200d60a13fb3b",
+      "sha256_source": "computed",
+      "url": "https://storage.googleapis.com/deepmind-gutenberg/train/41317.txt"
+    },
+    "train_41479_txt": {
+      "bytes": 749034,
+      "downloaded_utc": "2026-10-10T16:58:10+00:00",
+      "md5_published": "08ead138b4b90c3e12334057d472e29f",
+      "path": "raw/pg19/train/41479.txt",
+      "sha256": "100e81ca3ce4462ab3fc1fbee303cd95bf40b8a10a4a50f459dc5515684ee6e3",
+      "sha256_source": "computed",
+      "url": "https://storage.googleapis.com/deepmind-gutenberg/train/41479.txt"
+    },
+    "train_41553_txt": {
+      "bytes": 197580,
+      "downloaded_utc": "2026-10-10T16:58:12+00:00",
+      "md5_published": "0a4c600b4924f092c458e551386be1c0",
+      "path": "raw/pg19/train/41553.txt",
+      "sha256": "657f1dcd02dcbb843b80a9fdb820a94511df9cdf0dcb7a4eeba861680361f911",
+      "sha256_source": "computed",
+      "url": "https://storage.googleapis.com/deepmind-gutenberg/train/41553.txt"
+    },
+    "train_4158_txt": {
+      "bytes": 60536,
+      "downloaded_utc": "2026-10-10T16:58:09+00:00",
+      "md5_published": "a695888f31d65b740d9c0adeeac13b2b",
+      "path": "raw/pg19/train/4158.txt",
+      "sha256": "f87345696a4597f9bab9042715b2ec73fed22b100703c0f1f74594e5f455e138",
+      "sha256_source": "computed",
+      "url": "https://storage.googleapis.com/deepmind-gutenberg/train/4158.txt"
+    },
+    "train_415_txt": {
+      "bytes": 1277192,
+      "downloaded_utc": "2026-10-10T16:58:11+00:00",
+      "md5_published": "95469ff774189902d4ca688bc02d53a5",
+      "path": "raw/pg19/train/415.txt",
+      "sha256": "7dd5f6989487aac9196812d10272b5fdf03caee559e33dc51f4dc02f3575348a",
+      "sha256_source": "computed",
+      "url": "https://storage.googleapis.com/deepmind-gutenberg/train/415.txt"
+    },
+    "train_41698_txt": {
+      "bytes": 579885,
+      "downloaded_utc": "2026-10-10T16:58:11+00:00",
+      "md5_published": "c9c2dc44a1e3bd11b101f6594e27e68c",
+      "path": "raw/pg19/train/41698.txt",
+      "sha256": "fdfc516e6623e5a3a0ce26ece23940963d21332fcf7b37409853e512e5b0b6fe",
+      "sha256_source": "computed",
+      "url": "https://storage.googleapis.com/deepmind-gutenberg/train/41698.txt"
+    },
+    "train_41743_txt": {
+      "bytes": 287248,
+      "downloaded_utc": "2026-10-10T16:58:11+00:00",
+      "md5_published": "7f07bf4af13a3161e0066e7eba304d3b",
+      "path": "raw/pg19/train/41743.txt",
+      "sha256": "f8244e7b4ab5539dd31407bfa1f6b328fc1686f3d769287049c11f5cfdbd17b7",
+      "sha256_source": "computed",
+      "url": "https://storage.googleapis.com/deepmind-gutenberg/train/41743.txt"
+    },
+    "train_41835_txt": {
+      "bytes": 59578,
+      "downloaded_utc": "2026-10-10T16:58:10+00:00",
+      "md5_published": "24974e38ec15b63a9a64cfdaa6c92b1e",
+      "path": "raw/pg19/train/41835.txt",
+      "sha256": "2ee07f07e12afbb586eb1e2eb89f481ea56ca70e753ff1a0ec63c49605765748",
+      "sha256_source": "computed",
+      "url": "https://storage.googleapis.com/deepmind-gutenberg/train/41835.txt"
+    },
+    "train_4183_txt": {
+      "bytes": 79869,
+      "downloaded_utc": "2026-10-10T16:58:10+00:00",
+      "md5_published": "eeb00591fceb8fbc8bfbde465d5f376d",
+      "path": "raw/pg19/train/4183.txt",
+      "sha256": "e80e9c2c06b8bc2c99b7650f47e3cab67bd4a4794b51ba7cbb6aba214711f527",
+      "sha256_source": "computed",
+      "url": "https://storage.googleapis.com/deepmind-gutenberg/train/4183.txt"
+    },
+    "train_41847_txt": {
+      "bytes": 286892,
+      "downloaded_utc": "2026-10-10T16:58:12+00:00",
+      "md5_published": "25e3a40cd7001ff1855ed079fc3630ed",
+      "path": "raw/pg19/train/41847.txt",
+      "sha256": "f8715f5d373b9beb5b8ee3db415c79fafb43b5dcd13415e7a50f8de7228ccced",
+      "sha256_source": "computed",
+      "url": "https://storage.googleapis.com/deepmind-gutenberg/train/41847.txt"
+    },
+    "train_4197_txt": {
+      "bytes": 129443,
+      "downloaded_utc": "2026-10-10T16:58:12+00:00",
+      "md5_published": "75ec0fb3f8ac3839a6e3d6f369f5294e",
+      "path": "raw/pg19/train/4197.txt",
+      "sha256": "b5971620263f05d76ec219fda3c82ea899f8ecd0f35f87712bac36599b04a81a",
+      "sha256_source": "computed",
+      "url": "https://storage.googleapis.com/deepmind-gutenberg/train/4197.txt"
+    },
+    "train_42049_txt": {
+      "bytes": 418994,
+      "downloaded_utc": "2026-10-10T16:58:15+00:00",
+      "md5_published": "96f471b9952c3d45ccf3ff8ba4b060c9",
+      "path": "raw/pg19/train/42049.txt",
+      "sha256": "9a11e06d9b3f56a116c5fd2fc6ff0a21a0fc5332ad93e87cf7f560707825b0b5",
+      "sha256_source": "computed",
+      "url": "https://storage.googleapis.com/deepmind-gutenberg/train/42049.txt"
+    },
+    "train_42169_txt": {
+      "bytes": 202478,
+      "downloaded_utc": "2026-10-10T16:58:15+00:00",
+      "md5_published": "4569c89a4a72fd67761818670a38f25e",
+      "path": "raw/pg19/train/42169.txt",
+      "sha256": "c728a72c64d2fd6c9634519b8dbc4cd151cd6f7be01a0e4fb31aba53fdaad860",
+      "sha256_source": "computed",
+      "url": "https://storage.googleapis.com/deepmind-gutenberg/train/42169.txt"
+    },
+    "train_42204_txt": {
+      "bytes": 103241,
+      "downloaded_utc": "2026-10-10T16:58:12+00:00",
+      "md5_published": "b6f394729a39cd3f9f66de90eec3ae9b",
+      "path": "raw/pg19/train/42204.txt",
+      "sha256": "6a55f474cc73a4bb54386830dac6f389e0989eb296cf616b67bfcfddfc12a505",
+      "sha256_source": "computed",
+      "url": "https://storage.googleapis.com/deepmind-gutenberg/train/42204.txt"
+    },
+    "train_42214_txt": {
+      "bytes": 685342,
+      "downloaded_utc": "2026-10-10T16:58:14+00:00",
+      "md5_published": "e7f8c261951e4e6ed385517ea298ef7d",
+      "path": "raw/pg19/train/42214.txt",
+      "sha256": "06d7a9971302cbe4ad05ef430d7635ea2cd7925f41642757cf9929fc5e6d1319",
+      "sha256_source": "computed",
+      "url": "https://storage.googleapis.com/deepmind-gutenberg/train/42214.txt"
+    },
+    "train_4229_txt": {
+      "bytes": 1241251,
+      "downloaded_utc": "2026-10-10T16:58:14+00:00",
+      "md5_published": "6c6ea0a8cf157646794c59c6987a8485",
+      "path": "raw/pg19/train/4229.txt",
+      "sha256": "04a77d327192e22807e1721b63b4427024c2187e760f39de579983d95b1a208f",
+      "sha256_source": "computed",
+      "url": "https://storage.googleapis.com/deepmind-gutenberg/train/4229.txt"
+    },
+    "train_42334_txt": {
+      "bytes": 1019406,
+      "downloaded_utc": "2026-10-10T16:58:15+00:00",
+      "md5_published": "5c56e7c458f7d18915ae95113995a541",
+      "path": "raw/pg19/train/42334.txt",
+      "sha256": "d9578e67fda48f3657165d820964cd83e7aea271fe1404c62f0004f891ef44a0",
+      "sha256_source": "computed",
+      "url": "https://storage.googleapis.com/deepmind-gutenberg/train/42334.txt"
+    },
+    "train_42345_txt": {
+      "bytes": 374264,
+      "downloaded_utc": "2026-10-10T16:58:15+00:00",
+      "md5_published": "0966536a04ff795af6ae1c5bbbc9c3eb",
+      "path": "raw/pg19/train/42345.txt",
+      "sha256": "bfdd0fa2f77ddaadeea0b7f4fd300bb2c6ca2029cfe9dca08759422614806988",
+      "sha256_source": "computed",
+      "url": "https://storage.googleapis.com/deepmind-gutenberg/train/42345.txt"
+    },
+    "train_42597_txt": {
+      "bytes": 200436,
+      "downloaded_utc": "2026-10-10T16:58:14+00:00",
+      "md5_published": "728a37482534021611302a5acd676b0c",
+      "path": "raw/pg19/train/42597.txt",
+      "sha256": "4a5da82769c0155afdc99a072994509741639c419f16c686d45f5e335166cc00",
+      "sha256_source": "computed",
+      "url": "https://storage.googleapis.com/deepmind-gutenberg/train/42597.txt"
+    },
+    "train_42732_txt": {
+      "bytes": 798360,
+      "downloaded_utc": "2026-10-10T16:58:14+00:00",
+      "md5_published": "d8700916fb1ee5369ecb96db47782432",
+      "path": "raw/pg19/train/42732.txt",
+      "sha256": "5e3e40399e0d2402d8474d15ab38a1c0843d383fc1fda71d828638ce7cb3572c",
+      "sha256_source": "computed",
+      "url": "https://storage.googleapis.com/deepmind-gutenberg/train/42732.txt"
+    },
+    "train_42788_txt": {
+      "bytes": 141615,
+      "downloaded_utc": "2026-10-10T16:58:16+00:00",
+      "md5_published": "f4bda9255fbc37aa54d47d05879f7d88",
+      "path": "raw/pg19/train/42788.txt",
+      "sha256": "6fb7d2f32aaeeda934eb0ce5162c5af320c302c19fe0fefd2f85ea0b16e9fdad",
+      "sha256_source": "computed",
+      "url": "https://storage.googleapis.com/deepmind-gutenberg/train/42788.txt"
+    },
+    "train_42801_txt": {
+      "bytes": 498889,
+      "downloaded_utc": "2026-10-10T16:58:17+00:00",
+      "md5_published": "dc56e4f226b5b544fbf9b3eb6cdfd133",
+      "path": "raw/pg19/train/42801.txt",
+      "sha256": "bd8f7141522daca413df04b04774f05a50fa04c0668e5650548d717098ec794d",
+      "sha256_source": "computed",
+      "url": "https://storage.googleapis.com/deepmind-gutenberg/train/42801.txt"
+    },
+    "train_4338_txt": {
+      "bytes": 180730,
+      "downloaded_utc": "2026-10-10T16:58:17+00:00",
+      "md5_published": "9022f223c4d5c4128a943a737cbdc7ad",
+      "path": "raw/pg19/train/4338.txt",
+      "sha256": "4406fdece2a8182c7d4ee3e284d85a4ba4eb598e9688bc5f08d2e6f56e305904",
+      "sha256_source": "computed",
+      "url": "https://storage.googleapis.com/deepmind-gutenberg/train/4338.txt"
+    },
+    "train_43406_txt": {
+      "bytes": 51297,
+      "downloaded_utc": "2026-10-10T16:58:17+00:00",
+      "md5_published": "184f47fe4a823145debf343560d3ecba",
+      "path": "raw/pg19/train/43406.txt",
+      "sha256": "1a948544921d06f59295c01d43311ede8e4cb4ec435341f831a68fe325c8e135",
+      "sha256_source": "computed",
+      "url": "https://storage.googleapis.com/deepmind-gutenberg/train/43406.txt"
+    },
+    "train_43645_txt": {
+      "bytes": 10783,
+      "downloaded_utc": "2026-10-10T16:58:16+00:00",
+      "md5_published": "91b747ddcedc0382e681a013c0be6cc7",
+      "path": "raw/pg19/train/43645.txt",
+      "sha256": "2784047c934f5505677b75136bcd83e5e45b0e4d03d7778046f43e7af25e7b70",
+      "sha256_source": "computed",
+      "url": "https://storage.googleapis.com/deepmind-gutenberg/train/43645.txt"
+    },
+    "train_43753_txt": {
+      "bytes": 667110,
+      "downloaded_utc": "2026-10-10T16:58:18+00:00",
+      "md5_published": "7e81f4b6b885cbd766bb64aa40c91d18",
+      "path": "raw/pg19/train/43753.txt",
+      "sha256": "67a20606929a83cf4a6f0dee2b7f9713b4e8c864fea922a44fe960a7c23598c9",
+      "sha256_source": "computed",
+      "url": "https://storage.googleapis.com/deepmind-gutenberg/train/43753.txt"
+    },
+    "train_43785_txt": {
+      "bytes": 448590,
+      "downloaded_utc": "2026-10-10T16:58:20+00:00",
+      "md5_published": "60e16a933e47dd579ffd96da383bc65e",
+      "path": "raw/pg19/train/43785.txt",
+      "sha256": "b628fe209ddce02777ea1aa50e25dba0ef2b42b8a1e0ef130a191ffdeac19abd",
+      "sha256_source": "computed",
+      "url": "https://storage.googleapis.com/deepmind-gutenberg/train/43785.txt"
+    },
+    "train_43864_txt": {
+      "bytes": 334876,
+      "downloaded_utc": "2026-10-10T16:58:19+00:00",
+      "md5_published": "355bcaa411bb0882d7175834eebc786b",
+      "path": "raw/pg19/train/43864.txt",
+      "sha256": "246a0e6061b251f4355ecae2aa570dc7cbd4632deb02960ee0a4f9ec5f31418c",
+      "sha256_source": "computed",
+      "url": "https://storage.googleapis.com/deepmind-gutenberg/train/43864.txt"
+    },
+    "train_43910_txt": {
+      "bytes": 292891,
+      "downloaded_utc": "2026-10-10T16:58:18+00:00",
+      "md5_published": "8de65016c6fb2164c9591f667d7f425a",
+      "path": "raw/pg19/train/43910.txt",
+      "sha256": "eba9eba7e465cddab146b64de7588d7b3ff2dc7bed7c9e2cd5b7f8ea81a82f49",
+      "sha256_source": "computed",
+      "url": "https://storage.googleapis.com/deepmind-gutenberg/train/43910.txt"
+    },
+    "train_44065_txt": {
+      "bytes": 711379,
+      "downloaded_utc": "2026-10-10T16:58:19+00:00",
+      "md5_published": "d89590e6b77f785bd1bfb1761e3aad4a",
+      "path": "raw/pg19/train/44065.txt",
+      "sha256": "3643e4c9f7c856a42726de8d52ec88f30333544b5519f068d527516290bdd871",
+      "sha256_source": "computed",
+      "url": "https://storage.googleapis.com/deepmind-gutenberg/train/44065.txt"
+    },
+    "train_44178_txt": {
+      "bytes": 70977,
+      "downloaded_utc": "2026-10-10T16:58:18+00:00",
+      "md5_published": "257e65f8600c088f7f265b005228380b",
+      "path": "raw/pg19/train/44178.txt",
+      "sha256": "5a9a4c8e38634ea0ff9d49ffbd8fe0a6c014c92606cdb4c010e71109e7110bb6",
+      "sha256_source": "computed",
+      "url": "https://storage.googleapis.com/deepmind-gutenberg/train/44178.txt"
+    },
+    "train_44237_txt": {
+      "bytes": 623485,
+      "downloaded_utc": "2026-10-10T16:58:21+00:00",
+      "md5_published": "2a80ee66c541eb3f17b75cd3ae9ba704",
+      "path": "raw/pg19/train/44237.txt",
+      "sha256": "cb8ed55074d5420b92e479bc910a4a4f79e823e169c0db29e6b89fc32eac12be",
+      "sha256_source": "computed",
+      "url": "https://storage.googleapis.com/deepmind-gutenberg/train/44237.txt"
+    },
+    "train_4425_txt": {
+      "bytes": 174385,
+      "downloaded_utc": "2026-10-10T16:58:22+00:00",
+      "md5_published": "f12b099941fac1dbbba7228cb77491d9",
+      "path": "raw/pg19/train/4425.txt",
+      "sha256": "72d800eb649076117dd5afd85139cfe0743f8a9c6ea77e442f76e686694a9acb",
+      "sha256_source": "computed",
+      "url": "https://storage.googleapis.com/deepmind-gutenberg/train/4425.txt"
+    },
+    "train_44314_txt": {
+      "bytes": 649338,
+      "downloaded_utc": "2026-10-10T16:58:23+00:00",
+      "md5_published": "eea11903a09d9748240904dce58b5330",
+      "path": "raw/pg19/train/44314.txt",
+      "sha256": "cc76ff82d8407a553ed044f8016080b9c23dbdb4043d4d7f5fafc2cab21476d0",
+      "sha256_source": "computed",
+      "url": "https://storage.googleapis.com/deepmind-gutenberg/train/44314.txt"
+    },
+    "train_44556_txt": {
+      "bytes": 70995,
+      "downloaded_utc": "2026-10-10T16:58:20+00:00",
+      "md5_published": "f208283558f41b3eca29c9db50cf3b49",
+      "path": "raw/pg19/train/44556.txt",
+      "sha256": "1b7b7b6785681cb7c58f84ce59a61b422ddd511bbf1fc6e0abeb57ca07e63627",
+      "sha256_source": "computed",
+      "url": "https://storage.googleapis.com/deepmind-gutenberg/train/44556.txt"
+    },
+    "train_44566_txt": {
+      "bytes": 1030874,
+      "downloaded_utc": "2026-10-10T16:58:23+00:00",
+      "md5_published": "14f5339e9e361843181ab7143ac89b2b",
+      "path": "raw/pg19/train/44566.txt",
+      "sha256": "62cd98d62dbf6e32b8eb99c459439cc53262dbace1058abfc1239f7167e5e049",
+      "sha256_source": "computed",
+      "url": "https://storage.googleapis.com/deepmind-gutenberg/train/44566.txt"
+    },
+    "train_4470_txt": {
+      "bytes": 890427,
+      "downloaded_utc": "2026-10-10T16:58:24+00:00",
+      "md5_published": "a345505883681ff0f0c4421426d7a2b3",
+      "path": "raw/pg19/train/4470.txt",
+      "sha256": "2f0930db821e73342dd372d972f10d00b65b27fc48cf2c4e5d54e200673a6b92",
+      "sha256_source": "computed",
+      "url": "https://storage.googleapis.com/deepmind-gutenberg/train/4470.txt"
+    },
+    "train_44914_txt": {
+      "bytes": 48458,
+      "downloaded_utc": "2026-10-10T16:58:23+00:00",
+      "md5_published": "05466d7b198920bc767cdfc4f450d5da",
+      "path": "raw/pg19/train/44914.txt",
+      "sha256": "c0f0da69194fd673ceb3e3e52db3fa5b35f85609146d1e50d281f1d5f0aea8d4",
+      "sha256_source": "computed",
+      "url": "https://storage.googleapis.com/deepmind-gutenberg/train/44914.txt"
+    },
+    "train_4491_txt": {
+      "bytes": 386057,
+      "downloaded_utc": "2026-10-10T16:58:23+00:00",
+      "md5_published": "fef5db8e78d473935c90c7626144b6c3",
+      "path": "raw/pg19/train/4491.txt",
+      "sha256": "3b67cde42482a7b41ee83e2c282ff871d7023857cc5e9b92b7f92882c7858741",
+      "sha256_source": "computed",
+      "url": "https://storage.googleapis.com/deepmind-gutenberg/train/4491.txt"
+    },
+    "train_4493_txt": {
+      "bytes": 131610,
+      "downloaded_utc": "2026-10-10T16:58:22+00:00",
+      "md5_published": "6ea3f1a91df127e680c05eaf7f8e534f",
+      "path": "raw/pg19/train/4493.txt",
+      "sha256": "38fa23557ed7de10d9f9e203cb5d56b25b0b5b81380e515afbf70cbd4b4db8a7",
+      "sha256_source": "computed",
+      "url": "https://storage.googleapis.com/deepmind-gutenberg/train/4493.txt"
+    },
+    "train_45479_txt": {
+      "bytes": 55364,
+      "downloaded_utc": "2026-10-10T16:58:23+00:00",
+      "md5_published": "7fbb3263ae2a9900a382af2cf500cd8f",
+      "path": "raw/pg19/train/45479.txt",
+      "sha256": "677e3890b06b07aa436d76d767a8e2df90060c8f2e544fa880c3c5f92b11b6ec",
+      "sha256_source": "computed",
+      "url": "https://storage.googleapis.com/deepmind-gutenberg/train/45479.txt"
+    },
+    "train_45489_txt": {
+      "bytes": 501592,
+      "downloaded_utc": "2026-10-10T16:58:25+00:00",
+      "md5_published": "7f4499e51a5e1869803e760a0815938b",
+      "path": "raw/pg19/train/45489.txt",
+      "sha256": "b04d5d3ee64dd1f16382471c028070181d46193cffb344d8e36189f1394b43e0",
+      "sha256_source": "computed",
+      "url": "https://storage.googleapis.com/deepmind-gutenberg/train/45489.txt"
+    },
+    "train_45510_txt": {
+      "bytes": 250279,
+      "downloaded_utc": "2026-10-10T16:58:24+00:00",
+      "md5_published": "4e8a073cefbee31e817abeab2fc40fa6",
+      "path": "raw/pg19/train/45510.txt",
+      "sha256": "d6b1346cfb387f03935561142035a349fab39daecbdf9dfd563e2719f7a8bc69",
+      "sha256_source": "computed",
+      "url": "https://storage.googleapis.com/deepmind-gutenberg/train/45510.txt"
+    },
+    "train_45646_txt": {
+      "bytes": 54014,
+      "downloaded_utc": "2026-10-10T16:58:26+00:00",
+      "md5_published": "e74baac1912f7b2306185e621332039a",
+      "path": "raw/pg19/train/45646.txt",
+      "sha256": "f065253de761aea1eb73b950ca48c0dfcd48e49187b067758464411752229fd8",
+      "sha256_source": "computed",
+      "url": "https://storage.googleapis.com/deepmind-gutenberg/train/45646.txt"
+    },
+    "train_45659_txt": {
+      "bytes": 460392,
+      "downloaded_utc": "2026-10-10T16:58:26+00:00",
+      "md5_published": "2733133bc7a7606d1ab403ebe6c7b796",
+      "path": "raw/pg19/train/45659.txt",
+      "sha256": "316ba8df97375f31c3c36363b94ed9261fc23dd779f64a6b2eb1f3acaf06bcd2",
+      "sha256_source": "computed",
+      "url": "https://storage.googleapis.com/deepmind-gutenberg/train/45659.txt"
+    },
+    "train_45674_txt": {
+      "bytes": 249599,
+      "downloaded_utc": "2026-10-10T16:58:26+00:00",
+      "md5_published": "7ce448ea9949f056927a581f4e88a599",
+      "path": "raw/pg19/train/45674.txt",
+      "sha256": "18b4022aa912c5f6fbb3c270880894aa136fbbbb3c1a84f92afeb3947240beed",
+      "sha256_source": "computed",
+      "url": "https://storage.googleapis.com/deepmind-gutenberg/train/45674.txt"
+    },
+    "train_45749_txt": {
+      "bytes": 331308,
+      "downloaded_utc": "2026-10-10T16:58:28+00:00",
+      "md5_published": "b82610f11a93b0d9a2d918f5c79b5026",
+      "path": "raw/pg19/train/45749.txt",
+      "sha256": "030633188aac489b944d34dd37e7ad18fd20251017d7a357f7418b76dcb7ed97",
+      "sha256_source": "computed",
+      "url": "https://storage.googleapis.com/deepmind-gutenberg/train/45749.txt"
+    },
+    "train_46068_txt": {
+      "bytes": 259491,
+      "downloaded_utc": "2026-10-10T16:58:27+00:00",
+      "md5_published": "6a187ca96eca45f80098a4a8d2e5078d",
+      "path": "raw/pg19/train/46068.txt",
+      "sha256": "e7c773286d1280c6e039a5eb5397f75e648794385855882c85c0dc6a3ddbe7fc",
+      "sha256_source": "computed",
+      "url": "https://storage.googleapis.com/deepmind-gutenberg/train/46068.txt"
+    },
+    "train_46400_txt": {
+      "bytes": 707633,
+      "downloaded_utc": "2026-10-10T16:58:27+00:00",
+      "md5_published": "998123d14602e4791c56422ad3fbe327",
+      "path": "raw/pg19/train/46400.txt",
+      "sha256": "5cb04017f8ba7bcc3a1817363d95105e840326a8487d9e2a006f126f1f15befe",
+      "sha256_source": "computed",
+      "url": "https://storage.googleapis.com/deepmind-gutenberg/train/46400.txt"
+    },
+    "train_46735_txt": {
+      "bytes": 504294,
+      "downloaded_utc": "2026-10-10T16:58:27+00:00",
+      "md5_published": "b51e3b68e1aaf10231b576b6b298b37d",
+      "path": "raw/pg19/train/46735.txt",
+      "sha256": "ed7c18180d55e9bc850075f9ad73be8bd7d06e0725d05fb8805d2a101999f4a8",
+      "sha256_source": "computed",
+      "url": "https://storage.googleapis.com/deepmind-gutenberg/train/46735.txt"
+    },
+    "train_46737_txt": {
+      "bytes": 581014,
+      "downloaded_utc": "2026-10-10T16:58:28+00:00",
+      "md5_published": "607f26988d9a839c0088117830bf2da0",
+      "path": "raw/pg19/train/46737.txt",
+      "sha256": "6d07e38b5c349de52ab849dae9b8a0d00af70e97fe50413ff9fb29f04cb14d11",
+      "sha256_source": "computed",
+      "url": "https://storage.googleapis.com/deepmind-gutenberg/train/46737.txt"
+    },
+    "train_46751_txt": {
+      "bytes": 78548,
+      "downloaded_utc": "2026-10-10T16:58:29+00:00",
+      "md5_published": "216158bbbe63532a1d763324c8648153",
+      "path": "raw/pg19/train/46751.txt",
+      "sha256": "39e12b47ac2463cdd2254ff701c3ff81579179dafff6cc2118f1cbd93f9963b8",
+      "sha256_source": "computed",
+      "url": "https://storage.googleapis.com/deepmind-gutenberg/train/46751.txt"
+    },
+    "train_46800_txt": {
+      "bytes": 109941,
+      "downloaded_utc": "2026-10-10T16:58:28+00:00",
+      "md5_published": "10d66ae9e56a552bcb6ac7499cabae58",
+      "path": "raw/pg19/train/46800.txt",
+      "sha256": "a9ed3e99ca9c09c1ed3160d707f6a845610092ada6b53b0d08e6eae372f1bf9c",
+      "sha256_source": "computed",
+      "url": "https://storage.googleapis.com/deepmind-gutenberg/train/46800.txt"
+    },
+    "train_47117_txt": {
+      "bytes": 641208,
+      "downloaded_utc": "2026-10-10T16:58:31+00:00",
+      "md5_published": "0f478aaa5c697352ded1f6a9b147872f",
+      "path": "raw/pg19/train/47117.txt",
+      "sha256": "e27f289ffc06ea0035b4aea698e6a784040a1c3eda5d4d6d81f9e0df8d5c280a",
+      "sha256_source": "computed",
+      "url": "https://storage.googleapis.com/deepmind-gutenberg/train/47117.txt"
+    },
+    "train_47235_txt": {
+      "bytes": 102996,
+      "downloaded_utc": "2026-10-10T16:58:29+00:00",
+      "md5_published": "226938f1b9588cb752836c1fb60bd016",
+      "path": "raw/pg19/train/47235.txt",
+      "sha256": "3977facf6e5f7ced04484b401e89eff6ff2943468563f21e5ef1b735d97cd6cc",
+      "sha256_source": "computed",
+      "url": "https://storage.googleapis.com/deepmind-gutenberg/train/47235.txt"
+    },
+    "train_47498_txt": {
+      "bytes": 63024,
+      "downloaded_utc": "2026-10-10T16:58:29+00:00",
+      "md5_published": "24b769d3780b9052fa92e84d7b6f2e9a",
+      "path": "raw/pg19/train/47498.txt",
+      "sha256": "cc5d7e2e7c7061388c2ce3e4d55c2700516079406b0ec7be6f437c768e7e7497",
+      "sha256_source": "computed",
+      "url": "https://storage.googleapis.com/deepmind-gutenberg/train/47498.txt"
+    },
+    "train_4763_txt": {
+      "bytes": 119769,
+      "downloaded_utc": "2026-10-10T16:58:29+00:00",
+      "md5_published": "8914044a9d77b18e244ba5b54bcc52f3",
+      "path": "raw/pg19/train/4763.txt",
+      "sha256": "e4b8af6fbe492cdca785008b1f9653544f1e3f5eed1ed3d1ac883cc7b5775d69",
+      "sha256_source": "computed",
+      "url": "https://storage.googleapis.com/deepmind-gutenberg/train/4763.txt"
+    },
+    "train_47699_txt": {
+      "bytes": 98651,
+      "downloaded_utc": "2026-10-10T16:58:30+00:00",
+      "md5_published": "db93cf1a48c971c03ebfee14c944ed72",
+      "path": "raw/pg19/train/47699.txt",
+      "sha256": "b9c4a0e60d0beaf038268b65af8a7d931170a7f820d6d5ca14bdfd0fabb438e0",
+      "sha256_source": "computed",
+      "url": "https://storage.googleapis.com/deepmind-gutenberg/train/47699.txt"
+    },
+    "train_47730_txt": {
+      "bytes": 878262,
+      "downloaded_utc": "2026-10-10T16:58:31+00:00",
+      "md5_published": "59dcffe0d2704a99f4d002ff4d2ff2f7",
+      "path": "raw/pg19/train/47730.txt",
+      "sha256": "dcdc3996e3b5ce153a2ccb3b50f3a018ad58f38f5d29d92bcbbdfc2785854850",
+      "sha256_source": "computed",
+      "url": "https://storage.googleapis.com/deepmind-gutenberg/train/47730.txt"
+    },
+    "train_47794_txt": {
+      "bytes": 648738,
+      "downloaded_utc": "2026-10-10T16:58:33+00:00",
+      "md5_published": "a593c779c8ef2f3dce8bfed75d5870f5",
+      "path": "raw/pg19/train/47794.txt",
+      "sha256": "dc511ba6259946180e6a3ae5440150624044637d2bc4d17d25f6002e92ef8fc9",
+      "sha256_source": "computed",
+      "url": "https://storage.googleapis.com/deepmind-gutenberg/train/47794.txt"
+    },
+    "train_47905_txt": {
+      "bytes": 722134,
+      "downloaded_utc": "2026-10-10T16:58:32+00:00",
+      "md5_published": "db0b550e9ca89d670bde58b139c92783",
+      "path": "raw/pg19/train/47905.txt",
+      "sha256": "5658f8a32162068bfeec6bbe7c941a8086a3d07639098bc7379e8ec1660b7488",
+      "sha256_source": "computed",
+      "url": "https://storage.googleapis.com/deepmind-gutenberg/train/47905.txt"
+    },
+    "train_47934_txt": {
+      "bytes": 13125,
+      "downloaded_utc": "2026-10-10T16:58:29+00:00",
+      "md5_published": "c19fef1527f60fa92144a6694f7f9e88",
+      "path": "raw/pg19/train/47934.txt",
+      "sha256": "0d4954b605e5b5c8094c02389bd258bad0f94f49973a7668bc75830f021ebafc",
+      "sha256_source": "computed",
+      "url": "https://storage.googleapis.com/deepmind-gutenberg/train/47934.txt"
+    },
+    "train_47968_txt": {
+      "bytes": 530851,
+      "downloaded_utc": "2026-10-10T16:58:34+00:00",
+      "md5_published": "d785d3cb3f11a6899814b4e6a4fdd031",
+      "path": "raw/pg19/train/47968.txt",
+      "sha256": "3fc6cd3a7063eb4aa4bf4af2ebbf68f144e278b8e6aa848db48d367c17770c21",
+      "sha256_source": "computed",
+      "url": "https://storage.googleapis.com/deepmind-gutenberg/train/47968.txt"
+    },
+    "train_48055_txt": {
+      "bytes": 165111,
+      "downloaded_utc": "2026-10-10T16:58:32+00:00",
+      "md5_published": "6557e4e3af1e3f6f88e7ec24d4a8e655",
+      "path": "raw/pg19/train/48055.txt",
+      "sha256": "37c8d2201e834e5c5fe80f85746ec0000c33cd804c294f9dbb0a8d3e88d77c36",
+      "sha256_source": "computed",
+      "url": "https://storage.googleapis.com/deepmind-gutenberg/train/48055.txt"
+    },
+    "train_48967_txt": {
+      "bytes": 1167540,
+      "downloaded_utc": "2026-10-10T16:58:35+00:00",
+      "md5_published": "aa48aff688d4fd4cfd0c5b867655ba8f",
+      "path": "raw/pg19/train/48967.txt",
+      "sha256": "d2d414025aa14aa128fbba22cbe4d2ef4943db73f957715c943876c6f1338a31",
+      "sha256_source": "computed",
+      "url": "https://storage.googleapis.com/deepmind-gutenberg/train/48967.txt"
+    },
+    "train_49179_txt": {
+      "bytes": 103935,
+      "downloaded_utc": "2026-10-10T16:58:31+00:00",
+      "md5_published": "452bfb6f7f56c62644d95763514c5f9f",
+      "path": "raw/pg19/train/49179.txt",
+      "sha256": "19ed88753a47fe771f09d9fab0fae1a1e622ddc0ac359b9fa6b36e34fac4d067",
+      "sha256_source": "computed",
+      "url": "https://storage.googleapis.com/deepmind-gutenberg/train/49179.txt"
+    },
+    "train_49190_txt": {
+      "bytes": 254082,
+      "downloaded_utc": "2026-10-10T16:58:36+00:00",
+      "md5_published": "3ea4c7f30a2ff2011ba79610dfbbf588",
+      "path": "raw/pg19/train/49190.txt",
+      "sha256": "df08f3cf1adcda155e37cf6e05a542d0cae098263e00bc052155defd18917617",
+      "sha256_source": "computed",
+      "url": "https://storage.googleapis.com/deepmind-gutenberg/train/49190.txt"
+    },
+    "train_49304_txt": {
+      "bytes": 189526,
+      "downloaded_utc": "2026-10-10T16:58:35+00:00",
+      "md5_published": "1e07ace8d23c79debdde83c82f1c303b",
+      "path": "raw/pg19/train/49304.txt",
+      "sha256": "871e7fa50a040dae59acfe45d228eb39731c526a531bbe6ce4bcd179fc9abb71",
+      "sha256_source": "computed",
+      "url": "https://storage.googleapis.com/deepmind-gutenberg/train/49304.txt"
+    },
+    "train_49321_txt": {
+      "bytes": 79130,
+      "downloaded_utc": "2026-10-10T16:58:33+00:00",
+      "md5_published": "9a0d81b6d36846303e634b4b15fb6e0b",
+      "path": "raw/pg19/train/49321.txt",
+      "sha256": "4ec173bd66cdff1335e59a78b7890f653e1c375cc594c51c6be2507b0118ef47",
+      "sha256_source": "computed",
+      "url": "https://storage.googleapis.com/deepmind-gutenberg/train/49321.txt"
+    },
+    "train_49614_txt": {
+      "bytes": 342049,
+      "downloaded_utc": "2026-10-10T16:58:35+00:00",
+      "md5_published": "0e32ab30d29e7a4ce9c427b757f85a59",
+      "path": "raw/pg19/train/49614.txt",
+      "sha256": "9bf9ead1d9d6d13a2f7903ab032d4b3b591f6a933a48e7b94f5e24d495619ac0",
+      "sha256_source": "computed",
+      "url": "https://storage.googleapis.com/deepmind-gutenberg/train/49614.txt"
+    },
+    "train_4997_txt": {
+      "bytes": 304508,
+      "downloaded_utc": "2026-10-10T16:58:35+00:00",
+      "md5_published": "c030e440168065882f02fb958149b290",
+      "path": "raw/pg19/train/4997.txt",
+      "sha256": "d8cccedbc8b0f7206c70eff70db313e26a85945467638827d559097d892a368e",
+      "sha256_source": "computed",
+      "url": "https://storage.googleapis.com/deepmind-gutenberg/train/4997.txt"
+    },
+    "train_50074_txt": {
+      "bytes": 34358,
+      "downloaded_utc": "2026-10-10T16:58:34+00:00",
+      "md5_published": "df2c4f080cf45aee82f45d617ca8e475",
+      "path": "raw/pg19/train/50074.txt",
+      "sha256": "cae0b684ff4db053b8762101b89b9eec7a6e615dce82eed88836094cb310553b",
+      "sha256_source": "computed",
+      "url": "https://storage.googleapis.com/deepmind-gutenberg/train/50074.txt"
+    },
+    "train_50121_txt": {
+      "bytes": 14082,
+      "downloaded_utc": "2026-10-10T16:58:34+00:00",
+      "md5_published": "01ae4cc60ffa22dc044956bbd7154e6d",
+      "path": "raw/pg19/train/50121.txt",
+      "sha256": "f0dae500f52f646bb2a886fef47ae96bfadbba3c8fd3c579b7e33349dc010a63",
+      "sha256_source": "computed",
+      "url": "https://storage.googleapis.com/deepmind-gutenberg/train/50121.txt"
+    },
+    "train_50123_txt": {
+      "bytes": 306359,
+      "downloaded_utc": "2026-10-10T16:58:38+00:00",
+      "md5_published": "dd20dba221a4e55fc058df14f6cfc68e",
+      "path": "raw/pg19/train/50123.txt",
+      "sha256": "3c206f370ba62a42e30d54ea7641e5618e675301fc32e89d6c0e468b1679cd58",
+      "sha256_source": "computed",
+      "url": "https://storage.googleapis.com/deepmind-gutenberg/train/50123.txt"
+    },
+    "train_50334_txt": {
+      "bytes": 360011,
+      "downloaded_utc": "2026-10-10T16:58:36+00:00",
+      "md5_published": "d68412e3e9dcc0de37e60b79b5ac809c",
+      "path": "raw/pg19/train/50334.txt",
+      "sha256": "1ff5f3c373ae74bafac34cc364225a17f6ebc2c3e22c5495108cbd5c20d16eb1",
+      "sha256_source": "computed",
+      "url": "https://storage.googleapis.com/deepmind-gutenberg/train/50334.txt"
+    },
+    "train_5061_txt": {
+      "bytes": 438842,
+      "downloaded_utc": "2026-10-10T16:58:39+00:00",
+      "md5_published": "8579b11e4dbe0faab2be5e2f000c88e4",
+      "path": "raw/pg19/train/5061.txt",
+      "sha256": "212d30d23c549e3b9accf3d9065a1b54156baa7b8022b6f104c521ab2f5212cf",
+      "sha256_source": "computed",
+      "url": "https://storage.googleapis.com/deepmind-gutenberg/train/5061.txt"
+    },
+    "train_5075_txt": {
+      "bytes": 607963,
+      "downloaded_utc": "2026-10-10T16:58:39+00:00",
+      "md5_published": "a44f377d6ec1e55da97a26f784163bec",
+      "path": "raw/pg19/train/5075.txt",
+      "sha256": "10820876155f0473c1af0e2cdf1b0f84bd02bc35165c96aee2a4401c947720f9",
+      "sha256_source": "computed",
+      "url": "https://storage.googleapis.com/deepmind-gutenberg/train/5075.txt"
+    },
+    "train_50772_txt": {
+      "bytes": 605516,
+      "downloaded_utc": "2026-10-10T16:58:40+00:00",
+      "md5_published": "07f1bb04da5f56c8a28b7dfbf6ff612c",
+      "path": "raw/pg19/train/50772.txt",
+      "sha256": "29a3c44d442f9c3c1321d48a7bc56f26689248bc1b3781b907c9fd40309c4130",
+      "sha256_source": "computed",
+      "url": "https://storage.googleapis.com/deepmind-gutenberg/train/50772.txt"
+    },
+    "train_50970_txt": {
+      "bytes": 300932,
+      "downloaded_utc": "2026-10-10T16:58:39+00:00",
+      "md5_published": "d425079238f73258f8447ac4ab3aeb69",
+      "path": "raw/pg19/train/50970.txt",
+      "sha256": "8632846c12040eeb202a315a91613a18c13698a05d8531e9b1644b9e54251ddc",
+      "sha256_source": "computed",
+      "url": "https://storage.googleapis.com/deepmind-gutenberg/train/50970.txt"
+    },
+    "train_50976_txt": {
+      "bytes": 627801,
+      "downloaded_utc": "2026-10-10T16:58:41+00:00",
+      "md5_published": "d7aeeb6a3835e5deffcdba2f7d8512e2",
+      "path": "raw/pg19/train/50976.txt",
+      "sha256": "c2537f1140ed969d7e1dfeead639c679cd90ba4c305bd07367c0e6dbdbf5e404",
+      "sha256_source": "computed",
+      "url": "https://storage.googleapis.com/deepmind-gutenberg/train/50976.txt"
+    },
+    "train_51040_txt": {
+      "bytes": 32287,
+      "downloaded_utc": "2026-10-10T16:58:38+00:00",
+      "md5_published": "83fb2b036707bbffea3ce08c35e9b6de",
+      "path": "raw/pg19/train/51040.txt",
+      "sha256": "e21f82085c656c4f05b6a0f74347a450d4ce6b1f0c7b175b687fe521dff0c61d",
+      "sha256_source": "computed",
+      "url": "https://storage.googleapis.com/deepmind-gutenberg/train/51040.txt"
+    },
+    "train_51198_txt": {
+      "bytes": 600239,
+      "downloaded_utc": "2026-10-10T16:58:41+00:00",
+      "md5_published": "ec62d6d38d9e9393aaed8695bd129ae6",
+      "path": "raw/pg19/train/51198.txt",
+      "sha256": "15da7261493041887ef8b24b4e71cc8955fb454208fa8bcd791485e2b5ae6687",
+      "sha256_source": "computed",
+      "url": "https://storage.googleapis.com/deepmind-gutenberg/train/51198.txt"
+    },
+    "train_51302_txt": {
+      "bytes": 239074,
+      "downloaded_utc": "2026-10-10T16:58:42+00:00",
+      "md5_published": "e5e33ba79b0ef8a8323c90876abdbadb",
+      "path": "raw/pg19/train/51302.txt",
+      "sha256": "9225993f893170ea55fb00659a4fc9e263f5fd50c5badef75f33069b062841af",
+      "sha256_source": "computed",
+      "url": "https://storage.googleapis.com/deepmind-gutenberg/train/51302.txt"
+    },
+    "train_51370_txt": {
+      "bytes": 1118936,
+      "downloaded_utc": "2026-10-10T16:58:41+00:00",
+      "md5_published": "bf531d606e925822b9422e0da38f82b9",
+      "path": "raw/pg19/train/51370.txt",
+      "sha256": "1e439fa093c57960bc8134c1673c2e13ebfc623fea84b8c64fb257569e9757db",
+      "sha256_source": "computed",
+      "url": "https://storage.googleapis.com/deepmind-gutenberg/train/51370.txt"
+    },
+    "train_51685_txt": {
+      "bytes": 690077,
+      "downloaded_utc": "2026-10-10T16:58:42+00:00",
+      "md5_published": "4f223165ba3151b206b372c51c90743d",
+      "path": "raw/pg19/train/51685.txt",
+      "sha256": "5e146938556f8d353b2b7ee9c09668fb31b38a68e87ef7dde6f32c55990a3663",
+      "sha256_source": "computed",
+      "url": "https://storage.googleapis.com/deepmind-gutenberg/train/51685.txt"
+    },
+    "train_51924_txt": {
+      "bytes": 108454,
+      "downloaded_utc": "2026-10-10T16:58:42+00:00",
+      "md5_published": "800b0a326120a323842d8525c4f2c504",
+      "path": "raw/pg19/train/51924.txt",
+      "sha256": "eeaea67469c89201e2463949e3ea790261d9f1db4d2804c4482310c848ee3d5c",
+      "sha256_source": "computed",
+      "url": "https://storage.googleapis.com/deepmind-gutenberg/train/51924.txt"
+    },
+    "train_52338_txt": {
+      "bytes": 320180,
+      "downloaded_utc": "2026-10-10T16:58:43+00:00",
+      "md5_published": "9a12a6ddf328a24bf90a2bb4803b71a4",
+      "path": "raw/pg19/train/52338.txt",
+      "sha256": "750a29a5c144b230131fde28bffae92e01c8febd2d8c1c23e3f65e4aa037a316",
+      "sha256_source": "computed",
+      "url": "https://storage.googleapis.com/deepmind-gutenberg/train/52338.txt"
+    },
+    "train_52411_txt": {
+      "bytes": 221858,
+      "downloaded_utc": "2026-10-10T16:58:42+00:00",
+      "md5_published": "bad00e5d121c6d6a6adff5096102e3d2",
+      "path": "raw/pg19/train/52411.txt",
+      "sha256": "7a949b00fcde86943640da5aa3328287716e360ef86eb23bc6010b6fadbafefa",
+      "sha256_source": "computed",
+      "url": "https://storage.googleapis.com/deepmind-gutenberg/train/52411.txt"
+    },
+    "train_52422_txt": {
+      "bytes": 30517,
+      "downloaded_utc": "2026-10-10T16:58:43+00:00",
+      "md5_published": "59c40995819d014563d5d5f26ad4d373",
+      "path": "raw/pg19/train/52422.txt",
+      "sha256": "4dcb705e6c9af9711a059ae2eb979775c0bcc4856432ad9edd9fbd65e16835b7",
+      "sha256_source": "computed",
+      "url": "https://storage.googleapis.com/deepmind-gutenberg/train/52422.txt"
+    },
+    "train_52634_txt": {
+      "bytes": 339405,
+      "downloaded_utc": "2026-10-10T16:58:45+00:00",
+      "md5_published": "3b4b7cbc7f0faa68a4e406221b4a98fa",
+      "path": "raw/pg19/train/52634.txt",
+      "sha256": "189959d9d07e01782374bda7f157cf66a293da27431846e4e81e6a9e4bf0a16f",
+      "sha256_source": "computed",
+      "url": "https://storage.googleapis.com/deepmind-gutenberg/train/52634.txt"
+    },
+    "train_52762_txt": {
+      "bytes": 103036,
+      "downloaded_utc": "2026-10-10T16:58:45+00:00",
+      "md5_published": "8a5253323630b678173e8a1fd27624d6",
+      "path": "raw/pg19/train/52762.txt",
+      "sha256": "c4228a87e9574a23fad8e3dc319a96c39eeca983a7350e5aef3eb7a3f795d942",
+      "sha256_source": "computed",
+      "url": "https://storage.googleapis.com/deepmind-gutenberg/train/52762.txt"
+    },
+    "train_527_txt": {
+      "bytes": 295118,
+      "downloaded_utc": "2026-10-10T16:58:45+00:00",
+      "md5_published": "d68012ec12b33f5573a4db327927806a",
+      "path": "raw/pg19/train/527.txt",
+      "sha256": "0cc87ce9c946f82f52ea5318209b693743a66ad66ee764c5810a08dfa69f7174",
+      "sha256_source": "computed",
+      "url": "https://storage.googleapis.com/deepmind-gutenberg/train/527.txt"
+    },
+    "train_52868_txt": {
+      "bytes": 572135,
+      "downloaded_utc": "2026-10-10T16:58:46+00:00",
+      "md5_published": "3d3a492cd4a3bc040d70ceaf4b35487d",
+      "path": "raw/pg19/train/52868.txt",
+      "sha256": "e8f7b98ddd41eaeea623f30d4b79b1184322629cc52243eae6330ff36c4a0073",
+      "sha256_source": "computed",
+      "url": "https://storage.googleapis.com/deepmind-gutenberg/train/52868.txt"
+    },
+    "train_52935_txt": {
+      "bytes": 51797,
+      "downloaded_utc": "2026-10-10T16:58:45+00:00",
+      "md5_published": "7a6d274b275827b95298119754c31aac",
+      "path": "raw/pg19/train/52935.txt",
+      "sha256": "2caf679560f6addd53eb2faffeb6df435da0e5263abba61a91f6dbabd5fbf150",
+      "sha256_source": "computed",
+      "url": "https://storage.googleapis.com/deepmind-gutenberg/train/52935.txt"
+    },
+    "train_53307_txt": {
+      "bytes": 260663,
+      "downloaded_utc": "2026-10-10T16:58:46+00:00",
+      "md5_published": "950cede5033ca6f13972e0cca284fc16",
+      "path": "raw/pg19/train/53307.txt",
+      "sha256": "d5d6046c9dbf2351b4cd0dddddd10edd55b662347102d8ee0e7bc1d81461c6ac",
+      "sha256_source": "computed",
+      "url": "https://storage.googleapis.com/deepmind-gutenberg/train/53307.txt"
+    },
+    "train_53368_txt": {
+      "bytes": 106121,
+      "downloaded_utc": "2026-10-10T16:58:46+00:00",
+      "md5_published": "e23225a8dcef4f4bfc27959e59e6a201",
+      "path": "raw/pg19/train/53368.txt",
+      "sha256": "886feaf0cecaa6fbb79a2fa61b2f49a276ec1c41bb5e503dc92bd8d10c2a3367",
+      "sha256_source": "computed",
+      "url": "https://storage.googleapis.com/deepmind-gutenberg/train/53368.txt"
+    },
+    "train_53836_txt": {
+      "bytes": 296081,
+      "downloaded_utc": "2026-10-10T16:58:45+00:00",
+      "md5_published": "da652a2bf123b2413baccf2223380b0d",
+      "path": "raw/pg19/train/53836.txt",
+      "sha256": "6a5b77edee134b6dccfc6fea77a6b1bf276fffb8e77626de05b20b25b81ead60",
+      "sha256_source": "computed",
+      "url": "https://storage.googleapis.com/deepmind-gutenberg/train/53836.txt"
+    },
+    "train_53844_txt": {
+      "bytes": 257005,
+      "downloaded_utc": "2026-10-10T16:58:49+00:00",
+      "md5_published": "ac2a8df070943feea448ea94d5980f24",
+      "path": "raw/pg19/train/53844.txt",
+      "sha256": "e4d605fb855aae23fd320404e597d44cf38cd20de65e2e5346fa33a38052d049",
+      "sha256_source": "computed",
+      "url": "https://storage.googleapis.com/deepmind-gutenberg/train/53844.txt"
+    },
+    "train_54038_txt": {
+      "bytes": 727053,
+      "downloaded_utc": "2026-10-10T16:58:48+00:00",
+      "md5_published": "1a236a8d5b2ab43c6c007dda7cf04203",
+      "path": "raw/pg19/train/54038.txt",
+      "sha256": "3a29ad46c7a22506250805417177bfc8527639c47c4c92a86c9763313a48768b",
+      "sha256_source": "computed",
+      "url": "https://storage.googleapis.com/deepmind-gutenberg/train/54038.txt"
+    },
+    "train_54259_txt": {
+      "bytes": 485776,
+      "downloaded_utc": "2026-10-10T16:58:48+00:00",
+      "md5_published": "ae83487714081f06d8eccb990907c7bb",
+      "path": "raw/pg19/train/54259.txt",
+      "sha256": "59a65c14912819b880de33ff8cfea0bd5e64080ec8791497e8ee32109d0271e7",
+      "sha256_source": "computed",
+      "url": "https://storage.googleapis.com/deepmind-gutenberg/train/54259.txt"
+    },
+    "train_54294_txt": {
+      "bytes": 300716,
+      "downloaded_utc": "2026-10-10T16:58:49+00:00",
+      "md5_published": "2c33c82e800d278ef006477fe891a50d",
+      "path": "raw/pg19/train/54294.txt",
+      "sha256": "ea0c530ff8c4fd9a27d51d002435f9053d136955803898288da878932a1b1a50",
+      "sha256_source": "computed",
+      "url": "https://storage.googleapis.com/deepmind-gutenberg/train/54294.txt"
+    },
+    "train_54345_txt": {
+      "bytes": 4519451,
+      "downloaded_utc": "2026-10-10T16:58:55+00:00",
+      "md5_published": "65bc69d57cb4952c036aa0769eaa99e6",
+      "path": "raw/pg19/train/54345.txt",
+      "sha256": "0475117bbf53c2831bdaf125d3ae34f705aca3ed6f0bb959c175f388d7e48750",
+      "sha256_source": "computed",
+      "url": "https://storage.googleapis.com/deepmind-gutenberg/train/54345.txt"
+    },
+    "train_54383_txt": {
+      "bytes": 847916,
+      "downloaded_utc": "2026-10-10T16:58:51+00:00",
+      "md5_published": "f56373db06ed795d9ef0887b8f28d85a",
+      "path": "raw/pg19/train/54383.txt",
+      "sha256": "6ca0113a49144616e4ce45aceb99988123c6433d96d1ee823789c704d5a42706",
+      "sha256_source": "computed",
+      "url": "https://storage.googleapis.com/deepmind-gutenberg/train/54383.txt"
+    },
+    "train_54534_txt": {
+      "bytes": 69703,
+      "downloaded_utc": "2026-10-10T16:58:48+00:00",
+      "md5_published": "8159d126c362a021bc1fcc836fd11aff",
+      "path": "raw/pg19/train/54534.txt",
+      "sha256": "16f79952130a996530a7703b6823d9334893d730d4cf41bf62cfedd59b0f3ce7",
+      "sha256_source": "computed",
+      "url": "https://storage.googleapis.com/deepmind-gutenberg/train/54534.txt"
+    },
+    "train_54755_txt": {
+      "bytes": 354399,
+      "downloaded_utc": "2026-10-10T16:58:50+00:00",
+      "md5_published": "b345c3a1c1cd355eedaddd57130d8363",
+      "path": "raw/pg19/train/54755.txt",
+      "sha256": "965836ca8cdaf968b66edeab93aead1b9a82db7c8debfb44953692999505a31b",
+      "sha256_source": "computed",
+      "url": "https://storage.googleapis.com/deepmind-gutenberg/train/54755.txt"
+    },
+    "train_54900_txt": {
+      "bytes": 477901,
+      "downloaded_utc": "2026-10-10T16:58:52+00:00",
+      "md5_published": "d15fbdb7655aeef0624aecaecfadd1e3",
+      "path": "raw/pg19/train/54900.txt",
+      "sha256": "943ded5724c7a5e8442e56258066c41b747c70ee5715475b5ab51f43df73b681",
+      "sha256_source": "computed",
+      "url": "https://storage.googleapis.com/deepmind-gutenberg/train/54900.txt"
+    },
+    "train_55016_txt": {
+      "bytes": 150273,
+      "downloaded_utc": "2026-10-10T16:58:51+00:00",
+      "md5_published": "aac36d642ffdbb33a4ca6d6e3cffa0aa",
+      "path": "raw/pg19/train/55016.txt",
+      "sha256": "d0e829bb86261d25e7f134262804d777ac74b818c7fe4235468f666fa9224f8b",
+      "sha256_source": "computed",
+      "url": "https://storage.googleapis.com/deepmind-gutenberg/train/55016.txt"
+    },
+    "train_55035_txt": {
+      "bytes": 483187,
+      "downloaded_utc": "2026-10-10T16:58:53+00:00",
+      "md5_published": "f673f5484aefdc9655e610ee90b0b60d",
+      "path": "raw/pg19/train/55035.txt",
+      "sha256": "08fc8a4a35ba2837adb7354613afb4fefa47d7b0921bd7ce0b05bdd1eb08a492",
+      "sha256_source": "computed",
+      "url": "https://storage.googleapis.com/deepmind-gutenberg/train/55035.txt"
+    },
+    "train_55053_txt": {
+      "bytes": 506119,
+      "downloaded_utc": "2026-10-10T16:58:51+00:00",
+      "md5_published": "3f1507e15159929b004d1e20ee6bbe29",
+      "path": "raw/pg19/train/55053.txt",
+      "sha256": "cfcb750988d83c3f2eb94f1851db4b2e856f356eb4eeebc6fd0930cfa7949a95",
+      "sha256_source": "computed",
+      "url": "https://storage.googleapis.com/deepmind-gutenberg/train/55053.txt"
+    },
+    "train_55137_txt": {
+      "bytes": 510650,
+      "downloaded_utc": "2026-10-10T16:58:52+00:00",
+      "md5_published": "260d5e819de955435b8a61c523524f39",
+      "path": "raw/pg19/train/55137.txt",
+      "sha256": "8c35eb9ae08e1b48295a4b8d6631d8dece1553b0986a6a76819ae5fa46329ca3",
+      "sha256_source": "computed",
+      "url": "https://storage.googleapis.com/deepmind-gutenberg/train/55137.txt"
+    },
+    "train_55239_txt": {
+      "bytes": 618784,
+      "downloaded_utc": "2026-10-10T16:58:53+00:00",
+      "md5_published": "8a8d786c9f14190256da98dd1038047f",
+      "path": "raw/pg19/train/55239.txt",
+      "sha256": "678e2e4b90e3d4dd0e52cb3c651fb550b33b15dbd60dd9d9909f5453e5f8344f",
+      "sha256_source": "computed",
+      "url": "https://storage.googleapis.com/deepmind-gutenberg/train/55239.txt"
+    },
+    "train_55342_txt": {
+      "bytes": 337070,
+      "downloaded_utc": "2026-10-10T16:58:53+00:00",
+      "md5_published": "278e3f7b07af3d675dfb29b9522d8249",
+      "path": "raw/pg19/train/55342.txt",
+      "sha256": "4c846512c8532f6fc37cf49a9bfe7c8675eb11f278421c2ad6ed5d4d491dc06b",
+      "sha256_source": "computed",
+      "url": "https://storage.googleapis.com/deepmind-gutenberg/train/55342.txt"
+    },
+    "train_55767_txt": {
+      "bytes": 317858,
+      "downloaded_utc": "2026-10-10T16:58:55+00:00",
+      "md5_published": "9311befb54312beea725169b770a489c",
+      "path": "raw/pg19/train/55767.txt",
+      "sha256": "0790c2d04bbbd67d76ab69bc5da428496b82a9c19183f39e4a490f5a568cf5d8",
+      "sha256_source": "computed",
+      "url": "https://storage.googleapis.com/deepmind-gutenberg/train/55767.txt"
+    },
+    "train_56063_txt": {
+      "bytes": 252526,
+      "downloaded_utc": "2026-10-10T16:58:55+00:00",
+      "md5_published": "35456c4c5719e0f353086a1e8a9b3b90",
+      "path": "raw/pg19/train/56063.txt",
+      "sha256": "d0dbe5aea8c631a1a405c4219c8c09e6f77c0da2a8cd21d34b082a08e37e252e",
+      "sha256_source": "computed",
+      "url": "https://storage.googleapis.com/deepmind-gutenberg/train/56063.txt"
+    },
+    "train_56087_txt": {
+      "bytes": 507601,
+      "downloaded_utc": "2026-10-10T16:58:57+00:00",
+      "md5_published": "e09b9feda6a4863047e8e5037724801a",
+      "path": "raw/pg19/train/56087.txt",
+      "sha256": "3f457ae79dece614a727a75cdbcd3c26efd250ed5c330e3e1b9092aafb253991",
+      "sha256_source": "computed",
+      "url": "https://storage.googleapis.com/deepmind-gutenberg/train/56087.txt"
+    },
+    "train_56263_txt": {
+      "bytes": 268915,
+      "downloaded_utc": "2026-10-10T16:58:56+00:00",
+      "md5_published": "2284f7ad1ffbfb879a431a1fd6ab39c4",
+      "path": "raw/pg19/train/56263.txt",
+      "sha256": "93390138be013f5921b3b1391bc01591926d7362a36e8b5f394f0177f6e64174",
+      "sha256_source": "computed",
+      "url": "https://storage.googleapis.com/deepmind-gutenberg/train/56263.txt"
+    },
+    "train_56735_txt": {
+      "bytes": 297772,
+      "downloaded_utc": "2026-10-10T16:58:57+00:00",
+      "md5_published": "68d779098905ff22e60dbb5021edf57d",
+      "path": "raw/pg19/train/56735.txt",
+      "sha256": "7d47c2d787011bd9591ef1fbd0b1a79937b3932d53c63d423b1afec77673ae50",
+      "sha256_source": "computed",
+      "url": "https://storage.googleapis.com/deepmind-gutenberg/train/56735.txt"
+    },
+    "train_57156_txt": {
+      "bytes": 232770,
+      "downloaded_utc": "2026-10-10T16:58:55+00:00",
+      "md5_published": "8ca0e91bf5fbeed0f3a9f7d4540ae18b",
+      "path": "raw/pg19/train/57156.txt",
+      "sha256": "52061abfc0b25edde330420964d9d6fad69f4273f0f1c066fcb090a1f6050bbc",
+      "sha256_source": "computed",
+      "url": "https://storage.googleapis.com/deepmind-gutenberg/train/57156.txt"
+    },
+    "train_5722_txt": {
+      "bytes": 207250,
+      "downloaded_utc": "2026-10-10T16:58:57+00:00",
+      "md5_published": "f5d50ef8cab0e75af6a140cdcb63f081",
+      "path": "raw/pg19/train/5722.txt",
+      "sha256": "6bb14138bc9f445976a5f9cdf2b3b39f744b6f42176e7233dec203bf4a6a2d27",
+      "sha256_source": "computed",
+      "url": "https://storage.googleapis.com/deepmind-gutenberg/train/5722.txt"
+    },
+    "train_5723_txt": {
+      "bytes": 70651,
+      "downloaded_utc": "2026-10-10T16:58:58+00:00",
+      "md5_published": "95babf65be54cd94de84ee38c6f94f8c",
+      "path": "raw/pg19/train/5723.txt",
+      "sha256": "b087b045f6ddc521319e0f418b7753c8f0480ef719b700d0a170bec3110de6dd",
+      "sha256_source": "computed",
+      "url": "https://storage.googleapis.com/deepmind-gutenberg/train/5723.txt"
+    },
+    "train_57748_txt": {
+      "bytes": 363725,
+      "downloaded_utc": "2026-10-10T16:58:57+00:00",
+      "md5_published": "90287da0eb84b2e1aff0e81bc84dab3f",
+      "path": "raw/pg19/train/57748.txt",
+      "sha256": "11afd29fee698c92c05b6f1d64469ea7e5cf7e626d4e3bf7675a857a21a7d3d7",
+      "sha256_source": "computed",
+      "url": "https://storage.googleapis.com/deepmind-gutenberg/train/57748.txt"
+    },
+    "train_58107_txt": {
+      "bytes": 304923,
+      "downloaded_utc": "2026-10-10T16:58:57+00:00",
+      "md5_published": "c3698007d791cf47d917a54ea9b69af2",
+      "path": "raw/pg19/train/58107.txt",
+      "sha256": "e492152a7cea57d6664a3fa5006eeeb46e914c56731ee8ae6e1809183dd89d27",
+      "sha256_source": "computed",
+      "url": "https://storage.googleapis.com/deepmind-gutenberg/train/58107.txt"
+    },
+    "train_58557_txt": {
+      "bytes": 521829,
+      "downloaded_utc": "2026-10-10T16:59:00+00:00",
+      "md5_published": "e9b9cdb18741ff3537778812d2412e64",
+      "path": "raw/pg19/train/58557.txt",
+      "sha256": "3bbda9146a471d48f77c0db0cd6d68e62b49ea8bd9e812606365988f22bed49e",
+      "sha256_source": "computed",
+      "url": "https://storage.googleapis.com/deepmind-gutenberg/train/58557.txt"
+    },
+    "train_58633_txt": {
+      "bytes": 244655,
+      "downloaded_utc": "2026-10-10T16:58:58+00:00",
+      "md5_published": "093e9cd3416221f420ad8a2ec46c8696",
+      "path": "raw/pg19/train/58633.txt",
+      "sha256": "fea807f6271d9bacfebc21b2b982579817cdb08bdedf372f6dc0d0f6406eac22",
+      "sha256_source": "computed",
+      "url": "https://storage.googleapis.com/deepmind-gutenberg/train/58633.txt"
+    },
+    "train_58658_txt": {
+      "bytes": 1995170,
+      "downloaded_utc": "2026-10-10T16:59:02+00:00",
+      "md5_published": "c093fcb394fbe24b88798bd2cae11701",
+      "path": "raw/pg19/train/58658.txt",
+      "sha256": "0768fe45d983b9841b929c4d39600278d9cc116a822b5564f21e7e8c324babc6",
+      "sha256_source": "computed",
+      "url": "https://storage.googleapis.com/deepmind-gutenberg/train/58658.txt"
+    },
+    "train_58694_txt": {
+      "bytes": 845741,
+      "downloaded_utc": "2026-10-10T16:59:01+00:00",
+      "md5_published": "442414a3339dbd6fb6ef92de67e8f231",
+      "path": "raw/pg19/train/58694.txt",
+      "sha256": "76bef95755423a4abfcab6174893fcec246276fdbe9709df3e26e632761e5d74",
+      "sha256_source": "computed",
+      "url": "https://storage.googleapis.com/deepmind-gutenberg/train/58694.txt"
+    },
+    "train_6041_txt": {
+      "bytes": 185398,
+      "downloaded_utc": "2026-10-10T16:59:00+00:00",
+      "md5_published": "df4f5a0227baa143b5a8ceeccc6a19b7",
+      "path": "raw/pg19/train/6041.txt",
+      "sha256": "4281b77f52f12e2ab94459f6efb7ec37f5e524792f1032b15c527df004391a7f",
+      "sha256_source": "computed",
+      "url": "https://storage.googleapis.com/deepmind-gutenberg/train/6041.txt"
+    },
+    "train_6987_txt": {
+      "bytes": 462652,
+      "downloaded_utc": "2026-10-10T16:59:00+00:00",
+      "md5_published": "21b3db91c71875b061fd852466bbe749",
+      "path": "raw/pg19/train/6987.txt",
+      "sha256": "24dee4606eeac7548784ecf529bfcfab402f738b8f3d3f05dc179a0a55f1ef44",
+      "sha256_source": "computed",
+      "url": "https://storage.googleapis.com/deepmind-gutenberg/train/6987.txt"
+    },
+    "train_7074_txt": {
+      "bytes": 29922,
+      "downloaded_utc": "2026-10-10T16:58:58+00:00",
+      "md5_published": "2bf8189c9b04524eed248729c2d34053",
+      "path": "raw/pg19/train/7074.txt",
+      "sha256": "1617d73b90c72147e0703894aa6a738d57ffe77e5c84ed7093f6566040054cf6",
+      "sha256_source": "computed",
+      "url": "https://storage.googleapis.com/deepmind-gutenberg/train/7074.txt"
+    },
+    "train_7371_txt": {
+      "bytes": 406418,
+      "downloaded_utc": "2026-10-10T16:59:00+00:00",
+      "md5_published": "f24ab9e85174bcc282345e33561aac55",
+      "path": "raw/pg19/train/7371.txt",
+      "sha256": "2b50a639ecb315708a3cb0aa5891edb550789f2f6ac11c815ea518dc88e7afb7",
+      "sha256_source": "computed",
+      "url": "https://storage.googleapis.com/deepmind-gutenberg/train/7371.txt"
+    },
+    "train_7472_txt": {
+      "bytes": 600797,
+      "downloaded_utc": "2026-10-10T16:59:01+00:00",
+      "md5_published": "43c38c0cca1735b7de68d7ce1fbb6864",
+      "path": "raw/pg19/train/7472.txt",
+      "sha256": "bd501ccf5a223e4cb961fb958d4375892345f215e39c094606db562232d563f2",
+      "sha256_source": "computed",
+      "url": "https://storage.googleapis.com/deepmind-gutenberg/train/7472.txt"
+    },
+    "train_7502_txt": {
+      "bytes": 449527,
+      "downloaded_utc": "2026-10-10T16:59:01+00:00",
+      "md5_published": "b952ba55e091e6f5fa66be425b71cab6",
+      "path": "raw/pg19/train/7502.txt",
+      "sha256": "7709251bcbaf3c79015ccfd4c8060907359675ba33fb028668d7fd851265c3b8",
+      "sha256_source": "computed",
+      "url": "https://storage.googleapis.com/deepmind-gutenberg/train/7502.txt"
+    },
+    "train_7639_txt": {
+      "bytes": 1014987,
+      "downloaded_utc": "2026-10-10T16:59:03+00:00",
+      "md5_published": "c23a4519870abbc06575176266feec71",
+      "path": "raw/pg19/train/7639.txt",
+      "sha256": "224e1d38448edf9c30e04292a072820be5acf4420c676ad8651ac202e468de4a",
+      "sha256_source": "computed",
+      "url": "https://storage.googleapis.com/deepmind-gutenberg/train/7639.txt"
+    },
+    "train_8094_txt": {
+      "bytes": 69881,
+      "downloaded_utc": "2026-10-10T16:59:01+00:00",
+      "md5_published": "1bc404325ff93aa6525961946130229b",
+      "path": "raw/pg19/train/8094.txt",
+      "sha256": "dcea106d1e42994aee717c4785e700f7b03b71ce4da65df0dc76329c38df1cea",
+      "sha256_source": "computed",
+      "url": "https://storage.googleapis.com/deepmind-gutenberg/train/8094.txt"
+    },
+    "train_820_txt": {
+      "bytes": 1595598,
+      "downloaded_utc": "2026-10-10T16:59:04+00:00",
+      "md5_published": "813ca28cf4ceeb11e7d72ae50c1bbf1a",
+      "path": "raw/pg19/train/820.txt",
+      "sha256": "cdb156b9be278c3bf951e92bfe9634671030585fd3b9c13c99b67fd5b9529564",
+      "sha256_source": "computed",
+      "url": "https://storage.googleapis.com/deepmind-gutenberg/train/820.txt"
+    },
+    "train_8604_txt": {
+      "bytes": 203838,
+      "downloaded_utc": "2026-10-10T16:59:03+00:00",
+      "md5_published": "f8c9499b4e8f436d71922c84eb35d744",
+      "path": "raw/pg19/train/8604.txt",
+      "sha256": "5ab4cc2cb287c6985fec59ff03287cd0816d076c7544c5d2d1695e6428ce20d1",
+      "sha256_source": "computed",
+      "url": "https://storage.googleapis.com/deepmind-gutenberg/train/8604.txt"
+    },
+    "train_8783_txt": {
+      "bytes": 24068,
+      "downloaded_utc": "2026-10-10T16:59:01+00:00",
+      "md5_published": "79e89d37bee7aa6f97f850dfa3a43a6d",
+      "path": "raw/pg19/train/8783.txt",
+      "sha256": "5b19a3d741910e6400090d4bf9ae29c078795509cf0a8f61b178ce816baace20",
+      "sha256_source": "computed",
+      "url": "https://storage.googleapis.com/deepmind-gutenberg/train/8783.txt"
+    },
+    "train_8796_txt": {
+      "bytes": 86748,
+      "downloaded_utc": "2026-10-10T16:59:04+00:00",
+      "md5_published": "faf87269548267de5efa7a8bde75dd57",
+      "path": "raw/pg19/train/8796.txt",
+      "sha256": "7c0c9f127eaefb957b419267b19bbfe57e979bd7374b5fbdf25689429060e55a",
+      "sha256_source": "computed",
+      "url": "https://storage.googleapis.com/deepmind-gutenberg/train/8796.txt"
+    },
+    "train_8908_txt": {
+      "bytes": 144334,
+      "downloaded_utc": "2026-10-10T16:59:05+00:00",
+      "md5_published": "5312ed217349371b262427ac4bc36c5c",
+      "path": "raw/pg19/train/8908.txt",
+      "sha256": "e906e454baaa96ff49fe1333552c9c14ebebfe43bcbe5858743e0db28342fdd6",
+      "sha256_source": "computed",
+      "url": "https://storage.googleapis.com/deepmind-gutenberg/train/8908.txt"
+    },
+    "train_9218_txt": {
+      "bytes": 23342,
+      "downloaded_utc": "2026-10-10T16:59:02+00:00",
+      "md5_published": "629070f66b8a2efadf52d976046f2dc2",
+      "path": "raw/pg19/train/9218.txt",
+      "sha256": "e07a853880657beaec245a6bb8c764d2df61471cef16b4eb53a46926b906c57e",
+      "sha256_source": "computed",
+      "url": "https://storage.googleapis.com/deepmind-gutenberg/train/9218.txt"
+    },
+    "train_962_txt": {
+      "bytes": 593820,
+      "downloaded_utc": "2026-10-10T16:59:04+00:00",
+      "md5_published": "52d236394c194130ca6c13a385816e58",
+      "path": "raw/pg19/train/962.txt",
+      "sha256": "3fab060aa8ce61bde0b02c87b378e0678836ec66420f88d0f07d067e7b1164ed",
+      "sha256_source": "computed",
+      "url": "https://storage.googleapis.com/deepmind-gutenberg/train/962.txt"
+    },
+    "train_963_txt": {
+      "bytes": 1917472,
+      "downloaded_utc": "2026-10-10T16:59:07+00:00",
+      "md5_published": "a5595a979445c33cf36eae835c295100",
+      "path": "raw/pg19/train/963.txt",
+      "sha256": "2123e9219f3713e75d450bae8f6aa8351ba027af48fa32b37b591f5a8a5e8c73",
+      "sha256_source": "computed",
+      "url": "https://storage.googleapis.com/deepmind-gutenberg/train/963.txt"
+    },
+    "train_9813_txt": {
+      "bytes": 732813,
+      "downloaded_utc": "2026-10-10T16:59:06+00:00",
+      "md5_published": "04c45e05abfc9a7f855bb128a4f01d6a",
+      "path": "raw/pg19/train/9813.txt",
+      "sha256": "0adb7b2fbe1cf67eaaed0b1cb73fab1af18c0cd513ce6a92e69db2a1d2dbd51e",
+      "sha256_source": "computed",
+      "url": "https://storage.googleapis.com/deepmind-gutenberg/train/9813.txt"
+    },
+    "train_9954_txt": {
+      "bytes": 95305,
+      "downloaded_utc": "2026-10-10T16:59:04+00:00",
+      "md5_published": "39ee76e32d3750e4d31a4f621b603cf0",
+      "path": "raw/pg19/train/9954.txt",
+      "sha256": "66b94531a2636a4256bfd7db3ca64ec3ad45c0e75dee1fb13eed4fa68fa52c97",
+      "sha256_source": "computed",
+      "url": "https://storage.googleapis.com/deepmind-gutenberg/train/9954.txt"
+    },
+    "train_9956_txt": {
+      "bytes": 320874,
+      "downloaded_utc": "2026-10-10T16:59:05+00:00",
+      "md5_published": "b2525e4a80c23b56f46a8b02d0fa6ab0",
+      "path": "raw/pg19/train/9956.txt",
+      "sha256": "5321cb2602a9ccd69065cf28c506c200eb86c0972760481aee44071bba49ea05",
+      "sha256_source": "computed",
+      "url": "https://storage.googleapis.com/deepmind-gutenberg/train/9956.txt"
+    },
+    "validation_1022_txt": {
+      "bytes": 68996,
+      "downloaded_utc": "2026-10-10T16:56:04+00:00",
+      "md5_published": "096923aa0cb49c8ea71a79dd044b4873",
+      "path": "raw/pg19/validation/1022.txt",
+      "sha256": "008528d5f55bce57538fa475e8cbe504d48424f1b4a702c6d7de5e5935e6cc5b",
+      "sha256_source": "computed",
+      "url": "https://storage.googleapis.com/deepmind-gutenberg/validation/1022.txt"
+    },
+    "validation_11155_txt": {
+      "bytes": 502104,
+      "downloaded_utc": "2026-10-10T16:56:07+00:00",
+      "md5_published": "69c3173c3ca382aa579336967753f9c1",
+      "path": "raw/pg19/validation/11155.txt",
+      "sha256": "2df49972f98e3eae8c4ee551be35921a1553366b2ef90a66665c18686a9b598e",
+      "sha256_source": "computed",
+      "url": "https://storage.googleapis.com/deepmind-gutenberg/validation/11155.txt"
+    },
+    "validation_13089_txt": {
+      "bytes": 576815,
+      "downloaded_utc": "2026-10-10T16:56:04+00:00",
+      "md5_published": "5b6aaec42ee1297a414159b29d142c20",
+      "path": "raw/pg19/validation/13089.txt",
+      "sha256": "a3eb3813dd81bf2ec2694c9de68f27624b586f73f15156ab06d6efb10a4d44ca",
+      "sha256_source": "computed",
+      "url": "https://storage.googleapis.com/deepmind-gutenberg/validation/13089.txt"
+    },
+    "validation_16959_txt": {
+      "bytes": 188790,
+      "downloaded_utc": "2026-10-10T16:56:05+00:00",
+      "md5_published": "7e8a6c240b41ed6044756227041f65fb",
+      "path": "raw/pg19/validation/16959.txt",
+      "sha256": "a4954251686388083485ff0f7f92321f113c75783c043dfdc2a58dc4c56a9ab7",
+      "sha256_source": "computed",
+      "url": "https://storage.googleapis.com/deepmind-gutenberg/validation/16959.txt"
+    },
+    "validation_1925_txt": {
+      "bytes": 325788,
+      "downloaded_utc": "2026-10-10T16:56:05+00:00",
+      "md5_published": "e3650bb1259486e0ccea2e346d64d57a",
+      "path": "raw/pg19/validation/1925.txt",
+      "sha256": "afc8bf875adc83b0aba63f11aeafd7e207487f41b11a249aeb1da5d4052509a6",
+      "sha256_source": "computed",
+      "url": "https://storage.googleapis.com/deepmind-gutenberg/validation/1925.txt"
+    },
+    "validation_2383_txt": {
+      "bytes": 1701939,
+      "downloaded_utc": "2026-10-10T16:56:03+00:00",
+      "md5_published": "55cb736065651ab591491ecdc3c5c5ce",
+      "path": "raw/pg19/validation/2383.txt",
+      "sha256": "fbc6fae5fe29d74c53e0764cb0b623d671d2efcbb06cfb3f72f01bf3bb41ba31",
+      "sha256_source": "computed",
+      "url": "https://storage.googleapis.com/deepmind-gutenberg/validation/2383.txt"
+    },
+    "validation_23956_txt": {
+      "bytes": 172098,
+      "downloaded_utc": "2026-10-10T16:56:03+00:00",
+      "md5_published": "e1d48f48a9351dbcce1f1529ba614cae",
+      "path": "raw/pg19/validation/23956.txt",
+      "sha256": "58ef898123bccb98fc4c8a228f1d456b294a89c510c94264e551736ce1fd1922",
+      "sha256_source": "computed",
+      "url": "https://storage.googleapis.com/deepmind-gutenberg/validation/23956.txt"
+    },
+    "validation_24360_txt": {
+      "bytes": 855066,
+      "downloaded_utc": "2026-10-10T16:56:04+00:00",
+      "md5_published": "866072055b1a3fe80e2d8e2d588a455c",
+      "path": "raw/pg19/validation/24360.txt",
+      "sha256": "2e90247c3e31242ded585962e8b7e6cd8d7f85a98e277e9e90bc0a8af17f7998",
+      "sha256_source": "computed",
+      "url": "https://storage.googleapis.com/deepmind-gutenberg/validation/24360.txt"
+    },
+    "validation_25066_txt": {
+      "bytes": 554135,
+      "downloaded_utc": "2026-10-10T16:56:10+00:00",
+      "md5_published": "4b9ef48c9c22c3db6d44e921e8ae959e",
+      "path": "raw/pg19/validation/25066.txt",
+      "sha256": "9a7b3ac8d3bef8fe2d729ca6ee7ff13b13571e8cc910d081841d0b0890352f0f",
+      "sha256_source": "computed",
+      "url": "https://storage.googleapis.com/deepmind-gutenberg/validation/25066.txt"
+    },
+    "validation_27688_txt": {
+      "bytes": 143662,
+      "downloaded_utc": "2026-10-10T16:56:14+00:00",
+      "md5_published": "3a7500a0de4843020ded56e4e8206c10",
+      "path": "raw/pg19/validation/27688.txt",
+      "sha256": "b591faa7f95822897c840a5e0211576ee2f67b746269f8d9cdc48c1d163304c6",
+      "sha256_source": "computed",
+      "url": "https://storage.googleapis.com/deepmind-gutenberg/validation/27688.txt"
+    },
+    "validation_28213_txt": {
+      "bytes": 50997,
+      "downloaded_utc": "2026-10-10T16:56:05+00:00",
+      "md5_published": "6c023df30ff128951b5691cf3536be25",
+      "path": "raw/pg19/validation/28213.txt",
+      "sha256": "e2e03e26852a123ad619a2002c9d2552705d79d4d594a565abdcb8ea310026ae",
+      "sha256_source": "computed",
+      "url": "https://storage.googleapis.com/deepmind-gutenberg/validation/28213.txt"
+    },
+    "validation_28776_txt": {
+      "bytes": 194567,
+      "downloaded_utc": "2026-10-10T16:56:09+00:00",
+      "md5_published": "ee92faded1c203dc43f2b62e5b232e59",
+      "path": "raw/pg19/validation/28776.txt",
+      "sha256": "d1f650d773ab90c7fdd20df001dc4657d10d3e628173ecb82c02b176b41f00e1",
+      "sha256_source": "computed",
+      "url": "https://storage.googleapis.com/deepmind-gutenberg/validation/28776.txt"
+    },
+    "validation_29981_txt": {
+      "bytes": 696592,
+      "downloaded_utc": "2026-10-10T16:56:09+00:00",
+      "md5_published": "0d65763a94961e2732aec8d8ab3e8de5",
+      "path": "raw/pg19/validation/29981.txt",
+      "sha256": "8e84fd40da79d37bf3137a2c74294b87722fcc95b399e653d6290c8463f6c387",
+      "sha256_source": "computed",
+      "url": "https://storage.googleapis.com/deepmind-gutenberg/validation/29981.txt"
+    },
+    "validation_32629_txt": {
+      "bytes": 54554,
+      "downloaded_utc": "2026-10-10T16:56:09+00:00",
+      "md5_published": "631ce576b0e041a1196ab42f723af8b2",
+      "path": "raw/pg19/validation/32629.txt",
+      "sha256": "e915674df53acff150f3848e249de557c40aa4fcce53395afd1347bff5cd58a1",
+      "sha256_source": "computed",
+      "url": "https://storage.googleapis.com/deepmind-gutenberg/validation/32629.txt"
+    },
+    "validation_34016_txt": {
+      "bytes": 56836,
+      "downloaded_utc": "2026-10-10T16:56:09+00:00",
+      "md5_published": "c370c736ea14f7f98028912f97f93c8a",
+      "path": "raw/pg19/validation/34016.txt",
+      "sha256": "424f341e3964cd30d2d8a61da70f2c3127a410dfffab43df5b0af56ff1f9995f",
+      "sha256_source": "computed",
+      "url": "https://storage.googleapis.com/deepmind-gutenberg/validation/34016.txt"
+    },
+    "validation_34056_txt": {
+      "bytes": 61791,
+      "downloaded_utc": "2026-10-10T16:56:14+00:00",
+      "md5_published": "fb7b736f15c6fbc0a00da250b0ea68d7",
+      "path": "raw/pg19/validation/34056.txt",
+      "sha256": "d2ffe6d98b879348950da8b5d14103d25648c1a241d85c178f24d97e74590768",
+      "sha256_source": "computed",
+      "url": "https://storage.googleapis.com/deepmind-gutenberg/validation/34056.txt"
+    },
+    "validation_34100_txt": {
+      "bytes": 357675,
+      "downloaded_utc": "2026-10-10T16:56:17+00:00",
+      "md5_published": "4ae28ceccfd30b3b986c33e1332383f1",
+      "path": "raw/pg19/validation/34100.txt",
+      "sha256": "7cba01945a9b671e0daa33138f5d05e7669068544668536b65ca16f4274615ce",
+      "sha256_source": "computed",
+      "url": "https://storage.googleapis.com/deepmind-gutenberg/validation/34100.txt"
+    },
+    "validation_356_txt": {
+      "bytes": 217960,
+      "downloaded_utc": "2026-10-10T16:56:17+00:00",
+      "md5_published": "dae1aa982429af49f0a7d0e3fd4c3cfd",
+      "path": "raw/pg19/validation/356.txt",
+      "sha256": "1a99efb2edd8327fff5820d3c1a10a3f000252fa382bc830a045e6eba2a7b9a3",
+      "sha256_source": "computed",
+      "url": "https://storage.googleapis.com/deepmind-gutenberg/validation/356.txt"
+    },
+    "validation_35816_txt": {
+      "bytes": 155932,
+      "downloaded_utc": "2026-10-10T16:56:15+00:00",
+      "md5_published": "2c66e43913d2abe3d0ccc2152a019759",
+      "path": "raw/pg19/validation/35816.txt",
+      "sha256": "6e7c639346428b7ee3f8fc23ab954dbcf0ca5f4a0914dd9d394b3ff06667dbe5",
+      "sha256_source": "computed",
+      "url": "https://storage.googleapis.com/deepmind-gutenberg/validation/35816.txt"
+    },
+    "validation_36402_txt": {
+      "bytes": 79138,
+      "downloaded_utc": "2026-10-10T16:56:14+00:00",
+      "md5_published": "ebe8fdd50d2f6ce98841428190b4c23e",
+      "path": "raw/pg19/validation/36402.txt",
+      "sha256": "f949b2673e1630e20560acdf32a24db5e3e35c3a55adc0a422511f3dc721b090",
+      "sha256_source": "computed",
+      "url": "https://storage.googleapis.com/deepmind-gutenberg/validation/36402.txt"
+    },
+    "validation_37833_txt": {
+      "bytes": 343216,
+      "downloaded_utc": "2026-10-10T16:56:16+00:00",
+      "md5_published": "21a315057a8f81bd907879e07e37f9c2",
+      "path": "raw/pg19/validation/37833.txt",
+      "sha256": "4c124ed88d9cfdbaaffe2f61f57a619a1f8c4c141d071d47b47fc02ac1d3a1b8",
+      "sha256_source": "computed",
+      "url": "https://storage.googleapis.com/deepmind-gutenberg/validation/37833.txt"
+    },
+    "validation_38214_txt": {
+      "bytes": 564922,
+      "downloaded_utc": "2026-10-10T16:56:15+00:00",
+      "md5_published": "5b7ec5dc0145baf80f00ecf1218cb64c",
+      "path": "raw/pg19/validation/38214.txt",
+      "sha256": "90882eec16aeaf052a578b3111c1c55e73240202a6ff5a4045860a913671522f",
+      "sha256_source": "computed",
+      "url": "https://storage.googleapis.com/deepmind-gutenberg/validation/38214.txt"
+    },
+    "validation_38403_txt": {
+      "bytes": 266774,
+      "downloaded_utc": "2026-10-10T16:56:17+00:00",
+      "md5_published": "0c6df0a7ce97f4aa178e7d64c55a5d9c",
+      "path": "raw/pg19/validation/38403.txt",
+      "sha256": "f24f11db0d22fed1d14f2154bad29daabad93233692d4d4ec306038de5287ca2",
+      "sha256_source": "computed",
+      "url": "https://storage.googleapis.com/deepmind-gutenberg/validation/38403.txt"
+    },
+    "validation_4024_txt": {
+      "bytes": 93433,
+      "downloaded_utc": "2026-10-10T16:56:18+00:00",
+      "md5_published": "9188497096c46b7cf212fc16a3b906c7",
+      "path": "raw/pg19/validation/4024.txt",
+      "sha256": "70d4de73ab7d9d8d05f7d2bca2826203cc0e45a264a9e37fd5309315df3c0dcc",
+      "sha256_source": "computed",
+      "url": "https://storage.googleapis.com/deepmind-gutenberg/validation/4024.txt"
+    },
+    "validation_41074_txt": {
+      "bytes": 339379,
+      "downloaded_utc": "2026-10-10T16:56:20+00:00",
+      "md5_published": "519bd3db093113474b5ce1e8acd9abc0",
+      "path": "raw/pg19/validation/41074.txt",
+      "sha256": "6a182155ba40d92c9c5a68b0db494066f1c97d661f3798d1d50a7b8d041c88f0",
+      "sha256_source": "computed",
+      "url": "https://storage.googleapis.com/deepmind-gutenberg/validation/41074.txt"
+    },
+    "validation_42067_txt": {
+      "bytes": 926112,
+      "downloaded_utc": "2026-10-10T16:56:18+00:00",
+      "md5_published": "1115dc3bf2f9b17d3c846cbe047a01df",
+      "path": "raw/pg19/validation/42067.txt",
+      "sha256": "700e5c9f13a5813c217a59c3f8fc0acbaf5a31ee123f0a9633f50fc449fc35a8",
+      "sha256_source": "computed",
+      "url": "https://storage.googleapis.com/deepmind-gutenberg/validation/42067.txt"
+    },
+    "validation_42142_txt": {
+      "bytes": 233672,
+      "downloaded_utc": "2026-10-10T16:56:18+00:00",
+      "md5_published": "23b976a45321e2b6c5cfdf91cef4c1a0",
+      "path": "raw/pg19/validation/42142.txt",
+      "sha256": "db5b82ac0b052dbe2fe6aa2a9a1db925a74ec19ac8c883e5f7b33b920894af32",
+      "sha256_source": "computed",
+      "url": "https://storage.googleapis.com/deepmind-gutenberg/validation/42142.txt"
+    },
+    "validation_42306_txt": {
+      "bytes": 44891,
+      "downloaded_utc": "2026-10-10T16:56:17+00:00",
+      "md5_published": "da6039636e2cb22319a21d4cb748f025",
+      "path": "raw/pg19/validation/42306.txt",
+      "sha256": "075bcd3f1c50d9b35f51b26d7c292f82518285ba9f666b91eca92bc9c5800f4e",
+      "sha256_source": "computed",
+      "url": "https://storage.googleapis.com/deepmind-gutenberg/validation/42306.txt"
+    },
+    "validation_43423_txt": {
+      "bytes": 503352,
+      "downloaded_utc": "2026-10-10T16:56:21+00:00",
+      "md5_published": "47d4827a21ff7fd3243192b81361d6fe",
+      "path": "raw/pg19/validation/43423.txt",
+      "sha256": "a6498799e6745800a85e4c9ce02b03ee41204c5470df20c43b366371cdecb428",
+      "sha256_source": "computed",
+      "url": "https://storage.googleapis.com/deepmind-gutenberg/validation/43423.txt"
+    },
+    "validation_44896_txt": {
+      "bytes": 914065,
+      "downloaded_utc": "2026-10-10T16:56:22+00:00",
+      "md5_published": "d63da698394bd3876b434a7b59da1f6c",
+      "path": "raw/pg19/validation/44896.txt",
+      "sha256": "e57f484306113c477e01ec5db51331d2ae7fb9ae7c0f83c3157fdecae91ab019",
+      "sha256_source": "computed",
+      "url": "https://storage.googleapis.com/deepmind-gutenberg/validation/44896.txt"
+    },
+    "validation_44912_txt": {
+      "bytes": 371246,
+      "downloaded_utc": "2026-10-10T16:56:22+00:00",
+      "md5_published": "a56579e9546c32a099d4d62de36fd462",
+      "path": "raw/pg19/validation/44912.txt",
+      "sha256": "b1d9ff5bb400620699faab5782e5c6ea02ee3bc06ac0b3a0f8f254aec0d996b4",
+      "sha256_source": "computed",
+      "url": "https://storage.googleapis.com/deepmind-gutenberg/validation/44912.txt"
+    },
+    "validation_4533_txt": {
+      "bytes": 359131,
+      "downloaded_utc": "2026-10-10T16:56:21+00:00",
+      "md5_published": "c83176416b85f129828a94ab8c05cca3",
+      "path": "raw/pg19/validation/4533.txt",
+      "sha256": "cc7b7c1a6173e0e5abb680bd8a4e1dfded794a2086f8ab931bba3690b87da6ee",
+      "sha256_source": "computed",
+      "url": "https://storage.googleapis.com/deepmind-gutenberg/validation/4533.txt"
+    },
+    "validation_48089_txt": {
+      "bytes": 415583,
+      "downloaded_utc": "2026-10-10T16:56:21+00:00",
+      "md5_published": "1ceb7735f178bc04ded3f69d86de574c",
+      "path": "raw/pg19/validation/48089.txt",
+      "sha256": "4f89427e5fc1a6265fd76cd0877476c25f185980176a0529c8854ab5a867d742",
+      "sha256_source": "computed",
+      "url": "https://storage.googleapis.com/deepmind-gutenberg/validation/48089.txt"
+    },
+    "validation_48461_txt": {
+      "bytes": 411140,
+      "downloaded_utc": "2026-10-10T16:56:21+00:00",
+      "md5_published": "31580ef91b6f053b11e7b2918fb364b8",
+      "path": "raw/pg19/validation/48461.txt",
+      "sha256": "15e1d99fed94ea342f267d34ba3c2906a6898b35bf3a8b37606546e39770201e",
+      "sha256_source": "computed",
+      "url": "https://storage.googleapis.com/deepmind-gutenberg/validation/48461.txt"
+    },
+    "validation_48677_txt": {
+      "bytes": 327818,
+      "downloaded_utc": "2026-10-10T16:56:23+00:00",
+      "md5_published": "3ccc694a5f68f1f721002675929c5ae5",
+      "path": "raw/pg19/validation/48677.txt",
+      "sha256": "13edb9f8a487f59b90b8e3640d9a63e85c2a5d0887a2f0699a1708de6272e080",
+      "sha256_source": "computed",
+      "url": "https://storage.googleapis.com/deepmind-gutenberg/validation/48677.txt"
+    },
+    "validation_49091_txt": {
+      "bytes": 184256,
+      "downloaded_utc": "2026-10-10T16:56:22+00:00",
+      "md5_published": "ff31de23a066804fb35f17b3720ca484",
+      "path": "raw/pg19/validation/49091.txt",
+      "sha256": "80110648e98998d7807305ddbfb8eab3c811b4bdc7cc82ca87a279d2a42cd924",
+      "sha256_source": "computed",
+      "url": "https://storage.googleapis.com/deepmind-gutenberg/validation/49091.txt"
+    },
+    "validation_50355_txt": {
+      "bytes": 80516,
+      "downloaded_utc": "2026-10-10T16:56:23+00:00",
+      "md5_published": "1da5ae595a66321384dfbe17e12346a9",
+      "path": "raw/pg19/validation/50355.txt",
+      "sha256": "ceedd5a8f0e91399ebee63340c8759efedf0c9e7b3ace230722ee9d36610168f",
+      "sha256_source": "computed",
+      "url": "https://storage.googleapis.com/deepmind-gutenberg/validation/50355.txt"
+    },
+    "validation_51859_txt": {
+      "bytes": 228945,
+      "downloaded_utc": "2026-10-10T16:56:22+00:00",
+      "md5_published": "9d8f61c9da132b1b3afb26fe426e7a48",
+      "path": "raw/pg19/validation/51859.txt",
+      "sha256": "2bf4858ee08e20423a57387b68cee32520848936225fa03214592bdba4375f4f",
+      "sha256_source": "computed",
+      "url": "https://storage.googleapis.com/deepmind-gutenberg/validation/51859.txt"
+    },
+    "validation_5195_txt": {
+      "bytes": 308764,
+      "downloaded_utc": "2026-10-10T16:56:25+00:00",
+      "md5_published": "e9978786c7f7cfb54087c67f63a928e1",
+      "path": "raw/pg19/validation/5195.txt",
+      "sha256": "5021ba894b95d4bc92606cf5738f569e3f2c227468b6f0aa08ce56512fb37ec0",
+      "sha256_source": "computed",
+      "url": "https://storage.googleapis.com/deepmind-gutenberg/validation/5195.txt"
+    },
+    "validation_5321_txt": {
+      "bytes": 160373,
+      "downloaded_utc": "2026-10-10T16:56:24+00:00",
+      "md5_published": "a0475832e19d82ae5f7a4ee0068167d7",
+      "path": "raw/pg19/validation/5321.txt",
+      "sha256": "a55e0817099bce3aa567d06b6cf24c1aac81dc4b26f259cbd09f952df4125ba4",
+      "sha256_source": "computed",
+      "url": "https://storage.googleapis.com/deepmind-gutenberg/validation/5321.txt"
+    },
+    "validation_53682_txt": {
+      "bytes": 260344,
+      "downloaded_utc": "2026-10-10T16:56:24+00:00",
+      "md5_published": "d2b86d9b0cafc43f173951906445ec49",
+      "path": "raw/pg19/validation/53682.txt",
+      "sha256": "4e78bf89eff3b5061d926fc06d1fdcd522864bd993595f97372e72215b69c2f0",
+      "sha256_source": "computed",
+      "url": "https://storage.googleapis.com/deepmind-gutenberg/validation/53682.txt"
+    },
+    "validation_54098_txt": {
+      "bytes": 153699,
+      "downloaded_utc": "2026-10-10T16:56:24+00:00",
+      "md5_published": "4333aa5e7a0b36098e14f71731d64b1b",
+      "path": "raw/pg19/validation/54098.txt",
+      "sha256": "f9704c7d8b774a835367ae94493ab4f8dba8c87e7ba9aa71d29ba44e20a1b8f5",
+      "sha256_source": "computed",
+      "url": "https://storage.googleapis.com/deepmind-gutenberg/validation/54098.txt"
+    },
+    "validation_555_txt": {
+      "bytes": 289989,
+      "downloaded_utc": "2026-10-10T16:56:24+00:00",
+      "md5_published": "b78ba503cd89af016ba9ee0212b1f914",
+      "path": "raw/pg19/validation/555.txt",
+      "sha256": "a08e6cdef563d273e6326e8ab14946db7d7a78213599dd43af2f300457b0ce26",
+      "sha256_source": "computed",
+      "url": "https://storage.googleapis.com/deepmind-gutenberg/validation/555.txt"
+    },
+    "validation_55658_txt": {
+      "bytes": 437149,
+      "downloaded_utc": "2026-10-10T16:56:25+00:00",
+      "md5_published": "8bd452fed1c38b4566375937894e5392",
+      "path": "raw/pg19/validation/55658.txt",
+      "sha256": "cb6f11d0aa12886613f08d0f85f6b24aa3edd85be6f2c0118d3108d08778c09d",
+      "sha256_source": "computed",
+      "url": "https://storage.googleapis.com/deepmind-gutenberg/validation/55658.txt"
+    },
+    "validation_56719_txt": {
+      "bytes": 261676,
+      "downloaded_utc": "2026-10-10T16:56:24+00:00",
+      "md5_published": "726de2546687849dd1c0c24bab07e9e6",
+      "path": "raw/pg19/validation/56719.txt",
+      "sha256": "93d959db5c8cd4ca1a3a0271653589e519597d371efd5f3bfb55708359845b98",
+      "sha256_source": "computed",
+      "url": "https://storage.googleapis.com/deepmind-gutenberg/validation/56719.txt"
+    },
+    "validation_57843_txt": {
+      "bytes": 153039,
+      "downloaded_utc": "2026-10-10T16:56:26+00:00",
+      "md5_published": "227bf4edb5939b3720b0e9701f0894f4",
+      "path": "raw/pg19/validation/57843.txt",
+      "sha256": "e64095db4123f118e1b59766902b209d9e9b7e576e9bf1a20a50aae0a930ec7f",
+      "sha256_source": "computed",
+      "url": "https://storage.googleapis.com/deepmind-gutenberg/validation/57843.txt"
+    },
+    "validation_58093_txt": {
+      "bytes": 410332,
+      "downloaded_utc": "2026-10-10T16:56:24+00:00",
+      "md5_published": "3db6334ed785bdd3ccf2b0829216f43b",
+      "path": "raw/pg19/validation/58093.txt",
+      "sha256": "e6cf11e7fba84c5d9604fb89a671994ab874f2aed82f6afd68c7913ae2fcb61e",
+      "sha256_source": "computed",
+      "url": "https://storage.googleapis.com/deepmind-gutenberg/validation/58093.txt"
+    },
+    "validation_6404_txt": {
+      "bytes": 344265,
+      "downloaded_utc": "2026-10-10T16:56:26+00:00",
+      "md5_published": "f9c371f758bb3cc05d7bad4c83232a7d",
+      "path": "raw/pg19/validation/6404.txt",
+      "sha256": "b262eda40fba85a7c11dd27462dfd4e7bf5625552931e9edc5e7e26e36458925",
+      "sha256_source": "computed",
+      "url": "https://storage.googleapis.com/deepmind-gutenberg/validation/6404.txt"
+    },
+    "validation_7510_txt": {
+      "bytes": 424105,
+      "downloaded_utc": "2026-10-10T16:56:27+00:00",
+      "md5_published": "ba1107b41594d223199e44c2cb3a1bca",
+      "path": "raw/pg19/validation/7510.txt",
+      "sha256": "6fd10db2605118d8659f9a7e7b337b1730341830a6ac43c7ab087ba709e205de",
+      "sha256_source": "computed",
+      "url": "https://storage.googleapis.com/deepmind-gutenberg/validation/7510.txt"
+    },
+    "validation_8545_txt": {
+      "bytes": 905381,
+      "downloaded_utc": "2026-10-10T16:56:27+00:00",
+      "md5_published": "0c6b846b2d67a9eff36fec630a9e5e02",
+      "path": "raw/pg19/validation/8545.txt",
+      "sha256": "5405bed8a7324feeb09c3b029567301b6efa00a281d2e528fc8efc501cfa3952",
+      "sha256_source": "computed",
+      "url": "https://storage.googleapis.com/deepmind-gutenberg/validation/8545.txt"
+    }
+  },
+  "counts": {
+    "train": {
+      "books": 300,
+      "characters": 120666451
+    },
+    "validation": {
+      "books": 50,
+      "characters": 17366594
+    },
+    "test": {
+      "books": 100,
+      "characters": 40419935
+    }
+  }
+}
