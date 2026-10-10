@@ -37,7 +37,7 @@ image ─▶ preprocessing ─▶ GLYPHARIS-Det (line detector) ─▶ crop + re
 ## Research questions
 
 1. How effective is a lightweight detector + CTC recognizer for document OCR?
-2. Does synthetic data help, and does its *domain* matter (scene-text vs document-style) at equal budget?
+2. How much does document-style synthetic data help, how does it scale, and which generator factors matter?
 3. Which degradation augmentations improve robustness on degraded documents?
 4. How does it compare with Tesseract, PaddleOCR (PP-OCRv5) and TrOCR-Small under one protocol?
 5. Which failure modes dominate, detector or recognizer?

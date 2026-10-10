@@ -1,6 +1,7 @@
 # ADR-0003: Add a document-style synthetic data source next to SynthText
 
-- **Status:** Accepted (2026-10-09, Phase 0)
+- **Status:** Accepted (2026-10-09, Phase 0). The "keep SynthText" part is superseded by
+  [ADR-0009](ADR-0009-no-synthtext.md) (2026-10-10).
 
 ## Context
 The brief's primary training data, HierText and SynthText, is oriented towards text in natural scenes.

@@ -1,6 +1,7 @@
 # ADR-0008: Ship a usable engine (v0.1) before the research studies; CPU-first inference
 
-- **Status:** Accepted (2026-10-10, Phase 0)
+- **Status:** Accepted (2026-10-10, Phase 0). Point 4 amended by [ADR-0009](ADR-0009-no-synthtext.md):
+  v0.1 trains on HierText + GlyphSynth only.
 
 ## Context
 The consumer application (BookWorm) is still in development and cannot handle image-only pages until

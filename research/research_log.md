@@ -34,3 +34,13 @@ the bottom. Experiments get their full record in `experiments.md`; this log is t
   check also came out identical, although PyTorch warns that CTC backward on GPU has no deterministic
   kernel; the protocol keeps a 1e-4 relative tolerance rather than assuming exactness.
 - CTC computed in an fp32 region under bf16 autocast stays finite with finite gradients.
+
+### 2026-10-10 — Phase 2: licences and SynthText
+
+- Checked every dataset's licence on its official page (DATASETS.md). SynthText's VGG terms are
+  non-commercial, 12-month and no-redistribution, and the download links have been withdrawn. The consumer
+  application's commercial status is undecided, so SynthText was dropped (ADR-0009). GlyphSynth becomes
+  the only synthetic source; RQ2 and H2 reframed before any experiment (H2′).
+- HierText test labels have been public since 2024-12, so the planned fallback test split is unnecessary.
+- Research-only sets (FUNSD, OmniDocBench) and sets without a stated licence (IIIT5K, SROIE, DocVQA) are
+  evaluation-only.

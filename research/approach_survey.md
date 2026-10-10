@@ -57,7 +57,7 @@ scene-text-oriented, the target is document pages. Options considered:
 
 | Option | Assessment |
 |---|---|
-| Train on HierText + SynthText only (as briefed) | Kept as the control; likely to under-serve dense document text. |
+| Train on HierText + SynthText only (as briefed) | SynthText later dropped for licence reasons (ADR-0009); HierText-only is the control. |
 | Add real document datasets with human line transcriptions | Few exist at scale with permissive licences; those that exist are used as external tests to keep them independent. |
 | Pseudo-label scans with another OCR engine | Would distil that engine's errors and violate the spirit of ADR-0007; out of scope for v1. |
 | **Render document-style synthetic data (GlyphSynth)** | Exact labels, unlimited volume, matches the target domain, licence-controllable. **Adopted** ([ADR-0003](../docs/decisions/ADR-0003-document-domain-synthetic-data.md)); its value is measured, not assumed (RQ2, Phase 12). |
@@ -82,6 +82,7 @@ transforms. Robustness is measured with a fixed corruption suite in the style of
 | Two-stage detector + recognizer | ADR-0001 |
 | Lines + CTC | ADR-0002 |
 | GlyphSynth next to SynthText | ADR-0003 |
+| Drop SynthText; commercially usable training data only | ADR-0009 |
 | Fixed dataset roles | ADR-0005 |
 | ImageNet backbones only, no OCR weights | ADR-0007 |
 | Usable engine first, CPU-first inference | ADR-0008 |
