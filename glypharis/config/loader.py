@@ -183,6 +183,15 @@ def _convert(value: Any, tp: Any, where: str) -> Any:
             raise ConfigError(f"{where}: {value!r} is not one of {list(allowed)}")
         return value
 
+    if origin is dict:
+        key_tp, val_tp = get_args(tp)
+        if not isinstance(value, Mapping):
+            raise ConfigError(f"{where}: expected a mapping, got {type(value).__name__}")
+        return {
+            _convert(k, key_tp, f"{where} key {k!r}"): _convert(v, val_tp, f"{where}.{k}")
+            for k, v in value.items()
+        }
+
     if origin is list:
         (item_tp,) = get_args(tp)
         if not isinstance(value, list):
