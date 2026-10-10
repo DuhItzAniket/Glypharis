@@ -7,10 +7,14 @@ How work moves through this repository. These rules apply to every contributor, 
 | Branch | Purpose |
 |---|---|
 | `main` | Stable. Only phase-complete work lands here. Every commit on `main` must pass CI (from Phase 1 on). |
-| `phase/NN-short-name` | One branch per phase, e.g. `phase/01-environment`, `phase/06-rec-baseline`. Merged into `main` with `--no-ff` when the phase gate passes. |
+| `phase/NN-short-name` | One branch per phase, e.g. `phase/01-environment`, `phase/06-rec-baseline`. Merged into `main` through a GitHub pull request (merge commit, no squash) by the repository owner once CI on the branch is green. |
 | `exp/<experiment-id>` | Optional, short-lived. Only for experiments that need code changes not ready for the phase branch. Deleted or merged after the experiment is recorded. |
 
-Phase 0 was committed straight to `main` because the repository was empty.
+Phase 0 was committed straight to `main` because the repository was empty. Nothing else is pushed to
+`main` directly.
+
+Commits and merges must not expose personal information: the commit email is the owner's GitHub noreply
+address, and the GitHub account keeps email addresses private so website merges use it too.
 
 Each completed phase gets an annotated tag: `phase-00`, `phase-01`, … The tag message summarises the
 phase completion record from `docs/PHASE_STATUS.md`.
@@ -47,9 +51,11 @@ A phase is not complete until **all ten** steps below are done and recorded in
 5. **Documentation**: update `PHASE_STATUS.md`, the research log, and any affected docs/cards.
 6. **Git diff inspection**: `git diff main...HEAD --stat` plus a read-through, with no stray data, checkpoints, or secrets.
 7. **Commit**: meaningful commits plus a final checkpoint commit for the phase.
-8. **Push**: push the phase branch, then merge to `main`.
+8. **Push**: push the phase branch; once its CI is green the owner merges the pull request into `main`.
 9. **CI verification**: the GitHub Actions run on the pushed commit is green (from Phase 1 on).
-10. **Phase completion record**: status, measured results, known issues, commit hash, CI status, tag.
+10. **Phase completion record**: status, measured results, known issues, merge commit, CI status, tag.
+    The tag goes on the merge commit. Because the merge commit only exists after the merge, the record is
+    written as the first commit of the next phase branch.
 
 If a step fails, the phase stays open. Serious unresolved failures block the next phase.
 

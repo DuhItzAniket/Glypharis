@@ -8,8 +8,8 @@ Phases run in the order set by [ADR-0008](decisions/ADR-0008-usable-engine-first
 | Phase | Name | Status | Tag |
 |---|---|---|---|
 | 0 | Repository discovery and planning | **COMPLETE** | `phase-00` |
-| 1 | Environment and reproducibility | **IN GATE** (awaiting CI) | — |
-| 2 | Dataset acquisition | not started | — |
+| 1 | Environment and reproducibility | **COMPLETE** | `phase-01` |
+| 2 | Dataset acquisition | IN PROGRESS | — |
 | 3 | Data audit | not started | — |
 | 4 | Preprocessing, charset, GlyphSynth, GDC | not started | — |
 | 5 | Baseline systems | not started | — |
@@ -83,7 +83,7 @@ resolves.
 
 ## Phase 01 — Environment and reproducibility
 
-**Status:** IN GATE — implementation, tests and diagnostics done; waiting for push and CI (gate steps 8–10).
+**Status:** COMPLETE (2026-10-10)
 
 **Objective:** a reproducible, tested foundation that later phases build on.
 
@@ -111,8 +111,8 @@ resolves.
 | CPU determinism: two seeded runs, bit-identical losses for 50 steps | pass | `test_cpu_toy_training_is_bit_identical_for_50_steps`; env report "CPU determinism" |
 | CUDA determinism within a documented tolerance | pass (tolerance 1e-4 relative, EXPERIMENT_PROTOCOL §11) | `test_cuda_toy_training_within_tolerance`; env report "CUDA determinism" |
 | Config validator rejects an unknown key and a wrong type | pass | `tests/test_config.py` |
-| `env_report.py` runs on the laptop and in CI | laptop: pass; CI: pending | `reports/environment/env_report.md` |
-| CI green on `main` | pending | — |
+| `env_report.py` runs on the laptop and in CI | pass | `reports/environment/env_report.md`; CI artifact `env-report-ci` |
+| CI green on `main` | pass | GitHub Actions run 38025056305 on merge commit `030049c` |
 
 **Results (measured):** see `reports/environment/env_report.md` — AMP (bf16, fp16), CTC in fp32 under
 autocast, CPU and CUDA determinism checks all pass on the RTX 4050 Laptop with driver 566.24.
@@ -123,6 +123,8 @@ autocast, CPU and CUDA determinism checks all pass on the RTX 4050 Laptop with d
 - The GPU-marked tests are skipped in CI (no GPU runner); they run locally before every phase gate.
 - ruff also formats Python code blocks inside Markdown files.
 
-**Git:** branch `phase/01-environment`.
+**Git:** branch `phase/01-environment`, merged through pull request #1. Merge commit `030049c`, tag
+`phase-01`. (The merge commit was re-created once with the noreply identity; same tree and parents.)
 
-**CI status:** pending.
+**CI status:** green on the branch (run 38024668422) and on `main` (run 38025056305). The GPU-marked tests
+are skipped in CI and passed locally.
