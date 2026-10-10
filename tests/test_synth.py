@@ -120,3 +120,13 @@ def test_rendered_text_is_dark_on_light_unless_inverted(charset):
         border = np.concatenate([a[:2].ravel(), a[-2:].ravel()])
         if not info.inverted and not info.neighbours:
             assert border.mean() > a.mean() - 1  # background is the brightest part
+
+
+def test_gutenberg_markup_is_cleaned(charset):
+    paras = book_paragraphs(
+        "He said _never_ again--and meant it, as everyone in the room knew well."
+    )
+    assert paras == ["He said never again--and meant it, as everyone in the room knew well."]
+    sampler = TextSampler(paras * 3, charset)
+    outs = {sampler.sample(np.random.default_rng([0, i])) for i in range(200)}
+    assert any("—" in t for t in outs) and not any("_" in t for t in outs)

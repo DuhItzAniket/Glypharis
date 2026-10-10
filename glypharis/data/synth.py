@@ -84,12 +84,16 @@ _PG_HEADER = re.compile(r"^\s*(\*\*\*|end of (the )?project gutenberg)", re.IGNO
 
 
 def book_paragraphs(text: str, min_chars: int = 40) -> list[str]:
-    """Paragraphs of a PG-19 book: hard-wrapped lines joined, labels normalised."""
+    """Paragraphs of a PG-19 book: hard-wrapped lines joined, labels normalised.
+
+    Underscores are Project Gutenberg's plain-text italics markup (``_word_``) and are removed;
+    they are never printed.
+    """
     paragraphs = []
     for block in re.split(r"\n\s*\n", text):
         if _PG_HEADER.match(block):
             continue
-        para = normalize_label(" ".join(block.split()))
+        para = normalize_label(" ".join(block.replace("_", "").split()))
         if len(para) >= min_chars:
             paragraphs.append(para)
     return paragraphs
@@ -182,6 +186,7 @@ def modern_snippet(rng: np.random.Generator) -> str:
 class TextConfig:
     modern_fraction: float = 0.2
     upper_fraction: float = 0.06  # ALL CAPS lines (headings)
+    em_dash_fraction: float = 0.7  # PG-19's ASCII "--" printed as a real em dash
     # Line length mixture: (probability, min chars, max chars)
     lengths: tuple[tuple[float, int, int], ...] = ((0.7, 30, 90), (0.22, 6, 30), (0.08, 1, 6))
 
@@ -213,6 +218,8 @@ class TextSampler:
                 i = int(rng.choice(len(probs), p=probs / probs.sum()))
                 _, lo, hi = self.cfg.lengths[i]
                 text = self._window(rng, int(rng.integers(lo, hi + 1)))
+            if "--" in text and rng.random() < self.cfg.em_dash_fraction:
+                text = text.replace("--", "\u2014")
             if rng.random() < self.cfg.upper_fraction:
                 text = text.upper()
             text = normalize_label(text)
