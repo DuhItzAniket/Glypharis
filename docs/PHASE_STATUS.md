@@ -9,8 +9,8 @@ Phases run in the order set by [ADR-0008](decisions/ADR-0008-usable-engine-first
 |---|---|---|---|
 | 0 | Repository discovery and planning | **COMPLETE** | `phase-00` |
 | 1 | Environment and reproducibility | **COMPLETE** | `phase-01` |
-| 2 | Dataset acquisition | **IN GATE** (awaiting CI) | — |
-| 3 | Data audit | not started | — |
+| 2 | Dataset acquisition | **COMPLETE** | `phase-02` |
+| 3 | Data audit | IN PROGRESS | — |
 | 4 | Preprocessing, charset, GlyphSynth, GDC | not started | — |
 | 5 | Baseline systems | not started | — |
 | 6 | Recognition baseline | not started | — |
@@ -133,7 +133,7 @@ are skipped in CI and passed locally.
 
 ## Phase 02 — Dataset acquisition
 
-**Status:** IN GATE — implementation, tests and diagnostics done; waiting for push and CI (gate steps 8–10).
+**Status:** COMPLETE (2026-10-10)
 
 **Objective:** reproducible download and provenance for every dataset.
 
@@ -165,7 +165,7 @@ check, no-op rerun, manifest content).
 | Every downloaded dataset has a manifest with file counts and hashes | pass | `data/manifests/hiertext.json`, `data/DATASET_MANIFEST.yaml` |
 | A re-run of the downloader is a no-op | pass | second run and `--verify` run: manifest content and mtime unchanged, nothing fetched |
 | DATASETS.md has no "TBD" for downloaded sets | pass | HierText card has measured counts |
-| CI green; downloader unit-tested against a fake source | local: pass; CI: pending | `tests/test_download.py` |
+| CI green; downloader unit-tested against a fake source | pass | `tests/test_download.py`; GitHub Actions run 38059995516 on `main` |
 
 **Results (measured):** HierText 11,639 images (8,281 / 1,724 / 1,634), counts as in DATASETS.md;
 3.72 GiB of archives plus 79 MiB of ground truth. Ground-truth files match GitHub's git blob SHA-1.
@@ -174,6 +174,7 @@ check, no-op rerun, manifest content).
 - S3 throughput was 0.3–0.8 MB/s per connection from this machine; the downloader uses one connection.
 - Counting walks all extracted images and parses the ground truth, so each run takes about a minute.
 
-**Git:** branch `phase/02-datasets`.
+**Git:** branch `phase/02-datasets`, merged through pull request #2. Merge commit `937206b`, tag
+`phase-02`. (The merge commit was re-created with the noreply identity; same tree and parents.)
 
-**CI status:** pending.
+**CI status:** green on the branch (run 38059683845), the pull request, and `main` (run 38059995516).
