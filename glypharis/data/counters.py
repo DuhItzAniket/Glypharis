@@ -23,7 +23,7 @@ def _count_images(folder: Path) -> int:
 
 
 def _hiertext_annotation_counts(path: Path) -> dict[str, int]:
-    """Images, paragraphs, lines and words in a HierText ground-truth file.
+    """Images, paragraphs, lines and words (with legible / handwritten subsets) in a HierText file.
 
     The files are named .jsonl.gz but hold one JSON document with an ``annotations`` list; both
     layouts are accepted so a format change upstream shows up as a count change, not a crash.
@@ -35,14 +35,20 @@ def _hiertext_annotation_counts(path: Path) -> dict[str, int]:
         records = doc.get("annotations", [doc]) if isinstance(doc, dict) else doc
     except json.JSONDecodeError:
         records = [json.loads(line) for line in text.splitlines() if line.strip()]
-    paragraphs = lines = words = 0
+    c = dict.fromkeys(
+        ("paragraphs", "lines", "lines_legible", "lines_handwritten", "words", "words_legible"), 0
+    )
     for rec in records:
         for para in rec.get("paragraphs", []):
-            paragraphs += 1
+            c["paragraphs"] += 1
             for line in para.get("lines", []):
-                lines += 1
-                words += len(line.get("words", []))
-    return {"images": len(records), "paragraphs": paragraphs, "lines": lines, "words": words}
+                c["lines"] += 1
+                c["lines_legible"] += bool(line.get("legible", True))
+                c["lines_handwritten"] += bool(line.get("handwritten", False))
+                for word in line.get("words", []):
+                    c["words"] += 1
+                    c["words_legible"] += bool(word.get("legible", True))
+    return {"images": len(records), **c}
 
 
 def count_hiertext(raw: Path) -> dict[str, Any]:

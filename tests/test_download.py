@@ -319,7 +319,11 @@ def test_duplicate_file_names_rejected():
 
 
 def test_count_hiertext_both_layouts(tmp_path):
-    rec = {"image_id": "1", "paragraphs": [{"lines": [{"words": [{}, {}]}, {"words": [{}]}]}]}
+    lines = [
+        {"legible": True, "words": [{"legible": True}, {"legible": False}]},
+        {"legible": False, "handwritten": True, "words": [{}]},
+    ]
+    rec = {"image_id": "1", "paragraphs": [{"lines": lines}]}
     raw = tmp_path / "hiertext"
     (raw / "gt").mkdir(parents=True)
     (raw / "images/train").mkdir(parents=True)
@@ -332,7 +336,15 @@ def test_count_hiertext_both_layouts(tmp_path):
     counts = count_hiertext(raw)
     assert counts["train"] == {
         "image_files": 1,
-        "annotations": {"images": 2, "paragraphs": 2, "lines": 4, "words": 6},
+        "annotations": {
+            "images": 2,
+            "paragraphs": 2,
+            "lines": 4,
+            "lines_legible": 2,
+            "lines_handwritten": 2,
+            "words": 6,
+            "words_legible": 4,
+        },
     }
     assert counts["validation"]["annotations"]["images"] == 1
     assert counts["test"] == {"image_files": 0}
