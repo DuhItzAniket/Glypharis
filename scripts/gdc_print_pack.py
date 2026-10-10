@@ -25,7 +25,13 @@ from typing import Any
 import yaml
 from PIL import Image, ImageDraw
 
-from glypharis.data.gdc import PackLayout, compose_pack_page, extract_lines, render_page
+from glypharis.data.gdc import (
+    PackLayout,
+    compose_pack_page,
+    extract_image_regions,
+    extract_lines,
+    render_page,
+)
 
 CONDITIONS = {
     "scan_app": "Phone scanner app (Google Drive scan or Microsoft Lens), page flat, auto crop off "
@@ -69,7 +75,8 @@ def main(argv: list[str] | None = None) -> int:
             lines = extract_lines(pdf, page_index, scale)
             page_img = render_page(pdf, page_index, args.dpi)
             label = f"GDC-{sheet_no:04d}  {doc['key']} p.{entry['page']}  [{condition}]"
-            sheet, gt = compose_pack_page(page_img, lines, sheet_no, label, layout)
+            regions = extract_image_regions(pdf, page_index, scale)
+            sheet, gt, ignore = compose_pack_page(page_img, lines, sheet_no, label, layout, regions)
             sheets.append(sheet)
             records.append(
                 {
@@ -80,12 +87,16 @@ def main(argv: list[str] | None = None) -> int:
                     "condition": condition,
                     "group": doc.get("group", ""),
                     "lines": gt,
+                    "ignore": ignore,
                 }
             )
             qa = sheet.copy()
             draw = ImageDraw.Draw(qa)
             for ln in gt:
-                draw.polygon([tuple(p) for p in ln["polygon"]], outline=(255, 0, 0))
+                color = (0, 160, 0) if ln["vertical"] else (255, 0, 0)
+                draw.polygon([tuple(p) for p in ln["polygon"]], outline=color)
+            for poly in ignore:
+                draw.polygon([tuple(p) for p in poly], outline=(0, 90, 255), width=3)
             qa.thumbnail((1240, 1754))
             qa.save(qa_dir / f"{sheet_no:04d}.png")
             sheet_no += 1

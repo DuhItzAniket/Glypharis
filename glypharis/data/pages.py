@@ -64,9 +64,15 @@ class Page:
     source: str
     split: str
     lines: list[PageLine] = field(default_factory=list)
+    # "Don't care" polygons (e.g. raster images whose text has no ground truth). Written only when
+    # present, so pages without them serialise exactly as before.
+    ignore: list[list[list[float]]] = field(default_factory=list)
 
     def to_dict(self) -> dict[str, Any]:
-        return asdict(self)
+        d = asdict(self)
+        if not d["ignore"]:
+            del d["ignore"]
+        return d
 
     @classmethod
     def from_dict(cls, d: dict[str, Any]) -> Page:
@@ -79,6 +85,7 @@ class Page:
             source=d["source"],
             split=d["split"],
             lines=lines,
+            ignore=d.get("ignore", []),
         )
 
 
