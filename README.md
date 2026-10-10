@@ -8,8 +8,7 @@ GLYPHARIS is built as a research project. Every model is trained and evaluated o
 (RTX 4050, 6 GB), every experiment is registered before it runs, and every reported number traces back to
 a generated report.
 
-> **Status: Phase 1 — environment and reproducibility.** No model has been trained yet. Nothing below
-> is a result.
+> **Status: Phase 2 — dataset acquisition.** No model has been trained yet. Nothing below is a result.
 > See [docs/PHASE_STATUS.md](docs/PHASE_STATUS.md). First usable version (v0.1) is planned right after the
 > end-to-end pipeline works ([ADR-0008](docs/decisions/ADR-0008-usable-engine-first.md)).
 
@@ -38,7 +37,7 @@ image ─▶ preprocessing ─▶ GLYPHARIS-Det (line detector) ─▶ crop + re
 ## Research questions
 
 1. How effective is a lightweight detector + CTC recognizer for document OCR?
-2. Does synthetic data help, and does its *domain* matter (scene-text vs document-style) at equal budget?
+2. How much does document-style synthetic data help, how does it scale, and which generator factors matter?
 3. Which degradation augmentations improve robustness on degraded documents?
 4. How does it compare with Tesseract, PaddleOCR (PP-OCRv5) and TrOCR-Small under one protocol?
 5. Which failure modes dominate, detector or recognizer?

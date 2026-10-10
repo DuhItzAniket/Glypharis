@@ -28,6 +28,18 @@ CI of the difference excludes zero, on validation unless stated otherwise.
 - **Test:** Phase 12 scaling study (GW-DATA-*).
 - **Success criterion:** H2a — CI-separated improvement at ≥ 1 budget vs HierText-only; H2b — CI-separated
   difference between sources at ≥ 2 of 4 budgets on the document slice.
+- **Status:** superseded (2026-10-10) by H2′ — SynthText dropped for licence reasons (ADR-0009), so H2b
+  cannot be tested. H2a carries over unchanged into H2′.
+
+### H2′ — Document-style synthetic data helps and scales; diversity matters (RQ2, reframed)
+
+- **H2′a:** Adding GlyphSynth to HierText-train lowers validation CER on the document-style slice, with
+  diminishing returns from 25K to 250K lines.
+- **H2′b:** At a fixed GlyphSynth size, rendering with many fonts lowers document-slice CER compared with
+  a few fonts, and the degradation pipeline lowers CER on degraded slices without hurting clean ones.
+- **Test:** Phase 12 (GW-DATA-*).
+- **Success criterion:** H2′a — CI-separated improvement over HierText-only at ≥ 1 size; H2′b —
+  CI-separated difference for each factor at the tested size.
 - **Status:** open
 
 ### H3 — Document degradation augmentation improves robustness (RQ3)
@@ -47,8 +59,9 @@ CI of the difference excludes zero, on validation unless stated otherwise.
 
 ### H5 — Domain gap is large (RQ6)
 
-- **Statement:** A model trained on HierText + SynthText only shows a markedly higher CER on
-  document-style data than on scene-style validation; GlyphSynth narrows that gap.
+- **Statement:** A model trained on HierText only shows a markedly higher CER on document-style data
+  than on scene-style validation; adding GlyphSynth narrows that gap. (Wording updated 2026-10-10 before
+  any experiment: the control was "HierText + SynthText", which ADR-0009 removed.)
 - **Test:** Phase 12 / 14.
 - **Status:** open
 

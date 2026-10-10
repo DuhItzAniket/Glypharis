@@ -1,0 +1,45 @@
+# Where every dataset comes from. Read by scripts/download_datasets.py.
+#
+# Sizes are the Content-Length reported by the server (checked 2026-10-10). sha256 is filled in only
+# where the publisher gives one; otherwise the hash is computed on first download and recorded in
+# data/manifests/<dataset>.json, and later runs verify against that record.
+#
+# `phase` says when the files are needed. External test sets and GlyphSynth inputs (fonts, PG-19
+# text) are added when their phase needs them. SynthText is deliberately absent (ADR-0009).
+
+hiertext:
+  title: HierText
+  version: "2022 release; test annotations published 2024-12-02"
+  homepage: https://github.com/google-research-datasets/hiertext
+  licence: CC BY-SA 4.0
+  citation: long2022hiertext
+  role: train / validation / test (ADR-0005)
+  phase: 2
+  files:
+    - name: gt_train
+      url: https://raw.githubusercontent.com/google-research-datasets/hiertext/main/gt/train.jsonl.gz
+      filename: gt/train.jsonl.gz
+      size: 59214216
+    - name: gt_validation
+      url: https://raw.githubusercontent.com/google-research-datasets/hiertext/main/gt/validation.jsonl.gz
+      filename: gt/validation.jsonl.gz
+      size: 12274736
+    - name: gt_test
+      url: https://raw.githubusercontent.com/google-research-datasets/hiertext/main/gt/test.jsonl.gz
+      filename: gt/test.jsonl.gz
+      size: 11342161
+    - name: images_train
+      url: https://open-images-dataset.s3.amazonaws.com/ocr/train.tgz
+      filename: archives/train.tgz
+      size: 2798458845
+      extract_to: images
+    - name: images_validation
+      url: https://open-images-dataset.s3.amazonaws.com/ocr/validation.tgz
+      filename: archives/validation.tgz
+      size: 577088394
+      extract_to: images
+    - name: images_test
+      url: https://open-images-dataset.s3.amazonaws.com/ocr/test.tgz
+      filename: archives/test.tgz
+      size: 537066598
+      extract_to: images

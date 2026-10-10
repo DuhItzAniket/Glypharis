@@ -50,7 +50,7 @@ The brief's RQ1–RQ7 are kept, sharpened where the survey showed a gap.
 | RQ | Question | Primary evidence | Phases |
 |---|---|---|---|
 | RQ1 | How effective is a lightweight detector + CTC line recognizer for document OCR? | E2E CER/WER on GDC and OmniDocBench text blocks vs baselines | 6, 8, 10, 14 |
-| RQ2 | How much does synthetic data help recognition, and **does its domain matter** (scene-text SynthText vs document-style GlyphSynth) at equal budget? | Scaling curves 25K→250K for both sources | 12 |
+| RQ2 | How much does document-style synthetic data (GlyphSynth) help recognition, how does it scale, and which generator factors (font diversity, degradation) matter? (reframed by ADR-0009) | Scaling curves 25K→250K for both sources | 12 |
 | RQ3 | Which degradation augmentations improve robustness on degraded documents? | Corruption-suite CER per augmentation family | 7, 11 |
 | RQ4 | How does GLYPHARIS compare with Tesseract, PaddleOCR (PP-OCRv5) and TrOCR-Small? | Same data, same metrics, same normalisation, with latency and memory | 5, 14, 16 |
 | RQ5 | Which failure modes dominate, and do they come from the detector or the recognizer? | Categorised error report with oracle-detector analysis | 9, 15 |
@@ -61,15 +61,15 @@ The brief's RQ1–RQ7 are kept, sharpened where the survey showed a gap.
 ## 4. Data strategy (summary)
 
 Full provenance, licences, and citations are in [DATASETS.md](../DATASETS.md). Roles are fixed in
-[ADR-0005](decisions/ADR-0005-evaluation-data-roles.md) and must not drift.
+[ADR-0005](decisions/ADR-0005-evaluation-data-roles.md) and [ADR-0009](decisions/ADR-0009-no-synthtext.md)
+and must not drift. Only commercially usable sources train delivered models; SynthText is dropped (ADR-0009).
 
 | Role | Sources | Notes |
 |---|---|---|
 | **Train (real)** | HierText train (lines) | Real photographed text with line/paragraph hierarchy |
-| **Train (synthetic, scene)** | SynthText subsets 25K / 50K / 100K / 250K images | As specified in the brief |
 | **Train (synthetic, document)** | **GlyphSynth**: our renderer for document-style text lines and pages (open-licence fonts + public-domain / permissive text + document degradations) | Added by [ADR-0003](decisions/ADR-0003-document-domain-synthetic-data.md). Exact labels and unlimited volume, matched to the target domain |
 | **Validation** | HierText validation (lines), GlyphSynth-val (held-out fonts *and* texts) | Model selection, early stopping, and HPO only use these |
-| **Internal test** | HierText test, if public ground truth exists (else see DATASETS.md fallback), GDC | Phases 5 / 14 / 22 only |
+| **Internal test** | HierText test (ground truth public since 2024-12), GDC | Phases 5 / 14 / 22 only |
 | **External test** | IIIT5K (words), FUNSD (forms), OmniDocBench (documents), SROIE (receipts, low priority) | Never used for training or tuning |
 | **Reference only** | DocVQA | Its OCR text is machine-generated, so it is not used as CER ground truth (see DATASETS.md) |
 
@@ -127,8 +127,8 @@ Each phase lists **Objective, Tasks, Deliverables, Exit criteria**. Effort is in
 **Execution order** ([ADR-0008](decisions/ADR-0008-usable-engine-first.md)): phases are listed in brief
 order but run as `0–10 → 17 → 18 → 20` (= v0.1, a usable engine), then `11 → 12 → 13 → 14 → 15 → 16 →
 17/18/20 re-run on the final model → 19 → 21 → 22 → 23` (= v1.0). v0.1 uses the Phase 7 recognizer and
-Phase 8 detector, is evaluated on validation data only, and needs only the SynthText subset used in the
-recognizer mix. Inference is CPU-first: CPU latency through ONNX Runtime is the primary efficiency number,
+Phase 8 detector, is evaluated on validation data only, and trains on HierText + GlyphSynth
+([ADR-0009](decisions/ADR-0009-no-synthtext.md)). Inference is CPU-first: CPU latency through ONNX Runtime is the primary efficiency number,
 with a concrete target set from the Phase 5 baseline measurements.
 
 ### Phase 0 — Repository discovery and planning ✅
@@ -171,8 +171,8 @@ with a concrete target set from the Phase 5 baseline measurements.
   2. `data/DATASET_MANIFEST.yaml`: dataset, version, source, licence, download date, samples, preprocessing,
      split, as the brief requires.
   3. `DATASETS.md` cards updated with actual counts measured after download.
-  4. Disk plan: SynthText is the largest download; extract only what the 250K study needs and stream-convert
-     its annotation file (RAM risk, see RISK_REGISTER R-04).
+  4. Disk plan: free space checked before every download with a 20 GiB margin (R-03). SynthText, the
+     largest planned download, was dropped after the licence check (ADR-0009).
   5. Licence check recorded per dataset *before* download; anything unclear is parked, not downloaded.
 - **Exit criteria:** every downloaded dataset has a manifest with file counts and hashes; a re-run of the
   downloader is a no-op; DATASETS.md has no "TBD" for downloaded sets; CI green (the downloader is unit-tested
@@ -318,13 +318,14 @@ with a concrete target set from the Phase 5 baseline measurements.
 - **Effort:** 2 S, 20–40 GPU-h.
 
 ### Phase 12 — Synthetic data study
-- **Objective:** measure how much synthetic data helps and whether its domain matters (RQ2).
-- **Design:** recognizer trained on HierText-train + {SynthText, GlyphSynth} at {25K, 50K, 100K, 250K};
-  sizes counted in *images* for SynthText as the brief specifies, and line counts reported for both
-  sources so the comparison is interpretable. Equal step budgets per size. Evaluated on HierText-val,
-  GlyphSynth-val, and a document-style validation slice. 3 seeds at 25K and 250K for both sources.
-- **Exit criteria:** scaling plots + table (CER, WER, F1 for the detector variant if run, latency
-  unchanged by design); verdict on "more data ⇒ better?" and "document vs scene synthetic?", with CIs.
+- **Objective:** measure how much document-style synthetic data helps, how it scales, and which
+  generator factors matter (RQ2, reframed by ADR-0009).
+- **Design:** recognizer trained on HierText-train (control) and HierText-train + GlyphSynth at {25K, 50K,
+  100K, 250K} lines (the brief's subset sizes). Equal step budgets per size. Generator-factor arms at one
+  size: few vs many fonts, degradations on vs off. Evaluated on HierText-val, GlyphSynth-val, and a
+  document-style validation slice. 3 seeds at 25K and 250K.
+- **Exit criteria:** scaling plots + table (CER, WER; latency unchanged by design); verdicts on "more
+  synthetic data ⇒ better?" and on each generator factor, with CIs.
 - **Effort:** 2 S, 30–60 GPU-h.
 
 ### Phase 13 — Ablation study
@@ -430,6 +431,7 @@ with a concrete target set from the Phase 5 baseline measurements.
 | GDC replaces the name "BookWorm-OCR-Challenge" | Keeps the repo consumer-neutral (brief §66) | — |
 | Phases 17, 18, 20 run right after Phase 10 for a v0.1, then again for the final model | The consumer needs a usable engine before the studies finish | ADR-0008 |
 | CPU-first inference; English printed text only | Deployment target undecided; owner decision on scope | ADR-0008 |
+| SynthText dropped; synthetic data only from GlyphSynth; RQ2 reframed; delivered models train only on commercially usable data | SynthText licence is non-commercial, 12-month, links withdrawn | ADR-0009 |
 
 ## 9. Traceability (brief section → where it is handled)
 

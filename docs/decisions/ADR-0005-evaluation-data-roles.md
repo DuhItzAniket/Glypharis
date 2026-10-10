@@ -1,6 +1,7 @@
 # ADR-0005: Fixed roles for every dataset: train / val / test / external
 
-- **Status:** Accepted (2026-10-09, Phase 0)
+- **Status:** Accepted (2026-10-09, Phase 0). SynthText row superseded by
+  [ADR-0009](ADR-0009-no-synthtext.md); HierText test labels became public, so the fallback is unused.
 
 ## Context
 The brief requires strict separation of train, validation, test and external test data (§40) and
