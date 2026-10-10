@@ -11,7 +11,7 @@ Phases run in the order set by [ADR-0008](decisions/ADR-0008-usable-engine-first
 | 1 | Environment and reproducibility | **COMPLETE** | `phase-01` |
 | 2 | Dataset acquisition | **COMPLETE** | `phase-02` |
 | 3 | Data audit | **COMPLETE** | `phase-03` |
-| 4 | Preprocessing, charset, GlyphSynth, GDC | IN PROGRESS | — |
+| 4 | Preprocessing, charset, GlyphSynth, GDC | **IN GATE** (awaiting CI) | — |
 | 5 | Baseline systems | not started | — |
 | 6 | Recognition baseline | not started | — |
 | 7 | Recognizer improvement | not started | — |
@@ -227,3 +227,66 @@ to normalise. Median legible line: 1 word, 7 characters,
 `phase-03` (re-created with the noreply identity; same tree and parents).
 
 **CI status:** green on the branch, the pull request and `main` (run 38063919422).
+
+---
+
+## Phase 04 — Preprocessing, charset, synthetic data, GDC
+
+**Status:** IN GATE — implementation, tests and diagnostics done; waiting for push and CI (gate steps 8–10).
+GDC capture continues as the tracked item **GDC-capture** (ADR-0010).
+
+**Objective:** training-ready data with documented transformations.
+
+**Implemented**
+- `glypharis.data.text`: label normalisation v1 (original and normalised text both kept), evaluation
+  tracks, `Charset`; `scripts/build_charset.py` → `data/manifests/charset.json` (274 characters + blank),
+  `reports/charset/charset_report.md`.
+- `glypharis.data.pages` (internal page format, grouped by document), `crops` (rectified line crops,
+  64 px, 0.15 margin), `linepack` (binary pack + index, Windows-safe); `scripts/prepare_hiertext.py`
+  applies the Phase 3 exclusion list and packs train and validation crops.
+- `glypharis.data.augment`: presets none / geometric / photometric / degradation / full with
+  per-transform probability and severity (config `data.augmentation`, `data.augmentation_params`),
+  and the fixed GLYPH-C corruptions; previews in `reports/data_analysis/`.
+- GlyphSynth v1 (`glypharis.data.synth`, `scripts/build_glyphsynth.py`) from 100 pinned Google Fonts
+  families and PG-19 text, with held-out fonts and texts for validation.
+- GLYPH-C v1 frozen (`scripts/build_glyph_c.py`, `data/manifests/processed/glyph_c.json`).
+- GDC tooling (`glypharis.data.gdc`, `scripts/gdc_select_pages.py`, `gdc_print_pack.py`,
+  `gdc_align.py`), 21 source documents, 106-sheet print pack, capture checklist, training exclusion
+  list.
+- Downloader: published MD5 support and parallel transfers.
+
+**Descoped / moved (documented):** GDC capture and freeze → GDC-capture track (ADR-0010).
+Detector-side (page-level) augmentation → Phase 8. Real-scan GDC slice (owner's own scans) → part of
+GDC-capture.
+
+**Tests:** 233 passed locally (CPU and GPU-marked).
+
+**Exit criteria**
+
+| Criterion | Result | Evidence |
+|---|---|---|
+| Round-trip test (convert → read back → identical text and boxes) | pass | `test_pages_round_trip_is_exact_and_deterministic`; linepack round trip |
+| Crops visually spot-checked | pass | `reports/data_analysis/hiertext/line_crops.png`, `glyphsynth/samples.png` |
+| Charset covers ≥ 99.9% of validation characters | pass on in-scope characters (99.943%); 99.809% of all characters, the rest being letters of other scripts excluded by the English-only scope | `reports/charset/charset_report.md` |
+| GlyphSynth reproducible from seed | pass | validation pack rebuilt byte-identical; HierText packs likewise |
+| GDC frozen with manifest | moved to GDC-capture (ADR-0010); print pack and tooling done | `data/manifests/gdc/pack.json` |
+| CI green | local: pass; CI: pending | — |
+
+**Known issues**
+- HierText labels contain some noise (visible on the crop sheet); recorded, not corrected.
+- GDC text-layer ground truth cannot cover text inside raster images (handled as ignore regions) and
+  merges some side-by-side form headers into one line.
+
+**Git:** branch `phase/04-preprocessing`.
+
+**CI status:** pending.
+
+### Tracked item: GDC-capture (ADR-0010)
+
+| Step | Owner | Status |
+|---|---|---|
+| Print `data/processed/gdc/print_pack.pdf` (A4, 100 % scale) | owner | open |
+| Capture all 106 sheets per `data/manifests/gdc/capture_checklist.md` into `data/raw/gdc/captures/` | owner | open |
+| Run `scripts/gdc_align.py`, check overlays, request retakes | maintainer | open |
+| Real-scan slice: owner's scans, transcriptions drafted and verified | owner + maintainer | open |
+| Freeze (`scripts/gdc_align.py --freeze`) | maintainer | open |

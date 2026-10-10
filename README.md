@@ -8,7 +8,7 @@ GLYPHARIS is built as a research project. Every model is trained and evaluated o
 (RTX 4050, 6 GB), every experiment is registered before it runs, and every reported number traces back to
 a generated report.
 
-> **Status: Phase 4 — preprocessing, charset, synthetic data and test set.** No model has been trained yet. Nothing below is a result.
+> **Status: Phase 4 — preprocessing, charset, synthetic data and test set (in gate).** No model has been trained yet. Nothing below is a result.
 > See [docs/PHASE_STATUS.md](docs/PHASE_STATUS.md). First usable version (v0.1) is planned right after the
 > end-to-end pipeline works ([ADR-0008](docs/decisions/ADR-0008-usable-engine-first.md)).
 
