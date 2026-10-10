@@ -1,0 +1,597 @@
+{
+ "version": 1,
+ "generated_by": "scripts/audit_data.py",
+ "dataset": "hiertext",
+ "rules": {
+  "coord_tolerance_px": 2.0,
+  "min_inside_fraction": 0.5,
+  "tiny_line_height_px": 4.0,
+  "extreme_line_aspect": 60.0,
+  "extreme_image_aspect": 4.0,
+  "stats_long_side": 1024,
+  "dhash_max_distance": 6,
+  "phash_max_distance": 10,
+  "text_min_chars": 5,
+  "text_min_letters": 3,
+  "text_max_images": 20,
+  "text_min_shared": 5,
+  "text_min_overlap": 0.5
+ },
+ "images": [
+  {
+   "split": "train",
+   "image_id": "0207e610f87761e1",
+   "reasons": [
+    "text_overlap_cross_split"
+   ]
+  },
+  {
+   "split": "train",
+   "image_id": "050e2a62105e1d19",
+   "reasons": [
+    "text_overlap_cross_split"
+   ]
+  },
+  {
+   "split": "train",
+   "image_id": "07dfbda1a973a5ee",
+   "reasons": [
+    "text_overlap_cross_split"
+   ]
+  },
+  {
+   "split": "train",
+   "image_id": "0d332ca75516915d",
+   "reasons": [
+    "text_overlap_cross_split"
+   ]
+  },
+  {
+   "split": "train",
+   "image_id": "10176bdc9d86cb23",
+   "reasons": [
+    "text_overlap_cross_split"
+   ]
+  },
+  {
+   "split": "train",
+   "image_id": "107511b6c15a5af7",
+   "reasons": [
+    "text_overlap_cross_split"
+   ]
+  },
+  {
+   "split": "train",
+   "image_id": "11d8f5444ce9768b",
+   "reasons": [
+    "text_overlap_cross_split"
+   ]
+  },
+  {
+   "split": "train",
+   "image_id": "13cfb39634bbb105",
+   "reasons": [
+    "text_overlap_cross_split"
+   ]
+  },
+  {
+   "split": "train",
+   "image_id": "151e98b3470a5ebd",
+   "reasons": [
+    "text_overlap_cross_split"
+   ]
+  },
+  {
+   "split": "train",
+   "image_id": "1993bcd793b20ae3",
+   "reasons": [
+    "text_overlap_cross_split"
+   ]
+  },
+  {
+   "split": "train",
+   "image_id": "1e0936a669a69c45",
+   "reasons": [
+    "near_duplicate_cross_split"
+   ]
+  },
+  {
+   "split": "train",
+   "image_id": "27f76ad6aa35a844",
+   "reasons": [
+    "text_overlap_cross_split"
+   ]
+  },
+  {
+   "split": "train",
+   "image_id": "2ea2118322cd8cfb",
+   "reasons": [
+    "text_overlap_cross_split"
+   ]
+  },
+  {
+   "split": "train",
+   "image_id": "3700ee13b505f773",
+   "reasons": [
+    "text_overlap_cross_split"
+   ]
+  },
+  {
+   "split": "train",
+   "image_id": "3ab83eefeb9d3abb",
+   "reasons": [
+    "text_overlap_cross_split"
+   ]
+  },
+  {
+   "split": "train",
+   "image_id": "3c1bb3faf65db2c5",
+   "reasons": [
+    "text_overlap_cross_split"
+   ]
+  },
+  {
+   "split": "train",
+   "image_id": "3c36839f4b54a72e",
+   "reasons": [
+    "text_overlap_cross_split"
+   ]
+  },
+  {
+   "split": "train",
+   "image_id": "44a551cd0fb327d7",
+   "reasons": [
+    "text_overlap_cross_split"
+   ]
+  },
+  {
+   "split": "train",
+   "image_id": "4a2dd183011b4ad9",
+   "reasons": [
+    "near_duplicate_cross_split",
+    "text_overlap_cross_split"
+   ]
+  },
+  {
+   "split": "train",
+   "image_id": "4c1216583e1845d0",
+   "reasons": [
+    "text_overlap_cross_split"
+   ]
+  },
+  {
+   "split": "train",
+   "image_id": "527adaae15c35833",
+   "reasons": [
+    "text_overlap_cross_split"
+   ]
+  },
+  {
+   "split": "train",
+   "image_id": "56922dae0d62c5e5",
+   "reasons": [
+    "text_overlap_cross_split"
+   ]
+  },
+  {
+   "split": "train",
+   "image_id": "5f98a4c697bad792",
+   "reasons": [
+    "text_overlap_cross_split"
+   ]
+  },
+  {
+   "split": "train",
+   "image_id": "666c9acfe84836ef",
+   "reasons": [
+    "text_overlap_cross_split"
+   ]
+  },
+  {
+   "split": "train",
+   "image_id": "667aa8217d094277",
+   "reasons": [
+    "text_overlap_cross_split"
+   ]
+  },
+  {
+   "split": "train",
+   "image_id": "671339f1c38d6794",
+   "reasons": [
+    "text_overlap_cross_split"
+   ]
+  },
+  {
+   "split": "train",
+   "image_id": "747231dfb9c22684",
+   "reasons": [
+    "text_overlap_cross_split"
+   ]
+  },
+  {
+   "split": "train",
+   "image_id": "7b26dfc5c0e6d098",
+   "reasons": [
+    "text_overlap_cross_split"
+   ]
+  },
+  {
+   "split": "train",
+   "image_id": "7b66823706e7f63b",
+   "reasons": [
+    "text_overlap_cross_split"
+   ]
+  },
+  {
+   "split": "train",
+   "image_id": "7c86e7f6ac0d8112",
+   "reasons": [
+    "text_overlap_cross_split"
+   ]
+  },
+  {
+   "split": "train",
+   "image_id": "818520d844c0872e",
+   "reasons": [
+    "text_overlap_cross_split"
+   ]
+  },
+  {
+   "split": "train",
+   "image_id": "8438f3e0f8d4452a",
+   "reasons": [
+    "text_overlap_cross_split"
+   ]
+  },
+  {
+   "split": "train",
+   "image_id": "860bc9fa06bc427d",
+   "reasons": [
+    "text_overlap_cross_split"
+   ]
+  },
+  {
+   "split": "train",
+   "image_id": "86fd98566450ff3c",
+   "reasons": [
+    "text_overlap_cross_split"
+   ]
+  },
+  {
+   "split": "train",
+   "image_id": "877d9a5da5f6f7e3",
+   "reasons": [
+    "text_overlap_cross_split"
+   ]
+  },
+  {
+   "split": "train",
+   "image_id": "89e728ab100c4e73",
+   "reasons": [
+    "text_overlap_cross_split"
+   ]
+  },
+  {
+   "split": "train",
+   "image_id": "8e042585ead16d55",
+   "reasons": [
+    "text_overlap_cross_split"
+   ]
+  },
+  {
+   "split": "train",
+   "image_id": "906a2960614f61b3",
+   "reasons": [
+    "text_overlap_cross_split"
+   ]
+  },
+  {
+   "split": "train",
+   "image_id": "95b3d3ad8a465a2b",
+   "reasons": [
+    "text_overlap_cross_split"
+   ]
+  },
+  {
+   "split": "train",
+   "image_id": "9ad1f189b8b57c0e",
+   "reasons": [
+    "text_overlap_cross_split"
+   ]
+  },
+  {
+   "split": "train",
+   "image_id": "9b0858d3bb742a0f",
+   "reasons": [
+    "text_overlap_cross_split"
+   ]
+  },
+  {
+   "split": "train",
+   "image_id": "9ca75b14eb6511bf",
+   "reasons": [
+    "text_overlap_cross_split"
+   ]
+  },
+  {
+   "split": "train",
+   "image_id": "a063d88ef45c3649",
+   "reasons": [
+    "near_duplicate_cross_split"
+   ]
+  },
+  {
+   "split": "train",
+   "image_id": "b057324a8594d403",
+   "reasons": [
+    "text_overlap_cross_split"
+   ]
+  },
+  {
+   "split": "train",
+   "image_id": "b79b4e2bb69b0bf7",
+   "reasons": [
+    "text_overlap_cross_split"
+   ]
+  },
+  {
+   "split": "train",
+   "image_id": "bcf91412166ff418",
+   "reasons": [
+    "text_overlap_cross_split"
+   ]
+  },
+  {
+   "split": "train",
+   "image_id": "bd656a76047a19a7",
+   "reasons": [
+    "text_overlap_cross_split"
+   ]
+  },
+  {
+   "split": "train",
+   "image_id": "bf45b0bba1b5a5b3",
+   "reasons": [
+    "text_overlap_cross_split"
+   ]
+  },
+  {
+   "split": "train",
+   "image_id": "c6f7948205cdb201",
+   "reasons": [
+    "text_overlap_cross_split"
+   ]
+  },
+  {
+   "split": "train",
+   "image_id": "c7ef9d8bf930ebe1",
+   "reasons": [
+    "text_overlap_cross_split"
+   ]
+  },
+  {
+   "split": "train",
+   "image_id": "c9263c5954f3ffdd",
+   "reasons": [
+    "text_overlap_cross_split"
+   ]
+  },
+  {
+   "split": "train",
+   "image_id": "c9bc775f46eab8dc",
+   "reasons": [
+    "text_overlap_cross_split"
+   ]
+  },
+  {
+   "split": "train",
+   "image_id": "cbe08d815efe78d3",
+   "reasons": [
+    "text_overlap_cross_split"
+   ]
+  },
+  {
+   "split": "train",
+   "image_id": "cd4597e4dcdc248d",
+   "reasons": [
+    "text_overlap_cross_split"
+   ]
+  },
+  {
+   "split": "train",
+   "image_id": "cfefc8bb7f8e3e5e",
+   "reasons": [
+    "text_overlap_cross_split"
+   ]
+  },
+  {
+   "split": "train",
+   "image_id": "d44afadeb37f4cfa",
+   "reasons": [
+    "text_overlap_cross_split"
+   ]
+  },
+  {
+   "split": "train",
+   "image_id": "d750528218c82e6b",
+   "reasons": [
+    "near_duplicate_cross_split",
+    "text_overlap_cross_split"
+   ]
+  },
+  {
+   "split": "train",
+   "image_id": "d8fe6cf3d55e60e1",
+   "reasons": [
+    "text_overlap_cross_split"
+   ]
+  },
+  {
+   "split": "train",
+   "image_id": "daa9293ea0e967a4",
+   "reasons": [
+    "text_overlap_cross_split"
+   ]
+  },
+  {
+   "split": "train",
+   "image_id": "dcbb3da11024de9a",
+   "reasons": [
+    "text_overlap_cross_split"
+   ]
+  },
+  {
+   "split": "train",
+   "image_id": "e630bc2754b5a7d5",
+   "reasons": [
+    "text_overlap_cross_split"
+   ]
+  },
+  {
+   "split": "train",
+   "image_id": "e70bc70f9825c22a",
+   "reasons": [
+    "text_overlap_cross_split"
+   ]
+  },
+  {
+   "split": "train",
+   "image_id": "ebe104dc29b00483",
+   "reasons": [
+    "text_overlap_cross_split"
+   ]
+  },
+  {
+   "split": "train",
+   "image_id": "edffb33e1520928e",
+   "reasons": [
+    "text_overlap_cross_split"
+   ]
+  },
+  {
+   "split": "train",
+   "image_id": "ef8ac48d094b4068",
+   "reasons": [
+    "text_overlap_cross_split"
+   ]
+  },
+  {
+   "split": "train",
+   "image_id": "f54a86b40b611c97",
+   "reasons": [
+    "text_overlap_cross_split"
+   ]
+  },
+  {
+   "split": "train",
+   "image_id": "f7b680315547c689",
+   "reasons": [
+    "text_overlap_cross_split"
+   ]
+  },
+  {
+   "split": "train",
+   "image_id": "f91f3687e7dc6457",
+   "reasons": [
+    "text_overlap_cross_split"
+   ]
+  },
+  {
+   "split": "validation",
+   "image_id": "0a47456e8390f6c7",
+   "reasons": [
+    "text_overlap_cross_split"
+   ]
+  },
+  {
+   "split": "validation",
+   "image_id": "15201bcbc27bf045",
+   "reasons": [
+    "text_overlap_cross_split"
+   ]
+  },
+  {
+   "split": "validation",
+   "image_id": "73f0719a2e446188",
+   "reasons": [
+    "text_overlap_cross_split"
+   ]
+  },
+  {
+   "split": "validation",
+   "image_id": "7ff725a4ddf5c616",
+   "reasons": [
+    "text_overlap_cross_split"
+   ]
+  },
+  {
+   "split": "validation",
+   "image_id": "8a4201656f036156",
+   "reasons": [
+    "text_overlap_cross_split"
+   ]
+  },
+  {
+   "split": "validation",
+   "image_id": "a406ccf80e8064a9",
+   "reasons": [
+    "text_overlap_cross_split"
+   ]
+  },
+  {
+   "split": "validation",
+   "image_id": "b98e26644ed6c48d",
+   "reasons": [
+    "text_overlap_cross_split"
+   ]
+  },
+  {
+   "split": "validation",
+   "image_id": "f3593644b53248a3",
+   "reasons": [
+    "text_overlap_cross_split"
+   ]
+  },
+  {
+   "split": "validation",
+   "image_id": "ff703ad6fd295d29",
+   "reasons": [
+    "text_overlap_cross_split"
+   ]
+  }
+ ],
+ "lines": [
+  {
+   "split": "test",
+   "line_id": "767d4d067324fa8f/p0/l41",
+   "scope": "recognizer",
+   "reasons": [
+    "empty_text_legible"
+   ]
+  },
+  {
+   "split": "train",
+   "line_id": "5d4b39a5dc1e9581/p2/l26",
+   "scope": "all",
+   "reasons": [
+    "mostly_outside"
+   ]
+  },
+  {
+   "split": "train",
+   "line_id": "797676273907457c/p0/l96",
+   "scope": "all",
+   "reasons": [
+    "degenerate_box"
+   ]
+  },
+  {
+   "split": "train",
+   "line_id": "86d0719594cf3258/p31/l1",
+   "scope": "all",
+   "reasons": [
+    "mostly_outside"
+   ]
+  }
+ ]
+}
