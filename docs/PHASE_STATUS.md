@@ -10,8 +10,8 @@ Phases run in the order set by [ADR-0008](decisions/ADR-0008-usable-engine-first
 | 0 | Repository discovery and planning | **COMPLETE** | `phase-00` |
 | 1 | Environment and reproducibility | **COMPLETE** | `phase-01` |
 | 2 | Dataset acquisition | **COMPLETE** | `phase-02` |
-| 3 | Data audit | **IN GATE** (awaiting CI) | — |
-| 4 | Preprocessing, charset, GlyphSynth, GDC | not started | — |
+| 3 | Data audit | **COMPLETE** | `phase-03` |
+| 4 | Preprocessing, charset, GlyphSynth, GDC | IN PROGRESS | — |
 | 5 | Baseline systems | not started | — |
 | 6 | Recognition baseline | not started | — |
 | 7 | Recognizer improvement | not started | — |
@@ -183,7 +183,7 @@ check, no-op rerun, manifest content).
 
 ## Phase 03 — Data audit
 
-**Status:** IN GATE — implementation, tests and diagnostics done; waiting for push and CI (gate steps 8–10).
+**Status:** COMPLETE (2026-10-10)
 
 **Objective:** know the data before training on it.
 
@@ -210,7 +210,7 @@ that stays at the same version when nothing changes).
 | Zero unexplained exclusions | pass | every exclusion carries a flag code with a documented decision |
 | Zero cross-split near-duplicates left unhandled | pass | 4 hash pairs + 87 text-overlap pairs, lower-priority copy excluded; contact sheets checked by eye |
 | Plots committed | pass | `reports/data_analysis/hiertext/*.png`, `reports/data_quality/*.png` |
-| CI green | local: pass; CI: pending | — |
+| CI green | pass | GitHub Actions run 38063919422 on `main` |
 
 **Results (measured, `reports/data_quality_report.md`):** 68 train and 9 validation
 images excluded for duplication / text overlap; 3 train lines excluded (broken boxes); 1 test line
@@ -223,6 +223,7 @@ to normalise. Median legible line: 1 word, 7 characters,
   selection); borderline pairs were checked by eye and all were genuine overlaps.
 - HierText line boxes are mostly single words, so long-line recognition needs GlyphSynth (R-06).
 
-**Git:** branch `phase/03-data-audit`.
+**Git:** branch `phase/03-data-audit`, merged through pull request #3. Merge commit `7cb784d`, tag
+`phase-03` (re-created with the noreply identity; same tree and parents).
 
-**CI status:** pending.
+**CI status:** green on the branch, the pull request and `main` (run 38063919422).
