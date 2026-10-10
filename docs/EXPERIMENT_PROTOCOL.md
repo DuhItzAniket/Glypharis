@@ -26,9 +26,13 @@ Dataset roles are fixed by [ADR-0005](decisions/ADR-0005-evaluation-data-roles.m
 3. **Missing test labels.** If a benchmark withholds test ground truth, its official validation split
    becomes our test split and a new validation split is carved from train (RISK_REGISTER R-08). The
    change is recorded in DATASETS.md and in the split statistics table below.
-4. **Cross-split deduplication.** Exact (SHA-256) and near-duplicate (perceptual hash, Hamming distance
-   threshold set and recorded in Phase 3) images across splits are reported. Duplicates are removed
-   from the *training* side, never from evaluation splits.
+4. **Cross-split deduplication.** Three checks, thresholds fixed in Phase 3 (`glypharis.data.audit.Thresholds`,
+   recorded in `reports/data_quality_report.md`): exact copies (SHA-256), near copies (dHash ≤ 6 **and**
+   pHash ≤ 10 of 64 bits), and **text overlap** (images sharing ≥ 5 distinctive lines covering ≥ 50% of
+   the smaller image's distinctive lines; a distinctive line has ≥ 5 characters, ≥ 3 letters and occurs
+   in ≤ 20 images). The copy in the lower-priority split is removed (test > validation > train), so
+   test images are never removed for duplication. Removals are listed in
+   `data/manifests/exclusions/<dataset>.json`.
 5. **GDC sources are excluded from all training corpora,** including the text corpus used by GlyphSynth.
    The exclusion list lives in `data/manifests/exclusions/` and is checked by a test.
 6. **GlyphSynth validation** uses held-out fonts *and* held-out source texts, so it measures
