@@ -1,0 +1,116 @@
+{
+ "glyphsynth_version": 1,
+ "seed": 20261010,
+ "capture": true,
+ "render_config": {
+  "out_height": 64,
+  "margin": 0.15,
+  "size_px": [
+   10.0,
+   48.0
+  ],
+  "italic_p": 0.15,
+  "bold_p": 0.15,
+  "invert_p": 0.03,
+  "neighbour_p": 0.35,
+  "underline_p": 0.03,
+  "capture": true
+ },
+ "text_config": {
+  "modern_fraction": 0.2,
+  "upper_fraction": 0.06,
+  "em_dash_fraction": 0.7,
+  "lengths": [
+   [
+    0.7,
+    30,
+    90
+   ],
+   [
+    0.22,
+    6,
+    30
+   ],
+   [
+    0.08,
+    1,
+    6
+   ]
+  ]
+ },
+ "capture_steps": [
+  {
+   "name": "rotate",
+   "p": 0.15,
+   "severity": 0.3
+  },
+  {
+   "name": "perspective",
+   "p": 0.1,
+   "severity": 0.4
+  },
+  {
+   "name": "paper_texture",
+   "p": 0.4,
+   "severity": 0.6
+  },
+  {
+   "name": "uneven_light",
+   "p": 0.3,
+   "severity": 0.6
+  },
+  {
+   "name": "ink_spread",
+   "p": 0.15,
+   "severity": 1.0
+  },
+  {
+   "name": "low_resolution",
+   "p": 0.2,
+   "severity": 0.5
+  },
+  {
+   "name": "gaussian_blur",
+   "p": 0.3,
+   "severity": 0.5
+  },
+  {
+   "name": "gaussian_noise",
+   "p": 0.3,
+   "severity": 0.4
+  },
+  {
+   "name": "salt_pepper",
+   "p": 0.05,
+   "severity": 0.4
+  },
+  {
+   "name": "binarize",
+   "p": 0.03,
+   "severity": 1.0
+  },
+  {
+   "name": "jpeg",
+   "p": 0.3,
+   "severity": 0.6
+  }
+ ],
+ "charset_version": 1,
+ "font_commit": "bd8f81ddb5c74d5c8897b36ad88b440266245103",
+ "splits": {
+  "train": {
+   "count": 100000,
+   "bytes": 1383038274,
+   "bin_sha256": "762c1755f4d4ba27a3a9a0ef87efd03da71428832aa6356e6d39110d31320a0a",
+   "seed": 20261010,
+   "families": 85
+  },
+  "val": {
+   "count": 10000,
+   "bytes": 137107862,
+   "bin_sha256": "dd2caeb5d11ef826caa4c77cf982ad0a0097efba74608031629bb4d5747e6aae",
+   "seed": 20261011,
+   "families": 15
+  }
+ }
+}
