@@ -24,3 +24,13 @@ the bottom. Experiments get their full record in `experiments.md`; this log is t
 - Recorded ADR-0008: ship v0.1 after Phases 10 → 17 → 18 → 20, then run the studies; CPU-first
   inference. Phase numbers unchanged for traceability.
 - Hypotheses H1–H8 written before any experiment (`hypotheses.md`).
+
+### 2026-10-10 — Phase 1: environment
+
+- Project `.venv` with torch 2.14.1+cu126 (driver 566.24 supports CUDA ≤ 12.7). Chose it over the global
+  2.5.1+cu121 after the AMP, CTC-in-fp32 and determinism checks passed
+  (`reports/environment/env_report.md`).
+- Seeded CPU toy training (CNN-BiLSTM-CTC, 50 steps) is bit-identical across runs. On CUDA the same
+  check also came out identical, although PyTorch warns that CTC backward on GPU has no deterministic
+  kernel; the protocol keeps a 1e-4 relative tolerance rather than assuming exactness.
+- CTC computed in an fp32 region under bf16 autocast stays finite with finite gradients.

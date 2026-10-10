@@ -63,3 +63,6 @@ AGENTS.md
 docs/handoff/
 *.local.md
 .env
+
+# --- CI scratch output ---
+ci-env-report/
