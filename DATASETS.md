@@ -47,11 +47,19 @@ version, samples, annotation format, intended task, preprocessing, split usage.
 - **Version:** 2022 release; test annotations published 2024-12-02 (so HierText test has ground truth and
   the R-08 fallback is not needed). Image archives last modified 2022-03-03.
 - **Integrity:** no published checksums. SHA-256 recorded on first download in
-  `data/manifests/hiertext.json`; GitHub's git blob SHA-1 values for the three ground-truth files are a
-  second reference.
+  `data/manifests/hiertext.json`. The three ground-truth files also match GitHub's git blob SHA-1
+  (`git hash-object`), checked 2026-10-10.
 - **Samples (published):** 11,639 images (train 8,281 / validation 1,724 / test 1,634), about 1.2M words.
-- **Samples (measured):** see `data/manifests/hiertext.json` and the split table in
-  EXPERIMENT_PROTOCOL §1 (filled after download).
+- **Samples (measured, 2026-10-10, `data/manifests/hiertext.json`):**
+
+  | Split | Images (files = annotated) | Paragraphs | Lines | Legible lines | Handwritten lines | Words | Legible words |
+  |---|---|---|---|---|---|---|---|
+  | train | 8,281 | 242,164 | 498,014 | 381,963 | 34,200 | 1,014,142 | 862,577 |
+  | validation | 1,724 | 51,137 | 104,139 | 80,096 | 6,667 | 210,345 | 178,382 |
+  | test | 1,634 | 46,316 | 94,564 | 73,737 | 7,103 | 194,374 | 167,188 |
+
+  The published "about 1.2M words" matches the legible words (1,208,147); the files contain 1,418,861
+  words in total. Downloaded size: 3.72 GiB archives + 79 MiB ground truth.
 - **Annotation format:** gzipped JSON with paragraph → line → word hierarchy, polygon vertices,
   transcription, legibility and handwritten flags.
 - **Intended task here:** detector training (line polygons), recognizer training (line crops), E2E

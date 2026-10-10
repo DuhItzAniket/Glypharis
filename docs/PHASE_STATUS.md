@@ -9,7 +9,7 @@ Phases run in the order set by [ADR-0008](decisions/ADR-0008-usable-engine-first
 |---|---|---|---|
 | 0 | Repository discovery and planning | **COMPLETE** | `phase-00` |
 | 1 | Environment and reproducibility | **COMPLETE** | `phase-01` |
-| 2 | Dataset acquisition | IN PROGRESS | — |
+| 2 | Dataset acquisition | **IN GATE** (awaiting CI) | — |
 | 3 | Data audit | not started | — |
 | 4 | Preprocessing, charset, GlyphSynth, GDC | not started | — |
 | 5 | Baseline systems | not started | — |
@@ -128,3 +128,52 @@ autocast, CPU and CUDA determinism checks all pass on the RTX 4050 Laptop with d
 
 **CI status:** green on the branch (run 38024668422) and on `main` (run 38025056305). The GPU-marked tests
 are skipped in CI and passed locally.
+
+---
+
+## Phase 02 — Dataset acquisition
+
+**Status:** IN GATE — implementation, tests and diagnostics done; waiting for push and CI (gate steps 8–10).
+
+**Objective:** reproducible download and provenance for every dataset.
+
+**Implemented**
+- `data/sources.yaml` (source registry, validated by `glypharis.data.sources`).
+- `glypharis.data.download`: resumable HTTP download via `.part` files and Range requests, retries,
+  SHA-256 verification (published hash, or the hash recorded on first download), safe archive extraction
+  with an idempotent marker, free-disk check with a 20 GiB margin, per-dataset manifest written only when
+  its content changes.
+- `glypharis.data.counters` (measured counts) and `glypharis.data.registry` →
+  `data/DATASET_MANIFEST.yaml` (brief §13 fields).
+- `scripts/download_datasets.py` (`--list`, `--dry-run`, `--files`, `--verify`).
+- Licence check of every candidate dataset on its official page, recorded in `DATASETS.md`.
+- ADR-0009: SynthText dropped; delivered models train only on commercially usable data.
+
+**Descoped (documented):** external test sets (IIIT5K, FUNSD, OmniDocBench, SROIE) are registered and
+licence-checked but downloaded in Phase 14, when they are used; GlyphSynth inputs (Google Fonts at a
+pinned commit, PG-19 text) are added to the registry in Phase 4, where the font list and text sample are
+designed. SynthText is not downloaded (ADR-0009).
+
+**Tests:** 92 passed locally (downloader tested against a local HTTP server with Range support: resume,
+server ignoring Range, size and hash mismatch, corruption detected by `--verify`, path traversal, disk
+check, no-op rerun, manifest content).
+
+**Exit criteria**
+
+| Criterion | Result | Evidence |
+|---|---|---|
+| Every downloaded dataset has a manifest with file counts and hashes | pass | `data/manifests/hiertext.json`, `data/DATASET_MANIFEST.yaml` |
+| A re-run of the downloader is a no-op | pass | second run and `--verify` run: manifest content and mtime unchanged, nothing fetched |
+| DATASETS.md has no "TBD" for downloaded sets | pass | HierText card has measured counts |
+| CI green; downloader unit-tested against a fake source | local: pass; CI: pending | `tests/test_download.py` |
+
+**Results (measured):** HierText 11,639 images (8,281 / 1,724 / 1,634), counts as in DATASETS.md;
+3.72 GiB of archives plus 79 MiB of ground truth. Ground-truth files match GitHub's git blob SHA-1.
+
+**Known issues**
+- S3 throughput was 0.3–0.8 MB/s per connection from this machine; the downloader uses one connection.
+- Counting walks all extracted images and parses the ground truth, so each run takes about a minute.
+
+**Git:** branch `phase/02-datasets`.
+
+**CI status:** pending.

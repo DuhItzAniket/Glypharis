@@ -44,3 +44,6 @@ the bottom. Experiments get their full record in `experiments.md`; this log is t
 - HierText test labels have been public since 2024-12, so the planned fallback test split is unnecessary.
 - Research-only sets (FUNSD, OmniDocBench) and sets without a stated licence (IIIT5K, SROIE, DocVQA) are
   evaluation-only.
+- Downloaded HierText (3.72 GiB). Image and annotation counts match the published split sizes; the
+  published word count corresponds to legible words only. S3 throughput was the bottleneck (about
+  0.3–0.8 MB/s per connection).
