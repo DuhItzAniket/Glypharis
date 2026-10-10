@@ -4,8 +4,8 @@
 # where the publisher gives one; otherwise the hash is computed on first download and recorded in
 # data/manifests/<dataset>.json, and later runs verify against that record.
 #
-# `phase` says when the files are needed. External test sets are registered here but downloaded
-# only when Phase 14 needs them (ADR-0008).
+# `phase` says when the files are needed. External test sets and GlyphSynth inputs (fonts, PG-19
+# text) are added when their phase needs them. SynthText is deliberately absent (ADR-0009).
 
 hiertext:
   title: HierText
@@ -29,32 +29,17 @@ hiertext:
       filename: gt/test.jsonl.gz
       size: 11342161
     - name: images_train
-      url: https://s3.amazonaws.com/open-images-dataset/ocr/train.tgz
+      url: https://open-images-dataset.s3.amazonaws.com/ocr/train.tgz
       filename: archives/train.tgz
       size: 2798458845
       extract_to: images
     - name: images_validation
-      url: https://s3.amazonaws.com/open-images-dataset/ocr/validation.tgz
+      url: https://open-images-dataset.s3.amazonaws.com/ocr/validation.tgz
       filename: archives/validation.tgz
       size: 577088394
       extract_to: images
     - name: images_test
-      url: https://s3.amazonaws.com/open-images-dataset/ocr/test.tgz
+      url: https://open-images-dataset.s3.amazonaws.com/ocr/test.tgz
       filename: archives/test.tgz
       size: 537066598
       extract_to: images
-
-synthtext:
-  title: SynthText in the Wild
-  version: "2016 release (server Last-Modified 2016-05-05)"
-  homepage: https://www.robots.ox.ac.uk/~vgg/data/scenetext/
-  licence: see DATASETS.md
-  citation: gupta2016synthetic
-  role: train only (ADR-0005)
-  phase: 2
-  files:
-    # Kept zipped: Phase 4 extracts only the images and annotations the experiments need (R-03, R-04).
-    - name: archive
-      url: https://thor.robots.ox.ac.uk/scenetext/SynthText.zip
-      filename: SynthText.zip
-      size: 40717671794

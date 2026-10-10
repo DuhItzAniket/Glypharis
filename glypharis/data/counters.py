@@ -9,7 +9,6 @@ from __future__ import annotations
 
 import gzip
 import json
-import zipfile
 from collections.abc import Callable
 from pathlib import Path
 from typing import Any
@@ -57,18 +56,6 @@ def count_hiertext(raw: Path) -> dict[str, Any]:
     return counts
 
 
-def count_synthtext(raw: Path) -> dict[str, Any]:
-    archive = raw / "SynthText.zip"
-    if not archive.exists():
-        return {}
-    with zipfile.ZipFile(archive) as zf:
-        names = [i.filename for i in zf.infolist() if not i.is_dir()]
-    images = sum(1 for n in names if Path(n).suffix.lower() in IMAGE_SUFFIXES)
-    gt = [n for n in names if n.endswith("gt.mat")]
-    return {"archive_members": len(names), "images": images, "annotation_files": gt}
-
-
 COUNTERS: dict[str, Callable[[Path], dict[str, Any]]] = {
     "hiertext": count_hiertext,
-    "synthtext": count_synthtext,
 }

@@ -19,7 +19,7 @@ import pytest
 import yaml
 
 from glypharis.data import download as dl
-from glypharis.data.counters import count_hiertext, count_synthtext
+from glypharis.data.counters import count_hiertext
 from glypharis.data.registry import build_dataset_manifest, write_dataset_manifest
 from glypharis.data.sources import DatasetSpec, FileSpec, SourceError, load_sources, parse_sources
 
@@ -274,7 +274,8 @@ def test_plan_reports_status(served, tmp_path):
 
 def test_repo_sources_file_is_valid(repo_root):
     sources = load_sources(repo_root / "data" / "sources.yaml")
-    assert {"hiertext", "synthtext"} <= set(sources)
+    assert "hiertext" in sources
+    assert "synthtext" not in sources  # ADR-0009
     for spec in sources.values():
         assert all(f.url.startswith("https://") for f in spec.files)
 
@@ -335,20 +336,6 @@ def test_count_hiertext_both_layouts(tmp_path):
     }
     assert counts["validation"]["annotations"]["images"] == 1
     assert counts["test"] == {"image_files": 0}
-
-
-def test_count_synthtext(tmp_path):
-    raw = tmp_path / "synthtext"
-    raw.mkdir()
-    with zipfile.ZipFile(raw / "SynthText.zip", "w") as zf:
-        zf.writestr("SynthText/1/a.jpg", b"1")
-        zf.writestr("SynthText/1/b.jpg", b"2")
-        zf.writestr("SynthText/gt.mat", b"m")
-    assert count_synthtext(raw) == {
-        "archive_members": 3,
-        "images": 2,
-        "annotation_files": ["SynthText/gt.mat"],
-    }
 
 
 def test_dataset_manifest_yaml(served, tmp_path):
