@@ -1,0 +1,31 @@
+{
+ "glyph_c_version": 1,
+ "seed": 7,
+ "per_source": 3000,
+ "sources": {
+  "hiertext": "processed/hiertext/lines_validation",
+  "glyphsynth": "processed/glyphsynth/lines_val"
+ },
+ "corruptions": [
+  "gaussian_blur",
+  "gaussian_noise",
+  "jpeg",
+  "low_resolution",
+  "contrast",
+  "rotate",
+  "perspective"
+ ],
+ "levels": [
+  1,
+  2,
+  3,
+  4,
+  5
+ ],
+ "samples": 6000,
+ "sample_list_sha256": "9f73fb836177d15b8decce9d7a076ec49da97cd52c4ace17694693174f7437ba",
+ "crops": 216000,
+ "bytes": 1960076900,
+ "bin_sha256": "bdca7cce572a523e78b4d7e4dbda33ecd2313229ba2977ec0f738ea3fb34d7e4",
+ "frozen": true
+}
