@@ -11,7 +11,7 @@ import yaml
 _DATASET_KEYS = {
     "title", "version", "homepage", "licence", "citation", "role", "phase", "files",
 }  # fmt: skip
-_FILE_KEYS = {"name", "url", "filename", "size", "sha256", "extract_to"}
+_FILE_KEYS = {"name", "url", "filename", "size", "sha256", "md5", "extract_to"}
 
 
 class SourceError(ValueError):
@@ -26,6 +26,7 @@ class FileSpec:
     size: int | None = None
     sha256: str | None = None
     extract_to: str | None = None
+    md5: str | None = None  # published MD5 (hex), e.g. from a cloud bucket listing
 
 
 @dataclass(frozen=True)
@@ -73,12 +74,17 @@ def _parse_file(raw: Any, where: str) -> FileSpec:
         not isinstance(sha, str) or len(sha) != 64 or any(c not in "0123456789abcdef" for c in sha)
     ):
         raise SourceError(f"{where}: sha256 must be 64 lowercase hex characters")
+    md5 = raw.get("md5")
+    if md5 is not None and (
+        not isinstance(md5, str) or len(md5) != 32 or any(c not in "0123456789abcdef" for c in md5)
+    ):
+        raise SourceError(f"{where}: md5 must be 32 lowercase hex characters")
     extract_to = raw.get("extract_to")
     if extract_to is not None:
         if not isinstance(extract_to, str):
             raise SourceError(f"{where}: extract_to must be a path")
         _check_relative(extract_to, f"{where}.extract_to")
-    return FileSpec(raw["name"], raw["url"], raw["filename"], size, sha, extract_to)
+    return FileSpec(raw["name"], raw["url"], raw["filename"], size, sha, extract_to, md5)
 
 
 def parse_sources(data: Any) -> dict[str, DatasetSpec]:

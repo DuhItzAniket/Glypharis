@@ -39,6 +39,7 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--verify", action="store_true", help="re-hash present files")
     parser.add_argument("--dry-run", action="store_true", help="show what would be downloaded")
     parser.add_argument("--list", action="store_true", help="list registered datasets")
+    parser.add_argument("--parallel", type=int, default=1, help="concurrent file transfers")
     args = parser.parse_args(argv)
 
     data_root = Path(args.data_root)
@@ -78,7 +79,12 @@ def main(argv: list[str] | None = None) -> int:
     try:
         for key in args.dataset:
             fetch_dataset(
-                sources[key], data_root, only=only, verify=args.verify, counter=COUNTERS.get(key)
+                sources[key],
+                data_root,
+                only=only,
+                verify=args.verify,
+                counter=COUNTERS.get(key),
+                parallel=args.parallel,
             )
     except DownloadError as exc:
         log.error("%s", exc)

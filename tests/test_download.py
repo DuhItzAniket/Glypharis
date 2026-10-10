@@ -299,7 +299,8 @@ def _one(**file_overrides: object) -> dict:
         ({"filename": "/abs/a.bin"}, "relative path"),
         ({"size": -1}, "positive int"),
         ({"sha256": "abc"}, "64 lowercase hex"),
-        ({"md5": "x"}, "unknown keys"),
+        ({"crc32": "x"}, "unknown keys"),
+        ({"md5": "x"}, "32 lowercase hex"),
         ({"extract_to": "../up"}, "relative path"),
     ],
 )
@@ -396,3 +397,26 @@ def test_cli_dry_run_and_full_run(served, tmp_path, capsys):
     assert "missing" in capsys.readouterr().out
     assert download_datasets.main([*args, "--dataset", "nope"]) == 2
     assert not (root / "raw").exists()  # dry run fetched nothing
+
+
+def test_published_md5_mismatch_fails(served, tmp_path):
+    server, files = served
+    spec = _spec(server, files)
+    blob = spec.files[0]
+    wrong = FileSpec(blob.name, blob.url, blob.filename, blob.size, md5="0" * 32)
+    with pytest.raises(dl.DownloadError, match="md5"):
+        dl.fetch_dataset(_spec(server, files, files=(wrong,)), tmp_path / "data")
+    good_md5 = hashlib.md5((files / "blob.bin").read_bytes(), usedforsecurity=False).hexdigest()
+    ok = FileSpec(blob.name, blob.url, blob.filename, blob.size, md5=good_md5)
+    m = dl.fetch_dataset(_spec(server, files, files=(ok,)), tmp_path / "data2")
+    assert m["files"]["blob"]["md5_published"] == good_md5
+
+
+def test_parallel_fetch_gives_same_manifest(served, tmp_path):
+    server, files = served
+    spec = _spec(server, files)
+    a = dl.fetch_dataset(spec, tmp_path / "a")
+    b = dl.fetch_dataset(spec, tmp_path / "b", parallel=4)
+    strip = lambda m: {k: {kk: vv for kk, vv in v.items() if kk not in ("downloaded_utc", "path")}  # noqa: E731
+                       for k, v in m["files"].items()}  # fmt: skip
+    assert strip(a) == strip(b)
