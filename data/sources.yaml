@@ -3393,3 +3393,39 @@ pg19:
       filename: train/9956.txt
       size: 320874
       md5: b2525e4a80c23b56f46a8b02d0fa6ab0
+
+gdc_sources:
+  title: GDC source documents (born-digital, openly licensed)
+  version: "selected and checked 2026-10-10; arXiv versions pinned"
+  homepage: see DATASETS.md (GDC)
+  licence: per document (arXiv CC BY 4.0; US federal works public domain; Gutenberg public domain in the USA; textbooks CC BY-SA 3.0)
+  citation: none
+  role: GDC internal test set only; never training (EXPERIMENT_PROTOCOL §1 rule 5)
+  phase: 4
+  files:
+    # Academic papers, arXiv CC BY 4.0
+    - {name: arxiv_2302_13971v1, url: https://arxiv.org/pdf/2302.13971v1, filename: arxiv/2302.13971v1.pdf, size: 726566}
+    - {name: arxiv_2301_12597v3, url: https://arxiv.org/pdf/2301.12597v3, filename: arxiv/2301.12597v3.pdf, size: 6737540}
+    - {name: arxiv_2310_03744v2, url: https://arxiv.org/pdf/2310.03744v2, filename: arxiv/2310.03744v2.pdf, size: 2215588}
+    - {name: arxiv_2211_10438v7, url: https://arxiv.org/pdf/2211.10438v7, filename: arxiv/2211.10438v7.pdf, size: 5378996}
+    - {name: arxiv_2305_18290v3, url: https://arxiv.org/pdf/2305.18290v3, filename: arxiv/2305.18290v3.pdf, size: 1299212}
+    - {name: arxiv_2312_00752v2, url: https://arxiv.org/pdf/2312.00752v2, filename: arxiv/2312.00752v2.pdf, size: 1168615}
+    - {name: arxiv_2310_06825v1, url: https://arxiv.org/pdf/2310.06825v1, filename: arxiv/2310.06825v1.pdf, size: 3749788}
+    - {name: arxiv_2201_11903v6, url: https://arxiv.org/pdf/2201.11903v6, filename: arxiv/2201.11903v6.pdf, size: 891773}
+    - {name: arxiv_2305_14314v1, url: https://arxiv.org/pdf/2305.14314v1, filename: arxiv/2305.14314v1.pdf, size: 1065470}
+    # US federal works, public domain (17 U.S.C. 105)
+    - {name: nasa_tm_20220000420, url: https://ntrs.nasa.gov/api/citations/20220000420/downloads/TM-20220000420.pdf, filename: gov/nasa-tm-20220000420.pdf, size: 1829211}
+    - {name: census_p60_282, url: https://www2.census.gov/library/publications/2024/demo/p60-282.pdf, filename: gov/census-p60-282.pdf, size: 1890167}
+    - {name: frb_fsr_20240419, url: https://www.federalreserve.gov/publications/files/financial-stability-report-20240419.pdf, filename: gov/frb-fsr-20240419.pdf, size: 3715416}
+    # Typeset public-domain books, Project Gutenberg via the PGLAF mirror
+    - {name: pg_33283, url: https://gutenberg.pglaf.org/3/3/2/8/33283/33283-pdf.pdf, filename: books/pg-33283.pdf, size: 1298365}
+    - {name: pg_17384, url: https://gutenberg.pglaf.org/1/7/3/8/17384/17384-pdf.pdf, filename: books/pg-17384.pdf, size: 1051576}
+    - {name: pg_37157, url: https://gutenberg.pglaf.org/3/7/1/5/37157/37157-pdf.pdf, filename: books/pg-37157.pdf, size: 994390}
+    - {name: pg_41568, url: https://gutenberg.pglaf.org/4/1/5/6/41568/41568-pdf.pdf, filename: books/pg-41568.pdf, size: 1021150}
+    # Textbooks, CC BY-SA 3.0 (MCS licence page checked after download)
+    - {name: hefferon_linear_algebra, url: https://jheffero.w3.uvm.edu/linearalgebra/book.pdf, filename: books/hefferon-linear-algebra.pdf, size: 7626685}
+    - {name: mit_mcs_2018, url: https://courses.csail.mit.edu/6.042/spring18/mcs.pdf, filename: books/mit-mcs-2018.pdf, size: 13269308}
+    # Forms, US federal works, public domain
+    - {name: irs_f1040_2024, url: https://www.irs.gov/pub/irs-prior/f1040--2024.pdf, filename: forms/irs-f1040-2024.pdf, size: 163287}
+    - {name: irs_fw9_2024, url: https://www.irs.gov/pub/irs-prior/fw9--2024.pdf, filename: forms/irs-fw9-2024.pdf, size: 140815}
+    - {name: irs_i1040gi_2024, url: https://www.irs.gov/pub/irs-prior/i1040gi--2024.pdf, filename: forms/irs-i1040gi-2024.pdf, size: 4375877}
