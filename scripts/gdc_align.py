@@ -3,13 +3,18 @@
 Usage:
     python scripts/gdc_align.py [--captures data/raw/gdc/captures] [--freeze]
 
-For every image in the captures folder: find the corner markers, identify the sheet, fit the
-sheet-to-photo homography, and project the sheet's ground-truth lines and ignore regions into the
-photo. Writes:
+For every image in the captures folder:
+1. find the corner markers, identify the sheet and fit the sheet-to-photo homography;
+2. refine it with smooth optical flow against the clean sheet (rendered from the print pack), which
+   corrects bent or curled paper and lens distortion (`glypharis.data.gdc.refine_alignment`);
+3. map the sheet's ground-truth lines (densified along their top and bottom edges) and ignore
+   regions into the photo, and score each line's local alignment.
+
+Writes:
     data/processed/gdc/pages_test.jsonl.gz     one page record per aligned capture (split "test")
     data/processed/gdc/aligned_qa/<sheet>.jpg  ground truth drawn on each capture, for checking
     data/manifests/gdc/alignment.json          per-capture result, missing and duplicate sheets
-With --freeze (only when every sheet is aligned and checked):
+With --freeze (only when every sheet is aligned without problems):
     data/manifests/gdc/gdc_v1.json             hashes of captures and pages: the frozen record
 """
 
@@ -24,14 +29,27 @@ from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any
 
+import numpy as np
 from PIL import Image, ImageDraw, ImageOps
 
-from glypharis.data.gdc import PackLayout, align_capture, project_polygons
+from glypharis.data.gdc import (
+    PackLayout,
+    Refinement,
+    align_capture,
+    densify_box,
+    edge_irregularity,
+    ncc,
+    refine_alignment,
+)
 from glypharis.data.pages import Page, PageLine, write_pages
 from glypharis.data.text import Charset
 
-IMAGE_SUFFIXES = {".jpg", ".jpeg", ".png", ".tif", ".tiff", ".webp", ".heic"}
-MAX_RMS_PX = 6.0  # marker reprojection error above this is flagged for a retake
+IMAGE_SUFFIXES = {".jpg", ".jpeg", ".png", ".tif", ".tiff", ".webp"}
+WORK_SCALE = 0.5  # refinement grid: half the sheet resolution (150 dpi for a 300 dpi pack)
+MIN_PAGE_NCC = 0.5  # refined sheet/photo agreement below this asks for a retake
+MIN_LINE_SCORE = 0.3  # lines below this have uncertain boxes (text ground truth is still exact)
+MAX_IRREGULARITY = 0.25  # zigzag mapped polygons (in line heights) get score 0
+DENSIFY_STEP = 100.0  # sheet pixels between polygon points along a line
 
 
 def _sha256(path: Path) -> str:
@@ -43,10 +61,48 @@ def load_sheets(path: Path) -> dict[int, dict[str, Any]]:
         return {rec["sheet"]: rec for rec in map(json.loads, fh)}
 
 
+def render_sheet(pack_pdf: Path, sheet: int, dpi: float) -> np.ndarray:
+    import pypdfium2 as pdfium
+
+    pdf = pdfium.PdfDocument(str(pack_pdf))
+    try:
+        page = pdf[sheet]
+        img = page.render(scale=dpi / 72).to_pil().convert("L")
+        page.close()
+        return np.asarray(img)
+    finally:
+        pdf.close()
+
+
+def _line_score(
+    i0: np.ndarray, refined: np.ndarray, poly: list[list[float]], scale: float
+) -> float:
+    xs = [p[0] * scale for p in poly]
+    ys = [p[1] * scale for p in poly]
+    h, w = i0.shape
+    x0, x1 = max(0, int(min(xs)) - 2), min(w, int(max(xs)) + 3)
+    y0, y1 = max(0, int(min(ys)) - 2), min(h, int(max(ys)) + 3)
+    if x1 - x0 < 3 or y1 - y0 < 3:
+        return 0.0
+    a, b = i0[y0:y1, x0:x1], refined[y0:y1, x0:x1]
+    return ncc(a, b, np.ones_like(a))
+
+
 def capture_to_page(
-    image_rel: str, size: tuple[int, int], sheet: dict[str, Any], H: Any, charset: Charset
+    image_rel: str,
+    size: tuple[int, int],
+    sheet: dict[str, Any],
+    ref: Refinement,
+    i0: np.ndarray,
+    refined: np.ndarray,
+    charset: Charset,
 ) -> Page:
-    polys = project_polygons([ln["polygon"] for ln in sheet["lines"]], H)
+    def mapped_pts(poly: list[list[float]]) -> np.ndarray:
+        return ref.map_points(densify_box(poly, DENSIFY_STEP))
+
+    def as_list(pts: np.ndarray) -> list[list[float]]:
+        return [[round(float(x), 2), round(float(y), 2)] for x, y in pts]
+
     page = Page(
         doc_id=f"gdc-{sheet['doc_key']}-p{sheet['page']}",
         image=image_rel,
@@ -54,18 +110,23 @@ def capture_to_page(
         height=size[1],
         source="gdc",
         split="test",
-        ignore=project_polygons(sheet.get("ignore", []), H),
+        ignore=[as_list(mapped_pts(p)) for p in sheet.get("ignore", [])],
     )
-    for i, (ln, poly) in enumerate(zip(sheet["lines"], polys, strict=True)):
-        reason = (
-            "vertical"
-            if ln["vertical"]
-            else ("out_of_charset" if charset.oov(ln["text"]) else None)
-        )
+    for i, ln in enumerate(sheet["lines"]):
+        if ln["vertical"]:
+            reason: str | None = "vertical"
+        elif charset.oov(ln["text"]):
+            reason = "out_of_charset"
+        else:
+            reason = None
+        pts = mapped_pts(ln["polygon"])
+        score = _line_score(i0, refined, ln["polygon"], ref.scale)
+        if edge_irregularity(pts) > MAX_IRREGULARITY:
+            score = 0.0
         page.lines.append(
             PageLine(
                 line_id=f"gdc-{sheet['sheet']:04d}/l{i}",
-                polygon=poly,
+                polygon=as_list(pts),
                 text_original=ln["text"],
                 text=ln["text"],
                 legible=True,
@@ -73,6 +134,7 @@ def capture_to_page(
                 vertical=bool(ln["vertical"]),
                 rec_ok=reason is None,
                 rec_skip=reason,
+                align_score=round(score, 3),
             )
         )
     return page
@@ -88,7 +150,9 @@ def main(argv: list[str] | None = None) -> int:
     captures = Path(args.captures) if args.captures else root / "raw" / "gdc" / "captures"
     sheets = load_sheets(root / "processed" / "gdc" / "sheets.jsonl.gz")
     pack = json.loads((root / "manifests" / "gdc" / "pack.json").read_text(encoding="utf-8"))
-    layout = PackLayout(dpi=pack["layout"]["dpi"])
+    dpi = pack["layout"]["dpi"]
+    layout = PackLayout(dpi=dpi)
+    pack_pdf = root / "processed" / "gdc" / "print_pack.pdf"
     charset = Charset.load(root / "manifests" / "charset.json")
     qa_dir = root / "processed" / "gdc" / "aligned_qa"
     qa_dir.mkdir(parents=True, exist_ok=True)
@@ -112,20 +176,31 @@ def main(argv: list[str] | None = None) -> int:
         else:
             sheet = sheets[a.pack_page]
             seen[a.pack_page] = rel
-            status = "ok" if a.reprojection_error_px <= MAX_RMS_PX else "high_error"
+            sheet_img = render_sheet(pack_pdf, a.pack_page, dpi * WORK_SCALE)
+            photo_gray = np.asarray(img.convert("L"))
+            ref, i0, refined = refine_alignment(photo_gray, sheet_img, a.homography, WORK_SCALE)
+            page = capture_to_page(rel, img.size, sheet, ref, i0, refined, charset)
+            pages.append(page)
+            scores = [ln.align_score or 0.0 for ln in page.lines if not ln.vertical]
+            low = sum(1 for s in scores if s < MIN_LINE_SCORE)
             entry.update(
-                status=status,
+                status="ok" if ref.ncc_refined >= MIN_PAGE_NCC else "poor_alignment",
                 sheet=a.pack_page,
                 condition=sheet["condition"],
                 markers=a.markers_found,
-                rms_px=round(a.reprojection_error_px, 2),
+                marker_rms_px=round(a.reprojection_error_px, 2),
+                ncc_homography=round(ref.ncc_homography, 3),
+                ncc_refined=round(ref.ncc_refined, 3),
+                flow_consistent=round(ref.consistent_fraction, 3),
+                lines=len(page.lines),
+                lines_low_score=low,
             )
-            page = capture_to_page(rel, img.size, sheet, a.homography, charset)
-            pages.append(page)
             qa = img.copy()
             draw = ImageDraw.Draw(qa)
             for ln in page.lines:
-                draw.polygon([tuple(p) for p in ln.polygon], outline=(255, 0, 0), width=2)
+                ok = (ln.align_score or 0.0) >= MIN_LINE_SCORE
+                color = (255, 0, 0) if ok else (255, 150, 0)  # orange: box not trusted
+                draw.polygon([tuple(p) for p in ln.polygon], outline=color, width=2)
             for poly in page.ignore:
                 draw.polygon([tuple(p) for p in poly], outline=(0, 90, 255), width=3)
             qa.thumbnail((1600, 1600))
@@ -138,15 +213,21 @@ def main(argv: list[str] | None = None) -> int:
     missing = sorted(set(sheets) - set(seen))
     report = {
         "generated_utc": datetime.now(UTC).replace(microsecond=0).isoformat(),
+        "rules": {
+            "work_scale": WORK_SCALE,
+            "min_page_ncc": MIN_PAGE_NCC,
+            "min_line_score": MIN_LINE_SCORE,
+            "max_irregularity": MAX_IRREGULARITY,
+        },
         "captures": len(files),
-        "aligned": sum(1 for r in results if r["status"] in ("ok", "high_error")),
+        "aligned": len(seen),
         "missing_sheets": missing,
         "problems": [r for r in results if r["status"] != "ok"],
         "results": results,
     }
     man = root / "manifests" / "gdc" / "alignment.json"
     man.write_text(json.dumps(report, indent=1) + "\n", encoding="utf-8", newline="\n")
-    print(f"{report['aligned']}/{len(sheets)} sheets aligned, {len(missing)} missing, "
+    print(f"{len(seen)}/{len(sheets)} sheets aligned, {len(missing)} missing, "
           f"{len(report['problems'])} problems")  # fmt: skip
 
     if args.freeze:

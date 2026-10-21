@@ -53,6 +53,8 @@ class PageLine:
     vertical: bool
     rec_ok: bool
     rec_skip: str | None = None
+    # GDC only: local agreement (NCC) between the source sheet and the aligned photo at this line.
+    align_score: float | None = None
 
 
 @dataclass
@@ -72,6 +74,9 @@ class Page:
         d = asdict(self)
         if not d["ignore"]:
             del d["ignore"]
+        for line in d["lines"]:
+            if line["align_score"] is None:
+                del line["align_score"]
         return d
 
     @classmethod

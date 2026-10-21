@@ -1,5 +1,7 @@
 from __future__ import annotations
 
+from pathlib import Path
+
 import cv2
 import matplotlib
 import numpy as np
@@ -11,10 +13,13 @@ from glypharis.data.gdc import (
     PdfLine,
     align_capture,
     compose_pack_page,
+    densify_box,
+    edge_irregularity,
     extract_lines,
     group_chars,
     is_small_caps_font,
     project_polygons,
+    refine_alignment,
     render_page,
 )
 
@@ -185,3 +190,87 @@ def test_raised_quote_after_comma_stays_on_the_line():
     chars = [*_chars('"changes of position', 0, 100), (",", (100.0, 98.0, 102.0, 101.0), 0.0),
              ("”", (103.0, 107.0, 107.0, 110.0), 0.0), *_chars(" which", 108, 100)]  # fmt: skip
     assert [t for t, _, _ in group_chars(chars)] == ['"changes of position,” which']
+
+
+# ------------------------------------------------------------------- non-rigid refinement
+
+
+def _texty_sheet(w=600, h=800, seed=0):
+    """A white sheet with lines of real rendered words (distinct, like a printed page)."""
+    from PIL import ImageDraw, ImageFont
+
+    rng = np.random.default_rng(seed)
+    words = (
+        "model",
+        "data",
+        "page",
+        "line",
+        "text",
+        "order",
+        "value",
+        "table",
+        "figure",
+        "result",
+        "method",
+        "sample",
+        "index",
+        "report",
+        "section",
+        "note",
+        "price",
+        "item",
+        "account",
+        "review",
+        "summary",
+    )
+    font = ImageFont.truetype(
+        str(Path(matplotlib.get_data_path()) / "fonts/ttf/DejaVuSerif.ttf"), 16
+    )
+    img = Image.new("L", (w, h), 245)
+    draw = ImageDraw.Draw(img)
+    for y in range(60, h - 60, 26):
+        line = " ".join(words[int(i)] for i in rng.integers(0, len(words), size=9))
+        draw.text((50, y), line, font=font, fill=25)
+    return np.asarray(img)
+
+
+def test_refinement_recovers_a_bent_page():
+    sheet = _texty_sheet()
+    h, w = sheet.shape
+    # "Photo": the sheet bent by a smooth vertical sine wave (amplitude 12 px), no homography.
+    yy, xx = np.mgrid[0:h, 0:w].astype(np.float32)
+    dy = 12 * np.sin(xx / w * np.pi)
+    photo = cv2.remap(sheet, xx, yy - dy, cv2.INTER_LINEAR, borderValue=245)
+    ref, _, _ = refine_alignment(photo, sheet, np.eye(3), scale=1.0, sigmas=(40.0, 20.0))
+    pts = np.array([[150.0, 300.0], [300.0, 400.0], [450.0, 500.0]], np.float32)
+    true = pts + np.stack([np.zeros(3), 12 * np.sin(pts[:, 0] / w * np.pi)], axis=1)
+    err_h = np.abs(pts - true).max()
+    err_r = np.abs(ref.map_points(pts) - true).max()
+    assert err_h > 10 and err_r < 3
+    assert ref.ncc_refined > ref.ncc_homography
+
+
+def test_line_score_catches_a_box_on_the_wrong_line():
+    import gdc_align
+
+    sheet = _texty_sheet()
+    _, i0, refined = refine_alignment(sheet, sheet, np.eye(3), scale=1.0, sigmas=(40.0,))
+    right = [[50, 60], [550, 60], [550, 80], [50, 80]]
+    wrong = [[50, 86], [550, 86], [550, 106], [50, 106]]  # the next printed line
+    # Compare the line's source image with the photo shifted by one line: the score must drop.
+    shifted = np.roll(refined, -26, axis=0)
+    assert gdc_align._line_score(i0, refined, right, 1.0) > 0.9
+    assert gdc_align._line_score(i0, shifted, right, 1.0) < 0.5
+    assert gdc_align._line_score(i0, refined, wrong, 1.0) > 0.9
+
+
+def test_densify_and_irregularity():
+    poly = densify_box([[0, 0], [400, 0], [400, 20], [0, 20]], step=100)
+    assert len(poly) == 10  # 5 points on the top edge, 5 on the bottom
+    assert edge_irregularity(poly) == pytest.approx(0.0)
+    bent = poly.copy()
+    bent[:5, 1] += np.array([0, 2, 4, 2, 0])  # gentle curve
+    assert edge_irregularity(bent) < 0.25
+    zig = poly.copy()
+    zig[:5, 1] += np.array([0, 15, -15, 15, 0])  # zigzag
+    assert edge_irregularity(zig) > 0.25

@@ -39,6 +39,7 @@ def _setup(root, n_sheets=2):
     man = root / "manifests" / "gdc"
     man.mkdir(parents=True)
     (man / "pack.json").write_text(json.dumps({"layout": {"dpi": 100}, "sheets_gt_sha256": "x"}))
+    images[0].save(gdc / "print_pack.pdf", save_all=True, append_images=images[1:], resolution=100)
     Charset(list(" abcdefghijklmnopqrstuvwxyz0123456789")).save(root / "manifests" / "charset.json")
     return images
 

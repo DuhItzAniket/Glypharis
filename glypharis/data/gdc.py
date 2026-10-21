@@ -202,10 +202,13 @@ def extract_image_regions(
     pdf = pdfium.PdfDocument(str(pdf_path))
     try:
         page = pdf[page_index]
-        height_pt = page.get_height()
+        width_pt, height_pt = page.get_width(), page.get_height()
         out = []
         for obj in page.get_objects(filter=[pdfium_c.FPDF_PAGEOBJ_IMAGE], max_depth=8):
             left, bottom, right, top = obj.get_bounds()
+            # Images may extend past the page edge (clipped when printed): keep the visible part.
+            left, right = max(left, 0.0), min(right, width_pt)
+            bottom, top = max(bottom, 0.0), min(top, height_pt)
             if right - left >= min_size_pt and top - bottom >= min_size_pt:
                 out.append((left * scale, (height_pt - top) * scale, right * scale,
                             (height_pt - bottom) * scale))  # fmt: skip
@@ -358,3 +361,144 @@ def project_polygons(polys: list[list[list[float]]], H: np.ndarray) -> list[list
     pts = np.array(polys, dtype=np.float32).reshape(1, -1, 2)
     out = cv2.perspectiveTransform(pts, H)[0].reshape(len(polys), 4, 2)
     return [[[float(x), float(y)] for x, y in p] for p in out]
+
+
+# ------------------------------------------------------------------- non-rigid refinement
+
+
+@dataclass
+class Refinement:
+    """Sheet-to-photo mapping: homography plus a smooth residual flow.
+
+    The flow lives on a working grid at ``scale`` x sheet pixels. A sheet point ``p`` maps to
+    ``H_w @ (p * scale + flow(p * scale))`` with ``H_w = H @ diag(1/scale, 1/scale, 1)``.
+    """
+
+    homography: np.ndarray
+    scale: float
+    flow: np.ndarray  # (h, w, 2) float32 on the working grid
+    ncc_homography: float  # image agreement before refinement (text pixels only)
+    ncc_refined: float  # and after
+    consistent_fraction: float  # share of text pixels with forward-backward consistent flow
+
+    def map_points(self, pts: np.ndarray) -> np.ndarray:
+        """Map (N, 2) sheet-pixel points to photo pixels."""
+        import cv2
+
+        p = pts.astype(np.float32) * self.scale
+        fx = cv2.remap(self.flow[..., 0], p[:, 0:1], p[:, 1:2], cv2.INTER_LINEAR,
+                       borderMode=cv2.BORDER_REPLICATE)[:, 0]  # fmt: skip
+        fy = cv2.remap(self.flow[..., 1], p[:, 0:1], p[:, 1:2], cv2.INTER_LINEAR,
+                       borderMode=cv2.BORDER_REPLICATE)[:, 0]  # fmt: skip
+        q = np.stack([p[:, 0] + fx, p[:, 1] + fy], axis=1)
+        hw = self.homography @ np.diag([1 / self.scale, 1 / self.scale, 1.0])
+        return cv2.perspectiveTransform(q[None].astype(np.float32), hw)[0]
+
+
+def _local_norm(img: np.ndarray) -> np.ndarray:
+    """Local contrast normalisation, so lighting and paper tone do not drive the flow."""
+    import cv2
+
+    x = img.astype(np.float32)
+    m = cv2.GaussianBlur(x, (0, 0), 15)
+    sd = np.sqrt(cv2.GaussianBlur((x - m) ** 2, (0, 0), 15)) + 5
+    return np.clip((x - m) / sd * 40 + 128, 0, 255).astype(np.uint8)
+
+
+def _remap(img: np.ndarray, flow: np.ndarray) -> np.ndarray:
+    import cv2
+
+    h, w = img.shape[:2]
+    mx, my = np.meshgrid(np.arange(w, dtype=np.float32), np.arange(h, dtype=np.float32))
+    return cv2.remap(img, mx + flow[..., 0], my + flow[..., 1], cv2.INTER_LINEAR,
+                     borderMode=cv2.BORDER_REPLICATE)  # fmt: skip
+
+
+def ncc(a: np.ndarray, b: np.ndarray, mask: np.ndarray) -> float:
+    """Normalised cross-correlation over the pixels where ``mask`` is set."""
+    sel = mask > 0
+    if sel.sum() < 16:
+        return 0.0
+    x = a[sel].astype(np.float32)
+    y = b[sel].astype(np.float32)
+    x -= x.mean()
+    y -= y.mean()
+    den = float(np.sqrt((x * x).sum() * (y * y).sum()))
+    return float((x * y).sum() / den) if den > 0 else 0.0
+
+
+def refine_alignment(
+    photo_gray: np.ndarray,
+    sheet_gray: np.ndarray,
+    homography: np.ndarray,
+    scale: float,
+    sigmas: tuple[float, ...] = (80.0, 40.0, 25.0),
+    max_fb_error: float = 2.0,
+) -> tuple[Refinement, np.ndarray, np.ndarray]:
+    """Refine a marker homography with dense optical flow (curled or bent paper, lens distortion).
+
+    ``sheet_gray`` is the clean sheet rendered at ``scale`` x sheet resolution. The photo is
+    warped into that grid with the homography; DIS optical flow then measures the residual
+    displacement in a coarse-to-fine series of passes. Each pass keeps only flow vectors that pass a
+    forward-backward consistency check on text pixels and smooths them with a Gaussian of the given
+    width, because page bending is smooth while text is repetitive and invites false matches.
+
+    Returns the refinement plus the normalised sheet and the refined warped photo (for scoring).
+    """
+    import cv2
+
+    h, w = sheet_gray.shape
+    hw = homography @ np.diag([1 / scale, 1 / scale, 1.0])
+    flags = cv2.INTER_LINEAR | cv2.WARP_INVERSE_MAP  # hw maps the sheet grid into the photo
+    warped = cv2.warpPerspective(photo_gray, hw, (w, h), flags=flags, borderValue=255)
+    i0, i1 = _local_norm(sheet_gray), _local_norm(warped)
+    sx = cv2.Sobel(sheet_gray.astype(np.float32), cv2.CV_32F, 1, 0)
+    sy = cv2.Sobel(sheet_gray.astype(np.float32), cv2.CV_32F, 0, 1)
+    text = (cv2.GaussianBlur(cv2.magnitude(sx, sy), (0, 0), 3) > 20).astype(np.float32)
+    # Present at runtime in OpenCV 5; missing from its type stubs.
+    dis = cv2.DISOpticalFlow_create(cv2.DISOPTICAL_FLOW_PRESET_MEDIUM)  # type: ignore[attr-defined]
+    total = np.zeros((h, w, 2), np.float32)
+    consistent = 0.0
+    for sigma in sigmas:
+        cur = _remap(i1, total)
+        fw = dis.calc(i0, cur, None)
+        bw = dis.calc(cur, i0, None)
+        err = np.hypot(*(fw + _remap(bw, fw)).transpose(2, 0, 1))
+        weight = text * (err < max_fb_error)
+        consistent = float(weight.sum() / max(text.sum(), 1.0))
+        den = cv2.GaussianBlur(weight, (0, 0), sigma) + 1e-4
+        step = np.dstack(
+            [cv2.GaussianBlur(fw[..., k] * weight, (0, 0), sigma) / den for k in range(2)]
+        )
+        total = (step + _remap(total, step)).astype(np.float32)  # x -> x + step -> + total(.)
+    refined = _remap(i1, total)
+    ref = Refinement(
+        homography, scale, total, ncc(i0, i1, text), ncc(i0, refined, text), consistent
+    )
+    return ref, i0, refined
+
+
+def edge_irregularity(poly: np.ndarray) -> float:
+    """Largest second difference along a densified line's top or bottom edge, in line heights.
+
+    A bent page curves lines gently; a zigzag means the flow followed noise (e.g. sparse text near
+    the page edge), so the box should not be trusted.
+    """
+    n = len(poly) // 2
+    top, bottom = poly[:n], poly[n:][::-1]
+    h = float(np.median(np.linalg.norm(top - bottom, axis=1)))
+    if n < 3 or h <= 0:
+        return 0.0
+    rough = max(float(np.abs(e[2:] - 2 * e[1:-1] + e[:-2]).max()) for e in (top, bottom))
+    return rough / h
+
+
+def densify_box(poly: list[list[float]], step: float) -> np.ndarray:
+    """Turn a 4-point TL, TR, BR, BL box into a polygon with points every ``step`` pixels along the
+    top and bottom edges, so a bent line can follow the page."""
+    tl, tr, br, bl = (np.asarray(p, dtype=np.float32) for p in poly)
+    n = max(2, min(16, int(np.ceil(np.linalg.norm(tr - tl) / step)) + 1))
+    t = np.linspace(0, 1, n, dtype=np.float32)[:, None]
+    top = tl + (tr - tl) * t
+    bottom = bl + (br - bl) * t
+    return np.concatenate([top, bottom[::-1]])
