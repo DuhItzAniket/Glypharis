@@ -37,22 +37,29 @@ SYSTEM_NAMES = {
     "ppocr_mobile": "PP-OCRv5 mobile",
     "ppocr_server": "PP-OCRv5 server",
     "trocr": "TrOCR-small-printed",
+    "ppocr6_tiny": "PP-OCRv6 tiny",
+    "ppocr6_small": "PP-OCRv6 small",
+    "ppocr6_medium": "PP-OCRv6 medium",
 }
 EXPERIMENTS = {"tesseract": "GW-BASE-001", "ppocr_mobile": "GW-BASE-002",
-               "ppocr_server": "GW-BASE-003", "trocr": "GW-BASE-004"}  # fmt: skip
+               "ppocr_server": "GW-BASE-003", "trocr": "GW-BASE-004",
+               "ppocr6_tiny": "GW-BASE-005", "ppocr6_small": "GW-BASE-006",
+               "ppocr6_medium": "GW-BASE-007"}  # fmt: skip
 
 _REC_SETS = ("hiertext_val", "glyphsynth_val", "hiertext_test", "gdc_test")
 _PAGE_SETS = ("hiertext_val", "hiertext_test", "gdc_test")
-_SERVER_COST = "not run: the server recognizer needs 1-3 s per line on this CPU (GW-BASE-003)"
+_SLOW = "not run: the recognizer needs about 1-3 s per line on this CPU"
+_FULL = ("tesseract", "ppocr_mobile", "ppocr6_tiny", "ppocr6_small")
+_REDUCED = ("ppocr_server", "ppocr6_medium")
 # (system, task, eval set) -> None when planned, or the reason it is not run.
 PLAN: dict[tuple[str, str, str], str | None] = {
-    **{(s, "rec", e): None for s in ("tesseract", "ppocr_mobile", "trocr") for e in _REC_SETS},
-    **{(s, "e2e", e): None for s in ("tesseract", "ppocr_mobile") for e in _PAGE_SETS},
+    **{(s, "rec", e): None for s in (*_FULL, "trocr") for e in _REC_SETS},
+    **{(s, "e2e", e): None for s in _FULL for e in _PAGE_SETS},
     **{("trocr", "e2e", e): "not applicable: TrOCR has no detector" for e in _PAGE_SETS},
-    **{("ppocr_server", "rec", e): None for e in ("hiertext_val", "gdc_test")},
-    ("ppocr_server", "e2e", "gdc_test"): None,
-    **{("ppocr_server", "rec", e): _SERVER_COST for e in ("glyphsynth_val", "hiertext_test")},
-    **{("ppocr_server", "e2e", e): _SERVER_COST for e in ("hiertext_val", "hiertext_test")},
+    **{(s, "rec", e): None for s in _REDUCED for e in ("hiertext_val", "gdc_test")},
+    **{(s, "e2e", "gdc_test"): None for s in _REDUCED},
+    **{(s, "rec", e): _SLOW for s in _REDUCED for e in ("glyphsynth_val", "hiertext_test")},
+    **{(s, "e2e", e): _SLOW for s in _REDUCED for e in ("hiertext_val", "hiertext_test")},
 }
 
 
@@ -301,7 +308,7 @@ def render_summary(entries: list[dict[str, Any]]) -> str:
     ]
     have = {(e["system"], e["task"], e["eval_set"]): e for e in entries}
     rows = []
-    for key, reason in PLAN.items():
+    for key, reason in sorted(PLAN.items(), key=lambda kv: (EXPERIMENTS[kv[0][0]], kv[0][1:])):
         system, task, eval_set = key
         e = have.get(key)
         if e is not None:

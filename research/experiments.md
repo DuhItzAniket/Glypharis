@@ -11,6 +11,9 @@ Rows link to a full entry below. Numbers are copied from generated reports only,
 | [GW-BASE-002](#gw-base-002) | 2026-10-21 | 05 | PaddleOCR PP-OCRv5 mobile (det + English rec): recognition and end to end | planned | — | `reports/baselines/` |
 | [GW-BASE-003](#gw-base-003) | 2026-10-21 | 05 | PaddleOCR PP-OCRv5 server (det + rec): recognition and end to end | planned | — | `reports/baselines/` |
 | [GW-BASE-004](#gw-base-004) | 2026-10-21 | 05 | TrOCR-small-printed: recognition only | planned | — | `reports/baselines/` |
+| [GW-BASE-005](#gw-base-005) | 2026-10-21 | 05 | PaddleOCR PP-OCRv6 tiny (det + rec): recognition and end to end | planned | — | `reports/baselines/` |
+| [GW-BASE-006](#gw-base-006) | 2026-10-21 | 05 | PaddleOCR PP-OCRv6 small (det + rec): recognition and end to end | planned | — | `reports/baselines/` |
+| [GW-BASE-007](#gw-base-007) | 2026-10-21 | 05 | PaddleOCR PP-OCRv6 medium (PaddleOCR 3.7's English default): reduced scope | planned | — | `reports/baselines/` |
 
 ### GW-BASE-001 — Tesseract 5 (LSTM, eng): recognition and end to end
 
@@ -75,6 +78,66 @@ Rows link to a full entry below. Numbers are copied from generated reports only,
 ### GW-BASE-004 — TrOCR-small-printed: recognition only
 
 - **System:** microsoft/trocr-small-printed, transformers on CPU, greedy decoding as in the checkpoint, with `max_new_tokens=256` because the checkpoint sets no length and transformers would otherwise stop at 20 tokens and cut long lines. It has no detector, so it is run on recognition only.
+- **Date allocated / run:** 2026-10-21 / —
+- **Phase:** 05
+- **Git commit:** recorded in the run metadata   **Config:** `scripts/run_baselines.py` defaults   **Seed(s):** subsample seed 5; bootstrap seed 20261010
+- **Dataset version(s):** HierText (Phase 4 manifests), GlyphSynth v1 val, GDC v1; test crops in `data/manifests/processed/eval_crops.json`
+- **Hardware:** laptop CPU only (`.venv-baselines`, ADR-0006); no GPU
+- **Research question:** where do existing systems stand on our evaluation sets, under our metrics?
+- **Hypothesis (written before the run):** none; this is a reference measurement, not a test of an idea.
+- **Method:** `scripts/run_baselines.py` then `scripts/evaluate_baselines.py`. Validation: 10,000 seeded line crops per set and 400 seeded pages; test sets in full (logged in `research/test_access_log.md`).
+- **Variables:** independent: system; controlled: evaluation sets, crops, metrics and normalisation tracks
+- **Control:** —
+- **Result:** see `reports/baselines/` (filled in after the run)
+- **Training diagnostics:** not applicable (no training)
+- **Interpretation:**
+- **Limitations:**
+- **Next experiment:**
+- **Training time:** not applicable
+
+### GW-BASE-005 — PaddleOCR PP-OCRv6 tiny (det + rec): recognition and end to end
+
+- **System:** PaddleOCR 3.7 with PP-OCRv6_tiny_det and PP-OCRv6_tiny_rec (multilingual recognizer: Chinese, English, Latin scripts), CPU, same pipeline settings and deviations as GW-BASE-002 (the v6 detectors crash under oneDNN too).
+- **Date allocated / run:** 2026-10-21 / —
+- **Phase:** 05
+- **Git commit:** recorded in the run metadata   **Config:** `scripts/run_baselines.py` defaults   **Seed(s):** subsample seed 5; bootstrap seed 20261010
+- **Dataset version(s):** HierText (Phase 4 manifests), GlyphSynth v1 val, GDC v1; test crops in `data/manifests/processed/eval_crops.json`
+- **Hardware:** laptop CPU only (`.venv-baselines`, ADR-0006); no GPU
+- **Research question:** where do existing systems stand on our evaluation sets, under our metrics?
+- **Hypothesis (written before the run):** none; this is a reference measurement, not a test of an idea.
+- **Method:** `scripts/run_baselines.py` then `scripts/evaluate_baselines.py`. Validation: 10,000 seeded line crops per set and 400 seeded pages; test sets in full (logged in `research/test_access_log.md`).
+- **Variables:** independent: system; controlled: evaluation sets, crops, metrics and normalisation tracks
+- **Control:** —
+- **Result:** see `reports/baselines/` (filled in after the run)
+- **Training diagnostics:** not applicable (no training)
+- **Interpretation:**
+- **Limitations:**
+- **Next experiment:**
+- **Training time:** not applicable
+
+### GW-BASE-006 — PaddleOCR PP-OCRv6 small (det + rec): recognition and end to end
+
+- **System:** PaddleOCR 3.7 with PP-OCRv6_small_det and PP-OCRv6_small_rec, CPU, same settings as GW-BASE-005.
+- **Date allocated / run:** 2026-10-21 / —
+- **Phase:** 05
+- **Git commit:** recorded in the run metadata   **Config:** `scripts/run_baselines.py` defaults   **Seed(s):** subsample seed 5; bootstrap seed 20261010
+- **Dataset version(s):** HierText (Phase 4 manifests), GlyphSynth v1 val, GDC v1; test crops in `data/manifests/processed/eval_crops.json`
+- **Hardware:** laptop CPU only (`.venv-baselines`, ADR-0006); no GPU
+- **Research question:** where do existing systems stand on our evaluation sets, under our metrics?
+- **Hypothesis (written before the run):** none; this is a reference measurement, not a test of an idea.
+- **Method:** `scripts/run_baselines.py` then `scripts/evaluate_baselines.py`. Validation: 10,000 seeded line crops per set and 400 seeded pages; test sets in full (logged in `research/test_access_log.md`).
+- **Variables:** independent: system; controlled: evaluation sets, crops, metrics and normalisation tracks
+- **Control:** —
+- **Result:** see `reports/baselines/` (filled in after the run)
+- **Training diagnostics:** not applicable (no training)
+- **Interpretation:**
+- **Limitations:**
+- **Next experiment:**
+- **Training time:** not applicable
+
+### GW-BASE-007 — PaddleOCR PP-OCRv6 medium (PaddleOCR 3.7's English default): reduced scope
+
+- **System:** PaddleOCR 3.7 with PP-OCRv6_medium_det and PP-OCRv6_medium_rec, which is what `PaddleOCR(lang="en")` loads by default in 3.7. CPU, same settings as GW-BASE-005. **Reduced scope** for the same reason as GW-BASE-003 (about 1 s per line): GDC test recognition and end to end, HierText validation recognition.
 - **Date allocated / run:** 2026-10-21 / —
 - **Phase:** 05
 - **Git commit:** recorded in the run metadata   **Config:** `scripts/run_baselines.py` defaults   **Seed(s):** subsample seed 5; bootstrap seed 20261010

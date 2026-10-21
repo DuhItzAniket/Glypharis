@@ -176,7 +176,10 @@ def tesseract_tsv_lines(tsv: str) -> list[dict[str, Any]]:
 
 
 class PPOCR:
-    """PaddleOCR 3.x with PP-OCRv5 models loaded from the pinned local copies.
+    """PaddleOCR 3.x with PP-OCRv5 or PP-OCRv6 models loaded from the pinned local copies.
+
+    PP-OCRv6 medium is what PaddleOCR 3.7 picks by default for English; tiny and small are its
+    lighter siblings. The v6 recognizers are multilingual (Chinese, English, Latin scripts).
 
     PaddleOCR's own pipeline config is used with two changes:
 
@@ -194,6 +197,9 @@ class PPOCR:
     MODELS: ClassVar[dict[str, tuple[str, str]]] = {
         "ppocr_mobile": ("PP-OCRv5_mobile_det", "en_PP-OCRv5_mobile_rec"),
         "ppocr_server": ("PP-OCRv5_server_det", "PP-OCRv5_server_rec"),
+        "ppocr6_tiny": ("PP-OCRv6_tiny_det", "PP-OCRv6_tiny_rec"),
+        "ppocr6_small": ("PP-OCRv6_small_det", "PP-OCRv6_small_rec"),
+        "ppocr6_medium": ("PP-OCRv6_medium_det", "PP-OCRv6_medium_rec"),
     }
 
     def __init__(self, name: str, task: str) -> None:
@@ -348,7 +354,7 @@ def done_keys(path: Path) -> set[str]:
 def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(description=__doc__.splitlines()[0])
     parser.add_argument("--system", required=True,
-                        choices=["tesseract", "ppocr_mobile", "ppocr_server", "trocr"])  # fmt: skip
+                        choices=["tesseract", *PPOCR.MODELS, "trocr"])  # fmt: skip
     parser.add_argument("--task", required=True, choices=TASKS)
     parser.add_argument("--eval-set", required=True, choices=sorted(EVAL_SETS))
     parser.add_argument("--experiment", required=True)
