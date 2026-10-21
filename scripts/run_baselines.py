@@ -84,6 +84,17 @@ def page_indices(n: int, split: str) -> np.ndarray:
     return idx
 
 
+def expected_count(data: Path, eval_set: str, task: str) -> int:
+    """How many samples a complete run of ``task`` on ``eval_set`` writes."""
+    spec = EVAL_SETS[eval_set]
+    if task == "rec":
+        meta = json.loads((data / f"{spec['pack']}.meta.json").read_text(encoding="utf-8"))
+        return len(rec_indices(int(meta["count"]), spec["split"]))
+    if not spec["pages"]:
+        return 0
+    return len(page_indices(sum(1 for _ in read_pages(data / spec["pages"])), spec["split"]))
+
+
 def rec_samples(data: Path, eval_set: str) -> Iterator[tuple[str, str, Image.Image]]:
     spec = EVAL_SETS[eval_set]
     reader = LinePackReader(data / spec["pack"])
@@ -367,14 +378,18 @@ def main(argv: list[str] | None = None) -> int:
     spec = EVAL_SETS[args.eval_set]
     if args.system == "trocr" and args.task == "e2e":
         raise SystemExit("TrOCR has no detector, so it is evaluated on recognition only")
+    out = output_path(data, args.experiment, args.system, args.task, args.eval_set)
+    out.parent.mkdir(parents=True, exist_ok=True)
+    done = done_keys(out)
+    if len(done) >= expected_count(data, args.eval_set, args.task):
+        # Nothing to do: no model load, and no entry in the test-access log.
+        print(f"{args.system} {args.task} {args.eval_set}: already complete ({len(done)})")
+        return 0
     open_test_access(spec["benchmark"], spec["split"], args.experiment,
                      f"{args.system} ({args.task})", 5, args.reason)  # fmt: skip
 
     git = git_info()  # the code that is about to run
     system = make_system(args.system, args.task)
-    out = output_path(data, args.experiment, args.system, args.task, args.eval_set)
-    out.parent.mkdir(parents=True, exist_ok=True)
-    done = done_keys(out)
     import psutil
 
     proc = psutil.Process()

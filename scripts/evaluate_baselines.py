@@ -23,7 +23,7 @@ from pathlib import Path
 from typing import Any
 
 import numpy as np
-from run_baselines import EVAL_SETS, page_indices, rec_indices
+from run_baselines import EVAL_SETS, expected_count
 
 from glypharis.data.pages import Page, read_pages
 from glypharis.eval.page_metrics import PageResult, PredLine, evaluate_page
@@ -139,15 +139,6 @@ def score_e2e(results: list[PageResult]) -> dict[str, Any]:
         "e2e_f1": ci_dict(ratio_ci(2 * e2e_tp, _arr(results, lambda r: r.e2e_pred + r.e2e_gt),
                                    "pages")),
     }  # fmt: skip
-
-
-def expected_count(data: Path, eval_set: str, task: str) -> int:
-    spec = EVAL_SETS[eval_set]
-    if task == "rec":
-        meta = json.loads((data / f"{spec['pack']}.meta.json").read_text(encoding="utf-8"))
-        return len(rec_indices(int(meta["count"]), spec["split"]))
-    n = sum(1 for _ in read_pages(data / spec["pages"]))
-    return len(page_indices(n, spec["split"]))
 
 
 def evaluate_file(path: Path, data: Path, page_cache: dict[str, dict[str, Page]]) -> dict[str, Any]:
