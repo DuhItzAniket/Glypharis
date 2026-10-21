@@ -11,8 +11,8 @@ Phases run in the order set by [ADR-0008](decisions/ADR-0008-usable-engine-first
 | 1 | Environment and reproducibility | **COMPLETE** | `phase-01` |
 | 2 | Dataset acquisition | **COMPLETE** | `phase-02` |
 | 3 | Data audit | **COMPLETE** | `phase-03` |
-| 4 | Preprocessing, charset, GlyphSynth, GDC | **IN GATE** (awaiting CI) | — |
-| 5 | Baseline systems | not started | — |
+| 4 | Preprocessing, charset, GlyphSynth, GDC | **COMPLETE** | `phase-04` |
+| 5 | Baseline systems | **IN PROGRESS** | — |
 | 6 | Recognition baseline | not started | — |
 | 7 | Recognizer improvement | not started | — |
 | 8 | Text detector | not started | — |
@@ -232,8 +232,8 @@ to normalise. Median legible line: 1 word, 7 characters,
 
 ## Phase 04 — Preprocessing, charset, synthetic data, GDC
 
-**Status:** IN GATE — implementation, tests and diagnostics done; waiting for push and CI (gate steps 8–10).
-GDC capture continues as the tracked item **GDC-capture** (ADR-0010).
+**Status:** COMPLETE (2026-10-21). GDC capture ran as the tracked item **GDC-capture** (ADR-0010) and
+finished inside the phase: GDC v1 was frozen before the merge.
 
 **Objective:** training-ready data with documented transformations.
 
@@ -269,17 +269,18 @@ GDC-capture.
 | Crops visually spot-checked | pass | `reports/data_analysis/hiertext/line_crops.png`, `glyphsynth/samples.png` |
 | Charset covers ≥ 99.9% of validation characters | pass on in-scope characters (99.943%); 99.809% of all characters, the rest being letters of other scripts excluded by the English-only scope | `reports/charset/charset_report.md` |
 | GlyphSynth reproducible from seed | pass | validation pack rebuilt byte-identical; HierText packs likewise |
-| GDC frozen with manifest | moved to GDC-capture (ADR-0010); print pack and tooling done | `data/manifests/gdc/pack.json` |
-| CI green | local: pass; CI: pending | — |
+| GDC frozen with manifest | pass: GDC v1 frozen 2026-10-21 through the GDC-capture track (ADR-0010) | `data/manifests/gdc/gdc_v1.json` |
+| CI green | pass | GitHub Actions run 39625823839 on `main` |
 
 **Known issues**
 - HierText labels contain some noise (visible on the crop sheet); recorded, not corrected.
 - GDC text-layer ground truth cannot cover text inside raster images (handled as ignore regions) and
   merges some side-by-side form headers into one line.
 
-**Git:** branch `phase/04-preprocessing`.
+**Git:** branch `phase/04-preprocessing`, merged through pull request #4. Merge commit `b2e3053`, tag
+`phase-04` (merge re-created with the noreply identity; same tree and parents).
 
-**CI status:** pending.
+**CI status:** green on the branch, the pull request and `main` (run 39625823839).
 
 ### Tracked item: GDC-capture (ADR-0010)
 
