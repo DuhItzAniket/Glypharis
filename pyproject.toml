@@ -22,6 +22,9 @@ dependencies = [
     "fonttools",
     "pypdfium2",
     "opencv-contrib-python-headless",
+    "rapidfuzz",
+    "shapely",
+    "scipy",
 ]
 
 [project.optional-dependencies]
@@ -50,7 +53,7 @@ warn_redundant_casts = true
 strict_equality = true
 
 [[tool.mypy.overrides]]
-module = ["pynvml", "pynvml.*", "fontTools", "fontTools.*", "cv2", "cv2.*", "pypdfium2", "pypdfium2.*"]
+module = ["pynvml", "pynvml.*", "fontTools", "fontTools.*", "cv2", "cv2.*", "pypdfium2", "pypdfium2.*", "shapely", "shapely.*", "scipy", "scipy.*"]
 ignore_missing_imports = true
 
 [tool.pytest.ini_options]
