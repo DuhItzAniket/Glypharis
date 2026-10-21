@@ -285,8 +285,14 @@ GDC-capture.
 
 | Step | Owner | Status |
 |---|---|---|
-| Print `data/processed/gdc/print_pack.pdf` (A4, 100 % scale) | owner | open |
-| Capture all 106 sheets per `data/manifests/gdc/capture_checklist.md` into `data/raw/gdc/captures/` | owner | open |
-| Run `scripts/gdc_align.py`, check overlays, request retakes | maintainer | open |
-| Real-scan slice: owner's scans, transcriptions drafted and verified | owner + maintainer | open |
-| Freeze (`scripts/gdc_align.py --freeze`) | maintainer | open |
+| Print `data/processed/gdc/print_pack.pdf` (A4, 100 % scale) | owner | done |
+| Capture all 106 sheets per `data/manifests/gdc/capture_checklist.md` into `data/raw/gdc/captures/` | owner | done (2026-10-21) |
+| Run `scripts/gdc_align.py`, check overlays, request retakes | maintainer | done: 106/106 aligned, no retakes; all overlays checked |
+| Freeze (`scripts/gdc_align.py --freeze`) | maintainer | **done: GDC v1 frozen 2026-10-21** (`data/manifests/gdc/gdc_v1.json`) |
+| Real-scan slice | owner + maintainer | moved to a separate set, **GDC-scan v1**, built and frozen on its own when the owner's scans arrive |
+
+Alignment (`data/manifests/gdc/alignment.json`): marker homography refined by smooth optical flow,
+because the curved captures were off by up to a line height with the homography alone. Refined
+sheet/photo agreement: median NCC 0.924, minimum 0.757. 200 of 8,606 lines (2.3 %) have an alignment
+score below 0.3 (box not trusted; text ground truth unaffected), mostly small figure text in distant
+shots.

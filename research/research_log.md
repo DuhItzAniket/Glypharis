@@ -90,3 +90,17 @@ the bottom. Experiments get their full record in `experiments.md`; this log is t
   minus sign, section sign, Greek letters; 0.11% of characters). The charset was **not** changed in
   response; any change must be justified on training or validation data.
 - Decision (ADR-0010): GDC capture runs as its own track because printing is on the owner's side.
+
+### 2026-10-21 — GDC v1 captured, aligned and frozen
+
+- The owner printed the pack and captured all 106 sheets with a phone. Every sheet was identified from
+  its corner markers.
+- The marker homography alone was fine for flat captures (RMS 2–6 px) but missed by up to a line
+  height on the eight curved sheets, and even flat captures had ~1 mm of residual misalignment (paper
+  curl, lens distortion). Added a smooth optical-flow refinement with forward-backward consistency;
+  median sheet/photo NCC rose from about 0.09 to 0.92.
+- A first synthetic test of the refinement used near-identical rows of fake words and locked onto the
+  wrong row: repetitive text is a real risk. On real pages the per-line score (source line image vs
+  aligned photo) detects such shifts; a test now checks that it does.
+- GDC v1 frozen with 106 pages and 8,606 lines. The real-scan slice becomes a separate set (GDC-scan),
+  so the frozen set does not wait on it.

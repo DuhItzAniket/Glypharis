@@ -23,7 +23,7 @@ Research-only or unlicensed datasets are used **only for evaluation**.
 | GlyphSynth (ours) | train / val | inherits font and text licences (open fonts; public-domain / Apache-2.0 text) | yes | v1 built (Phase 4) |
 | Google Fonts (100 families) | GlyphSynth input | SIL OFL 1.1 (96), Apache 2.0 (2), Ubuntu Font Licence (2) | yes | downloaded (Phase 4) |
 | PG-19 (450 books) | GlyphSynth input | Apache 2.0 packaging; texts public domain in the US | yes | downloaded (Phase 4) |
-| GDC (ours) | internal test | openly licensed source PDFs; our annotations | evaluation only | print pack built; capture pending (ADR-0010) |
+| GDC (ours) | internal test | openly licensed source PDFs; our annotations | evaluation only | **v1 frozen** 2026-10-21 (106 pages); GDC-scan pending |
 | IIIT5K | external test | none stated (citation requested) | evaluation only | Phase 14 |
 | FUNSD | external test | custom licence: non-commercial research and education only | evaluation only | Phase 14 |
 | OmniDocBench | external test | data "for research purposes only and not for commercial use"; code Apache-2.0 | evaluation only | Phase 14 |
@@ -124,6 +124,14 @@ version, samples, annotation format, intended task, preprocessing, split usage.
   fixed quotas. Ground truth comes from the PDF text layer, rebuilt line by line from character
   geometry; every sheet's overlay was checked by eye during construction. Capture checklist:
   `data/manifests/gdc/capture_checklist.md`.
+- **v1 captures (frozen 2026-10-21, `data/manifests/gdc/gdc_v1.json`):** 106 phone captures (3072 x 4080),
+  one per sheet: 37 scanner-app, 16 flat, 16 angled, 11 low light, 11 distant, 7 rotated, 8 curved.
+  Every sheet was identified from its markers and aligned with a homography refined by smooth optical
+  flow; all overlays were checked by eye. 8,606 lines; each carries an alignment score, and 200 lines
+  scoring below 0.3 are excluded from box-based metrics. Capture images and the page file are hashed in
+  the freeze record; they stay out of git.
+- **GDC-scan (planned):** a separate small set of the owner's real scans, transcribed (drafts checked by
+  the owner) and frozen on its own.
 
 ### IIIT5K
 
