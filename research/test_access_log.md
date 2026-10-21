@@ -6,4 +6,4 @@ Any other access must be justified in the "Reason" column and discussed in the p
 
 | Date | Split / benchmark | Experiment ID | Checkpoint | Phase | Reason |
 |---|---|---|---|---|---|
-| — | — | — | — | — | No test access yet. |
+| 2026-10-21 | gdc test | GW-BASE-002 | ppocr_mobile (rec) | 5 | Phase 5 baseline |
