@@ -10,8 +10,8 @@ Phases run in the order set by [ADR-0008](decisions/ADR-0008-usable-engine-first
 | 0 | Repository discovery and planning | **COMPLETE** | `phase-00` |
 | 1 | Environment and reproducibility | **COMPLETE** | `phase-01` |
 | 2 | Dataset acquisition | **COMPLETE** | `phase-02` |
-| 3 | Data audit | **IN GATE** (awaiting CI) | — |
-| 4 | Preprocessing, charset, GlyphSynth, GDC | not started | — |
+| 3 | Data audit | **COMPLETE** | `phase-03` |
+| 4 | Preprocessing, charset, GlyphSynth, GDC | **IN GATE** (awaiting CI) | — |
 | 5 | Baseline systems | not started | — |
 | 6 | Recognition baseline | not started | — |
 | 7 | Recognizer improvement | not started | — |
@@ -183,7 +183,7 @@ check, no-op rerun, manifest content).
 
 ## Phase 03 — Data audit
 
-**Status:** IN GATE — implementation, tests and diagnostics done; waiting for push and CI (gate steps 8–10).
+**Status:** COMPLETE (2026-10-10)
 
 **Objective:** know the data before training on it.
 
@@ -210,7 +210,7 @@ that stays at the same version when nothing changes).
 | Zero unexplained exclusions | pass | every exclusion carries a flag code with a documented decision |
 | Zero cross-split near-duplicates left unhandled | pass | 4 hash pairs + 87 text-overlap pairs, lower-priority copy excluded; contact sheets checked by eye |
 | Plots committed | pass | `reports/data_analysis/hiertext/*.png`, `reports/data_quality/*.png` |
-| CI green | local: pass; CI: pending | — |
+| CI green | pass | GitHub Actions run 38063919422 on `main` |
 
 **Results (measured, `reports/data_quality_report.md`):** 68 train and 9 validation
 images excluded for duplication / text overlap; 3 train lines excluded (broken boxes); 1 test line
@@ -223,6 +223,76 @@ to normalise. Median legible line: 1 word, 7 characters,
   selection); borderline pairs were checked by eye and all were genuine overlaps.
 - HierText line boxes are mostly single words, so long-line recognition needs GlyphSynth (R-06).
 
-**Git:** branch `phase/03-data-audit`.
+**Git:** branch `phase/03-data-audit`, merged through pull request #3. Merge commit `7cb784d`, tag
+`phase-03` (re-created with the noreply identity; same tree and parents).
+
+**CI status:** green on the branch, the pull request and `main` (run 38063919422).
+
+---
+
+## Phase 04 — Preprocessing, charset, synthetic data, GDC
+
+**Status:** IN GATE — implementation, tests and diagnostics done; waiting for push and CI (gate steps 8–10).
+GDC capture continues as the tracked item **GDC-capture** (ADR-0010).
+
+**Objective:** training-ready data with documented transformations.
+
+**Implemented**
+- `glypharis.data.text`: label normalisation v1 (original and normalised text both kept), evaluation
+  tracks, `Charset`; `scripts/build_charset.py` → `data/manifests/charset.json` (274 characters + blank),
+  `reports/charset/charset_report.md`.
+- `glypharis.data.pages` (internal page format, grouped by document), `crops` (rectified line crops,
+  64 px, 0.15 margin), `linepack` (binary pack + index, Windows-safe); `scripts/prepare_hiertext.py`
+  applies the Phase 3 exclusion list and packs train and validation crops.
+- `glypharis.data.augment`: presets none / geometric / photometric / degradation / full with
+  per-transform probability and severity (config `data.augmentation`, `data.augmentation_params`),
+  and the fixed GLYPH-C corruptions; previews in `reports/data_analysis/`.
+- GlyphSynth v1 (`glypharis.data.synth`, `scripts/build_glyphsynth.py`) from 100 pinned Google Fonts
+  families and PG-19 text, with held-out fonts and texts for validation.
+- GLYPH-C v1 frozen (`scripts/build_glyph_c.py`, `data/manifests/processed/glyph_c.json`).
+- GDC tooling (`glypharis.data.gdc`, `scripts/gdc_select_pages.py`, `gdc_print_pack.py`,
+  `gdc_align.py`), 21 source documents, 106-sheet print pack, capture checklist, training exclusion
+  list.
+- Downloader: published MD5 support and parallel transfers.
+
+**Descoped / moved (documented):** GDC capture and freeze → GDC-capture track (ADR-0010).
+Detector-side (page-level) augmentation → Phase 8. Real-scan GDC slice (owner's own scans) → part of
+GDC-capture.
+
+**Tests:** 233 passed locally (CPU and GPU-marked).
+
+**Exit criteria**
+
+| Criterion | Result | Evidence |
+|---|---|---|
+| Round-trip test (convert → read back → identical text and boxes) | pass | `test_pages_round_trip_is_exact_and_deterministic`; linepack round trip |
+| Crops visually spot-checked | pass | `reports/data_analysis/hiertext/line_crops.png`, `glyphsynth/samples.png` |
+| Charset covers ≥ 99.9% of validation characters | pass on in-scope characters (99.943%); 99.809% of all characters, the rest being letters of other scripts excluded by the English-only scope | `reports/charset/charset_report.md` |
+| GlyphSynth reproducible from seed | pass | validation pack rebuilt byte-identical; HierText packs likewise |
+| GDC frozen with manifest | moved to GDC-capture (ADR-0010); print pack and tooling done | `data/manifests/gdc/pack.json` |
+| CI green | local: pass; CI: pending | — |
+
+**Known issues**
+- HierText labels contain some noise (visible on the crop sheet); recorded, not corrected.
+- GDC text-layer ground truth cannot cover text inside raster images (handled as ignore regions) and
+  merges some side-by-side form headers into one line.
+
+**Git:** branch `phase/04-preprocessing`.
 
 **CI status:** pending.
+
+### Tracked item: GDC-capture (ADR-0010)
+
+| Step | Owner | Status |
+|---|---|---|
+| Print `data/processed/gdc/print_pack.pdf` (A4, 100 % scale) | owner | done |
+| Capture all 106 sheets per `data/manifests/gdc/capture_checklist.md` into `data/raw/gdc/captures/` | owner | done (2026-10-21) |
+| Run `scripts/gdc_align.py`, check overlays, request retakes | maintainer | done: 106/106 aligned, no retakes; all overlays checked |
+| Freeze (`scripts/gdc_align.py --freeze`) | maintainer | **done: GDC v1 frozen 2026-10-21** (`data/manifests/gdc/gdc_v1.json`) |
+| Real-scan slice | owner + maintainer | moved to a separate set, **GDC-scan v1**, built and frozen on its own when the owner's scans arrive |
+
+Alignment (`data/manifests/gdc/alignment.json`): marker homography refined by smooth optical flow,
+because the curved captures were off by up to a line height with the homography alone. Refined
+sheet/photo agreement: median NCC 0.924, minimum 0.757. 200 of 8,606 lines (2.3 %) have an alignment
+score below 0.3 (box not trusted; text ground truth unaffected), mostly small figure text in distant
+shots.

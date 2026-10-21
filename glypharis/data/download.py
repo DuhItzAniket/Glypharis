@@ -29,6 +29,7 @@ import urllib.error
 import urllib.request
 import zipfile
 from collections.abc import Callable
+from concurrent.futures import ThreadPoolExecutor
 from dataclasses import dataclass
 from datetime import UTC, datetime
 from pathlib import Path
@@ -61,6 +62,14 @@ def sha256_file(path: Path, chunk: int = 8 * CHUNK) -> str:
     return digest.hexdigest()
 
 
+def md5_file(path: Path, chunk: int = 8 * CHUNK) -> str:
+    digest = hashlib.md5(usedforsecurity=False)
+    with path.open("rb") as fh:
+        while block := fh.read(chunk):
+            digest.update(block)
+    return digest.hexdigest()
+
+
 # ----------------------------------------------------------------------------------- transfer
 
 
@@ -82,6 +91,7 @@ def download_file(
     backoff: float = 5.0,
 ) -> None:
     """Download ``url`` to ``dest`` via ``dest.part``, resuming and retrying on network errors."""
+    log.info("downloading %s", url)
     dest.parent.mkdir(parents=True, exist_ok=True)
     part = dest.with_name(dest.name + ".part")
     attempt = 0
@@ -263,6 +273,7 @@ def fetch_dataset(
     verify: bool = False,
     counter: Counter | None = None,
     download: Callable[..., None] = download_file,
+    parallel: int = 1,
 ) -> dict[str, Any]:
     """Download, verify and extract one dataset, then write its manifest. Returns the manifest."""
     if only:
@@ -282,6 +293,21 @@ def fetch_dataset(
     if needed:
         check_disk_space(data_root, needed)
 
+    # Transfers first (optionally several at a time: many small files from a slow host), then
+    # hashing, verification, extraction and the manifest in a fixed order.
+    to_fetch = [f for f in selected if plans[f.name].status != "present"]
+    fetched_at: dict[str, str] = {}
+    if to_fetch:
+        log.info("%s: fetching %d file(s) with %d connection(s)", spec.key, len(to_fetch), parallel)
+
+        def _get(f: FileSpec) -> None:
+            download(f.url, raw / f.filename, f.size)
+            fetched_at[f.name] = _now()
+
+        with ThreadPoolExecutor(max_workers=max(1, parallel)) as pool:
+            for future in [pool.submit(_get, f) for f in to_fetch]:
+                future.result()
+
     for f in spec.files:
         record = dict(prev_files.get(f.name, {}))
         if f not in selected:
@@ -292,12 +318,16 @@ def fetch_dataset(
         rel = path.relative_to(data_root).as_posix()
         recorded_sha = record.get("sha256")
 
-        fresh = plans[f.name].status != "present"
+        fresh = f.name in fetched_at
         if fresh:
-            log.info("downloading %s/%s from %s", spec.key, f.filename, f.url)
-            download(f.url, path, f.size)
-            record["downloaded_utc"] = _now()
+            record["downloaded_utc"] = fetched_at[f.name]
 
+        if f.md5 is not None and (fresh or verify):
+            md5 = md5_file(path)
+            if md5 != f.md5:
+                raise DownloadError(
+                    f"{spec.key}/{f.filename}: md5 {md5} does not match the published {f.md5}"
+                )
         if fresh or verify or recorded_sha is None:
             sha = sha256_file(path)
             expected = f.sha256 or recorded_sha
@@ -318,6 +348,7 @@ def fetch_dataset(
             path=rel,
             bytes=path.stat().st_size,
             sha256_source="published" if f.sha256 else "computed",
+            **({"md5_published": f.md5} if f.md5 else {}),
         )
         record.setdefault("downloaded_utc", _now())
 

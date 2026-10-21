@@ -67,3 +67,40 @@ the bottom. Experiments get their full record in `experiments.md`; this log is t
   characters cover 99% / 99.9% / 99.99% of occurrences. Input for the Phase 4 charset.
 - Train, validation and test distributions (image size, brightness, contrast, blur, line geometry, text
   length) are visually indistinguishable.
+
+### 2026-10-10 — Phase 4: preprocessing, synthetic data and GDC
+
+- Charset v1: 274 characters seen at least 10 times in HierText train labels, letters limited to Latin
+  and Greek. It covers 99.943% of in-scope validation characters; 0.13% of validation characters are
+  letters of other scripts, out of scope by design.
+- HierText line crops: 348,935 train and 73,888 validation; the sample sheet also shows label noise in
+  HierText itself (e.g. a crop reading "KI ONOS" labelled "KFONOS").
+- An out-of-memory crash in the crop job traced to every worker process importing torch through
+  `glypharis.utils`; data tools now import it lazily.
+- GlyphSynth v1: the first sample sheet showed Gutenberg plain-text markup (_italics_, "--") in labels;
+  fixed before generating. Median line 39 characters against 7 in HierText.
+- Augmentation previews caught three defects before any training (rotation and perspective cutting
+  text off, mean-threshold binarisation wiping faint text).
+- GDC ground truth from PDF text layers needed four corrections, each found on QA overlays: PDFium
+  joins hyphenated lines (it marks the printed hyphen as U+FFFE), splits rotated text into single
+  glyphs (fixed with per-character angles), compares tiny punctuation boxes as rows, and leaves
+  small-caps text in lowercase. Raster images inside PDFs have no text layer and became ignore
+  regions.
+- Test-set discipline: GDC ground truth contains a few characters outside the charset (en dash,
+  minus sign, section sign, Greek letters; 0.11% of characters). The charset was **not** changed in
+  response; any change must be justified on training or validation data.
+- Decision (ADR-0010): GDC capture runs as its own track because printing is on the owner's side.
+
+### 2026-10-21 — GDC v1 captured, aligned and frozen
+
+- The owner printed the pack and captured all 106 sheets with a phone. Every sheet was identified from
+  its corner markers.
+- The marker homography alone was fine for flat captures (RMS 2–6 px) but missed by up to a line
+  height on the eight curved sheets, and even flat captures had ~1 mm of residual misalignment (paper
+  curl, lens distortion). Added a smooth optical-flow refinement with forward-backward consistency;
+  median sheet/photo NCC rose from about 0.09 to 0.92.
+- A first synthetic test of the refinement used near-identical rows of fake words and locked onto the
+  wrong row: repetitive text is a real risk. On real pages the per-line score (source line image vs
+  aligned photo) detects such shifts; a test now checks that it does.
+- GDC v1 frozen with 106 pages and 8,606 lines. The real-scan slice becomes a separate set (GDC-scan),
+  so the frozen set does not wait on it.

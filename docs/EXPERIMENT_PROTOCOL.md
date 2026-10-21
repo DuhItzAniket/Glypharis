@@ -42,12 +42,19 @@ Split files (`data/manifests/splits/*.txt`) are committed with their SHA-256 in 
 
 ### Split statistics
 
-Filled in Phase 4 from `scripts/audit_data.py` output. Values are copied from
-`reports/data_analysis/split_stats.md`, not typed by hand.
+Copied from the generated manifests named in the last column (Phase 4).
 
-| Dataset | Split | Images / pages | Lines | Characters | Source |
-|---|---|---|---|---|---|
-| — | — | — | — | — | pending Phase 4 |
+| Dataset | Split | Images / pages | Lines (recognizer-usable) | Source |
+|---|---|---|---|---|
+| HierText | train | 8,213 | 493,464 (348,935) | `data/manifests/processed/hiertext.json` |
+| HierText | validation | 1,715 | 103,810 (73,888) | same |
+| HierText | test | 1,634 | 94,564 (67,277) | same |
+| GlyphSynth v1 | train | — | 100,000 | `data/manifests/processed/glyphsynth.json` |
+| GlyphSynth v1 | val (held-out fonts and texts) | — | 10,000 | same |
+| GLYPH-C v1 | validation-derived | 6,000 samples | 216,000 crops (clean + 7 corruptions x 5 levels) | `data/manifests/processed/glyph_c.json` |
+| GDC v1 | test | 106 sheets | 8,606 ground-truth lines | `data/manifests/gdc/pack.json` (capture pending, ADR-0010) |
+
+HierText image counts are after the Phase 3 exclusion list (v1).
 
 ## 2. Text normalisation tracks
 
@@ -89,6 +96,11 @@ Empty references are excluded from CER denominators and counted separately.
 | Dataset-native metric | Where a benchmark defines its own (e.g. HierText's PQ-style metric), it is reported in addition, with the official code where available. |
 
 "Don't care" regions (illegible text) are excluded from both sides where the dataset marks them.
+GDC pages also carry *ignore regions*: raster images inside the source PDFs, whose printed text has
+no text layer and therefore no ground truth. Ground-truth lines are always scored; an ignore region
+only excuses predictions inside it that match no ground-truth line. GDC lines flagged `vertical`
+(rotated text such as margin stamps and axis titles) are reported separately and excluded from the
+main line metrics.
 
 ### End to end (page in, text out)
 
@@ -195,4 +207,5 @@ choice; no per-benchmark tuning.
 | Date | Change | Reason | Affects |
 |---|---|---|---|
 | 2026-10-10 | Initial version (Phase 0) | — | — |
+| 2026-10-10 | Ignore regions and vertical lines for GDC (§3); split statistics filled (§1) | Phase 4 built GDC from PDF text layers; raster images inside PDFs have no text layer | GDC metrics |
 | 2026-10-10 | CUDA reproducibility tolerance fixed at a maximum **relative** loss difference of 1e-4 between two seeded runs (toy check in `scripts/env_report.py`); CPU runs must be bit-identical | Phase 1 exit criterion needed a documented tolerance. CUDA CTC backward has no deterministic kernel, so exact equality is not guaranteed even though the Phase 1 measurement showed none (reports/environment/env_report.md) | All CUDA runs |

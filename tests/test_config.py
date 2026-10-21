@@ -226,3 +226,16 @@ def test_cli_shortcuts_and_set(repo_root):
     assert cfg.checkpoint.resume == "checkpoints/x/last.pt"
     assert cfg.train.batch_size == 8
     assert cfg.seed == 6  # explicit --set wins over the shortcut
+
+
+def test_augmentation_config_is_validated():
+    cfg = build_config(
+        {"data": {"augmentation": "full", "augmentation_params": {"jpeg": {"p": 0.5}}}}
+    )
+    assert cfg.data.augmentation_params == {"jpeg": {"p": 0.5}}
+    with pytest.raises(ConfigError, match="unknown augmentation preset"):
+        build_config({"data": {"augmentation": "fancy"}})
+    with pytest.raises(ConfigError, match="no transform"):
+        build_config({"data": {"augmentation": "geometric", "augmentation_params": {"jpeg": {}}}})
+    with pytest.raises(ConfigError, match="expected float"):
+        build_config({"data": {"augmentation_params": {"jpeg": {"p": "high"}}}})

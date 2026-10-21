@@ -9,10 +9,12 @@ from __future__ import annotations
 import contextlib
 import logging
 from dataclasses import asdict, dataclass
-from typing import Any
+from typing import TYPE_CHECKING, Any
 
 import psutil
-import torch
+
+if TYPE_CHECKING:
+    import torch
 
 log = logging.getLogger(__name__)
 
@@ -85,14 +87,21 @@ def _gpu_telemetry(index: int) -> dict[str, Any]:
 
 
 def snapshot(device: torch.device | None = None) -> ResourceSnapshot:
-    """Take one resource snapshot. CUDA fields are filled only for a CUDA device."""
+    """Take one resource snapshot. CUDA fields are filled only for a CUDA device.
+
+    torch is imported only when a CUDA device is passed, so CPU-only data tools stay light.
+    """
     vm = psutil.virtual_memory()
     fields: dict[str, Any] = {
         "process_rss_mib": psutil.Process().memory_info().rss / _MIB,
         "system_ram_used_mib": (vm.total - vm.available) / _MIB,
         "system_ram_total_mib": vm.total / _MIB,
     }
-    if device is not None and device.type == "cuda" and torch.cuda.is_available():
+    if device is not None and device.type == "cuda":
+        import torch
+
+        if not torch.cuda.is_available():
+            return ResourceSnapshot(**fields)
         index = device.index if device.index is not None else torch.cuda.current_device()
         free, total = torch.cuda.mem_get_info(index)
         fields.update(
@@ -108,5 +117,7 @@ def snapshot(device: torch.device | None = None) -> ResourceSnapshot:
 
 def reset_peak(device: torch.device) -> None:
     """Reset the CUDA peak-memory counter (start of a dry run or an epoch)."""
+    import torch
+
     if device.type == "cuda" and torch.cuda.is_available():
         torch.cuda.reset_peak_memory_stats(device)

@@ -1,0 +1,312 @@
+seed: 11
+rules:
+  min_chars: 600
+  max_oov: 0.03
+  max_fragment_lines: 0.25
+  max_vertical: 0.3
+  quotas:
+    scan_app: 0.35
+    photo_flat: 0.15
+    photo_angled: 0.15
+    low_light: 0.1
+    distant: 0.1
+    rotated: 0.07
+    curved: 0.08
+  rejected_after_review: 0
+documents:
+- key: llama
+  file: arxiv/2302.13971v1.pdf
+  group: paper
+  pages:
+  - page: 1
+    condition: scan_app
+  - page: 4
+    condition: photo_angled
+  - page: 15
+    condition: photo_angled
+  - page: 22
+    condition: photo_angled
+  - page: 25
+    condition: curved
+- key: blip2
+  file: arxiv/2301.12597v3.pdf
+  group: paper
+  pages:
+  - page: 1
+    condition: rotated
+  - page: 2
+    condition: scan_app
+  - page: 3
+    condition: photo_flat
+  - page: 6
+    condition: photo_angled
+  - page: 12
+    condition: scan_app
+- key: llava15
+  file: arxiv/2310.03744v2.pdf
+  group: paper
+  pages:
+  - page: 1
+    condition: low_light
+  - page: 3
+    condition: scan_app
+  - page: 7
+    condition: low_light
+  - page: 11
+    condition: photo_flat
+  - page: 15
+    condition: low_light
+- key: smoothquant
+  file: arxiv/2211.10438v7.pdf
+  group: paper
+  pages:
+  - page: 1
+    condition: photo_flat
+  - page: 4
+    condition: low_light
+  - page: 5
+    condition: photo_flat
+  - page: 7
+    condition: low_light
+  - page: 8
+    condition: distant
+- key: dpo
+  file: arxiv/2305.18290v3.pdf
+  group: paper
+  pages:
+  - page: 1
+    condition: photo_flat
+  - page: 4
+    condition: photo_flat
+  - page: 9
+    condition: scan_app
+  - page: 22
+    condition: scan_app
+  - page: 23
+    condition: scan_app
+- key: mamba
+  file: arxiv/2312.00752v2.pdf
+  group: paper
+  pages:
+  - page: 1
+    condition: curved
+  - page: 19
+    condition: scan_app
+  - page: 30
+    condition: distant
+  - page: 32
+    condition: low_light
+  - page: 33
+    condition: distant
+- key: mistral7b
+  file: arxiv/2310.06825v1.pdf
+  group: paper
+  pages:
+  - page: 1
+    condition: curved
+  - page: 2
+    condition: distant
+  - page: 4
+    condition: scan_app
+  - page: 9
+    condition: low_light
+- key: cot
+  file: arxiv/2201.11903v6.pdf
+  group: paper
+  pages:
+  - page: 1
+    condition: scan_app
+  - page: 16
+    condition: photo_angled
+  - page: 20
+    condition: scan_app
+  - page: 41
+    condition: rotated
+  - page: 43
+    condition: photo_flat
+- key: qlora
+  file: arxiv/2305.14314v1.pdf
+  group: paper
+  pages:
+  - page: 1
+    condition: distant
+  - page: 14
+    condition: photo_angled
+  - page: 19
+    condition: photo_flat
+  - page: 23
+    condition: photo_angled
+  - page: 26
+    condition: rotated
+- key: nasa_tm
+  file: gov/nasa-tm-20220000420.pdf
+  group: report
+  pages:
+  - page: 2
+    condition: distant
+  - page: 5
+    condition: photo_flat
+  - page: 7
+    condition: photo_flat
+  - page: 8
+    condition: scan_app
+  - page: 10
+    condition: scan_app
+  - page: 21
+    condition: low_light
+- key: census_income
+  file: gov/census-p60-282.pdf
+  group: report
+  pages:
+  - page: 6
+    condition: scan_app
+  - page: 10
+    condition: distant
+  - page: 38
+    condition: photo_flat
+  - page: 40
+    condition: photo_angled
+  - page: 49
+    condition: scan_app
+  - page: 55
+    condition: scan_app
+- key: frb_fsr
+  file: gov/frb-fsr-20240419.pdf
+  group: report
+  pages:
+  - page: 14
+    condition: curved
+  - page: 25
+    condition: low_light
+  - page: 26
+    condition: photo_flat
+  - page: 31
+    condition: photo_angled
+  - page: 34
+    condition: scan_app
+  - page: 49
+    condition: photo_angled
+- key: calculus_made_easy
+  file: books/pg-33283.pdf
+  group: book
+  pages:
+  - page: 1
+    condition: low_light
+  - page: 9
+    condition: distant
+  - page: 28
+    condition: photo_flat
+  - page: 70
+    condition: scan_app
+  - page: 259
+    condition: rotated
+- key: hilbert_geometry
+  file: books/pg-17384.pdf
+  group: book
+  pages:
+  - page: 5
+    condition: curved
+  - page: 6
+    condition: scan_app
+  - page: 51
+    condition: scan_app
+  - page: 72
+    condition: scan_app
+  - page: 87
+    condition: photo_angled
+- key: science_hypothesis
+  file: books/pg-37157.pdf
+  group: book
+  pages:
+  - page: 13
+    condition: photo_angled
+  - page: 100
+    condition: low_light
+  - page: 101
+    condition: scan_app
+  - page: 104
+    condition: curved
+  - page: 284
+    condition: photo_angled
+- key: whitehead_maths
+  file: books/pg-41568.pdf
+  group: book
+  pages:
+  - page: 4
+    condition: scan_app
+  - page: 6
+    condition: rotated
+  - page: 7
+    condition: rotated
+  - page: 105
+    condition: scan_app
+  - page: 193
+    condition: curved
+- key: hefferon_linalg
+  file: books/hefferon-linear-algebra.pdf
+  group: textbook
+  pages:
+  - page: 22
+    condition: scan_app
+  - page: 69
+    condition: distant
+  - page: 85
+    condition: scan_app
+  - page: 338
+    condition: photo_angled
+  - page: 498
+    condition: photo_angled
+  - page: 516
+    condition: scan_app
+- key: mit_mcs
+  file: books/mit-mcs-2018.pdf
+  group: textbook
+  pages:
+  - page: 95
+    condition: photo_flat
+  - page: 186
+    condition: scan_app
+  - page: 483
+    condition: scan_app
+  - page: 656
+    condition: scan_app
+  - page: 676
+    condition: scan_app
+  - page: 814
+    condition: scan_app
+- key: irs_1040
+  file: forms/irs-f1040-2024.pdf
+  group: form
+  pages:
+  - page: 1
+    condition: scan_app
+  - page: 2
+    condition: photo_flat
+- key: irs_w9
+  file: forms/irs-fw9-2024.pdf
+  group: form
+  pages:
+  - page: 1
+    condition: scan_app
+  - page: 2
+    condition: distant
+  - page: 4
+    condition: scan_app
+  - page: 5
+    condition: rotated
+- key: irs_1040_instructions
+  file: forms/irs-i1040gi-2024.pdf
+  group: form
+  pages:
+  - page: 28
+    condition: photo_angled
+  - page: 41
+    condition: scan_app
+  - page: 45
+    condition: curved
+  - page: 57
+    condition: photo_flat
+  - page: 106
+    condition: distant
+  - page: 108
+    condition: scan_app

@@ -130,3 +130,24 @@ def test_setup_logging_is_idempotent(tmp_path):
     ours = [h for h in logging.getLogger().handlers if getattr(h, "_glypharis", False)]
     assert len(ours) == 2  # one console + one file, not four
     setup_logging()
+
+
+# ------------------------------------------------------------------------- import weight
+
+
+def test_data_tools_do_not_import_torch():
+    """Data-preparation workers import these; each torch import costs about 500 MB per process."""
+    import subprocess
+    import sys
+
+    code = (
+        "import sys\n"
+        "import glypharis.utils, glypharis.utils.gitinfo, glypharis.utils.logsetup\n"
+        "import glypharis.utils.monitor\n"
+        "import glypharis.data.audit, glypharis.data.crops, glypharis.data.pages\n"
+        "import glypharis.data.linepack, glypharis.data.download, glypharis.data.text\n"
+        "glypharis.utils.monitor.snapshot()\n"
+        "print('torch' in sys.modules)\n"
+    )
+    out = subprocess.run([sys.executable, "-c", code], capture_output=True, text=True, check=True)
+    assert out.stdout.strip() == "False"

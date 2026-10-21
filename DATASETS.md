@@ -20,8 +20,10 @@ Research-only or unlicensed datasets are used **only for evaluation**.
 | Dataset | Role | Licence (as stated by the publisher) | Commercial use | Status |
 |---|---|---|---|---|
 | HierText | train / val / test | Annotations CC BY-SA 4.0; images from Open Images, listed as CC BY 2.0 | yes (attribution, share-alike) | downloaded (Phase 2) |
-| GlyphSynth (ours) | train / val | inherits font and text licences (open fonts; public-domain / Apache-2.0 text) | yes | built in Phase 4 |
-| GDC (ours) | internal test | openly licensed source PDFs; our annotations | evaluation only | built in Phase 4 |
+| GlyphSynth (ours) | train / val | inherits font and text licences (open fonts; public-domain / Apache-2.0 text) | yes | v1 built (Phase 4) |
+| Google Fonts (100 families) | GlyphSynth input | SIL OFL 1.1 (96), Apache 2.0 (2), Ubuntu Font Licence (2) | yes | downloaded (Phase 4) |
+| PG-19 (450 books) | GlyphSynth input | Apache 2.0 packaging; texts public domain in the US | yes | downloaded (Phase 4) |
+| GDC (ours) | internal test | openly licensed source PDFs; our annotations | evaluation only | **v1 frozen** 2026-10-21 (106 pages); GDC-scan pending |
 | IIIT5K | external test | none stated (citation requested) | evaluation only | Phase 14 |
 | FUNSD | external test | custom licence: non-commercial research and education only | evaluation only | Phase 14 |
 | OmniDocBench | external test | data "for research purposes only and not for commercial use"; code Apache-2.0 | evaluation only | Phase 14 |
@@ -92,8 +94,13 @@ version, samples, annotation format, intended task, preprocessing, split usage.
 - **Splits:** GlyphSynth-val uses held-out fonts and held-out texts. GDC sources are excluded
   (EXPERIMENT_PROTOCOL §1 rule 5).
 - **Reproducibility:** fully determined by generator version, config, seed, font commit and text manifest.
-- **Acquisition:** font and text sources are registered in `data/sources.yaml` in Phase 4, when the font
-  list and text sample are designed.
+- **Acquisition (measured, `data/manifests/google_fonts.json`, `pg19.json`):** 245 font files from 100
+  families (44 serif, 41 sans, 15 mono) at google/fonts commit bd8f81d; PG-19 validation (50 books,
+  17.4M characters), test (100 books, 40.4M characters) and a seed-19 sample of 300 train books
+  (120.7M characters), each matching the bucket's MD5.
+- **v1 (`reports/data_analysis/glyphsynth/report.md`):** 85 train / 15 held-out font families;
+  100,000 train and 10,000 held-out lines, median 39 characters per line. Rebuilding from the seed
+  reproduces the packs byte for byte.
 
 ### GDC — Glypharis Document Challenge (ours)
 
@@ -105,8 +112,26 @@ version, samples, annotation format, intended task, preprocessing, split usage.
 - **Ground truth:** mainly print-and-capture from born-digital, openly licensed PDFs (exact text and line
   positions from the PDF, aligned to the captured image); a small manually transcribed subset of real old
   scans.
-- **Rules:** built in Phase 4, frozen with a hash manifest before Phase 5, never trained on, sources on the
-  training exclusion list, evaluated only in Phases 5, 14, 22.
+- **Rules:** frozen with a hash manifest before any model is evaluated on it (ADR-0010), never trained
+  on, sources on the training exclusion list (`data/manifests/exclusions/gdc_sources.json`, checked
+  by a test), evaluated only in Phases 5, 14, 22.
+- **Sources (`data/manifests/gdc_sources.json`):** 21 born-digital PDFs: 9 arXiv papers (CC BY 4.0),
+  3 US federal reports (public domain), 4 Project Gutenberg typeset books (public domain in the USA,
+  fetched from the PGLAF mirror), 2 textbooks (CC BY-SA 3.0), 3 IRS forms (public domain). None of
+  the Gutenberg books is in the PG-19 text used for GlyphSynth.
+- **v1 print pack (`data/manifests/gdc/pack.json`, `selection.yaml`):** 106 sheets (44 paper, 20 book,
+  18 report, 12 textbook, 12 form pages), 8,606 ground-truth lines, capture conditions assigned with
+  fixed quotas. Ground truth comes from the PDF text layer, rebuilt line by line from character
+  geometry; every sheet's overlay was checked by eye during construction. Capture checklist:
+  `data/manifests/gdc/capture_checklist.md`.
+- **v1 captures (frozen 2026-10-21, `data/manifests/gdc/gdc_v1.json`):** 106 phone captures (3072 x 4080),
+  one per sheet: 37 scanner-app, 16 flat, 16 angled, 11 low light, 11 distant, 7 rotated, 8 curved.
+  Every sheet was identified from its markers and aligned with a homography refined by smooth optical
+  flow; all overlays were checked by eye. 8,606 lines; each carries an alignment score, and 200 lines
+  scoring below 0.3 are excluded from box-based metrics. Capture images and the page file are hashed in
+  the freeze record; they stay out of git.
+- **GDC-scan (planned):** a separate small set of the owner's real scans, transcribed (drafts checked by
+  the owner) and frozen on its own.
 
 ### IIIT5K
 

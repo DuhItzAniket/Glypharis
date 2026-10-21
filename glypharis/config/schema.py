@@ -43,7 +43,9 @@ class DataConfig:
     image_width: int | None = None
     max_width: int = 1024
     num_workers: int = 4
-    augmentation: str = "none"
+    augmentation: str = "none"  # preset name, see glypharis.data.augment.PRESETS
+    # Per-transform overrides, e.g. {"gaussian_blur": {"p": 0.5, "severity": 0.8}}
+    augmentation_params: dict[str, dict[str, float]] = field(default_factory=dict)
 
 
 @dataclass
@@ -129,6 +131,12 @@ class RunConfig:
         check(d.max_width > 0, "data.max_width must be > 0")
         check(d.num_workers >= 0, "data.num_workers must be >= 0")
         check(d.dataset_subset is None or d.dataset_subset > 0, "data.dataset_subset must be > 0")
+        try:
+            from glypharis.data.augment import Augmenter
+
+            Augmenter(d.augmentation, d.augmentation_params)
+        except ValueError as exc:
+            errors.append(f"data.augmentation: {exc}")
         check(t.epochs > 0, "train.epochs must be > 0")
         check(t.batch_size > 0, "train.batch_size must be > 0")
         check(t.gradient_accumulation > 0, "train.gradient_accumulation must be > 0")

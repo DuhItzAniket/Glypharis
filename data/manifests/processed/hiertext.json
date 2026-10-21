@@ -1,0 +1,91 @@
+{
+ "dataset": "hiertext",
+ "page_format_version": 1,
+ "normalization_version": 1,
+ "charset_version": 1,
+ "charset_classes": 275,
+ "exclusion_list_version": 1,
+ "crop_settings": {
+  "height": 64,
+  "margin": 0.15,
+  "max_aspect": 64.0,
+  "jpeg_quality": 95
+ },
+ "splits": {
+  "train": {
+   "pages": 8213,
+   "images_excluded": 68,
+   "lines": 493464,
+   "lines_rec_ok": 348935,
+   "rec_skip": {
+    "excluded": 0,
+    "illegible": 115764,
+    "handwritten": 25122,
+    "vertical": 2039,
+    "empty": 0,
+    "out_of_charset": 1457,
+    "too_long": 147
+   },
+   "pages_file": "processed/hiertext/pages_train.jsonl.gz",
+   "pages_sha256": "6f5f3871a557771e03ad57a774b5bc45e92dc8be52313700837973f5783562a8",
+   "pack": {
+    "prefix": "processed/hiertext/lines_train",
+    "count": 348935,
+    "bytes": 2113124155,
+    "bin_sha256": "b8cfff844ed2a3be027e28ff821c8e50f793756c1840624153935cb04a51a620",
+    "width_at_height_64": {
+     "p50": 231.0,
+     "p95": 1021.0,
+     "p99": 1663.0,
+     "max": 3164.0
+    }
+   }
+  },
+  "validation": {
+   "pages": 1715,
+   "images_excluded": 9,
+   "lines": 103810,
+   "lines_rec_ok": 73888,
+   "rec_skip": {
+    "excluded": 0,
+    "illegible": 24019,
+    "handwritten": 4920,
+    "vertical": 371,
+    "empty": 0,
+    "out_of_charset": 590,
+    "too_long": 22
+   },
+   "pages_file": "processed/hiertext/pages_validation.jsonl.gz",
+   "pages_sha256": "0655c5f795a644666777a072714d039d48231878b7707889b1e770703ddfd180",
+   "pack": {
+    "prefix": "processed/hiertext/lines_validation",
+    "count": 73888,
+    "bytes": 436185706,
+    "bin_sha256": "7db3ec6782eaf919da95194629b35574fbedd4c3361f4b8579400782d16f4f2a",
+    "width_at_height_64": {
+     "p50": 220.0,
+     "p95": 1048.6499999999942,
+     "p99": 1639.1300000000047,
+     "max": 3156.0
+    }
+   }
+  },
+  "test": {
+   "pages": 1634,
+   "images_excluded": 0,
+   "lines": 94564,
+   "lines_rec_ok": 67277,
+   "rec_skip": {
+    "excluded": 1,
+    "illegible": 20827,
+    "handwritten": 5738,
+    "vertical": 424,
+    "empty": 0,
+    "out_of_charset": 282,
+    "too_long": 15
+   },
+   "pages_file": "processed/hiertext/pages_test.jsonl.gz",
+   "pages_sha256": "c48915b2b9747c71dfa93c41315d2c9f2ad665c6591efd78f516b7a413cf272b"
+  }
+ }
+}

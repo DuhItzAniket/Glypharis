@@ -1,0 +1,1923 @@
+{
+ "generated_utc": "2026-10-21T14:00:27+00:00",
+ "rules": {
+  "work_scale": 0.5,
+  "min_page_ncc": 0.5,
+  "min_line_score": 0.3,
+  "max_irregularity": 0.25
+ },
+ "captures": 106,
+ "aligned": 106,
+ "missing_sheets": [],
+ "problems": [],
+ "results": [
+  {
+   "file": "raw/gdc/captures/000.jpg",
+   "sha256": "d5bbc23e3d83dd75862e972516f422be74a40648da13b9ed8f41347ac9e70a12",
+   "size": [
+    3072,
+    4080
+   ],
+   "status": "ok",
+   "sheet": 0,
+   "condition": "scan_app",
+   "markers": 4,
+   "marker_rms_px": 3.83,
+   "ncc_homography": 0.071,
+   "ncc_refined": 0.939,
+   "flow_consistent": 0.978,
+   "lines": 94,
+   "lines_low_score": 0
+  },
+  {
+   "file": "raw/gdc/captures/001.jpg",
+   "sha256": "28677283866dac2f9b07b0aaa3311c95d10823ffb056192a9b7e2c827b1ccaf5",
+   "size": [
+    3072,
+    4080
+   ],
+   "status": "ok",
+   "sheet": 1,
+   "condition": "photo_angled",
+   "markers": 4,
+   "marker_rms_px": 3.68,
+   "ncc_homography": 0.071,
+   "ncc_refined": 0.924,
+   "flow_consistent": 0.929,
+   "lines": 164,
+   "lines_low_score": 0
+  },
+  {
+   "file": "raw/gdc/captures/002.jpg",
+   "sha256": "df36c22e360346dc3906c4b345d787e6390697ca36235d38ae217b807870957c",
+   "size": [
+    3072,
+    4080
+   ],
+   "status": "ok",
+   "sheet": 2,
+   "condition": "photo_angled",
+   "markers": 4,
+   "marker_rms_px": 3.19,
+   "ncc_homography": 0.046,
+   "ncc_refined": 0.926,
+   "flow_consistent": 0.973,
+   "lines": 111,
+   "lines_low_score": 0
+  },
+  {
+   "file": "raw/gdc/captures/003.jpg",
+   "sha256": "3b1356c9f13bb20bf1ed57e708bc61f7ac1b1c922f90bd56b5c2bc9719df3467",
+   "size": [
+    3072,
+    4080
+   ],
+   "status": "ok",
+   "sheet": 3,
+   "condition": "photo_angled",
+   "markers": 4,
+   "marker_rms_px": 3.9,
+   "ncc_homography": 0.081,
+   "ncc_refined": 0.89,
+   "flow_consistent": 0.728,
+   "lines": 50,
+   "lines_low_score": 0
+  },
+  {
+   "file": "raw/gdc/captures/004.jpg",
+   "sha256": "3e01bfc50f3c599726d711387cfe0aebc9f4182d79370e775c6682017f6ebd3b",
+   "size": [
+    3072,
+    4080
+   ],
+   "status": "ok",
+   "sheet": 4,
+   "condition": "curved",
+   "markers": 4,
+   "marker_rms_px": 21.01,
+   "ncc_homography": 0.033,
+   "ncc_refined": 0.872,
+   "flow_consistent": 0.861,
+   "lines": 35,
+   "lines_low_score": 28
+  },
+  {
+   "file": "raw/gdc/captures/005.jpg",
+   "sha256": "f45692b6d32458cef573e5b70701588083b6c4b5641f4039ecd1830fa0eefcd1",
+   "size": [
+    4080,
+    3072
+   ],
+   "status": "ok",
+   "sheet": 5,
+   "condition": "rotated",
+   "markers": 4,
+   "marker_rms_px": 3.04,
+   "ncc_homography": 0.17,
+   "ncc_refined": 0.936,
+   "flow_consistent": 0.945,
+   "lines": 101,
+   "lines_low_score": 0
+  },
+  {
+   "file": "raw/gdc/captures/006.jpg",
+   "sha256": "afdf2565b323dab45d0e468173896bcdb82f847397b92eb7665faba92a795bff",
+   "size": [
+    3072,
+    4080
+   ],
+   "status": "ok",
+   "sheet": 6,
+   "condition": "scan_app",
+   "markers": 4,
+   "marker_rms_px": 2.95,
+   "ncc_homography": 0.035,
+   "ncc_refined": 0.943,
+   "flow_consistent": 0.981,
+   "lines": 102,
+   "lines_low_score": 0
+  },
+  {
+   "file": "raw/gdc/captures/007.jpg",
+   "sha256": "47a048906fd0d309ed2a5dbc6ad63abbf3abde946285536a139670ac9976ebfd",
+   "size": [
+    3072,
+    4080
+   ],
+   "status": "ok",
+   "sheet": 7,
+   "condition": "photo_flat",
+   "markers": 4,
+   "marker_rms_px": 3.16,
+   "ncc_homography": 0.048,
+   "ncc_refined": 0.92,
+   "flow_consistent": 0.97,
+   "lines": 138,
+   "lines_low_score": 0
+  },
+  {
+   "file": "raw/gdc/captures/008.jpg",
+   "sha256": "d61f90b81653949696ecf4bfdc2f9d397dda65c40995990ab1234ab652a78214",
+   "size": [
+    3072,
+    4080
+   ],
+   "status": "ok",
+   "sheet": 8,
+   "condition": "photo_angled",
+   "markers": 4,
+   "marker_rms_px": 4.08,
+   "ncc_homography": 0.05,
+   "ncc_refined": 0.9,
+   "flow_consistent": 0.912,
+   "lines": 199,
+   "lines_low_score": 0
+  },
+  {
+   "file": "raw/gdc/captures/009.jpg",
+   "sha256": "7ad36645ec14ba47c1ce9cd8efee6e498b6af86e75cb54141d81de20a67415ca",
+   "size": [
+    3072,
+    4080
+   ],
+   "status": "ok",
+   "sheet": 9,
+   "condition": "scan_app",
+   "markers": 4,
+   "marker_rms_px": 3.09,
+   "ncc_homography": 0.15,
+   "ncc_refined": 0.906,
+   "flow_consistent": 0.804,
+   "lines": 99,
+   "lines_low_score": 1
+  },
+  {
+   "file": "raw/gdc/captures/010.jpg",
+   "sha256": "96bce845310580cd71cdbfd872aee9627eecd2533288347daa8f448388c4a34f",
+   "size": [
+    3072,
+    4080
+   ],
+   "status": "ok",
+   "sheet": 10,
+   "condition": "low_light",
+   "markers": 4,
+   "marker_rms_px": 3.6,
+   "ncc_homography": 0.148,
+   "ncc_refined": 0.932,
+   "flow_consistent": 0.981,
+   "lines": 125,
+   "lines_low_score": 0
+  },
+  {
+   "file": "raw/gdc/captures/011.jpg",
+   "sha256": "8e44b48f1d7a4deba8091f20b86fb501be74643407f58b4faba748e3bad310d4",
+   "size": [
+    3072,
+    4080
+   ],
+   "status": "ok",
+   "sheet": 11,
+   "condition": "scan_app",
+   "markers": 4,
+   "marker_rms_px": 2.55,
+   "ncc_homography": 0.077,
+   "ncc_refined": 0.922,
+   "flow_consistent": 0.969,
+   "lines": 98,
+   "lines_low_score": 0
+  },
+  {
+   "file": "raw/gdc/captures/012.jpg",
+   "sha256": "9efaa2e7711aa7ff4d2d1271df3552b1743ad4194a9ad2554418ebbb49d5ff9f",
+   "size": [
+    3072,
+    4080
+   ],
+   "status": "ok",
+   "sheet": 12,
+   "condition": "low_light",
+   "markers": 4,
+   "marker_rms_px": 3.43,
+   "ncc_homography": 0.16,
+   "ncc_refined": 0.939,
+   "flow_consistent": 0.981,
+   "lines": 99,
+   "lines_low_score": 0
+  },
+  {
+   "file": "raw/gdc/captures/013.jpg",
+   "sha256": "1955193fb9910cca24ecf59ec1ed3a4511b2f28a94ed86364abb5195aef18130",
+   "size": [
+    3072,
+    4080
+   ],
+   "status": "ok",
+   "sheet": 13,
+   "condition": "photo_flat",
+   "markers": 4,
+   "marker_rms_px": 2.41,
+   "ncc_homography": 0.048,
+   "ncc_refined": 0.909,
+   "flow_consistent": 0.88,
+   "lines": 45,
+   "lines_low_score": 0
+  },
+  {
+   "file": "raw/gdc/captures/014.jpg",
+   "sha256": "a26c00bf1882284a4a1b55b33e26a7b2a2f0d59879725313ea71ffc7b5f69294",
+   "size": [
+    3072,
+    4080
+   ],
+   "status": "ok",
+   "sheet": 14,
+   "condition": "low_light",
+   "markers": 4,
+   "marker_rms_px": 2.55,
+   "ncc_homography": 0.041,
+   "ncc_refined": 0.92,
+   "flow_consistent": 0.991,
+   "lines": 114,
+   "lines_low_score": 0
+  },
+  {
+   "file": "raw/gdc/captures/015.jpg",
+   "sha256": "bef373134ade21cd370d51d808f827ef174e385c9eb2e3c54cd62c14c236b158",
+   "size": [
+    3072,
+    4080
+   ],
+   "status": "ok",
+   "sheet": 15,
+   "condition": "photo_flat",
+   "markers": 4,
+   "marker_rms_px": 2.54,
+   "ncc_homography": 0.134,
+   "ncc_refined": 0.917,
+   "flow_consistent": 0.935,
+   "lines": 75,
+   "lines_low_score": 0
+  },
+  {
+   "file": "raw/gdc/captures/016.jpg",
+   "sha256": "2d220e60257af58074effc69e2d0797bbd5bb519b876d10f93da823cccbc8688",
+   "size": [
+    3072,
+    4080
+   ],
+   "status": "ok",
+   "sheet": 16,
+   "condition": "low_light",
+   "markers": 4,
+   "marker_rms_px": 2.51,
+   "ncc_homography": 0.105,
+   "ncc_refined": 0.925,
+   "flow_consistent": 0.979,
+   "lines": 80,
+   "lines_low_score": 0
+  },
+  {
+   "file": "raw/gdc/captures/017.jpg",
+   "sha256": "b97acb1011aa702c8dea643e4cf38e1029dccee9318a408fed719a3359f86037",
+   "size": [
+    3072,
+    4080
+   ],
+   "status": "ok",
+   "sheet": 17,
+   "condition": "photo_flat",
+   "markers": 4,
+   "marker_rms_px": 2.17,
+   "ncc_homography": 0.062,
+   "ncc_refined": 0.935,
+   "flow_consistent": 0.928,
+   "lines": 99,
+   "lines_low_score": 0
+  },
+  {
+   "file": "raw/gdc/captures/018.jpg",
+   "sha256": "0f2881ad3fff13ab80d9daeda4bde1ef482cfab67779d75749ce889a3472e428",
+   "size": [
+    3072,
+    4080
+   ],
+   "status": "ok",
+   "sheet": 18,
+   "condition": "low_light",
+   "markers": 4,
+   "marker_rms_px": 2.08,
+   "ncc_homography": 0.096,
+   "ncc_refined": 0.905,
+   "flow_consistent": 0.945,
+   "lines": 135,
+   "lines_low_score": 0
+  },
+  {
+   "file": "raw/gdc/captures/019.jpg",
+   "sha256": "c1df10bb10d4b8d284dcc814ff68a591a31564d3afeed98617869a9b012017a8",
+   "size": [
+    3072,
+    4080
+   ],
+   "status": "ok",
+   "sheet": 19,
+   "condition": "distant",
+   "markers": 4,
+   "marker_rms_px": 2.24,
+   "ncc_homography": 0.088,
+   "ncc_refined": 0.914,
+   "flow_consistent": 0.929,
+   "lines": 328,
+   "lines_low_score": 126
+  },
+  {
+   "file": "raw/gdc/captures/020.jpg",
+   "sha256": "0608b409c54a83d881bf4298f4a322889f4fdc213e1d8220fe00bc241f935d33",
+   "size": [
+    3072,
+    4080
+   ],
+   "status": "ok",
+   "sheet": 20,
+   "condition": "photo_flat",
+   "markers": 4,
+   "marker_rms_px": 2.89,
+   "ncc_homography": 0.114,
+   "ncc_refined": 0.936,
+   "flow_consistent": 0.925,
+   "lines": 46,
+   "lines_low_score": 0
+  },
+  {
+   "file": "raw/gdc/captures/021.jpg",
+   "sha256": "ca4f4468196d40b1a59284f81c28abe4903deaf23ce55b9fdf4d829a12cc7c68",
+   "size": [
+    3072,
+    4080
+   ],
+   "status": "ok",
+   "sheet": 21,
+   "condition": "photo_flat",
+   "markers": 4,
+   "marker_rms_px": 2.61,
+   "ncc_homography": 0.063,
+   "ncc_refined": 0.941,
+   "flow_consistent": 0.974,
+   "lines": 97,
+   "lines_low_score": 0
+  },
+  {
+   "file": "raw/gdc/captures/022.jpg",
+   "sha256": "ece85832889607b86cb5b091b7c945d3059c90525c290488cf29d7bf17f7964d",
+   "size": [
+    3072,
+    4080
+   ],
+   "status": "ok",
+   "sheet": 22,
+   "condition": "scan_app",
+   "markers": 4,
+   "marker_rms_px": 2.37,
+   "ncc_homography": 0.064,
+   "ncc_refined": 0.943,
+   "flow_consistent": 0.969,
+   "lines": 70,
+   "lines_low_score": 0
+  },
+  {
+   "file": "raw/gdc/captures/023.jpg",
+   "sha256": "28ecb827388225e11a7ed28ed64ec9ad194abcc2e1ec08453bec2c77143152cd",
+   "size": [
+    3072,
+    4080
+   ],
+   "status": "ok",
+   "sheet": 23,
+   "condition": "scan_app",
+   "markers": 4,
+   "marker_rms_px": 2.9,
+   "ncc_homography": 0.056,
+   "ncc_refined": 0.93,
+   "flow_consistent": 0.941,
+   "lines": 81,
+   "lines_low_score": 0
+  },
+  {
+   "file": "raw/gdc/captures/024.jpg",
+   "sha256": "af0dfb60aff87cf48c85d42be36ccd24b745ac29125d215600f904cd767c3aa7",
+   "size": [
+    3072,
+    4080
+   ],
+   "status": "ok",
+   "sheet": 24,
+   "condition": "scan_app",
+   "markers": 4,
+   "marker_rms_px": 2.66,
+   "ncc_homography": 0.137,
+   "ncc_refined": 0.936,
+   "flow_consistent": 0.923,
+   "lines": 70,
+   "lines_low_score": 0
+  },
+  {
+   "file": "raw/gdc/captures/025.jpg",
+   "sha256": "96bf78216b42c159ff474c6c5b6ea1c2cef6a5ca8831d54ef36c62ede3188b09",
+   "size": [
+    3072,
+    4080
+   ],
+   "status": "ok",
+   "sheet": 25,
+   "condition": "curved",
+   "markers": 4,
+   "marker_rms_px": 16.77,
+   "ncc_homography": 0.032,
+   "ncc_refined": 0.921,
+   "flow_consistent": 0.972,
+   "lines": 47,
+   "lines_low_score": 0
+  },
+  {
+   "file": "raw/gdc/captures/026.jpg",
+   "sha256": "b22be2e80dfcd5d42bce60a980a57b45924df2a8e211fa3bb4cdf9bdd25ddc7a",
+   "size": [
+    3072,
+    4080
+   ],
+   "status": "ok",
+   "sheet": 26,
+   "condition": "scan_app",
+   "markers": 4,
+   "marker_rms_px": 2.84,
+   "ncc_homography": 0.055,
+   "ncc_refined": 0.934,
+   "flow_consistent": 0.992,
+   "lines": 55,
+   "lines_low_score": 0
+  },
+  {
+   "file": "raw/gdc/captures/027.jpg",
+   "sha256": "1e357ae461686f4b48fa6cadcb419200642f8b9eab91f1239e54d97dc0869172",
+   "size": [
+    3072,
+    4080
+   ],
+   "status": "ok",
+   "sheet": 27,
+   "condition": "distant",
+   "markers": 4,
+   "marker_rms_px": 2.55,
+   "ncc_homography": 0.133,
+   "ncc_refined": 0.923,
+   "flow_consistent": 0.915,
+   "lines": 67,
+   "lines_low_score": 0
+  },
+  {
+   "file": "raw/gdc/captures/028.jpg",
+   "sha256": "71cf685bc1d6abf55c1ddddf8a5a57e19b94b82cb58076af9901ef7a428ccf83",
+   "size": [
+    3072,
+    4080
+   ],
+   "status": "ok",
+   "sheet": 28,
+   "condition": "low_light",
+   "markers": 4,
+   "marker_rms_px": 2.55,
+   "ncc_homography": 0.081,
+   "ncc_refined": 0.925,
+   "flow_consistent": 0.943,
+   "lines": 74,
+   "lines_low_score": 0
+  },
+  {
+   "file": "raw/gdc/captures/029.jpg",
+   "sha256": "c6cc9f96c9d4fb06edf4b7d4327cb6cd7455fd51b565b111a8195e8b9d1de147",
+   "size": [
+    3072,
+    4080
+   ],
+   "status": "ok",
+   "sheet": 29,
+   "condition": "distant",
+   "markers": 4,
+   "marker_rms_px": 2.71,
+   "ncc_homography": 0.104,
+   "ncc_refined": 0.925,
+   "flow_consistent": 0.983,
+   "lines": 86,
+   "lines_low_score": 0
+  },
+  {
+   "file": "raw/gdc/captures/030.jpg",
+   "sha256": "0fdeea326e06347ce974adf5661bf884e3021a852228015204517f4b384939ed",
+   "size": [
+    3072,
+    4080
+   ],
+   "status": "ok",
+   "sheet": 30,
+   "condition": "curved",
+   "markers": 4,
+   "marker_rms_px": 25.13,
+   "ncc_homography": 0.03,
+   "ncc_refined": 0.881,
+   "flow_consistent": 0.906,
+   "lines": 38,
+   "lines_low_score": 0
+  },
+  {
+   "file": "raw/gdc/captures/031.jpg",
+   "sha256": "74daaf2e30f31ff16ad4511234f9edba05eb0ce94336792dcc8cb3f72beb1dc4",
+   "size": [
+    3072,
+    4080
+   ],
+   "status": "ok",
+   "sheet": 31,
+   "condition": "distant",
+   "markers": 4,
+   "marker_rms_px": 2.92,
+   "ncc_homography": 0.129,
+   "ncc_refined": 0.936,
+   "flow_consistent": 0.949,
+   "lines": 68,
+   "lines_low_score": 0
+  },
+  {
+   "file": "raw/gdc/captures/032.jpg",
+   "sha256": "2c19d502cd8b34aab83ed50affb725769c8a22ee9f0d88ff1bdc66f9a2a9816f",
+   "size": [
+    3072,
+    4080
+   ],
+   "status": "ok",
+   "sheet": 32,
+   "condition": "scan_app",
+   "markers": 4,
+   "marker_rms_px": 2.54,
+   "ncc_homography": 0.085,
+   "ncc_refined": 0.933,
+   "flow_consistent": 0.898,
+   "lines": 76,
+   "lines_low_score": 0
+  },
+  {
+   "file": "raw/gdc/captures/033.jpg",
+   "sha256": "04a990ad14d08a5569079f1b67e349a55b7ed1e6e4fbe5228c188d619dde5ebd",
+   "size": [
+    3072,
+    4080
+   ],
+   "status": "ok",
+   "sheet": 33,
+   "condition": "low_light",
+   "markers": 4,
+   "marker_rms_px": 2.89,
+   "ncc_homography": 0.095,
+   "ncc_refined": 0.929,
+   "flow_consistent": 0.966,
+   "lines": 41,
+   "lines_low_score": 1
+  },
+  {
+   "file": "raw/gdc/captures/034.jpg",
+   "sha256": "0444812e8bd2a1e368a3d0d6812ea67be3152ce1b62faab5f56d1a76fa871565",
+   "size": [
+    3072,
+    4080
+   ],
+   "status": "ok",
+   "sheet": 34,
+   "condition": "scan_app",
+   "markers": 4,
+   "marker_rms_px": 2.69,
+   "ncc_homography": 0.104,
+   "ncc_refined": 0.927,
+   "flow_consistent": 0.832,
+   "lines": 54,
+   "lines_low_score": 0
+  },
+  {
+   "file": "raw/gdc/captures/035.jpg",
+   "sha256": "3d84fc1047b6e291b68f603027d14f00778127ed777edadacaf463b93304aef3",
+   "size": [
+    3072,
+    4080
+   ],
+   "status": "ok",
+   "sheet": 35,
+   "condition": "photo_angled",
+   "markers": 4,
+   "marker_rms_px": 3.24,
+   "ncc_homography": 0.059,
+   "ncc_refined": 0.927,
+   "flow_consistent": 0.95,
+   "lines": 61,
+   "lines_low_score": 2
+  },
+  {
+   "file": "raw/gdc/captures/036.jpg",
+   "sha256": "4b5452003c9d1c10181681b9b02f2d8ef2ce96b886e90ef1c50378eccfa5a34b",
+   "size": [
+    3072,
+    4080
+   ],
+   "status": "ok",
+   "sheet": 36,
+   "condition": "scan_app",
+   "markers": 4,
+   "marker_rms_px": 3.3,
+   "ncc_homography": 0.049,
+   "ncc_refined": 0.917,
+   "flow_consistent": 0.947,
+   "lines": 94,
+   "lines_low_score": 0
+  },
+  {
+   "file": "raw/gdc/captures/037.jpg",
+   "sha256": "6f180771a1d6582ec8d539533a58b48853c730ece824e9841f314396898d1028",
+   "size": [
+    3072,
+    4080
+   ],
+   "status": "ok",
+   "sheet": 37,
+   "condition": "rotated",
+   "markers": 4,
+   "marker_rms_px": 1.96,
+   "ncc_homography": 0.139,
+   "ncc_refined": 0.911,
+   "flow_consistent": 0.917,
+   "lines": 33,
+   "lines_low_score": 0
+  },
+  {
+   "file": "raw/gdc/captures/038.jpg",
+   "sha256": "9bb4cf2aa85d00f1db99ebb8c22d2242426670bd620f36460d1281fed1cd96a5",
+   "size": [
+    3072,
+    4080
+   ],
+   "status": "ok",
+   "sheet": 38,
+   "condition": "photo_flat",
+   "markers": 4,
+   "marker_rms_px": 2.45,
+   "ncc_homography": 0.096,
+   "ncc_refined": 0.924,
+   "flow_consistent": 0.942,
+   "lines": 34,
+   "lines_low_score": 0
+  },
+  {
+   "file": "raw/gdc/captures/039.jpg",
+   "sha256": "99a2699814f8120c6dfa8e87be5704e3c59fcddfa232b65f13388b0c371729fe",
+   "size": [
+    3072,
+    4080
+   ],
+   "status": "ok",
+   "sheet": 39,
+   "condition": "distant",
+   "markers": 4,
+   "marker_rms_px": 1.58,
+   "ncc_homography": 0.123,
+   "ncc_refined": 0.927,
+   "flow_consistent": 0.921,
+   "lines": 48,
+   "lines_low_score": 0
+  },
+  {
+   "file": "raw/gdc/captures/040.jpg",
+   "sha256": "1a957256b4e025293e41d82387cc2440535a5b8c367aa5c343c0064a14e2bee5",
+   "size": [
+    3072,
+    4080
+   ],
+   "status": "ok",
+   "sheet": 40,
+   "condition": "photo_angled",
+   "markers": 4,
+   "marker_rms_px": 3.28,
+   "ncc_homography": 0.04,
+   "ncc_refined": 0.937,
+   "flow_consistent": 0.978,
+   "lines": 54,
+   "lines_low_score": 0
+  },
+  {
+   "file": "raw/gdc/captures/041.jpg",
+   "sha256": "e60a5e5281003036cadfb644ad4ff662b34c9215eeb88ea831d75d98e159076b",
+   "size": [
+    3072,
+    4080
+   ],
+   "status": "ok",
+   "sheet": 41,
+   "condition": "photo_flat",
+   "markers": 4,
+   "marker_rms_px": 1.33,
+   "ncc_homography": 0.144,
+   "ncc_refined": 0.937,
+   "flow_consistent": 0.958,
+   "lines": 47,
+   "lines_low_score": 0
+  },
+  {
+   "file": "raw/gdc/captures/042.jpg",
+   "sha256": "60865852e4a0b775c44a577214b64bc4c213f3455eafd2632e7ae2a4f82f562c",
+   "size": [
+    3072,
+    4080
+   ],
+   "status": "ok",
+   "sheet": 42,
+   "condition": "photo_angled",
+   "markers": 4,
+   "marker_rms_px": 3.0,
+   "ncc_homography": 0.087,
+   "ncc_refined": 0.934,
+   "flow_consistent": 0.93,
+   "lines": 128,
+   "lines_low_score": 0
+  },
+  {
+   "file": "raw/gdc/captures/043.jpg",
+   "sha256": "372a984a0cc1fb83c355350b9ff51517e2376e7403955c4d3d1eb3d43224d35b",
+   "size": [
+    3072,
+    4080
+   ],
+   "status": "ok",
+   "sheet": 43,
+   "condition": "rotated",
+   "markers": 4,
+   "marker_rms_px": 1.79,
+   "ncc_homography": 0.292,
+   "ncc_refined": 0.924,
+   "flow_consistent": 0.847,
+   "lines": 51,
+   "lines_low_score": 0
+  },
+  {
+   "file": "raw/gdc/captures/044.jpg",
+   "sha256": "20bb02d7324088dbbbb2120467572fba2516ab3bfd9567080cba146369147ebb",
+   "size": [
+    3072,
+    4080
+   ],
+   "status": "ok",
+   "sheet": 44,
+   "condition": "distant",
+   "markers": 4,
+   "marker_rms_px": 1.68,
+   "ncc_homography": 0.144,
+   "ncc_refined": 0.922,
+   "flow_consistent": 0.961,
+   "lines": 63,
+   "lines_low_score": 0
+  },
+  {
+   "file": "raw/gdc/captures/045.jpg",
+   "sha256": "5bb8e96ffa953df47c6e8c38155370b79f2de70275be0ce6ff45979bc4f48d30",
+   "size": [
+    3072,
+    4080
+   ],
+   "status": "ok",
+   "sheet": 45,
+   "condition": "photo_flat",
+   "markers": 4,
+   "marker_rms_px": 1.43,
+   "ncc_homography": 0.117,
+   "ncc_refined": 0.948,
+   "flow_consistent": 0.979,
+   "lines": 47,
+   "lines_low_score": 0
+  },
+  {
+   "file": "raw/gdc/captures/046.jpg",
+   "sha256": "9c2f906dae93f87340dc80e2d5a8d84a0c59fb8e4fcdc8519ad3887ed73dc938",
+   "size": [
+    3072,
+    4080
+   ],
+   "status": "ok",
+   "sheet": 46,
+   "condition": "photo_flat",
+   "markers": 4,
+   "marker_rms_px": 2.72,
+   "ncc_homography": 0.104,
+   "ncc_refined": 0.928,
+   "flow_consistent": 0.933,
+   "lines": 32,
+   "lines_low_score": 0
+  },
+  {
+   "file": "raw/gdc/captures/047.jpg",
+   "sha256": "924be52ff93650bf5b10dfc85741ae663d3f2a96cd13f51448dc5704e934fc04",
+   "size": [
+    3072,
+    4080
+   ],
+   "status": "ok",
+   "sheet": 47,
+   "condition": "scan_app",
+   "markers": 4,
+   "marker_rms_px": 2.14,
+   "ncc_homography": 0.181,
+   "ncc_refined": 0.911,
+   "flow_consistent": 0.946,
+   "lines": 37,
+   "lines_low_score": 0
+  },
+  {
+   "file": "raw/gdc/captures/048.jpg",
+   "sha256": "d00a5464c272e61d24fcc4b4393be8fbeb3156d3e5db11f0b65fd1b3097de15c",
+   "size": [
+    3072,
+    4080
+   ],
+   "status": "ok",
+   "sheet": 48,
+   "condition": "scan_app",
+   "markers": 4,
+   "marker_rms_px": 2.88,
+   "ncc_homography": 0.035,
+   "ncc_refined": 0.93,
+   "flow_consistent": 0.857,
+   "lines": 24,
+   "lines_low_score": 0
+  },
+  {
+   "file": "raw/gdc/captures/049.jpg",
+   "sha256": "dfc0840e376feb14a6fc30261d23002dc7276fded3a467f03e056d63f00c732a",
+   "size": [
+    3072,
+    4080
+   ],
+   "status": "ok",
+   "sheet": 49,
+   "condition": "low_light",
+   "markers": 4,
+   "marker_rms_px": 2.3,
+   "ncc_homography": 0.116,
+   "ncc_refined": 0.935,
+   "flow_consistent": 0.945,
+   "lines": 12,
+   "lines_low_score": 0
+  },
+  {
+   "file": "raw/gdc/captures/050.jpg",
+   "sha256": "8c6532ad3fd333b50c277eedbcc26f4852969aa06e4aec8f59cbfd00dbacb5ad",
+   "size": [
+    3072,
+    4080
+   ],
+   "status": "ok",
+   "sheet": 50,
+   "condition": "scan_app",
+   "markers": 4,
+   "marker_rms_px": 2.66,
+   "ncc_homography": 0.091,
+   "ncc_refined": 0.878,
+   "flow_consistent": 0.895,
+   "lines": 53,
+   "lines_low_score": 8
+  },
+  {
+   "file": "raw/gdc/captures/051.jpg",
+   "sha256": "cec5a775dbfcfddd9cec4399fedb6167de60a6d89f8e92afcf6b57b6627d7d0b",
+   "size": [
+    3072,
+    4080
+   ],
+   "status": "ok",
+   "sheet": 51,
+   "condition": "distant",
+   "markers": 4,
+   "marker_rms_px": 2.02,
+   "ncc_homography": 0.082,
+   "ncc_refined": 0.902,
+   "flow_consistent": 0.947,
+   "lines": 141,
+   "lines_low_score": 0
+  },
+  {
+   "file": "raw/gdc/captures/052.jpg",
+   "sha256": "534cdc8730229dac5671f3a666867524811e516bc61b07f768db196c40523b5b",
+   "size": [
+    3072,
+    4080
+   ],
+   "status": "ok",
+   "sheet": 52,
+   "condition": "photo_flat",
+   "markers": 4,
+   "marker_rms_px": 1.71,
+   "ncc_homography": 0.03,
+   "ncc_refined": 0.898,
+   "flow_consistent": 0.899,
+   "lines": 265,
+   "lines_low_score": 0
+  },
+  {
+   "file": "raw/gdc/captures/053.jpg",
+   "sha256": "e458cfed9a71e5bc5ffd6b9cad6544212378b7d29c6c66878acc3562182d63d5",
+   "size": [
+    3072,
+    4080
+   ],
+   "status": "ok",
+   "sheet": 53,
+   "condition": "photo_angled",
+   "markers": 4,
+   "marker_rms_px": 3.15,
+   "ncc_homography": 0.097,
+   "ncc_refined": 0.826,
+   "flow_consistent": 0.93,
+   "lines": 463,
+   "lines_low_score": 0
+  },
+  {
+   "file": "raw/gdc/captures/054.jpg",
+   "sha256": "cd66fac9e5c97cc78bf3a89d7cbbb418347206629dcbf2bef0b509c9f5b13805",
+   "size": [
+    3072,
+    4080
+   ],
+   "status": "ok",
+   "sheet": 54,
+   "condition": "scan_app",
+   "markers": 4,
+   "marker_rms_px": 2.82,
+   "ncc_homography": 0.053,
+   "ncc_refined": 0.907,
+   "flow_consistent": 0.963,
+   "lines": 150,
+   "lines_low_score": 0
+  },
+  {
+   "file": "raw/gdc/captures/055.jpg",
+   "sha256": "289f1ecc8d177972827d41c7c3e7d11d07ec3edc44f7cd091179e1de3739e496",
+   "size": [
+    3072,
+    4080
+   ],
+   "status": "ok",
+   "sheet": 55,
+   "condition": "scan_app",
+   "markers": 4,
+   "marker_rms_px": 2.76,
+   "ncc_homography": 0.07,
+   "ncc_refined": 0.887,
+   "flow_consistent": 0.911,
+   "lines": 295,
+   "lines_low_score": 0
+  },
+  {
+   "file": "raw/gdc/captures/056.jpg",
+   "sha256": "f97ce383e0f783ff64bb9206eb0872085d51592a14cddbfc14c8063a60354d27",
+   "size": [
+    3072,
+    4080
+   ],
+   "status": "ok",
+   "sheet": 56,
+   "condition": "curved",
+   "markers": 4,
+   "marker_rms_px": 21.14,
+   "ncc_homography": 0.024,
+   "ncc_refined": 0.789,
+   "flow_consistent": 0.627,
+   "lines": 88,
+   "lines_low_score": 0
+  },
+  {
+   "file": "raw/gdc/captures/057.jpg",
+   "sha256": "9be2e847678be7afc732eaa193a6766fe30d08b7ac14d2f81577f5593da3a610",
+   "size": [
+    3072,
+    4080
+   ],
+   "status": "ok",
+   "sheet": 57,
+   "condition": "low_light",
+   "markers": 4,
+   "marker_rms_px": 2.48,
+   "ncc_homography": 0.123,
+   "ncc_refined": 0.916,
+   "flow_consistent": 0.762,
+   "lines": 85,
+   "lines_low_score": 0
+  },
+  {
+   "file": "raw/gdc/captures/058.jpg",
+   "sha256": "0ab293f73ff75d87a9c84e3657663cadc0cd7e61ab1a9c412397628014f2d852",
+   "size": [
+    3072,
+    4080
+   ],
+   "status": "ok",
+   "sheet": 58,
+   "condition": "photo_flat",
+   "markers": 4,
+   "marker_rms_px": 2.22,
+   "ncc_homography": 0.084,
+   "ncc_refined": 0.911,
+   "flow_consistent": 0.891,
+   "lines": 73,
+   "lines_low_score": 0
+  },
+  {
+   "file": "raw/gdc/captures/059.jpg",
+   "sha256": "007fbee90c067e52b74b9a22c16ccbd8086e8dd2765fc90f8912d7b6b19077ee",
+   "size": [
+    3072,
+    4080
+   ],
+   "status": "ok",
+   "sheet": 59,
+   "condition": "photo_angled",
+   "markers": 4,
+   "marker_rms_px": 3.12,
+   "ncc_homography": 0.06,
+   "ncc_refined": 0.903,
+   "flow_consistent": 0.81,
+   "lines": 39,
+   "lines_low_score": 0
+  },
+  {
+   "file": "raw/gdc/captures/060.jpg",
+   "sha256": "df34010ce94ea6adacc94459c39e71e7762396a89d451a40899c83ddb855f025",
+   "size": [
+    3072,
+    4080
+   ],
+   "status": "ok",
+   "sheet": 60,
+   "condition": "scan_app",
+   "markers": 4,
+   "marker_rms_px": 2.82,
+   "ncc_homography": 0.106,
+   "ncc_refined": 0.875,
+   "flow_consistent": 0.617,
+   "lines": 85,
+   "lines_low_score": 0
+  },
+  {
+   "file": "raw/gdc/captures/061.jpg",
+   "sha256": "9a40fd04bae28d3da6340b03682d925fcad1e20493a5b0d0117eb0115ac64e31",
+   "size": [
+    3072,
+    4080
+   ],
+   "status": "ok",
+   "sheet": 61,
+   "condition": "photo_angled",
+   "markers": 4,
+   "marker_rms_px": 4.11,
+   "ncc_homography": 0.02,
+   "ncc_refined": 0.918,
+   "flow_consistent": 0.887,
+   "lines": 49,
+   "lines_low_score": 0
+  },
+  {
+   "file": "raw/gdc/captures/062.jpg",
+   "sha256": "3c624bb1b9fcb46460069b303d6bedbabf22a68c7366c935e749192a2832d6b2",
+   "size": [
+    3072,
+    4080
+   ],
+   "status": "ok",
+   "sheet": 62,
+   "condition": "low_light",
+   "markers": 4,
+   "marker_rms_px": 2.96,
+   "ncc_homography": 0.118,
+   "ncc_refined": 0.865,
+   "flow_consistent": 0.963,
+   "lines": 18,
+   "lines_low_score": 0
+  },
+  {
+   "file": "raw/gdc/captures/063.jpg",
+   "sha256": "15f82516f4b7bf8456e8fc7f3098d02c98f33adea04a6037a883a0bd831d4836",
+   "size": [
+    3072,
+    4080
+   ],
+   "status": "ok",
+   "sheet": 63,
+   "condition": "distant",
+   "markers": 4,
+   "marker_rms_px": 1.61,
+   "ncc_homography": 0.133,
+   "ncc_refined": 0.921,
+   "flow_consistent": 0.914,
+   "lines": 22,
+   "lines_low_score": 3
+  },
+  {
+   "file": "raw/gdc/captures/064.jpg",
+   "sha256": "8f207e601228ca43644d13bea5e5e24d5307209c1f5868a023503f6163f0f580",
+   "size": [
+    3072,
+    4080
+   ],
+   "status": "ok",
+   "sheet": 64,
+   "condition": "photo_flat",
+   "markers": 4,
+   "marker_rms_px": 2.04,
+   "ncc_homography": 0.099,
+   "ncc_refined": 0.94,
+   "flow_consistent": 0.967,
+   "lines": 26,
+   "lines_low_score": 2
+  },
+  {
+   "file": "raw/gdc/captures/065.jpg",
+   "sha256": "71263a558e4f71bfdbb77bdb5e51a76e3bfd250866d198dc6bbcad9fdc612f65",
+   "size": [
+    3072,
+    4080
+   ],
+   "status": "ok",
+   "sheet": 65,
+   "condition": "scan_app",
+   "markers": 4,
+   "marker_rms_px": 2.04,
+   "ncc_homography": 0.106,
+   "ncc_refined": 0.946,
+   "flow_consistent": 0.97,
+   "lines": 44,
+   "lines_low_score": 2
+  },
+  {
+   "file": "raw/gdc/captures/066.jpg",
+   "sha256": "8e56cceeef10b183587283cbac76c0effc703c9ac1ec094204ae237b1fa8bbfc",
+   "size": [
+    4080,
+    3072
+   ],
+   "status": "ok",
+   "sheet": 66,
+   "condition": "rotated",
+   "markers": 4,
+   "marker_rms_px": 2.6,
+   "ncc_homography": 0.066,
+   "ncc_refined": 0.946,
+   "flow_consistent": 0.968,
+   "lines": 25,
+   "lines_low_score": 0
+  },
+  {
+   "file": "raw/gdc/captures/067.jpg",
+   "sha256": "1308ab17dfcf5c2b5772bd5145abda073a2da31b99b836e5bcca4029897dc35a",
+   "size": [
+    3072,
+    4080
+   ],
+   "status": "ok",
+   "sheet": 67,
+   "condition": "curved",
+   "markers": 4,
+   "marker_rms_px": 15.69,
+   "ncc_homography": 0.063,
+   "ncc_refined": 0.883,
+   "flow_consistent": 0.93,
+   "lines": 33,
+   "lines_low_score": 0
+  },
+  {
+   "file": "raw/gdc/captures/068.jpg",
+   "sha256": "d414ea29890789b3cb7b674f506f206cb551c126fd85b530aadb871d368a33d0",
+   "size": [
+    3072,
+    4080
+   ],
+   "status": "ok",
+   "sheet": 68,
+   "condition": "scan_app",
+   "markers": 4,
+   "marker_rms_px": 3.11,
+   "ncc_homography": 0.105,
+   "ncc_refined": 0.924,
+   "flow_consistent": 0.976,
+   "lines": 39,
+   "lines_low_score": 0
+  },
+  {
+   "file": "raw/gdc/captures/069.jpg",
+   "sha256": "775d5fb1ff02f57e641d66b735eda91102a78b35f4a202cc567a653cb909df25",
+   "size": [
+    3072,
+    4080
+   ],
+   "status": "ok",
+   "sheet": 69,
+   "condition": "scan_app",
+   "markers": 4,
+   "marker_rms_px": 1.85,
+   "ncc_homography": 0.115,
+   "ncc_refined": 0.935,
+   "flow_consistent": 0.976,
+   "lines": 26,
+   "lines_low_score": 0
+  },
+  {
+   "file": "raw/gdc/captures/070.jpg",
+   "sha256": "e00e1111edc83fe9136f180b0d35dd43011b568aed4bd9809aac69b67710714e",
+   "size": [
+    3072,
+    4080
+   ],
+   "status": "ok",
+   "sheet": 70,
+   "condition": "scan_app",
+   "markers": 4,
+   "marker_rms_px": 2.69,
+   "ncc_homography": 0.221,
+   "ncc_refined": 0.925,
+   "flow_consistent": 0.951,
+   "lines": 36,
+   "lines_low_score": 0
+  },
+  {
+   "file": "raw/gdc/captures/071.jpg",
+   "sha256": "23a6d6e9decc54aa180f79331adc5017273f24b63fd0147c4641465d773cb9c9",
+   "size": [
+    3072,
+    4080
+   ],
+   "status": "ok",
+   "sheet": 71,
+   "condition": "photo_angled",
+   "markers": 4,
+   "marker_rms_px": 2.06,
+   "ncc_homography": 0.054,
+   "ncc_refined": 0.925,
+   "flow_consistent": 0.97,
+   "lines": 42,
+   "lines_low_score": 0
+  },
+  {
+   "file": "raw/gdc/captures/072.jpg",
+   "sha256": "d10c2460d0b8413b19d2dc411fc70bc9536a1ba4b9b981ab5f334d2f476baea3",
+   "size": [
+    3072,
+    4080
+   ],
+   "status": "ok",
+   "sheet": 72,
+   "condition": "photo_angled",
+   "markers": 4,
+   "marker_rms_px": 3.6,
+   "ncc_homography": 0.126,
+   "ncc_refined": 0.945,
+   "flow_consistent": 0.985,
+   "lines": 26,
+   "lines_low_score": 0
+  },
+  {
+   "file": "raw/gdc/captures/073.jpg",
+   "sha256": "a86ce93b473e4d4675962a1ad793de458cee551558f5ac51e2f17715318efa13",
+   "size": [
+    3072,
+    4080
+   ],
+   "status": "ok",
+   "sheet": 73,
+   "condition": "low_light",
+   "markers": 4,
+   "marker_rms_px": 2.47,
+   "ncc_homography": 0.067,
+   "ncc_refined": 0.939,
+   "flow_consistent": 0.974,
+   "lines": 29,
+   "lines_low_score": 0
+  },
+  {
+   "file": "raw/gdc/captures/074.jpg",
+   "sha256": "c646ad448964e76b6589dc4eb19087e379076d80a6117a0f402b79367b42938d",
+   "size": [
+    3072,
+    4080
+   ],
+   "status": "ok",
+   "sheet": 74,
+   "condition": "scan_app",
+   "markers": 4,
+   "marker_rms_px": 2.7,
+   "ncc_homography": 0.05,
+   "ncc_refined": 0.957,
+   "flow_consistent": 0.983,
+   "lines": 29,
+   "lines_low_score": 0
+  },
+  {
+   "file": "raw/gdc/captures/075.jpg",
+   "sha256": "2d20ea8495a6334fb2e18c65e0899331b36a6718df02618a34b7fc0f504414b3",
+   "size": [
+    3072,
+    4080
+   ],
+   "status": "ok",
+   "sheet": 75,
+   "condition": "curved",
+   "markers": 4,
+   "marker_rms_px": 24.98,
+   "ncc_homography": 0.028,
+   "ncc_refined": 0.943,
+   "flow_consistent": 0.97,
+   "lines": 28,
+   "lines_low_score": 0
+  },
+  {
+   "file": "raw/gdc/captures/076.jpg",
+   "sha256": "bc336b8e07fe80cc5b3498783dcf53d03fa019561f6a2984df14de6ca86eb6a8",
+   "size": [
+    3072,
+    4080
+   ],
+   "status": "ok",
+   "sheet": 76,
+   "condition": "photo_angled",
+   "markers": 4,
+   "marker_rms_px": 4.42,
+   "ncc_homography": 0.025,
+   "ncc_refined": 0.944,
+   "flow_consistent": 0.98,
+   "lines": 26,
+   "lines_low_score": 0
+  },
+  {
+   "file": "raw/gdc/captures/077.jpg",
+   "sha256": "9e161970f7d0a4928d3c2e69c6b0031ae6b869a6f0e75658c49fd422b40ae519",
+   "size": [
+    3072,
+    4080
+   ],
+   "status": "ok",
+   "sheet": 77,
+   "condition": "scan_app",
+   "markers": 4,
+   "marker_rms_px": 3.28,
+   "ncc_homography": 0.09,
+   "ncc_refined": 0.916,
+   "flow_consistent": 0.971,
+   "lines": 23,
+   "lines_low_score": 0
+  },
+  {
+   "file": "raw/gdc/captures/078.jpg",
+   "sha256": "bb776fc060daec6ca9aa032fd3cff6882666bf62636020263306614e5460bbd7",
+   "size": [
+    4080,
+    3072
+   ],
+   "status": "ok",
+   "sheet": 78,
+   "condition": "rotated",
+   "markers": 4,
+   "marker_rms_px": 3.07,
+   "ncc_homography": 0.065,
+   "ncc_refined": 0.954,
+   "flow_consistent": 0.991,
+   "lines": 30,
+   "lines_low_score": 0
+  },
+  {
+   "file": "raw/gdc/captures/079.jpg",
+   "sha256": "8919d57d58437d9d304ad56dd0294b5d339ab1811211e4b76b539dceab717057",
+   "size": [
+    4080,
+    3072
+   ],
+   "status": "ok",
+   "sheet": 79,
+   "condition": "rotated",
+   "markers": 4,
+   "marker_rms_px": 2.44,
+   "ncc_homography": 0.082,
+   "ncc_refined": 0.957,
+   "flow_consistent": 0.983,
+   "lines": 30,
+   "lines_low_score": 0
+  },
+  {
+   "file": "raw/gdc/captures/080.jpg",
+   "sha256": "17e31d20505c31a14257fe627d7bec379132bf4a0e35be784826a3967e850d28",
+   "size": [
+    3072,
+    4080
+   ],
+   "status": "ok",
+   "sheet": 80,
+   "condition": "scan_app",
+   "markers": 4,
+   "marker_rms_px": 2.15,
+   "ncc_homography": 0.089,
+   "ncc_refined": 0.962,
+   "flow_consistent": 0.991,
+   "lines": 33,
+   "lines_low_score": 0
+  },
+  {
+   "file": "raw/gdc/captures/081.jpg",
+   "sha256": "b0e2fe54d739c68a7aeaaa2f4d09af6d3738819ddedf21bcde926993aa22de39",
+   "size": [
+    3072,
+    4080
+   ],
+   "status": "ok",
+   "sheet": 81,
+   "condition": "curved",
+   "markers": 4,
+   "marker_rms_px": 36.07,
+   "ncc_homography": 0.005,
+   "ncc_refined": 0.757,
+   "flow_consistent": 0.976,
+   "lines": 29,
+   "lines_low_score": 7
+  },
+  {
+   "file": "raw/gdc/captures/082.jpg",
+   "sha256": "d08aa6aadbcb7b5dca7dd09122b64088eae1afc4586e032fe5e4b366f800c235",
+   "size": [
+    3072,
+    4080
+   ],
+   "status": "ok",
+   "sheet": 82,
+   "condition": "scan_app",
+   "markers": 4,
+   "marker_rms_px": 2.45,
+   "ncc_homography": 0.13,
+   "ncc_refined": 0.931,
+   "flow_consistent": 0.961,
+   "lines": 42,
+   "lines_low_score": 0
+  },
+  {
+   "file": "raw/gdc/captures/083.jpg",
+   "sha256": "5d5a24736b66634fa3f44eb1a75cda4094d73dfdb97026389a8cc4b5f46b692d",
+   "size": [
+    3072,
+    4080
+   ],
+   "status": "ok",
+   "sheet": 83,
+   "condition": "distant",
+   "markers": 4,
+   "marker_rms_px": 1.71,
+   "ncc_homography": 0.123,
+   "ncc_refined": 0.932,
+   "flow_consistent": 0.939,
+   "lines": 53,
+   "lines_low_score": 0
+  },
+  {
+   "file": "raw/gdc/captures/084.jpg",
+   "sha256": "601037c8f8705b5450169962620fb6cba432dea7e4a26769c39517a366b7b9b0",
+   "size": [
+    3072,
+    4080
+   ],
+   "status": "ok",
+   "sheet": 84,
+   "condition": "scan_app",
+   "markers": 4,
+   "marker_rms_px": 2.91,
+   "ncc_homography": 0.115,
+   "ncc_refined": 0.935,
+   "flow_consistent": 0.964,
+   "lines": 41,
+   "lines_low_score": 0
+  },
+  {
+   "file": "raw/gdc/captures/085.jpg",
+   "sha256": "65d13c0db3e42770243f8d618d708905965b71a65055069f319d64cfee04c570",
+   "size": [
+    3072,
+    4080
+   ],
+   "status": "ok",
+   "sheet": 85,
+   "condition": "photo_angled",
+   "markers": 4,
+   "marker_rms_px": 2.73,
+   "ncc_homography": 0.06,
+   "ncc_refined": 0.926,
+   "flow_consistent": 0.933,
+   "lines": 47,
+   "lines_low_score": 0
+  },
+  {
+   "file": "raw/gdc/captures/086.jpg",
+   "sha256": "d3f6ded34808d3a11e46f6ec64d046bf18d3dbb3fa3419b32c268b3bf93f9aec",
+   "size": [
+    3072,
+    4080
+   ],
+   "status": "ok",
+   "sheet": 86,
+   "condition": "photo_angled",
+   "markers": 4,
+   "marker_rms_px": 4.33,
+   "ncc_homography": 0.083,
+   "ncc_refined": 0.908,
+   "flow_consistent": 0.963,
+   "lines": 52,
+   "lines_low_score": 0
+  },
+  {
+   "file": "raw/gdc/captures/087.jpg",
+   "sha256": "702e5ff50c0c295f1855217849c179d4685c8e4355a6967fad0600caef7d8023",
+   "size": [
+    3072,
+    4080
+   ],
+   "status": "ok",
+   "sheet": 87,
+   "condition": "scan_app",
+   "markers": 4,
+   "marker_rms_px": 2.02,
+   "ncc_homography": 0.219,
+   "ncc_refined": 0.946,
+   "flow_consistent": 0.953,
+   "lines": 67,
+   "lines_low_score": 0
+  },
+  {
+   "file": "raw/gdc/captures/088.jpg",
+   "sha256": "96a63e64c931221efeb5afd1c18a95d9a15dba9d715d09e8d575efd1eb2bfee8",
+   "size": [
+    3072,
+    4080
+   ],
+   "status": "ok",
+   "sheet": 88,
+   "condition": "photo_flat",
+   "markers": 4,
+   "marker_rms_px": 2.98,
+   "ncc_homography": 0.118,
+   "ncc_refined": 0.878,
+   "flow_consistent": 0.754,
+   "lines": 29,
+   "lines_low_score": 0
+  },
+  {
+   "file": "raw/gdc/captures/089.jpg",
+   "sha256": "13062bf5d962e7a0dd1861f312ce3d6a0e30be6b81c3dbf771b2b205ef21381c",
+   "size": [
+    3072,
+    4080
+   ],
+   "status": "ok",
+   "sheet": 89,
+   "condition": "scan_app",
+   "markers": 4,
+   "marker_rms_px": 3.04,
+   "ncc_homography": 0.043,
+   "ncc_refined": 0.853,
+   "flow_consistent": 0.754,
+   "lines": 17,
+   "lines_low_score": 0
+  },
+  {
+   "file": "raw/gdc/captures/090.jpg",
+   "sha256": "5640de5cf9af160835cf4df2ad178b0fecdd92f740b1e36c34bf497407106665",
+   "size": [
+    3072,
+    4080
+   ],
+   "status": "ok",
+   "sheet": 90,
+   "condition": "scan_app",
+   "markers": 4,
+   "marker_rms_px": 3.08,
+   "ncc_homography": 0.116,
+   "ncc_refined": 0.907,
+   "flow_consistent": 0.848,
+   "lines": 39,
+   "lines_low_score": 0
+  },
+  {
+   "file": "raw/gdc/captures/091.jpg",
+   "sha256": "418b82fcf61b82ffbb8e0eb11640918caae75f0784e97ba755797bab9e0c98e1",
+   "size": [
+    3072,
+    4080
+   ],
+   "status": "ok",
+   "sheet": 91,
+   "condition": "scan_app",
+   "markers": 4,
+   "marker_rms_px": 2.45,
+   "ncc_homography": 0.18,
+   "ncc_refined": 0.899,
+   "flow_consistent": 0.721,
+   "lines": 40,
+   "lines_low_score": 0
+  },
+  {
+   "file": "raw/gdc/captures/092.jpg",
+   "sha256": "45de0e4c163faf61ee3e9d38235c0c2ff5f2316b2e57483c58aef04ff32d945f",
+   "size": [
+    3072,
+    4080
+   ],
+   "status": "ok",
+   "sheet": 92,
+   "condition": "scan_app",
+   "markers": 4,
+   "marker_rms_px": 3.95,
+   "ncc_homography": 0.1,
+   "ncc_refined": 0.928,
+   "flow_consistent": 0.866,
+   "lines": 44,
+   "lines_low_score": 0
+  },
+  {
+   "file": "raw/gdc/captures/093.jpg",
+   "sha256": "f8cc8eab7bbc05f13b874723b7cbb5c2f7188b84bdec49e26f798df4e3ea33c8",
+   "size": [
+    3072,
+    4080
+   ],
+   "status": "ok",
+   "sheet": 93,
+   "condition": "scan_app",
+   "markers": 4,
+   "marker_rms_px": 2.27,
+   "ncc_homography": 0.09,
+   "ncc_refined": 0.919,
+   "flow_consistent": 0.834,
+   "lines": 49,
+   "lines_low_score": 0
+  },
+  {
+   "file": "raw/gdc/captures/094.jpg",
+   "sha256": "c4d07ef87b9be4482ffc65b99ab17f519b406cd13d2fa90e50fe7d85ef9a4a63",
+   "size": [
+    3072,
+    4080
+   ],
+   "status": "ok",
+   "sheet": 94,
+   "condition": "scan_app",
+   "markers": 4,
+   "marker_rms_px": 3.23,
+   "ncc_homography": 0.046,
+   "ncc_refined": 0.915,
+   "flow_consistent": 0.816,
+   "lines": 177,
+   "lines_low_score": 0
+  },
+  {
+   "file": "raw/gdc/captures/095.jpg",
+   "sha256": "1581df3f03d6c61689f4dd8e56ee4b4aa9b5d9511356ea219b19f00d9c629275",
+   "size": [
+    3072,
+    4080
+   ],
+   "status": "ok",
+   "sheet": 95,
+   "condition": "photo_flat",
+   "markers": 4,
+   "marker_rms_px": 2.32,
+   "ncc_homography": 0.088,
+   "ncc_refined": 0.9,
+   "flow_consistent": 0.826,
+   "lines": 161,
+   "lines_low_score": 0
+  },
+  {
+   "file": "raw/gdc/captures/096.jpg",
+   "sha256": "111bae3d181aebcee35b01b57ddb62fcedfa837fc81a51ae5f8f80b3a66e0d86",
+   "size": [
+    3072,
+    4080
+   ],
+   "status": "ok",
+   "sheet": 96,
+   "condition": "scan_app",
+   "markers": 4,
+   "marker_rms_px": 3.1,
+   "ncc_homography": 0.039,
+   "ncc_refined": 0.903,
+   "flow_consistent": 0.84,
+   "lines": 105,
+   "lines_low_score": 1
+  },
+  {
+   "file": "raw/gdc/captures/097.jpg",
+   "sha256": "49d27655db739ccfffc59699954d8c3e7235516b53d4ed2c685283af5cf5c78d",
+   "size": [
+    3072,
+    4080
+   ],
+   "status": "ok",
+   "sheet": 97,
+   "condition": "distant",
+   "markers": 4,
+   "marker_rms_px": 1.93,
+   "ncc_homography": 0.103,
+   "ncc_refined": 0.866,
+   "flow_consistent": 0.98,
+   "lines": 140,
+   "lines_low_score": 0
+  },
+  {
+   "file": "raw/gdc/captures/098.jpg",
+   "sha256": "cf0168c60dad86430e84bb120b374deb79a886b60e523cd64240f354018ca892",
+   "size": [
+    3072,
+    4080
+   ],
+   "status": "ok",
+   "sheet": 98,
+   "condition": "scan_app",
+   "markers": 4,
+   "marker_rms_px": 3.47,
+   "ncc_homography": 0.004,
+   "ncc_refined": 0.922,
+   "flow_consistent": 0.954,
+   "lines": 144,
+   "lines_low_score": 0
+  },
+  {
+   "file": "raw/gdc/captures/099.jpg",
+   "sha256": "df975205cb773d994b4cd9b594859d86867c2a532d495cd5341aeb788fe67fd6",
+   "size": [
+    3072,
+    4080
+   ],
+   "status": "ok",
+   "sheet": 99,
+   "condition": "rotated",
+   "markers": 4,
+   "marker_rms_px": 1.43,
+   "ncc_homography": 0.065,
+   "ncc_refined": 0.928,
+   "flow_consistent": 0.943,
+   "lines": 135,
+   "lines_low_score": 0
+  },
+  {
+   "file": "raw/gdc/captures/100.jpg",
+   "sha256": "3c5a1a3ba67909bbbe18d92a136928d8ce145ce07f281d8014bd8599bc64fbd0",
+   "size": [
+    3072,
+    4080
+   ],
+   "status": "ok",
+   "sheet": 100,
+   "condition": "photo_angled",
+   "markers": 4,
+   "marker_rms_px": 5.83,
+   "ncc_homography": 0.002,
+   "ncc_refined": 0.904,
+   "flow_consistent": 0.99,
+   "lines": 178,
+   "lines_low_score": 3
+  },
+  {
+   "file": "raw/gdc/captures/101.jpg",
+   "sha256": "37a5b2697a84a2a32c5782745e41b3ff6554ce61afc5f1e7bdb9cdfecb88a5ed",
+   "size": [
+    3072,
+    4080
+   ],
+   "status": "ok",
+   "sheet": 101,
+   "condition": "scan_app",
+   "markers": 4,
+   "marker_rms_px": 2.46,
+   "ncc_homography": 0.092,
+   "ncc_refined": 0.932,
+   "flow_consistent": 0.977,
+   "lines": 116,
+   "lines_low_score": 3
+  },
+  {
+   "file": "raw/gdc/captures/102.jpg",
+   "sha256": "15e7ee15f25b192527c5e3c51e1e15968b82b253b1dc6ec8fec7b90aef172d29",
+   "size": [
+    3072,
+    4080
+   ],
+   "status": "ok",
+   "sheet": 102,
+   "condition": "curved",
+   "markers": 4,
+   "marker_rms_px": 24.73,
+   "ncc_homography": 0.039,
+   "ncc_refined": 0.824,
+   "flow_consistent": 0.709,
+   "lines": 77,
+   "lines_low_score": 4
+  },
+  {
+   "file": "raw/gdc/captures/103.jpg",
+   "sha256": "48631ef16afc924d91e7a6afb2ce108bff64aa372cbae4d7def1e5fc7cf721dc",
+   "size": [
+    3072,
+    4080
+   ],
+   "status": "ok",
+   "sheet": 103,
+   "condition": "photo_flat",
+   "markers": 4,
+   "marker_rms_px": 9.62,
+   "ncc_homography": 0.06,
+   "ncc_refined": 0.93,
+   "flow_consistent": 0.962,
+   "lines": 161,
+   "lines_low_score": 3
+  },
+  {
+   "file": "raw/gdc/captures/104.jpg",
+   "sha256": "6117af67766aa138be45a964e5b001b662dbf733a13a5d8136c88c3e67b6b929",
+   "size": [
+    3072,
+    4080
+   ],
+   "status": "ok",
+   "sheet": 104,
+   "condition": "distant",
+   "markers": 4,
+   "marker_rms_px": 1.69,
+   "ncc_homography": 0.158,
+   "ncc_refined": 0.885,
+   "flow_consistent": 0.967,
+   "lines": 173,
+   "lines_low_score": 3
+  },
+  {
+   "file": "raw/gdc/captures/105.jpg",
+   "sha256": "8091f8b80d9174ca07a8a0f7c4da910c344b263b197f8472e26274498373fa2a",
+   "size": [
+    3072,
+    4080
+   ],
+   "status": "ok",
+   "sheet": 105,
+   "condition": "scan_app",
+   "markers": 4,
+   "marker_rms_px": 2.88,
+   "ncc_homography": 0.125,
+   "ncc_refined": 0.913,
+   "flow_consistent": 0.911,
+   "lines": 113,
+   "lines_low_score": 3
+  }
+ ]
+}

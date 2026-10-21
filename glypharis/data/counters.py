@@ -62,6 +62,34 @@ def count_hiertext(raw: Path) -> dict[str, Any]:
     return counts
 
 
+def count_google_fonts(raw: Path) -> dict[str, Any]:
+    """Font files and families per category (first folder) and licence folder (second)."""
+    files = sorted(p.relative_to(raw).parts for p in raw.rglob("*.ttf"))
+    families = {(parts[0], parts[1], parts[2]) for parts in files if len(parts) >= 4}
+    by_cat: dict[str, int] = {}
+    by_lic: dict[str, int] = {}
+    for cat, lic, _ in families:
+        by_cat[cat] = by_cat.get(cat, 0) + 1
+        by_lic[lic] = by_lic.get(lic, 0) + 1
+    return {
+        "files": len(files),
+        "families": len(families),
+        "families_by_category": dict(sorted(by_cat.items())),
+        "families_by_licence": dict(sorted(by_lic.items())),
+    }
+
+
+def count_pg19(raw: Path) -> dict[str, Any]:
+    out: dict[str, Any] = {}
+    for part in ("train", "validation", "test"):
+        books = sorted((raw / part).glob("*.txt"))
+        chars = sum(len(p.read_text(encoding="utf-8")) for p in books)
+        out[part] = {"books": len(books), "characters": chars}
+    return out
+
+
 COUNTERS: dict[str, Callable[[Path], dict[str, Any]]] = {
+    "google_fonts": count_google_fonts,
+    "pg19": count_pg19,
     "hiertext": count_hiertext,
 }

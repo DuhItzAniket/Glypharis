@@ -16,3 +16,4 @@ Format: `ADR-NNNN-short-name.md` with Status, Context, Decision, Consequences, a
 | [0007](ADR-0007-pretrained-weights-policy.md) | Generic ImageNet backbones allowed; no pretrained OCR weights inside GLYPHARIS | Accepted |
 | [0008](ADR-0008-usable-engine-first.md) | Ship a usable engine (v0.1) before the research studies; CPU-first inference | Accepted (point 4 amended by 0009) |
 | [0009](ADR-0009-no-synthtext.md) | Drop SynthText; keep every training source commercially usable | Accepted |
+| [0010](ADR-0010-gdc-capture-track.md) | GDC capture runs as its own track; Phase 4 closes when the print pack is ready | Accepted |
