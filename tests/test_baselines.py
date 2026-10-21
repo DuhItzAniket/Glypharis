@@ -98,7 +98,10 @@ def test_evaluate_baselines_writes_three_tables(tmp_path):
     e2e = next(r for r in results if r["task"] == "e2e")
     assert e2e["detection"]["iou_0.5"]["recall"]["value"] == 0.5
     assert e2e["tracks"]["strict"]["e2e_f1"]["value"] == 2 / 3
-    for name in ("recognition.md", "detection.md", "end_to_end.md"):
+    for name in ("recognition.md", "detection.md", "end_to_end.md", "README.md"):
         text = (out / name).read_text(encoding="utf-8")
         assert "GW-BASE-001" in text and "Tesseract 5" in text
     assert "## Track: normalised" in (out / "recognition.md").read_text(encoding="utf-8")
+    summary = (out / "README.md").read_text(encoding="utf-8")
+    assert "| GW-BASE-001 | Tesseract 5 | rec | gdc_test | 2 of 2 |" in summary
+    assert "planned, no predictions yet" in summary and "TrOCR has no detector" in summary
