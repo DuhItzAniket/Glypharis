@@ -364,6 +364,7 @@ def main(argv: list[str] | None = None) -> int:
     open_test_access(spec["benchmark"], spec["split"], args.experiment,
                      f"{args.system} ({args.task})", 5, args.reason)  # fmt: skip
 
+    git = git_info()  # the code that is about to run
     system = make_system(args.system, args.task)
     out = output_path(data, args.experiment, args.system, args.task, args.eval_set)
     out.parent.mkdir(parents=True, exist_ok=True)
@@ -414,7 +415,6 @@ def main(argv: list[str] | None = None) -> int:
 
     meta_path = out.with_suffix(".meta.json")
     runs = json.loads(meta_path.read_text(encoding="utf-8"))["runs"] if meta_path.exists() else []
-    git = git_info()
     runs.append({"written": written, "wall_seconds": round(time.monotonic() - start, 1),
                  "git_commit": git.commit, "git_dirty": git.dirty,
                  "peak_rss_mib": round(peak_rss / 2**20, 1),
