@@ -6,6 +6,8 @@ Ground truth is a `glypharis.data.pages.Page`. Which ground-truth lines count:
   rotated text are out of scope for an English printed-text engine (ADR-0008).
 - **box lines** (detection, bag-of-lines, E2E F1): text lines whose box is trusted, i.e. no GDC
   alignment score or a score of at least `MIN_ALIGN_SCORE`.
+- **recognition lines** (recognition-only benchmarks cut from pages): `rec_ok` lines with a trusted
+  box; see `is_rec_line`.
 - every other ground-truth line is **don't care**: a prediction matched to it is ignored, and it is
   never a miss. Predictions lying mostly inside a page ignore region or a don't-care line are
   ignored too.
@@ -45,6 +47,13 @@ def is_text_line(line: PageLine) -> bool:
 
 def is_box_line(line: PageLine) -> bool:
     return is_text_line(line) and (line.align_score is None or line.align_score >= MIN_ALIGN_SCORE)
+
+
+def is_rec_line(line: PageLine) -> bool:
+    """Lines in a recognition-only benchmark built from pages: usable for the recognizer
+    (`PageLine.rec_ok`: legible, printed, horizontal, inside the charset) and with a trusted box,
+    since the crop is cut from the box."""
+    return line.rec_ok and (line.align_score is None or line.align_score >= MIN_ALIGN_SCORE)
 
 
 def _poly(points: Sequence[Sequence[float]]) -> Polygon:

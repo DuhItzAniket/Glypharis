@@ -8,7 +8,15 @@ import numpy as np
 import pytest
 from PIL import Image
 
-from glypharis.data.crops import CropSettings, background_grey, encode_jpeg, expand_quad, rectify
+from glypharis.data.crops import (
+    CropSettings,
+    background_grey,
+    cut_line,
+    encode_jpeg,
+    expand_quad,
+    line_quad,
+    rectify,
+)
 from glypharis.data.exclusions import Exclusions
 from glypharis.data.hiertext import ImageAnnotation, Line
 from glypharis.data.linepack import LinePackReader, LinePackWriter
@@ -123,6 +131,54 @@ def test_rectify_rotated_line_comes_out_horizontal():
             (50 - 20 * s, 50 + 20 * c)]  # fmt: skip
     crop = rectify(page, quad, CropSettings(height=20), 255)
     assert crop.size == (100, 20)
+
+
+def _band(xs, centre, half):
+    """Densified polygon: top edge left to right, then bottom edge right to left."""
+    top = [[float(x), centre(x) - half] for x in xs]
+    bottom = [[float(x), centre(x) + half] for x in reversed(xs)]
+    return top + bottom
+
+
+def test_line_quad_takes_the_corners_of_a_long_polygon():
+    poly = _band([10, 50, 90], lambda x: 20.0, 5)
+    assert line_quad(poly) == [[10.0, 15.0], [90.0, 15.0], [90.0, 25.0], [10.0, 25.0]]
+    assert line_quad(poly[:4]) == poly[:4]
+
+
+def test_cut_line_on_a_straight_band_matches_the_quad_crop():
+    page = Image.new("L", (300, 100), 255)
+    page.paste(0, (40, 45, 60, 55))
+    settings = CropSettings(height=32)
+    straight = _band(list(range(20, 281, 20)), lambda x: 50.0, 10)
+    a = cut_line(page, straight, settings, 255)
+    b = rectify(page, expand_quad(line_quad(straight), settings.margin), settings, 255)
+    assert abs(a.width - b.width) <= 2 and a.height == b.height == 32
+    w = min(a.width, b.width)
+    diff = np.abs(np.asarray(a, np.float32)[:, :w] - np.asarray(b, np.float32)[:, :w])
+    assert diff.mean() < 8
+
+
+def test_cut_line_follows_a_curved_line():
+    page = Image.new("L", (400, 200), 255)
+    px = page.load()
+
+    def centre(x):
+        return 100 + 60 * ((x - 200) / 180) ** 2  # a bowed line, 60 px of sag at the ends
+
+    for x in range(20, 381):
+        for y in range(int(centre(x)) - 6, int(centre(x)) + 7):
+            px[x, y] = 0
+    poly = _band(list(range(20, 381, 30)), centre, 10)
+    settings = CropSettings(height=40)
+    strip = np.asarray(cut_line(page, poly, settings, 255), np.float32)
+    mid = strip[16:24, 8:-8]  # the band stays in the middle rows all the way along
+    assert mid.mean() < 60
+    assert strip[:4].mean() > 200 and strip[-4:].mean() > 200
+    corners = np.asarray(
+        rectify(page, expand_quad(line_quad(poly), settings.margin), settings, 255), np.float32
+    )
+    assert corners[16:24].mean() > mid.mean() + 100  # the corner crop loses the middle of the line
 
 
 def test_outside_area_uses_fill_not_black():

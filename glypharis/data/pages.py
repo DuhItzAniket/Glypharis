@@ -175,3 +175,15 @@ def read_pages(path: str | Path) -> Iterator[Page]:
         for line in fh:
             if line.strip():
                 yield Page.from_dict(json.loads(line))
+
+
+def open_page_image(page: Page, data_root: str | Path = "data", mode: str = "RGB") -> Any:
+    """Load a page image the way its polygons expect it: EXIF rotation applied, then ``mode``.
+
+    GDC captures are phone photos whose polygons are in the rotated frame. HierText images carry no
+    orientation tag, so for them this is a plain load.
+    """
+    from PIL import Image, ImageOps
+
+    with Image.open(Path(data_root) / page.image) as img:
+        return ImageOps.exif_transpose(img).convert(mode)

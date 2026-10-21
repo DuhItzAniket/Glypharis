@@ -1,0 +1,28 @@
+{
+ "gdc_test": {
+  "pages": "processed/gdc/pages_test.jsonl.gz",
+  "pages_sha256": "328a967d213b13285cce4713fa2ce7822f33b0712b5f9647beb6d09c52b18913",
+  "pack": "processed/gdc/lines_test",
+  "count": 8106,
+  "bin_sha256": "175d482e589627e0b93e7f7a340bc1a3c67879209dce6534008a7e3183be909f",
+  "crop_settings": {
+   "height": 64,
+   "margin": 0.15,
+   "max_aspect": 64.0,
+   "jpeg_quality": 95
+  }
+ },
+ "hiertext_test": {
+  "pages": "processed/hiertext/pages_test.jsonl.gz",
+  "pages_sha256": "c48915b2b9747c71dfa93c41315d2c9f2ad665c6591efd78f516b7a413cf272b",
+  "pack": "processed/hiertext/lines_test",
+  "count": 67277,
+  "bin_sha256": "45db87c5538a05f4467a80c319f268bcf900f42758f4d26546927721263d8b1e",
+  "crop_settings": {
+   "height": 64,
+   "margin": 0.15,
+   "max_aspect": 64.0,
+   "jpeg_quality": 95
+  }
+ }
+}
