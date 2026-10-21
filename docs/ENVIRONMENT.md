@@ -94,8 +94,8 @@ fallback; switching is a pin change plus a re-run of the report and the test sui
 ## Open environment items
 
 1. ~~Create `.venv` and decide the torch build~~ (done, Phase 1; see above).
-2. Separate environment for baselines (`.venv-baselines`) so PaddlePaddle does not conflict with PyTorch
-   (Phase 5).
+2. ~~Separate environment for baselines (`.venv-baselines`) so PaddlePaddle does not conflict with PyTorch~~
+   (done, Phase 5; pins in `requirements/baselines-lock.txt`, setup in `requirements/README.md`).
 3. Install Tesseract (UB Mannheim Windows build) — requires the user to run the installer (before Phase 5).
 4. Optional: install `gh` to verify GitHub Actions runs from the terminal. Until then CI status is read
    from the public GitHub API.
