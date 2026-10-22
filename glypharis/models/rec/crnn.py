@@ -38,7 +38,6 @@ class CRNN(nn.Module):
             *_conv(c4, c5),
             *_conv(c5, c6),
             nn.MaxPool2d((2, 1), (2, 1)),  # H/16, W/4
-            nn.AdaptiveAvgPool2d((1, None)),  # height -> 1
         )
         self.rnn = nn.LSTM(
             c6,
@@ -67,8 +66,10 @@ class CRNN(nn.Module):
         return torch.div(torch.div(widths, 2, rounding_mode="floor"), 2, rounding_mode="floor")
 
     def forward(self, x: torch.Tensor) -> torch.Tensor:
-        f = self.cnn(x)  # N, C, 1, T
-        f = f.squeeze(2).permute(2, 0, 1)  # T, N, C
+        # Average away the remaining height (2 rows at H = 32, 3 at H = 48). A plain mean, unlike
+        # adaptive pooling, has a deterministic CUDA backward.
+        f = self.cnn(x).mean(dim=2)  # N, C, T
+        f = f.permute(2, 0, 1)  # T, N, C
         f, _ = self.rnn(f)
         return self.head(self.dropout(f))  # T, N, classes
 

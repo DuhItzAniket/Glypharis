@@ -67,10 +67,12 @@ class Parts:
         return RecLineDataset(self.packs, self.charset, d.image_height, d.max_width, aug,
                               self.cfg.seed, self.limits, subset)  # fmt: skip
 
-    def loader(self, ds: RecLineDataset, batch: int, shuffle: bool, epoch: int = 0) -> Any:
+    def loader(self, ds: RecLineDataset, batch: int, shuffle: bool, epoch: int = 0,
+               workers: int | None = None) -> Any:  # fmt: skip
         sampler = WidthBucketBatchSampler(ds.widths, batch, self.cfg.seed, shuffle=shuffle)
         sampler.set_epoch(epoch)
-        w = self.cfg.data.num_workers
+        # Workers are new processes on Windows; for tiny sets, loading in-process is far faster.
+        w = self.cfg.data.num_workers if workers is None else workers
         gen = make_generator(self.cfg.seed + epoch)
         return torch.utils.data.DataLoader(ds, batch_sampler=sampler, collate_fn=collate,
                                            num_workers=w, pin_memory=self.device.type == "cuda",
@@ -93,12 +95,12 @@ def overfit(p: Parts, out: Path) -> dict[str, Any]:
     curve, step, cer = [], 0, 1.0
     t0 = time.monotonic()
     while step < OVERFIT_MAX_STEPS:
-        for batch in p.loader(ds, 16, shuffle=True, epoch=step):
+        for batch in p.loader(ds, 16, shuffle=True, epoch=step, workers=0):
             _step(p, model, opt, batch)
             step += 1
         if step % 40 < 4:  # about every 40 steps (4 batches per pass)
-            res = evaluate(model, p.loader(ds, 32, shuffle=False), p.charset, p.amp, p.device,
-                           p.ctc)  # fmt: skip
+            res = evaluate(model, p.loader(ds, 32, shuffle=False, workers=0), p.charset, p.amp,
+                           p.device, p.ctc)  # fmt: skip
             cer = res.cer
             curve.append({"step": step, "cer": cer, "loss": res.loss})
             if cer <= OVERFIT_TARGET_CER:
