@@ -16,8 +16,8 @@
   "pages": "processed/hiertext/pages_test.jsonl.gz",
   "pages_sha256": "c48915b2b9747c71dfa93c41315d2c9f2ad665c6591efd78f516b7a413cf272b",
   "pack": "processed/hiertext/lines_test",
-  "count": 67277,
-  "bin_sha256": "45db87c5538a05f4467a80c319f268bcf900f42758f4d26546927721263d8b1e",
+  "count": 67574,
+  "bin_sha256": "e854af994ac21bafd2d507c99777bacfe0cdbea84135260d5a52772962ad7f37",
   "crop_settings": {
    "height": 64,
    "margin": 0.15,
