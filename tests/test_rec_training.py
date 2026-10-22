@@ -105,9 +105,8 @@ def test_resume_mid_epoch_matches_an_uninterrupted_run(tiny):
     for (name, a), (_, b) in zip(full.model.state_dict().items(),
                                  resumed.model.state_dict().items(), strict=True):  # fmt: skip
         assert torch.equal(a, b), name
-    assert [h["val_cer"] for h in full.state.history] == [
-        h["val_cer"] for h in resumed.state.history
-    ]
+    for key in ("val_cer", "train_loss"):  # the epoch's running loss survives the resume too
+        assert [h[key] for h in full.state.history] == [h[key] for h in resumed.state.history]
 
 
 def test_resume_refuses_a_different_config(tiny):
@@ -272,3 +271,13 @@ def test_resume_matches_with_a_column_cap(tiny):
     for a, b in zip(full.model.state_dict().values(), resumed.model.state_dict().values(),
                     strict=True):  # fmt: skip
         assert torch.equal(a, b)
+
+
+def test_resume_check_script_passes_on_cpu(tiny, monkeypatch):
+    import rec_resume_check
+
+    monkeypatch.setattr(rec_resume_check, "STEPS", 8)
+    cfg_path = _yaml(_cfg(tiny, "r", **{"train.epochs": 3}), tiny / "resume.yaml")
+    assert rec_resume_check.main(["--config", str(cfg_path)]) == 0
+    res = json.loads((tiny / "r/reports/training/sanity/GW-REC-999/resume_check.json").read_text())
+    assert res["passed"] and res["max_rel_loss_diff"] == 0 and res["max_rel_weight_diff"] == 0

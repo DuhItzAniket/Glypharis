@@ -215,6 +215,8 @@ class TrainState:
     history: list[dict[str, Any]] = field(default_factory=list)
     flags: list[dict[str, Any]] = field(default_factory=list)
     train_seconds: float = 0.0
+    epoch_loss_sum: float = 0.0  # running training loss of the current epoch
+    epoch_loss_n: int = 0
 
 
 class RecTrainer:
@@ -280,6 +282,7 @@ class RecTrainer:
         self.ctc = nn.CTCLoss(blank=Charset.BLANK, zero_infinity=True)
         self.gradmon = GradientMonitor(cfg.diagnostics)
         self.state = TrainState()
+        self._clock = time.monotonic()
         self.git = git_info()
         self.params = count_parameters(self.model)
 
@@ -367,6 +370,12 @@ class RecTrainer:
 
     # ----------------------------------------------------------------------------- train
 
+    def _tick(self) -> None:
+        """Add the time since the last tick to the state (saved with every checkpoint)."""
+        now = time.monotonic()
+        self.state.train_seconds += now - self._clock
+        self._clock = now
+
     def _optimizer_step(self) -> float:
         if self.amp.needs_grad_scaler:
             self.scaler.unscale_(self.optimizer)
@@ -402,7 +411,11 @@ class RecTrainer:
             epoch = self.state.epoch
             self.sampler.set_epoch(epoch, self.state.batch_in_epoch)
             loader = self._loader(self.train_ds, self.sampler, cfg.seed + 1000 + epoch)
-            t0, lines, loss_sum, loss_n = time.monotonic(), 0, 0.0, 0
+            # The epoch's running loss and the training time live in the state, so a resumed
+            # epoch continues them instead of starting over at the resume point.
+            st = self.state
+            t0, lines, step_sum, step_n = time.monotonic(), 0, 0.0, 0
+            self._clock = time.monotonic()
             for batch in loader:
                 try:
                     loss, _, _ = ctc_loss(self.model, batch, self.amp, self.device, self.ctc)
@@ -415,35 +428,41 @@ class RecTrainer:
                         self._non_finite(batch, loss)
                     continue
                 self.scaler.scale(loss / accum).backward()
-                self.state.batch_in_epoch += 1
+                st.batch_in_epoch += 1
                 lines += len(batch["keys"])
-                loss_sum += float(loss.detach())
-                loss_n += 1
-                last_of_epoch = self.state.batch_in_epoch == self.epoch_batches[epoch]
-                if self.state.batch_in_epoch % accum and not last_of_epoch:
+                value = float(loss.detach())
+                st.epoch_loss_sum += value
+                st.epoch_loss_n += 1
+                step_sum += value
+                step_n += 1
+                last_of_epoch = st.batch_in_epoch == self.epoch_batches[epoch]
+                if st.batch_in_epoch % accum and not last_of_epoch:
                     continue
                 norm = self._optimizer_step()
-                self._flag(self.gradmon.update(norm, epoch, self.state.step))
-                if self.state.step % cfg.logging.log_every_n_steps == 0:
+                self._flag(self.gradmon.update(norm, epoch, st.step))
+                if st.step % cfg.logging.log_every_n_steps == 0:
                     elapsed = time.monotonic() - t0
-                    rec = {"type": "step", "epoch": epoch, "step": self.state.step,
-                           "loss": loss_sum / max(loss_n, 1), "grad_norm": norm,
+                    rec = {"type": "step", "epoch": epoch, "step": st.step,
+                           "loss": st.epoch_loss_sum / max(st.epoch_loss_n, 1),
+                           "step_loss": step_sum / step_n, "grad_norm": norm,
                            "lr": self.optimizer.param_groups[0]["lr"],
                            "lines_per_s": lines / max(elapsed, 1e-9)}  # fmt: skip
                     if self.device.type == "cuda":
                         rec["vram_peak_mib"] = torch.cuda.max_memory_allocated() / 2**20
                     self._log(rec)
+                step_sum, step_n = 0.0, 0
                 every = cfg.checkpoint.every_steps
-                if every and self.state.step % every == 0 and not last_of_epoch:
+                if every and st.step % every == 0 and not last_of_epoch:
+                    self._tick()
                     self.save("last.pt")
-                if t.max_steps is not None and self.state.step >= t.max_steps:
+                if t.max_steps is not None and st.step >= t.max_steps:
                     done = True
                     break
-            self.state.train_seconds += time.monotonic() - t0
-            if done and self.state.batch_in_epoch < self.epoch_batches[epoch]:
+            self._tick()
+            if done and st.batch_in_epoch < self.epoch_batches[epoch]:
                 self.save("last.pt")  # cut short mid-epoch: resumable from here
                 break
-            self._end_epoch(loss_sum / max(loss_n, 1))
+            self._end_epoch(st.epoch_loss_sum / max(st.epoch_loss_n, 1))
         summary = self._summary()
         (self.run_dir / "summary.json").write_text(json.dumps(summary, indent=1) + "\n",
                                                    encoding="utf-8")  # fmt: skip
@@ -482,6 +501,7 @@ class RecTrainer:
         improved = metric < self.state.best_metric - es.min_delta
         self.state.epoch += 1
         self.state.batch_in_epoch = 0
+        self.state.epoch_loss_sum, self.state.epoch_loss_n = 0.0, 0
         if improved:
             self.state.best_metric, self.state.best_epoch, self.state.bad_epochs = metric, epoch, 0
         else:
