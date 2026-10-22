@@ -281,3 +281,13 @@ def test_resume_check_script_passes_on_cpu(tiny, monkeypatch):
     assert rec_resume_check.main(["--config", str(cfg_path)]) == 0
     res = json.loads((tiny / "r/reports/training/sanity/GW-REC-999/resume_check.json").read_text())
     assert res["passed"] and res["max_rel_loss_diff"] == 0 and res["max_rel_weight_diff"] == 0
+
+
+@pytest.mark.gpu
+def test_rng_state_restores_from_a_checkpoint_loaded_onto_the_gpu(tmp_path):
+    from glypharis.training.checkpoint import rng_state, save_checkpoint, set_rng_state
+
+    save_checkpoint(tmp_path / "c.pt", {"rng": rng_state()})
+    expected = torch.rand(3)
+    set_rng_state(load_checkpoint(tmp_path / "c.pt", "cuda")["rng"])  # tensors land on the GPU
+    assert torch.equal(torch.rand(3), expected)
