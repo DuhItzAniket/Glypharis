@@ -25,7 +25,7 @@ Rows link to a full entry below. Numbers are copied from generated reports only,
 - **Hardware:** laptop CPU only (`.venv-baselines`, ADR-0006); no GPU
 - **Research question:** where do existing systems stand on our evaluation sets, under our metrics?
 - **Hypothesis (written before the run):** none; this is a reference measurement, not a test of an idea.
-- **Method:** `scripts/run_baselines.py` then `scripts/evaluate_baselines.py`. Validation: 10,000 seeded line crops per set and 400 seeded pages; test sets in full (logged in `research/test_access_log.md`).
+- **Method:** `scripts/run_baselines.py` then `scripts/evaluate_baselines.py`. Recognition crops come from the evaluation packs of `scripts/build_eval_crops.py`, which keep lines with characters outside the GLYPHARIS charset (EXPERIMENT_PROTOCOL §2; the charset ceiling is reported). HierText validation: 10,000 seeded line crops and 400 seeded pages; GlyphSynth validation and the test sets in full (test access logged in `research/test_access_log.md`, scoring included). Speed and memory come from a separate `--profile` pass on validation data (10 warm-up, 100 timed, batch 1).
 - **Variables:** independent: system; controlled: evaluation sets, crops, metrics and normalisation tracks
 - **Control:** —
 - **Result:** see `reports/baselines/` (filled in after the run)
@@ -45,7 +45,7 @@ Rows link to a full entry below. Numbers are copied from generated reports only,
 - **Hardware:** laptop CPU only (`.venv-baselines`, ADR-0006); no GPU
 - **Research question:** where do existing systems stand on our evaluation sets, under our metrics?
 - **Hypothesis (written before the run):** none; this is a reference measurement, not a test of an idea.
-- **Method:** `scripts/run_baselines.py` then `scripts/evaluate_baselines.py`. Validation: 10,000 seeded line crops per set and 400 seeded pages; test sets in full (logged in `research/test_access_log.md`).
+- **Method:** `scripts/run_baselines.py` then `scripts/evaluate_baselines.py`. Recognition crops come from the evaluation packs of `scripts/build_eval_crops.py`, which keep lines with characters outside the GLYPHARIS charset (EXPERIMENT_PROTOCOL §2; the charset ceiling is reported). HierText validation: 10,000 seeded line crops and 400 seeded pages; GlyphSynth validation and the test sets in full (test access logged in `research/test_access_log.md`, scoring included). Speed and memory come from a separate `--profile` pass on validation data (10 warm-up, 100 timed, batch 1).
 - **Variables:** independent: system; controlled: evaluation sets, crops, metrics and normalisation tracks
 - **Control:** —
 - **Result:** see `reports/baselines/` (filled in after the run)
@@ -65,7 +65,7 @@ Rows link to a full entry below. Numbers are copied from generated reports only,
 - **Hardware:** laptop CPU only (`.venv-baselines`, ADR-0006); no GPU
 - **Research question:** where do existing systems stand on our evaluation sets, under our metrics?
 - **Hypothesis (written before the run):** none; this is a reference measurement, not a test of an idea.
-- **Method:** `scripts/run_baselines.py` then `scripts/evaluate_baselines.py`. Validation: 10,000 seeded line crops per set and 400 seeded pages; test sets in full (logged in `research/test_access_log.md`).
+- **Method:** `scripts/run_baselines.py` then `scripts/evaluate_baselines.py`. Recognition crops come from the evaluation packs of `scripts/build_eval_crops.py`, which keep lines with characters outside the GLYPHARIS charset (EXPERIMENT_PROTOCOL §2; the charset ceiling is reported). HierText validation: 10,000 seeded line crops and 400 seeded pages; GlyphSynth validation and the test sets in full (test access logged in `research/test_access_log.md`, scoring included). Speed and memory come from a separate `--profile` pass on validation data (10 warm-up, 100 timed, batch 1).
 - **Variables:** independent: system; controlled: evaluation sets, crops, metrics and normalisation tracks
 - **Control:** —
 - **Result:** see `reports/baselines/` (filled in after the run)
@@ -77,7 +77,7 @@ Rows link to a full entry below. Numbers are copied from generated reports only,
 
 ### GW-BASE-004 — TrOCR-small-printed: recognition only
 
-- **System:** microsoft/trocr-small-printed, transformers on CPU, greedy decoding as in the checkpoint, with `max_new_tokens=256` because the checkpoint sets no length and transformers would otherwise stop at 20 tokens and cut long lines. It has no detector, so it is run on recognition only.
+- **System:** microsoft/trocr-small-printed, transformers on CPU, greedy decoding as in the checkpoint, with `max_new_tokens=256` because the checkpoint sets no length and transformers would otherwise stop at 20 tokens and cut long lines, and with the decoder cache on: the checkpoint ships `use_cache: false`, which re-runs the whole prefix at every step. Outputs were checked identical on 64 validation lines; decoding is 2.3x faster. It has no detector, so it is run on recognition only.
 - **Date allocated / run:** 2026-10-21 / —
 - **Phase:** 05
 - **Git commit:** recorded in the run metadata   **Config:** `scripts/run_baselines.py` defaults   **Seed(s):** subsample seed 5; bootstrap seed 20261010
@@ -85,7 +85,7 @@ Rows link to a full entry below. Numbers are copied from generated reports only,
 - **Hardware:** laptop CPU only (`.venv-baselines`, ADR-0006); no GPU
 - **Research question:** where do existing systems stand on our evaluation sets, under our metrics?
 - **Hypothesis (written before the run):** none; this is a reference measurement, not a test of an idea.
-- **Method:** `scripts/run_baselines.py` then `scripts/evaluate_baselines.py`. Validation: 10,000 seeded line crops per set and 400 seeded pages; test sets in full (logged in `research/test_access_log.md`).
+- **Method:** `scripts/run_baselines.py` then `scripts/evaluate_baselines.py`. Recognition crops come from the evaluation packs of `scripts/build_eval_crops.py`, which keep lines with characters outside the GLYPHARIS charset (EXPERIMENT_PROTOCOL §2; the charset ceiling is reported). HierText validation: 10,000 seeded line crops and 400 seeded pages; GlyphSynth validation and the test sets in full (test access logged in `research/test_access_log.md`, scoring included). Speed and memory come from a separate `--profile` pass on validation data (10 warm-up, 100 timed, batch 1).
 - **Variables:** independent: system; controlled: evaluation sets, crops, metrics and normalisation tracks
 - **Control:** —
 - **Result:** see `reports/baselines/` (filled in after the run)
@@ -105,7 +105,7 @@ Rows link to a full entry below. Numbers are copied from generated reports only,
 - **Hardware:** laptop CPU only (`.venv-baselines`, ADR-0006); no GPU
 - **Research question:** where do existing systems stand on our evaluation sets, under our metrics?
 - **Hypothesis (written before the run):** none; this is a reference measurement, not a test of an idea.
-- **Method:** `scripts/run_baselines.py` then `scripts/evaluate_baselines.py`. Validation: 10,000 seeded line crops per set and 400 seeded pages; test sets in full (logged in `research/test_access_log.md`).
+- **Method:** `scripts/run_baselines.py` then `scripts/evaluate_baselines.py`. Recognition crops come from the evaluation packs of `scripts/build_eval_crops.py`, which keep lines with characters outside the GLYPHARIS charset (EXPERIMENT_PROTOCOL §2; the charset ceiling is reported). HierText validation: 10,000 seeded line crops and 400 seeded pages; GlyphSynth validation and the test sets in full (test access logged in `research/test_access_log.md`, scoring included). Speed and memory come from a separate `--profile` pass on validation data (10 warm-up, 100 timed, batch 1).
 - **Variables:** independent: system; controlled: evaluation sets, crops, metrics and normalisation tracks
 - **Control:** —
 - **Result:** see `reports/baselines/` (filled in after the run)
@@ -125,7 +125,7 @@ Rows link to a full entry below. Numbers are copied from generated reports only,
 - **Hardware:** laptop CPU only (`.venv-baselines`, ADR-0006); no GPU
 - **Research question:** where do existing systems stand on our evaluation sets, under our metrics?
 - **Hypothesis (written before the run):** none; this is a reference measurement, not a test of an idea.
-- **Method:** `scripts/run_baselines.py` then `scripts/evaluate_baselines.py`. Validation: 10,000 seeded line crops per set and 400 seeded pages; test sets in full (logged in `research/test_access_log.md`).
+- **Method:** `scripts/run_baselines.py` then `scripts/evaluate_baselines.py`. Recognition crops come from the evaluation packs of `scripts/build_eval_crops.py`, which keep lines with characters outside the GLYPHARIS charset (EXPERIMENT_PROTOCOL §2; the charset ceiling is reported). HierText validation: 10,000 seeded line crops and 400 seeded pages; GlyphSynth validation and the test sets in full (test access logged in `research/test_access_log.md`, scoring included). Speed and memory come from a separate `--profile` pass on validation data (10 warm-up, 100 timed, batch 1).
 - **Variables:** independent: system; controlled: evaluation sets, crops, metrics and normalisation tracks
 - **Control:** —
 - **Result:** see `reports/baselines/` (filled in after the run)
@@ -145,7 +145,7 @@ Rows link to a full entry below. Numbers are copied from generated reports only,
 - **Hardware:** laptop CPU only (`.venv-baselines`, ADR-0006); no GPU
 - **Research question:** where do existing systems stand on our evaluation sets, under our metrics?
 - **Hypothesis (written before the run):** none; this is a reference measurement, not a test of an idea.
-- **Method:** `scripts/run_baselines.py` then `scripts/evaluate_baselines.py`. Validation: 10,000 seeded line crops per set and 400 seeded pages; test sets in full (logged in `research/test_access_log.md`).
+- **Method:** `scripts/run_baselines.py` then `scripts/evaluate_baselines.py`. Recognition crops come from the evaluation packs of `scripts/build_eval_crops.py`, which keep lines with characters outside the GLYPHARIS charset (EXPERIMENT_PROTOCOL §2; the charset ceiling is reported). HierText validation: 10,000 seeded line crops and 400 seeded pages; GlyphSynth validation and the test sets in full (test access logged in `research/test_access_log.md`, scoring included). Speed and memory come from a separate `--profile` pass on validation data (10 warm-up, 100 timed, batch 1).
 - **Variables:** independent: system; controlled: evaluation sets, crops, metrics and normalisation tracks
 - **Control:** —
 - **Result:** see `reports/baselines/` (filled in after the run)

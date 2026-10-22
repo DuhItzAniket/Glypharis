@@ -4,9 +4,14 @@ import json
 
 import evaluate_baselines
 import numpy as np
+import pytest
 import run_baselines
+from PIL import Image
 
+from glypharis.data.crops import encode_jpeg
+from glypharis.data.linepack import LinePackWriter
 from glypharis.data.pages import Page, PageLine, write_pages
+from glypharis.data.text import Charset
 
 TSV = "\n".join(
     [
@@ -19,6 +24,13 @@ TSV = "\n".join(
         "5\t1\t1\t1\t2\t2\t80\t40\t60\t20\t-1\t ",
     ]
 )
+LOG_HEADER = "| Date | Benchmark | ID | Checkpoint | Phase | Reason |\n|---|---|---|---|---|---|\n"
+PLACEHOLDER = "| — | — | — | — | — | No test access yet. |\n"
+OOC = (True, False, False, False, "out_of_charset")  # legible, handwritten, vertical, rec_ok, skip
+VERTICAL = (True, False, True, False, "vertical")
+
+
+# ------------------------------------------------------------------------- runner helpers
 
 
 def test_tesseract_tsv_groups_words_into_lines():
@@ -49,59 +61,239 @@ def test_validation_is_subsampled_and_test_is_complete():
     assert len(run_baselines.page_indices(100, "validation")) == 100
 
 
-def test_resume_drops_a_half_written_last_line(tmp_path):
+def test_resume_repairs_the_end_of_an_interrupted_file(tmp_path):
     path = tmp_path / "p.jsonl"
     path.write_text('{"key": "a"}\n{"key": "b"}\n{"key": "c", "pre', encoding="utf-8")
     assert run_baselines.done_keys(path) == {"a", "b"}
     assert path.read_text(encoding="utf-8") == '{"key": "a"}\n{"key": "b"}\n'
+    # a complete record that lost only its newline keeps its key and gets the newline back
+    path.write_text('{"key": "a"}\n{"key": "b"}', encoding="utf-8")
+    assert run_baselines.done_keys(path) == {"a", "b"}
+    assert path.read_text(encoding="utf-8").endswith("}\n")
+    # a cut inside a multi-byte character
+    path.write_bytes(b'{"key": "a"}\n{"key": "b", "pred": "caf' + "é".encode()[:1])
+    assert run_baselines.done_keys(path) == {"a"}
+    assert path.read_bytes() == b'{"key": "a"}\n'
     assert run_baselines.done_keys(tmp_path / "missing.jsonl") == set()
+
+
+# --------------------------------------------------------------------------- fake data root
 
 
 def _box(x0, y0, x1, y1):
     return [[x0, y0], [x1, y0], [x1, y1], [x0, y1]]
 
 
-def _write(path, records, meta):
-    path.parent.mkdir(parents=True, exist_ok=True)
-    path.write_text("".join(json.dumps(r) + "\n" for r in records), encoding="utf-8")
-    run = {"written": len(records), "wall_seconds": 1.0, "peak_rss_mib": 300.0, "batch": 2}
-    meta = {**meta, "version": "x 1.0", "settings": {}, "runs": [run]}
-    path.with_suffix(".meta.json").write_text(json.dumps(meta), encoding="utf-8")
-
-
-def test_evaluate_baselines_writes_three_tables(tmp_path):
-    data = tmp_path / "data"
-    lines = [
-        PageLine("d/l0", _box(0, 0, 100, 20), "alpha", "alpha", True, False, False, True),
-        PageLine("d/l1", _box(0, 30, 100, 50), "beta", "beta", True, False, False, True),
+def _lines(prefix):
+    return [
+        PageLine(f"{prefix}/l0", _box(0, 0, 100, 20), "alpha", "alpha", True, False, False, True),
+        PageLine(f"{prefix}/l1", _box(0, 30, 100, 50), "beta", "beta", True, False, False, True),
+        PageLine(f"{prefix}/l2", _box(0, 60, 100, 80), "naïve", "naïve", *OOC),
+        PageLine(f"{prefix}/v0", _box(150, 0, 170, 90), "STAMP", "STAMP", *VERTICAL),
     ]
-    write_pages(data / "processed/gdc/pages_test.jsonl.gz",
-                [Page("d", "img.jpg", 200, 100, "gdc", "test", lines)])  # fmt: skip
-    pack_meta = data / "processed/gdc/lines_test.meta.json"
-    pack_meta.write_text(json.dumps({"count": 2}), encoding="utf-8")
-    exp = data / "processed/baselines/GW-BASE-001"
-    _write(exp / "tesseract_rec_gdc_test.jsonl",
-           [{"key": "d/l0", "ref": "alpha", "pred": "alpha", "time_ms": 5.0},
-            {"key": "d/l1", "ref": "beta", "pred": "bota", "time_ms": 5.0}],
-           {"system": "tesseract", "task": "rec", "eval_set": "gdc_test",
-            "experiment": "GW-BASE-001"})  # fmt: skip
-    _write(exp / "tesseract_e2e_gdc_test.jsonl",
-           [{"key": "d", "time_ms": 900.0,
-             "lines": [{"polygon": _box(0, 0, 100, 20), "text": "alpha", "confidence": 0.9}]}],
-           {"system": "tesseract", "task": "e2e", "eval_set": "gdc_test",
-            "experiment": "GW-BASE-001"})  # fmt: skip
-    out = tmp_path / "reports"
-    assert evaluate_baselines.main(["--data-root", str(data), "--out", str(out)]) == 0
+
+
+def _pack(prefix, lines, split, source):
+    crop = encode_jpeg(Image.new("L", (40, 16), 255), 95)
+    with LinePackWriter(prefix) as w:
+        for ln in lines:
+            if ln.line_id.endswith(("l0", "l1", "l2")):  # the recognition lines
+                w.add(ln.line_id, ln.line_id.split("/")[0], split, source, ln.text, crop, (40, 16))
+
+
+@pytest.fixture
+def root(tmp_path, monkeypatch):
+    """A data root with one page per page-based set, its line pack and an empty access log."""
+    data = tmp_path / "data"
+    Charset(list(" abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ")).save(
+        data / "manifests/charset.json"
+    )
+    (data / "raw").mkdir(parents=True)
+    Image.new("RGB", (200, 100), "white").save(data / "raw/page.png")
+    for name, (pages, pack, split, source) in {
+        "gdc_test": ("processed/gdc/pages_test.jsonl.gz", "processed/gdc/lines_test", "test",
+                     "gdc"),
+        "hiertext_test": ("processed/hiertext/pages_test.jsonl.gz", "processed/hiertext/lines_test",
+                          "test", "hiertext"),
+        "hiertext_val": ("processed/hiertext/pages_validation.jsonl.gz",
+                         "processed/hiertext/lines_validation_eval", "validation", "hiertext"),
+    }.items():  # fmt: skip
+        lines = _lines(name)
+        write_pages(data / pages, [Page(name, "raw/page.png", 200, 100, source, split, lines)])
+        _pack(data / pack, lines, split, source)
+    log = tmp_path / "access.md"
+    log.write_text(LOG_HEADER + PLACEHOLDER, encoding="utf-8")
+    monkeypatch.setattr(run_baselines, "ACCESS_LOG", log)
+    monkeypatch.setattr(run_baselines, "cpu_busy_percent", lambda interval=2.0: 3.0)
+    return data, log
+
+
+class FakeSystem:
+    version = "fake 1.0"
+
+    def __init__(self, fail_after=None):
+        self.calls, self.fail_after, self.child_peak = 0, fail_after, 0
+
+    def settings(self):
+        return {"cpu_threads": 2}
+
+    def inference_batch(self, runner_batch):
+        return runner_batch
+
+    def recognize(self, images):
+        self.calls += len(images)
+        if self.fail_after is not None and self.calls > self.fail_after:
+            raise RuntimeError("interrupted")
+        return ["alpha"] * len(images)
+
+    def page(self, img):
+        return [{"polygon": _box(0, 0, 100, 20), "text": "alpha", "confidence": 1.0}]
+
+
+def _run(data, *extra, system="tesseract", experiment="GW-BASE-001"):
+    return run_baselines.main(["--system", system, "--experiment", experiment, "--data-root",
+                               str(data), "--batch", "1", *extra])  # fmt: skip
+
+
+# ---------------------------------------------------------------------------- runner main
+
+
+def test_recognition_set_keeps_out_of_charset_lines(root):
+    data, _ = root
+    keys = run_baselines.expected_keys(data, "gdc_test", "rec")
+    assert keys == ["gdc_test/l0", "gdc_test/l1", "gdc_test/l2"]
+    assert run_baselines.expected_keys(data, "gdc_test", "e2e") == ["gdc_test"]
+
+
+def test_runner_writes_metadata_first_resumes_and_logs_each_access(root, monkeypatch):
+    data, log = root
+    monkeypatch.setattr(run_baselines, "make_system", lambda n, t: FakeSystem(fail_after=1))
+    with pytest.raises(RuntimeError, match="interrupted"):
+        _run(data, "--task", "rec", "--eval-set", "gdc_test")
+    out = data / "processed/baselines/GW-BASE-001/tesseract_rec_gdc_test.jsonl"
+    meta = json.loads(out.with_suffix(".meta.json").read_text(encoding="utf-8"))
+    assert meta["runs"][0]["status"] == "running" and meta["expected"] == 3
+    assert meta["runs"][0]["git_commit"] is not None
+
+    monkeypatch.setattr(run_baselines, "make_system", lambda n, t: FakeSystem())
+    assert _run(data, "--task", "rec", "--eval-set", "gdc_test") == 0
+    records = [json.loads(x) for x in out.read_text(encoding="utf-8").splitlines()]
+    assert sorted(r["key"] for r in records) == ["gdc_test/l0", "gdc_test/l1", "gdc_test/l2"]
+    assert [r["seg"] for r in records] == [0, 1, 1]
+    meta = json.loads(out.with_suffix(".meta.json").read_text(encoding="utf-8"))
+    assert [r["status"] for r in meta["runs"]] == ["running", "done"] and meta["samples"] == 3
+    rows = [ln for ln in log.read_text(encoding="utf-8").splitlines() if "GW-BASE-001" in ln]
+    assert len(rows) == 2 and "resumed: 1 of 3" in rows[1]
+
+    # complete: no model load and no further access-log row
+    monkeypatch.setattr(run_baselines, "make_system", lambda n, t: pytest.fail("model loaded"))
+    assert _run(data, "--task", "rec", "--eval-set", "gdc_test") == 0
+    assert sum("GW-BASE-001" in ln for ln in log.read_text(encoding="utf-8").splitlines()) == 2
+
+
+def test_runner_refuses_wrong_ids_and_stale_files(root, monkeypatch):
+    data, _ = root
+    with pytest.raises(SystemExit, match="registered as GW-BASE-001"):
+        _run(data, "--task", "rec", "--eval-set", "gdc_test", experiment="GW-BASE-002")
+    out = data / "processed/baselines/GW-BASE-001/tesseract_rec_gdc_test.jsonl"
+    out.parent.mkdir(parents=True)
+    out.write_text('{"key": "old-sample/l9"}\n', encoding="utf-8")
+    with pytest.raises(SystemExit, match="move it aside"):
+        _run(data, "--task", "rec", "--eval-set", "gdc_test")
+
+
+def test_profile_times_after_warmup_on_validation_only(root, monkeypatch):
+    data, _ = root
+    monkeypatch.setattr(run_baselines, "make_system", lambda n, t: FakeSystem())
+    monkeypatch.setattr(run_baselines, "WARMUP", 1)
+    monkeypatch.setattr(run_baselines, "PROFILE_SAMPLES", 2)
+    with pytest.raises(SystemExit, match="validation data only"):
+        _run(data, "--task", "rec", "--eval-set", "gdc_test", "--profile")
+    with pytest.raises(SystemExit, match="profiling needs"):  # one page cannot fill 1 + 2
+        _run(data, "--task", "e2e", "--eval-set", "hiertext_val", "--profile")
+    assert _run(data, "--task", "rec", "--eval-set", "hiertext_val", "--profile") == 0
+    path = data / "processed/baselines/GW-BASE-001/profile_tesseract_rec_hiertext_val.json"
+    prof = json.loads(path.read_text(encoding="utf-8"))
+    assert len(prof["warmup_times_ms"]) == 1 and len(prof["times_ms"]) == 2
+    assert prof["batch"] == 1 and prof["input_sizes"] == [[40, 16], [40, 16]]
+    assert prof["conditions"]["cpu_busy_percent_before"] == 3.0
+    assert prof["peak_mem_mib"] >= prof["process_peak_mib"] > 0
+
+
+# ------------------------------------------------------------------------------- scoring
+
+
+def _write_run(data, system, experiment, task, eval_set, records):
+    out = run_baselines.output_path(data, experiment, system, task, eval_set)
+    out.parent.mkdir(parents=True, exist_ok=True)
+    out.write_text("".join(json.dumps(r) + "\n" for r in records), encoding="utf-8")
+    meta = {"system": system, "task": task, "eval_set": eval_set, "experiment": experiment,
+            "version": "x 1.0", "settings": {"cpu_threads": 2},
+            "runs": [{"status": "done"}]}  # fmt: skip
+    out.with_suffix(".meta.json").write_text(json.dumps(meta), encoding="utf-8")
+    return out
+
+
+def _page_record(key):
+    return {"key": key, "time_ms": 1.0, "lines": [
+        {"polygon": _box(0, 0, 100, 20), "text": "alpha", "confidence": 0.9},
+        {"polygon": _box(150, 0, 170, 90), "text": "STAMP", "confidence": 0.9},
+    ]}  # fmt: skip
+
+
+def test_scorer_writes_every_table_and_logs_test_scoring(root):
+    data, log = root
+    _write_run(data, "tesseract", "GW-BASE-001", "rec", "gdc_test",
+               [{"key": "gdc_test/l0", "ref": "alpha", "pred": "alpha"},
+                {"key": "gdc_test/l1", "ref": "beta", "pred": "bota"},
+                {"key": "gdc_test/l2", "ref": "naïve", "pred": "naive"}])  # fmt: skip
+    _write_run(data, "tesseract", "GW-BASE-001", "e2e", "gdc_test", [_page_record("gdc_test")])
+    _write_run(data, "tesseract", "GW-BASE-001", "e2e", "hiertext_val",
+               [_page_record("hiertext_val")])  # fmt: skip
+    prof = {"system": "tesseract", "task": "rec", "eval_set": "hiertext_val",
+            "experiment": "GW-BASE-001", "settings": {"OMP_THREAD_LIMIT": None}, "batch": 1,
+            "warmup": 10, "times_ms": [10.0] * 100, "input_sizes": [[40, 16]] * 100,
+            "peak_mem_mib": 80.0, "child_peak_mib": 50.0, "invocation_overhead_ms": 120.0,
+            "cpu_busy_percent_after": 4.0,
+            "conditions": {"on_ac_power": True, "power_plan": "Balanced", "cpu": "test cpu",
+                           "cpu_busy_percent_before": 3.0}}  # fmt: skip
+    (data / "processed/baselines/GW-BASE-001/profile_tesseract_rec_hiertext_val.json").write_text(
+        json.dumps(prof), encoding="utf-8"
+    )
+    out = data.parent / "reports"
+    args = ["--data-root", str(data), "--out", str(out), "--access-log", str(log)]
+    assert evaluate_baselines.main(args) == 0
+
     results = json.loads((out / "results.json").read_text(encoding="utf-8"))
-    rec = next(r for r in results if r["task"] == "rec")
-    assert rec["tracks"]["strict"]["cer"]["value"] == 1 / 9  # one substitution in 9 characters
-    e2e = next(r for r in results if r["task"] == "e2e")
-    assert e2e["detection"]["iou_0.5"]["recall"]["value"] == 0.5
-    assert e2e["tracks"]["strict"]["e2e_f1"]["value"] == 2 / 3
-    for name in ("recognition.md", "detection.md", "end_to_end.md", "README.md"):
-        text = (out / name).read_text(encoding="utf-8")
-        assert "GW-BASE-001" in text and "Tesseract 5" in text
-    assert "## Track: normalised" in (out / "recognition.md").read_text(encoding="utf-8")
+    entries = {(e["task"], e["eval_set"]): e for e in results["predictions"]}
+    rec = entries["rec", "gdc_test"]["tracks"]
+    assert rec["strict"]["cer"]["value"] == 2 / 14  # "bota" (1) and "naive" (1) over 14 chars
+    assert rec["strict"]["charset_ceiling"] == pytest.approx(1 / 14)  # the "ï"
+    gdc = entries["e2e", "gdc_test"]
+    assert gdc["detection"]["iou_0.5"]["recall"]["value"] == pytest.approx(1 / 3)
+    assert gdc["tracks"]["strict"]["order_aware_reported"] is True
+    assert "page_cer_order_aware" in gdc["tracks"]["strict"]
+    assert gdc["vertical"]["strict"]["detection"]["iou_0.5"]["recall"]["value"] == 1.0
+    ht = entries["e2e", "hiertext_val"]["tracks"]["strict"]
+    assert ht["order_aware_reported"] is False and "page_cer_order_aware" not in ht
+    assert results["efficiency"][0]["mean_ms"] == 10.0
+
+    rows = [ln for ln in log.read_text(encoding="utf-8").splitlines() if "scoring" in ln]
+    assert len(rows) == 2  # the two gdc test files; the validation file is not logged
+    e2e_md = (out / "end_to_end.md").read_text(encoding="utf-8")
+    assert "## GDC vertical lines" in e2e_md and "| n/a | n/a |" in e2e_md
+    eff = (out / "efficiency.md").read_text(encoding="utf-8")
+    assert "Peak VRAM: not applicable" in eff and "120 ms on a blank image" in eff
     summary = (out / "README.md").read_text(encoding="utf-8")
-    assert "| GW-BASE-001 | Tesseract 5 | rec | gdc_test | 2 of 2 |" in summary
+    assert "| GW-BASE-001 | Tesseract 5 | rec | gdc_test | 3 of 3 |" in summary
     assert "planned, no predictions yet" in summary and "TrOCR has no detector" in summary
+
+
+def test_scorer_rejects_predictions_for_another_sample(root):
+    data, log = root
+    _write_run(data, "tesseract", "GW-BASE-001", "rec", "gdc_test",
+               [{"key": "gdc_test/l0", "ref": "alpha", "pred": "alpha"},
+                {"key": "gdc_test/l0", "ref": "alpha", "pred": "alpha"}])  # fmt: skip
+    args = ["--data-root", str(data), "--out", str(data.parent / "r"), "--access-log", str(log)]
+    with pytest.raises(SystemExit, match="1 keys repeated"):
+        evaluate_baselines.main(args)
