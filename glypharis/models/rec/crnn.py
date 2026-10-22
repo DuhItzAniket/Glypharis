@@ -65,13 +65,25 @@ class CRNN(nn.Module):
         """Output frames for input widths (each conv keeps width; two 2x pools floor it)."""
         return torch.div(torch.div(widths, 2, rounding_mode="floor"), 2, rounding_mode="floor")
 
-    def forward(self, x: torch.Tensor) -> torch.Tensor:
+    def forward(self, x: torch.Tensor, widths: torch.Tensor | None = None) -> torch.Tensor:
+        """Per-frame logits. ``widths`` (input columns of each line before padding) makes the
+        BiLSTM read each line only up to its own end: without it, the backward direction starts in
+        the padding, so a line's output would depend on the other lines in its batch."""
         # Average away the remaining height (2 rows at H = 32, 3 at H = 48). A plain mean, unlike
         # adaptive pooling, has a deterministic CUDA backward.
-        f = self.cnn(x).mean(dim=2)  # N, C, T
-        f = f.permute(2, 0, 1)  # T, N, C
-        f, _ = self.rnn(f)
-        return self.head(self.dropout(f))  # T, N, classes
+        f = self.cnn(x).mean(dim=2).permute(2, 0, 1)  # T, N, C
+        t = f.shape[0]
+        # The recurrent part runs in fp32: cuDNN's bf16 LSTM path is slow and less exact.
+        with torch.autocast(device_type=x.device.type, enabled=False):
+            f = f.float()
+            if widths is None:
+                f, _ = self.rnn(f)
+            else:
+                lengths = self.frames(widths.cpu()).clamp(min=1, max=t)
+                packed = nn.utils.rnn.pack_padded_sequence(f, lengths, enforce_sorted=False)
+                out, _ = self.rnn(packed)
+                f, _ = nn.utils.rnn.pad_packed_sequence(out, total_length=t)
+            return self.head(self.dropout(f))  # T, N, classes
 
 
 def build_recognizer(num_classes: int, cfg: ModelConfig) -> CRNN:

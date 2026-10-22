@@ -3,8 +3,8 @@
     python scripts/rec_sanity.py --config configs/rec/gw-rec-001.yaml
     python scripts/rec_sanity.py --config configs/rec/gw-rec-001.yaml --checks overfit lr_range
 
-1. overfit: 64 training lines, no augmentation, constant learning rate; the model must drive its CER
-   on those same lines to <= 1% (shows the model, loss and decoding can learn at all).
+1. overfit: 64 training lines in one batch, no augmentation, constant learning rate; the model
+   must drive its CER on those same lines to <= 1% (shows the model, loss and decoding can learn).
 2. lr_range: learning rate raised exponentially from 1e-6 to 1 over a few hundred steps on the real
    training data; the loss curve is saved and the rate at the lowest smoothed loss, divided by 10,
    is reported as a guide for the configured rate.
@@ -41,7 +41,8 @@ from glypharis.utils.monitor import reset_peak, snapshot
 from glypharis.utils.seed import make_generator, seed_everything
 
 OVERFIT_LINES = 64
-OVERFIT_MAX_STEPS = 3000
+OVERFIT_MAX_STEPS = 1500
+OVERFIT_EVAL_EVERY = 50
 OVERFIT_TARGET_CER = 0.01
 LR_START, LR_END, LR_STEPS = 1e-6, 1.0, 400
 
@@ -68,8 +69,10 @@ class Parts:
                               self.cfg.seed, self.limits, subset)  # fmt: skip
 
     def loader(self, ds: RecLineDataset, batch: int, shuffle: bool, epoch: int = 0,
-               workers: int | None = None) -> Any:  # fmt: skip
-        sampler = WidthBucketBatchSampler(ds.widths, batch, self.cfg.seed, shuffle=shuffle)
+               workers: int | None = None, cap: bool = True) -> Any:  # fmt: skip
+        cols = self.cfg.data.max_batch_columns if cap else None
+        sampler = WidthBucketBatchSampler(ds.widths, batch, self.cfg.seed, shuffle=shuffle,
+                                          max_columns=cols)  # fmt: skip
         sampler.set_epoch(epoch)
         # Workers are new processes on Windows; for tiny sets, loading in-process is far faster.
         w = self.cfg.data.num_workers if workers is None else workers
@@ -89,18 +92,24 @@ def _step(p: Parts, model: nn.Module, opt: torch.optim.Optimizer, batch: dict[st
 
 
 def overfit(p: Parts, out: Path) -> dict[str, Any]:
+    """All lines in one batch: BatchNorm then learns exactly the statistics evaluation uses.
+
+    With several small batches drawn from 64 lines, each batch's statistics differ so much that
+    the model fits them per batch, and evaluation mode (running statistics) looks worse than the
+    model is; that is a small-data artefact of BatchNorm, not a training failure.
+    """
     ds = p.dataset(augment=False, subset=OVERFIT_LINES)
     model = p.model()
     opt = torch.optim.AdamW(model.parameters(), lr=p.cfg.train.learning_rate)
     curve, step, cer = [], 0, 1.0
     t0 = time.monotonic()
     while step < OVERFIT_MAX_STEPS:
-        for batch in p.loader(ds, 16, shuffle=True, epoch=step, workers=0):
+        for batch in p.loader(ds, len(ds), shuffle=True, epoch=step, workers=0, cap=False):
             _step(p, model, opt, batch)
             step += 1
-        if step % 40 < 4:  # about every 40 steps (4 batches per pass)
-            res = evaluate(model, p.loader(ds, 32, shuffle=False, workers=0), p.charset, p.amp,
-                           p.device, p.ctc)  # fmt: skip
+        if step % OVERFIT_EVAL_EVERY == 0:
+            res = evaluate(model, p.loader(ds, len(ds), shuffle=False, workers=0, cap=False),
+                           p.charset, p.amp, p.device, p.ctc)  # fmt: skip
             cer = res.cer
             curve.append({"step": step, "cer": cer, "loss": res.loss})
             if cer <= OVERFIT_TARGET_CER:
@@ -187,7 +196,9 @@ def dry_run(p: Parts, out: Path, minutes: float) -> dict[str, Any]:
         torch.cuda.synchronize()
     total = time.monotonic() - start
     snap = snapshot(p.device).to_dict()
-    steps_per_epoch = len(WidthBucketBatchSampler(ds.widths, p.cfg.train.batch_size, p.cfg.seed))
+    steps_per_epoch = WidthBucketBatchSampler(
+        ds.widths, p.cfg.train.batch_size, p.cfg.seed,
+        max_columns=p.cfg.data.max_batch_columns).num_batches(0)  # fmt: skip
     return {
         "minutes": round(total / 60, 2), "steps": steps, "lines": lines,
         "lines_per_s": round(lines / total, 1), "ms_per_step": round(1000 * total / steps, 1),

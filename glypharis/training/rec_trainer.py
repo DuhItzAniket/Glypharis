@@ -79,7 +79,7 @@ def ctc_loss(
     """Forward pass under autocast; CTC in fp32. Returns (loss, logits, frame lengths)."""
     images = batch["images"].to(device, non_blocking=True)
     with amp.autocast():
-        logits = model(images)
+        logits = model(images, batch["widths"])
     t = logits.shape[0]
     lengths = CRNN.frames(batch["widths"]).clamp(max=t)
     with fp32_region(device.type):
@@ -268,10 +268,13 @@ class RecTrainer:
         self.optimizer = make_optimizer(cfg, self.model)
         t = cfg.train
         self.sampler = WidthBucketBatchSampler(self.train_ds.widths, t.batch_size, cfg.seed,
-                                               d.bucket_chunk)  # fmt: skip
-        self.batches_per_epoch = len(self.sampler)
-        self.steps_per_epoch = math.ceil(self.batches_per_epoch / t.gradient_accumulation)
-        self.total_steps = t.epochs * self.steps_per_epoch
+                                               d.bucket_chunk,
+                                               max_columns=d.max_batch_columns)  # fmt: skip
+        # With a column cap the batch count can differ between epochs; it is known in advance.
+        self.epoch_batches = [self.sampler.num_batches(e) for e in range(t.epochs)]
+        accum = t.gradient_accumulation
+        self.steps_per_epoch = [math.ceil(n / accum) for n in self.epoch_batches]
+        self.total_steps = sum(self.steps_per_epoch)
         self.scheduler = make_scheduler(cfg, self.optimizer, self.total_steps)
         self.scaler = torch.amp.GradScaler(self.device.type, enabled=self.amp.needs_grad_scaler)
         self.ctc = nn.CTCLoss(blank=Charset.BLANK, zero_infinity=True)
@@ -296,8 +299,10 @@ class RecTrainer:
         )
 
     def _eval_loader(self, ds: RecLineDataset) -> DataLoader[Any]:
+        cap = self.cfg.data.max_batch_columns
         sampler = WidthBucketBatchSampler(ds.widths, self.cfg.train.batch_size * 2, self.cfg.seed,
-                                          shuffle=False)  # fmt: skip
+                                          shuffle=False,
+                                          max_columns=2 * cap if cap else None)  # fmt: skip
         return self._loader(ds, sampler, self.cfg.seed + 7)
 
     # ------------------------------------------------------------------------ checkpoints
@@ -414,7 +419,7 @@ class RecTrainer:
                 lines += len(batch["keys"])
                 loss_sum += float(loss.detach())
                 loss_n += 1
-                last_of_epoch = self.state.batch_in_epoch == self.batches_per_epoch
+                last_of_epoch = self.state.batch_in_epoch == self.epoch_batches[epoch]
                 if self.state.batch_in_epoch % accum and not last_of_epoch:
                     continue
                 norm = self._optimizer_step()
@@ -435,7 +440,7 @@ class RecTrainer:
                     done = True
                     break
             self.state.train_seconds += time.monotonic() - t0
-            if done and self.state.batch_in_epoch < self.batches_per_epoch:
+            if done and self.state.batch_in_epoch < self.epoch_batches[epoch]:
                 self.save("last.pt")  # cut short mid-epoch: resumable from here
                 break
             self._end_epoch(loss_sum / max(loss_n, 1))

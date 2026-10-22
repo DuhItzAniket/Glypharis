@@ -13,6 +13,7 @@ data:
   charset: data/manifests/charset.json
   image_height: 32          # ARCHITECTURE §4 baseline; 48 is a Phase 7 ablation
   max_width: 1024           # 0.4% of training lines are wider and get squeezed
+  max_batch_columns: 32768  # lines x widest line per batch: about 1.6 GB peak at bf16
   num_workers: 4            # leaves cores for other work (a CPU benchmark may be running)
   augmentation: full        # geometric + document wear + capture effects, default probabilities
   train_eval_subset: 2000

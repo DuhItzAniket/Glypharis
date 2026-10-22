@@ -33,6 +33,7 @@ from glypharis.data.linepack import LinePackReader
 from glypharis.data.text import Charset
 
 STRIDE = 4  # must match glypharis.models.rec.crnn.STRIDE
+PAD_MULTIPLE = 32  # padded batch widths are multiples of this
 
 
 @dataclass(frozen=True)
@@ -110,9 +111,13 @@ class RecLineDataset(Dataset[dict[str, Any]]):
 
 
 def collate(batch: list[dict[str, Any]]) -> dict[str, Any]:
-    """Right-pad to the widest line (and to what CTC needs), stack, and concatenate targets."""
+    """Right-pad to the widest line (and to what CTC needs), stack, and concatenate targets.
+
+    The padded width is rounded up to a multiple of ``PAD_MULTIPLE``: far fewer distinct tensor
+    shapes reach the GPU, which keeps the CUDA memory cache from fragmenting.
+    """
     need = [max(b["image"].shape[1], STRIDE * ctc_frames_needed(b["target"])) for b in batch]
-    width = int(math.ceil(max(need) / STRIDE) * STRIDE)
+    width = int(math.ceil(max(need) / PAD_MULTIPLE) * PAD_MULTIPLE)
     height = batch[0]["image"].shape[0]
     images = torch.empty(len(batch), 1, height, width)
     for k, b in enumerate(batch):
@@ -133,13 +138,32 @@ def collate(batch: list[dict[str, Any]]) -> dict[str, Any]:
     }
 
 
+def _split(
+    order: np.ndarray, widths: np.ndarray, bs: int, max_columns: int | None
+) -> list[list[int]]:
+    """Cut width-sorted indices into batches of at most ``bs`` lines and, when ``max_columns`` is
+    set, at most that many padded columns (lines x widest line), which bounds GPU memory."""
+    out: list[list[int]] = []
+    cur: list[int] = []
+    for i in order.tolist():
+        w = int(widths[i])
+        if cur and (len(cur) >= bs or (max_columns and (len(cur) + 1) * w > max_columns)):
+            out.append(cur)
+            cur = []
+        cur.append(i)
+    if cur:
+        out.append(cur)
+    return out
+
+
 class WidthBucketBatchSampler(Sampler[list[tuple[int, int]]]):
     """Batches of similar width, rebuilt deterministically from ``(seed, epoch)``.
 
     Training: shuffle all indices, cut them into chunks of ``batch_size * chunk`` lines, sort each
-    chunk by width, split it into batches, and shuffle the batch order. Evaluation
-    (``shuffle=False``): all lines sorted by width, in fixed batches. ``start_batch`` skips the
-    batches an interrupted epoch already used.
+    chunk by width, split it into batches (also capped at ``max_columns`` padded columns), and
+    shuffle the batch order. Evaluation (``shuffle=False``): all lines sorted by width. The number
+    of batches can differ from epoch to epoch when ``max_columns`` is set; `num_batches` gives it.
+    ``start_batch`` skips the batches an interrupted epoch already used.
     """
 
     def __init__(
@@ -149,9 +173,10 @@ class WidthBucketBatchSampler(Sampler[list[tuple[int, int]]]):
         seed: int,
         chunk: int = 50,
         shuffle: bool = True,
+        max_columns: int | None = None,
     ) -> None:
         self.widths, self.batch_size, self.seed = np.asarray(widths), batch_size, seed
-        self.chunk, self.shuffle = chunk, shuffle
+        self.chunk, self.shuffle, self.max_columns = chunk, shuffle, max_columns
         self.epoch, self.start_batch = 0, 0
 
     def set_epoch(self, epoch: int, start_batch: int = 0) -> None:
@@ -161,7 +186,7 @@ class WidthBucketBatchSampler(Sampler[list[tuple[int, int]]]):
         n, bs = len(self.widths), self.batch_size
         if not self.shuffle:
             order = np.argsort(self.widths, kind="stable")
-            return [order[i : i + bs].tolist() for i in range(0, n, bs)]
+            return _split(order, self.widths, bs, self.max_columns)
         rng = np.random.default_rng([self.seed, epoch])
         perm = rng.permutation(n)
         out: list[list[int]] = []
@@ -169,20 +194,19 @@ class WidthBucketBatchSampler(Sampler[list[tuple[int, int]]]):
         for c in range(0, n, step):
             part = perm[c : c + step]
             part = part[np.argsort(self.widths[part], kind="stable")]
-            out.extend(part[i : i + bs].tolist() for i in range(0, len(part), bs))
+            out.extend(_split(part, self.widths, bs, self.max_columns))
         order = rng.permutation(len(out))
         return [out[int(i)] for i in order]
+
+    def num_batches(self, epoch: int) -> int:
+        return len(self.batches(epoch))
 
     def __iter__(self) -> Iterator[list[tuple[int, int]]]:
         for b in self.batches(self.epoch)[self.start_batch :]:
             yield [(self.epoch, i) for i in b]
 
     def __len__(self) -> int:
-        n, bs, step = len(self.widths), self.batch_size, self.batch_size * self.chunk
-        if not self.shuffle:
-            return math.ceil(n / bs)
-        full, rest = divmod(n, step)
-        return full * self.chunk + math.ceil(rest / bs)
+        return self.num_batches(self.epoch)
 
 
 def assert_no_leakage(train: RecLineDataset, val: RecLineDataset) -> None:

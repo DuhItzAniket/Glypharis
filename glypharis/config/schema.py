@@ -51,6 +51,8 @@ class DataConfig:
     val_subset: int | None = None  # seeded subset of validation lines scored each epoch
     train_eval_subset: int = 2000  # training lines scored each epoch (over/underfitting checks)
     bucket_chunk: int = 50  # batches per width-sorted chunk (bucketing)
+    # Cap on padded columns per batch (lines x widest line); bounds GPU memory. null: no cap.
+    max_batch_columns: int | None = None
 
 
 @dataclass
@@ -156,6 +158,8 @@ class RunConfig:
         check(d.train_eval_subset >= 0, "data.train_eval_subset must be >= 0")
         check(d.val_subset is None or d.val_subset > 0, "data.val_subset must be > 0 or null")
         check(d.bucket_chunk > 0, "data.bucket_chunk must be > 0")
+        check(d.max_batch_columns is None or d.max_batch_columns >= d.max_width,
+              "data.max_batch_columns must be null or at least data.max_width")  # fmt: skip
         check(all(v > 0 for v in d.train_limits.values()), "data.train_limits must be > 0")
         m = self.model
         check(len(m.cnn_channels) == 6 and all(c > 0 for c in m.cnn_channels),

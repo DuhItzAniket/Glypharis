@@ -228,3 +228,47 @@ def test_sanity_sequence_runs_end_to_end(tiny, monkeypatch):
     assert {"overfit", "lr_range", "dry_run"} <= set(res)
     assert res["dry_run"]["finite"] and res["lr_range"]["steps"] > 0
     assert (out / "lr_range.png").exists() and "Overfit" in (out / "sanity.md").read_text("utf-8")
+
+
+# ---------------------------------------------------------------- batch independence, caps
+
+
+def test_a_lines_output_does_not_depend_on_the_rest_of_its_batch():
+    from glypharis.config.schema import ModelConfig
+    from glypharis.models.rec.crnn import CRNN
+
+    torch.manual_seed(0)
+    m = CRNN(30, ModelConfig(cnn_channels=[8, 8, 16, 16, 16, 16], lstm_hidden=16)).eval()
+    short = torch.randn(1, 1, 32, 160)
+    alone = m(short, torch.tensor([160]))[:, 0]
+    batch = torch.zeros(2, 1, 32, 640)
+    batch[0, :, :, :160] = short[0]
+    batch[1] = torch.randn(1, 32, 640)
+    together = m(batch, torch.tensor([160, 640]))[: alone.shape[0], 0]
+    # Away from the right edge (the CNN sees a few padded columns there) the frames must match:
+    # the BiLSTM reads each line only up to its own end.
+    assert torch.allclose(alone[:25], together[:25], atol=1e-4)
+
+
+def test_column_cap_bounds_every_batch():
+    widths = np.random.default_rng(2).integers(20, 1000, size=500)
+    s = WidthBucketBatchSampler(widths, 32, seed=1, chunk=4, max_columns=4096)
+    for b in s.batches(0):
+        assert (len(b) <= 32 and len(b) * max(widths[b]) <= 4096) or len(b) == 1
+    assert sorted(i for b in s.batches(0) for i in b) == list(range(500))
+    assert s.num_batches(0) == len(s.batches(0)) and s.num_batches(0) > len(widths) // 32
+
+
+def test_resume_matches_with_a_column_cap(tiny):
+    cap = {"data.max_batch_columns": 1024}
+    full = RecTrainer(_cfg(tiny, "cf", **cap))
+    full.fit()
+    cut = RecTrainer(_cfg(tiny, "cc", **cap, **{"train.max_steps": 5}))
+    cut.fit()
+    resumed = RecTrainer(_cfg(tiny, "cc", **cap,
+                              **{"checkpoint.resume": str(tiny / "cc/ckpt/last.pt")}))  # fmt: skip
+    resumed.fit()
+    assert full.state.step == resumed.state.step
+    for a, b in zip(full.model.state_dict().values(), resumed.model.state_dict().values(),
+                    strict=True):  # fmt: skip
+        assert torch.equal(a, b)

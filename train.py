@@ -66,7 +66,7 @@ def main(argv: list[str] | None = None) -> int:
     trainer = RecTrainer(cfg)
     log.info("%s: %s parameters, %d training and %d validation lines, %d steps per epoch on %s",
              cfg.experiment_id, f"{trainer.params:,}", len(trainer.train_ds), len(trainer.val_ds),
-             trainer.steps_per_epoch, trainer.device)  # fmt: skip
+             trainer.steps_per_epoch[0], trainer.device)  # fmt: skip
     code = 0
     try:
         trainer.fit()
