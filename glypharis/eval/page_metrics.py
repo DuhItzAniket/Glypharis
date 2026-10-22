@@ -148,6 +148,7 @@ class PageResult:
     # order-agnostic bag of lines (matching at IoU 0.5)
     bag_errors: int = 0
     bag_ref_chars: int = 0
+    bag_insert_chars: int = 0  # the part of bag_errors that comes from spurious lines
     # end-to-end line F1 (matched at IoU 0.5 and line CER <= E2E_MAX_LINE_CER)
     e2e_tp: int = 0
     e2e_pred: int = 0
@@ -231,6 +232,7 @@ def evaluate_page(
             continue
         else:
             res.bag_errors += len(ptext)  # a spurious line: every character is an insertion
+            res.bag_insert_chars += len(ptext)
             res.e2e_pred += 1
     for g, ln in enumerate(box_lines):
         rtext = normalize_eval(ln.text, track)
@@ -245,9 +247,10 @@ def vertical_view(gt: Page) -> Page:
     """The page with its vertical lines as the only lines that count.
 
     GDC reports rotated lines (margin stamps, axis titles) separately (EXPERIMENT_PROTOCOL §3).
-    Scoring this view with `evaluate_page` gives detection, bag-of-lines and E2E F1 for those lines;
-    every other line becomes don't care, so predictions on horizontal text are ignored rather than
-    counted as false positives. Its order-aware text has no meaning and is not reported.
+    Every other line becomes don't care. Only the measures about the vertical lines themselves are
+    meaningful in this view: detection recall and the CER of the vertical lines found or missed
+    (``bag_errors - bag_insert_chars``). Precision, insertions and E2E F1 are not: any spurious
+    prediction anywhere on the page would count against the few vertical lines.
     """
     lines = [
         replace(ln, vertical=False)

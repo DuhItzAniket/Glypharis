@@ -140,6 +140,9 @@ class FakeSystem:
     def inference_batch(self, runner_batch):
         return runner_batch
 
+    def model_bytes(self):
+        return 2**20
+
     def recognize(self, images):
         self.calls += len(images)
         if self.fail_after is not None and self.calls > self.fail_after:
@@ -207,7 +210,7 @@ def test_profile_times_after_warmup_on_validation_only(root, monkeypatch):
     monkeypatch.setattr(run_baselines, "make_system", lambda n, t: FakeSystem())
     monkeypatch.setattr(run_baselines, "WARMUP", 1)
     monkeypatch.setattr(run_baselines, "PROFILE_SAMPLES", 2)
-    with pytest.raises(SystemExit, match="validation data only"):
+    with pytest.raises(SystemExit, match="profiling rec uses"):
         _run(data, "--task", "rec", "--eval-set", "gdc_test", "--profile")
     with pytest.raises(SystemExit, match="profiling needs"):  # one page cannot fill 1 + 2
         _run(data, "--task", "e2e", "--eval-set", "hiertext_val", "--profile")
@@ -217,7 +220,7 @@ def test_profile_times_after_warmup_on_validation_only(root, monkeypatch):
     assert len(prof["warmup_times_ms"]) == 1 and len(prof["times_ms"]) == 2
     assert prof["batch"] == 1 and prof["input_sizes"] == [[40, 16], [40, 16]]
     assert prof["conditions"]["cpu_busy_percent_before"] == 3.0
-    assert prof["peak_mem_mib"] >= prof["process_peak_mib"] > 0
+    assert prof["peak_mem_mib"] >= prof["process_peak_mib"] > 0 and prof["model_mib"] == 1.0
 
 
 # ------------------------------------------------------------------------------- scoring
@@ -273,7 +276,9 @@ def test_scorer_writes_every_table_and_logs_test_scoring(root):
     assert gdc["detection"]["iou_0.5"]["recall"]["value"] == pytest.approx(1 / 3)
     assert gdc["tracks"]["strict"]["order_aware_reported"] is True
     assert "page_cer_order_aware" in gdc["tracks"]["strict"]
-    assert gdc["vertical"]["strict"]["detection"]["iou_0.5"]["recall"]["value"] == 1.0
+    vert = gdc["vertical"]["strict"]
+    assert vert["recall"]["value"] == 1.0 and vert["lines"] == 1
+    assert vert["cer"]["value"] == 0.0  # the read "alpha" elsewhere is not charged to the stamp
     ht = entries["e2e", "hiertext_val"]["tracks"]["strict"]
     assert ht["order_aware_reported"] is False and "page_cer_order_aware" not in ht
     assert results["efficiency"][0]["mean_ms"] == 10.0
@@ -283,7 +288,7 @@ def test_scorer_writes_every_table_and_logs_test_scoring(root):
     e2e_md = (out / "end_to_end.md").read_text(encoding="utf-8")
     assert "## GDC vertical lines" in e2e_md and "| n/a | n/a |" in e2e_md
     eff = (out / "efficiency.md").read_text(encoding="utf-8")
-    assert "Peak VRAM: not applicable" in eff and "120 ms on a blank image" in eff
+    assert "no baseline uses a GPU" in eff and "120 ms on a blank image" in eff
     summary = (out / "README.md").read_text(encoding="utf-8")
     assert "| GW-BASE-001 | Tesseract 5 | rec | gdc_test | 3 of 3 |" in summary
     assert "planned, no predictions yet" in summary and "TrOCR has no detector" in summary
@@ -297,3 +302,39 @@ def test_scorer_rejects_predictions_for_another_sample(root):
     args = ["--data-root", str(data), "--out", str(data.parent / "r"), "--access-log", str(log)]
     with pytest.raises(SystemExit, match="1 keys repeated"):
         evaluate_baselines.main(args)
+
+
+def test_scorer_tolerates_a_cut_off_last_record_and_lists_files_without_metadata(root):
+    data, log = root
+    out = _write_run(data, "tesseract", "GW-BASE-001", "rec", "gdc_test",
+                     [{"key": "gdc_test/l0", "ref": "alpha", "pred": "alpha"}])  # fmt: skip
+    with out.open("ab") as fh:
+        fh.write(b'{"key": "gdc_test/l1", "ref": "be')
+    no_meta = run_baselines.output_path(data, "GW-BASE-002", "ppocr_mobile", "rec", "gdc_test")
+    no_meta.parent.mkdir(parents=True, exist_ok=True)
+    no_meta.write_text('{"key": "gdc_test/l0", "ref": "alpha", "pred": "alpha"}\n', "utf-8")
+    report = data.parent / "rep"
+    args = ["--data-root", str(data), "--out", str(report), "--access-log", str(log)]
+    assert evaluate_baselines.main(args) == 0
+    summary = (report / "README.md").read_text(encoding="utf-8")
+    assert "| GW-BASE-001 | Tesseract 5 | rec | gdc_test | 1 of 3 |" in summary
+    assert "1 predicted, no run metadata yet" in summary
+
+
+def test_runner_refuses_bad_requests_and_handles_metadata(root, monkeypatch):
+    data, _ = root
+    with pytest.raises(SystemExit, match="no pages"):
+        _run(data, "--task", "e2e", "--eval-set", "glyphsynth_val")
+    with pytest.raises(SystemExit, match="reason is required"):
+        _run(data, "--task", "rec", "--eval-set", "gdc_test", "--reason", " ")
+    out = run_baselines.output_path(data, "GW-BASE-001", "tesseract", "rec", "gdc_test")
+    out.parent.mkdir(parents=True, exist_ok=True)
+    meta = out.with_suffix(".meta.json")
+    meta.write_text('{"runs": [{"status": "done"}], "settings": {"old": 1}}', encoding="utf-8")
+    monkeypatch.setattr(run_baselines, "make_system", lambda n, t: FakeSystem())
+    assert _run(data, "--task", "rec", "--eval-set", "gdc_test") == 0  # predictions moved aside
+    fresh = json.loads(meta.read_text(encoding="utf-8"))
+    assert len(fresh["runs"]) == 1 and "old" not in fresh["settings"]
+    meta.unlink()  # complete predictions whose run never wrote metadata get a minimal record
+    assert _run(data, "--task", "rec", "--eval-set", "gdc_test") == 0
+    assert "not recorded" in json.loads(meta.read_text(encoding="utf-8"))["note"]

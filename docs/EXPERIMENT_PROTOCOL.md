@@ -93,15 +93,19 @@ Empty references are excluded from CER denominators and counted separately.
 | F1 @ IoU 0.7 | Stricter localisation. |
 | Mean matched IoU | Over true positives. |
 | Merge / split counts | One GT ↔ many predictions and vice versa (Phase 9). |
-| Dataset-native metric | Where a benchmark defines its own (e.g. HierText's PQ-style metric), it is reported in addition, with the official code where available. |
+| Dataset-native metric | Where a benchmark defines its own (e.g. HierText's PQ-style metric), it is reported in addition, with the official code, from Phase 14 (§11). |
 
 "Don't care" regions (illegible text) are excluded from both sides where the dataset marks them.
 GDC pages also carry *ignore regions*: raster images inside the source PDFs, whose printed text has
-no text layer and therefore no ground truth. Ground-truth lines are always scored; an ignore region
-only excuses predictions inside it that match no ground-truth line. These exclusions apply to every
-metric, the order-aware page text included. GDC lines flagged `vertical`
+no text layer and therefore no ground truth, and (from GDC v1.1) the sheet outside the document
+area, where the corner markers and the printed sheet label sit. Ground-truth lines that count are
+always scored; an ignore region only excuses predictions inside it that match no ground-truth line.
+GDC lines whose alignment score is below 0.3 keep their text in the order-aware reference but
+their box is not trusted, so for detection, bag-of-lines and E2E F1 they are don't care. These
+exclusions apply to every metric, the order-aware page text included. GDC lines flagged `vertical`
 (rotated text such as margin stamps and axis titles) are reported separately and excluded from the
-main line metrics.
+main line metrics: recall and the CER of those lines only, since precision would charge every
+spurious prediction on the page to them.
 
 ### End to end (page in, text out)
 
@@ -218,3 +222,4 @@ choice; no per-benchmark tuning.
 | 2026-10-22 | §3: matching maximises valid pairs before IoU and matches lines that count before don't-care lines; don't-care exclusions apply to the order-aware page text too; order-aware page CER/WER is reported only where a reading order exists (GDC) | Phase 5 code review: plain IoU-sum matching could drop valid pairs, the order-aware text counted reads of don't-care regions as insertions, and HierText has no reading order | Detection, end to end; no results had been reported yet |
 | 2026-10-22 | §3: efficiency comes from a dedicated profiling pass, and peak RAM includes engine processes the harness starts | Long accuracy runs share the machine with other work; a command-line engine's memory is outside the Python process | Efficiency numbers |
 | 2026-10-22 | §3: dataset-native metrics (HierText's PQ-style metric) are computed from Phase 14, with the official evaluation code | Phase 5 scores every system with the project's own line metrics; the native metric needs the official code and word-level output | HierText reporting |
+| 2026-10-22 | §3: GDC v1.1 adds ignore regions for the sheet outside the document area (markers and the printed sheet label); every ground-truth line is unchanged (checked by the alignment script). The GDC vertical-line view reports recall and the CER of those lines only; GDC lines with an untrusted box are stated as don't care for box-based metrics | Second Phase 5 code review: every system reads the sheet label, which has no ground truth, and was charged for it; precision in the vertical view counted every spurious prediction on the page | GDC end-to-end and detection metrics; no results had been reported yet |
