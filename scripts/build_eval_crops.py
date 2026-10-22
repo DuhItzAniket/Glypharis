@@ -1,18 +1,22 @@
-"""Cut the line crops of a page-based test set into a line pack (Phase 5).
+"""Cut the line crops of a page-based evaluation set into a line pack (Phase 5).
 
-Recognition-only benchmarks need ground-truth line crops. HierText train and validation crops were
-cut in Phase 4; the test sets are cut here, once, so every system (the baselines now, GLYPHARIS
-later) reads exactly the same crops. Lines are chosen by `glypharis.eval.page_metrics.is_rec_line`
-and cut with `glypharis.data.crops.cut_line`, which follows curved GDC lines.
+Recognition-only benchmarks need ground-truth line crops, cut once so every system (the baselines
+now, GLYPHARIS later) reads exactly the same crops. Lines are chosen by
+`glypharis.eval.page_metrics.is_rec_line` and cut with `glypharis.data.crops.cut_line`, which
+follows curved GDC lines. The selection keeps lines with characters outside the GLYPHARIS charset
+and very long lines, which the Phase 4 training packs leave out: an evaluation set must not be
+shaped by one system's limits (EXPERIMENT_PROTOCOL §2). That is why HierText validation gets its
+own evaluation pack instead of reusing the Phase 4 validation pack.
 
+    python scripts/build_eval_crops.py --eval-set hiertext_val
     python scripts/build_eval_crops.py --eval-set hiertext_test
     python scripts/build_eval_crops.py --eval-set gdc_test
 
 Cutting crops is preprocessing, not evaluation: no model sees the data and nothing is scored, so
 the test-access log is not touched.
 
-Outputs: data/processed/<dataset>/lines_test.{bin,index.jsonl,meta.json} (git-ignored) and
-data/manifests/processed/eval_crops.json (committed).
+Outputs: the line pack named in SETS (git-ignored) and data/manifests/processed/eval_crops.json
+(committed).
 """
 
 from __future__ import annotations
@@ -31,6 +35,10 @@ from glypharis.data.pages import Page, open_page_image, read_pages
 from glypharis.eval.page_metrics import is_rec_line
 
 SETS = {
+    "hiertext_val": (
+        "processed/hiertext/pages_validation.jsonl.gz",
+        "processed/hiertext/lines_validation_eval",
+    ),
     "hiertext_test": ("processed/hiertext/pages_test.jsonl.gz", "processed/hiertext/lines_test"),
     "gdc_test": ("processed/gdc/pages_test.jsonl.gz", "processed/gdc/lines_test"),
 }

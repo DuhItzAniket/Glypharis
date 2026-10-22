@@ -3,8 +3,8 @@
   "pages": "processed/gdc/pages_test.jsonl.gz",
   "pages_sha256": "328a967d213b13285cce4713fa2ce7822f33b0712b5f9647beb6d09c52b18913",
   "pack": "processed/gdc/lines_test",
-  "count": 8106,
-  "bin_sha256": "175d482e589627e0b93e7f7a340bc1a3c67879209dce6534008a7e3183be909f",
+  "count": 8372,
+  "bin_sha256": "d6dda6660361a66ba9b95f50fd707fbfb1136e3461192110eb2ab93859936325",
   "crop_settings": {
    "height": 64,
    "margin": 0.15,
@@ -18,6 +18,19 @@
   "pack": "processed/hiertext/lines_test",
   "count": 67277,
   "bin_sha256": "45db87c5538a05f4467a80c319f268bcf900f42758f4d26546927721263d8b1e",
+  "crop_settings": {
+   "height": 64,
+   "margin": 0.15,
+   "max_aspect": 64.0,
+   "jpeg_quality": 95
+  }
+ },
+ "hiertext_val": {
+  "pages": "processed/hiertext/pages_validation.jsonl.gz",
+  "pages_sha256": "0655c5f795a644666777a072714d039d48231878b7707889b1e770703ddfd180",
+  "pack": "processed/hiertext/lines_validation_eval",
+  "count": 74500,
+  "bin_sha256": "b89bb2b0cd166c925b4e347a5970a057c092db9b341dd56d8ba1a0522d21f593",
   "crop_settings": {
    "height": 64,
    "margin": 0.15,
