@@ -1,0 +1,43 @@
+# GW-REC-001: CRNN baseline on HierText lines (Phase 6). Values are starting points; the LR range
+# test of the Phase 6 sanity sequence checks the learning rate before the full run.
+inherits: ../base.yaml
+experiment_id: GW-REC-001
+task: rec
+model_name: crnn
+
+data:
+  train: [processed/hiertext/lines_train]
+  # Phase 4 validation pack: the lines the recognizer can represent (in-charset), used for
+  # checkpoint selection. Out-of-charset lines are scored in the Phase 5-style evaluation packs.
+  val: [processed/hiertext/lines_validation]
+  charset: data/manifests/charset.json
+  image_height: 32          # ARCHITECTURE §4 baseline; 48 is a Phase 7 ablation
+  max_width: 1024           # 0.4% of training lines are wider and get squeezed
+  num_workers: 4            # leaves cores for other work (a CPU benchmark may be running)
+  augmentation: full        # geometric + document wear + capture effects, default probabilities
+  train_eval_subset: 2000
+
+model:
+  cnn_channels: [64, 128, 256, 256, 512, 512]   # about 7.8M parameters with the heads below
+  lstm_hidden: 256
+  lstm_layers: 2
+  dropout: 0.1
+
+train:
+  epochs: 30
+  batch_size: 64
+  gradient_accumulation: 1
+  optimizer: adamw
+  learning_rate: 1.0e-3
+  weight_decay: 1.0e-4
+  scheduler: onecycle
+  grad_clip_norm: 5.0
+  mixed_precision: bf16
+
+checkpoint:
+  every_steps: 1000         # last.pt refreshed mid-epoch, so a crash loses little
+
+early_stopping:
+  monitor: val_cer
+  patience: 8
+  min_delta: 0.001

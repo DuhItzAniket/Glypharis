@@ -7,8 +7,10 @@ import pytest
 import torch
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
-# Scripts are not part of the package; make them importable for tests.
+# Scripts and the top-level entry points (train.py) are not part of the package; make them
+# importable for tests.
 sys.path.insert(0, str(REPO_ROOT / "scripts"))
+sys.path.insert(0, str(REPO_ROOT))
 
 
 def pytest_collection_modifyitems(config: pytest.Config, items: list[pytest.Item]) -> None:
