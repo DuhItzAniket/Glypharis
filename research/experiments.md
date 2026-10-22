@@ -14,6 +14,8 @@ Rows link to a full entry below. Numbers are copied from generated reports only,
 | [GW-BASE-005](#gw-base-005) | 2026-10-21 | 05 | PaddleOCR PP-OCRv6 tiny (det + rec): recognition and end to end | planned | — | `reports/baselines/` |
 | [GW-BASE-006](#gw-base-006) | 2026-10-21 | 05 | PaddleOCR PP-OCRv6 small (det + rec): recognition and end to end | planned | — | `reports/baselines/` |
 | [GW-BASE-007](#gw-base-007) | 2026-10-21 | 05 | PaddleOCR PP-OCRv6 medium (PaddleOCR 3.7's English default): reduced scope | planned | — | `reports/baselines/` |
+| [GW-REC-001](#gw-rec-001) | 2026-10-22 | 06 | CRNN baseline on HierText lines | planned | — | `reports/training/GW-REC-001/` |
+| [GW-REC-002](#gw-rec-002) | 2026-10-22 | 06 | GW-REC-001 plus 35,000 GlyphSynth lines (exploratory look at H2′a) | planned | — | `reports/training/GW-REC-002/` |
 
 ### GW-BASE-001 — Tesseract 5 (LSTM, eng): recognition and end to end
 
@@ -154,6 +156,44 @@ Rows link to a full entry below. Numbers are copied from generated reports only,
 - **Limitations:**
 - **Next experiment:**
 - **Training time:** not applicable
+
+### GW-REC-001 — CRNN baseline on HierText lines
+
+- **Date allocated / run:** 2026-10-22 / —
+- **Phase:** 06
+- **Git commit:** recorded in the run summary   **Config:** `configs/rec/gw-rec-001.yaml`   **Seed(s):** 1337 (single seed: exploratory)
+- **Dataset version(s):** HierText line packs from Phase 4 (`data/manifests/processed/hiertext.json`); charset v1
+- **Hardware:** RTX 4050 Laptop 6 GB, bf16 autocast, CTC in fp32
+- **Research question:** how well does the ARCHITECTURE §4 CRNN (about 7.8M parameters, H = 32) learn HierText lines, and is the training loop healthy?
+- **Hypothesis (written before the run):** none tested; this is the reference run that Phase 7 improves on. Expectation, not a claim: no diagnostic flags other than possible late overfitting.
+- **Method:** `python train.py --config configs/rec/gw-rec-001.yaml` after the sanity sequence (`scripts/rec_sanity.py`: overfit 64 lines, LR range test, 10-minute dry run). Up to 30 epochs, AdamW 1e-3 with OneCycle, batch 64, augmentation preset `full`, early stopping on validation CER (patience 8). Checkpoint selection on validation CER (strict track).
+- **Variables:** none (reference run)
+- **Control:** —
+- **Result:** (from `reports/training/GW-REC-001/report.md`)
+- **Training diagnostics:**
+- **Interpretation:**
+- **Limitations:** single seed; validation is the in-charset HierText validation pack.
+- **Next experiment:** Phase 7 ablations
+- **Training time:**
+
+### GW-REC-002 — GW-REC-001 plus a small GlyphSynth mix
+
+- **Date allocated / run:** 2026-10-22 / —
+- **Phase:** 06
+- **Git commit:** recorded in the run summary   **Config:** `configs/rec/gw-rec-002.yaml`   **Seed(s):** 1337 (single seed: exploratory)
+- **Dataset version(s):** as GW-REC-001, plus GlyphSynth v1 train (`data/manifests/processed/glyphsynth.json`), a fixed seeded subset of 35,000 lines
+- **Hardware:** as GW-REC-001
+- **Research question:** does a small amount of document-style synthetic text change HierText validation CER?
+- **Hypothesis (written before the run):** exploratory look at [H2′a](hypotheses.md); the real test, with several sizes and seeds, is Phase 12. Expectation: similar or slightly lower HierText validation CER; a clear gain is more likely on long, document-like lines than on HierText's short scene text.
+- **Method:** identical to GW-REC-001 except the training data. Same seed, schedule, steps per epoch scale with the larger training set.
+- **Variables:** independent: training data (HierText vs HierText + 35,000 GlyphSynth lines); controlled: everything else
+- **Control:** GW-REC-001
+- **Result:**
+- **Training diagnostics:**
+- **Interpretation:**
+- **Limitations:** single seed, one mix size; more steps per epoch than GW-REC-001 (not budget-matched, EXPERIMENT_PROTOCOL §5), so a difference is not attributable to the data alone.
+- **Next experiment:** Phase 12 (GW-DATA-*)
+- **Training time:**
 
 ---
 

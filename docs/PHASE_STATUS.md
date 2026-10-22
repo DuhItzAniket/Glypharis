@@ -13,7 +13,7 @@ Phases run in the order set by [ADR-0008](decisions/ADR-0008-usable-engine-first
 | 3 | Data audit | **COMPLETE** | `phase-03` |
 | 4 | Preprocessing, charset, GlyphSynth, GDC | **COMPLETE** | `phase-04` |
 | 5 | Baseline systems | **IN PROGRESS** | — |
-| 6 | Recognition baseline | not started | — |
+| 6 | Recognition baseline | **IN PROGRESS** (in parallel with 5, owner approved) | — |
 | 7 | Recognizer improvement | not started | — |
 | 8 | Text detector | not started | — |
 | 9 | Detector error analysis | not started | — |
