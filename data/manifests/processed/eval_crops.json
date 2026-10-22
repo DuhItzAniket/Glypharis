@@ -1,14 +1,14 @@
 {
  "gdc_test": {
   "pages": "processed/gdc/pages_test.jsonl.gz",
-  "pages_sha256": "328a967d213b13285cce4713fa2ce7822f33b0712b5f9647beb6d09c52b18913",
+  "pages_sha256": "c4227f1ae6d0aa856c3e64a2bcf55325840343df48dc6810b104e62a6f092af5",
   "pack": "processed/gdc/lines_test",
   "count": 8372,
   "bin_sha256": "d6dda6660361a66ba9b95f50fd707fbfb1136e3461192110eb2ab93859936325",
   "crop_settings": {
    "height": 64,
    "margin": 0.15,
-   "max_aspect": 64.0,
+   "max_aspect": "not applied (evaluation keeps long lines)",
    "jpeg_quality": 95
   }
  },
@@ -21,7 +21,7 @@
   "crop_settings": {
    "height": 64,
    "margin": 0.15,
-   "max_aspect": 64.0,
+   "max_aspect": "not applied (evaluation keeps long lines)",
    "jpeg_quality": 95
   }
  },
@@ -34,7 +34,7 @@
   "crop_settings": {
    "height": 64,
    "margin": 0.15,
-   "max_aspect": 64.0,
+   "max_aspect": "not applied (evaluation keeps long lines)",
    "jpeg_quality": 95
   }
  }

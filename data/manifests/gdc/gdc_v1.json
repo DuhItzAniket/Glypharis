@@ -1,10 +1,14 @@
 {
- "gdc_version": 1,
- "frozen_utc": "2026-10-21T14:00:27+00:00",
+ "gdc_version": "1.1",
+ "changes": {
+  "1.0": "ground-truth lines frozen 2026-10-21",
+  "1.1": "ignore regions for the sheet outside the content box (markers and the printed sheet label); lines unchanged"
+ },
+ "frozen_utc": "2026-10-22T15:56:39+00:00",
  "frozen": true,
  "pages": 106,
  "lines": 8606,
- "pages_sha256": "328a967d213b13285cce4713fa2ce7822f33b0712b5f9647beb6d09c52b18913",
+ "pages_sha256": "c4227f1ae6d0aa856c3e64a2bcf55325840343df48dc6810b104e62a6f092af5",
  "captures": {
   "raw/gdc/captures/000.jpg": "d5bbc23e3d83dd75862e972516f422be74a40648da13b9ed8f41347ac9e70a12",
   "raw/gdc/captures/001.jpg": "28677283866dac2f9b07b0aaa3311c95d10823ffb056192a9b7e2c827b1ccaf5",
