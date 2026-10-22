@@ -10,3 +10,11 @@ Any other access must be justified in the "Reason" column and discussed in the p
 | 2026-10-22 | gdc test | GW-BASE-002 | ppocr_mobile (rec) | 5 | Phase 5 baseline |
 | 2026-10-22 | hiertext test | GW-BASE-002 | ppocr_mobile (rec) | 5 | Phase 5 baseline |
 | 2026-10-22 | hiertext test | GW-BASE-002 | ppocr_mobile (rec) | 5 | Phase 5 baseline |
+| 2026-10-22 | gdc test | GW-BASE-002 | ppocr_mobile (rec) | 5 | Phase 5 baseline (resumed: 8106 of 8372 samples already predicted) |
+| 2026-10-22 | hiertext test | GW-BASE-002 | ppocr_mobile (rec) | 5 | Phase 5 baseline (resumed: 67277 of 67574 samples already predicted) |
+| 2026-10-22 | gdc test | GW-BASE-002 | ppocr_mobile (e2e) | 5 | Phase 5 baseline |
+| 2026-10-22 | hiertext test | GW-BASE-002 | ppocr_mobile (e2e) | 5 | Phase 5 baseline |
+| 2026-10-22 | gdc test | GW-BASE-001 | tesseract (rec) | 5 | Phase 5 baseline |
+| 2026-10-22 | hiertext test | GW-BASE-001 | tesseract (rec) | 5 | Phase 5 baseline |
+| 2026-10-22 | gdc test | GW-BASE-001 | tesseract (e2e) | 5 | Phase 5 baseline |
+| 2026-10-22 | hiertext test | GW-BASE-001 | tesseract (e2e) | 5 | Phase 5 baseline |
