@@ -5,7 +5,14 @@ import pytest
 
 from glypharis.data.pages import Page, PageLine
 from glypharis.eval.access import HeldOutAccessError, open_test_access
-from glypharis.eval.page_metrics import PredLine, det_summary, evaluate_page
+from glypharis.eval.page_metrics import (
+    PredLine,
+    det_summary,
+    evaluate_page,
+    is_rec_line,
+    match_pairs,
+    vertical_view,
+)
 from glypharis.eval.stats import mean_ci, paired_ratio_diff_ci, ratio_ci
 from glypharis.eval.text_metrics import RecAccumulator, score_pair
 
@@ -133,3 +140,70 @@ def test_test_access_is_guarded_and_logged(tmp_path):
     assert "No test access yet" not in text
     assert "| gdc test | GW-BASE-001 | tesseract-5 | 5 | baseline |" in text
     assert text.count("GW-BASE-00") == 2
+
+
+# ------------------------------------------------------------------- review fixes (Phase 5)
+
+
+def test_order_aware_text_skips_dont_care_like_the_other_metrics():
+    hand = PageLine("p/h", _box(0, 120, 100, 140), "scribble", "scribble", True, True, False,
+                    False, "handwritten")  # fmt: skip
+    page = _page()
+    page.lines.append(hand)
+    preds = [
+        PredLine(_box(0, 0, 100, 20), "first line"),
+        PredLine(_box(0, 30, 100, 50), "second line"),
+        PredLine(_box(0, 90, 100, 110), "wobbly"),  # text line with an untrusted box: kept
+        PredLine(_box(0, 60, 100, 80), "smudge"),  # illegible line: dropped
+        PredLine(_box(0, 120, 100, 140), "scribble"),  # handwritten line: dropped
+        PredLine(_box(160, 10, 190, 30), "logo"),  # ignore region: dropped
+    ]
+    r = evaluate_page(page, preds)
+    assert r.aware_errors == 0 and r.aware_ref_chars == len("first line\nsecond line\nwobbly")
+    assert (r.aware_word_errors, r.aware_ref_words) == (0, 5)
+    ghost = evaluate_page(page, [*preds, PredLine(_box(0, 150, 100, 170), "ghost")])
+    assert ghost.aware_errors == len("\nghost")  # a real spurious line still costs its characters
+
+
+def test_matching_maximises_valid_pairs_before_iou():
+    iou = np.array([[0.55, 0.95], [0.45, 0.52]])
+    # The plain IoU-sum optimum pairs (0,1) and (1,0) = 1.40, leaving only one pair >= 0.5.
+    assert match_pairs(iou, 0.5) == {0: 0, 1: 1}
+    assert match_pairs(np.zeros((2, 0)), 0.5) == {} and match_pairs(np.zeros((2, 2)), 0.5) == {}
+
+
+def test_dont_care_lines_cannot_take_a_match_from_a_line_that_counts():
+    care = _line(0, _box(0, 0, 100, 20), "care")
+    dont = _line(1, _box(0, 2, 100, 22), "smudge", legible=False)
+    page = Page("p", "img.jpg", 200, 200, "test", "test", [care, dont])
+    r = evaluate_page(page, [PredLine(_box(0, 3, 100, 23), "care")])  # nearer the don't-care box
+    assert r.det[0.5] == (1, 0, 0) and r.e2e_tp == 1
+
+
+def test_vertical_view_scores_only_vertical_lines():
+    stamp = _line(0, _box(0, 0, 20, 100), "STAMP", vertical=True)
+    body = _line(1, _box(30, 0, 130, 20), "body text")
+    page = Page("p", "img.jpg", 200, 200, "gdc", "test", [stamp, body])
+    preds = [PredLine(_box(0, 0, 20, 100), "STAMP"), PredLine(_box(30, 0, 130, 20), "body text")]
+    r = evaluate_page(vertical_view(page), preds)
+    assert r.det[0.5] == (1, 0, 0) and r.bag_errors == 0 and r.e2e_gt == 1
+    assert evaluate_page(page, preds).det[0.5] == (1, 0, 0)  # main metrics: the stamp is don't care
+
+
+def test_recognition_benchmarks_keep_out_of_charset_and_long_lines():
+    def line(rec_ok, skip, score=None, legible=True):
+        return PageLine("p/l", _box(0, 0, 10, 2), "x", "x", legible, False, False, rec_ok, skip,
+                        score)  # fmt: skip
+
+    assert is_rec_line(line(True, None))
+    assert is_rec_line(line(False, "out_of_charset")) and is_rec_line(line(False, "too_long"))
+    assert not is_rec_line(line(False, "excluded"))
+    assert not is_rec_line(line(False, "illegible", legible=False))
+    assert not is_rec_line(line(True, None, score=0.1))  # crop would be cut from a wrong box
+
+
+def test_degenerate_prediction_polygons_do_not_crash():
+    page = _page()
+    preds = [PredLine([[0, 0], [5, 5]], "x"), PredLine([], ""), PredLine(_box(0, 0, 100, 20), "a")]
+    r = evaluate_page(page, preds)
+    assert r.det[0.5][0] == 1

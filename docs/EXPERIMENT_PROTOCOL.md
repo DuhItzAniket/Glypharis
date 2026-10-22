@@ -63,7 +63,7 @@ All metrics are computed on two tracks and both are reported. Normalisation code
 
 | Track | Applied to prediction and reference | Purpose |
 |---|---|---|
-| **strict** | Unicode NFC; strip leading/trailing whitespace; collapse internal whitespace runs to one space | Primary track. Case, punctuation and symbols all count. |
+| **strict** | The label normalisation `glypharis.data.text.normalize_label` (v1): Unicode NFC; typographic spaces turned into spaces, whitespace runs collapsed, leading and trailing whitespace stripped; Latin ligatures U+FB00–U+FB06 written out; invisible, control, private-use, unassigned and U+FFFD characters removed | Primary track. Case, punctuation and symbols all count. |
 | **normalised** | strict + NFKC + typographic map (curly quotes → straight, en/em dash → `-`, ligatures expanded) + case-folded | Comparison with systems whose output conventions differ (e.g. baselines that emit straight quotes or a reduced charset) |
 
 Characters outside the model charset in a reference are **not** removed; they count as errors the model
@@ -89,7 +89,7 @@ Empty references are excluded from CER denominators and counted separately.
 
 | Metric | Definition |
 |---|---|
-| **Precision / Recall / F1 @ IoU 0.5** (primary) | One-to-one matching by polygon IoU (Hungarian on IoU, threshold 0.5). |
+| **Precision / Recall / F1 @ IoU 0.5** (primary) | One-to-one matching by polygon IoU at threshold 0.5: Hungarian assignment that maximises the number of pairs passing the threshold, then their summed IoU. Lines that count are matched before don't-care lines. |
 | F1 @ IoU 0.7 | Stricter localisation. |
 | Mean matched IoU | Over true positives. |
 | Merge / split counts | One GT ↔ many predictions and vice versa (Phase 9). |
@@ -98,7 +98,8 @@ Empty references are excluded from CER denominators and counted separately.
 "Don't care" regions (illegible text) are excluded from both sides where the dataset marks them.
 GDC pages also carry *ignore regions*: raster images inside the source PDFs, whose printed text has
 no text layer and therefore no ground truth. Ground-truth lines are always scored; an ignore region
-only excuses predictions inside it that match no ground-truth line. GDC lines flagged `vertical`
+only excuses predictions inside it that match no ground-truth line. These exclusions apply to every
+metric, the order-aware page text included. GDC lines flagged `vertical`
 (rotated text such as margin stamps and axis titles) are reported separately and excluded from the
 main line metrics.
 
@@ -106,8 +107,8 @@ main line metrics.
 
 | Metric | Definition |
 |---|---|
-| **Page CER / WER, order-aware** | Lines joined in predicted reading order with `\n`, compared with the reference page text. |
-| **Page CER, order-agnostic** | Bag-of-lines: predicted lines matched to GT lines by box IoU, CER over matched pairs, unmatched lines count as full deletions / insertions. Separates reading-order errors from recognition errors. |
+| **Page CER / WER, order-aware** | Lines joined in predicted reading order with `\n`, compared with the reference page text. Reported only where the ground truth has a reading order: GDC (PDF text-layer order). HierText's annotation order is not a reading order, so the metric is n/a there. |
+| **Page CER, order-agnostic** | Bag-of-lines: predicted lines matched to GT lines by box IoU, CER over matched pairs, unmatched lines count as full deletions / insertions. Measures recognition and detection without reading order. |
 | E2E line F1 | A GT line counts as found if a prediction overlaps it at IoU ≥ 0.5 *and* its line CER ≤ 0.1 (threshold fixed here, not tuned). |
 | **Oracle analysis** | GT boxes → recognizer, compared with detector boxes → recognizer, to split error between the two stages. |
 
@@ -123,11 +124,14 @@ scaling; the temperature is fitted on validation only.
 |---|---|
 | Latency mean / p95 | Wall clock per image, after 10 warm-up images, over ≥ 100 images; batch size and threads stated |
 | Throughput | Images / second at the stated batch size |
-| Peak RAM | Process RSS high-water mark |
+| Peak RAM | Peak working set (RSS high-water mark) of the process, plus that of any engine process it starts (e.g. `tesseract.exe`) |
 | Peak VRAM | `torch.cuda.max_memory_allocated` plus `nvidia-smi` process memory |
 | Model size | Parameters and on-disk bytes per format (PyTorch, ONNX, INT8 ONNX) |
 
-Conditions recorded with every efficiency number: power plan (AC, performance mode), CPU thread count,
+Efficiency is measured in a dedicated profiling pass (for the baselines `scripts/run_baselines.py
+--profile`), one sample at a time on validation data, not taken from long accuracy runs, which share
+the machine with other work over hours. Conditions recorded with every efficiency number: power plan
+(AC, performance mode), CPU load before and after, CPU thread count,
 GPU clocks and temperature at start and end, input resolution, precision. **CPU latency is the primary
 deployment number** ([ADR-0008](decisions/ADR-0008-usable-engine-first.md)).
 
@@ -209,3 +213,8 @@ choice; no per-benchmark tuning.
 | 2026-10-10 | Initial version (Phase 0) | — | — |
 | 2026-10-10 | Ignore regions and vertical lines for GDC (§3); split statistics filled (§1) | Phase 4 built GDC from PDF text layers; raster images inside PDFs have no text layer | GDC metrics |
 | 2026-10-10 | CUDA reproducibility tolerance fixed at a maximum **relative** loss difference of 1e-4 between two seeded runs (toy check in `scripts/env_report.py`); CPU runs must be bit-identical | Phase 1 exit criterion needed a documented tolerance. CUDA CTC backward has no deterministic kernel, so exact equality is not guaranteed even though the Phase 1 measurement showed none (reports/environment/env_report.md) | All CUDA runs |
+| 2026-10-22 | §2: strict track described as implemented since Phase 4 (`normalize_label`: ligatures written out, invisible and replacement characters removed); the code did not change | The table described only NFC and whitespace | Wording only; no number changes |
+| 2026-10-22 | §2 applied to recognition benchmarks: their crops keep lines with out-of-charset characters and very long lines, and the charset ceiling is reported next to every result | The first Phase 5 crops reused the training filter (`rec_ok`), which dropped those lines | Recognition-only benchmarks |
+| 2026-10-22 | §3: matching maximises valid pairs before IoU and matches lines that count before don't-care lines; don't-care exclusions apply to the order-aware page text too; order-aware page CER/WER is reported only where a reading order exists (GDC) | Phase 5 code review: plain IoU-sum matching could drop valid pairs, the order-aware text counted reads of don't-care regions as insertions, and HierText has no reading order | Detection, end to end; no results had been reported yet |
+| 2026-10-22 | §3: efficiency comes from a dedicated profiling pass, and peak RAM includes engine processes the harness starts | Long accuracy runs share the machine with other work; a command-line engine's memory is outside the Python process | Efficiency numbers |
+| 2026-10-22 | §3: dataset-native metrics (HierText's PQ-style metric) are computed from Phase 14, with the official evaluation code | Phase 5 scores every system with the project's own line metrics; the native metric needs the official code and word-level output | HierText reporting |

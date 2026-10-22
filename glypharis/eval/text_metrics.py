@@ -96,3 +96,22 @@ def summarise_scores(scores: list[SampleScore], empty_refs: int = 0) -> RecSumma
         sequence_accuracy=sum(s.exact for s in scores) / n if n else 0.0,
         empty_references=empty_refs,
     )
+
+
+def track_charset(characters: Iterable[str], track: Track) -> frozenset[str]:
+    """A charset's characters as they look after normalisation on ``track`` (space included)."""
+    return frozenset({" ", *"".join(normalize_eval(c, track) for c in characters)})
+
+
+def outside_charset(texts: Iterable[str], allowed: frozenset[str], track: Track) -> tuple[int, int]:
+    """Characters of the normalised ``texts`` outside ``allowed``, and the total character count.
+
+    Their share is the charset ceiling (EXPERIMENT_PROTOCOL §2): errors a model limited to that
+    charset cannot avoid.
+    """
+    outside = total = 0
+    for t in texts:
+        n = normalize_eval(t, track)
+        total += len(n)
+        outside += sum(ch not in allowed for ch in n)
+    return outside, total
