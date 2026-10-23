@@ -695,3 +695,19 @@ def test_trimming_the_log_works_while_another_process_holds_it_open(tiny, monkey
     assert max(steps) == 4 and not (tiny / "op/runs/GW-REC-999/metrics.jsonl.tmp").exists()
     dropped = (tiny / "op/runs/GW-REC-999/metrics.dropped.jsonl").read_text(encoding="utf-8")
     assert len(dropped.splitlines()) == 1
+
+
+def test_the_number_of_data_loading_processes_does_not_change_training(tiny, monkeypatch):
+    runs = {}
+    for workers in ("0", "2"):
+        monkeypatch.setenv("GLYPHARIS_NUM_WORKERS", workers)
+        trainer = RecTrainer(_cfg(tiny, f"w{workers}"))
+        trainer.fit()
+        assert trainer._summary()["data_workers"] == int(workers)
+        runs[workers] = trainer
+    for a, b in zip(runs["0"].model.state_dict().values(), runs["2"].model.state_dict().values(),
+                    strict=True):  # fmt: skip
+        assert torch.equal(a, b)
+    assert [h["val_cer"] for h in runs["0"].state.history] == [
+        h["val_cer"] for h in runs["2"].state.history
+    ]

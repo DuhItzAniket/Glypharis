@@ -22,6 +22,7 @@ from __future__ import annotations
 import json
 import logging
 import math
+import os
 import time
 from collections import Counter
 from collections.abc import Callable, Iterable
@@ -344,11 +345,15 @@ class RecTrainer:
         self._clock = time.monotonic()
         self.git = git_info()
         self.params = count_parameters(self.model)
+        # Data-loading processes. Each loads its own torch and CUDA (about 2 GB of commit memory on
+        # Windows); GW-REC-005 and 007 crashed when the system ran out of commit, so the queue can
+        # lower this without touching the config. Batches do not depend on it.
+        self.workers = int(os.environ.get("GLYPHARIS_NUM_WORKERS", cfg.data.num_workers))
 
     # ---------------------------------------------------------------------------- loaders
 
     def _loader(self, ds: RecLineDataset, sampler: Any, seed: int) -> DataLoader[Any]:
-        workers = self.cfg.data.num_workers
+        workers = self.workers
         return DataLoader(
             ds,
             batch_sampler=sampler,
@@ -631,6 +636,7 @@ class RecTrainer:
             "config_hash": run_config_hash(self.cfg),
             "git": self.git.to_dict(),
             "parameters": self.params,
+            "data_workers": self.workers,
             "model_bytes": model_bytes(self.model.state_dict()),
             "device": str(self.device),
             "gpu": torch.cuda.get_device_name() if self.device.type == "cuda" else None,
