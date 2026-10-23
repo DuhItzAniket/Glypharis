@@ -1,7 +1,12 @@
 # GW-REC-020: Phase 7, GLYPHARIS-Rec-M (the SVTR-style encoder, H6) against the control GW-REC-003
-# at the same budget: 8 epochs, the same batches, steps, schedule and learning rate. The default
-# sizes have about as many parameters as the CRNN. If the sanity sequence's LR range test calls
-# for another learning rate, the change is recorded in the registry before the run.
+# at the same budget: 8 epochs, 64 lines per optimizer step, the same schedule. The default sizes
+# have about as many parameters as the CRNN.
+# Amended 2026-10-24 before the main run, from the first sanity attempt
+# (reports/training/sanity/GW-REC-020/attempt1/): the LR range test put the lowest smoothed loss at
+# 3.24e-3 (suggestion 3.24e-4, so the control's 1e-3 was outside the 3x band), and the dry run ran
+# out of GPU memory at the control's batch. Hence learning rate 5e-4, and half-size micro-batches
+# with 2-step accumulation: still 64 lines per optimizer step, and the halved column cap splits
+# wide batches at the same widths as the control's.
 inherits: gw-rec-003.yaml
 experiment_id: GW-REC-020
 model_name: svtr
@@ -14,3 +19,11 @@ model:
     heads: [3, 6, 8]
     mlp_ratio: 4.0
     local_kernel: [3, 7]
+
+data:
+  max_batch_columns: 16384
+
+train:
+  learning_rate: 5.0e-4
+  batch_size: 32
+  gradient_accumulation: 2

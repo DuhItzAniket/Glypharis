@@ -95,7 +95,7 @@ def _step(p: Parts, model: nn.Module, opt: torch.optim.Optimizer, batch: dict[st
     return float(loss.detach())
 
 
-def overfit(p: Parts, out: Path) -> dict[str, Any]:
+def overfit(p: Parts, out: Path, max_steps: int | None = None) -> dict[str, Any]:
     """All lines in one batch: BatchNorm then learns exactly the statistics evaluation uses.
 
     With several small batches drawn from 64 lines, each batch's statistics differ so much that
@@ -106,8 +106,9 @@ def overfit(p: Parts, out: Path) -> dict[str, Any]:
     model = p.model()
     opt = torch.optim.AdamW(model.parameters(), lr=p.cfg.train.learning_rate)
     curve, step, cer = [], 0, 1.0
+    limit = max_steps or OVERFIT_MAX_STEPS
     t0 = time.monotonic()
-    while step < OVERFIT_MAX_STEPS:
+    while step < limit:
         for batch in p.loader(ds, len(ds), shuffle=True, epoch=step, workers=0, cap=False):
             _step(p, model, opt, batch)
             step += 1
@@ -248,6 +249,13 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--checks", nargs="+", default=["overfit", "lr_range", "dry_run"],
                         choices=["overfit", "lr_range", "dry_run"])  # fmt: skip
     parser.add_argument("--dry-run-minutes", type=float, default=10.0)
+    # Attention encoders sit longer on CTC's all-blank plateau than the CRNN does (GW-REC-020).
+    parser.add_argument(
+        "--overfit-max-steps",
+        type=int,
+        default=None,
+        help=f"step budget of the overfit check (default {OVERFIT_MAX_STEPS})",
+    )
     args = parser.parse_args(argv)
     cfg = config_from_args(args)
     cfg.require_run_identity()
@@ -263,7 +271,7 @@ def main(argv: list[str] | None = None) -> int:
                    git=git_info().commit)  # fmt: skip
     for check in args.checks:
         if check == "overfit":
-            results["overfit"] = overfit(p, out)
+            results["overfit"] = overfit(p, out, args.overfit_max_steps)
         elif check == "lr_range":
             results["lr_range"] = lr_range(p, out)
         else:
