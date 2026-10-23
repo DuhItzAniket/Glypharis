@@ -1,0 +1,7 @@
+# GW-REC-015: Phase 7 ablation, no augmentation instead of the full preset. Everything else is the control
+# GW-REC-003 (8-epoch short budget, seed 1337).
+inherits: gw-rec-003.yaml
+experiment_id: GW-REC-015
+
+data:
+  augmentation: none

@@ -1,0 +1,16 @@
+# GW-REC-006: Phase 7 ablation, input height 48 instead of 32. Everything else is the control
+# GW-REC-003 (8-epoch short budget, seed 1337).
+inherits: gw-rec-003.yaml
+experiment_id: GW-REC-006
+
+data:
+  image_height: 48
+  max_width: 1536          # the control's cap, scaled with the height
+  # 1.5x the activation memory per column: half-size micro-batches with 2-step accumulation keep
+  # 64 lines per optimizer step, and this cap splits wide batches at the same widths as the
+  # control's 32768 at H = 32.
+  max_batch_columns: 24576
+
+train:
+  batch_size: 32
+  gradient_accumulation: 2

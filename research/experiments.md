@@ -19,6 +19,19 @@ Rows link to a full entry below. Numbers are copied from generated reports only,
 | [GW-REC-003](#gw-rec-003) | 2026-10-23 | 07 | Phase 7 control: GW-REC-001 on the 8-epoch short budget, seed 1337 (noise floor) | planned | — | `reports/training/GW-REC-003/` |
 | [GW-REC-004](#gw-rec-004) | 2026-10-23 | 07 | Phase 7 control: GW-REC-001 on the 8-epoch short budget, seed 2024 (noise floor) | planned | — | `reports/training/GW-REC-004/` |
 | [GW-REC-005](#gw-rec-005) | 2026-10-23 | 07 | Phase 7 control: GW-REC-001 on the 8-epoch short budget, seed 7 (noise floor) | planned | — | `reports/training/GW-REC-005/` |
+| [GW-REC-006](#gw-rec-006) | 2026-10-23 | 07 | Phase 7 ablation: input height 48 (short budget, vs GW-REC-003) | planned | — | `reports/training/GW-REC-006/` |
+| [GW-REC-007](#gw-rec-007) | 2026-10-23 | 07 | Phase 7 ablation: CNN half as wide (short budget, vs GW-REC-003) | planned | — | `reports/training/GW-REC-007/` |
+| [GW-REC-008](#gw-rec-008) | 2026-10-23 | 07 | Phase 7 ablation: BiLSTM hidden 128 (short budget, vs GW-REC-003) | planned | — | `reports/training/GW-REC-008/` |
+| [GW-REC-009](#gw-rec-009) | 2026-10-23 | 07 | Phase 7 ablation: one BiLSTM layer (short budget, vs GW-REC-003) | planned | — | `reports/training/GW-REC-009/` |
+| [GW-REC-010](#gw-rec-010) | 2026-10-23 | 07 | Phase 7 ablation: Adam (short budget, vs GW-REC-003) | planned | — | `reports/training/GW-REC-010/` |
+| [GW-REC-011](#gw-rec-011) | 2026-10-23 | 07 | Phase 7 ablation: cosine schedule (short budget, vs GW-REC-003) | planned | — | `reports/training/GW-REC-011/` |
+| [GW-REC-012](#gw-rec-012) | 2026-10-23 | 07 | Phase 7 ablation: learning rate 5e-4 (short budget, vs GW-REC-003) | planned | — | `reports/training/GW-REC-012/` |
+| [GW-REC-013](#gw-rec-013) | 2026-10-23 | 07 | Phase 7 ablation: learning rate 2e-3 (short budget, vs GW-REC-003) | planned | — | `reports/training/GW-REC-013/` |
+| [GW-REC-014](#gw-rec-014) | 2026-10-23 | 07 | Phase 7 ablation: weight decay 1e-2 (short budget, vs GW-REC-003) | planned | — | `reports/training/GW-REC-014/` |
+| [GW-REC-015](#gw-rec-015) | 2026-10-23 | 07 | Phase 7 ablation: no augmentation (short budget, vs GW-REC-003) | planned | — | `reports/training/GW-REC-015/` |
+| [GW-REC-016](#gw-rec-016) | 2026-10-23 | 07 | Phase 7 ablation: geometric augmentation only (short budget, vs GW-REC-003) | planned | — | `reports/training/GW-REC-016/` |
+| [GW-REC-017](#gw-rec-017) | 2026-10-23 | 07 | Phase 7 ablation: photometric augmentation only (short budget, vs GW-REC-003) | planned | — | `reports/training/GW-REC-017/` |
+| [GW-REC-018](#gw-rec-018) | 2026-10-23 | 07 | Phase 7 ablation: degradation augmentation only (short budget, vs GW-REC-003) | planned | — | `reports/training/GW-REC-018/` |
 
 ### GW-BASE-001 — Tesseract 5 (LSTM, eng): recognition and end to end
 
@@ -253,6 +266,253 @@ Rows link to a full entry below. Numbers are copied from generated reports only,
 - **Interpretation:**
 - **Limitations:** a short budget ranks configurations, it does not show their full-budget accuracy; the winner is confirmed at the full budget at the end of Phase 7.
 - **Next experiment:** the Phase 7 ablations against this control
+- **Training time:**
+
+### GW-REC-006 — Phase 7 ablation: input height 48
+
+- **Date allocated / run:** 2026-10-23 / —
+- **Phase:** 07
+- **Git commit:** recorded in the run summary   **Config:** `configs/rec/gw-rec-006.yaml`   **Seed(s):** 1337 (single seed: exploratory)
+- **Dataset version(s):** as GW-REC-001
+- **Hardware:** as GW-REC-001
+- **Research question:** what does changing one thing, input height 48 instead of 32 (max width scaled to 1536; micro-batches of 32 with 2-step accumulation, so 64 lines per step as in the control), do to validation CER on the Phase 7 short budget?
+- **Hypothesis (written before the run):** expectation, not a claim: lower validation CER than the control, because small glyphs keep more detail, at about 1.5 times the compute per line.
+- **Method:** `python train.py --config configs/rec/gw-rec-006.yaml`; the control GW-REC-003 with only this change. Compared line by line with GW-REC-003 (`scripts/rec_compare.py`) and read against the spread of GW-REC-003, 004 and 005.
+- **Variables:** independent: input height 48 instead of 32 (max width scaled to 1536; micro-batches of 32 with 2-step accumulation, so 64 lines per step as in the control); controlled: everything else
+- **Control:** GW-REC-003 (seed spread: GW-REC-004, 005)
+- **Result:**
+- **Training diagnostics:**
+- **Interpretation:**
+- **Limitations:** single seed; short budget. BatchNorm sees micro-batches of 32 instead of 64.
+- **Next experiment:** the Phase 7 combination and full-budget confirmation
+- **Training time:**
+
+### GW-REC-007 — Phase 7 ablation: CNN half as wide
+
+- **Date allocated / run:** 2026-10-23 / —
+- **Phase:** 07
+- **Git commit:** recorded in the run summary   **Config:** `configs/rec/gw-rec-007.yaml`   **Seed(s):** 1337 (single seed: exploratory)
+- **Dataset version(s):** as GW-REC-001
+- **Hardware:** as GW-REC-001
+- **Research question:** what does changing one thing, CNN channels [32, 64, 128, 128, 256, 256] instead of [64, 128, 256, 256, 512, 512], do to validation CER on the Phase 7 short budget?
+- **Hypothesis (written before the run):** expectation, not a claim: somewhat higher validation CER with far fewer parameters and faster inference; it shows how much CNN width the task needs.
+- **Method:** `python train.py --config configs/rec/gw-rec-007.yaml`; the control GW-REC-003 with only this change. Compared line by line with GW-REC-003 (`scripts/rec_compare.py`) and read against the spread of GW-REC-003, 004 and 005.
+- **Variables:** independent: CNN channels [32, 64, 128, 128, 256, 256] instead of [64, 128, 256, 256, 512, 512]; controlled: everything else
+- **Control:** GW-REC-003 (seed spread: GW-REC-004, 005)
+- **Result:**
+- **Training diagnostics:**
+- **Interpretation:**
+- **Limitations:** single seed; short budget.
+- **Next experiment:** the Phase 7 combination and full-budget confirmation
+- **Training time:**
+
+### GW-REC-008 — Phase 7 ablation: BiLSTM hidden 128
+
+- **Date allocated / run:** 2026-10-23 / —
+- **Phase:** 07
+- **Git commit:** recorded in the run summary   **Config:** `configs/rec/gw-rec-008.yaml`   **Seed(s):** 1337 (single seed: exploratory)
+- **Dataset version(s):** as GW-REC-001
+- **Hardware:** as GW-REC-001
+- **Research question:** what does changing one thing, BiLSTM hidden size 128 per direction instead of 256, do to validation CER on the Phase 7 short budget?
+- **Hypothesis (written before the run):** expectation, not a claim: slightly higher validation CER with a much smaller sequence model.
+- **Method:** `python train.py --config configs/rec/gw-rec-008.yaml`; the control GW-REC-003 with only this change. Compared line by line with GW-REC-003 (`scripts/rec_compare.py`) and read against the spread of GW-REC-003, 004 and 005.
+- **Variables:** independent: BiLSTM hidden size 128 per direction instead of 256; controlled: everything else
+- **Control:** GW-REC-003 (seed spread: GW-REC-004, 005)
+- **Result:**
+- **Training diagnostics:**
+- **Interpretation:**
+- **Limitations:** single seed; short budget.
+- **Next experiment:** the Phase 7 combination and full-budget confirmation
+- **Training time:**
+
+### GW-REC-009 — Phase 7 ablation: one BiLSTM layer
+
+- **Date allocated / run:** 2026-10-23 / —
+- **Phase:** 07
+- **Git commit:** recorded in the run summary   **Config:** `configs/rec/gw-rec-009.yaml`   **Seed(s):** 1337 (single seed: exploratory)
+- **Dataset version(s):** as GW-REC-001
+- **Hardware:** as GW-REC-001
+- **Research question:** what does changing one thing, one BiLSTM layer instead of two, do to validation CER on the Phase 7 short budget?
+- **Hypothesis (written before the run):** expectation, not a claim: slightly higher validation CER.
+- **Method:** `python train.py --config configs/rec/gw-rec-009.yaml`; the control GW-REC-003 with only this change. Compared line by line with GW-REC-003 (`scripts/rec_compare.py`) and read against the spread of GW-REC-003, 004 and 005.
+- **Variables:** independent: one BiLSTM layer instead of two; controlled: everything else
+- **Control:** GW-REC-003 (seed spread: GW-REC-004, 005)
+- **Result:**
+- **Training diagnostics:**
+- **Interpretation:**
+- **Limitations:** single seed; short budget.
+- **Next experiment:** the Phase 7 combination and full-budget confirmation
+- **Training time:**
+
+### GW-REC-010 — Phase 7 ablation: Adam
+
+- **Date allocated / run:** 2026-10-23 / —
+- **Phase:** 07
+- **Git commit:** recorded in the run summary   **Config:** `configs/rec/gw-rec-010.yaml`   **Seed(s):** 1337 (single seed: exploratory)
+- **Dataset version(s):** as GW-REC-001
+- **Hardware:** as GW-REC-001
+- **Research question:** what does changing one thing, Adam instead of AdamW, same learning rate and weight decay, do to validation CER on the Phase 7 short budget?
+- **Hypothesis (written before the run):** expectation, not a claim: no difference beyond the seed spread, since the weight decay is small.
+- **Method:** `python train.py --config configs/rec/gw-rec-010.yaml`; the control GW-REC-003 with only this change. Compared line by line with GW-REC-003 (`scripts/rec_compare.py`) and read against the spread of GW-REC-003, 004 and 005.
+- **Variables:** independent: Adam instead of AdamW, same learning rate and weight decay; controlled: everything else
+- **Control:** GW-REC-003 (seed spread: GW-REC-004, 005)
+- **Result:**
+- **Training diagnostics:**
+- **Interpretation:**
+- **Limitations:** single seed; short budget.
+- **Next experiment:** the Phase 7 combination and full-budget confirmation
+- **Training time:**
+
+### GW-REC-011 — Phase 7 ablation: cosine schedule
+
+- **Date allocated / run:** 2026-10-23 / —
+- **Phase:** 07
+- **Git commit:** recorded in the run summary   **Config:** `configs/rec/gw-rec-011.yaml`   **Seed(s):** 1337 (single seed: exploratory)
+- **Dataset version(s):** as GW-REC-001
+- **Hardware:** as GW-REC-001
+- **Research question:** what does changing one thing, cosine schedule with 2,000 warm-up steps instead of OneCycle (30% warm-up), do to validation CER on the Phase 7 short budget?
+- **Hypothesis (written before the run):** expectation, not a claim: no difference beyond the seed spread.
+- **Method:** `python train.py --config configs/rec/gw-rec-011.yaml`; the control GW-REC-003 with only this change. Compared line by line with GW-REC-003 (`scripts/rec_compare.py`) and read against the spread of GW-REC-003, 004 and 005.
+- **Variables:** independent: cosine schedule with 2,000 warm-up steps instead of OneCycle (30% warm-up); controlled: everything else
+- **Control:** GW-REC-003 (seed spread: GW-REC-004, 005)
+- **Result:**
+- **Training diagnostics:**
+- **Interpretation:**
+- **Limitations:** single seed; short budget.
+- **Next experiment:** the Phase 7 combination and full-budget confirmation
+- **Training time:**
+
+### GW-REC-012 — Phase 7 ablation: learning rate 5e-4
+
+- **Date allocated / run:** 2026-10-23 / —
+- **Phase:** 07
+- **Git commit:** recorded in the run summary   **Config:** `configs/rec/gw-rec-012.yaml`   **Seed(s):** 1337 (single seed: exploratory)
+- **Dataset version(s):** as GW-REC-001
+- **Hardware:** as GW-REC-001
+- **Research question:** what does changing one thing, peak learning rate 5e-4 instead of 1e-3, do to validation CER on the Phase 7 short budget?
+- **Hypothesis (written before the run):** expectation, not a claim: slightly higher validation CER on the short budget (slower progress).
+- **Method:** `python train.py --config configs/rec/gw-rec-012.yaml`; the control GW-REC-003 with only this change. Compared line by line with GW-REC-003 (`scripts/rec_compare.py`) and read against the spread of GW-REC-003, 004 and 005.
+- **Variables:** independent: peak learning rate 5e-4 instead of 1e-3; controlled: everything else
+- **Control:** GW-REC-003 (seed spread: GW-REC-004, 005)
+- **Result:**
+- **Training diagnostics:**
+- **Interpretation:**
+- **Limitations:** single seed; short budget.
+- **Next experiment:** the Phase 7 combination and full-budget confirmation
+- **Training time:**
+
+### GW-REC-013 — Phase 7 ablation: learning rate 2e-3
+
+- **Date allocated / run:** 2026-10-23 / —
+- **Phase:** 07
+- **Git commit:** recorded in the run summary   **Config:** `configs/rec/gw-rec-013.yaml`   **Seed(s):** 1337 (single seed: exploratory)
+- **Dataset version(s):** as GW-REC-001
+- **Hardware:** as GW-REC-001
+- **Research question:** what does changing one thing, peak learning rate 2e-3 instead of 1e-3, do to validation CER on the Phase 7 short budget?
+- **Hypothesis (written before the run):** expectation, not a claim: similar validation CER, possibly less stable; the Phase 6 LR range test put the lowest smoothed loss at 3.72e-3 (`reports/training/sanity/GW-REC-001/sanity.md`).
+- **Method:** `python train.py --config configs/rec/gw-rec-013.yaml`; the control GW-REC-003 with only this change. Compared line by line with GW-REC-003 (`scripts/rec_compare.py`) and read against the spread of GW-REC-003, 004 and 005.
+- **Variables:** independent: peak learning rate 2e-3 instead of 1e-3; controlled: everything else
+- **Control:** GW-REC-003 (seed spread: GW-REC-004, 005)
+- **Result:**
+- **Training diagnostics:**
+- **Interpretation:**
+- **Limitations:** single seed; short budget.
+- **Next experiment:** the Phase 7 combination and full-budget confirmation
+- **Training time:**
+
+### GW-REC-014 — Phase 7 ablation: weight decay 1e-2
+
+- **Date allocated / run:** 2026-10-23 / —
+- **Phase:** 07
+- **Git commit:** recorded in the run summary   **Config:** `configs/rec/gw-rec-014.yaml`   **Seed(s):** 1337 (single seed: exploratory)
+- **Dataset version(s):** as GW-REC-001
+- **Hardware:** as GW-REC-001
+- **Research question:** what does changing one thing, weight decay 1e-2 instead of 1e-4, do to validation CER on the Phase 7 short budget?
+- **Hypothesis (written before the run):** expectation, not a claim: similar or slightly lower validation CER.
+- **Method:** `python train.py --config configs/rec/gw-rec-014.yaml`; the control GW-REC-003 with only this change. Compared line by line with GW-REC-003 (`scripts/rec_compare.py`) and read against the spread of GW-REC-003, 004 and 005.
+- **Variables:** independent: weight decay 1e-2 instead of 1e-4; controlled: everything else
+- **Control:** GW-REC-003 (seed spread: GW-REC-004, 005)
+- **Result:**
+- **Training diagnostics:**
+- **Interpretation:**
+- **Limitations:** single seed; short budget.
+- **Next experiment:** the Phase 7 combination and full-budget confirmation
+- **Training time:**
+
+### GW-REC-015 — Phase 7 ablation: no augmentation
+
+- **Date allocated / run:** 2026-10-23 / —
+- **Phase:** 07
+- **Git commit:** recorded in the run summary   **Config:** `configs/rec/gw-rec-015.yaml`   **Seed(s):** 1337 (single seed: exploratory)
+- **Dataset version(s):** as GW-REC-001
+- **Hardware:** as GW-REC-001
+- **Research question:** what does changing one thing, augmentation preset none instead of full, do to validation CER on the Phase 7 short budget?
+- **Hypothesis (written before the run):** expectation, not a claim: lower train CER and somewhat higher validation CER than the control.
+- **Method:** `python train.py --config configs/rec/gw-rec-015.yaml`; the control GW-REC-003 with only this change. Compared line by line with GW-REC-003 (`scripts/rec_compare.py`) and read against the spread of GW-REC-003, 004 and 005.
+- **Variables:** independent: augmentation preset none instead of full; controlled: everything else
+- **Control:** GW-REC-003 (seed spread: GW-REC-004, 005)
+- **Result:**
+- **Training diagnostics:**
+- **Interpretation:**
+- **Limitations:** single seed; short budget. First pass only; the full augmentation study is Phase 11 (H3).
+- **Next experiment:** the Phase 7 combination and full-budget confirmation
+- **Training time:**
+
+### GW-REC-016 — Phase 7 ablation: geometric augmentation only
+
+- **Date allocated / run:** 2026-10-23 / —
+- **Phase:** 07
+- **Git commit:** recorded in the run summary   **Config:** `configs/rec/gw-rec-016.yaml`   **Seed(s):** 1337 (single seed: exploratory)
+- **Dataset version(s):** as GW-REC-001
+- **Hardware:** as GW-REC-001
+- **Research question:** what does changing one thing, augmentation preset geometric instead of full, do to validation CER on the Phase 7 short budget?
+- **Hypothesis (written before the run):** expectation, not a claim: between none (GW-REC-015) and full.
+- **Method:** `python train.py --config configs/rec/gw-rec-016.yaml`; the control GW-REC-003 with only this change. Compared line by line with GW-REC-003 (`scripts/rec_compare.py`) and read against the spread of GW-REC-003, 004 and 005.
+- **Variables:** independent: augmentation preset geometric instead of full; controlled: everything else
+- **Control:** GW-REC-003 (seed spread: GW-REC-004, 005)
+- **Result:**
+- **Training diagnostics:**
+- **Interpretation:**
+- **Limitations:** single seed; short budget. First pass only; the full augmentation study is Phase 11 (H3).
+- **Next experiment:** the Phase 7 combination and full-budget confirmation
+- **Training time:**
+
+### GW-REC-017 — Phase 7 ablation: photometric augmentation only
+
+- **Date allocated / run:** 2026-10-23 / —
+- **Phase:** 07
+- **Git commit:** recorded in the run summary   **Config:** `configs/rec/gw-rec-017.yaml`   **Seed(s):** 1337 (single seed: exploratory)
+- **Dataset version(s):** as GW-REC-001
+- **Hardware:** as GW-REC-001
+- **Research question:** what does changing one thing, augmentation preset photometric instead of full, do to validation CER on the Phase 7 short budget?
+- **Hypothesis (written before the run):** expectation, not a claim: between none (GW-REC-015) and full.
+- **Method:** `python train.py --config configs/rec/gw-rec-017.yaml`; the control GW-REC-003 with only this change. Compared line by line with GW-REC-003 (`scripts/rec_compare.py`) and read against the spread of GW-REC-003, 004 and 005.
+- **Variables:** independent: augmentation preset photometric instead of full; controlled: everything else
+- **Control:** GW-REC-003 (seed spread: GW-REC-004, 005)
+- **Result:**
+- **Training diagnostics:**
+- **Interpretation:**
+- **Limitations:** single seed; short budget. First pass only; the full augmentation study is Phase 11 (H3).
+- **Next experiment:** the Phase 7 combination and full-budget confirmation
+- **Training time:**
+
+### GW-REC-018 — Phase 7 ablation: degradation augmentation only
+
+- **Date allocated / run:** 2026-10-23 / —
+- **Phase:** 07
+- **Git commit:** recorded in the run summary   **Config:** `configs/rec/gw-rec-018.yaml`   **Seed(s):** 1337 (single seed: exploratory)
+- **Dataset version(s):** as GW-REC-001
+- **Hardware:** as GW-REC-001
+- **Research question:** what does changing one thing, augmentation preset degradation instead of full, do to validation CER on the Phase 7 short budget?
+- **Hypothesis (written before the run):** expectation, not a claim: between none (GW-REC-015) and full.
+- **Method:** `python train.py --config configs/rec/gw-rec-018.yaml`; the control GW-REC-003 with only this change. Compared line by line with GW-REC-003 (`scripts/rec_compare.py`) and read against the spread of GW-REC-003, 004 and 005.
+- **Variables:** independent: augmentation preset degradation instead of full; controlled: everything else
+- **Control:** GW-REC-003 (seed spread: GW-REC-004, 005)
+- **Result:**
+- **Training diagnostics:**
+- **Interpretation:**
+- **Limitations:** single seed; short budget. First pass only; the full augmentation study is Phase 11 (H3).
+- **Next experiment:** the Phase 7 combination and full-budget confirmation
 - **Training time:**
 
 ---

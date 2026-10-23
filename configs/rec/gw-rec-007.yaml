@@ -1,0 +1,7 @@
+# GW-REC-007: Phase 7 ablation, CNN half as wide. Everything else is the control
+# GW-REC-003 (8-epoch short budget, seed 1337).
+inherits: gw-rec-003.yaml
+experiment_id: GW-REC-007
+
+model:
+  cnn_channels: [32, 64, 128, 128, 256, 256]

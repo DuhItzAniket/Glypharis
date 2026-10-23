@@ -1,0 +1,7 @@
+# GW-REC-014: Phase 7 ablation, weight decay 1e-2 instead of 1e-4. Everything else is the control
+# GW-REC-003 (8-epoch short budget, seed 1337).
+inherits: gw-rec-003.yaml
+experiment_id: GW-REC-014
+
+train:
+  weight_decay: 1.0e-2
