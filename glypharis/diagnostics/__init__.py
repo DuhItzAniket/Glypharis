@@ -17,6 +17,7 @@ import numpy as np
 from glypharis.config.schema import DiagnosticsConfig
 
 OVERFIT_CER_RISE = 0.10  # relative rise of val CER above its best
+VAL_LOSS_RISE = 0.02  # relative rise of val loss within the window that counts as divergence
 UNDERFIT_AFTER = 0.20  # share of the step budget after which a high train CER is flagged
 FLAT_LOSS = 0.01  # relative improvement over the window below which a loss counts as flat
 EMPTY_ALARM = 0.5  # share of empty greedy decodes
@@ -75,11 +76,19 @@ def check_overfitting(history: Sequence[EpochPoint], cfg: DiagnosticsConfig) -> 
     now = history[-1]
     train_loss = [p.train_loss for p in win]
     val_loss = [p.val_loss for p in win]
-    ts, vs = _slope(train_loss), _slope(val_loss)
-    if ts < 0 < vs:
-        return Flag("POSSIBLE OVERFITTING", now.epoch, now.step,
-                    f"over the last {w} validation points train loss slope {ts:.4g} < 0 while "
-                    f"val loss slope {vs:.4g} > 0")  # fmt: skip
+    ts = _slope(train_loss)
+    low = min(val_loss)
+    rise = (val_loss[-1] - low) / low if low > 0 else 0.0
+    # A CTC model's validation loss can creep up while its CER still improves (it grows more
+    # confident), so loss divergence alone is not overfitting: it also needs CER to have stopped
+    # setting new bests within the window (rule revised after GW-REC-001, protocol §11).
+    before = [p.val_cer for p in history[:-w]]
+    reference = min(before) if before else win[0].val_cer
+    cer_improving = min(p.val_cer for p in (win if before else win[1:])) < reference
+    if ts < 0 and rise >= VAL_LOSS_RISE and not cer_improving:
+        msg = (f"over the last {w} validation points train loss slope {ts:.4g} < 0, val loss "
+               f"rose {rise:.1%} above its window low, val CER set no new best")  # fmt: skip
+        return Flag("POSSIBLE OVERFITTING", now.epoch, now.step, msg)
     best = min(p.val_cer for p in history)
     train_cer = [p.train_cer for p in win]
     if best > 0 and now.val_cer >= best * (1 + OVERFIT_CER_RISE) and _slope(train_cer) < 0:

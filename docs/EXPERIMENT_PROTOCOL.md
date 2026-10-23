@@ -160,7 +160,7 @@ Each flag is written into the run report with the epoch it was raised and the ev
 
 | Flag | Rule (defaults) |
 |---|---|
-| `POSSIBLE OVERFITTING` | Over a window of 5 validation points, train loss slope < 0 while val loss slope > 0, **or** val CER rises ≥ 10% relative above its best while train CER keeps falling |
+| `POSSIBLE OVERFITTING` | Over a window of 5 validation points, train loss slope < 0 while val loss rises ≥ 2% above its lowest point in the window **and** val CER sets no new best in the window, **or** val CER rises ≥ 10% relative above its best while train CER keeps falling |
 | `POSSIBLE UNDERFITTING` | Train CER > 0.5 (`underfit_cer_threshold`) after 20% of the step budget, **or** both train and val loss improve < 1% relative over the last 5 validation points while val CER is still above that threshold (both poor, both flat) |
 | `BLANK COLLAPSE` | Share of blank argmax frames > 0.95 on validation, or greedy decode empty for > 50% of validation lines |
 | `PREDICTION COLLAPSE` | > 50% of validation predictions identical |
@@ -218,3 +218,4 @@ choice; no per-benchmark tuning.
 | 2026-10-22 | §3: matching maximises valid pairs before IoU and matches lines that count before don't-care lines; don't-care exclusions apply to the order-aware page text too; order-aware page CER/WER is reported only where a reading order exists (GDC) | Phase 5 code review: plain IoU-sum matching could drop valid pairs, the order-aware text counted reads of don't-care regions as insertions, and HierText has no reading order | Detection, end to end; no results had been reported yet |
 | 2026-10-22 | §3: efficiency comes from a dedicated profiling pass, and peak RAM includes engine processes the harness starts | Long accuracy runs share the machine with other work; a command-line engine's memory is outside the Python process | Efficiency numbers |
 | 2026-10-22 | §3: dataset-native metrics (HierText's PQ-style metric) are computed from Phase 14, with the official evaluation code | Phase 5 scores every system with the project's own line metrics; the native metric needs the official code and word-level output | HierText reporting |
+| 2026-10-23 | §6: the loss branch of `POSSIBLE OVERFITTING` now needs val loss to rise at least 2% above its window low and val CER to set no new best in the window (before: any positive val-loss slope) | GW-REC-001 raised it 8 times while val CER improved every epoch to the end: a CTC model's validation loss creeps up as it grows more confident, so a loss slope alone is not overfitting. Replayed on GW-REC-001's history the revised rule raises nothing; the original flags stay in that run's record | Diagnostics of later runs |

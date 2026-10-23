@@ -176,6 +176,22 @@ def test_overfitting_and_underfitting_rules():
     healthy = _points([5, 4, 3, 2, 1], [5, 4, 3, 2, 1], [0.5, 0.4, 0.3, 0.2, 0.1],
                       [0.5, 0.4, 0.3, 0.2, 0.1])  # fmt: skip
     assert check_overfitting(healthy, d) is None
+    # GW-REC-001's pattern: val loss creeps up a little while val CER keeps setting new bests.
+    confident = _points(
+        [1.0, 0.9, 0.8, 0.7, 0.6],
+        [0.556, 0.558, 0.559, 0.561, 0.562],
+        [0.06, 0.05, 0.045, 0.04, 0.036],
+        [0.080, 0.079, 0.078, 0.076, 0.075],
+    )
+    assert check_overfitting(confident, d) is None
+    # Same loss pattern, but a real divergence: val loss up 10% and val CER stuck above its best.
+    diverging = _points(
+        [1.0, 0.9, 0.8, 0.7, 0.6],
+        [0.50, 0.52, 0.53, 0.54, 0.55],
+        [0.06, 0.05, 0.045, 0.04, 0.036],
+        [0.075, 0.077, 0.078, 0.078, 0.079],
+    )
+    assert check_overfitting(diverging, d).name == "POSSIBLE OVERFITTING"
     stuck = _points([3, 3, 3, 3, 3], [3, 3, 3, 3, 3], [0.9] * 5, [0.9] * 5)
     assert check_underfitting(stuck, d, 0.1).name == "POSSIBLE UNDERFITTING"
     assert check_underfitting(healthy, d, 0.5) is None

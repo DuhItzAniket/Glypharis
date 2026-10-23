@@ -53,8 +53,9 @@ def _curves(steps: list[dict[str, Any]], epochs: list[dict[str, Any]], out: Path
         ax[3].set_yscale("log")
         if "vram_peak_mib" in steps[0]:
             ax[4].plot(x, [s["vram_peak_mib"] for s in steps], lw=0.6, label="running peak")
-    titles = ["loss", "CER / WER", "learning rate", "gradient norm (before clipping)", "VRAM",
-              "collapse checks"]  # fmt: skip
+    ax[0].set_yscale("log")  # the first steps' loss is an order of magnitude above the rest
+    titles = ["loss (log scale)", "CER / WER", "learning rate", "gradient norm (before clipping)",
+              "VRAM", "collapse checks"]  # fmt: skip
     for a, t in zip(ax, titles, strict=True):
         a.set_title(t)
         a.set_xlabel("optimizer step")
