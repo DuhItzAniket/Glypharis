@@ -22,6 +22,7 @@ import json
 import math
 import sys
 import time
+from functools import partial
 from pathlib import Path
 from typing import Any
 
@@ -60,7 +61,8 @@ class Parts:
         self.ctc = nn.CTCLoss(blank=Charset.BLANK, zero_infinity=True)
 
     def model(self) -> nn.Module:
-        return build_recognizer(self.charset.num_classes, self.cfg.model).to(self.device)
+        name = self.cfg.model_name or "crnn"
+        return build_recognizer(self.charset.num_classes, self.cfg.model, name).to(self.device)
 
     def dataset(self, augment: bool, subset: int | None = None) -> RecLineDataset:
         d = self.cfg.data
@@ -77,7 +79,9 @@ class Parts:
         # Workers are new processes on Windows; for tiny sets, loading in-process is far faster.
         w = self.cfg.data.num_workers if workers is None else workers
         gen = make_generator(self.cfg.seed + epoch)
-        return torch.utils.data.DataLoader(ds, batch_sampler=sampler, collate_fn=collate,
+        stride = self.cfg.model.frame_stride  # 4 for the SVTR encoder
+        return torch.utils.data.DataLoader(ds, batch_sampler=sampler,
+                                           collate_fn=partial(collate, stride=stride),
                                            num_workers=w, pin_memory=self.device.type == "cuda",
                                            generator=gen)  # fmt: skip
 

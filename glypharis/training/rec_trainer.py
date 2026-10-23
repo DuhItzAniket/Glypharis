@@ -26,6 +26,7 @@ import time
 from collections import Counter
 from collections.abc import Callable, Iterable
 from dataclasses import asdict, dataclass, field, replace
+from functools import partial
 from pathlib import Path
 from typing import Any, NoReturn
 
@@ -54,7 +55,8 @@ from glypharis.diagnostics import (
     check_underfitting,
 )
 from glypharis.eval.text_metrics import RecAccumulator, score_pair
-from glypharis.models.rec.crnn import CRNN, build_recognizer, count_parameters
+from glypharis.models.rec.base import LineRecognizer
+from glypharis.models.rec.crnn import build_recognizer, count_parameters
 from glypharis.training.checkpoint import (
     load_checkpoint,
     prune_epoch_checkpoints,
@@ -74,14 +76,18 @@ CHECKPOINT_FORMAT = 1
 
 
 def ctc_loss(
-    model: nn.Module, batch: dict[str, Any], amp: AmpPolicy, device: torch.device, ctc: nn.CTCLoss
+    model: LineRecognizer,
+    batch: dict[str, Any],
+    amp: AmpPolicy,
+    device: torch.device,
+    ctc: nn.CTCLoss,
 ) -> tuple[torch.Tensor, torch.Tensor, torch.Tensor]:
     """Forward pass under autocast; CTC in fp32. Returns (loss, logits, frame lengths)."""
     images = batch["images"].to(device, non_blocking=True)
     with amp.autocast():
         logits = model(images, batch["widths"])
     t = logits.shape[0]
-    lengths = CRNN.frames(batch["widths"]).clamp(max=t)
+    lengths = model.frames(batch["widths"]).clamp(max=t)
     with fp32_region(device.type):
         log_probs = logits.float().log_softmax(2)
         loss = ctc(log_probs, batch["targets"], lengths, batch["target_lengths"])
@@ -112,7 +118,7 @@ class EvalResult:
 
 @torch.no_grad()
 def evaluate(
-    model: nn.Module,
+    model: LineRecognizer,
     loader: Iterable[dict[str, Any]],
     charset: Charset,
     amp: AmpPolicy,
@@ -317,7 +323,9 @@ class RecTrainer:
             self.train_eval_ds.refs = [self.train_eval_ds.refs[int(i)] for i in np.sort(keep)]
             self.train_eval_ds.widths = self.train_eval_ds.widths[np.sort(keep)]
 
-        self.model = build_recognizer(self.charset.num_classes, cfg.model).to(self.device)
+        self.model = build_recognizer(
+            self.charset.num_classes, cfg.model, cfg.model_name or "crnn"
+        ).to(self.device)
         self.optimizer = make_optimizer(cfg, self.model)
         t = cfg.train
         self.sampler = WidthBucketBatchSampler(self.train_ds.widths, t.batch_size, cfg.seed,
@@ -344,7 +352,7 @@ class RecTrainer:
         return DataLoader(
             ds,
             batch_sampler=sampler,
-            collate_fn=collate,
+            collate_fn=partial(collate, stride=self.model.stride),
             num_workers=workers,
             pin_memory=self.device.type == "cuda",
             worker_init_fn=worker_init_fn if workers else None,

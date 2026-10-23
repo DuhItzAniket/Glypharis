@@ -271,8 +271,19 @@ def load_config(path: str | Path, overrides: Iterable[str] = ()) -> RunConfig:
     return build_config(load_raw(path), overrides)
 
 
+# Recognizer fields added in Phase 7, left out of the dict at their defaults: every earlier config
+# (GW-REC-001 to 018) keeps its hash and still matches the runs it produced.
+_ADDED_MODEL_DEFAULTS: dict[str, Any] = {"frame_stride": 4, "svtr": None}
+
+
 def config_to_dict(cfg: RunConfig) -> dict[str, Any]:
-    return dataclasses.asdict(cfg)
+    """The resolved config as plain data: what is hashed, saved and compared on resume."""
+    d = dataclasses.asdict(cfg)
+    model = d.get("model", {})
+    for key, default in _ADDED_MODEL_DEFAULTS.items():
+        if key in model and model[key] == default:
+            del model[key]
+    return d
 
 
 def config_hash(cfg: RunConfig) -> str:

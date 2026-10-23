@@ -285,7 +285,7 @@ def test_stacked_lstm_checkpoints_load_and_compute_the_same():
     x, widths = torch.randn(3, 1, 32, 96), torch.tensor([96, 60, 33])
     with torch.no_grad():
         feats = model.cnn(x).mean(dim=2).permute(2, 0, 1)
-        lengths = CRNN.frames(widths).clamp(min=1, max=feats.shape[0])
+        lengths = model.frames(widths).clamp(min=1, max=feats.shape[0])
         packed = nn.utils.rnn.pack_padded_sequence(feats, lengths, enforce_sorted=False)
         ref, _ = nn.utils.rnn.pad_packed_sequence(stacked(packed)[0], total_length=len(feats))
         assert torch.allclose(model(x, widths), model.head(ref), atol=1e-6)
@@ -562,3 +562,66 @@ def test_out_of_memory_saves_the_state_and_still_writes_a_report(tiny, monkeypat
     ]
     assert [r["step"] for r in recs if r["type"] == "oom"] == [1]
     assert (tiny / "oom/reports/training/GW-REC-999/report.md").exists()
+
+
+@pytest.mark.parametrize(
+    "extra",
+    [
+        {
+            "model_name": "svtr",
+            "model.svtr": "{dims: [16, 32, 48], heads: [2, 4, 4], "
+            "local_blocks: [1, 1, 0], global_blocks: [0, 1, 1]}",
+        },
+        {"model.frame_stride": 8},
+    ],
+    ids=["svtr", "crnn-stride-8"],
+)
+def test_the_phase_7_encoders_train_resume_and_report(tiny, extra):
+    import train
+
+    cfg_path = _yaml(_cfg(tiny, "p7", **extra), tiny / "p7.yaml")
+    assert train.main(["--config", str(cfg_path)]) == 0
+    summary = json.loads((tiny / "p7/runs/GW-REC-999/summary.json").read_text(encoding="utf-8"))
+    assert summary["steps"] == 6 and np.isfinite(summary["final"]["val_loss"])
+    # A mid-epoch resume reproduces the uninterrupted run exactly on the CPU.
+    full = RecTrainer(_cfg(tiny, "pf", **extra))
+    full.fit()
+    cut = RecTrainer(_cfg(tiny, "pc", **extra, **{"train.max_steps": 4}))
+    cut.fit()
+    resumed = RecTrainer(
+        _cfg(tiny, "pc", **extra, **{"checkpoint.resume": str(tiny / "pc/ckpt/last.pt")})
+    )
+    resumed.fit()
+    for a, b in zip(
+        full.model.state_dict().values(), resumed.model.state_dict().values(), strict=True
+    ):
+        assert torch.equal(a, b)
+
+
+PHASE_6_AND_7_CONFIG_HASHES = {
+    "gw-rec-001": "a13d7c4c367626da272252a16539d407ae1e244dde376745f1c904577401bdfa",
+    "gw-rec-002": "5e33f43cb53dd5745091ffcb68bfdb650b5195dd8379ef25e6086781cb4bebf2",
+    "gw-rec-003": "e06f26593818f217eff90be468d0d02ef143cce88e72f8ae8f8f14f723db8a51",
+    "gw-rec-004": "13c409430f8519597559d981b864df58a69c8406cb860a241ab56656c893cdb4",
+    "gw-rec-005": "3723c56e1c5c78dc2c7d811dc8c2b3611684756309c6582151fac225ac846588",
+    "gw-rec-006": "37ff03a6a4e2b7bcbb1296597bc81e6d8c3b93f3b965e8b4721e29637c31aa6b",
+    "gw-rec-007": "4bb1c04c26fad0a262966f7dae70f51af6084aa45e9ec477b42904dbfd97494c",
+    "gw-rec-008": "1d41e0167901ed9a143fe795ff24d73a417ab6b6a3295b890439cd1723ea2e05",
+    "gw-rec-009": "b935fc8dabb293251f3880605101d573c10d3cd63270d2892a7e2c771592a325",
+    "gw-rec-010": "2045c19597180730a63a76cbc8b1aa88fc948acc355de3e00d0ff757b67e3af6",
+    "gw-rec-011": "5e4593b643cf63e94080011f4bfb9f4080550cabca8c3f9b973aac23d3a9191b",
+    "gw-rec-012": "56071b24884d28f81a909be0385ab807a914ea0bfc1265eea4aa8e9336e01e7d",
+    "gw-rec-013": "ab5a198536d17275d8b8fbb810e12f2e63cefc6cf0a42e8f8a50cebf594c0889",
+    "gw-rec-014": "c0bdfae67510a5833611695a0930b54e3da048b3b7ead17594ff8519ee49423a",
+    "gw-rec-015": "c2a25e146da37d65e14ba4b44f7f0c853da9c0a16aa5514eb8c0295923ccc221",
+    "gw-rec-016": "4ab81243410aacc96fb150a475521c5cc690a7fa0c8ba3e6fdcc7fc2c5204775",
+    "gw-rec-017": "c538853fd93dbece789d66c5c0edd8df906d95812e9a8f840135a522807bd2ed",
+    "gw-rec-018": "b166c17245a2c205ed7d830fca66ea1bb7c515df6e49a34ea49da1411fb0b311",
+}
+
+
+def test_phase_7_schema_growth_leaves_every_earlier_config_hash_alone(repo_root):
+    from glypharis.config.loader import config_hash, load_config
+
+    for name, want in PHASE_6_AND_7_CONFIG_HASHES.items():
+        assert config_hash(load_config(repo_root / "configs/rec" / f"{name}.yaml")) == want, name
