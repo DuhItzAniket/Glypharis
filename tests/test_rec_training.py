@@ -426,3 +426,53 @@ def test_rng_state_restores_from_a_checkpoint_loaded_onto_the_gpu(tmp_path):
     expected = torch.rand(3)
     set_rng_state(load_checkpoint(tmp_path / "c.pt", "cuda")["rng"])  # tensors land on the GPU
     assert torch.equal(torch.rand(3), expected)
+
+
+def _poison_third_backward(trainer):
+    """Make the third backward pass produce a NaN gradient while its loss stays finite."""
+    calls = {"n": 0}
+
+    def hook(grad):
+        calls["n"] += 1
+        return grad * float("nan") if calls["n"] == 3 else grad
+
+    trainer.model.head.weight.register_hook(hook)
+
+
+def test_a_nan_gradient_with_a_finite_loss_stops_before_the_weights_change(tiny):
+    from glypharis.diagnostics import NonFiniteLoss
+
+    trainer = RecTrainer(_cfg(tiny, "nan"))
+    _poison_third_backward(trainer)  # batch 3 = the first of optimizer step 2 (accumulation 2)
+    with pytest.raises(NonFiniteLoss, match="grad_norm"):
+        trainer.fit()
+    recs = [
+        json.loads(x) for x in (tiny / "nan/runs/GW-REC-999/metrics.jsonl").read_text().splitlines()
+    ]
+    bad = [r for r in recs if r["type"] == "nonfinite"]
+    assert len(bad) == 1 and bad[0]["step"] == 1 and "grad_norm" in bad[0] and bad[0]["keys"]
+    ck = load_checkpoint(tiny / "nan/ckpt/nonfinite.pt")
+    assert all(torch.isfinite(v).all() for v in ck["model"].values() if v.is_floating_point())
+
+
+def test_a_nan_gradient_is_skipped_when_the_run_may_continue(tiny):
+    trainer = RecTrainer(_cfg(tiny, "skip", **{"diagnostics.stop_on_nan": False}))
+    _poison_third_backward(trainer)
+    trainer.fit()
+    recs = [
+        json.loads(x)
+        for x in (tiny / "skip/runs/GW-REC-999/metrics.jsonl").read_text().splitlines()
+    ]
+    assert sum(r["type"] == "nonfinite_grad_skipped" for r in recs) == 1
+    assert trainer.state.step == 6  # the skipped step still counts, so the schedule stays aligned
+    assert all(torch.isfinite(p).all() for p in trainer.model.parameters())
+
+
+def test_a_resumed_run_reports_the_config_hash_it_started_with(tiny):
+    from glypharis.config.loader import config_hash
+    from glypharis.training.rec_trainer import run_config_hash
+
+    plain = _cfg(tiny, "h")
+    resumed = _cfg(tiny, "h", **{"checkpoint.resume": str(tiny / "h/ckpt/last.pt")})
+    assert config_hash(plain) != config_hash(resumed)
+    assert run_config_hash(resumed) == run_config_hash(plain) == config_hash(plain)
