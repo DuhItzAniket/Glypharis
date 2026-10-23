@@ -386,3 +386,12 @@ confirms the winner on the full one:
 
 The optional TrOCR-Small fine-tune comes last and only if the budget allows.
 
+**Decision rule (fixed 2026-10-23, before any ablation ran).** Each arm is paired line by line with
+GW-REC-003, the control with the same seed. It counts as **better** only if the 95% CI of its CER
+difference lies below zero *and* its CER is below all three control seeds. It counts as **worse**
+only if that CI lies above zero *and* its CER is above all three. Otherwise it shows no clear
+difference. The table states how many comparisons were made; no multiplicity correction is
+applied (EXPERIMENT_PROTOCOL §4). The combination step only takes changes judged better, plus
+changes with no clear difference that make the model smaller or faster. The evidence table is
+`reports/training/phase07/ablation_table.md` (`scripts/rec_ablation_table.py`).
+

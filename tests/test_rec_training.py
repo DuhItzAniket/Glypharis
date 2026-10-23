@@ -625,3 +625,30 @@ def test_phase_7_schema_growth_leaves_every_earlier_config_hash_alone(repo_root)
 
     for name, want in PHASE_6_AND_7_CONFIG_HASHES.items():
         assert config_hash(load_config(repo_root / "configs/rec" / f"{name}.yaml")) == want, name
+
+
+def test_ablation_table_reads_changes_from_saved_configs_and_marks_pending_arms(tiny):
+    import rec_ablation_table
+
+    import train
+
+    for tag, extra in (("c1", {"seed": 1}), ("c2", {"seed": 2}), ("c3", {"seed": 3}),
+                       ("lr", {"seed": 1, "train.learning_rate": 1.0e-3})):  # fmt: skip
+        cfg_path = _yaml(_cfg(tiny, tag, **extra), tiny / f"{tag}.yaml")
+        assert train.main(["--config", str(cfg_path)]) == 0
+    run = lambda tag: str(tiny / tag / "runs/GW-REC-999")  # noqa: E731
+    (tiny / "never/runs/GW-REC-999").mkdir(parents=True)
+    out = tiny / "table"
+    argv = ["--control", run("c1"), run("c2"), run("c3"), "--arms", run("lr"), run("never"),
+            "--out", str(out)]  # fmt: skip
+    assert rec_ablation_table.main(argv) == 0
+    res = json.loads((out / "ablation_table.json").read_text(encoding="utf-8"))
+    assert len(res["control"]["val_cer"]) == 3
+    done, pending = res["arms"]
+    assert "train.learning_rate: 0.001" in done["change"] and done["verdict"] in (
+        "better",
+        "worse",
+        "no clear difference",
+    )
+    assert pending["status"] == "pending"
+    assert "1 comparisons" in (out / "ablation_table.md").read_text(encoding="utf-8")
