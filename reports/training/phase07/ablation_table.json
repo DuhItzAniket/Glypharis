@@ -19,7 +19,26 @@
  "arms": [
   {
    "run": "GW-REC-006",
-   "status": "pending"
+   "status": "done",
+   "change": "data.image_height: 48, data.max_batch_columns: 24576, data.max_width: 1536, train.batch_size: 32, train.gradient_accumulation: 2",
+   "parameters": 7796435,
+   "steps": 45339,
+   "train_seconds": 8786.42299999998,
+   "val_cer": {
+    "value": 0.07828478362685959,
+    "low": 0.07658911413696395,
+    "high": 0.07983985679638554,
+    "resamples": 1000,
+    "unit": "lines"
+   },
+   "difference": {
+    "value": -0.004888312531919951,
+    "low": -0.005364591323028825,
+    "high": -0.004439352709675979,
+    "resamples": 1000,
+    "unit": "lines"
+   },
+   "verdict": "better"
   },
   {
    "run": "GW-REC-007",
