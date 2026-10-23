@@ -520,3 +520,22 @@ def test_rec_compare_pairs_lines_and_matches_the_logged_cer(tiny):
     path.write_text("\n".join(path.read_text(encoding="utf-8").splitlines()[1:]), encoding="utf-8")
     with pytest.raises(SystemExit, match="different lines"):
         rec_compare.main([str(a), str(b), "--out", str(tiny / "cmp")])
+
+
+def test_model_size_is_recorded_and_filled_in_for_older_runs(tiny):
+    import rec_report
+
+    import train
+
+    cfg_path = _yaml(_cfg(tiny, "ms"), tiny / "ms.yaml")
+    assert train.main(["--config", str(cfg_path)]) == 0
+    path = tiny / "ms/runs/GW-REC-999/summary.json"
+    summary = json.loads(path.read_text(encoding="utf-8"))
+    state = load_checkpoint(tiny / "ms/ckpt/best.pt")["model"]
+    assert summary["model_bytes"] == sum(t.numel() * t.element_size() for t in state.values())
+    del summary["model_bytes"]
+    path.write_text(json.dumps(summary), encoding="utf-8")
+    assert rec_report.main(["--config", str(cfg_path)]) == 0
+    assert json.loads(path.read_text(encoding="utf-8"))["model_bytes"] > 0
+    report = (tiny / "ms/reports/training/GW-REC-999/report.md").read_text(encoding="utf-8")
+    assert "MiB of weights and buffers" in report

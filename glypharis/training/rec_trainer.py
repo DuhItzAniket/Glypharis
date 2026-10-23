@@ -259,6 +259,11 @@ def config_matches(saved: dict[str, Any], cfg: RunConfig) -> bool:
     return saved == now
 
 
+def model_bytes(state: dict[str, torch.Tensor]) -> int:
+    """Size of a model's weights and buffers as stored (fp32 for the recognizer)."""
+    return sum(t.numel() * t.element_size() for t in state.values())
+
+
 def run_config_hash(cfg: RunConfig) -> str:
     """The run's config hash. The resume pointer says how a run was continued, not what it is,
     so a resumed run reports the same hash as at its start."""
@@ -586,6 +591,7 @@ class RecTrainer:
             "config_hash": run_config_hash(self.cfg),
             "git": self.git.to_dict(),
             "parameters": self.params,
+            "model_bytes": model_bytes(self.model.state_dict()),
             "device": str(self.device),
             "gpu": torch.cuda.get_device_name() if self.device.type == "cuda" else None,
             "precision": self.amp.name,
