@@ -476,3 +476,24 @@ def test_a_resumed_run_reports_the_config_hash_it_started_with(tiny):
     resumed = _cfg(tiny, "h", **{"checkpoint.resume": str(tiny / "h/ckpt/last.pt")})
     assert config_hash(plain) != config_hash(resumed)
     assert run_config_hash(resumed) == run_config_hash(plain) == config_hash(plain)
+
+
+def test_rec_report_restores_the_run_config_hash_and_notes_it(tiny):
+    import rec_report
+
+    import train
+
+    cfg_path = _yaml(_cfg(tiny, "rp"), tiny / "rp.yaml")
+    assert train.main(["--config", str(cfg_path)]) == 0
+    path = tiny / "rp/runs/GW-REC-999/summary.json"
+    summary = json.loads(path.read_text(encoding="utf-8"))
+    right = summary["config_hash"]
+    path.write_text(json.dumps({**summary, "config_hash": "e047cc28" * 8}), encoding="utf-8")
+    assert rec_report.main(["--config", str(cfg_path)]) == 0
+    fixed = json.loads(path.read_text(encoding="utf-8"))
+    assert fixed["config_hash"] == right and fixed["config_hash_as_written"] == "e047cc28" * 8
+    report = (tiny / "rp/reports/training/GW-REC-999/report.md").read_text(encoding="utf-8")
+    assert "Config hash corrected" in report and right[:16] in report
+    other = _yaml(_cfg(tiny, "rp", **{"train.learning_rate": 1e-4}), tiny / "other.yaml")
+    with pytest.raises(SystemExit, match="not the config"):
+        rec_report.main(["--config", str(other)])
