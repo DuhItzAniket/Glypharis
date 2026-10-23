@@ -21,6 +21,7 @@ from glypharis.config.cli import add_config_args, config_from_args
 from glypharis.diagnostics import NonFiniteLoss
 from glypharis.training.rec_trainer import RecTrainer
 from glypharis.training.report import worst_images, write_report
+from glypharis.utils.device import limit_gpu_memory, select_device
 from glypharis.utils.logsetup import setup_logging
 
 log = logging.getLogger("train")
@@ -43,6 +44,7 @@ def main(argv: list[str] | None = None) -> int:
     cfg = config_from_args(args)
     cfg.require_run_identity()
     assert cfg.experiment_id is not None
+    limit_gpu_memory(select_device(cfg.device))
     setup_logging(Path(cfg.paths.runs_dir) / cfg.experiment_id, cfg.experiment_id,
                   cfg.logging.level)  # fmt: skip
     if cfg.task != "rec":

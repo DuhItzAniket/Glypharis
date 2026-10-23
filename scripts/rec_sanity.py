@@ -37,7 +37,7 @@ from glypharis.data.rec_dataset import RecLineDataset, WidthBucketBatchSampler, 
 from glypharis.data.text import Charset
 from glypharis.models.rec.crnn import build_recognizer, count_parameters
 from glypharis.training.rec_trainer import ctc_loss, evaluate
-from glypharis.utils.device import AmpPolicy, resolve_amp, select_device
+from glypharis.utils.device import AmpPolicy, limit_gpu_memory, resolve_amp, select_device
 from glypharis.utils.monitor import reset_peak, snapshot
 from glypharis.utils.seed import make_generator, seed_everything
 
@@ -260,6 +260,7 @@ def main(argv: list[str] | None = None) -> int:
     cfg = config_from_args(args)
     cfg.require_run_identity()
     assert cfg.experiment_id is not None
+    limit_gpu_memory(select_device(cfg.device))
     out = Path(cfg.paths.reports_dir) / "training" / "sanity" / cfg.experiment_id
     out.mkdir(parents=True, exist_ok=True)
     path = out / "sanity.json"

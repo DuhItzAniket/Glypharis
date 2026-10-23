@@ -89,3 +89,26 @@ def fp32_region(device_type: str) -> Iterator[None]:
     """
     with torch.autocast(device_type=device_type, enabled=False):
         yield
+
+
+GPU_MEMORY_FRACTION = 0.85  # default share of the GPU one training process may hold
+
+
+def limit_gpu_memory(device: torch.device, fraction: float | None = None) -> float | None:
+    """Cap the share of GPU memory PyTorch's caching allocator may hold (env
+    ``GLYPHARIS_GPU_MEMORY_FRACTION`` overrides the default; 1 turns the cap off).
+
+    On the 6 GB laptop GPU the cache otherwise grows until almost nothing is free, and then an
+    allocation cuDNN makes for itself fails: GW-REC-005 died twice with CUDNN_STATUS_INTERNAL_ERROR
+    while the display also needed memory. With the cap the allocator frees cached blocks first.
+    Results do not change, only how much unused memory is kept. Returns the fraction set, or None
+    for a run that does not use the GPU (setting the cap would open a CUDA context).
+    """
+    import os
+
+    if device.type != "cuda" or not torch.cuda.is_available():
+        return None
+    share = fraction or float(os.environ.get("GLYPHARIS_GPU_MEMORY_FRACTION", GPU_MEMORY_FRACTION))
+    if share < 1:
+        torch.cuda.set_per_process_memory_fraction(share)
+    return share
