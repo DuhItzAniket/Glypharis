@@ -1,0 +1,81 @@
+{
+ "reference": "GW-REC-003",
+ "control": {
+  "runs": [
+   "GW-REC-003",
+   "GW-REC-004",
+   "GW-REC-005"
+  ],
+  "val_cer": [
+   0.08317309615877955,
+   0.08303776733326901,
+   0.08307895436712004
+  ],
+  "mean": 0.0830966059530562,
+  "sd": 6.936970965819068e-05,
+  "min": 0.08303776733326901,
+  "max": 0.08317309615877955
+ },
+ "arms": [
+  {
+   "run": "GW-REC-006",
+   "status": "pending"
+  },
+  {
+   "run": "GW-REC-007",
+   "status": "pending"
+  },
+  {
+   "run": "GW-REC-008",
+   "status": "pending"
+  },
+  {
+   "run": "GW-REC-009",
+   "status": "pending"
+  },
+  {
+   "run": "GW-REC-019",
+   "status": "pending"
+  },
+  {
+   "run": "GW-REC-015",
+   "status": "pending"
+  },
+  {
+   "run": "GW-REC-016",
+   "status": "pending"
+  },
+  {
+   "run": "GW-REC-017",
+   "status": "pending"
+  },
+  {
+   "run": "GW-REC-018",
+   "status": "pending"
+  },
+  {
+   "run": "GW-REC-010",
+   "status": "pending"
+  },
+  {
+   "run": "GW-REC-011",
+   "status": "pending"
+  },
+  {
+   "run": "GW-REC-012",
+   "status": "pending"
+  },
+  {
+   "run": "GW-REC-013",
+   "status": "pending"
+  },
+  {
+   "run": "GW-REC-014",
+   "status": "pending"
+  },
+  {
+   "run": "GW-REC-020",
+   "status": "pending"
+  }
+ ]
+}
