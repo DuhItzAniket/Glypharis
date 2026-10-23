@@ -674,3 +674,24 @@ def test_a_resume_after_a_crash_moves_the_records_past_the_checkpoint_aside(tiny
     assert json.loads(dropped) == ghost
     report = (tiny / "cr/reports/training/GW-REC-999/report.md").read_text(encoding="utf-8")
     assert "Resumed from `last.pt` at step 4" in report and "1 log records" in report
+
+
+def test_trimming_the_log_works_while_another_process_holds_it_open(tiny, monkeypatch):
+    from pathlib import Path
+
+    cut = RecTrainer(_cfg(tiny, "op", **{"train.max_steps": 4}))
+    cut.fit()
+    log = tiny / "op/runs/GW-REC-999/metrics.jsonl"
+    with log.open("a", encoding="utf-8") as fh:
+        fh.write(json.dumps({"type": "step", "epoch": 1, "step": 5}) + "\n")
+
+    def held_open(self, target):  # what Windows does while `tail -F` has the file open
+        raise PermissionError(13, "Access is denied")
+
+    monkeypatch.setattr(Path, "replace", held_open)
+    resumed = RecTrainer(_cfg(tiny, "op", **{"checkpoint.resume": str(tiny / "op/ckpt/last.pt")}))
+    resumed.resume(tiny / "op/ckpt/last.pt")
+    steps = [json.loads(x).get("step") for x in log.read_text(encoding="utf-8").splitlines()]
+    assert max(steps) == 4 and not (tiny / "op/runs/GW-REC-999/metrics.jsonl.tmp").exists()
+    dropped = (tiny / "op/runs/GW-REC-999/metrics.dropped.jsonl").read_text(encoding="utf-8")
+    assert len(dropped.splitlines()) == 1

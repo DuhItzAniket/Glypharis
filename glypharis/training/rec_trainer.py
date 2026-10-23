@@ -420,12 +420,20 @@ class RecTrainer:
             if line.strip():
                 (drop if json.loads(line).get("step", 0) > step else keep).append(line)
         if drop:
+            text = "\n".join(keep) + "\n"
+            tmp = path.with_suffix(".jsonl.tmp")
+            tmp.write_text(text, encoding="utf-8", newline="\n")
+            try:
+                tmp.replace(path)
+            except PermissionError:
+                # On Windows a file another process holds open (a log viewer, `tail -F`) cannot be
+                # replaced, but it can be rewritten; the full copy in tmp covers a crash meanwhile.
+                path.write_text(text, encoding="utf-8", newline="\n")
+                tmp.unlink()
+            # Only once the log no longer holds them, so a failed attempt cannot copy them twice.
             with (self.run_dir / "metrics.dropped.jsonl").open("a", encoding="utf-8",
                                                               newline="\n") as fh:  # fmt: skip
                 fh.write("\n".join(drop) + "\n")
-            tmp = path.with_suffix(".jsonl.tmp")
-            tmp.write_text("\n".join(keep) + "\n", encoding="utf-8", newline="\n")
-            tmp.replace(path)
         return len(drop)
 
     # --------------------------------------------------------------------------- logging
