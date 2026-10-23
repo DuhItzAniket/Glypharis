@@ -497,3 +497,26 @@ def test_rec_report_restores_the_run_config_hash_and_notes_it(tiny):
     other = _yaml(_cfg(tiny, "rp", **{"train.learning_rate": 1e-4}), tiny / "other.yaml")
     with pytest.raises(SystemExit, match="not the config"):
         rec_report.main(["--config", str(other)])
+
+
+def test_rec_compare_pairs_lines_and_matches_the_logged_cer(tiny):
+    import rec_compare
+
+    import train
+
+    for tag, seed in (("ca", 1), ("cb", 2)):
+        cfg_path = _yaml(_cfg(tiny, tag, seed=seed), tiny / f"{tag}.yaml")
+        assert train.main(["--config", str(cfg_path)]) == 0
+    a, b = tiny / "ca/runs/GW-REC-999", tiny / "cb/runs/GW-REC-999"
+    assert rec_compare.main([str(a), str(b), "--out", str(tiny / "cmp")]) == 0
+    res = json.loads((tiny / "cmp/GW-REC-999_vs_GW-REC-999.json").read_text(encoding="utf-8"))
+    assert res["lines"] == 16 and res["track"] == "strict"
+    d = res["cer"]["difference"]
+    assert d["low"] <= d["value"] <= d["high"]
+    assert sum(res["lines_fewer_char_errors"].values()) == 16
+    assert res["first"]["best_epoch"] in (0, 1) and res["second"]["experiment_id"] == "GW-REC-999"
+    # A run validated on other lines is refused.
+    path = b / "val_best_samples.jsonl"
+    path.write_text("\n".join(path.read_text(encoding="utf-8").splitlines()[1:]), encoding="utf-8")
+    with pytest.raises(SystemExit, match="different lines"):
+        rec_compare.main([str(a), str(b), "--out", str(tiny / "cmp")])
