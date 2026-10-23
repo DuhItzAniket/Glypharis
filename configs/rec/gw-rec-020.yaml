@@ -7,6 +7,11 @@
 # out of GPU memory at the control's batch. Hence learning rate 5e-4, and half-size micro-batches
 # with 2-step accumulation: still 64 lines per optimizer step, and the halved column cap splits
 # wide batches at the same widths as the control's.
+# Amended again 2026-10-24, before the main run, from the second sanity attempt (attempt2/): at
+# 5e-4 the overfit check passed (0% CER after 300 steps) and the LR range test put the rate inside
+# the 3x band, but the dry run still ran out of memory at micro-batches of 32 (4.73 GiB allocated
+# under the 85% cap). Micro-batches of 16 with 4-step accumulation: still 64 lines per step, and
+# a column cap of 8192 splits wide batches at the same widths as the control's.
 inherits: gw-rec-003.yaml
 experiment_id: GW-REC-020
 model_name: svtr
@@ -21,9 +26,9 @@ model:
     local_kernel: [3, 7]
 
 data:
-  max_batch_columns: 16384
+  max_batch_columns: 8192
 
 train:
   learning_rate: 5.0e-4
-  batch_size: 32
-  gradient_accumulation: 2
+  batch_size: 16
+  gradient_accumulation: 4
