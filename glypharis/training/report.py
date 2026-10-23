@@ -169,7 +169,14 @@ def write_report(run_dir: Path, report_dir: Path, images: dict[str, Any] | None 
         lines += [f"Validation CER of the selected checkpoint: {100 * ci.value:.2f}% "
                   f"[{100 * ci.low:.2f}, {100 * ci.high:.2f}] (95% bootstrap CI over "
                   f"{len(samples):,} lines).", ""]  # fmt: skip
-    notes = summary.get("notes") or []
+    notes = list(summary.get("notes") or [])
+    for r in recs:
+        if r["type"] == "resume":
+            moved = r.get("dropped_records", 0)
+            tail = (f"; {moved} log records written after that checkpoint were moved to "
+                    "metrics.dropped.jsonl." if moved else ".")  # fmt: skip
+            notes.append(f"Resumed from `{Path(r['from']).name}` at step {r['step']:,} "
+                         f"(epoch {r['epoch']}){tail}")  # fmt: skip
     if notes:
         lines += ["## Notes", "", *[f"- {n}" for n in notes], ""]
     lines += ["## Diagnostics", ""]

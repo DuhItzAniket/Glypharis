@@ -652,3 +652,25 @@ def test_ablation_table_reads_changes_from_saved_configs_and_marks_pending_arms(
     )
     assert pending["status"] == "pending"
     assert "1 comparisons" in (out / "ablation_table.md").read_text(encoding="utf-8")
+
+
+def test_a_resume_after_a_crash_moves_the_records_past_the_checkpoint_aside(tiny):
+    import train
+
+    cut = RecTrainer(_cfg(tiny, "cr", **{"train.max_steps": 4}))
+    cut.fit()  # last.pt at step 4
+    log = tiny / "cr/runs/GW-REC-999/metrics.jsonl"
+    # A crash between two saves leaves records the checkpoint never saw.
+    ghost = {"type": "step", "epoch": 1, "step": 5, "loss": 1.0, "step_loss": 1.0}
+    with log.open("a", encoding="utf-8") as fh:
+        fh.write(json.dumps(ghost) + "\n")
+    cfg = _cfg(tiny, "cr", **{"checkpoint.resume": str(tiny / "cr/ckpt/last.pt")})
+    assert train.main(["--config", str(_yaml(cfg, tiny / "cr.yaml"))]) == 0
+    recs = [json.loads(x) for x in log.read_text(encoding="utf-8").splitlines()]
+    steps = [r["step"] for r in recs if r["type"] == "step"]
+    assert steps == sorted(set(steps)) and steps[-1] == 6  # each step once
+    assert [r["dropped_records"] for r in recs if r["type"] == "resume"] == [1]
+    dropped = (tiny / "cr/runs/GW-REC-999/metrics.dropped.jsonl").read_text(encoding="utf-8")
+    assert json.loads(dropped) == ghost
+    report = (tiny / "cr/reports/training/GW-REC-999/report.md").read_text(encoding="utf-8")
+    assert "Resumed from `last.pt` at step 4" in report and "1 log records" in report

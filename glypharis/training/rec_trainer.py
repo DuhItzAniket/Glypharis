@@ -401,8 +401,32 @@ class RecTrainer:
         self.state = state_from_checkpoint(ck["state"])
         self.gradmon.load_state_dict(ck["gradmon"])
         set_rng_state(ck["rng"])
+        dropped = self._trim_log(self.state.step)
+        self._log({"type": "resume", "from": str(path), "epoch": self.state.epoch,
+                   "step": self.state.step, "dropped_records": dropped})  # fmt: skip
         log.info("resumed from %s at epoch %d, batch %d, step %d", path, self.state.epoch,
                  self.state.batch_in_epoch, self.state.step)  # fmt: skip
+
+    def _trim_log(self, step: int) -> int:
+        """Move log records written after the checkpoint at ``step`` (a run that died between two
+        saves) to metrics.dropped.jsonl, so the resumed run does not log those steps twice.
+        Returns how many were moved."""
+        path = self.run_dir / "metrics.jsonl"
+        if not path.exists():
+            return 0
+        keep: list[str] = []
+        drop: list[str] = []
+        for line in path.read_text(encoding="utf-8").splitlines():
+            if line.strip():
+                (drop if json.loads(line).get("step", 0) > step else keep).append(line)
+        if drop:
+            with (self.run_dir / "metrics.dropped.jsonl").open("a", encoding="utf-8",
+                                                              newline="\n") as fh:  # fmt: skip
+                fh.write("\n".join(drop) + "\n")
+            tmp = path.with_suffix(".jsonl.tmp")
+            tmp.write_text("\n".join(keep) + "\n", encoding="utf-8", newline="\n")
+            tmp.replace(path)
+        return len(drop)
 
     # --------------------------------------------------------------------------- logging
 
