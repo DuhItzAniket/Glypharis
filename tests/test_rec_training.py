@@ -265,6 +265,63 @@ def test_a_lines_output_does_not_depend_on_the_rest_of_its_batch():
     assert torch.allclose(alone[:25], together[:25], atol=1e-4)
 
 
+def test_stacked_lstm_checkpoints_load_and_compute_the_same():
+    from torch import nn
+
+    from glypharis.config.schema import ModelConfig
+    from glypharis.models.rec.crnn import CRNN
+
+    torch.manual_seed(0)
+    cfg = ModelConfig(cnn_channels=[8, 8, 16, 16, 16, 16], lstm_hidden=6, dropout=0.3)
+    stacked = nn.LSTM(16, 6, num_layers=2, bidirectional=True, dropout=0.3).eval()
+    # The layout GW-REC-001/002 were saved with: one stacked nn.LSTM under "rnn.".
+    old = {k: v for k, v in CRNN(30, cfg).state_dict().items() if not k.startswith("rnn.")}
+    old |= {f"rnn.{k}": v for k, v in stacked.state_dict().items()}
+    model = CRNN(30, cfg).eval()
+    model.load_state_dict(old)
+    # Same parameter order, so saved optimizer states still line up.
+    expected = [*model.cnn.parameters(), *stacked.parameters(), *model.head.parameters()]
+    assert all(torch.equal(a, b) for a, b in zip(model.parameters(), expected, strict=True))
+    x, widths = torch.randn(3, 1, 32, 96), torch.tensor([96, 60, 33])
+    with torch.no_grad():
+        feats = model.cnn(x).mean(dim=2).permute(2, 0, 1)
+        lengths = CRNN.frames(widths).clamp(min=1, max=feats.shape[0])
+        packed = nn.utils.rnn.pack_padded_sequence(feats, lengths, enforce_sorted=False)
+        ref, _ = nn.utils.rnn.pad_packed_sequence(stacked(packed)[0], total_length=len(feats))
+        assert torch.allclose(model(x, widths), model.head(ref), atol=1e-6)
+
+
+@pytest.mark.gpu
+def test_lstm_dropout_on_the_gpu_follows_the_saved_rng_state():
+    from glypharis.config.schema import ModelConfig
+    from glypharis.models.rec.crnn import CRNN
+
+    m = CRNN(30, ModelConfig(cnn_channels=[8, 8, 16, 16, 16, 16], lstm_hidden=16)).cuda().train()
+    x, widths = torch.randn(2, 1, 32, 96, device="cuda"), torch.tensor([96, 50])
+    state = torch.cuda.get_rng_state()
+    first = m(x, widths)
+    torch.cuda.set_rng_state(state)
+    # cuDNN's built-in LSTM dropout kept its own random state, so this used to differ.
+    assert torch.equal(first, m(x, widths))
+
+
+@pytest.mark.gpu
+def test_a_gpu_training_process_exits_cleanly(repo_root):
+    import subprocess
+    import sys
+
+    code = (
+        "import torch\n"
+        "from glypharis.config.schema import ModelConfig\n"
+        "from glypharis.models.rec.crnn import CRNN\n"
+        "m = CRNN(30, ModelConfig()).cuda().train()\n"
+        "m(torch.randn(2, 1, 32, 96, device='cuda'), torch.tensor([96, 50])).sum().backward()\n"
+    )
+    # A stacked LSTM with dropout made this exit with 0xC0000409 on Windows.
+    done = subprocess.run([sys.executable, "-c", code], cwd=repo_root, capture_output=True)
+    assert done.returncode == 0, done.stderr.decode(errors="replace")[-2000:]
+
+
 def test_column_cap_bounds_every_batch():
     widths = np.random.default_rng(2).integers(20, 1000, size=500)
     s = WidthBucketBatchSampler(widths, 32, seed=1, chunk=4, max_columns=4096)
@@ -296,7 +353,10 @@ def test_resume_check_script_passes_on_cpu(tiny, monkeypatch):
     cfg_path = _yaml(_cfg(tiny, "r", **{"train.epochs": 3}), tiny / "resume.yaml")
     assert rec_resume_check.main(["--config", str(cfg_path)]) == 0
     res = json.loads((tiny / "r/reports/training/sanity/GW-REC-999/resume_check.json").read_text())
-    assert res["passed"] and res["max_rel_loss_diff"] == 0 and res["max_rel_weight_diff"] == 0
+    assert res["passed"] and res["cut_mid_epoch"] and res["lr_identical"]
+    assert res["boundary_rel_diff"] == 0 and res["max_rel_loss_diff_resumed"] == 0
+    assert res["max_rel_weight_diff_resumed"] == 0
+    assert res["max_rel_loss_diff_two_uninterrupted"] == 0  # the CPU is deterministic
 
 
 def test_best_checkpoint_is_the_lowest_metric_and_min_delta_only_drives_patience():

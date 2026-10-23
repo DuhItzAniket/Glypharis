@@ -10,12 +10,29 @@ CTC blank).
 
 from __future__ import annotations
 
+import re
+from typing import Any
+
 import torch
 from torch import nn
+from torch.nn.utils.rnn import PackedSequence
 
 from glypharis.config.schema import ModelConfig
 
 STRIDE = 4  # input columns per output frame
+# A stacked nn.LSTM names layer k's tensors rnn.weight_ih_l{k}[_reverse]; the per-layer modules
+# name the same tensors rnn.{k}.weight_ih_l0[_reverse].
+_STACKED_KEY = re.compile(r"^rnn\.((?:weight|bias)_(?:ih|hh))_l(\d+)(_reverse)?$")
+
+
+def _stacked_lstm_keys(module: nn.Module, state_dict: dict[str, Any], prefix: str,
+                       *_: Any) -> None:  # fmt: skip
+    """Load-time hook: rename a stacked-LSTM checkpoint's keys (GW-REC-001/002) to this layout."""
+    for key in [k for k in state_dict if k.startswith(prefix)]:
+        m = _STACKED_KEY.match(key[len(prefix) :])
+        if m:
+            name, layer, rev = m.group(1), m.group(2), m.group(3) or ""
+            state_dict[f"{prefix}rnn.{layer}.{name}_l0{rev}"] = state_dict.pop(key)
 
 
 def _conv(c_in: int, c_out: int) -> list[nn.Module]:
@@ -39,17 +56,21 @@ class CRNN(nn.Module):
             *_conv(c5, c6),
             nn.MaxPool2d((2, 1), (2, 1)),  # H/16, W/4
         )
-        self.rnn = nn.LSTM(
-            c6,
-            cfg.lstm_hidden,
-            num_layers=cfg.lstm_layers,
-            bidirectional=True,
-            dropout=cfg.dropout if cfg.lstm_layers > 1 else 0.0,
+        # One single-layer BiLSTM per layer, with ordinary dropout between them, instead of a
+        # stacked nn.LSTM with its built-in dropout. cuDNN draws that dropout from its own random
+        # state, which a checkpoint cannot save (so a resumed CUDA run drew different masks), and
+        # on Windows freeing that state at exit aborted every training process (0xC0000409).
+        # Same architecture, parameters and parameter order; old checkpoints load unchanged.
+        h = cfg.lstm_hidden
+        self.rnn = nn.ModuleList(
+            nn.LSTM(c6 if i == 0 else 2 * h, h, bidirectional=True) for i in range(cfg.lstm_layers)
         )
+        self.rnn_dropout = nn.Dropout(cfg.dropout)  # between BiLSTM layers
         self.dropout = nn.Dropout(cfg.dropout)
-        self.head = nn.Linear(2 * cfg.lstm_hidden, num_classes)
+        self.head = nn.Linear(2 * h, num_classes)
         self.num_classes = num_classes
         self._init_weights()
+        self.register_load_state_dict_pre_hook(_stacked_lstm_keys)
 
     def _init_weights(self) -> None:
         for m in self.modules():
@@ -77,12 +98,17 @@ class CRNN(nn.Module):
         with torch.autocast(device_type=x.device.type, enabled=False):
             f = f.float()
             if widths is None:
-                f, _ = self.rnn(f)
+                for i, rnn in enumerate(self.rnn):
+                    f, _ = rnn(self.rnn_dropout(f) if i else f)
             else:
                 lengths = self.frames(widths.cpu()).clamp(min=1, max=t)
-                packed = nn.utils.rnn.pack_padded_sequence(f, lengths, enforce_sorted=False)
-                out, _ = self.rnn(packed)
-                f, _ = nn.utils.rnn.pad_packed_sequence(out, total_length=t)
+                seq = nn.utils.rnn.pack_padded_sequence(f, lengths, enforce_sorted=False)
+                for i, rnn in enumerate(self.rnn):
+                    if i:  # dropout on the packed values only, as the stacked LSTM did
+                        seq = PackedSequence(self.rnn_dropout(seq.data), seq.batch_sizes,
+                                             seq.sorted_indices, seq.unsorted_indices)  # fmt: skip
+                    seq, _ = rnn(seq)
+                f, _ = nn.utils.rnn.pad_packed_sequence(seq, total_length=t)
             return self.head(self.dropout(f))  # T, N, classes
 
 
