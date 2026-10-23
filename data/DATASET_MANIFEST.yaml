@@ -79,6 +79,17 @@
   preprocessing: none (raw download; extraction only)
   split: train / validation / test (ADR-0005)
   manifest: manifests/hiertext.json
+- dataset: imagenet_backbones
+  version: torchvision 0.29.1 weight files
+  source: https://pytorch.org/vision/stable/models.html
+  license: BSD-3-Clause (torchvision code); weights carry ImageNet-1K terms (owner
+    decision against ADR-0009 before v0.1 ships a detector; not a blocker for Phase
+    8 code or runs; see RISK_REGISTER R-05)
+  download_date: '2026-10-23'
+  samples: {}
+  preprocessing: none (raw download; extraction only)
+  split: GLYPHARIS-Det backbone initialisation only (ADR-0007)
+  manifest: manifests/imagenet_backbones.json
 - dataset: pg19
   version: gs://deepmind-gutenberg, listed 2026-10-10
   source: https://github.com/google-deepmind/pg19

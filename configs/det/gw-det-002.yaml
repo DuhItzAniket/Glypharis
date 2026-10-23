@@ -1,0 +1,6 @@
+# GW-DET-002: GW-DET-001 with a randomly initialised backbone. Only the initialisation changes.
+inherits: gw-det-001.yaml
+experiment_id: GW-DET-002
+model_name: dbnet_mbv3_large_scratch
+det:
+  model: {init: scratch, weights: null, weights_sha256: null}

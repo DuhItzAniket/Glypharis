@@ -53,7 +53,7 @@ warn_redundant_casts = true
 strict_equality = true
 
 [[tool.mypy.overrides]]
-module = ["pynvml", "pynvml.*", "fontTools", "fontTools.*", "cv2", "cv2.*", "pypdfium2", "pypdfium2.*", "shapely", "shapely.*", "scipy", "scipy.*"]
+module = ["pynvml", "pynvml.*", "fontTools", "fontTools.*", "cv2", "cv2.*", "pypdfium2", "pypdfium2.*", "shapely", "shapely.*", "scipy", "scipy.*", "torchvision", "torchvision.*"]
 ignore_missing_imports = true
 
 [tool.pytest.ini_options]

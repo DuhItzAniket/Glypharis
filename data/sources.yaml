@@ -3506,3 +3506,19 @@ baseline_models:
     - {name: pp_ocrv6_tiny_rec_inference_json, url: https://huggingface.co/PaddlePaddle/PP-OCRv6_tiny_rec/resolve/0736086f72f666350ebcdc0c3a504eeac89cdfad/inference.json, filename: PP-OCRv6_tiny_rec/inference.json, size: 108959}
     - {name: pp_ocrv6_tiny_rec_inference_pdiparams, url: https://huggingface.co/PaddlePaddle/PP-OCRv6_tiny_rec/resolve/0736086f72f666350ebcdc0c3a504eeac89cdfad/inference.pdiparams, filename: PP-OCRv6_tiny_rec/inference.pdiparams, size: 4420410, sha256: bb2f8f54d1e25f28c71b6fa4fe23f5940e159cae27fbee96155c99f822156e57}
     - {name: pp_ocrv6_tiny_rec_inference_yml, url: https://huggingface.co/PaddlePaddle/PP-OCRv6_tiny_rec/resolve/0736086f72f666350ebcdc0c3a504eeac89cdfad/inference.yml, filename: PP-OCRv6_tiny_rec/inference.yml, size: 55571}
+
+imagenet_backbones:
+  title: torchvision MobileNetV3 ImageNet-1K weights (IMAGENET1K_V1)
+  version: "torchvision 0.29.1 weight files"
+  homepage: https://pytorch.org/vision/stable/models.html
+  licence: BSD-3-Clause (torchvision code); weights carry ImageNet-1K terms (owner decision against ADR-0009 before v0.1 ships a detector; not a blocker for Phase 8 code or runs; see RISK_REGISTER R-05)
+  citation: howard2019mobilenetv3
+  role: GLYPHARIS-Det backbone initialisation only (ADR-0007)
+  phase: 8
+  files:
+    # Sizes and full SHA-256 come from the torch hub cache copies (no network); the first 8 hex
+    # digits of each hash match the prefix torchvision publishes in the filename. Offline install:
+    # copy the two cached files into data/raw/imagenet_backbones/, then run
+    # scripts/download_datasets.py --dataset imagenet_backbones --verify.
+    - {name: mobilenet_v3_large, url: https://download.pytorch.org/models/mobilenet_v3_large-8738ca79.pth, filename: mobilenet_v3_large-8738ca79.pth, size: 22139423, sha256: 8738ca797c879b547d18bbd15da5736ff2557b2036a9af72225393ca61759a04}
+    - {name: mobilenet_v3_small, url: https://download.pytorch.org/models/mobilenet_v3_small-047dcff4.pth, filename: mobilenet_v3_small-047dcff4.pth, size: 10306551, sha256: 047dcff4addef86ea5bc2eff13c9614dc11f47ab1160d0a71a25e7db994f4e1f}
