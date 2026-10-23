@@ -1,0 +1,14 @@
+{
+ "device": "cuda",
+ "precision": "bf16",
+ "steps": 400,
+ "stopped_at": 201,
+ "stopped_mid_epoch": true,
+ "steps_compared": 400,
+ "max_rel_loss_diff": 0.02009654878539549,
+ "max_rel_weight_diff": 1.0851843357086182,
+ "tolerance": 0.0001,
+ "val_cer_a": 1.0,
+ "val_cer_c": 1.0,
+ "passed": false
+}
