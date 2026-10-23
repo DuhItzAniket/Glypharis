@@ -1,0 +1,53 @@
+{
+ "experiment_id": "GW-REC-020",
+ "device": "cuda",
+ "precision": "bf16",
+ "git": "498eb39672d106073ea4bb31b674354b4b11adca",
+ "overfit": {
+  "lines": 64,
+  "steps": 300,
+  "final_cer": 0.0,
+  "target_cer": 0.01,
+  "passed": true,
+  "seconds": 119.3,
+  "curve": [
+   {
+    "step": 50,
+    "cer": 1.0,
+    "loss": 4.26008415222168
+   },
+   {
+    "step": 100,
+    "cer": 1.0,
+    "loss": 4.132338523864746
+   },
+   {
+    "step": 150,
+    "cer": 0.9424836601307189,
+    "loss": 2.438272714614868
+   },
+   {
+    "step": 200,
+    "cer": 0.6601307189542484,
+    "loss": 1.180408239364624
+   },
+   {
+    "step": 250,
+    "cer": 0.0784313725490196,
+    "loss": 0.09110128879547119
+   },
+   {
+    "step": 300,
+    "cer": 0.0,
+    "loss": 0.007576815318316221
+   }
+  ]
+ },
+ "lr_range": {
+  "steps": 359,
+  "lr_at_min_loss": 0.002065380155810561,
+  "suggested_lr": 0.0002065380155810561,
+  "configured_lr": 0.0005,
+  "configured_within_3x_of_suggestion": true
+ }
+}
