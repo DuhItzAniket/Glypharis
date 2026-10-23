@@ -14,7 +14,7 @@ Phases run in the order set by [ADR-0008](decisions/ADR-0008-usable-engine-first
 | 4 | Preprocessing, charset, GlyphSynth, GDC | **COMPLETE** | `phase-04` |
 | 5 | Baseline systems | **IN PROGRESS** | — |
 | 6 | Recognition baseline | **IN PROGRESS** (in parallel with 5, owner approved) | — |
-| 7 | Recognizer improvement | not started | — |
+| 7 | Recognizer improvement | **IN PROGRESS** (in parallel with 5 and 6, owner approved 2026-10-23) | — |
 | 8 | Text detector | not started | — |
 | 9 | Detector error analysis | not started | — |
 | 10 | Full OCR pipeline | not started | — |
@@ -360,3 +360,29 @@ with 3.
   left for Phase 7's error analysis to count.
 
 **Git:** branch `phase/06-rec-baseline`, not pushed yet.
+
+---
+
+## Phase 07 — Recognizer improvement
+
+**Status:** IN PROGRESS. Opened in parallel with Phases 5 and 6 at the owner's request
+(2026-10-23), on `phase/07-rec-improvement`, which starts from the finished Phase 6 branch.
+
+**Objective:** improve the recognizer under controlled conditions and settle its architecture and
+hyperparameters. Validation data only.
+
+**Plan.** About 4.7 GPU-hours per full run, so Phase 7 ranks configurations on a short budget and
+confirms the winner on the full one:
+1. Control (GW-REC-003, 004, 005): GW-REC-001's configuration for 8 epochs (OneCycle over those 8
+   epochs), seeds 1337, 2024 and 7. Their spread is the noise floor.
+2. One-variable ablations against that control, each with an ID and expectation registered before it
+   runs: input height 48; a narrower CNN; BiLSTM size; coarser sequence downsampling; optimizer,
+   schedule, learning rate and weight decay (at most 12 short runs together); augmentation presets;
+   and the SVTR-style encoder, GLYPHARIS-Rec-M (H6), at a matched step budget, with CPU latency
+   measured. Each arm is compared line by line with the control (`scripts/rec_compare.py`) and read
+   against the seed spread.
+3. The chosen configuration at the full budget with three seeds against GW-REC-001's configuration,
+   which gives the evidence table.
+
+The optional TrOCR-Small fine-tune comes last and only if the budget allows.
+
