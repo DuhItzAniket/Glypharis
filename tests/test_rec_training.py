@@ -539,3 +539,26 @@ def test_model_size_is_recorded_and_filled_in_for_older_runs(tiny):
     assert json.loads(path.read_text(encoding="utf-8"))["model_bytes"] > 0
     report = (tiny / "ms/reports/training/GW-REC-999/report.md").read_text(encoding="utf-8")
     assert "MiB of weights and buffers" in report
+
+
+def test_out_of_memory_saves_the_state_and_still_writes_a_report(tiny, monkeypatch):
+    import train
+    from glypharis.training import rec_trainer
+
+    real, calls = rec_trainer.ctc_loss, {"n": 0}
+
+    def fails_on_the_fourth_batch(*args, **kwargs):
+        calls["n"] += 1
+        if calls["n"] == 4:
+            raise torch.cuda.OutOfMemoryError("CUDA out of memory (simulated)")
+        return real(*args, **kwargs)
+
+    monkeypatch.setattr(rec_trainer, "ctc_loss", fails_on_the_fourth_batch)
+    cfg_path = _yaml(_cfg(tiny, "oom"), tiny / "oom.yaml")
+    assert train.main(["--config", str(cfg_path)]) == 3
+    assert (tiny / "oom/ckpt/oom.pt").exists()
+    recs = [
+        json.loads(x) for x in (tiny / "oom/runs/GW-REC-999/metrics.jsonl").read_text().splitlines()
+    ]
+    assert [r["step"] for r in recs if r["type"] == "oom"] == [1]
+    assert (tiny / "oom/reports/training/GW-REC-999/report.md").exists()
