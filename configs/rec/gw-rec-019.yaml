@@ -1,0 +1,8 @@
+# GW-REC-019: Phase 7 ablation, coarser sequence downsampling: a frame covers 8 input columns
+# instead of 4 (the CRNN's third pooling also halves the width). Everything else is the control
+# GW-REC-003 (8-epoch short budget, seed 1337).
+inherits: gw-rec-003.yaml
+experiment_id: GW-REC-019
+
+model:
+  frame_stride: 8

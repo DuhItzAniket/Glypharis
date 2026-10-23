@@ -1,0 +1,16 @@
+# GW-REC-020: Phase 7, GLYPHARIS-Rec-M (the SVTR-style encoder, H6) against the control GW-REC-003
+# at the same budget: 8 epochs, the same batches, steps, schedule and learning rate. The default
+# sizes have about as many parameters as the CRNN. If the sanity sequence's LR range test calls
+# for another learning rate, the change is recorded in the registry before the run.
+inherits: gw-rec-003.yaml
+experiment_id: GW-REC-020
+model_name: svtr
+
+model:
+  svtr:
+    dims: [96, 192, 256]
+    local_blocks: [3, 3, 0]
+    global_blocks: [0, 3, 6]
+    heads: [3, 6, 8]
+    mlp_ratio: 4.0
+    local_kernel: [3, 7]
