@@ -2,10 +2,13 @@
 
     python train.py --config configs/rec/gw-rec-001.yaml
     python train.py --config configs/rec/gw-rec-001.yaml --resume checkpoints/GW-REC-001/last.pt
+    python train.py --config configs/det/gw-det-001.yaml
 
 The run's experiment ID must be registered in research/experiments.md before it starts
 (docs/WORKFLOW.md §4). Exit codes: 0 done, 2 non-finite loss, 3 out of GPU memory; in both failure
-cases the state is saved and a run report is still written.
+cases the state is saved and a run report is still written. A detector run (task det) also exits
+with 2 on a non-finite gradient norm, and with 4 when it is refused at start-up because another
+process holds the GPU; then only the log is written.
 """
 
 from __future__ import annotations
@@ -45,8 +48,12 @@ def main(argv: list[str] | None = None) -> int:
     assert cfg.experiment_id is not None
     setup_logging(Path(cfg.paths.runs_dir) / cfg.experiment_id, cfg.experiment_id,
                   cfg.logging.level)  # fmt: skip
+    if cfg.task == "det":
+        from glypharis.training.det_trainer import run_det
+
+        return run_det(cfg)
     if cfg.task != "rec":
-        raise SystemExit(f"task {cfg.task!r}: only the recognizer trainer exists so far (Phase 6)")
+        raise SystemExit(f"task {cfg.task!r}: no trainer exists for it yet")
     trainer = RecTrainer(cfg)
     log.info("%s: %s parameters, %d training and %d validation lines, %d steps per epoch on %s",
              cfg.experiment_id, f"{trainer.params:,}", len(trainer.train_ds), len(trainer.val_ds),
