@@ -14,12 +14,12 @@ Mean 8.31%, standard deviation 0.01 points, range 8.30 to 8.32%.
 
 ## Arms against GW-REC-003
 
-Difference: arm minus reference, percentage points, 95% bootstrap CI over lines (the same resampled lines for both runs). 1 comparisons, no correction for multiplicity. Verdict rule: better or worse only when the CI excludes zero and the arm's CER lies outside the control seeds' range in the same direction.
+Difference: arm minus reference, percentage points, 95% bootstrap CI over lines (the same resampled lines for both runs). 2 comparisons, no correction for multiplicity. Verdict rule: better or worse only when the CI excludes zero and the arm's CER lies outside the control seeds' range in the same direction.
 
 | Run | Change against the reference | Parameters | Steps | GPU-hours | Val CER % | Difference | Verdict |
 |---|---|---|---|---|---|---|---|
 | GW-REC-006 | data.image_height: 48, data.max_batch_columns: 24576, data.max_width: 1536, train.batch_size: 32, train.gradient_accumulation: 2 | 7,796,435 | 45,339 | 2.44 | 7.83 [7.66, 7.98] | -0.49 [-0.54, -0.44] | better |
-| GW-REC-007 | pending | | | | | | |
+| GW-REC-007 | model.cnn_channels: [32, 64, 128, 128, 256, 256] | 3,897,075 | 45,360 | 0.95 | 8.83 [8.65, 9.00] | +0.51 [+0.47, +0.56] | worse |
 | GW-REC-008 | pending | | | | | | |
 | GW-REC-009 | pending | | | | | | |
 | GW-REC-019 | pending | | | | | | |

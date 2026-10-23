@@ -42,7 +42,26 @@
   },
   {
    "run": "GW-REC-007",
-   "status": "pending"
+   "status": "done",
+   "change": "model.cnn_channels: [32, 64, 128, 128, 256, 256]",
+   "parameters": 3897075,
+   "steps": 45360,
+   "train_seconds": 3410.871999999974,
+   "val_cer": {
+    "value": 0.08830264703182698,
+    "low": 0.08651412281626698,
+    "high": 0.0899602954048904,
+    "resamples": 1000,
+    "unit": "lines"
+   },
+   "difference": {
+    "value": 0.00512955087304744,
+    "low": 0.0046692574133505435,
+    "high": 0.0055712780630872765,
+    "resamples": 1000,
+    "unit": "lines"
+   },
+   "verdict": "worse"
   },
   {
    "run": "GW-REC-008",
