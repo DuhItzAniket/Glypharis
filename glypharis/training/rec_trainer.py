@@ -35,7 +35,7 @@ from torch import nn
 from torch.utils.data import DataLoader
 
 from glypharis.config.loader import config_hash, config_to_dict, save_resolved
-from glypharis.config.schema import ConfigError, RunConfig
+from glypharis.config.schema import ConfigError, EarlyStoppingConfig, RunConfig
 from glypharis.data.augment import Augmenter
 from glypharis.data.rec_dataset import (
     RecLineDataset,
@@ -208,8 +208,9 @@ class TrainState:
     epoch: int = 0
     batch_in_epoch: int = 0  # batches of the current epoch already consumed
     step: int = 0  # optimizer steps
-    best_metric: float = math.inf
+    best_metric: float = math.inf  # lowest validation metric so far: selects best.pt
     best_epoch: int = -1
+    patience_ref: float = math.inf  # what early stopping measures progress against
     bad_epochs: int = 0
     stopped_early: bool = False
     history: list[dict[str, Any]] = field(default_factory=list)
@@ -217,6 +218,45 @@ class TrainState:
     train_seconds: float = 0.0
     epoch_loss_sum: float = 0.0  # running training loss of the current epoch
     epoch_loss_n: int = 0
+
+
+def record_validation(
+    state: TrainState, metric: float, epoch: int, es: EarlyStoppingConfig
+) -> bool:
+    """Update checkpoint selection and early stopping with one epoch's validation metric.
+
+    The selected checkpoint is the one with the strictly lowest validation metric (protocol §7; ties
+    keep the earlier epoch). ``min_delta`` only decides whether an epoch counts as progress for the
+    patience counter, so a small improvement still becomes the best checkpoint. Returns True when
+    this epoch is the new best.
+    """
+    best = metric < state.best_metric
+    if best:
+        state.best_metric, state.best_epoch = metric, epoch
+    if metric < state.patience_ref - es.min_delta:
+        state.patience_ref, state.bad_epochs = metric, 0
+    else:
+        state.bad_epochs += 1
+        if es.enabled and state.bad_epochs >= es.patience:
+            state.stopped_early = True
+    return best
+
+
+def state_from_checkpoint(saved: dict[str, Any]) -> TrainState:
+    """Rebuild the state. Before ``patience_ref`` existed, ``best_metric`` played its part."""
+    saved = dict(saved)
+    saved.setdefault("patience_ref", saved.get("best_metric", math.inf))
+    return TrainState(**saved)
+
+
+def config_matches(saved: dict[str, Any], cfg: RunConfig) -> bool:
+    """True when a checkpoint's config is this run's: only the resume pointer and ``max_steps``
+    (which the resume check sets) may differ."""
+    saved, now = dict(saved), config_to_dict(cfg)
+    for d in (saved, now):
+        d["checkpoint"] = {**d["checkpoint"], "resume": None}
+        d["train"] = {**d["train"], "max_steps": None}
+    return saved == now
 
 
 class RecTrainer:
@@ -332,21 +372,14 @@ class RecTrainer:
 
     def resume(self, path: str | Path) -> None:
         ck = load_checkpoint(path, self.device)
-        if ck.get("config_hash") != config_hash(self.cfg):
-            # Only the resume pointer itself may differ between the saved and the current config.
-            saved, now = dict(ck["config"]), config_to_dict(self.cfg)
-            saved["checkpoint"] = {**saved["checkpoint"], "resume": None}
-            now["checkpoint"] = {**now["checkpoint"], "resume": None}
-            saved["train"] = {**saved["train"], "max_steps": None}
-            now["train"] = {**now["train"], "max_steps": None}
-            if saved != now:
-                raise ConfigError(f"{path} was written with a different config; refusing to resume")
+        if not config_matches(ck["config"], self.cfg):
+            raise ConfigError(f"{path} was written with a different config; refusing to resume")
         self.model.load_state_dict(ck["model"])
         self.optimizer.load_state_dict(ck["optimizer"])
         if self.scheduler and ck["scheduler"]:
             self.scheduler.load_state_dict(ck["scheduler"])
         self.scaler.load_state_dict(ck["scaler"])
-        self.state = TrainState(**ck["state"])
+        self.state = state_from_checkpoint(ck["state"])
         self.gradmon.load_state_dict(ck["gradmon"])
         set_rng_state(ck["rng"])
         log.info("resumed from %s at epoch %d, batch %d, step %d", path, self.state.epoch,
@@ -496,18 +529,11 @@ class RecTrainer:
                                 epoch, step):  # fmt: skip
             self._flag(f)
 
-        es = cfg.early_stopping
         metric = val.cer  # early_stopping.monitor is validated to be a validation metric
-        improved = metric < self.state.best_metric - es.min_delta
+        improved = record_validation(self.state, metric, epoch, cfg.early_stopping)
         self.state.epoch += 1
         self.state.batch_in_epoch = 0
         self.state.epoch_loss_sum, self.state.epoch_loss_n = 0.0, 0
-        if improved:
-            self.state.best_metric, self.state.best_epoch, self.state.bad_epochs = metric, epoch, 0
-        else:
-            self.state.bad_epochs += 1
-            if es.enabled and self.state.bad_epochs >= es.patience:
-                self.state.stopped_early = True
         if improved:
             self.save("best.pt", metric)
             self._write_samples(val.samples)

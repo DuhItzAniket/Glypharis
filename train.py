@@ -14,33 +14,16 @@ import argparse
 import logging
 import sys
 from pathlib import Path
-from typing import Any
 
 import torch
 
 from glypharis.config.cli import add_config_args, config_from_args
 from glypharis.diagnostics import NonFiniteLoss
 from glypharis.training.rec_trainer import RecTrainer
-from glypharis.training.report import WORST, write_report
+from glypharis.training.report import worst_images, write_report
 from glypharis.utils.logsetup import setup_logging
 
 log = logging.getLogger("train")
-
-
-def worst_images(trainer: RecTrainer) -> dict[str, Any]:
-    """Crops of the worst validation lines of the best checkpoint, for the report."""
-    import json
-
-    path = trainer.run_dir / "val_best_samples.jsonl"
-    if not path.exists():
-        return {}
-    samples = [json.loads(x) for x in path.read_text(encoding="utf-8").splitlines() if x]
-    wanted = {s["key"] for s in sorted(samples, key=lambda s: (-s["cer"], s["key"]))[:WORST]}
-    out = {}
-    for ref in trainer.val_ds.refs:
-        if ref.key in wanted:
-            out[ref.key] = trainer.val_ds.readers[ref.pack].image(ref.index)
-    return out
 
 
 def finish(trainer: RecTrainer) -> Path:
@@ -49,7 +32,8 @@ def finish(trainer: RecTrainer) -> Path:
     summary = trainer._summary()
     (trainer.run_dir / "summary.json").write_text(json.dumps(summary, indent=1) + "\n",
                                                   encoding="utf-8")  # fmt: skip
-    return write_report(trainer.run_dir, trainer.report_dir, worst_images(trainer))
+    return write_report(trainer.run_dir, trainer.report_dir,
+                        worst_images(trainer.run_dir, trainer.val_ds))  # fmt: skip
 
 
 def main(argv: list[str] | None = None) -> int:

@@ -299,6 +299,65 @@ def test_resume_check_script_passes_on_cpu(tiny, monkeypatch):
     assert res["passed"] and res["max_rel_loss_diff"] == 0 and res["max_rel_weight_diff"] == 0
 
 
+def test_best_checkpoint_is_the_lowest_metric_and_min_delta_only_drives_patience():
+    from glypharis.config.schema import EarlyStoppingConfig
+    from glypharis.training.rec_trainer import TrainState, record_validation
+
+    es = EarlyStoppingConfig(enabled=True, patience=3, min_delta=0.001)
+    st = TrainState()
+    # Every epoch is a little better, but only epoch 3 by more than min_delta. GW-REC-002 kept an
+    # older best.pt this way when one rule did both jobs.
+    vals = [0.100, 0.0996, 0.0993, 0.0985, 0.0984, 0.0983, 0.0982]
+    assert [record_validation(st, v, e, es) for e, v in enumerate(vals)] == [True] * 7
+    assert st.best_epoch == 6 and st.best_metric == 0.0982
+    assert st.patience_ref == 0.0985 and st.bad_epochs == 3 and st.stopped_early
+    assert not record_validation(st, 0.0982, 7, es) and st.best_epoch == 6  # a tie keeps the first
+
+
+def test_checkpoints_from_before_the_patience_reference_still_resume():
+    from dataclasses import asdict
+
+    from glypharis.training.rec_trainer import TrainState, state_from_checkpoint
+
+    saved = asdict(TrainState(best_metric=0.5, best_epoch=3, bad_epochs=2))
+    del saved["patience_ref"]
+    st = state_from_checkpoint(saved)
+    assert st.patience_ref == 0.5 and st.best_epoch == 3 and st.bad_epochs == 2
+
+
+def test_reselect_moves_best_to_the_lowest_epoch_and_records_it(tiny):
+    import shutil
+
+    import rec_reselect
+
+    import train
+
+    cfg_path = _yaml(_cfg(tiny, "x", **{"train.epochs": 3}), tiny / "x.yaml")
+    assert train.main(["--config", str(cfg_path)]) == 0
+    run, ckpt = tiny / "x/runs/GW-REC-999", tiny / "x/ckpt"
+    epochs = rec_reselect.epoch_records(run / "metrics.jsonl")
+    low = min(epochs.values(), key=lambda r: (r["val_cer"], r["epoch"]))["epoch"]
+    wrong = next(e for e in epochs if e != low)
+    # Put the run in the state the old selection rule could leave it in.
+    shutil.copy2(ckpt / f"epoch_{wrong:03d}.pt", ckpt / "best.pt")
+    summary = json.loads((run / "summary.json").read_text(encoding="utf-8"))
+    summary.update(best_epoch=wrong, best=epochs[wrong])
+    (run / "summary.json").write_text(json.dumps(summary), encoding="utf-8")
+
+    assert rec_reselect.main(["--config", str(cfg_path)]) == 0
+    summary = json.loads((run / "summary.json").read_text(encoding="utf-8"))
+    assert summary["best_epoch"] == low and summary["reselection"]["from_epoch"] == wrong
+    assert summary["reselection"]["rescored_val_cer"] == epochs[low]["val_cer"]  # exact on CPU
+    best = load_checkpoint(ckpt / "best.pt")
+    assert best["state"]["best_epoch"] == low and best["state"]["epoch"] == low + 1
+    assert (ckpt / f"best_superseded_e{wrong:03d}.pt").exists()
+    assert (run / f"val_best_samples.superseded_e{wrong:03d}.jsonl").exists()
+    report = (tiny / "x/reports/training/GW-REC-999/report.md").read_text(encoding="utf-8")
+    assert "## Notes" in report and "re-selected" in report
+    assert rec_reselect.main(["--config", str(cfg_path)]) == 0  # a second run changes nothing
+    assert json.loads((run / "summary.json").read_text())["notes"] == summary["notes"]
+
+
 @pytest.mark.gpu
 def test_rng_state_restores_from_a_checkpoint_loaded_onto_the_gpu(tmp_path):
     from glypharis.training.checkpoint import rng_state, save_checkpoint, set_rng_state

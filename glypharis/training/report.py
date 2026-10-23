@@ -9,12 +9,15 @@ from __future__ import annotations
 
 import json
 from pathlib import Path
-from typing import Any
+from typing import TYPE_CHECKING, Any
 
 import numpy as np
 
 from glypharis.eval.stats import ratio_ci
 from glypharis.eval.text_metrics import score_pair
+
+if TYPE_CHECKING:
+    from glypharis.data.rec_dataset import RecLineDataset
 
 WORST = 20
 
@@ -90,6 +93,14 @@ def _worst_strip(worst: list[dict[str, Any]], images: dict[str, Any], out: Path)
     return True
 
 
+def worst_images(run_dir: Path, val_ds: RecLineDataset) -> dict[str, Any]:
+    """Crops of the worst validation lines of the selected checkpoint, for the report."""
+    samples = _read_jsonl(run_dir / "val_best_samples.jsonl")
+    wanted = {s["key"] for s in sorted(samples, key=lambda s: (-s["cer"], s["key"]))[:WORST]}
+    return {ref.key: val_ds.readers[ref.pack].image(ref.index)
+            for ref in val_ds.refs if ref.key in wanted}  # fmt: skip
+
+
 def write_report(run_dir: Path, report_dir: Path, images: dict[str, Any] | None = None) -> Path:
     """Write report.md (+ figures). ``images`` maps line keys to crops for the worst lines."""
     report_dir.mkdir(parents=True, exist_ok=True)
@@ -156,6 +167,9 @@ def write_report(run_dir: Path, report_dir: Path, images: dict[str, Any] | None 
         lines += [f"Validation CER of the selected checkpoint: {100 * ci.value:.2f}% "
                   f"[{100 * ci.low:.2f}, {100 * ci.high:.2f}] (95% bootstrap CI over "
                   f"{len(samples):,} lines).", ""]  # fmt: skip
+    notes = summary.get("notes") or []
+    if notes:
+        lines += ["## Notes", "", *[f"- {n}" for n in notes], ""]
     lines += ["## Diagnostics", ""]
     flags = summary.get("flags") or []
     if flags:
