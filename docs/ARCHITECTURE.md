@@ -57,19 +57,29 @@ Word-crop benchmarks (IIIT5K) are still used, as an *out-of-domain recognizer te
 
 ## 3. GLYPHARIS-Det (baseline)
 
-DBNet-style differentiable-binarisation segmentation detector.
+DBNet-style differentiable-binarisation segmentation detector, as built in Phase 8 (decisions in
+[ADR-0012](decisions/ADR-0012-detector-labels-and-operating-points.md)).
 
 | Part | Baseline choice | Notes |
 |---|---|---|
-| Backbone | MobileNetV3 (torchvision; Large default, Small for the `-S` variant), ImageNet-pretrained | Pretrained-vs-scratch is a planned ablation. Only generic ImageNet weights are used; no pretrained OCR weights. |
-| Neck | Lightweight FPN, fused to 1/4 input resolution | _(tunable)_ inner channels 96–128 |
-| Head | Probability map + threshold map → approximate binary map | Threshold branch used only in training |
-| Labels | Line polygons shrunk with Vatti clipping (DBNet shrink ratio r = 0.4) | Implemented with `pyclipper` |
-| Loss | L = L_prob(BCE + OHEM 3:1) + α·L_bin(Dice) + β·L_thresh(L1), α=1, β=10 | From the DBNet paper; to be re-verified |
-| Train input | Random crops 640×640 _(tunable)_ with scale/rotate augmentation | Fits a ~4.5 GiB VRAM budget at small batch (to be measured) |
-| Inference | Long side resized to a multiple of 32 (e.g. 960–1280) → threshold → unclip → polygons | Box/polygon score = mean prob inside region |
+| Backbone | MobileNetV3 (torchvision; Large default, Small for the `-S` variant), ImageNet-pretrained | Pretrained-vs-scratch is a planned ablation (GW-DET-002). Only generic ImageNet weights are used; no pretrained OCR weights. |
+| Input | uint8 RGB, H and W multiples of 32 | ImageNet normalisation happens inside the model, so callers pass raw pixels |
+| Neck | Lightweight FPN, fused to 1/4 input resolution | 96 inner channels (`det.model.inner_channels`) |
+| Head | Probability map + threshold map → approximate binary map | Threshold branch used only in training. The final transposed convolutions of both heads run in fp32 with autocast off, so the logits are always fp32 |
+| Labels | Line polygons shrunk by D = A(1 − r²)/L (DBNet shrink ratio r = 0.4) | A mitre inward offset with shapely, which for a convex polygon equals the Vatti offset the reference code computes with `pyclipper`. Pixels are labelled by exact centre sampling; a line whose kernel has no pixel centre becomes don't care for that sample |
+| Loss | L = L_prob(BCE + OHEM 3:1) + α·L_bin(Dice) + β·L_thresh(L1), BCE weight 1, α=1, β=10 | Checked: the DBNet reference code scales the BCE term by 5 (`bce_scale`); kept at 1 as pre-registered. `det.loss.bce_weight` is configurable for a later ablation under its own ID |
+| Train input | Random crops 640×640 with scale/rotate augmentation | Peak memory is gated per run by the sanity dry run (≤ 4.0 GiB reserved) |
+| Inference | Long side resized to 1280 (a multiple of 32) → threshold the probability map (0.3) → components scored by their mean probability (≥ 0.6) → unclip → boxes | Two pre-registered unclip operating points, `dbnet15` (DBNet's ratio 1.5) and `inverse10` (the exact inverse of the training shrink for a rectangle); training selects on the better of the two (ADR-0012) |
 
-Outputs: polygon (N×2), axis-aligned bbox, detector confidence.
+**Deviation from the original plan (unclip → polygons).** The output shape is set by
+`det.post.box_type`: `quad` (default, all GW-DET runs) gives the rotated rectangle around the
+unclipped kernel; `poly` gives the kernel's outline offset by the same unclip distance. Candidates
+keep the simplified contour, so Phase 9 can compare the two on validation before anything is
+evaluated on GDC, whose phone-captured lines can be curved (RISK_REGISTER R-22).
+
+Outputs, per line: polygon (N×2, clipped to the image), quad (TL, TR, BR, BL of its minimum-area
+rectangle, with the text direction from the aspect-2 rule in ADR-0012), axis-aligned bbox, score,
+aspect (long/short side) and long-axis angle.
 
 ## 4. GLYPHARIS-Rec (baseline: CRNN)
 
