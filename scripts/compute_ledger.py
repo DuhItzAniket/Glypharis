@@ -52,8 +52,12 @@ def phase_of(experiment: str) -> str:
 def classify(text: str, device: str) -> tuple[str, str, str]:
     """(experiment, kind, detail) for a log line's text."""
     if device == "cpu":
-        exp = re.search(r"--experiment (GW-BASE-\d{3})", text)
+        # Flags ("--experiment GW-BASE-002 --system ... --task ... --eval-set ...") or, in the
+        # first days, positional fields ("GW-BASE-002 ppocr_mobile rec hiertext_val").
+        exp = re.search(r"(GW-BASE-\d{3})", text)
         detail = " ".join(re.findall(r"--(?:system|task|eval-set) (\S+)", text))
+        if not detail and exp:
+            detail = " ".join(text[exp.end() :].split("::")[0].split()[:3])
         return (exp.group(1) if exp else "?"), "baseline", detail
     exp = re.search(r"gw-rec-(\d{3})", text, re.IGNORECASE)
     experiment = f"GW-REC-{exp.group(1)}" if exp else "?"
@@ -77,24 +81,53 @@ def parse(log: Path, device: str) -> list[Job]:
         if device == "cpu":
             key_kind = detail
         if what == "START":
+            if (experiment, key_kind) in open_jobs:  # killed by hand: no end line was written
+                start, start_kind = open_jobs.pop((experiment, key_kind))
+                jobs.append(Job(device, experiment, start_kind, detail, start, stamp,
+                                hours_between(start, stamp), "interrupted"))  # fmt: skip
             open_jobs[(experiment, key_kind)] = (stamp, kind)
             continue
         if (experiment, key_kind) not in open_jobs:
             continue  # an end line without its start (log started mid-job)
         start, start_kind = open_jobs.pop((experiment, key_kind))
-        hours = (
-            dt.datetime.fromisoformat(stamp) - dt.datetime.fromisoformat(start)
-        ).total_seconds()
         code = EXIT.search(text)
         outcome = (
             "done" if what == "DONE" else f"failed (exit {code.group(1)})" if code else "failed"
         )
-        jobs.append(
-            Job(device, experiment, start_kind, detail, start, stamp, hours / 3600, outcome)
-        )
+        jobs.append(Job(device, experiment, start_kind, detail, start, stamp,
+                        hours_between(start, stamp), outcome))  # fmt: skip
     for (experiment, _), (start, kind) in open_jobs.items():
-        jobs.append(Job(device, experiment, kind, "", start, None, None, "unfinished"))
+        jobs.append(Job(device, experiment, kind, "", start, None, None, "running"))
     return jobs
+
+
+def hours_between(start: str, end: str) -> float:
+    return (
+        dt.datetime.fromisoformat(end) - dt.datetime.fromisoformat(start)
+    ).total_seconds() / 3600
+
+
+def finished_runs(runs: Path) -> set[str]:
+    """Runs whose summary shows every planned epoch (or an early stop): their last training job
+    finished even if its process then exited non-zero (the Phase 6 exit crash, fixed in c58c063)."""
+    import yaml
+
+    done = set()
+    for summary in runs.glob("GW-REC-*/summary.json"):
+        s = json.loads(summary.read_text(encoding="utf-8"))
+        cfg = summary.parent / "config.resolved.yaml"
+        epochs = (
+            yaml.safe_load(cfg.read_text(encoding="utf-8"))["train"]["epochs"]
+            if cfg.exists()
+            else None
+        )
+        if s.get("stopped_early") or (epochs is not None and s.get("epochs_run", 0) >= epochs):
+            done.add(s["experiment_id"])
+    return done
+
+
+def failed(job: Job) -> bool:
+    return job.outcome.startswith("failed") or job.outcome == "interrupted"
 
 
 def main(argv: list[str] | None = None) -> int:
@@ -115,10 +148,20 @@ def main(argv: list[str] | None = None) -> int:
         s = json.loads(summary.read_text(encoding="utf-8"))
         train_h[s["experiment_id"]] = s["train_seconds"] / 3600
 
-    def total(device: str, phase: str | None = None, done: bool | None = None) -> float:
+    # A finished run's last training job counts as done even if the process exited non-zero.
+    complete = finished_runs(args.runs)
+    last_train: dict[str, Job] = {}
+    for j in jobs:
+        if j.kind in ("train", "resume"):
+            last_train[j.experiment] = j
+    for exp, j in last_train.items():
+        if exp in complete and failed(j):
+            j.outcome = f"done ({j.outcome} after the run finished)"
+
+    def total(device: str, phase: str | None = None, only_failed: bool = False) -> float:
         return sum(j.hours or 0.0 for j in jobs if j.device == device
                    and (phase is None or phase_of(j.experiment) == phase)
-                   and (done is None or (j.outcome == "done") == done))  # fmt: skip
+                   and (not only_failed or failed(j)))  # fmt: skip
 
     per_exp: dict[str, dict[str, Any]] = {}
     for j in jobs:
@@ -126,7 +169,7 @@ def main(argv: list[str] | None = None) -> int:
                  "failed_jobs": 0, "wall_h": 0.0}  # fmt: skip
         e = per_exp.setdefault(j.experiment, fresh)
         e["jobs"] += 1
-        e["failed_jobs"] += j.outcome != "done"
+        e["failed_jobs"] += failed(j)
         e["wall_h"] += j.hours or 0.0
     for exp, e in per_exp.items():
         e["train_h"] = train_h.get(exp)
@@ -148,10 +191,10 @@ def main(argv: list[str] | None = None) -> int:
         "",
         "| Phase | GPU-h (all) | GPU-h (failed jobs) | CPU-h (all) | CPU-h (failed jobs) |",
         "|---|---|---|---|---|",
-        *[f"| {p} | {total('gpu', p):.1f} | {total('gpu', p, False):.1f} | {total('cpu', p):.1f} | "
-          f"{total('cpu', p, False):.1f} |" for p in phases],
-        f"| all | {total('gpu'):.1f} | {total('gpu', None, False):.1f} | {total('cpu'):.1f} | "
-        f"{total('cpu', None, False):.1f} |",
+        *[f"| {p} | {total('gpu', p):.1f} | {total('gpu', p, True):.1f} | {total('cpu', p):.1f} | "
+          f"{total('cpu', p, True):.1f} |" for p in phases],
+        f"| all | {total('gpu'):.1f} | {total('gpu', None, True):.1f} | {total('cpu'):.1f} | "
+        f"{total('cpu', None, True):.1f} |",
         "",
         "## By experiment",
         "",
@@ -167,8 +210,8 @@ def main(argv: list[str] | None = None) -> int:
         "",
     ]  # fmt: skip
     args.out.mkdir(parents=True, exist_ok=True)
-    totals = {"gpu_h": total("gpu"), "gpu_failed_h": total("gpu", None, False),
-              "cpu_h": total("cpu"), "cpu_failed_h": total("cpu", None, False)}  # fmt: skip
+    totals = {"gpu_h": total("gpu"), "gpu_failed_h": total("gpu", None, True),
+              "cpu_h": total("cpu"), "cpu_failed_h": total("cpu", None, True)}  # fmt: skip
     result = {"jobs": [asdict(j) for j in jobs], "experiments": per_exp, "totals": totals}
     (args.out / "ledger.json").write_text(json.dumps(result, indent=1) + "\n", encoding="utf-8")
     (args.out / "ledger.md").write_text("\n".join(md), encoding="utf-8", newline="\n")
