@@ -249,7 +249,26 @@
   },
   {
    "run": "GW-REC-011",
-   "status": "pending"
+   "status": "done",
+   "change": "train.scheduler: cosine, train.warmup_steps: 2000",
+   "parameters": 7796435,
+   "steps": 45360,
+   "train_seconds": 5030.9679999999935,
+   "val_cer": {
+    "value": 0.08440046976754038,
+    "low": 0.08264343510216991,
+    "high": 0.08601221881051892,
+    "resamples": 1000,
+    "unit": "lines"
+   },
+   "difference": {
+    "value": 0.001227373608760835,
+    "low": 0.000822604345967783,
+    "high": 0.0016638977766271375,
+    "resamples": 1000,
+    "unit": "lines"
+   },
+   "verdict": "worse"
   },
   {
    "run": "GW-REC-012",

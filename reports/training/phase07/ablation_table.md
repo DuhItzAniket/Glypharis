@@ -14,7 +14,7 @@ Mean 8.31%, standard deviation 0.01 points, range 8.30 to 8.32%.
 
 ## Arms against GW-REC-003
 
-Difference: arm minus reference, percentage points, 95% bootstrap CI over lines (the same resampled lines for both runs). 10 comparisons, no correction for multiplicity. Verdict rule: better or worse only when the CI excludes zero and the arm's CER lies outside the control seeds' range in the same direction.
+Difference: arm minus reference, percentage points, 95% bootstrap CI over lines (the same resampled lines for both runs). 11 comparisons, no correction for multiplicity. Verdict rule: better or worse only when the CI excludes zero and the arm's CER lies outside the control seeds' range in the same direction.
 
 | Run | Change against the reference | Parameters | Steps | GPU-hours | Val CER % | Difference | Verdict |
 |---|---|---|---|---|---|---|---|
@@ -28,7 +28,7 @@ Difference: arm minus reference, percentage points, 95% bootstrap CI over lines 
 | GW-REC-017 | data.augmentation: photometric | 7,796,435 | 45,360 | 1.16 | 8.59 [8.42, 8.75] | +0.28 [+0.23, +0.32] | worse |
 | GW-REC-018 | data.augmentation: degradation | 7,796,435 | 45,360 | 1.18 | 8.68 [8.50, 8.85] | +0.36 [+0.32, +0.41] | worse |
 | GW-REC-010 | train.optimizer: adam | 7,796,435 | 45,360 | 1.53 | 9.17 [8.99, 9.34] | +0.85 [+0.81, +0.90] | worse |
-| GW-REC-011 | pending | | | | | | |
+| GW-REC-011 | train.scheduler: cosine, train.warmup_steps: 2000 | 7,796,435 | 45,360 | 1.40 | 8.44 [8.26, 8.60] | +0.12 [+0.08, +0.17] | worse |
 | GW-REC-012 | pending | | | | | | |
 | GW-REC-013 | pending | | | | | | |
 | GW-REC-014 | pending | | | | | | |
