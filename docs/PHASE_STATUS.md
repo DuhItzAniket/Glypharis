@@ -412,7 +412,8 @@ earlier state of `phase/05-baselines`, so Phase 5 merges first.
 implemented. The run takes the other permitted path: it saves `oom.pt`, writes the report and exits
 with 3.
 
-**Tests:** 293 passed locally (CPU and GPU-marked).
+**Tests:** 293 passed locally (CPU and GPU-marked). With Phase 5 merged in, 290 CPU tests pass; the 7
+GPU tests were deselected while the GPU was training a Phase 7 run.
 
 **Exit criteria**
 
@@ -439,4 +440,5 @@ with 3.
 - HierText annotation noise shows up in the worst-line tables. It is recorded, not corrected, and
   left for Phase 7's error analysis to count.
 
-**Git:** branch `phase/06-rec-baseline`, not pushed yet.
+**Git:** branch `phase/06-rec-baseline`, with Phase 5 merged in. Its pull request is based on
+`phase/05-baselines` until Phase 5 merges, then on `main`.
