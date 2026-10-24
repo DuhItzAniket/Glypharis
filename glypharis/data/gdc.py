@@ -265,6 +265,19 @@ class PackLayout:
         return side, top, w - side, h - top
 
 
+def sheet_margin_bands(layout: PackLayout) -> list[list[list[float]]]:
+    """The sheet outside the content box (markers, the sheet label, blank margins) as four bands.
+
+    The label is printed text with no ground truth, so these bands are ignore regions: a system
+    that reads the label is not charged for it (EXPERIMENT_PROTOCOL §3).
+    """
+    w, h = layout.size
+    x0, y0, x1, y1 = layout.content_box
+    boxes = [(0, 0, w, y0), (0, y1, w, h), (0, y0, x0, y1), (x1, y0, w, y1)]
+    return [[[float(a), float(b)], [float(c), float(b)], [float(c), float(d)], [float(a), float(d)]]
+            for a, b, c, d in boxes]  # fmt: skip
+
+
 def _aruco() -> Any:
     import cv2
 
