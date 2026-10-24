@@ -66,6 +66,10 @@ PLAN: dict[tuple[str, str, str], str | None] = {
     **{(s, "e2e", "gdc_test"): None for s in _REDUCED},
     **{(s, "rec", e): _SLOW for s in _REDUCED for e in ("glyphsynth_val", "hiertext_test")},
     **{(s, "e2e", e): _SLOW for s in _REDUCED for e in ("hiertext_val", "hiertext_test")},
+    ("ppocr_server", "e2e", "gdc_test"): (
+        "not runnable on this laptop: both attempts died on the first page, most likely for "
+        "lack of memory (research/failures.md, 2026-10-24)"
+    ),
 }
 
 
