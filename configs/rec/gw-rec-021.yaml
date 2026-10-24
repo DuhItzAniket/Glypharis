@@ -1,0 +1,14 @@
+# GW-REC-021: Phase 7 ablation, coarser sequence downsampling (a frame covers 8 input columns
+# instead of 4), re-run of GW-REC-019 with CTC-aware batching. GW-REC-019 failed: at stride 8,
+# lines denser than their image are padded far beyond the column cap the sampler enforced, and a
+# 64-line batch ran out of GPU memory (research/failures.md). Everything else is the control
+# GW-REC-003 (8-epoch short budget, seed 1337); batches differ from the control's wherever stride-8
+# padding makes a line wider than its image.
+inherits: gw-rec-003.yaml
+experiment_id: GW-REC-021
+
+data:
+  ctc_aware_batching: true
+
+model:
+  frame_stride: 8

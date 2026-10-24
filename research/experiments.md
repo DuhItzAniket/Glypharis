@@ -32,8 +32,9 @@ Rows link to a full entry below. Numbers are copied from generated reports only,
 | [GW-REC-016](#gw-rec-016) | 2026-10-23 | 07 | Phase 7 ablation: geometric augmentation only (short budget, vs GW-REC-003) | planned | — | `reports/training/GW-REC-016/` |
 | [GW-REC-017](#gw-rec-017) | 2026-10-23 | 07 | Phase 7 ablation: photometric augmentation only (short budget, vs GW-REC-003) | planned | — | `reports/training/GW-REC-017/` |
 | [GW-REC-018](#gw-rec-018) | 2026-10-23 | 07 | Phase 7 ablation: degradation augmentation only (short budget, vs GW-REC-003) | planned | — | `reports/training/GW-REC-018/` |
-| [GW-REC-019](#gw-rec-019) | 2026-10-23 | 07 | Phase 7 ablation: frame stride 8 (short budget, vs GW-REC-003) | planned | — | `reports/training/GW-REC-019/` |
+| [GW-REC-019](#gw-rec-019) | 2026-10-23 | 07 | Phase 7 ablation: frame stride 8 (short budget, vs GW-REC-003) | failed | out of GPU memory at step 1,444 (see failures.md); re-run as GW-REC-021 | `reports/training/GW-REC-019/` |
 | [GW-REC-020](#gw-rec-020) | 2026-10-23 | 07 | GLYPHARIS-Rec-M (SVTR-style) vs CRNN at matched budget (H6, exploratory) | planned | — | `reports/training/GW-REC-020/` |
+| [GW-REC-021](#gw-rec-021) | 2026-10-24 | 07 | Phase 7 ablation: frame stride 8 with CTC-aware batching (re-run of GW-REC-019; short budget, vs GW-REC-003) | planned | — | `reports/training/GW-REC-021/` |
 
 ### GW-BASE-001 — Tesseract 5 (LSTM, eng): recognition and end to end
 
@@ -529,7 +530,7 @@ Rows link to a full entry below. Numbers are copied from generated reports only,
 - **Method:** `python train.py --config configs/rec/gw-rec-019.yaml`; the control GW-REC-003 with `model.frame_stride: 8`. Compared line by line with GW-REC-003 and read against the spread of GW-REC-003, 004 and 005.
 - **Variables:** independent: frame stride (8 instead of 4); controlled: everything else
 - **Control:** GW-REC-003 (seed spread: GW-REC-004, 005)
-- **Result:**
+- **Result:** failed. Out of GPU memory at step 1,444 of epoch 1, three times at the same batch (64 lines padded to 3,264 columns); see `research/failures.md`. No result; re-run as GW-REC-021.
 - **Training diagnostics:**
 - **Interpretation:**
 - **Limitations:** single seed; short budget.
@@ -555,6 +556,25 @@ Rows link to a full entry below. Numbers are copied from generated reports only,
 - **Interpretation:**
 - **Limitations:** single seed; short budget; a transformer may need a longer schedule than a CRNN, so a short-budget loss for Rec-M is weaker evidence against H6 than a win would be for it.
 - **Next experiment:** if it is competitive, three seeds at the full budget
+- **Training time:**
+
+### GW-REC-021 — Phase 7 ablation: frame stride 8, CTC-aware batching (re-run of GW-REC-019)
+
+- **Date allocated / run:** 2026-10-24 / —
+- **Phase:** 07
+- **Git commit:** recorded in the run summary   **Config:** `configs/rec/gw-rec-021.yaml`   **Seed(s):** 1337 (single seed: exploratory)
+- **Dataset version(s):** as GW-REC-001
+- **Hardware:** as GW-REC-001
+- **Research question:** as GW-REC-019: what does halving the number of frames per line do to validation CER on the Phase 7 short budget?
+- **Hypothesis (written before the run):** as GW-REC-019: similar or slightly higher validation CER with a faster BiLSTM. Lines denser than 8 columns per character lose most; 3% of the training lines are, against 0.27% at stride 4.
+- **Method:** `python train.py --config configs/rec/gw-rec-021.yaml`; the control GW-REC-003 with `model.frame_stride: 8` and `data.ctc_aware_batching: true`, so the column cap bounds the padded batches. Compared line by line with GW-REC-003 and read against the spread of GW-REC-003, 004 and 005.
+- **Variables:** independent: frame stride (8 instead of 4); batching follows from it (only lines padded beyond their image change buckets); controlled: everything else
+- **Control:** GW-REC-003 (seed spread: GW-REC-004, 005)
+- **Result:**
+- **Training diagnostics:**
+- **Interpretation:**
+- **Limitations:** single seed; short budget; batches are not identical to the control's.
+- **Next experiment:** the Phase 7 combination and full-budget confirmation
 - **Training time:**
 
 ---
