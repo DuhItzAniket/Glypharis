@@ -12,7 +12,7 @@ Phases run in the order set by [ADR-0008](decisions/ADR-0008-usable-engine-first
 | 2 | Dataset acquisition | **COMPLETE** | `phase-02` |
 | 3 | Data audit | **COMPLETE** | `phase-03` |
 | 4 | Preprocessing, charset, GlyphSynth, GDC | **COMPLETE** | `phase-04` |
-| 5 | Baseline systems | **IN PROGRESS** | — |
+| 5 | Baseline systems | **COMPLETE** | `phase-05` |
 | 6 | Recognition baseline | **IN PROGRESS** (in parallel with 5, owner approved) | — |
 | 7 | Recognizer improvement | **IN PROGRESS** (in parallel with 5 and 6, owner approved 2026-10-23) | — |
 | 8 | Text detector | not started | — |
@@ -302,7 +302,7 @@ shots.
 
 ## Phase 05 — Baseline systems
 
-**Status:** write-up done (2026-10-25). Gate open: push, pull request, CI and merge.
+**Status:** COMPLETE (2026-10-25).
 
 **Objective:** scientific reference points before training anything.
 
@@ -365,7 +365,7 @@ owner on 2026-10-25. For v0.1 through ONNX Runtime on this laptop: line recognit
 | Baselines that could not be run documented with the reason | pass | coverage table in `reports/baselines/README.md`; `research/failures.md` |
 | CER, WER, NED, accuracy, mean and p95 latency, peak RAM, peak VRAM | pass (peak VRAM not applicable) | `recognition.md`, `efficiency.md` |
 | Test sets used only as logged | pass: every prediction and scoring access logged | `research/test_access_log.md` |
-| CI green | pending (after the push) | — |
+| CI green | pass | GitHub Actions runs 40130891767 (branch) and 40130913098 (pull request); `main` after the merge: run 40132573309 |
 
 **Known issues**
 - The profiling pass ran on the Windows Balanced power plan (recorded in `efficiency.md`); GLYPHARIS
@@ -376,7 +376,10 @@ owner on 2026-10-25. For v0.1 through ONNX Runtime on this laptop: line recognit
 - The PP-OCRv5 detectors and the v6 detectors run without oneDNN, which crashes on them here (speed
   only; outputs checked identical).
 
-**Git:** branch `phase/05-baselines`; push and merge pending.
+**Git:** branch `phase/05-baselines`, merged through pull request #5. Merge commit `cdc823c`, tag
+`phase-05` (merge re-created with the noreply identity; same tree and parents).
+
+**CI status:** green on the branch, the pull request and `main`.
 
 ---
 
