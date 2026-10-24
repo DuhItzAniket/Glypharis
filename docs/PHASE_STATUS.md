@@ -12,7 +12,7 @@ Phases run in the order set by [ADR-0008](decisions/ADR-0008-usable-engine-first
 | 2 | Dataset acquisition | **COMPLETE** | `phase-02` |
 | 3 | Data audit | **COMPLETE** | `phase-03` |
 | 4 | Preprocessing, charset, GlyphSynth, GDC | **COMPLETE** | `phase-04` |
-| 5 | Baseline systems | **IN PROGRESS** | — |
+| 5 | Baseline systems | **COMPLETE** | `phase-05` |
 | 6 | Recognition baseline | **IN PROGRESS** (in parallel with 5, owner approved) | — |
 | 7 | Recognizer improvement | not started | — |
 | 8 | Text detector | not started | — |
@@ -297,3 +297,151 @@ because the curved captures were off by up to a line height with the homography 
 sheet/photo agreement: median NCC 0.924, minimum 0.757. 200 of 8,606 lines (2.3 %) have an alignment
 score below 0.3 (box not trusted; text ground truth unaffected), mostly small figure text in distant
 shots.
+
+---
+
+## Phase 05 — Baseline systems
+
+**Status:** COMPLETE (2026-10-25).
+
+**Objective:** scientific reference points before training anything.
+
+**Implemented**
+- `.venv-baselines` (ADR-0006) with Tesseract 5 (UB Mannheim build), PaddleOCR 3.7 (PP-OCRv5 mobile
+  and server, PP-OCRv6 tiny, small and medium) and TrOCR-small-printed.
+- `scripts/run_baselines.py`: resumable prediction runs in the GLYPHARIS output schema, run metadata
+  written first, every test access logged before an image is read; `--profile` measures speed and
+  memory (batch 1, 10 warm-up and 100 timed samples, run conditions recorded).
+- `scripts/build_eval_crops.py`: evaluation line packs that keep lines with characters outside the
+  GLYPHARIS charset (the charset ceiling is reported next to every result).
+- `scripts/evaluate_baselines.py`: scores everything with `glypharis.eval`, the code that will score
+  GLYPHARIS; both normalisation tracks, bootstrap CIs, one table per comparison type, GDC's vertical
+  lines on their own, and the coverage of the planned run matrix.
+- `scripts/baseline_diagnostics.py`: validation-only diagnostics behind three results.
+- Seven baselines registered before running and run: GW-BASE-001 to GW-BASE-007.
+
+**Results** (strict track; from `reports/baselines/`, where every number has its CI and ID)
+
+| ID | System | HierText val lines, CER % | GDC test lines, CER % | HierText val pages, E2E F1 % | ms per line | ms per page |
+|---|---|---|---|---|---|---|
+| GW-BASE-001 | Tesseract 5 | 24.35 | 6.42 | 12.65 | 141.8 | 430.8 |
+| GW-BASE-002 | PP-OCRv5 mobile | 9.27 | 3.68 | 38.75 | 61.4 | 3,408.2 |
+| GW-BASE-003 | PP-OCRv5 server | 14.65 | 11.24 | not run | 2,266.7 | 80,861.6 |
+| GW-BASE-004 | TrOCR-small-printed | 62.58 (19.14 normalised) | 72.34 (13.07 normalised) | no detector | 133.3 | — |
+| GW-BASE-005 | PP-OCRv6 tiny | 11.10 | 4.00 | 38.69 | 21.6 | 1,726.6 |
+| GW-BASE-006 | PP-OCRv6 small | 7.53 | 3.46 | 45.68 | 46.0 | 3,714.2 |
+| GW-BASE-007 | PP-OCRv6 medium | 7.54 | 3.20 | not run | 552.5 | 32,528.5 |
+
+- PP-OCRv6 small is the most accurate full-scope system on every set. PP-OCRv6 medium (PaddleOCR's
+  English default) matches it on HierText lines at about twelve times the line time.
+- Every system is weak on HierText pages, mostly from detection: the best recall at IoU 0.5 is
+  50.67% (GW-BASE-006). Tesseract finds about one HierText line in ten.
+- On GDC, Tesseract has the best reading order (order-aware page CER 31.90% against 42.86–44.74%
+  for the PaddleOCR pipelines, which return lines in detection order).
+- PP-OCRv6 medium and PP-OCRv5 server are impractical on a laptop CPU: 32.5 s and 80.9 s per page.
+- Three results are explained by `reports/baselines/diagnostics.md`: PP-OCRv5 server drops word
+  gaps (WER three to four times its CER), PP-OCRv5 mobile cuts long lines short (its GlyphSynth CER),
+  and TrOCR-small-printed writes capitals (its strict-track CER).
+
+**Not run (documented with the reason):** PP-OCRv5 server and PP-OCRv6 medium ran at a reduced
+scope registered before the runs (about 1–3 s per line on this CPU); the PP-OCRv5 server GDC page run
+is not runnable on the laptop (`research/failures.md`, 2026-10-24); TrOCR has no detector. Peak VRAM
+is not applicable: no baseline uses a GPU.
+
+**CPU latency target (ADR-0008):** set in ADR-0011 from these measurements and accepted by the
+owner on 2026-10-25. For v0.1 through ONNX Runtime on this laptop: line recognition mean at most
+25 ms (p95 70 ms), pages mean at most 1.5 s (p95 2.7 s), peak RAM on pages below PP-OCRv6 tiny's
+1,836 MiB.
+
+**Tests:** 264 passed locally (CPU; the 4 GPU tests were deselected while the GPU was training).
+
+**Exit criteria**
+
+| Criterion | Result | Evidence |
+|---|---|---|
+| One table per comparison type in `reports/baselines/` | pass: recognition, detection and end to end, plus efficiency | `reports/baselines/*.md` |
+| Normalisation track stated | pass: strict and normalised tables; detection does not depend on the track | same |
+| Every number traceable to a `GW-BASE-NNN` ID | pass: every row carries its ID; every number is in `results.json` | `reports/baselines/results.json` |
+| Baselines that could not be run documented with the reason | pass | coverage table in `reports/baselines/README.md`; `research/failures.md` |
+| CER, WER, NED, accuracy, mean and p95 latency, peak RAM, peak VRAM | pass (peak VRAM not applicable) | `recognition.md`, `efficiency.md` |
+| Test sets used only as logged | pass: every prediction and scoring access logged | `research/test_access_log.md` |
+| CI green | pass | GitHub Actions runs 40130891767 (branch) and 40130913098 (pull request); `main` after the merge: run 40132573309 |
+
+**Known issues**
+- The profiling pass ran on the Windows Balanced power plan (recorded in `efficiency.md`); GLYPHARIS
+  must be timed the same way.
+- On its largest pages PP-OCRv5 server needed more memory than the laptop had free, so some of its
+  page times include paging to disk. Windows was also holding an unusually large amount of kernel
+  memory during the pass (a leak whose cause was not found), which left less RAM free.
+- The PP-OCRv5 detectors and the v6 detectors run without oneDNN, which crashes on them here (speed
+  only; outputs checked identical).
+
+**Git:** branch `phase/05-baselines`, merged through pull request #5. Merge commit `cdc823c`, tag
+`phase-05` (merge re-created with the noreply identity; same tree and parents).
+
+**CI status:** green on the branch, the pull request and `main`.
+
+---
+
+## Phase 06 — Recognition baseline (GLYPHARIS-Rec, CRNN)
+
+**Status:** IN PROGRESS. Run in parallel with Phase 5 (owner approved, 2026-10-22). Gate steps 1 to 7
+are done locally. Push, CI and merge wait for the owner and for Phase 5: this branch is stacked on an
+earlier state of `phase/05-baselines`, so Phase 5 merges first.
+
+**Objective:** a first stable recognizer with a fully instrumented training loop.
+
+**Implemented**
+- `glypharis.models.rec.crnn`: CNN → 2-layer BiLSTM → linear → CTC (ARCHITECTURE §4); 7,796,435
+  parameters, 29.8 MiB of weights and buffers. The BiLSTM reads each line only up to its own end
+  (packed sequences), and its layers run as separate single-layer BiLSTMs with ordinary dropout
+  between them (EXPERIMENT_PROTOCOL §11, 2026-10-23).
+- `glypharis.training.rec_trainer`: bf16 autocast with CTC in fp32, gradient accumulation and
+  clipping, OneCycle and cosine schedules, a width-bucketed sampler with a cap on columns per batch,
+  and augmentation that depends only on seed, epoch and index. Checkpoints (`best.pt`, `last.pt`,
+  `epoch_XXX.pt`, mid-epoch `last.pt`) carry model, optimizer, scheduler and scaler state, position,
+  history, config, git hash and every RNG state, so a run resumes exactly. `best.pt` holds the lowest
+  validation CER; `min_delta` only drives early stopping.
+- `glypharis.diagnostics`: overfitting (revised rule, §11), underfitting, blank and prediction
+  collapse, gradient explosion and vanishing. Hard stops on a non-finite loss or gradient, with the
+  state and batch keys saved; an OOM record; and the train/validation leakage assertion.
+- `glypharis.training.report`: curves, best vs final epoch, flags, bootstrap CI, worst lines and
+  notes, built only from what the run leaves on disk.
+- `train.py` (exit codes 0 / 2 non-finite / 3 out of memory). Scripts: `rec_sanity.py` (overfit 64
+  lines, LR range test, 10-minute dry run), `rec_resume_check.py`, `rec_reselect.py`,
+  `rec_report.py`, `rec_compare.py`.
+
+**Descoped / moved (documented):** on out-of-memory, the plan's "halve the batch" option is not
+implemented. The run takes the other permitted path: it saves `oom.pt`, writes the report and exits
+with 3.
+
+**Tests:** 293 passed locally (CPU and GPU-marked). With Phase 5 merged in, 290 CPU tests pass; the 7
+GPU tests were deselected while the GPU was training a Phase 7 run.
+
+**Exit criteria**
+
+| Criterion | Result | Evidence |
+|---|---|---|
+| All sanity checks pass and are recorded | pass: overfit 64 lines to 0.39% CER (target ≤ 1%); LR range test, configured 1e-3 within 3x of the suggestion; 10-minute dry run, peak VRAM 3825.5 MiB, loss finite | `reports/training/sanity/GW-REC-001/sanity.md` |
+| Resume test: kill at step N, resume, metrics match an uninterrupted run within tolerance | pass. CPU: identical (unit test). CUDA: first step after the resume identical, learning rates identical, drift 1.51e-2 against 2.90e-2 between two uninterrupted runs. The first CUDA attempt failed a tolerance that CUDA cannot meet; that result stays recorded | `reports/training/sanity/GW-REC-001/resume_check.json`, `sanity.md`; EXPERIMENT_PROTOCOL §11 |
+| First full run finishes without NaN | pass | `reports/training/GW-REC-001/report.md` |
+| Run report generated automatically | pass | `reports/training/GW-REC-001/`, `GW-REC-002/` |
+| Validation CER with a bootstrap CI | pass: GW-REC-001 7.53% [7.38, 7.69]; GW-REC-002 7.49% [7.34, 7.64] | run reports; `reports/training/compare/GW-REC-002_vs_GW-REC-001.md` |
+| Parameters, model size and training time recorded | pass: 7,796,435 parameters, 29.8 MiB; 4.71 and 5.32 GPU-hours | run reports |
+| CI green, with a tiny CPU training smoke test | pending the push | `test_training_smoke_writes_metrics_checkpoints_and_summary` |
+
+**Known issues**
+- Two CUDA runs of one config drift apart because CTC backward has no deterministic kernel. Two
+  uninterrupted runs differed by up to 2.90% in per-step loss over 400 steps.
+- GW-REC-002's `best.pt` was re-selected (epoch 24 → 27) and its config hash corrected after the
+  run. Both are recorded in its report's notes and in §11.
+- GW-REC-001 and GW-REC-002 aborted at exit (0xC0000409) after writing their outputs. The cause is
+  fixed in `c58c063`, and the results are unaffected.
+- On this laptop `CUDA_VISIBLE_DEVICES=` (empty) does not hide the GPU, and `-1` crashes torch a few
+  seconds later; the Phase 8 build found this. GPU-free test runs need another way to keep the GPU
+  out.
+- HierText annotation noise shows up in the worst-line tables. It is recorded, not corrected, and
+  left for Phase 7's error analysis to count.
+
+**Git:** branch `phase/06-rec-baseline`, with Phase 5 merged in. Its pull request is based on
+`phase/05-baselines` until Phase 5 merges, then on `main`.

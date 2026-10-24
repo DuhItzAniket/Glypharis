@@ -104,3 +104,51 @@ the bottom. Experiments get their full record in `experiments.md`; this log is t
   aligned photo) detects such shifts; a test now checks that it does.
 - GDC v1 frozen with 106 pages and 8,606 lines. The real-scan slice becomes a separate set (GDC-scan),
   so the frozen set does not wait on it.
+
+### 2026-10-23 — Phase 6: the recognizer baseline
+
+- GW-REC-001 (the CRNN on HierText lines) reached a validation CER of 7.53% [7.38, 7.69] after 30
+  epochs, with the best epoch the last one. GW-REC-002 added 35,000 GlyphSynth lines: 7.49%
+  [7.34, 7.64], paired −0.05 points [−0.09, −0.01]. That is one seed per arm and not budget-matched,
+  so it says nothing yet about the synthetic data (F2).
+- The sanity sequence caught two bugs before the full run. The BiLSTM read the right padding of
+  shorter lines (fixed with packed sequences), and unbounded batch widths fragmented the 6 GB of VRAM
+  (fixed with a cap on the columns per batch).
+- The first overfitting rule flagged GW-REC-001 eight times while its CER improved every epoch: a
+  CTC model's validation loss creeps up as it grows confident (F1). The rule now also needs CER to
+  stall.
+- `best.pt` was chosen with early stopping's `min_delta`, so improvements smaller than 0.001 CER
+  never became the best. GW-REC-002 had kept epoch 24 (7.58%) over epoch 27 (7.49%). It was
+  re-selected from its own records, and the trainer now keeps the lowest CER outright.
+- Every GPU training process aborted at exit (0xC0000409, which Git Bash shows as 127). Tiny probe
+  scripts traced it to cuDNN's built-in LSTM dropout, whose cached state is freed after the CUDA
+  driver has gone. That same state lives outside PyTorch's random generators, so a resumed CUDA run
+  drew different dropout masks. The two LSTM layers now run separately with ordinary dropout, and
+  both trained models re-score to exactly the same CER.
+- The first GPU resume check failed by design. It asked two CUDA runs to agree to 1e-4 over 400
+  steps, which nondeterministic CTC backward rules out: two uninterrupted runs differed by up to
+  2.90%. The redesigned check passes. The first step after the resume matches exactly, and the
+  resumed run drifts less than two uninterrupted runs do (1.51% against 2.90%).
+- The Phase 8 code review found that a NaN gradient with a finite loss got through every check in
+  the recognizer trainer, because bf16 has no gradient scaler to skip it. The trainer now stops
+  before the weights change.
+
+### 2026-10-25 — Phase 5: baselines
+
+- Seven baselines on our evaluation sets and metrics (`reports/baselines/`). PP-OCRv6 small is the
+  most accurate full-scope system; PaddleOCR's English default (PP-OCRv6 medium) matches it on
+  HierText lines at about twelve times the CPU time per line.
+- HierText pages are hard for every system, mostly because detection misses lines; Tesseract's page
+  analysis finds about one line in ten. On GDC, Tesseract still has the best reading order, since the
+  PaddleOCR pipelines return lines in detection order.
+- Three surprising numbers were checked on validation predictions before being written up
+  (`scripts/baseline_diagnostics.py`): PP-OCRv5 server drops word gaps, PP-OCRv5 mobile cuts long
+  lines short, and TrOCR-small-printed writes capitals. None of them is a scoring bug.
+- PP-OCRv5 server could not run the GDC pages on the 16 GB laptop (two attempts, both dead on the
+  first page) and takes 81 s per HierText page; recorded as a deployment finding, not retried with
+  a non-default configuration.
+- The scorer showed the failed run as "0 of 106" because the attempts had left an empty prediction
+  file; fixed so a file with no predictions is skipped and the coverage table gives the reason.
+- Set a CPU latency target for v0.1 from the measured speeds (ADR-0011, accepted by the owner),
+  anchored on PP-OCRv6 tiny, the fastest modern pipeline; Tesseract is faster on pages but finds too
+  few HierText lines to be the bar.

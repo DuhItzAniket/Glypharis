@@ -131,6 +131,8 @@ def write_report(run_dir: Path, report_dir: Path, images: dict[str, Any] | None 
         return f"| {name} | " + " | ".join(str(c) for c in cells) + " |"
 
     git = summary.get("git") or {}
+    size = (f" ({summary['model_bytes'] / 2**20:.1f} MiB of weights and buffers)"
+            if "model_bytes" in summary else "")  # fmt: skip
     device = summary.get("gpu") or "CPU"
     time_note = f"{hours:.2f} GPU-hours" if summary.get("gpu") else "CPU"
     data = "; ".join(f"`{k}` {v['count']:,} lines, sha256 {v['bin_sha256'][:12]}"
@@ -146,7 +148,7 @@ def write_report(run_dir: Path, report_dir: Path, images: dict[str, Any] | None 
         f"(dirty: {git.get('dirty')})",
         f"- Device {summary['device']} ({device}), precision {summary['precision']}, "
         f"torch {summary['torch']}",
-        f"- Parameters {summary['parameters']:,}; {summary['train_lines']:,} training lines, "
+        f"- Parameters {summary['parameters']:,}{size}; {summary['train_lines']:,} training lines, "
         f"{summary['val_lines']:,} validation lines",
         f"- Epochs run {summary['epochs_run']}, optimizer steps {summary['steps']:,}, stopped "
         f"early: {summary['stopped_early']}; training time {hours:.2f} h ({time_note})",

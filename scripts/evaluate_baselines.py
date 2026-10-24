@@ -47,7 +47,14 @@ THREAD_KEYS = ("cpu_threads", "torch_threads", "OMP_THREAD_LIMIT")
 
 _REC_SETS = ("hiertext_val", "glyphsynth_val", "hiertext_test", "gdc_test")
 _PAGE_SETS = ("hiertext_val", "hiertext_test", "gdc_test")
-_SLOW = "not run: the recognizer needs about 1-3 s per line on this CPU"
+_SLOW = (
+    "not run: on this CPU the recognizer needs about 1 s (PP-OCRv6 medium) to 3 s "
+    "(PP-OCRv5 server) per long line"
+)
+LEGACY_NOTE = (
+    " (settings as recorded by the first runner, which did not tell recognition and "
+    "page runs apart)"
+)
 _FULL = ("tesseract", "ppocr_mobile", "ppocr6_tiny", "ppocr6_small")
 _REDUCED = ("ppocr_server", "ppocr6_medium")
 # (system, task, eval set) -> None when planned, or the reason it is not run.
@@ -59,6 +66,10 @@ PLAN: dict[tuple[str, str, str], str | None] = {
     **{(s, "e2e", "gdc_test"): None for s in _REDUCED},
     **{(s, "rec", e): _SLOW for s in _REDUCED for e in ("glyphsynth_val", "hiertext_test")},
     **{(s, "e2e", e): _SLOW for s in _REDUCED for e in ("hiertext_val", "hiertext_test")},
+    ("ppocr_server", "e2e", "gdc_test"): (
+        "not runnable on this laptop: both attempts died on the first page, most likely for "
+        "lack of memory (research/failures.md, 2026-10-24)"
+    ),
 }
 
 
@@ -86,8 +97,18 @@ class Context:
 
 
 def read_records(path: Path) -> list[dict[str, Any]]:
-    with path.open(encoding="utf-8") as fh:
-        return [json.loads(line) for line in fh if line.strip()]
+    """Records of a prediction file. A last line cut off by a killed run is left out (the runner
+    removes it when the run resumes); a broken line anywhere else is an error."""
+    lines = [ln for ln in path.read_bytes().splitlines() if ln.strip()]
+    out = []
+    for i, line in enumerate(lines):
+        try:
+            out.append(json.loads(line.decode("utf-8")))
+        except (UnicodeDecodeError, json.JSONDecodeError):
+            if i != len(lines) - 1:
+                raise
+            print(f"{path.name}: ignored a last record cut off by an interrupted run")
+    return out
 
 
 def check_keys(records: list[dict[str, Any]], expected: list[str], name: str) -> None:
@@ -101,6 +122,11 @@ def check_keys(records: list[dict[str, Any]], expected: list[str], name: str) ->
 
 def ci_dict(iv: Interval) -> dict[str, Any]:
     return {"value": iv.value, "low": iv.low, "high": iv.high, "unit": iv.unit}
+
+
+def ci(num: np.ndarray, den: np.ndarray, unit: str) -> dict[str, Any] | None:
+    """Ratio with its bootstrap CI, or None (shown as n/a) when there is nothing to divide by."""
+    return ci_dict(ratio_ci(num, den, unit)) if float(np.sum(den)) > 0 else None
 
 
 def ceiling(texts: list[str], allowed: frozenset[str], track: Track) -> float:
@@ -122,8 +148,8 @@ def score_rec(
     return {
         "samples": s.samples,
         "empty_references": s.empty_references,
-        "cer": ci_dict(ratio_ci(errs, chars, "lines")),
-        "wer": ci_dict(ratio_ci(werrs, words, "lines")),
+        "cer": ci(errs, chars, "lines"),
+        "wer": ci(werrs, words, "lines"),
         "ned": s.ned,
         "sequence_accuracy": s.sequence_accuracy,
         "charset_ceiling": ceiling([r["ref"] for r in records], allowed, track),
@@ -143,9 +169,9 @@ def score_det(results: list[PageResult]) -> dict[str, Any]:
     for thr in (0.5, 0.7):
         tp, fp, fn = (_arr(results, lambda r, i=i, t=thr: r.det[t][i]) for i in range(3))
         out[f"iou_{thr}"] = {
-            "precision": ci_dict(ratio_ci(tp, tp + fp, "pages")),
-            "recall": ci_dict(ratio_ci(tp, tp + fn, "pages")),
-            "f1": ci_dict(ratio_ci(2 * tp, 2 * tp + fp + fn, "pages")),
+            "precision": ci(tp, tp + fp, "pages"),
+            "recall": ci(tp, tp + fn, "pages"),
+            "f1": ci(2 * tp, 2 * tp + fp + fn, "pages"),
         }
     tp05 = sum(r.det[0.5][0] for r in results)
     out["mean_matched_iou"] = sum(r.matched_iou_sum for r in results) / tp05 if tp05 else 0.0
@@ -158,32 +184,64 @@ def score_e2e(results: list[PageResult], reading_order: bool) -> dict[str, Any]:
     out: dict[str, Any] = {
         "pages": len(results),
         "order_aware_reported": reading_order,
-        "page_cer_bag_of_lines": ci_dict(ratio_ci(_arr(results, lambda r: r.bag_errors),
-                                                  _arr(results, lambda r: r.bag_ref_chars),
-                                                  "pages")),
-        "e2e_f1": ci_dict(ratio_ci(2 * e2e_tp, _arr(results, lambda r: r.e2e_pred + r.e2e_gt),
-                                   "pages")),
+        "page_cer_bag_of_lines": ci(_arr(results, lambda r: r.bag_errors),
+                                    _arr(results, lambda r: r.bag_ref_chars), "pages"),
+        "e2e_f1": ci(2 * e2e_tp, _arr(results, lambda r: r.e2e_pred + r.e2e_gt), "pages"),
     }  # fmt: skip
     if reading_order:
-        out["page_cer_order_aware"] = ci_dict(ratio_ci(
-            _arr(results, lambda r: r.aware_errors), _arr(results, lambda r: r.aware_ref_chars),
-            "pages"))  # fmt: skip
-        out["page_wer_order_aware"] = ci_dict(ratio_ci(
+        out["page_cer_order_aware"] = ci(
+            _arr(results, lambda r: r.aware_errors),
+            _arr(results, lambda r: r.aware_ref_chars),
+            "pages",
+        )
+        out["page_wer_order_aware"] = ci(
             _arr(results, lambda r: r.aware_word_errors),
-            _arr(results, lambda r: r.aware_ref_words), "pages"))  # fmt: skip
+            _arr(results, lambda r: r.aware_ref_words),
+            "pages",
+        )
     return out
+
+
+def score_vertical(results: list[PageResult]) -> dict[str, Any]:
+    """GDC vertical lines: recall, and the CER of those lines found or missed. Precision and
+    insertions are left out: every spurious prediction on the page would count against them."""
+    tp, fn = _arr(results, lambda r: r.det[0.5][0]), _arr(results, lambda r: r.det[0.5][2])
+    errors = _arr(results, lambda r: r.bag_errors - r.bag_insert_chars)
+    return {"lines": int(tp.sum() + fn.sum()), "recall": ci(tp, tp + fn, "pages"),
+            "cer": ci(errors, _arr(results, lambda r: r.bag_ref_chars), "pages")}  # fmt: skip
+
+
+def _no_meta_entry(path: Path) -> dict[str, Any] | None:
+    """Coverage entry for predictions whose run never wrote metadata (killed before it could)."""
+    for task in ("rec", "e2e"):
+        system, sep, eval_set = path.stem.partition(f"_{task}_")
+        if sep and system in SYSTEM_NAMES and eval_set in EVAL_SETS:
+            return {
+                "experiment": path.parent.name,
+                "system": system,
+                "task": task,
+                "eval_set": eval_set,
+                "samples": len(read_records(path)),
+                "no_meta": True,
+            }
+    return None
 
 
 def evaluate_file(path: Path, ctx: Context) -> dict[str, Any] | None:
     meta_path = path.with_suffix(".meta.json")
     if not meta_path.exists():
-        print(f"skipped {path.parent.name}/{path.name}: no run metadata (interrupted before the "
-              "runner wrote it); it is completed and described by the next run")  # fmt: skip
-        return None
+        print(
+            f"not scored {path.parent.name}/{path.name}: no run metadata (killed before the "
+            "runner wrote it); the next run of it completes it and writes the metadata"
+        )
+        return _no_meta_entry(path)
     meta = json.loads(meta_path.read_text(encoding="utf-8"))
     task, eval_set, system = meta["task"], meta["eval_set"], meta["system"]
     spec = EVAL_SETS[eval_set]
     records = read_records(path)
+    if not records:  # a run that died before its first sample: nothing to score
+        print(f"not scored {path.parent.name}/{path.name}: no predictions")
+        return None
     expected = ctx.keys(eval_set, task)
     check_keys(records, expected, f"{path.parent.name}/{path.name}")
     open_test_access(spec["benchmark"], spec["split"], meta["experiment"],
@@ -200,12 +258,15 @@ def evaluate_file(path: Path, ctx: Context) -> dict[str, Any] | None:
         "samples": len(records),
         "expected": len(expected),
         "runs": len(meta.get("runs", [])),
+        "legacy_meta": "expected" not in meta,
     }
     if task == "rec":
         entry["tracks"] = {t: score_rec(records, t, ctx.allowed[t]) for t in TRACKS}
         return entry
     pages = ctx.pages(eval_set)
     scored = [pages[r["key"]] for r in records]
+    # Ceiling over every reference text line (the order-aware reference; it covers the bag-of-lines
+    # reference, which leaves out GDC lines with an untrusted box).
     ref_texts = [ln.text for p in scored for ln in p.lines if is_text_line(ln)]
     entry["tracks"] = {}
     for t in TRACKS:
@@ -216,10 +277,19 @@ def evaluate_file(path: Path, ctx: Context) -> dict[str, Any] | None:
         entry["tracks"][t]["charset_ceiling"] = ceiling(ref_texts, ctx.allowed[t], t)
     if eval_set == "gdc_test":
         entry["vertical"] = {}
+        vrefs = [
+            ln.text
+            for p in scored
+            for ln in p.lines
+            if ln.vertical and ln.legible and not ln.handwritten and ln.text.strip()
+        ]
         for t in TRACKS:
             vres = [evaluate_page(vertical_view(pages[r["key"]]), _preds(r), track=t)
                     for r in records]  # fmt: skip
-            entry["vertical"][t] = {**score_e2e(vres, False), "detection": score_det(vres)}
+            entry["vertical"][t] = {
+                **score_vertical(vres),
+                "charset_ceiling": ceiling(vrefs, ctx.allowed[t], t),
+            }
     return entry
 
 
@@ -249,6 +319,7 @@ def read_profile(path: Path) -> dict[str, Any]:
         "cpu_busy_before": cond.get("cpu_busy_percent_before"),
         "cpu_busy_after": p.get("cpu_busy_percent_after"),
         "cpu": cond.get("cpu"),
+        "model_mib": p.get("model_mib"),
     }
 
 
@@ -279,8 +350,9 @@ def _table(header: list[str], rows: list[list[str]]) -> list[str]:
 def render(entries: list[dict[str, Any]], profiles: list[dict[str, Any]]) -> dict[str, str]:
     order = {s: i for i, s in enumerate(EVAL_SETS)}
     entries = sorted(entries, key=lambda e: (order[e["eval_set"]], e["experiment"]))
-    rec = [e for e in entries if e["task"] == "rec"]
-    e2e = [e for e in entries if e["task"] == "e2e"]
+    scored = [e for e in entries if not e.get("no_meta")]
+    rec = [e for e in scored if e["task"] == "rec"]
+    e2e = [e for e in scored if e["task"] == "e2e"]
     out: dict[str, str] = {}
 
     lines = [
@@ -355,21 +427,21 @@ def render(entries: list[dict[str, Any]], profiles: list[dict[str, Any]]) -> dic
             "## GDC vertical lines",
             "",
             "Rotated lines (margin stamps, axis titles) are left out of the tables above and",
-            "scored here on their own (EXPERIMENT_PROTOCOL §3); every other line counts as don't",
-            "care.",
+            "scored here on their own (EXPERIMENT_PROTOCOL §3). Only measures about these lines",
+            "are shown: recall at IoU 0.5, and the CER of the vertical lines found or missed",
+            "(a missed line counts all its characters). Precision and insertions are left out,",
+            "because any spurious prediction on the page would count against these few lines.",
             "",
         ]
-        head = ["ID", "System", "Lines", "Recall @0.5 %", "Precision @0.5 %",
-                "CER % bag (strict)", "CER % bag (normalised)", "E2E F1 % (strict)"]  # fmt: skip
+        head = ["ID", "System", "Lines", "Recall @0.5 %", "CER % (strict)", "CER % (normalised)",
+                "Charset ceiling %"]  # fmt: skip
         rows = []
         for e in vert:
-            v, d = e["vertical"], e["vertical"]["strict"]["detection"]
+            v = e["vertical"]
             rows.append([e["experiment"], SYSTEM_NAMES.get(e["system"], e["system"]),
-                         str(d["gt_lines"]), pct(d["iou_0.5"]["recall"]),
-                         pct(d["iou_0.5"]["precision"]),
-                         pct(v["strict"]["page_cer_bag_of_lines"]),
-                         pct(v["normalised"]["page_cer_bag_of_lines"]),
-                         pct(v["strict"]["e2e_f1"])])  # fmt: skip
+                         str(v["strict"]["lines"]), pct(v["strict"]["recall"]),
+                         pct(v["strict"]["cer"]), pct(v["normalised"]["cer"]),
+                         f"{100 * v['strict']['charset_ceiling']:.2f}"])  # fmt: skip
         lines += [*_table(head, rows), ""]
     out["end_to_end.md"] = "\n".join(lines)
     out["efficiency.md"] = render_efficiency(profiles)
@@ -383,25 +455,30 @@ def render_efficiency(profiles: list[dict[str, Any]]) -> str:
         "",
         f"{NOTE} Measured by `scripts/run_baselines.py --profile`, separately from the long",
         "prediction runs: one sample at a time (batch 1), the first 10 samples discarded as",
-        "warm-up, then 100 timed (EXPERIMENT_PROTOCOL §3), on validation data, CPU only, fp32.",
-        "Peak memory is the peak working set of the Python process plus that of any engine it",
-        "starts (tesseract.exe). Peak VRAM: not applicable, no baseline uses a GPU.",
+        "warm-up, then 100 timed (EXPERIMENT_PROTOCOL §3), on validation data, CPU only, each",
+        "system at the precision it ships (PaddleOCR and TrOCR fp32; Tesseract's fast English",
+        "model uses 8-bit integer weights). Peak memory is the peak working set of the Python",
+        "process plus the peak of any engine it starts (tesseract.exe); the two peaks need not",
+        "coincide, so for Tesseract it is an upper bound. It includes the harness (Python, NumPy,",
+        "the data reader). Model size is the system's model files on disk. Peak VRAM: not",
+        "applicable, no baseline uses a GPU.",
         "",
     ]
     if not profiles:
         return "\n".join([*lines, "No profiling runs yet.", ""])
     head = ["ID", "System", "Task", "Set", "Timed", "ms mean", "ms p95", "Items/s",
-            "Peak RAM MiB", "Median input (w x h)", "Threads", "On AC",
+            "Peak RAM MiB", "Model MiB", "Median input (w x h)", "Threads", "On AC",
             "CPU busy % before/after"]  # fmt: skip
     rows = []
     for p in sorted(profiles, key=lambda p: (p["task"], p["eval_set"], p["experiment"])):
         size = "x".join(map(str, p["median_input"])) if p["median_input"] else "-"
         threads = ", ".join(f"{k}={v}" for k, v in p["threads"].items()) or "-"
-        busy = f"{p['cpu_busy_before']:.0f} / {p['cpu_busy_after']:.0f}"
+        busy = f"{p['cpu_busy_before']} / {p['cpu_busy_after']}"
+        model = f"{p['model_mib']:,.1f}" if p.get("model_mib") is not None else "-"
         rows.append([p["experiment"], SYSTEM_NAMES.get(p["system"], p["system"]), p["task"],
                      p["eval_set"], str(p["timed"]), f"{p['mean_ms']:,.1f}",
                      f"{p['p95_ms']:,.1f}", f"{p['throughput_per_s']:.2f}",
-                     f"{p['peak_mem_mib']:,.0f}", size, threads, str(p["on_ac_power"]),
+                     f"{p['peak_mem_mib']:,.0f}", model, size, threads, str(p["on_ac_power"]),
                      busy])  # fmt: skip
     lines += [*_table(head, rows), ""]
     tess = [p for p in profiles if p.get("invocation_overhead_ms") is not None]
@@ -431,8 +508,11 @@ def render_summary(entries: list[dict[str, Any]], profiles: list[dict[str, Any]]
         if e.get("settings") is None:
             continue
         settings = ", ".join(f"{k}={v}" for k, v in e["settings"].items())
-        lines.append(f"- **{e['experiment']} {SYSTEM_NAMES.get(e['system'], e['system'])}**, "
-                     f"{e['task']} on {e['eval_set']}: {e['version']}. {settings}.")  # fmt: skip
+        legacy = LEGACY_NOTE if e.get("legacy_meta") else ""
+        lines.append(
+            f"- **{e['experiment']} {SYSTEM_NAMES.get(e['system'], e['system'])}**, "
+            f"{e['task']} on {e['eval_set']}: {e['version']}. {settings}.{legacy}"
+        )
     lines += [
         "",
         "## Coverage",
@@ -440,7 +520,7 @@ def render_summary(entries: list[dict[str, Any]], profiles: list[dict[str, Any]]
         "HierText validation uses seeded subsamples (10,000 line crops, 400 pages); GlyphSynth",
         "validation (10,000 lines) and both test sets are used in full. Recognition sets keep",
         "lines with characters outside the GLYPHARIS charset. A count below the expected one",
-        "means the run is still in progress.",
+        "means the run is still in progress or was interrupted.",
         "",
     ]
     have = {(e["system"], e["task"], e["eval_set"]): e for e in entries}
@@ -449,7 +529,9 @@ def render_summary(entries: list[dict[str, Any]], profiles: list[dict[str, Any]]
     for key, reason in sorted(PLAN.items(), key=lambda kv: (EXPERIMENTS[kv[0][0]], kv[0][1:])):
         system, task, eval_set = key
         found = have.get(key)
-        if found is not None:
+        if found is not None and found.get("no_meta"):
+            status = f"{found['samples']:,} predicted, no run metadata yet"
+        elif found is not None:
             status = f"{found['samples']:,} of {found['expected']:,}"
         elif reason is not None:
             status = reason

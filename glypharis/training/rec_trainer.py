@@ -25,9 +25,9 @@ import math
 import time
 from collections import Counter
 from collections.abc import Callable, Iterable
-from dataclasses import asdict, dataclass, field
+from dataclasses import asdict, dataclass, field, replace
 from pathlib import Path
-from typing import Any
+from typing import Any, NoReturn
 
 import numpy as np
 import torch
@@ -259,6 +259,17 @@ def config_matches(saved: dict[str, Any], cfg: RunConfig) -> bool:
     return saved == now
 
 
+def model_bytes(state: dict[str, torch.Tensor]) -> int:
+    """Size of a model's weights and buffers as stored (fp32 for the recognizer)."""
+    return sum(t.numel() * t.element_size() for t in state.values())
+
+
+def run_config_hash(cfg: RunConfig) -> str:
+    """The run's config hash. The resume pointer says how a run was continued, not what it is,
+    so a resumed run reports the same hash as at its start."""
+    return config_hash(replace(cfg, checkpoint=replace(cfg.checkpoint, resume=None)))
+
+
 class RecTrainer:
     def __init__(
         self,
@@ -361,7 +372,7 @@ class RecTrainer:
             "gradmon": self.gradmon.state_dict(),
             "metric": metric,
             "config": config_to_dict(self.cfg),
-            "config_hash": config_hash(self.cfg),
+            "config_hash": run_config_hash(self.cfg),
             "git": self.git.to_dict(),
             "charset": self.charset.characters,
             "rng": rng_state(),
@@ -409,26 +420,40 @@ class RecTrainer:
         self.state.train_seconds += now - self._clock
         self._clock = now
 
-    def _optimizer_step(self) -> float:
+    def _optimizer_step(self, keys: list[str]) -> float:
+        """Clip and apply the accumulated gradients of the batches ``keys``; returns the norm
+        before clipping.
+
+        A finite loss can still back-propagate to an inf or NaN gradient (a bf16 overflow, a 0/0 in
+        a backward). Stepping on it would turn every weight into NaN with no flag, and the next
+        batch's loss would take the blame. The fp16 scaler skips such a step by itself; without it
+        the run stops here with the weights untouched (or skips the step if stop_on_nan is off).
+        """
         if self.amp.needs_grad_scaler:
             self.scaler.unscale_(self.optimizer)
         clip = self.cfg.train.grad_clip_norm
         norm = float(nn.utils.clip_grad_norm_(self.model.parameters(),
                                               clip if clip is not None else math.inf))  # fmt: skip
-        self.scaler.step(self.optimizer)
-        self.scaler.update()
+        if math.isfinite(norm) or self.amp.needs_grad_scaler:
+            self.scaler.step(self.optimizer)
+            self.scaler.update()
+        elif self.cfg.diagnostics.stop_on_nan:
+            self._non_finite(keys, "grad_norm", norm)
+        else:
+            self._log({"type": "nonfinite_grad_skipped", "epoch": self.state.epoch,
+                       "step": self.state.step, "grad_norm": str(norm), "keys": keys})  # fmt: skip
         self.optimizer.zero_grad(set_to_none=True)
         if self.scheduler is not None:
             self.scheduler.step()
         self.state.step += 1
         return norm
 
-    def _non_finite(self, batch: dict[str, Any], loss: torch.Tensor) -> None:
+    def _non_finite(self, keys: list[str], what: str, value: float) -> NoReturn:
+        """Save nonfinite.pt and the batch keys, then stop the run; ``what`` names the value."""
         self.save("nonfinite.pt")
-        detail = {"type": "nonfinite", "epoch": self.state.epoch, "step": self.state.step,
-                  "loss": str(float(loss)), "keys": batch["keys"]}  # fmt: skip
-        self._log(detail)
-        raise NonFiniteLoss(f"non-finite loss {float(loss)} at step {self.state.step}; "
+        self._log({"type": "nonfinite", "epoch": self.state.epoch, "step": self.state.step,
+                   what: str(value), "keys": keys})  # fmt: skip
+        raise NonFiniteLoss(f"non-finite {what} {value} at step {self.state.step}; "
                             f"batch keys and state saved")  # fmt: skip
 
     def fit(self) -> dict[str, Any]:
@@ -448,6 +473,7 @@ class RecTrainer:
             # epoch continues them instead of starting over at the resume point.
             st = self.state
             t0, lines, step_sum, step_n = time.monotonic(), 0, 0.0, 0
+            group: list[str] = []  # keys of the batches the next optimizer step applies
             self._clock = time.monotonic()
             for batch in loader:
                 try:
@@ -456,28 +482,34 @@ class RecTrainer:
                     self._log({"type": "oom", "epoch": epoch, "step": self.state.step,
                                "batch_shape": list(batch["images"].shape)})  # fmt: skip
                     raise
-                if not torch.isfinite(loss):
-                    if cfg.diagnostics.stop_on_nan:
-                        self._non_finite(batch, loss)
-                    continue
-                self.scaler.scale(loss / accum).backward()
+                if torch.isfinite(loss):
+                    self.scaler.scale(loss / accum).backward()
+                    lines += len(batch["keys"])
+                    value = float(loss.detach())
+                    st.epoch_loss_sum += value
+                    st.epoch_loss_n += 1
+                    step_sum += value
+                    step_n += 1
+                    group += batch["keys"]
+                elif cfg.diagnostics.stop_on_nan:
+                    self._non_finite(batch["keys"], "loss", float(loss))
+                else:
+                    self._log({"type": "nonfinite_skipped", "epoch": epoch, "step": st.step,
+                               "loss": str(float(loss)), "keys": batch["keys"]})  # fmt: skip
+                # A skipped batch counts too: the sampler resumes by position, and the epoch's
+                # last optimizer step is triggered by the count.
                 st.batch_in_epoch += 1
-                lines += len(batch["keys"])
-                value = float(loss.detach())
-                st.epoch_loss_sum += value
-                st.epoch_loss_n += 1
-                step_sum += value
-                step_n += 1
                 last_of_epoch = st.batch_in_epoch == self.epoch_batches[epoch]
                 if st.batch_in_epoch % accum and not last_of_epoch:
                     continue
-                norm = self._optimizer_step()
+                norm = self._optimizer_step(group)
+                group = []
                 self._flag(self.gradmon.update(norm, epoch, st.step))
                 if st.step % cfg.logging.log_every_n_steps == 0:
                     elapsed = time.monotonic() - t0
                     rec = {"type": "step", "epoch": epoch, "step": st.step,
                            "loss": st.epoch_loss_sum / max(st.epoch_loss_n, 1),
-                           "step_loss": step_sum / step_n, "grad_norm": norm,
+                           "step_loss": step_sum / max(step_n, 1), "grad_norm": norm,
                            "lr": self.optimizer.param_groups[0]["lr"],
                            "lines_per_s": lines / max(elapsed, 1e-9)}  # fmt: skip
                     if self.device.type == "cuda":
@@ -556,9 +588,10 @@ class RecTrainer:
         best = next((p for p in st.history if p["epoch"] == st.best_epoch), {})
         return {
             "experiment_id": self.cfg.experiment_id,
-            "config_hash": config_hash(self.cfg),
+            "config_hash": run_config_hash(self.cfg),
             "git": self.git.to_dict(),
             "parameters": self.params,
+            "model_bytes": model_bytes(self.model.state_dict()),
             "device": str(self.device),
             "gpu": torch.cuda.get_device_name() if self.device.type == "cuda" else None,
             "precision": self.amp.name,

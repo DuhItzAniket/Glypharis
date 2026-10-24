@@ -9,7 +9,7 @@ import gdc_align
 import numpy as np
 from PIL import Image, ImageFilter
 
-from glypharis.data.gdc import PackLayout, PdfLine, compose_pack_page
+from glypharis.data.gdc import PackLayout, PdfLine, compose_pack_page, sheet_margin_bands
 from glypharis.data.pages import read_pages
 from glypharis.data.text import Charset
 
@@ -75,7 +75,7 @@ def test_alignment_report_and_freeze(tmp_path):
     first, rotated = pages[0].lines
     assert first.text == "line 0 one" and first.rec_ok
     assert rotated.vertical and rotated.rec_skip == "vertical"
-    assert len(pages[0].ignore) == 1
+    assert len(pages[0].ignore) == 1 + 4  # the raster image plus the four sheet-margin bands
 
     for f in ("b.jpg", "c.jpg"):
         (caps / f).unlink()
@@ -83,4 +83,30 @@ def test_alignment_report_and_freeze(tmp_path):
     assert gdc_align.main(["--data-root", str(root), "--freeze"]) == 0
     frozen = json.loads((root / "manifests/gdc/gdc_v1.json").read_text(encoding="utf-8"))
     assert frozen["frozen"] and frozen["pages"] == 2 and len(frozen["captures"]) == 2
+    assert frozen["gdc_version"] == gdc_align.GDC_VERSION
+
+    # Frozen lines are protected: a run that would change a ground-truth line writes nothing.
+    pages_file = root / "processed/gdc/pages_test.jsonl.gz"
+    before = pages_file.read_bytes()
+    with gzip.open(root / "processed/gdc/sheets.jsonl.gz", "rt", encoding="utf-8") as fh:
+        sheets = [json.loads(x) for x in fh]
+    sheets[0]["lines"][0]["text"] = "line 0 changed"
+    with gzip.open(root / "processed/gdc/sheets.jsonl.gz", "wt", encoding="utf-8") as fh:
+        fh.writelines(json.dumps(x) + "\n" for x in sheets)
+    assert gdc_align.main(["--data-root", str(root)]) == 1
+    assert pages_file.read_bytes() == before
     shutil.rmtree(root / "processed/gdc/aligned_qa")
+
+
+def test_sheet_margin_bands_cover_the_label_and_markers():
+    from shapely.geometry import Point, Polygon
+
+    bands = [Polygon(b) for b in sheet_margin_bands(LAYOUT)]
+    w, h = LAYOUT.size
+    label = Point(w // 2, h - LAYOUT.px(LAYOUT.margin_in + LAYOUT.marker_in / 2))
+    assert any(b.contains(label) for b in bands)
+    for corner in range(4):
+        cx, cy = LAYOUT.marker_corners(corner).mean(axis=0)
+        assert any(b.contains(Point(cx, cy)) for b in bands)
+    x0, y0, x1, y1 = LAYOUT.content_box
+    assert not any(b.contains(Point((x0 + x1) / 2, (y0 + y1) / 2)) for b in bands)

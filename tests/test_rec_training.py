@@ -426,3 +426,139 @@ def test_rng_state_restores_from_a_checkpoint_loaded_onto_the_gpu(tmp_path):
     expected = torch.rand(3)
     set_rng_state(load_checkpoint(tmp_path / "c.pt", "cuda")["rng"])  # tensors land on the GPU
     assert torch.equal(torch.rand(3), expected)
+
+
+def _poison_third_backward(trainer):
+    """Make the third backward pass produce a NaN gradient while its loss stays finite."""
+    calls = {"n": 0}
+
+    def hook(grad):
+        calls["n"] += 1
+        return grad * float("nan") if calls["n"] == 3 else grad
+
+    trainer.model.head.weight.register_hook(hook)
+
+
+def test_a_nan_gradient_with_a_finite_loss_stops_before_the_weights_change(tiny):
+    from glypharis.diagnostics import NonFiniteLoss
+
+    trainer = RecTrainer(_cfg(tiny, "nan"))
+    _poison_third_backward(trainer)  # batch 3 = the first of optimizer step 2 (accumulation 2)
+    with pytest.raises(NonFiniteLoss, match="grad_norm"):
+        trainer.fit()
+    recs = [
+        json.loads(x) for x in (tiny / "nan/runs/GW-REC-999/metrics.jsonl").read_text().splitlines()
+    ]
+    bad = [r for r in recs if r["type"] == "nonfinite"]
+    assert len(bad) == 1 and bad[0]["step"] == 1 and "grad_norm" in bad[0] and bad[0]["keys"]
+    ck = load_checkpoint(tiny / "nan/ckpt/nonfinite.pt")
+    assert all(torch.isfinite(v).all() for v in ck["model"].values() if v.is_floating_point())
+
+
+def test_a_nan_gradient_is_skipped_when_the_run_may_continue(tiny):
+    trainer = RecTrainer(_cfg(tiny, "skip", **{"diagnostics.stop_on_nan": False}))
+    _poison_third_backward(trainer)
+    trainer.fit()
+    recs = [
+        json.loads(x)
+        for x in (tiny / "skip/runs/GW-REC-999/metrics.jsonl").read_text().splitlines()
+    ]
+    assert sum(r["type"] == "nonfinite_grad_skipped" for r in recs) == 1
+    assert trainer.state.step == 6  # the skipped step still counts, so the schedule stays aligned
+    assert all(torch.isfinite(p).all() for p in trainer.model.parameters())
+
+
+def test_a_resumed_run_reports_the_config_hash_it_started_with(tiny):
+    from glypharis.config.loader import config_hash
+    from glypharis.training.rec_trainer import run_config_hash
+
+    plain = _cfg(tiny, "h")
+    resumed = _cfg(tiny, "h", **{"checkpoint.resume": str(tiny / "h/ckpt/last.pt")})
+    assert config_hash(plain) != config_hash(resumed)
+    assert run_config_hash(resumed) == run_config_hash(plain) == config_hash(plain)
+
+
+def test_rec_report_restores_the_run_config_hash_and_notes_it(tiny):
+    import rec_report
+
+    import train
+
+    cfg_path = _yaml(_cfg(tiny, "rp"), tiny / "rp.yaml")
+    assert train.main(["--config", str(cfg_path)]) == 0
+    path = tiny / "rp/runs/GW-REC-999/summary.json"
+    summary = json.loads(path.read_text(encoding="utf-8"))
+    right = summary["config_hash"]
+    path.write_text(json.dumps({**summary, "config_hash": "e047cc28" * 8}), encoding="utf-8")
+    assert rec_report.main(["--config", str(cfg_path)]) == 0
+    fixed = json.loads(path.read_text(encoding="utf-8"))
+    assert fixed["config_hash"] == right and fixed["config_hash_as_written"] == "e047cc28" * 8
+    report = (tiny / "rp/reports/training/GW-REC-999/report.md").read_text(encoding="utf-8")
+    assert "Config hash corrected" in report and right[:16] in report
+    other = _yaml(_cfg(tiny, "rp", **{"train.learning_rate": 1e-4}), tiny / "other.yaml")
+    with pytest.raises(SystemExit, match="not the config"):
+        rec_report.main(["--config", str(other)])
+
+
+def test_rec_compare_pairs_lines_and_matches_the_logged_cer(tiny):
+    import rec_compare
+
+    import train
+
+    for tag, seed in (("ca", 1), ("cb", 2)):
+        cfg_path = _yaml(_cfg(tiny, tag, seed=seed), tiny / f"{tag}.yaml")
+        assert train.main(["--config", str(cfg_path)]) == 0
+    a, b = tiny / "ca/runs/GW-REC-999", tiny / "cb/runs/GW-REC-999"
+    assert rec_compare.main([str(a), str(b), "--out", str(tiny / "cmp")]) == 0
+    res = json.loads((tiny / "cmp/GW-REC-999_vs_GW-REC-999.json").read_text(encoding="utf-8"))
+    assert res["lines"] == 16 and res["track"] == "strict"
+    d = res["cer"]["difference"]
+    assert d["low"] <= d["value"] <= d["high"]
+    assert sum(res["lines_fewer_char_errors"].values()) == 16
+    assert res["first"]["best_epoch"] in (0, 1) and res["second"]["experiment_id"] == "GW-REC-999"
+    # A run validated on other lines is refused.
+    path = b / "val_best_samples.jsonl"
+    path.write_text("\n".join(path.read_text(encoding="utf-8").splitlines()[1:]), encoding="utf-8")
+    with pytest.raises(SystemExit, match="different lines"):
+        rec_compare.main([str(a), str(b), "--out", str(tiny / "cmp")])
+
+
+def test_model_size_is_recorded_and_filled_in_for_older_runs(tiny):
+    import rec_report
+
+    import train
+
+    cfg_path = _yaml(_cfg(tiny, "ms"), tiny / "ms.yaml")
+    assert train.main(["--config", str(cfg_path)]) == 0
+    path = tiny / "ms/runs/GW-REC-999/summary.json"
+    summary = json.loads(path.read_text(encoding="utf-8"))
+    state = load_checkpoint(tiny / "ms/ckpt/best.pt")["model"]
+    assert summary["model_bytes"] == sum(t.numel() * t.element_size() for t in state.values())
+    del summary["model_bytes"]
+    path.write_text(json.dumps(summary), encoding="utf-8")
+    assert rec_report.main(["--config", str(cfg_path)]) == 0
+    assert json.loads(path.read_text(encoding="utf-8"))["model_bytes"] > 0
+    report = (tiny / "ms/reports/training/GW-REC-999/report.md").read_text(encoding="utf-8")
+    assert "MiB of weights and buffers" in report
+
+
+def test_out_of_memory_saves_the_state_and_still_writes_a_report(tiny, monkeypatch):
+    import train
+    from glypharis.training import rec_trainer
+
+    real, calls = rec_trainer.ctc_loss, {"n": 0}
+
+    def fails_on_the_fourth_batch(*args, **kwargs):
+        calls["n"] += 1
+        if calls["n"] == 4:
+            raise torch.cuda.OutOfMemoryError("CUDA out of memory (simulated)")
+        return real(*args, **kwargs)
+
+    monkeypatch.setattr(rec_trainer, "ctc_loss", fails_on_the_fourth_batch)
+    cfg_path = _yaml(_cfg(tiny, "oom"), tiny / "oom.yaml")
+    assert train.main(["--config", str(cfg_path)]) == 3
+    assert (tiny / "oom/ckpt/oom.pt").exists()
+    recs = [
+        json.loads(x) for x in (tiny / "oom/runs/GW-REC-999/metrics.jsonl").read_text().splitlines()
+    ]
+    assert [r["step"] for r in recs if r["type"] == "oom"] == [1]
+    assert (tiny / "oom/reports/training/GW-REC-999/report.md").exists()
