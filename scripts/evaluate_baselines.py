@@ -239,6 +239,9 @@ def evaluate_file(path: Path, ctx: Context) -> dict[str, Any] | None:
     task, eval_set, system = meta["task"], meta["eval_set"], meta["system"]
     spec = EVAL_SETS[eval_set]
     records = read_records(path)
+    if not records:  # a run that died before its first sample: nothing to score
+        print(f"not scored {path.parent.name}/{path.name}: no predictions")
+        return None
     expected = ctx.keys(eval_set, task)
     check_keys(records, expected, f"{path.parent.name}/{path.name}")
     open_test_access(spec["benchmark"], spec["split"], meta["experiment"],

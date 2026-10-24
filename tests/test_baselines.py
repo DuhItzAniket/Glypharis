@@ -313,12 +313,19 @@ def test_scorer_tolerates_a_cut_off_last_record_and_lists_files_without_metadata
     no_meta = run_baselines.output_path(data, "GW-BASE-002", "ppocr_mobile", "rec", "gdc_test")
     no_meta.parent.mkdir(parents=True, exist_ok=True)
     no_meta.write_text('{"key": "gdc_test/l0", "ref": "alpha", "pred": "alpha"}\n', "utf-8")
+    # a run that died before its first page: metadata, no predictions
+    _write_run(data, "ppocr_server", "GW-BASE-003", "e2e", "gdc_test", [])
     report = data.parent / "rep"
     args = ["--data-root", str(data), "--out", str(report), "--access-log", str(log)]
     assert evaluate_baselines.main(args) == 0
     summary = (report / "README.md").read_text(encoding="utf-8")
     assert "| GW-BASE-001 | Tesseract 5 | rec | gdc_test | 1 of 3 |" in summary
     assert "1 predicted, no run metadata yet" in summary
+    assert (
+        "| GW-BASE-003 | PP-OCRv5 server | e2e | gdc_test | not runnable on this laptop" in summary
+    )
+    assert "GW-BASE-003" not in (report / "end_to_end.md").read_text(encoding="utf-8")
+    assert "ppocr_server" not in log.read_text(encoding="utf-8")  # nothing scored, nothing logged
 
 
 def test_runner_refuses_bad_requests_and_handles_metadata(root, monkeypatch):
