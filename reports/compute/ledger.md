@@ -10,10 +10,10 @@ by hand has no end line; its duration is unknown and adds nothing to the hours.
 
 | Phase | GPU-h (all) | GPU-h (jobs that did not finish) | CPU-h (all) | CPU-h (jobs that did not finish) |
 |---|---|---|---|---|
-| 05 | 0.0 | 0.0 | 32.4 | 1.8 |
+| 05 | 0.0 | 0.0 | 41.9 | 1.8 |
 | 06 | 11.5 | 3.8 | 0.0 | 0.0 |
-| 07 | 21.4 | 2.6 | 0.0 | 0.0 |
-| all | 32.9 | 6.5 | 32.4 | 1.8 |
+| 07 | 25.7 | 3.9 | 0.0 | 0.0 |
+| all | 37.2 | 7.7 | 41.9 | 1.8 |
 
 ## By experiment
 
@@ -21,7 +21,7 @@ by hand has no end line; its duration is unknown and adds nothing to the hours.
 |---|---|---|---|---|---|---|
 | GW-BASE-001 | 05 | CPU | 14 | 0 | 1.18 |  |
 | GW-BASE-002 | 05 | CPU | 24 | 4 | 3.01 |  |
-| GW-BASE-003 | 05 | CPU | 2 | 0 | 7.02 |  |
+| GW-BASE-003 | 05 | CPU | 3 | 0 | 16.49 |  |
 | GW-BASE-004 | 05 | CPU | 9 | 1 | 3.55 |  |
 | GW-BASE-005 | 05 | CPU | 14 | 0 | 2.45 |  |
 | GW-BASE-006 | 05 | CPU | 14 | 0 | 5.24 |  |
@@ -35,10 +35,12 @@ by hand has no end line; its duration is unknown and adds nothing to the hours.
 | GW-REC-007 | 07 | GPU | 3 | 2 | 0.99 | 0.95 |
 | GW-REC-008 | 07 | GPU | 1 | 0 | 1.67 | 1.52 |
 | GW-REC-009 | 07 | GPU | 1 | 0 | 1.60 | 1.45 |
+| GW-REC-010 | 07 | GPU | 1 | 0 | 1.69 | 1.53 |
+| GW-REC-011 | 07 | GPU | 2 | 1 | 1.23 |  |
 | GW-REC-015 | 07 | GPU | 1 | 0 | 1.32 | 1.16 |
 | GW-REC-016 | 07 | GPU | 1 | 0 | 1.54 | 1.39 |
 | GW-REC-017 | 07 | GPU | 1 | 0 | 1.31 | 1.16 |
-| GW-REC-018 | 07 | GPU | 1 | 0 | 0.00 |  |
+| GW-REC-018 | 07 | GPU | 1 | 0 | 1.35 | 1.18 |
 | GW-REC-019 | 07 | GPU | 3 | 3 | 0.12 | 0.04 |
 | GW-REC-020 | 07 | GPU | 5 | 3 | 5.62 | 4.64 |
 
