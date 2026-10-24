@@ -30,6 +30,7 @@ Research-only or unlicensed datasets are used **only for evaluation**.
 | SROIE | external test (optional) | none public; download needs an RRC account | evaluation only | Phase 14, optional |
 | DocVQA | reference only | none public; download needs an RRC account | not used for CER | not downloaded |
 | SynthText | — | VGG terms: non-commercial research only, 12-month licence, no redistribution | **no** | **dropped** (ADR-0009) |
+| MobileNetV3 ImageNet-1K weights (torchvision) | detector backbone initialisation (ADR-0007) | BSD-3-Clause code; the weights carry ImageNet-1K terms | owner decision before v0.1 ships a detector (R-05) | registered (Phase 8) |
 
 ## Dataset cards
 
@@ -193,12 +194,50 @@ version, samples, annotation format, intended task, preprocessing, split usage.
 - **Decision:** not downloaded or used ([ADR-0009](docs/decisions/ADR-0009-no-synthtext.md)). The brief's
   SynthText subset study is replaced by a GlyphSynth scaling study at the same sizes.
 
+## Pretrained backbone weights
+
+Not a dataset, but they shape the weights of a delivered model, so they are registered like one
+(`data/sources.yaml`, `data/manifests/imagenet_backbones.json`) and fall under the training-data rule
+above. Generic ImageNet classification backbones are the only pretrained weights GLYPHARIS may use
+([ADR-0007](docs/decisions/ADR-0007-pretrained-weights-policy.md)).
+
+### MobileNetV3 ImageNet-1K weights (torchvision)
+
+- **Source / URL:** torchvision's MobileNetV3 Large and Small `IMAGENET1K_V1` weights,
+  https://pytorch.org/vision/stable/models.html; files under `https://download.pytorch.org/models/`.
+- **Citation:** Howard et al., *Searching for MobileNetV3*, ICCV 2019 (`howard2019mobilenetv3`).
+- **Licence:** torchvision's code is BSD-3-Clause. The weights were trained on ImageNet-1K and carry
+  its terms, which do not clearly allow commercial use. Whether a delivered detector may start from
+  them is an owner decision against ADR-0009 before v0.1 ships a detector (RISK_REGISTER R-05). It
+  does not block Phase 8 code or runs, and GW-DET-002 measures the fallback, random initialisation.
+- **Version:** torchvision 0.29.1 weight files.
+- **Files and integrity:** torchvision publishes only the first 8 hex digits of each file's SHA-256,
+  in the file name. The full hashes and sizes below were taken from local copies (the torch hub
+  cache) and pinned in `data/sources.yaml`; their prefixes match the published ones.
+
+  | File | Bytes | SHA-256 |
+  |---|---|---|
+  | `mobilenet_v3_large-8738ca79.pth` | 22,139,423 | `8738ca797c879b547d18bbd15da5736ff2557b2036a9af72225393ca61759a04` |
+  | `mobilenet_v3_small-047dcff4.pth` | 10,306,551 | `047dcff4addef86ea5bc2eff13c9614dc11f47ab1160d0a71a25e7db994f4e1f` |
+
+- **Installed:** 2026-10-23 (`data/manifests/imagenet_backbones.json`), without a download: the two
+  files are copied into `data/raw/imagenet_backbones/`, then
+  `python scripts/download_datasets.py --dataset imagenet_backbones --verify` checks them and writes
+  the manifest.
+- **Role:** GLYPHARIS-Det backbone initialisation only (ADR-0007). The detector builds torchvision's
+  MobileNetV3 with `weights=None`, so nothing is downloaded at run time. With `det.model.init:
+  imagenet` the file named in the config is checked against `det.model.weights_sha256` before it is
+  loaded into the backbone. GW-DET-001 uses Large, GW-DET-003 Small, and GW-DET-002 neither. A
+  trained detector checkpoint holds all its weights and never needs these files.
+
 ## Licensing implications
 
 - Models delivered to a consumer are trained only on HierText and GlyphSynth. HierText's share-alike
   annotations mean the model card (Phase 21) must state attribution and how share-alike is handled for
   released weights.
 - Evaluation-only datasets never enter training, augmentation or tuning.
+- A detector initialised from the MobileNetV3 ImageNet weights also carries their terms; the owner
+  decides before v0.1 whether a delivered detector may (RISK_REGISTER R-05).
 
 ## Consumer sample documents
 
