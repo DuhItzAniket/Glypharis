@@ -46,6 +46,21 @@ class DataConfig:
     augmentation: str = "none"  # preset name, see glypharis.data.augment.PRESETS
     # Per-transform overrides, e.g. {"gaussian_blur": {"p": 0.5, "severity": 0.8}}
     augmentation_params: dict[str, dict[str, float]] = field(default_factory=dict)
+    # Cap on lines taken from a training pack (pack prefix -> count), a fixed seeded subset.
+    train_limits: dict[str, int] = field(default_factory=dict)
+    val_subset: int | None = None  # seeded subset of validation lines scored each epoch
+    train_eval_subset: int = 2000  # training lines scored each epoch (over/underfitting checks)
+    bucket_chunk: int = 50  # batches per width-sorted chunk (bucketing)
+    # Cap on padded columns per batch (lines x widest line); bounds GPU memory. null: no cap.
+    max_batch_columns: int | None = None
+
+
+@dataclass
+class ModelConfig:
+    cnn_channels: list[int] = field(default_factory=lambda: [64, 128, 256, 256, 512, 512])
+    lstm_hidden: int = 256
+    lstm_layers: int = 2
+    dropout: float = 0.1
 
 
 @dataclass
@@ -61,6 +76,7 @@ class TrainConfig:
     grad_clip_norm: float | None = 5.0
     mixed_precision: Literal["bf16", "fp16", "none"] = "bf16"
     deterministic: bool = True
+    max_steps: int | None = None  # stop after this many optimizer steps (sanity runs, smoke test)
 
 
 @dataclass
@@ -69,6 +85,7 @@ class CheckpointConfig:
     checkpoint_interval: int = 1
     keep_last: int = 3
     resume: str | None = None
+    every_steps: int | None = None  # also refresh last.pt every N optimizer steps
 
 
 @dataclass
@@ -99,6 +116,7 @@ class RunConfig:
     paths: PathsConfig = field(default_factory=PathsConfig)
     logging: LoggingConfig = field(default_factory=LoggingConfig)
     data: DataConfig = field(default_factory=DataConfig)
+    model: ModelConfig = field(default_factory=ModelConfig)
     train: TrainConfig = field(default_factory=TrainConfig)
     checkpoint: CheckpointConfig = field(default_factory=CheckpointConfig)
     early_stopping: EarlyStoppingConfig = field(default_factory=EarlyStoppingConfig)
@@ -137,6 +155,19 @@ class RunConfig:
             Augmenter(d.augmentation, d.augmentation_params)
         except ValueError as exc:
             errors.append(f"data.augmentation: {exc}")
+        check(d.train_eval_subset >= 0, "data.train_eval_subset must be >= 0")
+        check(d.val_subset is None or d.val_subset > 0, "data.val_subset must be > 0 or null")
+        check(d.bucket_chunk > 0, "data.bucket_chunk must be > 0")
+        check(d.max_batch_columns is None or d.max_batch_columns >= d.max_width,
+              "data.max_batch_columns must be null or at least data.max_width")  # fmt: skip
+        check(all(v > 0 for v in d.train_limits.values()), "data.train_limits must be > 0")
+        m = self.model
+        check(len(m.cnn_channels) == 6 and all(c > 0 for c in m.cnn_channels),
+              "model.cnn_channels must list 6 positive widths")  # fmt: skip
+        check(m.lstm_hidden > 0 and m.lstm_layers > 0, "model.lstm_* must be > 0")
+        check(0 <= m.dropout < 1, "model.dropout must be in [0, 1)")
+        check(t.max_steps is None or t.max_steps > 0, "train.max_steps must be > 0 or null")
+        check(c.every_steps is None or c.every_steps > 0, "checkpoint.every_steps must be > 0")
         check(t.epochs > 0, "train.epochs must be > 0")
         check(t.batch_size > 0, "train.batch_size must be > 0")
         check(t.gradient_accumulation > 0, "train.gradient_accumulation must be > 0")

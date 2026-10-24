@@ -12,8 +12,8 @@ Phases run in the order set by [ADR-0008](decisions/ADR-0008-usable-engine-first
 | 2 | Dataset acquisition | **COMPLETE** | `phase-02` |
 | 3 | Data audit | **COMPLETE** | `phase-03` |
 | 4 | Preprocessing, charset, GlyphSynth, GDC | **COMPLETE** | `phase-04` |
-| 5 | Baseline systems | **IN PROGRESS** | — |
-| 6 | Recognition baseline | not started | — |
+| 5 | Baseline systems | **COMPLETE** | `phase-05` |
+| 6 | Recognition baseline | **IN PROGRESS** (in parallel with 5, owner approved) | — |
 | 7 | Recognizer improvement | not started | — |
 | 8 | Text detector | not started | — |
 | 9 | Detector error analysis | not started | — |
@@ -302,7 +302,7 @@ shots.
 
 ## Phase 05 — Baseline systems
 
-**Status:** write-up done (2026-10-25). Gate open: push, pull request, CI and merge.
+**Status:** COMPLETE (2026-10-25).
 
 **Objective:** scientific reference points before training anything.
 
@@ -365,7 +365,7 @@ owner on 2026-10-25. For v0.1 through ONNX Runtime on this laptop: line recognit
 | Baselines that could not be run documented with the reason | pass | coverage table in `reports/baselines/README.md`; `research/failures.md` |
 | CER, WER, NED, accuracy, mean and p95 latency, peak RAM, peak VRAM | pass (peak VRAM not applicable) | `recognition.md`, `efficiency.md` |
 | Test sets used only as logged | pass: every prediction and scoring access logged | `research/test_access_log.md` |
-| CI green | pending (after the push) | — |
+| CI green | pass | GitHub Actions runs 40130891767 (branch) and 40130913098 (pull request); `main` after the merge: run 40132573309 |
 
 **Known issues**
 - The profiling pass ran on the Windows Balanced power plan (recorded in `efficiency.md`); GLYPHARIS
@@ -376,4 +376,72 @@ owner on 2026-10-25. For v0.1 through ONNX Runtime on this laptop: line recognit
 - The PP-OCRv5 detectors and the v6 detectors run without oneDNN, which crashes on them here (speed
   only; outputs checked identical).
 
-**Git:** branch `phase/05-baselines`; push and merge pending.
+**Git:** branch `phase/05-baselines`, merged through pull request #5. Merge commit `cdc823c`, tag
+`phase-05` (merge re-created with the noreply identity; same tree and parents).
+
+**CI status:** green on the branch, the pull request and `main`.
+
+---
+
+## Phase 06 — Recognition baseline (GLYPHARIS-Rec, CRNN)
+
+**Status:** IN PROGRESS. Run in parallel with Phase 5 (owner approved, 2026-10-22). Gate steps 1 to 7
+are done locally. Push, CI and merge wait for the owner and for Phase 5: this branch is stacked on an
+earlier state of `phase/05-baselines`, so Phase 5 merges first.
+
+**Objective:** a first stable recognizer with a fully instrumented training loop.
+
+**Implemented**
+- `glypharis.models.rec.crnn`: CNN → 2-layer BiLSTM → linear → CTC (ARCHITECTURE §4); 7,796,435
+  parameters, 29.8 MiB of weights and buffers. The BiLSTM reads each line only up to its own end
+  (packed sequences), and its layers run as separate single-layer BiLSTMs with ordinary dropout
+  between them (EXPERIMENT_PROTOCOL §11, 2026-10-23).
+- `glypharis.training.rec_trainer`: bf16 autocast with CTC in fp32, gradient accumulation and
+  clipping, OneCycle and cosine schedules, a width-bucketed sampler with a cap on columns per batch,
+  and augmentation that depends only on seed, epoch and index. Checkpoints (`best.pt`, `last.pt`,
+  `epoch_XXX.pt`, mid-epoch `last.pt`) carry model, optimizer, scheduler and scaler state, position,
+  history, config, git hash and every RNG state, so a run resumes exactly. `best.pt` holds the lowest
+  validation CER; `min_delta` only drives early stopping.
+- `glypharis.diagnostics`: overfitting (revised rule, §11), underfitting, blank and prediction
+  collapse, gradient explosion and vanishing. Hard stops on a non-finite loss or gradient, with the
+  state and batch keys saved; an OOM record; and the train/validation leakage assertion.
+- `glypharis.training.report`: curves, best vs final epoch, flags, bootstrap CI, worst lines and
+  notes, built only from what the run leaves on disk.
+- `train.py` (exit codes 0 / 2 non-finite / 3 out of memory). Scripts: `rec_sanity.py` (overfit 64
+  lines, LR range test, 10-minute dry run), `rec_resume_check.py`, `rec_reselect.py`,
+  `rec_report.py`, `rec_compare.py`.
+
+**Descoped / moved (documented):** on out-of-memory, the plan's "halve the batch" option is not
+implemented. The run takes the other permitted path: it saves `oom.pt`, writes the report and exits
+with 3.
+
+**Tests:** 293 passed locally (CPU and GPU-marked). With Phase 5 merged in, 290 CPU tests pass; the 7
+GPU tests were deselected while the GPU was training a Phase 7 run.
+
+**Exit criteria**
+
+| Criterion | Result | Evidence |
+|---|---|---|
+| All sanity checks pass and are recorded | pass: overfit 64 lines to 0.39% CER (target ≤ 1%); LR range test, configured 1e-3 within 3x of the suggestion; 10-minute dry run, peak VRAM 3825.5 MiB, loss finite | `reports/training/sanity/GW-REC-001/sanity.md` |
+| Resume test: kill at step N, resume, metrics match an uninterrupted run within tolerance | pass. CPU: identical (unit test). CUDA: first step after the resume identical, learning rates identical, drift 1.51e-2 against 2.90e-2 between two uninterrupted runs. The first CUDA attempt failed a tolerance that CUDA cannot meet; that result stays recorded | `reports/training/sanity/GW-REC-001/resume_check.json`, `sanity.md`; EXPERIMENT_PROTOCOL §11 |
+| First full run finishes without NaN | pass | `reports/training/GW-REC-001/report.md` |
+| Run report generated automatically | pass | `reports/training/GW-REC-001/`, `GW-REC-002/` |
+| Validation CER with a bootstrap CI | pass: GW-REC-001 7.53% [7.38, 7.69]; GW-REC-002 7.49% [7.34, 7.64] | run reports; `reports/training/compare/GW-REC-002_vs_GW-REC-001.md` |
+| Parameters, model size and training time recorded | pass: 7,796,435 parameters, 29.8 MiB; 4.71 and 5.32 GPU-hours | run reports |
+| CI green, with a tiny CPU training smoke test | pending the push | `test_training_smoke_writes_metrics_checkpoints_and_summary` |
+
+**Known issues**
+- Two CUDA runs of one config drift apart because CTC backward has no deterministic kernel. Two
+  uninterrupted runs differed by up to 2.90% in per-step loss over 400 steps.
+- GW-REC-002's `best.pt` was re-selected (epoch 24 → 27) and its config hash corrected after the
+  run. Both are recorded in its report's notes and in §11.
+- GW-REC-001 and GW-REC-002 aborted at exit (0xC0000409) after writing their outputs. The cause is
+  fixed in `c58c063`, and the results are unaffected.
+- On this laptop `CUDA_VISIBLE_DEVICES=` (empty) does not hide the GPU, and `-1` crashes torch a few
+  seconds later; the Phase 8 build found this. GPU-free test runs need another way to keep the GPU
+  out.
+- HierText annotation noise shows up in the worst-line tables. It is recorded, not corrected, and
+  left for Phase 7's error analysis to count.
+
+**Git:** branch `phase/06-rec-baseline`, with Phase 5 merged in. Its pull request is based on
+`phase/05-baselines` until Phase 5 merges, then on `main`.

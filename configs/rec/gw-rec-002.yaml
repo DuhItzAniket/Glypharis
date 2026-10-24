@@ -1,0 +1,9 @@
+# GW-REC-002: GW-REC-001 plus a small GlyphSynth mix (35,000 lines, about 10% of the HierText
+# lines). Everything else is identical, so the difference is the data. Validation stays HierText.
+inherits: gw-rec-001.yaml
+experiment_id: GW-REC-002
+
+data:
+  train: [processed/hiertext/lines_train, processed/glyphsynth/lines_train]
+  train_limits:
+    processed/glyphsynth/lines_train: 35000
