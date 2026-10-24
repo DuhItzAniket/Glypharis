@@ -217,7 +217,7 @@ Rows link to a full entry below. Numbers are copied from generated reports only,
   6. **Data wait:** if the training loop waits for data more than 10% of a dry run's training time, `det.data.num_workers` rises from 6 to 8 and the dry run is repeated. If the wait is still above 10%, labels move to `LABEL_VERSION` 2 (a threshold map from `cv2.distanceTransform`), registered before any main run and never changed mid-arm.
   7. **VRAM:** each arm's own dry run must keep reserved GPU memory ≤ 4.0 GiB in training and in validation. If any arm exceeds it, all arms train with batch 4 and gradient accumulation 2 (the same effective batch of 8).
   8. **Other dry-run gates,** with no fallback (a failure stops that arm until it is understood): finite loss, and main-process plus worker RSS ≤ 8 GB.
-  9. **Resume check** (GW-DET-001): a run stopped mid-epoch and resumed matches an uninterrupted one, identically on the CPU and within a maximum relative per-step loss difference of 1e-4 on CUDA.
+  9. **Resume check** (GW-DET-001), with the protocol's CUDA design of 2026-10-23 (EXPERIMENT_PROTOCOL §11): two uninterrupted runs A and B, and C resumed from B's mid-epoch checkpoint. On the CPU, C equals B exactly. On CUDA, the first step after the resume matches B's to 1e-6, the learning rates are identical, and C's largest relative loss difference from B is at most max(1e-4, 2 × the A-vs-B difference).
 - **Variables:** none (reference run; the control for GW-DET-002 and GW-DET-003)
 - **Control:** —
 - **Result:**

@@ -528,8 +528,10 @@ def test_resume_check_passes_on_cpu_and_keeps_one_trainer_alive(synth, tmp_path,
     res = json.loads(
         (tmp_path / "r/reports/training/sanity" / ID / "resume_check.json").read_text()
     )
-    assert res["passed"] and res["stopped_mid_epoch"] and res["steps_compared"] == 8
-    assert res["max_rel_loss_diff"] == 0 and res["max_rel_weight_diff"] == 0
+    assert res["passed"] and res["cut_mid_epoch"] and res["cut"] == 5
+    assert res["steps_compared"] == 3 and res["boundary_rel_diff"] == 0 and res["lr_identical"]
+    assert res["max_rel_loss_diff_resumed"] == 0 and res["max_rel_weight_diff_resumed"] == 0
+    assert res["max_rel_loss_diff_two_uninterrupted"] == 0  # the CPU is deterministic
     assert res["val_f1_50_equal"]
     starts = [i for i, e in enumerate(events) if e == "init"]
     assert len(starts) == 3
