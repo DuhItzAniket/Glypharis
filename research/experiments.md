@@ -71,7 +71,7 @@ Rows link to a full entry below. Numbers are copied from generated reports only,
 - **Result:** see `reports/baselines/` (filled in after the run)
 - **Training diagnostics:** not applicable (no training)
 - **Interpretation:**
-- **Limitations:**
+- **Limitations:** the end-to-end run on the GDC test pages could not be run on the laptop: two attempts died on the first page (out of memory next to a GPU job; an access violation alone). See `research/failures.md`, 2026-10-24.
 - **Next experiment:**
 - **Training time:** not applicable
 

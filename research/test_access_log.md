@@ -29,3 +29,8 @@ Any other access must be justified in the "Reason" column and discussed in the p
 | 2026-10-23 | gdc test | GW-BASE-004 | trocr (rec) | 5 | Phase 5 baseline |
 | 2026-10-23 | hiertext test | GW-BASE-004 | trocr (rec) | 5 | Phase 5 baseline |
 | 2026-10-23 | hiertext test | GW-BASE-004 | trocr (rec) | 5 | Phase 5 baseline (resumed: 50576 of 67574 samples already predicted) |
+| 2026-10-23 | gdc test | GW-BASE-007 | ppocr6_medium (rec) | 5 | Phase 5 baseline |
+| 2026-10-23 | gdc test | GW-BASE-007 | ppocr6_medium (e2e) | 5 | Phase 5 baseline |
+| 2026-10-24 | gdc test | GW-BASE-003 | ppocr_server (rec) | 5 | Phase 5 baseline |
+| 2026-10-24 | gdc test | GW-BASE-003 | ppocr_server (e2e) | 5 | Phase 5 baseline |
+| 2026-10-24 | gdc test | GW-BASE-003 | ppocr_server (e2e) | 5 | Phase 5 baseline |
