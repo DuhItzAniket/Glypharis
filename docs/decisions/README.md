@@ -17,4 +17,4 @@ Format: `ADR-NNNN-short-name.md` with Status, Context, Decision, Consequences, a
 | [0008](ADR-0008-usable-engine-first.md) | Ship a usable engine (v0.1) before the research studies; CPU-first inference | Accepted (point 4 amended by 0009) |
 | [0009](ADR-0009-no-synthtext.md) | Drop SynthText; keep every training source commercially usable | Accepted |
 | [0010](ADR-0010-gdc-capture-track.md) | GDC capture runs as its own track; Phase 4 closes when the print pack is ready | Accepted |
-| [0011](ADR-0011-cpu-latency-target.md) | CPU latency target for GLYPHARIS v0.1 | Proposed |
+| [0011](ADR-0011-cpu-latency-target.md) | CPU latency target for GLYPHARIS v0.1 | Accepted |

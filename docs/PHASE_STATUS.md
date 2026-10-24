@@ -302,8 +302,7 @@ shots.
 
 ## Phase 05 — Baseline systems
 
-**Status:** write-up done (2026-10-25). Gate open: the owner's decision on ADR-0011 (CPU latency
-target), then push, pull request, CI and merge.
+**Status:** write-up done (2026-10-25). Gate open: push, pull request, CI and merge.
 
 **Objective:** scientific reference points before training anything.
 
@@ -349,9 +348,10 @@ scope registered before the runs (about 1–3 s per line on this CPU); the PP-OC
 is not runnable on the laptop (`research/failures.md`, 2026-10-24); TrOCR has no detector. Peak VRAM
 is not applicable: no baseline uses a GPU.
 
-**CPU latency target (ADR-0008):** proposed in ADR-0011 from these measurements. For v0.1 through
-ONNX Runtime on this laptop: line recognition mean at most 25 ms (p95 70 ms), pages mean at most
-1.5 s (p95 2.7 s), peak RAM on pages below PP-OCRv6 tiny's 1,836 MiB. Waiting for the owner.
+**CPU latency target (ADR-0008):** set in ADR-0011 from these measurements and accepted by the
+owner on 2026-10-25. For v0.1 through ONNX Runtime on this laptop: line recognition mean at most
+25 ms (p95 70 ms), pages mean at most 1.5 s (p95 2.7 s), peak RAM on pages below PP-OCRv6 tiny's
+1,836 MiB.
 
 **Tests:** 264 passed locally (CPU; the 4 GPU tests were deselected while the GPU was training).
 

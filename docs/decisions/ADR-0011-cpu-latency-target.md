@@ -1,6 +1,6 @@
 # ADR-0011: CPU latency target for GLYPHARIS v0.1
 
-- **Status:** Proposed (2026-10-25, Phase 5); waiting for the owner's approval
+- **Status:** Accepted (2026-10-25, Phase 5; approved by the owner)
 
 ## Context
 ADR-0008 makes CPU latency the primary efficiency number and leaves the target to be set from

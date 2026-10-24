@@ -121,6 +121,6 @@ the bottom. Experiments get their full record in `experiments.md`; this log is t
   a non-default configuration.
 - The scorer showed the failed run as "0 of 106" because the attempts had left an empty prediction
   file; fixed so a file with no predictions is skipped and the coverage table gives the reason.
-- Proposed a CPU latency target for v0.1 from the measured speeds (ADR-0011), anchored on PP-OCRv6
-  tiny, the fastest modern pipeline; Tesseract is faster on pages but finds too few HierText lines to
-  be the bar.
+- Set a CPU latency target for v0.1 from the measured speeds (ADR-0011, accepted by the owner),
+  anchored on PP-OCRv6 tiny, the fastest modern pipeline; Tesseract is faster on pages but finds too
+  few HierText lines to be the bar.
