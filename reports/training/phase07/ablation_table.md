@@ -14,12 +14,13 @@ Mean 8.31%, standard deviation 0.01 points, range 8.30 to 8.32%.
 
 ## Arms against GW-REC-003
 
-Difference: arm minus reference, percentage points, 95% bootstrap CI over lines (the same resampled lines for both runs). 2 comparisons, no correction for multiplicity. Verdict rule: better or worse only when the CI excludes zero and the arm's CER lies outside the control seeds' range in the same direction.
+Difference: arm minus reference, percentage points, 95% bootstrap CI over lines (the same resampled lines for both runs). 3 comparisons, no correction for multiplicity. Verdict rule: better or worse only when the CI excludes zero and the arm's CER lies outside the control seeds' range in the same direction.
 
 | Run | Change against the reference | Parameters | Steps | GPU-hours | Val CER % | Difference | Verdict |
 |---|---|---|---|---|---|---|---|
 | GW-REC-006 | data.image_height: 48, data.max_batch_columns: 24576, data.max_width: 1536, train.batch_size: 32, train.gradient_accumulation: 2 | 7,796,435 | 45,339 | 2.44 | 7.83 [7.66, 7.98] | -0.49 [-0.54, -0.44] | better |
 | GW-REC-007 | model.cnn_channels: [32, 64, 128, 128, 256, 256] | 3,897,075 | 45,360 | 0.95 | 8.83 [8.65, 9.00] | +0.51 [+0.47, +0.56] | worse |
+| GW-REC-020 | data.max_batch_columns: 8192, model.svtr.dims: [96, 192, 256], model.svtr.global_blocks: [0, 3, 6], model.svtr.heads: [3, 6, 8], model.svtr.local_blocks: [3, 3, 0], model.svtr.local_kernel: [3, 7], model.svtr.mlp_ratio: 4.0, model_name: svtr, train.batch_size: 16, train.gradient_accumulation: 4, train.learning_rate: 0.0005 | 7,928,835 | 45,301 | 4.64 | 8.18 [8.01, 8.35] | -0.13 [-0.18, -0.09] | better |
 | GW-REC-008 | pending | | | | | | |
 | GW-REC-009 | pending | | | | | | |
 | GW-REC-019 | pending | | | | | | |
@@ -32,4 +33,3 @@ Difference: arm minus reference, percentage points, 95% bootstrap CI over lines 
 | GW-REC-012 | pending | | | | | | |
 | GW-REC-013 | pending | | | | | | |
 | GW-REC-014 | pending | | | | | | |
-| GW-REC-020 | pending | | | | | | |

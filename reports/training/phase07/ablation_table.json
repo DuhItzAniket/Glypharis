@@ -64,6 +64,29 @@
    "verdict": "worse"
   },
   {
+   "run": "GW-REC-020",
+   "status": "done",
+   "change": "data.max_batch_columns: 8192, model.svtr.dims: [96, 192, 256], model.svtr.global_blocks: [0, 3, 6], model.svtr.heads: [3, 6, 8], model.svtr.local_blocks: [3, 3, 0], model.svtr.local_kernel: [3, 7], model.svtr.mlp_ratio: 4.0, model_name: svtr, train.batch_size: 16, train.gradient_accumulation: 4, train.learning_rate: 0.0005",
+   "parameters": 7928835,
+   "steps": 45301,
+   "train_seconds": 16712.97,
+   "val_cer": {
+    "value": 0.08183745948961027,
+    "low": 0.080112249902083,
+    "high": 0.0834589309491805,
+    "resamples": 1000,
+    "unit": "lines"
+   },
+   "difference": {
+    "value": -0.0013356366691692693,
+    "low": -0.0018255404807104587,
+    "high": -0.0008642992121815671,
+    "resamples": 1000,
+    "unit": "lines"
+   },
+   "verdict": "better"
+  },
+  {
    "run": "GW-REC-008",
    "status": "pending"
   },
@@ -109,10 +132,6 @@
   },
   {
    "run": "GW-REC-014",
-   "status": "pending"
-  },
-  {
-   "run": "GW-REC-020",
    "status": "pending"
   }
  ]
