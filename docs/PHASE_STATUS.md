@@ -13,7 +13,7 @@ Phases run in the order set by [ADR-0008](decisions/ADR-0008-usable-engine-first
 | 3 | Data audit | **COMPLETE** | `phase-03` |
 | 4 | Preprocessing, charset, GlyphSynth, GDC | **COMPLETE** | `phase-04` |
 | 5 | Baseline systems | **COMPLETE** | `phase-05` |
-| 6 | Recognition baseline | **IN PROGRESS** (in parallel with 5, owner approved) | — |
+| 6 | Recognition baseline | **COMPLETE** | `phase-06` |
 | 7 | Recognizer improvement | **IN PROGRESS** (in parallel with 5 and 6, owner approved 2026-10-23) | — |
 | 8 | Text detector | not started | — |
 | 9 | Detector error analysis | not started | — |
@@ -385,9 +385,8 @@ owner on 2026-10-25. For v0.1 through ONNX Runtime on this laptop: line recognit
 
 ## Phase 06 — Recognition baseline (GLYPHARIS-Rec, CRNN)
 
-**Status:** IN PROGRESS. Run in parallel with Phase 5 (owner approved, 2026-10-22). Gate steps 1 to 7
-are done locally. Push, CI and merge wait for the owner and for Phase 5: this branch is stacked on an
-earlier state of `phase/05-baselines`, so Phase 5 merges first.
+**Status:** COMPLETE (2026-10-25). Run in parallel with Phase 5 (owner approved, 2026-10-22) and
+merged after it.
 
 **Objective:** a first stable recognizer with a fully instrumented training loop.
 
@@ -428,7 +427,7 @@ GPU tests were deselected while the GPU was training a Phase 7 run.
 | Run report generated automatically | pass | `reports/training/GW-REC-001/`, `GW-REC-002/` |
 | Validation CER with a bootstrap CI | pass: GW-REC-001 7.53% [7.38, 7.69]; GW-REC-002 7.49% [7.34, 7.64] | run reports; `reports/training/compare/GW-REC-002_vs_GW-REC-001.md` |
 | Parameters, model size and training time recorded | pass: 7,796,435 parameters, 29.8 MiB; 4.71 and 5.32 GPU-hours | run reports |
-| CI green, with a tiny CPU training smoke test | pending the push | `test_training_smoke_writes_metrics_checkpoints_and_summary` |
+| CI green, with a tiny CPU training smoke test | pass: GitHub Actions runs 40132754557 (branch) and 40132758219 (pull request) | `test_training_smoke_writes_metrics_checkpoints_and_summary` |
 
 **Known issues**
 - Two CUDA runs of one config drift apart because CTC backward has no deterministic kernel. Two
@@ -443,8 +442,11 @@ GPU tests were deselected while the GPU was training a Phase 7 run.
 - HierText annotation noise shows up in the worst-line tables. It is recorded, not corrected, and
   left for Phase 7's error analysis to count.
 
-**Git:** branch `phase/06-rec-baseline`, with Phase 5 merged in. Its pull request is based on
-`phase/05-baselines` until Phase 5 merges, then on `main`.
+**Git:** branch `phase/06-rec-baseline` (Phase 5 merged in first), merged through pull request #6.
+Merge commit `608ee3f`, tag `phase-06` (merge re-created with the noreply identity; same tree and
+parents).
+
+**CI status:** green on the branch, the pull request and `main` (run 40133080942).
 
 ---
 
