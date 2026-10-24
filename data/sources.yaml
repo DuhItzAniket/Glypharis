@@ -3429,3 +3429,80 @@ gdc_sources:
     - {name: irs_f1040_2024, url: https://www.irs.gov/pub/irs-prior/f1040--2024.pdf, filename: forms/irs-f1040-2024.pdf, size: 163287}
     - {name: irs_fw9_2024, url: https://www.irs.gov/pub/irs-prior/fw9--2024.pdf, filename: forms/irs-fw9-2024.pdf, size: 140815}
     - {name: irs_i1040gi_2024, url: https://www.irs.gov/pub/irs-prior/i1040gi--2024.pdf, filename: forms/irs-i1040gi-2024.pdf, size: 4375877}
+
+baseline_models:
+  title: Baseline OCR model weights (PaddleOCR PP-OCRv5 and PP-OCRv6, TrOCR-small-printed)
+  version: "Hugging Face revisions pinned below (listed 2026-10-21)"
+  homepage: https://huggingface.co/PaddlePaddle and https://huggingface.co/microsoft/trocr-small-printed
+  licence: PaddleOCR models Apache 2.0; TrOCR card has no licence tag (source repo microsoft/unilm is MIT)
+  citation: du2020ppocr; li2023trocr
+  role: Phase 5 baselines only; never part of GLYPHARIS (ADR-0007)
+  phase: 5
+  files:
+    # PaddlePaddle/PP-OCRv5_mobile_det @ 0d63e78e2b680928f6b1747d76a08db6e645efb7
+    - {name: pp_ocrv5_mobile_det_config_json, url: https://huggingface.co/PaddlePaddle/PP-OCRv5_mobile_det/resolve/0d63e78e2b680928f6b1747d76a08db6e645efb7/config.json, filename: PP-OCRv5_mobile_det/config.json, size: 2871}
+    - {name: pp_ocrv5_mobile_det_inference_json, url: https://huggingface.co/PaddlePaddle/PP-OCRv5_mobile_det/resolve/0d63e78e2b680928f6b1747d76a08db6e645efb7/inference.json, filename: PP-OCRv5_mobile_det/inference.json, size: 229777}
+    - {name: pp_ocrv5_mobile_det_inference_pdiparams, url: https://huggingface.co/PaddlePaddle/PP-OCRv5_mobile_det/resolve/0d63e78e2b680928f6b1747d76a08db6e645efb7/inference.pdiparams, filename: PP-OCRv5_mobile_det/inference.pdiparams, size: 4692937, sha256: afa1820cb16c1fd0dad589d0f8b389139061c1ef6d68019685fd07be997dda5b}
+    - {name: pp_ocrv5_mobile_det_inference_yml, url: https://huggingface.co/PaddlePaddle/PP-OCRv5_mobile_det/resolve/0d63e78e2b680928f6b1747d76a08db6e645efb7/inference.yml, filename: PP-OCRv5_mobile_det/inference.yml, size: 903}
+    # PaddlePaddle/en_PP-OCRv5_mobile_rec @ 267c36e24c331595590fe7bd72bde2436fd286f2
+    - {name: en_pp_ocrv5_mobile_rec_config_json, url: https://huggingface.co/PaddlePaddle/en_PP-OCRv5_mobile_rec/resolve/267c36e24c331595590fe7bd72bde2436fd286f2/config.json, filename: en_PP-OCRv5_mobile_rec/config.json, size: 10455}
+    - {name: en_pp_ocrv5_mobile_rec_inference_json, url: https://huggingface.co/PaddlePaddle/en_PP-OCRv5_mobile_rec/resolve/267c36e24c331595590fe7bd72bde2436fd286f2/inference.json, filename: en_PP-OCRv5_mobile_rec/inference.json, size: 217712}
+    - {name: en_pp_ocrv5_mobile_rec_inference_pdiparams, url: https://huggingface.co/PaddlePaddle/en_PP-OCRv5_mobile_rec/resolve/267c36e24c331595590fe7bd72bde2436fd286f2/inference.pdiparams, filename: en_PP-OCRv5_mobile_rec/inference.pdiparams, size: 7772315, sha256: 3ec8a97ed6cefe8568d3e2ee90bb193299b566a7661aa4fd52d224b96b59f66b}
+    - {name: en_pp_ocrv5_mobile_rec_inference_yml, url: https://huggingface.co/PaddlePaddle/en_PP-OCRv5_mobile_rec/resolve/267c36e24c331595590fe7bd72bde2436fd286f2/inference.yml, filename: en_PP-OCRv5_mobile_rec/inference.yml, size: 3964}
+    # PaddlePaddle/PP-OCRv5_server_det @ ca867c897ecbca8873081573a802ad70d499cb94
+    - {name: pp_ocrv5_server_det_config_json, url: https://huggingface.co/PaddlePaddle/PP-OCRv5_server_det/resolve/ca867c897ecbca8873081573a802ad70d499cb94/config.json, filename: PP-OCRv5_server_det/config.json, size: 2871}
+    - {name: pp_ocrv5_server_det_inference_json, url: https://huggingface.co/PaddlePaddle/PP-OCRv5_server_det/resolve/ca867c897ecbca8873081573a802ad70d499cb94/inference.json, filename: PP-OCRv5_server_det/inference.json, size: 402480}
+    - {name: pp_ocrv5_server_det_inference_pdiparams, url: https://huggingface.co/PaddlePaddle/PP-OCRv5_server_det/resolve/ca867c897ecbca8873081573a802ad70d499cb94/inference.pdiparams, filename: PP-OCRv5_server_det/inference.pdiparams, size: 87932887, sha256: 183146fe9d9910352f68482f623bcbbb9fa7b9e8fa1463b9ad288cef00524d2d}
+    - {name: pp_ocrv5_server_det_inference_yml, url: https://huggingface.co/PaddlePaddle/PP-OCRv5_server_det/resolve/ca867c897ecbca8873081573a802ad70d499cb94/inference.yml, filename: PP-OCRv5_server_det/inference.yml, size: 903}
+    # PaddlePaddle/PP-OCRv5_server_rec @ b26c3587fda8da3c8ec0ce357214b4d661ff1558
+    - {name: pp_ocrv5_server_rec_config_json, url: https://huggingface.co/PaddlePaddle/PP-OCRv5_server_rec/resolve/b26c3587fda8da3c8ec0ce357214b4d661ff1558/config.json, filename: PP-OCRv5_server_rec/config.json, size: 352253}
+    - {name: pp_ocrv5_server_rec_inference_json, url: https://huggingface.co/PaddlePaddle/PP-OCRv5_server_rec/resolve/b26c3587fda8da3c8ec0ce357214b4d661ff1558/inference.json, filename: PP-OCRv5_server_rec/inference.json, size: 325204}
+    - {name: pp_ocrv5_server_rec_inference_pdiparams, url: https://huggingface.co/PaddlePaddle/PP-OCRv5_server_rec/resolve/b26c3587fda8da3c8ec0ce357214b4d661ff1558/inference.pdiparams, filename: PP-OCRv5_server_rec/inference.pdiparams, size: 84390117, sha256: 63853f062a5f4089befc16f565a68277618e0da5cb45468b49d11079de0ada77}
+    - {name: pp_ocrv5_server_rec_inference_yml, url: https://huggingface.co/PaddlePaddle/PP-OCRv5_server_rec/resolve/b26c3587fda8da3c8ec0ce357214b4d661ff1558/inference.yml, filename: PP-OCRv5_server_rec/inference.yml, size: 148345}
+    # PaddlePaddle/PP-LCNet_x1_0_doc_ori @ d3b95a6dff5fe8a94f2748e12b61cb26818a0df8
+    - {name: pp_lcnet_x1_0_doc_ori_config_json, url: https://huggingface.co/PaddlePaddle/PP-LCNet_x1_0_doc_ori/resolve/d3b95a6dff5fe8a94f2748e12b61cb26818a0df8/config.json, filename: PP-LCNet_x1_0_doc_ori/config.json, size: 2561}
+    - {name: pp_lcnet_x1_0_doc_ori_inference_json, url: https://huggingface.co/PaddlePaddle/PP-LCNet_x1_0_doc_ori/resolve/d3b95a6dff5fe8a94f2748e12b61cb26818a0df8/inference.json, filename: PP-LCNet_x1_0_doc_ori/inference.json, size: 104441}
+    - {name: pp_lcnet_x1_0_doc_ori_inference_pdiparams, url: https://huggingface.co/PaddlePaddle/PP-LCNet_x1_0_doc_ori/resolve/d3b95a6dff5fe8a94f2748e12b61cb26818a0df8/inference.pdiparams, filename: PP-LCNet_x1_0_doc_ori/inference.pdiparams, size: 6754166, sha256: e8d6e7c5d264507e40e58a655779059d616b20d7441ea22047d829eb3931989c}
+    - {name: pp_lcnet_x1_0_doc_ori_inference_yml, url: https://huggingface.co/PaddlePaddle/PP-LCNet_x1_0_doc_ori/resolve/d3b95a6dff5fe8a94f2748e12b61cb26818a0df8/inference.yml, filename: PP-LCNet_x1_0_doc_ori/inference.yml, size: 766}
+    # PaddlePaddle/UVDoc @ 16c3f0ea9c2f0c6a57e24160f7eeaa7574613fa3
+    - {name: uvdoc_config_json, url: https://huggingface.co/PaddlePaddle/UVDoc/resolve/16c3f0ea9c2f0c6a57e24160f7eeaa7574613fa3/config.json, filename: UVDoc/config.json, size: 1489}
+    - {name: uvdoc_inference_json, url: https://huggingface.co/PaddlePaddle/UVDoc/resolve/16c3f0ea9c2f0c6a57e24160f7eeaa7574613fa3/inference.json, filename: UVDoc/inference.json, size: 190986}
+    - {name: uvdoc_inference_pdiparams, url: https://huggingface.co/PaddlePaddle/UVDoc/resolve/16c3f0ea9c2f0c6a57e24160f7eeaa7574613fa3/inference.pdiparams, filename: UVDoc/inference.pdiparams, size: 32054311, sha256: 810488899520e0da843b9bd9769ba4949f1c81e357f0eceb12d4a7da459c3eca}
+    - {name: uvdoc_inference_yml, url: https://huggingface.co/PaddlePaddle/UVDoc/resolve/16c3f0ea9c2f0c6a57e24160f7eeaa7574613fa3/inference.yml, filename: UVDoc/inference.yml, size: 330}
+    # PaddlePaddle/PP-LCNet_x1_0_textline_ori @ cd237a44b0e359d4fe38310a416203cf7403faa5
+    - {name: pp_lcnet_x1_0_textline_ori_config_json, url: https://huggingface.co/PaddlePaddle/PP-LCNet_x1_0_textline_ori/resolve/cd237a44b0e359d4fe38310a416203cf7403faa5/config.json, filename: PP-LCNet_x1_0_textline_ori/config.json, size: 2487}
+    - {name: pp_lcnet_x1_0_textline_ori_inference_json, url: https://huggingface.co/PaddlePaddle/PP-LCNet_x1_0_textline_ori/resolve/cd237a44b0e359d4fe38310a416203cf7403faa5/inference.json, filename: PP-LCNet_x1_0_textline_ori/inference.json, size: 104399}
+    - {name: pp_lcnet_x1_0_textline_ori_inference_pdiparams, url: https://huggingface.co/PaddlePaddle/PP-LCNet_x1_0_textline_ori/resolve/cd237a44b0e359d4fe38310a416203cf7403faa5/inference.pdiparams, filename: PP-LCNet_x1_0_textline_ori/inference.pdiparams, size: 6743918, sha256: 0de2bcf996cf553e2b848dd7b1769dafffc6917b1ccdf55c1d8efe7909fbf743}
+    - {name: pp_lcnet_x1_0_textline_ori_inference_yml, url: https://huggingface.co/PaddlePaddle/PP-LCNet_x1_0_textline_ori/resolve/cd237a44b0e359d4fe38310a416203cf7403faa5/inference.yml, filename: PP-LCNet_x1_0_textline_ori/inference.yml, size: 735}
+    # microsoft/trocr-small-printed @ 04e994ab854b0089d4929f48c2b4dbe2ce78a340
+    - {name: trocr_small_printed_config_json, url: https://huggingface.co/microsoft/trocr-small-printed/resolve/04e994ab854b0089d4929f48c2b4dbe2ce78a340/config.json, filename: trocr-small-printed/config.json, size: 4211}
+    - {name: trocr_small_printed_generation_config_json, url: https://huggingface.co/microsoft/trocr-small-printed/resolve/04e994ab854b0089d4929f48c2b4dbe2ce78a340/generation_config.json, filename: trocr-small-printed/generation_config.json, size: 190}
+    - {name: trocr_small_printed_model_safetensors, url: https://huggingface.co/microsoft/trocr-small-printed/resolve/04e994ab854b0089d4929f48c2b4dbe2ce78a340/model.safetensors, filename: trocr-small-printed/model.safetensors, size: 245839136, sha256: 49350a39968df83e5a1adc90fc0ede02ff247671aed70b842af350fd4a7103f3}
+    - {name: trocr_small_printed_preprocessor_config_json, url: https://huggingface.co/microsoft/trocr-small-printed/resolve/04e994ab854b0089d4929f48c2b4dbe2ce78a340/preprocessor_config.json, filename: trocr-small-printed/preprocessor_config.json, size: 272}
+    - {name: trocr_small_printed_sentencepiece_bpe_model, url: https://huggingface.co/microsoft/trocr-small-printed/resolve/04e994ab854b0089d4929f48c2b4dbe2ce78a340/sentencepiece.bpe.model, filename: trocr-small-printed/sentencepiece.bpe.model, size: 1356293, sha256: 6f5e2fefcf793761a76a6bfb8ad35489f9c203b25557673284b6d032f41043f4}
+    - {name: trocr_small_printed_special_tokens_map_json, url: https://huggingface.co/microsoft/trocr-small-printed/resolve/04e994ab854b0089d4929f48c2b4dbe2ce78a340/special_tokens_map.json, filename: trocr-small-printed/special_tokens_map.json, size: 238}
+    - {name: trocr_small_printed_tokenizer_config_json, url: https://huggingface.co/microsoft/trocr-small-printed/resolve/04e994ab854b0089d4929f48c2b4dbe2ce78a340/tokenizer_config.json, filename: trocr-small-printed/tokenizer_config.json, size: 327}
+    # PaddlePaddle/PP-OCRv6_medium_det @ 8e0f56fb2ef86b461d99cfc7ac5c137738985f61
+    - {name: pp_ocrv6_medium_det_inference_json, url: https://huggingface.co/PaddlePaddle/PP-OCRv6_medium_det/resolve/8e0f56fb2ef86b461d99cfc7ac5c137738985f61/inference.json, filename: PP-OCRv6_medium_det/inference.json, size: 312150}
+    - {name: pp_ocrv6_medium_det_inference_pdiparams, url: https://huggingface.co/PaddlePaddle/PP-OCRv6_medium_det/resolve/8e0f56fb2ef86b461d99cfc7ac5c137738985f61/inference.pdiparams, filename: PP-OCRv6_medium_det/inference.pdiparams, size: 61960476, sha256: 85218d2e3d98f5a21c58b4220627be923a97aee5db3cc71f39536ab31ac53960}
+    - {name: pp_ocrv6_medium_det_inference_yml, url: https://huggingface.co/PaddlePaddle/PP-OCRv6_medium_det/resolve/8e0f56fb2ef86b461d99cfc7ac5c137738985f61/inference.yml, filename: PP-OCRv6_medium_det/inference.yml, size: 886}
+    # PaddlePaddle/PP-OCRv6_medium_rec @ e5a92bcbc5cc1b494628e458d267778f0704fd7c
+    - {name: pp_ocrv6_medium_rec_inference_json, url: https://huggingface.co/PaddlePaddle/PP-OCRv6_medium_rec/resolve/e5a92bcbc5cc1b494628e458d267778f0704fd7c/inference.json, filename: PP-OCRv6_medium_rec/inference.json, size: 221814}
+    - {name: pp_ocrv6_medium_rec_inference_pdiparams, url: https://huggingface.co/PaddlePaddle/PP-OCRv6_medium_rec/resolve/e5a92bcbc5cc1b494628e458d267778f0704fd7c/inference.pdiparams, filename: PP-OCRv6_medium_rec/inference.pdiparams, size: 76465087, sha256: 1b01c79a914587933f615569e75de54f2e638ebb5d3f3b3c1b38c24ede8c7319}
+    - {name: pp_ocrv6_medium_rec_inference_yml, url: https://huggingface.co/PaddlePaddle/PP-OCRv6_medium_rec/resolve/e5a92bcbc5cc1b494628e458d267778f0704fd7c/inference.yml, filename: PP-OCRv6_medium_rec/inference.yml, size: 150580}
+    # PaddlePaddle/PP-OCRv6_small_det @ 106c97591b235f607453300d9fc8c1cad1b25488
+    - {name: pp_ocrv6_small_det_inference_json, url: https://huggingface.co/PaddlePaddle/PP-OCRv6_small_det/resolve/106c97591b235f607453300d9fc8c1cad1b25488/inference.json, filename: PP-OCRv6_small_det/inference.json, size: 229307}
+    - {name: pp_ocrv6_small_det_inference_pdiparams, url: https://huggingface.co/PaddlePaddle/PP-OCRv6_small_det/resolve/106c97591b235f607453300d9fc8c1cad1b25488/inference.pdiparams, filename: PP-OCRv6_small_det/inference.pdiparams, size: 9817888, sha256: 5043d4ccc8d63402ccea8feefcee4db57077431a873e78d2191836a178a492da}
+    - {name: pp_ocrv6_small_det_inference_yml, url: https://huggingface.co/PaddlePaddle/PP-OCRv6_small_det/resolve/106c97591b235f607453300d9fc8c1cad1b25488/inference.yml, filename: PP-OCRv6_small_det/inference.yml, size: 885}
+    # PaddlePaddle/PP-OCRv6_small_rec @ bd619643acac4b9650c040234da8d944476ee3f1
+    - {name: pp_ocrv6_small_rec_inference_json, url: https://huggingface.co/PaddlePaddle/PP-OCRv6_small_rec/resolve/bd619643acac4b9650c040234da8d944476ee3f1/inference.json, filename: PP-OCRv6_small_rec/inference.json, size: 208004}
+    - {name: pp_ocrv6_small_rec_inference_pdiparams, url: https://huggingface.co/PaddlePaddle/PP-OCRv6_small_rec/resolve/bd619643acac4b9650c040234da8d944476ee3f1/inference.pdiparams, filename: PP-OCRv6_small_rec/inference.pdiparams, size: 21074618, sha256: 406e1e689c9a7fbb04178007a3fe10cf852afe7bf8bb3bc6dbb9d532b13bd907}
+    - {name: pp_ocrv6_small_rec_inference_yml, url: https://huggingface.co/PaddlePaddle/PP-OCRv6_small_rec/resolve/bd619643acac4b9650c040234da8d944476ee3f1/inference.yml, filename: PP-OCRv6_small_rec/inference.yml, size: 150579}
+    # PaddlePaddle/PP-OCRv6_tiny_det @ d3177d4e5551463292a61e27cfca2b53e7c3fe9d
+    - {name: pp_ocrv6_tiny_det_inference_json, url: https://huggingface.co/PaddlePaddle/PP-OCRv6_tiny_det/resolve/d3177d4e5551463292a61e27cfca2b53e7c3fe9d/inference.json, filename: PP-OCRv6_tiny_det/inference.json, size: 229184}
+    - {name: pp_ocrv6_tiny_det_inference_pdiparams, url: https://huggingface.co/PaddlePaddle/PP-OCRv6_tiny_det/resolve/d3177d4e5551463292a61e27cfca2b53e7c3fe9d/inference.pdiparams, filename: PP-OCRv6_tiny_det/inference.pdiparams, size: 1718055, sha256: 853f7ed317d4f2f80de646842e5bbc32f9d39c601562cbe466cda42e4bafb1b1}
+    - {name: pp_ocrv6_tiny_det_inference_yml, url: https://huggingface.co/PaddlePaddle/PP-OCRv6_tiny_det/resolve/d3177d4e5551463292a61e27cfca2b53e7c3fe9d/inference.yml, filename: PP-OCRv6_tiny_det/inference.yml, size: 883}
+    # PaddlePaddle/PP-OCRv6_tiny_rec @ 0736086f72f666350ebcdc0c3a504eeac89cdfad
+    - {name: pp_ocrv6_tiny_rec_inference_json, url: https://huggingface.co/PaddlePaddle/PP-OCRv6_tiny_rec/resolve/0736086f72f666350ebcdc0c3a504eeac89cdfad/inference.json, filename: PP-OCRv6_tiny_rec/inference.json, size: 108959}
+    - {name: pp_ocrv6_tiny_rec_inference_pdiparams, url: https://huggingface.co/PaddlePaddle/PP-OCRv6_tiny_rec/resolve/0736086f72f666350ebcdc0c3a504eeac89cdfad/inference.pdiparams, filename: PP-OCRv6_tiny_rec/inference.pdiparams, size: 4420410, sha256: bb2f8f54d1e25f28c71b6fa4fe23f5940e159cae27fbee96155c99f822156e57}
+    - {name: pp_ocrv6_tiny_rec_inference_yml, url: https://huggingface.co/PaddlePaddle/PP-OCRv6_tiny_rec/resolve/0736086f72f666350ebcdc0c3a504eeac89cdfad/inference.yml, filename: PP-OCRv6_tiny_rec/inference.yml, size: 55571}

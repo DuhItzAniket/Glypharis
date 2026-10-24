@@ -1,0 +1,135 @@
+"""Cut the line crops of a page-based evaluation set into a line pack (Phase 5).
+
+Recognition-only benchmarks need ground-truth line crops, cut once so every system (the baselines
+now, GLYPHARIS later) reads exactly the same crops. Lines are chosen by
+`glypharis.eval.page_metrics.is_rec_line` and cut with `glypharis.data.crops.cut_line`, which
+follows curved GDC lines. The selection keeps lines with characters outside the GLYPHARIS charset
+and very long lines, which the Phase 4 training packs leave out: an evaluation set must not be
+shaped by one system's limits (EXPERIMENT_PROTOCOL §2). That is why HierText validation gets its
+own evaluation pack instead of reusing the Phase 4 validation pack.
+
+    python scripts/build_eval_crops.py --eval-set hiertext_val
+    python scripts/build_eval_crops.py --eval-set hiertext_test
+    python scripts/build_eval_crops.py --eval-set gdc_test
+
+Cutting crops is preprocessing, not evaluation: no model sees the data and nothing is scored, so
+the test-access log is not touched.
+
+Outputs: the line pack named in SETS (git-ignored) and data/manifests/processed/eval_crops.json
+(committed).
+"""
+
+from __future__ import annotations
+
+import argparse
+import hashlib
+import json
+import sys
+from concurrent.futures import ProcessPoolExecutor
+from pathlib import Path
+from typing import Any
+
+from glypharis.data.crops import CropSettings, background_grey, cut_line, encode_jpeg
+from glypharis.data.linepack import LinePackReader, LinePackWriter
+from glypharis.data.pages import Page, open_page_image, read_pages
+from glypharis.eval.page_metrics import is_rec_line
+
+SETS = {
+    "hiertext_val": (
+        "processed/hiertext/pages_validation.jsonl.gz",
+        "processed/hiertext/lines_validation_eval",
+    ),
+    "hiertext_test": ("processed/hiertext/pages_test.jsonl.gz", "processed/hiertext/lines_test"),
+    "gdc_test": ("processed/gdc/pages_test.jsonl.gz", "processed/gdc/lines_test"),
+}
+
+
+def crop_page(args: tuple[dict[str, Any], str]) -> list[tuple[str, str, bytes, tuple[int, int]]]:
+    page_dict, data_root = args
+    page = Page.from_dict(page_dict)
+    settings = CropSettings()
+    gray = open_page_image(page, data_root, "L")
+    fill = background_grey(gray)
+    out = []
+    for ln in page.lines:
+        if is_rec_line(ln):
+            crop = cut_line(gray, ln.polygon, settings, fill)
+            out.append((ln.line_id, ln.text, encode_jpeg(crop, settings.jpeg_quality), crop.size))
+    return out
+
+
+def sha256(path: Path) -> str:
+    return hashlib.sha256(path.read_bytes()).hexdigest()
+
+
+def crop_settings_record(settings: CropSettings) -> dict[str, Any]:
+    """Crop settings as applied here; the aspect cap is a training filter, unused here."""
+    rec: dict[str, Any] = settings.to_dict()
+    rec["max_aspect"] = "not applied (evaluation keeps long lines)"
+    return rec
+
+
+def main(argv: list[str] | None = None) -> int:
+    parser = argparse.ArgumentParser(description=__doc__.splitlines()[0])
+    parser.add_argument("--eval-set", required=True, choices=sorted(SETS))
+    parser.add_argument("--data-root", default="data")
+    parser.add_argument("--workers", type=int, default=8)
+    parser.add_argument("--verify", action="store_true",
+                        help="re-cut in memory, check the pack is identical, refresh only "
+                             "the manifest (pages file changed, lines did not)")  # fmt: skip
+    args = parser.parse_args(argv)
+
+    root = Path(args.data_root)
+    pages_rel, pack_rel = SETS[args.eval_set]
+    pages = list(read_pages(root / pages_rel))
+    settings = CropSettings()
+    meta = {"eval_set": args.eval_set, "pages": pages_rel,
+            "crop_settings": crop_settings_record(settings),
+            "selection": "glypharis.eval.page_metrics.is_rec_line"}  # fmt: skip
+    jobs = [(p.to_dict(), str(root)) for p in pages]
+    if args.verify:
+        reader = LinePackReader(root / pack_rel)
+        n = 0
+        with ProcessPoolExecutor(max_workers=args.workers) as pool:
+            for crops in pool.map(crop_page, jobs, chunksize=4):
+                for key, label, data, _ in crops:
+                    rec = reader.records[n] if n < len(reader) else None
+                    if (
+                        rec is None
+                        or (rec.key, rec.label) != (key, label)
+                        or (reader.read_bytes(n) != data)
+                    ):
+                        raise SystemExit(f"{args.eval_set}: crop {n} ({key}) differs from the "
+                                         "pack; rebuild it instead of verifying")  # fmt: skip
+                    n += 1
+        if n != len(reader):
+            raise SystemExit(f"{args.eval_set}: {n} crops cut, pack has {len(reader)}")
+        pack_meta = {"count": n, "bin_sha256": reader.meta["bin_sha256"]}
+    else:
+        with (
+            LinePackWriter(root / pack_rel, meta) as writer,
+            ProcessPoolExecutor(max_workers=args.workers) as pool,
+        ):
+            for page, crops in zip(pages, pool.map(crop_page, jobs, chunksize=4), strict=True):
+                for key, label, data, size in crops:
+                    writer.add(key, page.doc_id, page.split, page.source, label, data, size)
+            pack_meta = writer.close()
+
+    man_path = root / "manifests" / "processed" / "eval_crops.json"
+    manifest = json.loads(man_path.read_text(encoding="utf-8")) if man_path.exists() else {}
+    manifest[args.eval_set] = {
+        "pages": pages_rel,
+        "pages_sha256": sha256(root / pages_rel),
+        "pack": pack_rel,
+        "count": pack_meta["count"],
+        "bin_sha256": pack_meta["bin_sha256"],
+        "crop_settings": crop_settings_record(settings),
+    }
+    man_path.write_text(json.dumps(dict(sorted(manifest.items())), indent=1) + "\n",
+                        encoding="utf-8", newline="\n")  # fmt: skip
+    print(f"{args.eval_set}: {pack_meta['count']} crops -> {pack_rel}")
+    return 0
+
+
+if __name__ == "__main__":
+    sys.exit(main())

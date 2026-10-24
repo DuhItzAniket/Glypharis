@@ -104,3 +104,23 @@ the bottom. Experiments get their full record in `experiments.md`; this log is t
   aligned photo) detects such shifts; a test now checks that it does.
 - GDC v1 frozen with 106 pages and 8,606 lines. The real-scan slice becomes a separate set (GDC-scan),
   so the frozen set does not wait on it.
+
+### 2026-10-25 — Phase 5: baselines
+
+- Seven baselines on our evaluation sets and metrics (`reports/baselines/`). PP-OCRv6 small is the
+  most accurate full-scope system; PaddleOCR's English default (PP-OCRv6 medium) matches it on
+  HierText lines at about twelve times the CPU time per line.
+- HierText pages are hard for every system, mostly because detection misses lines; Tesseract's page
+  analysis finds about one line in ten. On GDC, Tesseract still has the best reading order, since the
+  PaddleOCR pipelines return lines in detection order.
+- Three surprising numbers were checked on validation predictions before being written up
+  (`scripts/baseline_diagnostics.py`): PP-OCRv5 server drops word gaps, PP-OCRv5 mobile cuts long
+  lines short, and TrOCR-small-printed writes capitals. None of them is a scoring bug.
+- PP-OCRv5 server could not run the GDC pages on the 16 GB laptop (two attempts, both dead on the
+  first page) and takes 81 s per HierText page; recorded as a deployment finding, not retried with
+  a non-default configuration.
+- The scorer showed the failed run as "0 of 106" because the attempts had left an empty prediction
+  file; fixed so a file with no predictions is skipped and the coverage table gives the reason.
+- Set a CPU latency target for v0.1 from the measured speeds (ADR-0011, accepted by the owner),
+  anchored on PP-OCRv6 tiny, the fastest modern pipeline; Tesseract is faster on pages but finds too
+  few HierText lines to be the bar.

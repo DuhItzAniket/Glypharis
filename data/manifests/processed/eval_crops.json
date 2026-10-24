@@ -1,0 +1,41 @@
+{
+ "gdc_test": {
+  "pages": "processed/gdc/pages_test.jsonl.gz",
+  "pages_sha256": "c4227f1ae6d0aa856c3e64a2bcf55325840343df48dc6810b104e62a6f092af5",
+  "pack": "processed/gdc/lines_test",
+  "count": 8372,
+  "bin_sha256": "d6dda6660361a66ba9b95f50fd707fbfb1136e3461192110eb2ab93859936325",
+  "crop_settings": {
+   "height": 64,
+   "margin": 0.15,
+   "max_aspect": "not applied (evaluation keeps long lines)",
+   "jpeg_quality": 95
+  }
+ },
+ "hiertext_test": {
+  "pages": "processed/hiertext/pages_test.jsonl.gz",
+  "pages_sha256": "c48915b2b9747c71dfa93c41315d2c9f2ad665c6591efd78f516b7a413cf272b",
+  "pack": "processed/hiertext/lines_test",
+  "count": 67574,
+  "bin_sha256": "e854af994ac21bafd2d507c99777bacfe0cdbea84135260d5a52772962ad7f37",
+  "crop_settings": {
+   "height": 64,
+   "margin": 0.15,
+   "max_aspect": "not applied (evaluation keeps long lines)",
+   "jpeg_quality": 95
+  }
+ },
+ "hiertext_val": {
+  "pages": "processed/hiertext/pages_validation.jsonl.gz",
+  "pages_sha256": "0655c5f795a644666777a072714d039d48231878b7707889b1e770703ddfd180",
+  "pack": "processed/hiertext/lines_validation_eval",
+  "count": 74500,
+  "bin_sha256": "b89bb2b0cd166c925b4e347a5970a057c092db9b341dd56d8ba1a0522d21f593",
+  "crop_settings": {
+   "height": 64,
+   "margin": 0.15,
+   "max_aspect": "not applied (evaluation keeps long lines)",
+   "jpeg_quality": 95
+  }
+ }
+}
