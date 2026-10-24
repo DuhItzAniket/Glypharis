@@ -58,7 +58,6 @@ def test_killed_jobs_and_a_finished_runs_exit_crash_are_accounted(tmp_path):
                                 str(tmp_path / "runs"), "--out", str(out)]) == 0  # fmt: skip
     res = json.loads((out / "ledger.json").read_text(encoding="utf-8"))
     first, last = res["jobs"]
-    assert first["outcome"] == "interrupted"  # killed by hand, no end line
-    assert abs(first["hours"] - (7 * 60 + 56) / 3600) < 1e-9
+    assert first["outcome"] == "interrupted" and first["hours"] is None  # no end line: unknown
     assert last["outcome"].startswith("done")  # it finished the run, then exited non-zero
     assert res["experiments"]["GW-REC-007"]["failed_jobs"] == 1
