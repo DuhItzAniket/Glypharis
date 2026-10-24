@@ -86,6 +86,33 @@ CI of the difference excludes zero, on validation unless stated otherwise.
 - **Test:** Phase 10 (validation), Phase 14 (transfer).
 - **Status:** open
 
+### H9 — An ImageNet backbone helps the detector at equal steps (RQ1, ADR-0007)
+
+- **Statement:** Initialising GLYPHARIS-Det's MobileNetV3-Large backbone from ImageNet weights raises
+  validation F1@0.5 over random initialisation at an equal step budget.
+- **Test:** Phase 8: GW-DET-001 (ImageNet) against GW-DET-002 (random initialisation, otherwise
+  identical). One seed each, so exploratory.
+- **Success criterion:** the paired page-bootstrap 95% CI of F1@0.5(GW-DET-001) − F1@0.5(GW-DET-002),
+  on all HierText validation pages, lies entirely above 0 (`scripts/det_compare.py`).
+- **Status:** open (written 2026-10-25, before the sanity sequence and the runs)
+
+### H10 — MobileNetV3-Small is non-inferior to Large for detection (RQ7)
+
+- **Statement:** With the same recipe and step budget, GLYPHARIS-Det with a MobileNetV3-Small backbone
+  reaches validation F1@0.5 within 0.03 of the MobileNetV3-Large backbone (both ImageNet initialised).
+- **Test:** Phase 8: GW-DET-001 (Large) against GW-DET-003 (Small). One seed each, so exploratory.
+- **Success criterion:** the upper bound of the paired page-bootstrap 95% CI of F1@0.5(GW-DET-001) −
+  F1@0.5(GW-DET-003), on all HierText validation pages, is ≤ 0.03 (`scripts/det_compare.py`).
+- **Status:** open (written 2026-10-25, before the sanity sequence and the runs)
+
+**Operating point of record (H9, H10).** A detector run has exactly one operating point of record:
+the one stored in its `best.pt` (`selected_op`). It is chosen from the operating points pre-registered
+in the config (`dbnet15`, `inverse10`) as the one with the higher F1@0.5 on the per-epoch validation
+subset at the best epoch (EXPERIMENT_PROTOCOL §7). Both hypotheses compare full validation of each
+arm's `best.pt` at its stored operating point. The arg-max over operating points on the full
+validation set is reported for information only and is never used for H9 or H10. Both differences are
+also reported with each arm at each common fixed operating point, for transparency.
+
 ---
 
 The numeric thresholds above are planning thresholds set before any data was seen. They may be refined
