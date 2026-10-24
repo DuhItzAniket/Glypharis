@@ -157,7 +157,26 @@
   },
   {
    "run": "GW-REC-016",
-   "status": "pending"
+   "status": "done",
+   "change": "data.augmentation: geometric",
+   "parameters": 7796435,
+   "steps": 45360,
+   "train_seconds": 5001.139999999927,
+   "val_cer": {
+    "value": 0.08337667778324323,
+    "low": 0.08164565052149726,
+    "high": 0.08500298111317353,
+    "resamples": 1000,
+    "unit": "lines"
+   },
+   "difference": {
+    "value": 0.000203581624463686,
+    "low": -0.00020852503472122813,
+    "high": 0.0006245681991836864,
+    "resamples": 1000,
+    "unit": "lines"
+   },
+   "verdict": "no clear difference"
   },
   {
    "run": "GW-REC-017",

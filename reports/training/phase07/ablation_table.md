@@ -14,7 +14,7 @@ Mean 8.31%, standard deviation 0.01 points, range 8.30 to 8.32%.
 
 ## Arms against GW-REC-003
 
-Difference: arm minus reference, percentage points, 95% bootstrap CI over lines (the same resampled lines for both runs). 6 comparisons, no correction for multiplicity. Verdict rule: better or worse only when the CI excludes zero and the arm's CER lies outside the control seeds' range in the same direction.
+Difference: arm minus reference, percentage points, 95% bootstrap CI over lines (the same resampled lines for both runs). 7 comparisons, no correction for multiplicity. Verdict rule: better or worse only when the CI excludes zero and the arm's CER lies outside the control seeds' range in the same direction.
 
 | Run | Change against the reference | Parameters | Steps | GPU-hours | Val CER % | Difference | Verdict |
 |---|---|---|---|---|---|---|---|
@@ -24,7 +24,7 @@ Difference: arm minus reference, percentage points, 95% bootstrap CI over lines 
 | GW-REC-008 | model.lstm_hidden: 128 | 5,624,787 | 45,360 | 1.52 | 8.78 [8.60, 8.94] | +0.46 [+0.42, +0.51] | worse |
 | GW-REC-009 | model.lstm_layers: 1 | 6,219,475 | 45,360 | 1.45 | 8.78 [8.60, 8.94] | +0.46 [+0.42, +0.51] | worse |
 | GW-REC-015 | data.augmentation: none | 7,796,435 | 45,360 | 1.16 | 8.68 [8.50, 8.84] | +0.36 [+0.32, +0.41] | worse |
-| GW-REC-016 | pending | | | | | | |
+| GW-REC-016 | data.augmentation: geometric | 7,796,435 | 45,360 | 1.39 | 8.34 [8.16, 8.50] | +0.02 [-0.02, +0.06] | no clear difference |
 | GW-REC-017 | pending | | | | | | |
 | GW-REC-018 | pending | | | | | | |
 | GW-REC-010 | pending | | | | | | |
