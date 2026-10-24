@@ -16,6 +16,9 @@ Rows link to a full entry below. Numbers are copied from generated reports only,
 | [GW-BASE-007](#gw-base-007) | 2026-10-21 | 05 | PaddleOCR PP-OCRv6 medium (PaddleOCR 3.7's English default): reduced scope | done | lines 7.54% CER (HierText val); 553 ms per line, 32.5 s per page | `reports/baselines/` |
 | [GW-REC-001](#gw-rec-001) | 2026-10-22 | 06 | CRNN baseline on HierText lines | done | val CER 7.53% [7.38, 7.69] | `reports/training/GW-REC-001/` |
 | [GW-REC-002](#gw-rec-002) | 2026-10-22 | 06 | GW-REC-001 plus 35,000 GlyphSynth lines (exploratory look at H2′a) | done | val CER 7.49% [7.34, 7.64]; −0.05 points [−0.09, −0.01] vs GW-REC-001 (one seed, not budget-matched) | `reports/training/GW-REC-002/` |
+| [GW-DET-001](#gw-det-001) | 2026-10-25 | 08 | GLYPHARIS-Det baseline: DBNet-style, MobileNetV3-Large, ImageNet init, HierText pages (control for H9 and H10) | planned | — | `reports/training/GW-DET-001/` |
+| [GW-DET-002](#gw-det-002) | 2026-10-25 | 08 | GW-DET-001 with a randomly initialised backbone (H9: ImageNet vs scratch, exploratory) | planned | — | `reports/training/GW-DET-002/` |
+| [GW-DET-003](#gw-det-003) | 2026-10-25 | 08 | GW-DET-001 with a MobileNetV3-Small backbone (H10: Small within 0.03 F1@0.5 of Large, exploratory) | planned | — | `reports/training/GW-DET-003/` |
 
 ### GW-BASE-001 — Tesseract 5 (LSTM, eng): recognition and end to end
 
@@ -194,6 +197,73 @@ Rows link to a full entry below. Numbers are copied from generated reports only,
 - **Limitations:** single seed, one mix size; more steps per epoch than GW-REC-001 (not budget-matched, EXPERIMENT_PROTOCOL §5), so a difference is not attributable to the data alone; scored on all HierText validation lines, not the document-style slice.
 - **Next experiment:** Phase 12 (GW-DATA-*): several GlyphSynth sizes and seeds, budget-matched, on the document-style slice.
 - **Training time:** 5.32 GPU-hours (RTX 4050 Laptop), 30 epochs, with one planned stop and resume.
+
+### GW-DET-001 — GLYPHARIS-Det baseline: DBNet-style, MobileNetV3-Large, ImageNet init
+
+- **Date allocated / run:** 2026-10-25 / —
+- **Phase:** 08
+- **Git commit:** recorded in the run summary   **Config:** `configs/det/gw-det-001.yaml`   **Seed(s):** 1337 (single seed: exploratory)
+- **Dataset version(s):** HierText pages from Phase 4 (`data/manifests/processed/hiertext.json`; each page file's SHA-256 is checked against it at start-up); MobileNetV3-Large ImageNet weights (`data/manifests/imagenet_backbones.json`; SHA-256 checked before loading)
+- **Hardware:** RTX 4050 Laptop 6 GB. Training in bf16 autocast with the final head layers and the loss in fp32; validation in fp32 with TF32 off, batch 1
+- **Research question:** how well does the ARCHITECTURE §3 detector (DBNet-style, MobileNetV3-Large backbone initialised from ImageNet) find HierText text lines, measured as validation F1@0.5, and is its training loop healthy?
+- **Hypothesis (written before the run):** none tested on its own. This is the Phase 8 reference run and the control for [H9](hypotheses.md) (against GW-DET-002) and [H10](hypotheses.md) (against GW-DET-003). Expectation, not a claim: validation F1@0.5 below the label ceiling, and no collapse or threshold flags.
+- **Method:** the sanity sequence first, under this ID: `scripts/det_preview.py` (training crops and their labels, checked by eye), `scripts/det_sanity.py --config configs/det/gw-det-001.yaml` (label ceiling, overfit one batch, LR range test, 10-minute dry run) and `scripts/det_resume_check.py`. The decision rules below are then applied, and a dated amendment to this entry freezes the measured values, citing `reports/training/sanity/GW-DET-001/sanity.md` and the final config hash, before any main run starts. Then `python train.py --config configs/det/gw-det-001.yaml`: HierText train pages, 4 random 640×640 crops per page per epoch, batch 8, AdamW 1e-3 with 2,000 warm-up steps and a cosine schedule, up to 24 epochs (rule 4), early stopping off so the three arms keep equal step budgets (EXPERIMENT_PROTOCOL §5). Every epoch is scored on a fixed seeded subset of 800 validation pages (plus 200 training pages) at the two pre-registered operating points, `dbnet15` (DBNet unclip, ratio 1.5) and `inverse10` (the exact inverse of the label shrink). `best.pt` is the epoch with the highest F1@0.5 over the two, and it stores that operating point, the run's operating point of record (EXPERIMENT_PROTOCOL §7). At the end `best.pt` and `last.pt` are scored on every validation page: P, R and F1@0.5, F1@0.7 and mean IoU with page-bootstrap CIs at the stored operating point (the headline) and at each fixed one, per slice, with overlays, next to the label ceiling and a row on the Phase 5 baseline page set. GW-DET-002 and 003 are compared with this run by `scripts/det_compare.py` at each arm's stored operating point. GW-DET runs start only when no GW-REC run holds the GPU; the trainer refuses to start with less than 4.0 GiB of GPU memory free (exit 4).
+- **Decision rules (fixed 2026-10-25, before the sanity sequence):** each rule names the measurement that triggers it. A fallback triggered by any arm's dry run applies to all three arms, so they keep one recipe. Every outcome goes into the amendment.
+  1. **Label ceiling** (once, model-free, the same for all arms): the configured post-processing on every validation page, with the ground-truth label kernels as the probability map. Gate: selection-metric ceiling F1@0.5 ≥ 0.90, and zero counting mismatches between `fast_det_counts` and `evaluate_page`. Below the gate the runs stop and the owner decides; a change such as inference long side 1600 or shrink ratio 0.6 would be a new registered experiment.
+  2. **Overfit one batch** (plan exit criterion): 8 fixed training crops, up to 2,000 steps. Pass: kernel Dice ≥ 0.90, threshold-map L1 ≤ 0.02 and F1@0.5 ≥ 0.95 × the batch's own label ceiling. A failure is resolved before any main run.
+  3. **Learning rate:** if the configured 1e-3 is not within 3x of GW-DET-001's LR range-test suggestion (the LR at the lowest smoothed loss, divided by 10), the learning rate of all three arms changes before any main run to a value inside that band, stated with the reason in the amendment. GW-DET-002's own range test is recorded but does not change its learning rate (one variable).
+  4. **Epochs (9-hour rule):** `epochs = min(24, ⌊9 h / t_epoch⌋)`, where t_epoch is GW-DET-001's dry-run estimate of one epoch's training time plus one per-epoch validation pass. GW-DET-002 and 003 inherit the result (equal step budgets).
+  5. **Validation share:** if a dry run's validation pass takes more than 15% of the epoch's training time, `det.data.val_subset` drops from 800 to 400.
+  6. **Data wait:** if the training loop waits for data more than 10% of a dry run's training time, `det.data.num_workers` rises from 6 to 8 and the dry run is repeated. If the wait is still above 10%, labels move to `LABEL_VERSION` 2 (a threshold map from `cv2.distanceTransform`), registered before any main run and never changed mid-arm.
+  7. **VRAM:** each arm's own dry run must keep reserved GPU memory ≤ 4.0 GiB in training and in validation. If any arm exceeds it, all arms train with batch 4 and gradient accumulation 2 (the same effective batch of 8).
+  8. **Other dry-run gates,** with no fallback (a failure stops that arm until it is understood): finite loss, and main-process plus worker RSS ≤ 8 GB.
+  9. **Resume check** (GW-DET-001): a run stopped mid-epoch and resumed matches an uninterrupted one, identically on the CPU and within a maximum relative per-step loss difference of 1e-4 on CUDA.
+- **Variables:** none (reference run; the control for GW-DET-002 and GW-DET-003)
+- **Control:** —
+- **Result:**
+- **Training diagnostics:**
+- **Interpretation:**
+- **Limitations:** single seed; the operating point of record is chosen on validation (the per-epoch subset), so the headline is mildly optimistic; HierText is mostly scene text with short lines (RISK_REGISTER R-06), so document pages are measured later, on GDC in Phase 14.
+- **Next experiment:** GW-DET-002 and GW-DET-003 (H9, H10); then Phase 9, which works from this run's saved candidates and probability maps.
+- **Training time:**
+
+### GW-DET-002 — GW-DET-001 with a randomly initialised backbone (H9)
+
+- **Date allocated / run:** 2026-10-25 / —
+- **Phase:** 08
+- **Git commit:** recorded in the run summary   **Config:** `configs/det/gw-det-002.yaml`   **Seed(s):** 1337 (single seed: exploratory)
+- **Dataset version(s):** as GW-DET-001, without the ImageNet weights
+- **Hardware:** as GW-DET-001
+- **Research question:** does ImageNet initialisation of the MobileNetV3-Large backbone raise validation F1@0.5 at an equal step budget? This is the ImageNet-vs-scratch ablation planned in ADR-0007, so the effect of the prior is measured rather than assumed.
+- **Hypothesis (written before the run):** [H9](hypotheses.md): GW-DET-001 beats this run. Success if the paired page-bootstrap 95% CI of F1@0.5(GW-DET-001) − F1@0.5(GW-DET-002) lies entirely above 0, with each arm at the operating point stored in its `best.pt`.
+- **Method:** identical to GW-DET-001 except `det.model.init: scratch` (torchvision's random initialisation, no weights file); a test checks that the resolved config differs from GW-DET-001's only there and in the run's name. Sanity sequence under this ID: an LR range test (recorded only; the learning rate stays GW-DET-001's) and its own 10-minute dry run with the VRAM gate, because a scratch model's early probability maps are noisier and its validation can cost more. GW-DET-001's decision rules apply, including `epochs` from GW-DET-001's dry run, and a fallback triggered here applies to all three arms. A dated amendment to this entry freezes the values before the main run, citing `reports/training/sanity/GW-DET-002/sanity.md` and the final config hash. Then `python train.py --config configs/det/gw-det-002.yaml` and `python scripts/det_compare.py --a runs/GW-DET-001 --b runs/GW-DET-002`.
+- **Variables:** independent: backbone initialisation (ImageNet vs random); controlled: data, crops, augmentation, labels, loss, optimizer, learning rate, schedule, step budget, operating points, seed
+- **Control:** GW-DET-001
+- **Result:**
+- **Training diagnostics:**
+- **Interpretation:**
+- **Limitations:** single seed, and the paired CI covers page sampling only, not training randomness, so part of a difference between two single runs may be seed noise; the learning rate is GW-DET-001's, and if this arm's own range test suggests another one, that is reported as a limitation of the comparison; the two arms may end at different operating points of record.
+- **Next experiment:** if the owner rules out the ImageNet weight terms for a delivered detector (RISK_REGISTER R-05), this arm is the measured fallback.
+- **Training time:**
+
+### GW-DET-003 — GW-DET-001 with a MobileNetV3-Small backbone (H10)
+
+- **Date allocated / run:** 2026-10-25 / —
+- **Phase:** 08
+- **Git commit:** recorded in the run summary   **Config:** `configs/det/gw-det-003.yaml`   **Seed(s):** 1337 (single seed: exploratory)
+- **Dataset version(s):** as GW-DET-001, with the MobileNetV3-Small ImageNet weights (`data/manifests/imagenet_backbones.json`)
+- **Hardware:** as GW-DET-001
+- **Research question:** does the smaller MobileNetV3-Small backbone (the `-S` variant of ARCHITECTURE §3) keep validation F1@0.5 within 0.03 of MobileNetV3-Large at the same recipe and step budget?
+- **Hypothesis (written before the run):** [H10](hypotheses.md): Small is non-inferior to Large within 0.03 F1@0.5. Success if the upper bound of the paired page-bootstrap 95% CI of F1@0.5(GW-DET-001) − F1@0.5(GW-DET-003) is ≤ 0.03, with each arm at the operating point stored in its `best.pt`.
+- **Method:** identical to GW-DET-001 except `det.model.backbone: mobilenet_v3_small` and its ImageNet weights file (a test checks that nothing else differs): same neck width, heads, data, recipe and learning rate. Sanity sequence under this ID: its own 10-minute dry run with the VRAM gate, because its memory use and throughput differ from Large. GW-DET-001's decision rules apply, including `epochs` from GW-DET-001's dry run, and a fallback triggered here applies to all three arms. A dated amendment to this entry freezes the values before the main run, citing `reports/training/sanity/GW-DET-003/sanity.md` and the final config hash. Then `python train.py --config configs/det/gw-det-003.yaml` and `python scripts/det_compare.py --a runs/GW-DET-001 --b runs/GW-DET-003`. Both arms' parameter counts come from their run summaries.
+- **Variables:** independent: backbone size (MobileNetV3-Large vs Small, both ImageNet initialised); controlled: neck and heads, data, crops, augmentation, labels, loss, optimizer, learning rate, schedule, step budget, operating points, seed
+- **Control:** GW-DET-001
+- **Result:**
+- **Training diagnostics:**
+- **Interpretation:**
+- **Limitations:** single seed, and the paired CI covers page sampling only, not training randomness; no LR range test of its own (it uses GW-DET-001's learning rate); CPU latency, the reason to prefer a smaller backbone, is not measured by this run.
+- **Next experiment:** with H9, the evidence for choosing the detector backbone of v0.1.
+- **Training time:**
 
 ---
 
