@@ -203,7 +203,26 @@
   },
   {
    "run": "GW-REC-018",
-   "status": "pending"
+   "status": "done",
+   "change": "data.augmentation: degradation",
+   "parameters": 7796435,
+   "steps": 45360,
+   "train_seconds": 4258.014000000025,
+   "val_cer": {
+    "value": 0.08679284804808762,
+    "low": 0.08501021202174901,
+    "high": 0.08847634043306514,
+    "resamples": 1000,
+    "unit": "lines"
+   },
+   "difference": {
+    "value": 0.003619751889308081,
+    "low": 0.0031510135027821096,
+    "high": 0.004066907436847159,
+    "resamples": 1000,
+    "unit": "lines"
+   },
+   "verdict": "worse"
   },
   {
    "run": "GW-REC-010",

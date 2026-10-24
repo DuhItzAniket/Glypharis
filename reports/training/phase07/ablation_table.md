@@ -14,7 +14,7 @@ Mean 8.31%, standard deviation 0.01 points, range 8.30 to 8.32%.
 
 ## Arms against GW-REC-003
 
-Difference: arm minus reference, percentage points, 95% bootstrap CI over lines (the same resampled lines for both runs). 8 comparisons, no correction for multiplicity. Verdict rule: better or worse only when the CI excludes zero and the arm's CER lies outside the control seeds' range in the same direction.
+Difference: arm minus reference, percentage points, 95% bootstrap CI over lines (the same resampled lines for both runs). 9 comparisons, no correction for multiplicity. Verdict rule: better or worse only when the CI excludes zero and the arm's CER lies outside the control seeds' range in the same direction.
 
 | Run | Change against the reference | Parameters | Steps | GPU-hours | Val CER % | Difference | Verdict |
 |---|---|---|---|---|---|---|---|
@@ -26,7 +26,7 @@ Difference: arm minus reference, percentage points, 95% bootstrap CI over lines 
 | GW-REC-015 | data.augmentation: none | 7,796,435 | 45,360 | 1.16 | 8.68 [8.50, 8.84] | +0.36 [+0.32, +0.41] | worse |
 | GW-REC-016 | data.augmentation: geometric | 7,796,435 | 45,360 | 1.39 | 8.34 [8.16, 8.50] | +0.02 [-0.02, +0.06] | no clear difference |
 | GW-REC-017 | data.augmentation: photometric | 7,796,435 | 45,360 | 1.16 | 8.59 [8.42, 8.75] | +0.28 [+0.23, +0.32] | worse |
-| GW-REC-018 | pending | | | | | | |
+| GW-REC-018 | data.augmentation: degradation | 7,796,435 | 45,360 | 1.18 | 8.68 [8.50, 8.85] | +0.36 [+0.32, +0.41] | worse |
 | GW-REC-010 | pending | | | | | | |
 | GW-REC-011 | pending | | | | | | |
 | GW-REC-012 | pending | | | | | | |
