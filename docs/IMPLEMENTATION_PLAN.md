@@ -432,6 +432,7 @@ with a concrete target set from the Phase 5 baseline measurements.
 | Phases 17, 18, 20 run right after Phase 10 for a v0.1, then again for the final model | The consumer needs a usable engine before the studies finish | ADR-0008 |
 | CPU-first inference; English printed text only | Deployment target undecided; owner decision on scope | ADR-0008 |
 | SynthText dropped; synthetic data only from GlyphSynth; RQ2 reframed; delivered models train only on commercially usable data | SynthText licence is non-commercial, 12-month, links withdrawn | ADR-0009 |
+| CLEval-style detection metrics descoped from Phase 8 | The Phase 8 task names "CLEval-style metrics per protocol", but EXPERIMENT_PROTOCOL §3 never defined one, so none was pre-registered. What CLEval measures, whether merges, splits and partial lines hide real detection quality, is answered in Phase 9 from merge and split counts, and a metric defined after the detector exists would be chosen after the fact. Pending the owner's sign-off at the Phase 8 gate | EXPERIMENT_PROTOCOL §11 (2026-10-25) |
 
 ## 9. Traceability (brief section → where it is handled)
 
