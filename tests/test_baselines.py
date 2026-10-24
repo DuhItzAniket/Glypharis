@@ -328,6 +328,37 @@ def test_scorer_tolerates_a_cut_off_last_record_and_lists_files_without_metadata
     assert "ppocr_server" not in log.read_text(encoding="utf-8")  # nothing scored, nothing logged
 
 
+def test_diagnostics_read_validation_predictions_only(root):
+    import baseline_diagnostics
+
+    data, _ = root
+    _write_run(data, "ppocr_server", "GW-BASE-003", "rec", "hiertext_val",
+               [{"key": "a", "ref": "two words", "pred": "twowords"},
+                {"key": "b", "ref": "Mixed case", "pred": "MIXED CASE"},
+                {"key": "c", "ref": "one", "pred": "one"}])  # fmt: skip
+    long_ref = "x" * 80
+    _write_run(data, "ppocr_mobile", "GW-BASE-002", "rec", "glyphsynth_val",
+               [{"key": "a", "ref": long_ref, "pred": "x" * 20},
+                {"key": "b", "ref": "short", "pred": "short"}])  # fmt: skip
+    _write_run(data, "tesseract", "GW-BASE-001", "rec", "gdc_test",
+               [{"key": "gdc_test/l0", "ref": "secret", "pred": "secret"}])  # fmt: skip
+    out = data.parent / "diag"
+    assert baseline_diagnostics.main(["--data-root", str(data), "--out", str(out)]) == 0
+    res = json.loads((out / "diagnostics.json").read_text(encoding="utf-8"))
+    gaps = res["word_gaps"]["ppocr_server"]
+    assert gaps["multi_word"] == 2 and gaps["keeps_a_space"] == 0.5
+    assert gaps["wrong_only_in_spaces"] == 1
+    # three references have lowercase letters; one output has none
+    assert res["letter_case"]["ppocr_server"]["no_lowercase_output"] == pytest.approx(1 / 3)
+    buckets = res["long_lines"]["ppocr_mobile"]["buckets"]
+    assert buckets[0]["length_ratio"] == 1.0 and buckets[-1]["length_ratio"] == 0.25
+    assert res["long_lines"]["ppocr_mobile"]["cut_short"] == 1
+    assert "tesseract" not in res["word_gaps"]  # the test-set file is never read
+    assert "GW-BASE-003 | PP-OCRv5 server | 2 | 50.0 | 1 |" in (out / "diagnostics.md").read_text(
+        encoding="utf-8"
+    )
+
+
 def test_runner_refuses_bad_requests_and_handles_metadata(root, monkeypatch):
     data, _ = root
     with pytest.raises(SystemExit, match="no pages"):
