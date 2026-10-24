@@ -217,6 +217,9 @@ class Tesseract:
                       "sha256": sha256_file(model)}  # fmt: skip
         self.child_peak = 0
 
+    def model_bytes(self) -> int:
+        return int(self.model["bytes"])
+
     def settings(self) -> dict[str, Any]:
         common = {"lang": "eng", "oem": "default (LSTM)", "traineddata": self.model,
                   "build": self.version_detail,
@@ -310,8 +313,9 @@ class PPOCR:
       image and cannot be scored against the page's ground truth. Orientation classification
       stays on, and polygons from a rotated page are mapped back with `unrotate`;
     - the text detector runs without oneDNN, because Paddle 3.3's oneDNN path crashes on the
-      PP-OCRv5 and PP-OCRv6 detectors on this machine. This changes speed only; every other model
-      keeps the default oneDNN mode.
+      PP-OCRv5 and PP-OCRv6 detectors on this machine, so the default cannot be run at all. The
+      plain kernels compute the same network; recognizer outputs were identical with and without
+      oneDNN where both run. Every other model keeps the default oneDNN mode.
 
     Recognition-only runs use the TextRecognition module with its defaults (batch size 1).
     """
@@ -376,11 +380,17 @@ class PPOCR:
         return {**common, "module": "PaddleOCR pipeline", "det_model": self.det_name,
                 "rec_model": self.rec_name, "use_doc_unwarping": False,
                 "use_doc_orientation_classify": True, "use_textline_orientation": True,
-                "detector_run_mode": "paddle (no oneDNN; speed only)",
+                "detector_run_mode": "paddle (oneDNN crashes on this machine)",
                 "deviation": "doc unwarping off (it moves polygons)"}  # fmt: skip
 
     def inference_batch(self, runner_batch: int) -> int:
         return 1  # TextRecognition's default batch size; the pipeline runs one page at a time
+
+    def model_bytes(self) -> int:
+        names = [self.rec_name]
+        if self.task == "e2e":
+            names += [self.det_name, "PP-LCNet_x1_0_doc_ori", "PP-LCNet_x1_0_textline_ori"]
+        return sum(f.stat().st_size for n in names for f in (MODELS / n).glob("*") if f.is_file())
 
     def recognize(self, images: list[Image.Image]) -> list[str]:
         arrays = [np.asarray(im.convert("RGB"))[:, :, ::-1].copy() for im in images]  # BGR
@@ -451,6 +461,10 @@ class TrOCR:
     def inference_batch(self, runner_batch: int) -> int:
         return runner_batch
 
+    def model_bytes(self) -> int:
+        path = MODELS / "trocr-small-printed"
+        return sum(f.stat().st_size for f in path.glob("*") if f.is_file())
+
     def recognize(self, images: list[Image.Image]) -> list[str]:
         pixel = self.processor(images=[im.convert("RGB") for im in images], return_tensors="pt")
         with self.torch.inference_mode():
@@ -499,6 +513,29 @@ def cpu_busy_percent(interval: float = 2.0) -> float:
     return float(psutil.cpu_percent(interval=interval))
 
 
+POWER_MODES = {
+    "961cc777-2547-4f9d-8174-7d86181b8a7a": "best power efficiency",
+    "00000000-0000-0000-0000-000000000000": "balanced",
+    "ded574b5-45a0-4f42-8737-46345c09c238": "best performance",
+}
+
+
+def _power_mode(plugged: bool | None) -> str | None:
+    """Windows 11 power mode (the slider), which overlays the classic power plan."""
+    try:
+        import winreg
+
+        path = r"SYSTEM\CurrentControlSet\Control\Power\User\PowerSchemes"
+        key = winreg.OpenKey(winreg.HKEY_LOCAL_MACHINE, path)
+        name = (
+            "ActiveOverlayAcPowerScheme" if plugged is not False else "ActiveOverlayDcPowerScheme"
+        )
+        guid = str(winreg.QueryValueEx(key, name)[0]).lower()
+        return POWER_MODES.get(guid, guid)
+    except (ImportError, OSError):
+        return None
+
+
 def run_conditions() -> dict[str, Any]:
     """Machine state that EXPERIMENT_PROTOCOL §3 asks to record with efficiency numbers."""
     import psutil
@@ -509,6 +546,7 @@ def run_conditions() -> dict[str, Any]:
                               text=True, timeout=10).stdout.strip()  # fmt: skip
     except (OSError, subprocess.SubprocessError):
         plan = None
+    plugged = battery.power_plugged if battery else None
     return {
         "cpu": _cpu_name(),
         "physical_cores": psutil.cpu_count(logical=False),
@@ -516,6 +554,7 @@ def run_conditions() -> dict[str, Any]:
         "on_ac_power": battery.power_plugged if battery else None,
         "battery_percent": battery.percent if battery else None,
         "power_plan": plan,
+        "power_mode": _power_mode(plugged),
         "cpu_busy_percent_before": cpu_busy_percent(),
         "thread_env": {k: os.environ.get(k) for k in THREAD_ENV},
         "python": platform.python_version(),
@@ -570,8 +609,17 @@ def run_predictions(args: argparse.Namespace, data: Path) -> int:
         example = sorted(stray)[0]
         raise SystemExit(f"{out} holds {len(stray)} keys outside {args.eval_set} (e.g. {example});"
                          " it was made for another sample, move it aside")  # fmt: skip
+    meta_path = out.with_suffix(".meta.json")
+    if meta_path.exists() and not out.exists():
+        meta_path.unlink()  # metadata of predictions that were moved aside: start afresh
     if len(done) >= len(keys):
         # Nothing to do: no model load, and no entry in the test-access log.
+        if not meta_path.exists():
+            _write_meta(meta_path, {"system": args.system, "task": args.task,
+                                    "eval_set": args.eval_set, "experiment": args.experiment,
+                                    "expected": len(keys), "samples": len(done), "runs": [],
+                                    "note": "predictions written by a run killed before it "
+                                            "wrote metadata; settings not recorded"})  # fmt: skip
         print(f"{args.system} {args.task} {args.eval_set}: already complete ({len(done)})")
         return 0
 
@@ -585,7 +633,6 @@ def run_predictions(args: argparse.Namespace, data: Path) -> int:
     import psutil
 
     proc = psutil.Process()
-    meta_path = out.with_suffix(".meta.json")
     meta = json.loads(meta_path.read_text(encoding="utf-8")) if meta_path.exists() else {}
     runs = meta.get("runs", [])
     seg = len(runs)
@@ -693,6 +740,7 @@ def run_profile(args: argparse.Namespace, data: Path) -> int:
         "conditions": conditions, "cpu_busy_percent_after": cpu_busy_percent(),
         **git,
     }  # fmt: skip
+    profile["model_mib"] = round(system.model_bytes() / 2**20, 2)
     if isinstance(system, Tesseract):
         profile["invocation_overhead_ms"] = round(system.invocation_overhead_ms(), 1)
     path = output_path(data, args.experiment, args.system, args.task, args.eval_set)
@@ -722,6 +770,12 @@ def main(argv: list[str] | None = None) -> int:
                          f"not {args.experiment}")  # fmt: skip
     if args.system == "trocr" and args.task == "e2e":
         raise SystemExit("TrOCR has no detector, so it is evaluated on recognition only")
+    if args.task == "e2e" and not EVAL_SETS[args.eval_set]["pages"]:
+        raise SystemExit(f"{args.eval_set} has no pages, so end to end is not defined for it")
+    if args.profile and args.eval_set not in PROFILE_SETS[args.task]:
+        raise SystemExit(f"profiling {args.task} uses {PROFILE_SETS[args.task]}")
+    if not args.reason.strip():
+        raise SystemExit("a reason is required (it goes into the test-access log)")
     data = Path(args.data_root)
     return run_profile(args, data) if args.profile else run_predictions(args, data)
 
