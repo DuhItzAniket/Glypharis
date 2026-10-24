@@ -53,6 +53,10 @@ class DataConfig:
     bucket_chunk: int = 50  # batches per width-sorted chunk (bucketing)
     # Cap on padded columns per batch (lines x widest line); bounds GPU memory. null: no cap.
     max_batch_columns: int | None = None
+    # Count the CTC padding (stride x frames a label needs) in the widths that batches are split
+    # by, so the column cap holds for lines denser than their image (Phase 7, GW-REC-021). Off,
+    # and left out of the config hash, by default: earlier runs keep their batches.
+    ctc_aware_batching: bool = False
 
 
 @dataclass

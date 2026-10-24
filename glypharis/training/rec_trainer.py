@@ -44,6 +44,7 @@ from glypharis.data.rec_dataset import (
     WidthBucketBatchSampler,
     assert_no_leakage,
     collate,
+    ctc_frames_needed,
 )
 from glypharis.data.text import Charset
 from glypharis.diagnostics import (
@@ -271,6 +272,15 @@ def model_bytes(state: dict[str, torch.Tensor]) -> int:
     return sum(t.numel() * t.element_size() for t in state.values())
 
 
+def batching_widths(ds: RecLineDataset, charset: Charset, stride: int) -> np.ndarray:
+    """Columns each line takes once padded for CTC: at least ``stride`` per frame its label needs.
+    At stride 8, 3% of HierText training lines are denser than that, up to 3,256 columns, which
+    the image widths alone never showed the column cap (GW-REC-019 ran out of memory)."""
+    need = np.array([stride * ctc_frames_needed(charset.encode(r.label)) for r in ds.refs],
+                    dtype=np.int64)  # fmt: skip
+    return np.maximum(ds.widths, need)
+
+
 def run_config_hash(cfg: RunConfig) -> str:
     """The run's config hash. The resume pointer says how a run was continued, not what it is,
     so a resumed run reports the same hash as at its start."""
@@ -329,7 +339,8 @@ class RecTrainer:
         ).to(self.device)
         self.optimizer = make_optimizer(cfg, self.model)
         t = cfg.train
-        self.sampler = WidthBucketBatchSampler(self.train_ds.widths, t.batch_size, cfg.seed,
+        self.sampler = WidthBucketBatchSampler(self._batching_widths(self.train_ds), t.batch_size,
+                                               cfg.seed,
                                                d.bucket_chunk,
                                                max_columns=d.max_batch_columns)  # fmt: skip
         # With a column cap the batch count can differ between epochs; it is known in advance.
@@ -350,6 +361,13 @@ class RecTrainer:
         # lower this without touching the config. Batches do not depend on it.
         self.workers = int(os.environ.get("GLYPHARIS_NUM_WORKERS", cfg.data.num_workers))
 
+    def _batching_widths(self, ds: RecLineDataset) -> np.ndarray:
+        """The widths batches are bucketed and capped by: each line's image width, or with
+        ``data.ctc_aware_batching`` the width collate pads it to for CTC, whichever is larger."""
+        if not self.cfg.data.ctc_aware_batching:
+            return ds.widths
+        return batching_widths(ds, self.charset, self.model.stride)
+
     # ---------------------------------------------------------------------------- loaders
 
     def _loader(self, ds: RecLineDataset, sampler: Any, seed: int) -> DataLoader[Any]:
@@ -367,7 +385,8 @@ class RecTrainer:
 
     def _eval_loader(self, ds: RecLineDataset) -> DataLoader[Any]:
         cap = self.cfg.data.max_batch_columns
-        sampler = WidthBucketBatchSampler(ds.widths, self.cfg.train.batch_size * 2, self.cfg.seed,
+        sampler = WidthBucketBatchSampler(self._batching_widths(ds), self.cfg.train.batch_size * 2,
+                                          self.cfg.seed,
                                           shuffle=False,
                                           max_columns=2 * cap if cap else None)  # fmt: skip
         return self._loader(ds, sampler, self.cfg.seed + 7)

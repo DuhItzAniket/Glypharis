@@ -711,3 +711,33 @@ def test_the_number_of_data_loading_processes_does_not_change_training(tiny, mon
     assert [h["val_cer"] for h in runs["0"].state.history] == [
         h["val_cer"] for h in runs["2"].state.history
     ]
+
+
+def test_ctc_aware_batching_counts_the_padding_ctc_needs():
+    from types import SimpleNamespace
+
+    from glypharis.training.rec_trainer import batching_widths
+
+    cs = Charset(list(" abcdefghijklmnopqrstuvwxyz"))
+    refs = [SimpleNamespace(label="cat"), SimpleNamespace(label="hello world")]
+    ds = SimpleNamespace(widths=np.array([100, 30]), refs=refs)
+    need = 8 * ctc_frames_needed(cs.encode("hello world"))  # 12 frames: the "ll" needs a blank
+    assert batching_widths(ds, cs, 8).tolist() == [100, need] and need == 96
+
+
+def test_ctc_aware_batching_is_opt_in_and_keeps_the_cap_at_stride_8(tiny):
+    from glypharis.config.loader import config_hash
+    from glypharis.data.rec_dataset import PAD_MULTIPLE
+
+    assert config_hash(_cfg(tiny, "cb")) != config_hash(
+        _cfg(tiny, "cb", **{"data.ctc_aware_batching": True})
+    )
+    cap = 600
+    trainer = RecTrainer(_cfg(tiny, "cb", **{"data.ctc_aware_batching": True,
+                                             "model.frame_stride": 8,
+                                             "data.max_batch_columns": cap,
+                                             "data.max_width": 300}))  # fmt: skip
+    trainer.sampler.set_epoch(0, 0)
+    for batch in trainer._loader(trainer.train_ds, trainer.sampler, 1):
+        n, width = batch["images"].shape[0], batch["images"].shape[-1]
+        assert n * width <= cap + n * PAD_MULTIPLE  # collate rounds widths up to PAD_MULTIPLE
