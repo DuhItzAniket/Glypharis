@@ -176,6 +176,25 @@ Each flag is written into the run report with the epoch it was raised and the ev
 The underfitting rule above is a starting point; it is reviewed against the first real runs in Phase 6
 and any change is logged in §11.
 
+**Detector runs** (`glypharis.diagnostics.det`, Phase 8) apply the over- and underfitting rules above
+with error = 1 − F1@0.5 in place of CER (underfit threshold `det.diagnostics.underfit_error_threshold`,
+default 0.5), and the gradient, NaN/Inf, OOM and LEAKAGE rules unchanged; blank and prediction
+collapse do not apply. They add the flags below. Thresholds come from `det.diagnostics`; `val_op` is
+the epoch's winning operating point (§7).
+
+| Flag | Rule (defaults) |
+|---|---|
+| `ALL-BACKGROUND COLLAPSE` | Predicted text pixels / ground-truth kernel pixels < 0.1 on validation, **or** more than 50% of pages with lines that count get no box at `val_op` |
+| `ALL-TEXT COLLAPSE` | Predicted text pixels > 50% of valid pixels, **or** predicted / kernel pixels > 10 |
+| `THRESHOLD DIVERGENCE` | After 20% of the step budget, validation threshold-map L1 above that of a constant T = 0.5 on the same labels, **or** that L1 ≥ 1.5× its best for 3 consecutive validation points while the probability-map loss stays within 1% of its best |
+| `THRESHOLD OUT OF RANGE` | More than 5% of threshold-mask pixels have T outside [0.2, 0.8] (the labels lie in [0.3, 0.7]) |
+| `BOX SIZE MISMATCH` | At `val_op`, F1@0.3 − F1@0.5 > 0.25: lines are found but mis-sized |
+| `POSTPROCESS DROPS` | At `val_op`, boxes dropped as too thin or outside the image exceed 50% of the components that passed the box score threshold |
+| `EMPTY CROPS` | More than 35% of an epoch's training crops have no positive pixel |
+| `DATA LOADER BOTTLENECK` (resource note) | The training loop waited for data more than 20% of the epoch |
+| `SLOW VALIDATION` (resource note) | A validation pass takes more than 25% of the epoch's training time |
+| `LABEL CEILING LOW` (start-up) | The label-ceiling F1@0.5 on 20 validation pages is below 0.85 |
+
 ## 7. Early stopping and checkpoint selection
 
 - Monitor: validation CER (recognizer), validation F1 @ 0.5 (detector), never a training metric.
@@ -183,6 +202,17 @@ and any change is logged in §11.
 - `best.pt` is the checkpoint with the best monitored metric; `last.pt` is the last one. The run report
   always prints both, with their epochs, and states which one was selected and why. They are often
   different.
+- **Detector operating points.** A detector config pre-registers one or more post-processing
+  operating points (unclip settings). Every epoch scores a fixed seeded validation subset at each of
+  them from one forward pass. The monitored metric is the maximum over them of micro F1@0.5 (ties go
+  to the first listed), and the winner is that epoch's `val_op`, which each checkpoint stores as
+  `selected_op`. The one stored in `best.pt` is the run's **operating point of record**: full
+  validation of `best.pt` and `last.pt` reports it as the headline, with no second selection on the
+  full set. The arg-max over operating points on the full set is printed for information only and
+  is never used for a claim or a comparison. A later phase may move to another operating point,
+  chosen on validation, only as its own registered change. F1@0.3 is a diagnostic, never a result.
+  The label ceiling (the same post-processing applied to the ground-truth kernels) is reported next
+  to detector F1.
 
 ## 8. Run reports
 
@@ -227,3 +257,5 @@ choice; no per-benchmark tuning.
 | 2026-10-23 | §7 as implemented: `best.pt` is the strictly lowest validation CER; early stopping's `min_delta` only drives the patience counter (before: one rule did both, so an improvement smaller than `min_delta` never became `best.pt`). The wording of §7 did not change; the code now follows it | GW-REC-002 kept epoch 24 (7.58%) although epoch 27 reached 7.49%. It was re-selected from its own validation records with `scripts/rec_reselect.py`: the epoch-27 checkpoint re-scored to exactly the logged CER, nothing was retrained, no test data was read, and the superseded files are kept (reports/training/GW-REC-002/report.md, Notes). GW-REC-001 was unaffected: its lowest epoch was the selected one | Checkpoint selection of all runs; GW-REC-002's selected checkpoint |
 | 2026-10-23 | Recognizer implementation: the 2-layer BiLSTM runs as two single-layer BiLSTMs with ordinary dropout between them, instead of one stacked `nn.LSTM` with cuDNN's built-in dropout. Same architecture (ARCHITECTURE §4), parameters and parameter order; checkpoints of the old layout load through a key rename | cuDNN draws that dropout from its own random state, which no checkpoint holds, so a resumed CUDA run used different dropout masks from the first step after the resume. On Windows, freeing that cached state at exit also aborted every training process with 0xC0000409 (Git Bash reports 127) after all output was written: the "FAIL" entries of GW-REC-001 and GW-REC-002 in the GPU queue log. With the new code both runs' `best.pt` re-score to exactly their logged validation CER (7.5340% and 7.4870%) | CUDA training runs from this change on draw their LSTM dropout from PyTorch's generator; GW-REC-001/002 results unchanged |
 | 2026-10-23 | Resume check on CUDA (Phase 6 exit criterion): two uninterrupted runs A and B, plus C resumed from B's mid-epoch checkpoint. The first step after the resume must match B's to 1e-6, the learning rates must be identical, and C's largest relative loss difference from B may not exceed max(1e-4, 2 × the A-vs-B difference). On the CPU, results must still be identical | The old check required A and C to agree to 1e-4 over 400 steps, which assumes that two CUDA runs reproduce each other. With CTC backward nondeterministic, they do not at real scale: two uninterrupted runs differed by up to 2.90% in loss. The resumed run differed from its own uninterrupted run by 1.51% and matched it exactly on the first step after the resume (reports/training/sanity/GW-REC-001/resume_check.json). The old check's FAIL (2.0e-2) stays in sanity.md | Resume checks on CUDA. The 1e-4 tolerance of 2026-10-10 still applies to the toy check in `scripts/env_report.py` |
+| 2026-10-25 | §6: detector runs apply the shared over- and underfitting rules with error = 1 − F1@0.5 in place of CER, plus ten detection flags: map collapse both ways, threshold-branch divergence and range, box-size mismatch, post-processing drops, empty crops, data-loader bottleneck, slow validation and a low label ceiling | Phase 8 adds the detector. The §6 rules were written for the CTC recognizer (CER, blank collapse); a DBNet detector fails in other ways: an all-background or all-text map, a threshold branch that stops learning, lines found but boxes mis-sized | Detector runs (GW-DET-*); recognizer runs unchanged |
+| 2026-10-25 | §7: detector selection is the maximum over the pre-registered operating points of validation F1@0.5 on the per-epoch subset; the operating point stored in `best.pt` is the one reported on full validation, with no second selection; F1@0.3 is diagnostic only; the label ceiling is reported next to detector F1 | The right unclip distance depends on how much thicker the trained probability region is than the label kernel, which is not known before training, so two operating points (`dbnet15`, `inverse10`) are pre-registered and scored from the same forward pass. Choosing between them again on the full validation set would be a second selection | Detector selection and reporting, H9 and H10; written before any GW-DET run |
