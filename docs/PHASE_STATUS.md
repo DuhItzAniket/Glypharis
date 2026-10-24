@@ -482,3 +482,12 @@ applied (EXPERIMENT_PROTOCOL §4). The combination step only takes changes judge
 changes with no clear difference that make the model smaller or faster. The evidence table is
 `reports/training/phase07/ablation_table.md` (`scripts/rec_ablation_table.py`).
 
+
+**Combination step (registered 2026-10-25, before it ran).** Two changes were judged better on the
+short budget: input height 48 (GW-REC-006) and the SVTR-style encoder (GW-REC-020). GW-REC-022
+combines them at the same budget and seed. The changes with no clear difference so far (geometric
+augmentation only, learning rate 2e-3) make the model neither smaller nor faster, so the rule leaves
+them out; GW-REC-014 (weight decay) and GW-REC-021 (frame stride 8, which would make it faster) are
+still running and are added under the same rule if they qualify. Every candidate is timed on the
+CPU against ADR-0011's line target (`scripts/rec_profile.py`, `reports/training/phase07/cpu_latency.md`)
+before one configuration is chosen for the full-budget confirmation.

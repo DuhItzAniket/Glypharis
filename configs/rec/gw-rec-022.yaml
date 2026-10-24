@@ -1,0 +1,19 @@
+# GW-REC-022: Phase 7 combination step. The decision rule takes the changes judged better against
+# the control: input height 48 (GW-REC-006, -0.49 points) and the SVTR-style encoder (GW-REC-020,
+# -0.13 points). This run is GW-REC-020 at input height 48, on the same 8-epoch short budget and
+# seed, to see whether the two gains add up before anything is confirmed at the full budget.
+# Learning rate as GW-REC-020 (5e-4, chosen from its LR range test).
+inherits: gw-rec-020.yaml
+experiment_id: GW-REC-022
+
+data:
+  image_height: 48
+  max_width: 1536          # GW-REC-020's cap, scaled with the height, as in GW-REC-006
+  # 1.5x the columns per line and longer attention sequences: micro-batches of 8 with 8-step
+  # accumulation keep 64 lines per optimizer step, and this cap splits wide batches at the same
+  # (scaled) widths as GW-REC-020's 8192 at batch 16 and H = 32 (768 columns here, 512 there).
+  max_batch_columns: 6144
+
+train:
+  batch_size: 8
+  gradient_accumulation: 8

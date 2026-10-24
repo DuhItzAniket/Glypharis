@@ -35,6 +35,7 @@ Rows link to a full entry below. Numbers are copied from generated reports only,
 | [GW-REC-019](#gw-rec-019) | 2026-10-23 | 07 | Phase 7 ablation: frame stride 8 (short budget, vs GW-REC-003) | failed | out of GPU memory at step 1,444 (see failures.md); re-run as GW-REC-021 | `reports/training/GW-REC-019/` |
 | [GW-REC-020](#gw-rec-020) | 2026-10-23 | 07 | GLYPHARIS-Rec-M (SVTR-style) vs CRNN at matched budget (H6, exploratory) | planned | — | `reports/training/GW-REC-020/` |
 | [GW-REC-021](#gw-rec-021) | 2026-10-24 | 07 | Phase 7 ablation: frame stride 8 with CTC-aware batching (re-run of GW-REC-019; short budget, vs GW-REC-003) | planned | — | `reports/training/GW-REC-021/` |
+| [GW-REC-022](#gw-rec-022) | 2026-10-25 | 07 | Phase 7 combination: GLYPHARIS-Rec-M (SVTR) at input height 48 (short budget, vs GW-REC-003) | planned | — | `reports/training/GW-REC-022/` |
 
 ### GW-BASE-001 — Tesseract 5 (LSTM, eng): recognition and end to end
 
@@ -575,6 +576,25 @@ Rows link to a full entry below. Numbers are copied from generated reports only,
 - **Interpretation:**
 - **Limitations:** single seed; short budget; batches are not identical to the control's.
 - **Next experiment:** the Phase 7 combination and full-budget confirmation
+- **Training time:**
+
+### GW-REC-022 — Phase 7 combination: GLYPHARIS-Rec-M (SVTR) at input height 48
+
+- **Date allocated / run:** 2026-10-25 / —
+- **Phase:** 07
+- **Git commit:** recorded in the run summary   **Config:** `configs/rec/gw-rec-022.yaml`   **Seed(s):** 1337 (single seed: exploratory)
+- **Dataset version(s):** as GW-REC-001
+- **Hardware:** as GW-REC-001
+- **Research question:** do the two changes judged better on the short budget, input height 48 (GW-REC-006, −0.49 points) and the SVTR-style encoder (GW-REC-020, −0.13 points), add up when combined?
+- **Hypothesis (written before the run):** lower validation CER than either change alone, but by less than the sum of the two gains: both help with small and dense text, so part of their effect overlaps. Expected CPU latency above GW-REC-020's (1.5 times the columns per line), possibly above ADR-0011's line target.
+- **Method:** `python train.py --config configs/rec/gw-rec-022.yaml`; GW-REC-020 with `data.image_height: 48` and `data.max_width: 1536` as in GW-REC-006, micro-batches of 8 with 8-step accumulation (64 lines per optimizer step) and a column cap that splits wide batches at the same scaled widths. Learning rate as GW-REC-020 (5e-4); no new LR range test, because only the input height changes. Before the run, one forward and backward pass on the widest batches the sampler can form checks that it fits in GPU memory. Compared line by line with GW-REC-003 (the evidence table), with GW-REC-006 and GW-REC-020 (`scripts/rec_compare.py`), and timed on the CPU with `scripts/rec_profile.py`.
+- **Variables:** independent: input height and encoder together; batching follows from the height; controlled: everything else
+- **Control:** GW-REC-003 (seed spread: GW-REC-004, 005); GW-REC-006 and GW-REC-020 for the parts
+- **Result:**
+- **Training diagnostics:**
+- **Interpretation:**
+- **Limitations:** single seed; short budget; micro-batches differ from the control's.
+- **Next experiment:** the full-budget confirmation of the chosen configuration
 - **Training time:**
 
 ---

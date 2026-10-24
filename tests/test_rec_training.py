@@ -766,3 +766,12 @@ def test_cpu_profile_times_a_trained_run_like_the_baselines(tiny, monkeypatch):
     assert "| GW-REC-999 | crnn | 32 | 4 |" in md and "mean at most 25 ms" in md
     with pytest.raises(SystemExit, match="one --run per process"):
         rec_profile.main([*args, "--run", "GW-REC-999", "--run", "GW-REC-998"])
+
+
+def test_memory_probe_takes_the_worst_batches_and_runs_a_step(tiny):
+    import rec_memory_probe
+
+    cfg = _cfg(tiny, "probe", **{"data.max_width": 300, "data.max_batch_columns": 600})
+    assert rec_memory_probe.worst_batches(cfg) == [(2, 320), (8, 96)]  # widest lines; fullest batch
+    rows = rec_memory_probe.probe(cfg, torch.device("cpu"), 28)
+    assert [r["fits"] for r in rows] == [True, True] and rows[0]["height"] == 32
