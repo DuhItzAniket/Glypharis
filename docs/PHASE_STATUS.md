@@ -297,3 +297,83 @@ because the curved captures were off by up to a line height with the homography 
 sheet/photo agreement: median NCC 0.924, minimum 0.757. 200 of 8,606 lines (2.3 %) have an alignment
 score below 0.3 (box not trusted; text ground truth unaffected), mostly small figure text in distant
 shots.
+
+---
+
+## Phase 05 — Baseline systems
+
+**Status:** write-up done (2026-10-25). Gate open: the owner's decision on ADR-0011 (CPU latency
+target), then push, pull request, CI and merge.
+
+**Objective:** scientific reference points before training anything.
+
+**Implemented**
+- `.venv-baselines` (ADR-0006) with Tesseract 5 (UB Mannheim build), PaddleOCR 3.7 (PP-OCRv5 mobile
+  and server, PP-OCRv6 tiny, small and medium) and TrOCR-small-printed.
+- `scripts/run_baselines.py`: resumable prediction runs in the GLYPHARIS output schema, run metadata
+  written first, every test access logged before an image is read; `--profile` measures speed and
+  memory (batch 1, 10 warm-up and 100 timed samples, run conditions recorded).
+- `scripts/build_eval_crops.py`: evaluation line packs that keep lines with characters outside the
+  GLYPHARIS charset (the charset ceiling is reported next to every result).
+- `scripts/evaluate_baselines.py`: scores everything with `glypharis.eval`, the code that will score
+  GLYPHARIS; both normalisation tracks, bootstrap CIs, one table per comparison type, GDC's vertical
+  lines on their own, and the coverage of the planned run matrix.
+- `scripts/baseline_diagnostics.py`: validation-only diagnostics behind three results.
+- Seven baselines registered before running and run: GW-BASE-001 to GW-BASE-007.
+
+**Results** (strict track; from `reports/baselines/`, where every number has its CI and ID)
+
+| ID | System | HierText val lines, CER % | GDC test lines, CER % | HierText val pages, E2E F1 % | ms per line | ms per page |
+|---|---|---|---|---|---|---|
+| GW-BASE-001 | Tesseract 5 | 24.35 | 6.42 | 12.65 | 141.8 | 430.8 |
+| GW-BASE-002 | PP-OCRv5 mobile | 9.27 | 3.68 | 38.75 | 61.4 | 3,408.2 |
+| GW-BASE-003 | PP-OCRv5 server | 14.65 | 11.24 | not run | 2,266.7 | 80,861.6 |
+| GW-BASE-004 | TrOCR-small-printed | 62.58 (19.14 normalised) | 72.34 (13.07 normalised) | no detector | 133.3 | — |
+| GW-BASE-005 | PP-OCRv6 tiny | 11.10 | 4.00 | 38.69 | 21.6 | 1,726.6 |
+| GW-BASE-006 | PP-OCRv6 small | 7.53 | 3.46 | 45.68 | 46.0 | 3,714.2 |
+| GW-BASE-007 | PP-OCRv6 medium | 7.54 | 3.20 | not run | 552.5 | 32,528.5 |
+
+- PP-OCRv6 small is the most accurate full-scope system on every set. PP-OCRv6 medium (PaddleOCR's
+  English default) matches it on HierText lines at about twelve times the line time.
+- Every system is weak on HierText pages, mostly from detection: the best recall at IoU 0.5 is
+  50.67% (GW-BASE-006). Tesseract finds about one HierText line in ten.
+- On GDC, Tesseract has the best reading order (order-aware page CER 31.90% against 42.86–44.74%
+  for the PaddleOCR pipelines, which return lines in detection order).
+- PP-OCRv6 medium and PP-OCRv5 server are impractical on a laptop CPU: 32.5 s and 80.9 s per page.
+- Three results are explained by `reports/baselines/diagnostics.md`: PP-OCRv5 server drops word
+  gaps (WER three to four times its CER), PP-OCRv5 mobile cuts long lines short (its GlyphSynth CER),
+  and TrOCR-small-printed writes capitals (its strict-track CER).
+
+**Not run (documented with the reason):** PP-OCRv5 server and PP-OCRv6 medium ran at a reduced
+scope registered before the runs (about 1–3 s per line on this CPU); the PP-OCRv5 server GDC page run
+is not runnable on the laptop (`research/failures.md`, 2026-10-24); TrOCR has no detector. Peak VRAM
+is not applicable: no baseline uses a GPU.
+
+**CPU latency target (ADR-0008):** proposed in ADR-0011 from these measurements. For v0.1 through
+ONNX Runtime on this laptop: line recognition mean at most 25 ms (p95 70 ms), pages mean at most
+1.5 s (p95 2.7 s), peak RAM on pages below PP-OCRv6 tiny's 1,836 MiB. Waiting for the owner.
+
+**Tests:** 264 passed locally (CPU; the 4 GPU tests were deselected while the GPU was training).
+
+**Exit criteria**
+
+| Criterion | Result | Evidence |
+|---|---|---|
+| One table per comparison type in `reports/baselines/` | pass: recognition, detection and end to end, plus efficiency | `reports/baselines/*.md` |
+| Normalisation track stated | pass: strict and normalised tables; detection does not depend on the track | same |
+| Every number traceable to a `GW-BASE-NNN` ID | pass: every row carries its ID; every number is in `results.json` | `reports/baselines/results.json` |
+| Baselines that could not be run documented with the reason | pass | coverage table in `reports/baselines/README.md`; `research/failures.md` |
+| CER, WER, NED, accuracy, mean and p95 latency, peak RAM, peak VRAM | pass (peak VRAM not applicable) | `recognition.md`, `efficiency.md` |
+| Test sets used only as logged | pass: every prediction and scoring access logged | `research/test_access_log.md` |
+| CI green | pending (after the push) | — |
+
+**Known issues**
+- The profiling pass ran on the Windows Balanced power plan (recorded in `efficiency.md`); GLYPHARIS
+  must be timed the same way.
+- On its largest pages PP-OCRv5 server needed more memory than the laptop had free, so some of its
+  page times include paging to disk. Windows was also holding an unusually large amount of kernel
+  memory during the pass (a leak whose cause was not found), which left less RAM free.
+- The PP-OCRv5 detectors and the v6 detectors run without oneDNN, which crashes on them here (speed
+  only; outputs checked identical).
+
+**Git:** branch `phase/05-baselines`; push and merge pending.
