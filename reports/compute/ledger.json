@@ -1064,11 +1064,11 @@
    "device": "cpu",
    "experiment": "GW-BASE-003",
    "kind": "baseline",
-   "detail": "",
+   "detail": "ppocr_server rec gdc_test",
    "start": "2026-10-24 11:58:05",
-   "end": null,
-   "hours": null,
-   "outcome": "running"
+   "end": "2026-10-24 21:26:29",
+   "hours": 9.473333333333333,
+   "outcome": "done"
   },
   {
    "device": "gpu",
@@ -1136,6 +1136,46 @@
    "kind": "train",
    "detail": "",
    "start": "2026-10-24 17:12:42",
+   "end": "2026-10-24 18:33:30",
+   "hours": 1.3466666666666667,
+   "outcome": "done"
+  },
+  {
+   "device": "gpu",
+   "experiment": "GW-REC-010",
+   "kind": "train",
+   "detail": "",
+   "start": "2026-10-24 18:33:36",
+   "end": "2026-10-24 20:15:11",
+   "hours": 1.6930555555555555,
+   "outcome": "done"
+  },
+  {
+   "device": "gpu",
+   "experiment": "GW-REC-011",
+   "kind": "train",
+   "detail": "",
+   "start": "2026-10-24 20:15:13",
+   "end": "2026-10-24 21:29:04",
+   "hours": 1.2308333333333332,
+   "outcome": "failed (exit 127)"
+  },
+  {
+   "device": "cpu",
+   "experiment": "GW-BASE-003",
+   "kind": "baseline",
+   "detail": "",
+   "start": "2026-10-24 21:26:31",
+   "end": null,
+   "hours": null,
+   "outcome": "running"
+  },
+  {
+   "device": "gpu",
+   "experiment": "GW-REC-011",
+   "kind": "resume",
+   "detail": "",
+   "start": "2026-10-24 21:29:08",
    "end": null,
    "hours": null,
    "outcome": "running"
@@ -1257,9 +1297,9 @@
   "GW-BASE-003": {
    "device": "cpu",
    "phase": "05",
-   "jobs": 2,
+   "jobs": 3,
    "failed_jobs": 0,
-   "wall_h": 7.021388888888889,
+   "wall_h": 16.494722222222222,
    "train_h": null
   },
   "GW-REC-008": {
@@ -1315,14 +1355,30 @@
    "phase": "07",
    "jobs": 1,
    "failed_jobs": 0,
-   "wall_h": 0.0,
+   "wall_h": 1.3466666666666667,
+   "train_h": 1.1827816666666735
+  },
+  "GW-REC-010": {
+   "device": "gpu",
+   "phase": "07",
+   "jobs": 1,
+   "failed_jobs": 0,
+   "wall_h": 1.6930555555555555,
+   "train_h": 1.528685555555583
+  },
+  "GW-REC-011": {
+   "device": "gpu",
+   "phase": "07",
+   "jobs": 2,
+   "failed_jobs": 1,
+   "wall_h": 1.2308333333333332,
    "train_h": null
   }
  },
  "totals": {
-  "gpu_h": 32.947500000000005,
-  "gpu_failed_h": 6.48111111111111,
-  "cpu_h": 32.41055555555554,
+  "gpu_h": 37.21805555555556,
+  "gpu_failed_h": 7.711944444444443,
+  "cpu_h": 41.883888888888876,
   "cpu_failed_h": 1.803611111111111
  }
 }
