@@ -180,7 +180,26 @@
   },
   {
    "run": "GW-REC-017",
-   "status": "pending"
+   "status": "done",
+   "change": "data.augmentation: photometric",
+   "parameters": 7796435,
+   "steps": 45360,
+   "train_seconds": 4161.874999999942,
+   "val_cer": {
+    "value": 0.08593733451638184,
+    "low": 0.08424969221025548,
+    "high": 0.08752095343637319,
+    "resamples": 1000,
+    "unit": "lines"
+   },
+   "difference": {
+    "value": 0.002764238357602303,
+    "low": 0.0023115595990624554,
+    "high": 0.003191535579204435,
+    "resamples": 1000,
+    "unit": "lines"
+   },
+   "verdict": "worse"
   },
   {
    "run": "GW-REC-018",
