@@ -111,7 +111,26 @@
   },
   {
    "run": "GW-REC-009",
-   "status": "pending"
+   "status": "done",
+   "change": "model.lstm_layers: 1",
+   "parameters": 6219475,
+   "steps": 45360,
+   "train_seconds": 5202.406000000017,
+   "val_cer": {
+    "value": 0.08777545299853375,
+    "low": 0.08599334682161988,
+    "high": 0.08941846665080044,
+    "resamples": 1000,
+    "unit": "lines"
+   },
+   "difference": {
+    "value": 0.004602356839754196,
+    "low": 0.00415923986985631,
+    "high": 0.005052694824857662,
+    "resamples": 1000,
+    "unit": "lines"
+   },
+   "verdict": "worse"
   },
   {
    "run": "GW-REC-019",
