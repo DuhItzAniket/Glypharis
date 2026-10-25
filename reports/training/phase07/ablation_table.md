@@ -14,7 +14,7 @@ Mean 8.31%, standard deviation 0.01 points, range 8.30 to 8.32%.
 
 ## Arms against GW-REC-003
 
-Difference: arm minus reference, percentage points, 95% bootstrap CI over lines (the same resampled lines for both runs). 14 comparisons, no correction for multiplicity. Verdict rule: better or worse only when the CI excludes zero and the arm's CER lies outside the control seeds' range in the same direction.
+Difference: arm minus reference, percentage points, 95% bootstrap CI over lines (the same resampled lines for both runs). 15 comparisons, no correction for multiplicity. Verdict rule: better or worse only when the CI excludes zero and the arm's CER lies outside the control seeds' range in the same direction.
 
 | Run | Change against the reference | Parameters | Steps | GPU-hours | Val CER % | Difference | Verdict |
 |---|---|---|---|---|---|---|---|
@@ -32,4 +32,4 @@ Difference: arm minus reference, percentage points, 95% bootstrap CI over lines 
 | GW-REC-012 | train.learning_rate: 0.0005 | 7,796,435 | 45,360 | 1.00 | 8.51 [8.34, 8.67] | +0.19 [+0.15, +0.23] | worse |
 | GW-REC-013 | train.learning_rate: 0.002 | 7,796,435 | 45,360 | 0.96 | 8.34 [8.17, 8.50] | +0.02 [-0.02, +0.06] | no clear difference |
 | GW-REC-014 | train.weight_decay: 0.01 | 7,796,435 | 45,360 | 0.97 | 8.28 [8.11, 8.44] | -0.04 [-0.08, -0.00] | better |
-| GW-REC-021 | pending | | | | | | |
+| GW-REC-021 | data.ctc_aware_batching: True, model.frame_stride: 8 | 7,796,435 | 45,371 | 0.74 | 10.93 [10.70, 11.16] | +2.61 [+2.48, +2.74] | worse |

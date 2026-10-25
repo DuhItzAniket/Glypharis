@@ -341,7 +341,26 @@
   },
   {
    "run": "GW-REC-021",
-   "status": "pending"
+   "status": "done",
+   "change": "data.ctc_aware_batching: True, model.frame_stride: 8",
+   "parameters": 7796435,
+   "steps": 45371,
+   "train_seconds": 2666.3899999999558,
+   "val_cer": {
+    "value": 0.1092892059375228,
+    "low": 0.10704800217722182,
+    "high": 0.11156908142586483,
+    "resamples": 1000,
+    "unit": "lines"
+   },
+   "difference": {
+    "value": 0.026116109778743256,
+    "low": 0.02479098596021804,
+    "high": 0.02739049350140409,
+    "resamples": 1000,
+    "unit": "lines"
+   },
+   "verdict": "worse"
   }
  ]
 }
