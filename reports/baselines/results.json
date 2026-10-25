@@ -1,0 +1,3575 @@
+{
+ "predictions": [
+  {
+   "experiment": "GW-BASE-001",
+   "system": "tesseract",
+   "version": "tesseract v5.4.0.20240606",
+   "settings": {
+    "lang": "eng",
+    "oem": "default (LSTM)",
+    "traineddata": {
+     "path": "C:\\Program Files\\Tesseract-OCR\\tessdata\\eng.traineddata",
+     "bytes": 4113088,
+     "sha256": "7d4322bd2a7749724879683fc3912cb542f19906c83bcc1a52132556427170b2"
+    },
+    "build": [
+     "leptonica-1.84.1",
+     "libgif 5.2.1 : libjpeg 8d (libjpeg-turbo 3.0.1) : libpng 1.6.43 : libtiff 4.6.0 : zlib 1.3 : libwebp 1.4.0 : libopenjp2 2.5.2",
+     "Found AVX2",
+     "Found AVX",
+     "Found FMA",
+     "Found SSE4.1",
+     "Found libarchive 3.7.4 zlib/1.3.1 liblzma/5.6.1 bz2lib/1.0.8 liblz4/1.9.4 libzstd/1.5.6"
+    ],
+    "OMP_THREAD_LIMIT": null,
+    "psm": 3,
+    "invocation": "one process per page, TSV output"
+   },
+   "task": "e2e",
+   "eval_set": "gdc_test",
+   "split": "test",
+   "samples": 106,
+   "expected": 106,
+   "runs": 1,
+   "legacy_meta": false,
+   "tracks": {
+    "strict": {
+     "pages": 106,
+     "order_aware_reported": true,
+     "page_cer_bag_of_lines": {
+      "value": 0.5521016319944284,
+      "low": 0.44697831206107175,
+      "high": 0.6670046041678028,
+      "unit": "pages"
+     },
+     "e2e_f1": {
+      "value": 0.4611473272490222,
+      "low": 0.38028208232839417,
+      "high": 0.5524724913570312,
+      "unit": "pages"
+     },
+     "page_cer_order_aware": {
+      "value": 0.318994654635875,
+      "low": 0.25655384704377854,
+      "high": 0.38512607222346107,
+      "unit": "pages"
+     },
+     "page_wer_order_aware": {
+      "value": 0.45000428559184025,
+      "low": 0.37640103897237653,
+      "high": 0.5270090675128309,
+      "unit": "pages"
+     },
+     "charset_ceiling": 0.0010264588087578932
+    },
+    "normalised": {
+     "pages": 106,
+     "order_aware_reported": true,
+     "page_cer_bag_of_lines": {
+      "value": 0.550788937771076,
+      "low": 0.4456442300832524,
+      "high": 0.6656489678279842,
+      "unit": "pages"
+     },
+     "e2e_f1": {
+      "value": 0.4624511082138201,
+      "low": 0.38159918262286613,
+      "high": 0.5532630044378397,
+      "unit": "pages"
+     },
+     "page_cer_order_aware": {
+      "value": 0.31560265736806214,
+      "low": 0.2539406603551368,
+      "high": 0.38048545548334506,
+      "unit": "pages"
+     },
+     "page_wer_order_aware": {
+      "value": 0.44645765123335107,
+      "low": 0.3723071575407178,
+      "high": 0.523578666342438,
+      "unit": "pages"
+     },
+     "charset_ceiling": 0.0006079027355623101
+    }
+   },
+   "detection": {
+    "pages": 106,
+    "iou_0.5": {
+     "precision": {
+      "value": 0.6073478760045924,
+      "low": 0.508459857553092,
+      "high": 0.708706150849897,
+      "unit": "pages"
+     },
+     "recall": {
+      "value": 0.5054945054945055,
+      "low": 0.4243781143518431,
+      "high": 0.5964819149962378,
+      "unit": "pages"
+     },
+     "f1": {
+      "value": 0.5517601043024772,
+      "low": 0.47148403329421323,
+      "high": 0.6364338168300837,
+      "unit": "pages"
+     }
+    },
+    "iou_0.7": {
+     "precision": {
+      "value": 0.5176385889128869,
+      "low": 0.42364861183628066,
+      "high": 0.6207397054020072,
+      "unit": "pages"
+     },
+     "recall": {
+      "value": 0.42940754897276634,
+      "low": 0.35151611489218626,
+      "high": 0.5147744574563945,
+      "unit": "pages"
+     },
+     "f1": {
+      "value": 0.469413070444604,
+      "low": 0.3907672547719529,
+      "high": 0.5531289284216067,
+      "unit": "pages"
+     }
+    },
+    "mean_matched_iou": 0.8311369591170992,
+    "gt_lines": 8372
+   },
+   "vertical": {
+    "strict": {
+     "lines": 32,
+     "recall": {
+      "value": 0.15625,
+      "low": 0.03568349753694584,
+      "high": 0.35721428571428565,
+      "unit": "pages"
+     },
+     "cer": {
+      "value": 0.8940092165898618,
+      "low": 0.7745272525027809,
+      "high": 0.9786180692372644,
+      "unit": "pages"
+     },
+     "charset_ceiling": 0.002188183807439825
+    },
+    "normalised": {
+     "lines": 32,
+     "recall": {
+      "value": 0.15625,
+      "low": 0.03568349753694584,
+      "high": 0.35721428571428565,
+      "unit": "pages"
+     },
+     "cer": {
+      "value": 0.8944954128440367,
+      "low": 0.7757114688151509,
+      "high": 0.978844246031746,
+      "unit": "pages"
+     },
+     "charset_ceiling": 0.0
+    }
+   }
+  },
+  {
+   "experiment": "GW-BASE-001",
+   "system": "tesseract",
+   "version": "tesseract v5.4.0.20240606",
+   "settings": {
+    "lang": "eng",
+    "oem": "default (LSTM)",
+    "traineddata": {
+     "path": "C:\\Program Files\\Tesseract-OCR\\tessdata\\eng.traineddata",
+     "bytes": 4113088,
+     "sha256": "7d4322bd2a7749724879683fc3912cb542f19906c83bcc1a52132556427170b2"
+    },
+    "build": [
+     "leptonica-1.84.1",
+     "libgif 5.2.1 : libjpeg 8d (libjpeg-turbo 3.0.1) : libpng 1.6.43 : libtiff 4.6.0 : zlib 1.3 : libwebp 1.4.0 : libopenjp2 2.5.2",
+     "Found AVX2",
+     "Found AVX",
+     "Found FMA",
+     "Found SSE4.1",
+     "Found libarchive 3.7.4 zlib/1.3.1 liblzma/5.6.1 bz2lib/1.0.8 liblz4/1.9.4 libzstd/1.5.6"
+    ],
+    "OMP_THREAD_LIMIT": null,
+    "psm": 3,
+    "invocation": "one process per page, TSV output"
+   },
+   "task": "e2e",
+   "eval_set": "hiertext_test",
+   "split": "test",
+   "samples": 1634,
+   "expected": 1634,
+   "runs": 1,
+   "legacy_meta": false,
+   "tracks": {
+    "strict": {
+     "pages": 1634,
+     "order_aware_reported": false,
+     "page_cer_bag_of_lines": {
+      "value": 0.9292720919462805,
+      "low": 0.9039127593378952,
+      "high": 0.9552965992541466,
+      "unit": "pages"
+     },
+     "e2e_f1": {
+      "value": 0.13458231182992425,
+      "low": 0.1211507150473861,
+      "high": 0.14746753549428535,
+      "unit": "pages"
+     },
+     "charset_ceiling": 0.0007627519495989361
+    },
+    "normalised": {
+     "pages": 1634,
+     "order_aware_reported": false,
+     "page_cer_bag_of_lines": {
+      "value": 0.9276535431121454,
+      "low": 0.902386758969217,
+      "high": 0.953905644446255,
+      "unit": "pages"
+     },
+     "e2e_f1": {
+      "value": 0.13724126995743227,
+      "low": 0.12332836125209001,
+      "high": 0.15041401800761237,
+      "unit": "pages"
+     },
+     "charset_ceiling": 0.0006870214833474658
+    }
+   },
+   "detection": {
+    "pages": 1634,
+    "iou_0.5": {
+     "precision": {
+      "value": 0.5389578852424894,
+      "low": 0.5137207942798735,
+      "high": 0.5628668368162808,
+      "unit": "pages"
+     },
+     "recall": {
+      "value": 0.1149554562405659,
+      "low": 0.10482185833540632,
+      "high": 0.12531834268358666,
+      "unit": "pages"
+     },
+     "f1": {
+      "value": 0.18949345627965408,
+      "low": 0.17432333312214612,
+      "high": 0.2043662140150346,
+      "unit": "pages"
+     }
+    },
+    "iou_0.7": {
+     "precision": {
+      "value": 0.44140706306806354,
+      "low": 0.4150487804158125,
+      "high": 0.46696901773261607,
+      "unit": "pages"
+     },
+     "recall": {
+      "value": 0.09414863704975286,
+      "low": 0.08466139546135226,
+      "high": 0.10384450696607694,
+      "unit": "pages"
+     },
+     "f1": {
+      "value": 0.1551953358459268,
+      "low": 0.14097166007342304,
+      "high": 0.16939815531546243,
+      "unit": "pages"
+     }
+    },
+    "mean_matched_iou": 0.8283185363923053,
+    "gt_lines": 67574
+   }
+  },
+  {
+   "experiment": "GW-BASE-001",
+   "system": "tesseract",
+   "version": "tesseract v5.4.0.20240606",
+   "settings": {
+    "lang": "eng",
+    "oem": "default (LSTM)",
+    "traineddata": {
+     "path": "C:\\Program Files\\Tesseract-OCR\\tessdata\\eng.traineddata",
+     "bytes": 4113088,
+     "sha256": "7d4322bd2a7749724879683fc3912cb542f19906c83bcc1a52132556427170b2"
+    },
+    "build": [
+     "leptonica-1.84.1",
+     "libgif 5.2.1 : libjpeg 8d (libjpeg-turbo 3.0.1) : libpng 1.6.43 : libtiff 4.6.0 : zlib 1.3 : libwebp 1.4.0 : libopenjp2 2.5.2",
+     "Found AVX2",
+     "Found AVX",
+     "Found FMA",
+     "Found SSE4.1",
+     "Found libarchive 3.7.4 zlib/1.3.1 liblzma/5.6.1 bz2lib/1.0.8 liblz4/1.9.4 libzstd/1.5.6"
+    ],
+    "OMP_THREAD_LIMIT": null,
+    "psm": 3,
+    "invocation": "one process per page, TSV output"
+   },
+   "task": "e2e",
+   "eval_set": "hiertext_val",
+   "split": "validation",
+   "samples": 400,
+   "expected": 400,
+   "runs": 1,
+   "legacy_meta": false,
+   "tracks": {
+    "strict": {
+     "pages": 400,
+     "order_aware_reported": false,
+     "page_cer_bag_of_lines": {
+      "value": 0.9449675871776064,
+      "low": 0.88855631716701,
+      "high": 1.0054906053043386,
+      "unit": "pages"
+     },
+     "e2e_f1": {
+      "value": 0.12652395123356053,
+      "low": 0.10166650517372526,
+      "high": 0.1540873836276378,
+      "unit": "pages"
+     },
+     "charset_ceiling": 0.00036675058977459705
+    },
+    "normalised": {
+     "pages": 400,
+     "order_aware_reported": false,
+     "page_cer_bag_of_lines": {
+      "value": 0.9436139587658493,
+      "low": 0.8869412930717165,
+      "high": 1.0040087074462458,
+      "unit": "pages"
+     },
+     "e2e_f1": {
+      "value": 0.12786790822693675,
+      "low": 0.10299437723068865,
+      "high": 0.15505242099191982,
+      "unit": "pages"
+     },
+     "charset_ceiling": 0.00031710954648380015
+    }
+   },
+   "detection": {
+    "pages": 400,
+    "iou_0.5": {
+     "precision": {
+      "value": 0.5301240401653868,
+      "low": 0.47747217485732674,
+      "high": 0.5830285034411592,
+      "unit": "pages"
+     },
+     "recall": {
+      "value": 0.10287712058688675,
+      "low": 0.08371875988708943,
+      "high": 0.12396789080406946,
+      "unit": "pages"
+     },
+     "f1": {
+      "value": 0.17231448593645005,
+      "low": 0.14313989441551545,
+      "high": 0.20393450508086303,
+      "unit": "pages"
+     }
+    },
+    "iou_0.7": {
+     "precision": {
+      "value": 0.43325457767277026,
+      "low": 0.37967532998800047,
+      "high": 0.48647197789166935,
+      "unit": "pages"
+     },
+     "recall": {
+      "value": 0.08407840440165062,
+      "low": 0.06665788568421853,
+      "high": 0.10356810929049294,
+      "unit": "pages"
+     },
+     "f1": {
+      "value": 0.14082749352020735,
+      "low": 0.11437120565681219,
+      "high": 0.16991245201726357,
+      "unit": "pages"
+     }
+    },
+    "mean_matched_iou": 0.8333931095983035,
+    "gt_lines": 17448
+   }
+  },
+  {
+   "experiment": "GW-BASE-001",
+   "system": "tesseract",
+   "version": "tesseract v5.4.0.20240606",
+   "settings": {
+    "lang": "eng",
+    "oem": "default (LSTM)",
+    "traineddata": {
+     "path": "C:\\Program Files\\Tesseract-OCR\\tessdata\\eng.traineddata",
+     "bytes": 4113088,
+     "sha256": "7d4322bd2a7749724879683fc3912cb542f19906c83bcc1a52132556427170b2"
+    },
+    "build": [
+     "leptonica-1.84.1",
+     "libgif 5.2.1 : libjpeg 8d (libjpeg-turbo 3.0.1) : libpng 1.6.43 : libtiff 4.6.0 : zlib 1.3 : libwebp 1.4.0 : libopenjp2 2.5.2",
+     "Found AVX2",
+     "Found AVX",
+     "Found FMA",
+     "Found SSE4.1",
+     "Found libarchive 3.7.4 zlib/1.3.1 liblzma/5.6.1 bz2lib/1.0.8 liblz4/1.9.4 libzstd/1.5.6"
+    ],
+    "OMP_THREAD_LIMIT": null,
+    "psm": 7,
+    "invocation": "one process per batch, via a list file"
+   },
+   "task": "rec",
+   "eval_set": "gdc_test",
+   "split": "test",
+   "samples": 8372,
+   "expected": 8372,
+   "runs": 1,
+   "legacy_meta": false,
+   "tracks": {
+    "strict": {
+     "samples": 8372,
+     "empty_references": 0,
+     "cer": {
+      "value": 0.0641698095021935,
+      "low": 0.05914963600519198,
+      "high": 0.06946335483425575,
+      "unit": "lines"
+     },
+     "wer": {
+      "value": 0.1993716983450043,
+      "low": 0.18717795683548374,
+      "high": 0.21246765553449085,
+      "unit": "lines"
+     },
+     "ned": 0.8785335616435807,
+     "sequence_accuracy": 0.5683229813664596,
+     "charset_ceiling": 0.001026020501755117
+    },
+    "normalised": {
+     "samples": 8372,
+     "empty_references": 0,
+     "cer": {
+      "value": 0.06286318342220218,
+      "low": 0.05792133996080629,
+      "high": 0.06822340171131942,
+      "unit": "lines"
+     },
+     "wer": {
+      "value": 0.19529316789807127,
+      "low": 0.18347755712065925,
+      "high": 0.20807027653146318,
+      "unit": "lines"
+     },
+     "ned": 0.8822430530463329,
+     "sequence_accuracy": 0.5828953655040612,
+     "charset_ceiling": 0.000618713759385639
+    }
+   }
+  },
+  {
+   "experiment": "GW-BASE-001",
+   "system": "tesseract",
+   "version": "tesseract v5.4.0.20240606",
+   "settings": {
+    "lang": "eng",
+    "oem": "default (LSTM)",
+    "traineddata": {
+     "path": "C:\\Program Files\\Tesseract-OCR\\tessdata\\eng.traineddata",
+     "bytes": 4113088,
+     "sha256": "7d4322bd2a7749724879683fc3912cb542f19906c83bcc1a52132556427170b2"
+    },
+    "build": [
+     "leptonica-1.84.1",
+     "libgif 5.2.1 : libjpeg 8d (libjpeg-turbo 3.0.1) : libpng 1.6.43 : libtiff 4.6.0 : zlib 1.3 : libwebp 1.4.0 : libopenjp2 2.5.2",
+     "Found AVX2",
+     "Found AVX",
+     "Found FMA",
+     "Found SSE4.1",
+     "Found libarchive 3.7.4 zlib/1.3.1 liblzma/5.6.1 bz2lib/1.0.8 liblz4/1.9.4 libzstd/1.5.6"
+    ],
+    "OMP_THREAD_LIMIT": null,
+    "psm": 7,
+    "invocation": "one process per batch, via a list file"
+   },
+   "task": "rec",
+   "eval_set": "glyphsynth_val",
+   "split": "validation",
+   "samples": 10000,
+   "expected": 10000,
+   "runs": 1,
+   "legacy_meta": false,
+   "tracks": {
+    "strict": {
+     "samples": 10000,
+     "empty_references": 0,
+     "cer": {
+      "value": 0.015477712435012359,
+      "low": 0.01391675642610125,
+      "high": 0.017089277195192234,
+      "unit": "lines"
+     },
+     "wer": {
+      "value": 0.061912497743713636,
+      "low": 0.05817245145914315,
+      "high": 0.06566562605329095,
+      "unit": "lines"
+     },
+     "ned": 0.9815355940578507,
+     "sequence_accuracy": 0.7924,
+     "charset_ceiling": 0.0
+    },
+    "normalised": {
+     "samples": 10000,
+     "empty_references": 0,
+     "cer": {
+      "value": 0.01335184035260742,
+      "low": 0.011820534828281175,
+      "high": 0.014896828389733809,
+      "unit": "lines"
+     },
+     "wer": {
+      "value": 0.05279015842601464,
+      "low": 0.04918207785582401,
+      "high": 0.056569751562442046,
+      "unit": "lines"
+     },
+     "ned": 0.9836244085157597,
+     "sequence_accuracy": 0.8333,
+     "charset_ceiling": 0.0
+    }
+   }
+  },
+  {
+   "experiment": "GW-BASE-001",
+   "system": "tesseract",
+   "version": "tesseract v5.4.0.20240606",
+   "settings": {
+    "lang": "eng",
+    "oem": "default (LSTM)",
+    "traineddata": {
+     "path": "C:\\Program Files\\Tesseract-OCR\\tessdata\\eng.traineddata",
+     "bytes": 4113088,
+     "sha256": "7d4322bd2a7749724879683fc3912cb542f19906c83bcc1a52132556427170b2"
+    },
+    "build": [
+     "leptonica-1.84.1",
+     "libgif 5.2.1 : libjpeg 8d (libjpeg-turbo 3.0.1) : libpng 1.6.43 : libtiff 4.6.0 : zlib 1.3 : libwebp 1.4.0 : libopenjp2 2.5.2",
+     "Found AVX2",
+     "Found AVX",
+     "Found FMA",
+     "Found SSE4.1",
+     "Found libarchive 3.7.4 zlib/1.3.1 liblzma/5.6.1 bz2lib/1.0.8 liblz4/1.9.4 libzstd/1.5.6"
+    ],
+    "OMP_THREAD_LIMIT": null,
+    "psm": 7,
+    "invocation": "one process per batch, via a list file"
+   },
+   "task": "rec",
+   "eval_set": "hiertext_test",
+   "split": "test",
+   "samples": 67574,
+   "expected": 67574,
+   "runs": 1,
+   "legacy_meta": false,
+   "tracks": {
+    "strict": {
+     "samples": 67574,
+     "empty_references": 0,
+     "cer": {
+      "value": 0.24281391081250417,
+      "low": 0.23888512794185024,
+      "high": 0.24638182286020988,
+      "unit": "lines"
+     },
+     "wer": {
+      "value": 0.4477040641959782,
+      "low": 0.44282022254324793,
+      "high": 0.45225750676467025,
+      "unit": "lines"
+     },
+     "ned": 0.6471470456652865,
+     "sequence_accuracy": 0.4122443543374671,
+     "charset_ceiling": 0.0007627519495989361
+    },
+    "normalised": {
+     "samples": 67574,
+     "empty_references": 0,
+     "cer": {
+      "value": 0.23171315924662833,
+      "low": 0.22792820270643677,
+      "high": 0.2352856421998276,
+      "unit": "lines"
+     },
+     "wer": {
+      "value": 0.43429020572756477,
+      "low": 0.4294223103299487,
+      "high": 0.43884336000591867,
+      "unit": "lines"
+     },
+     "ned": 0.66498343461973,
+     "sequence_accuracy": 0.43117175244916683,
+     "charset_ceiling": 0.0006870214833474658
+    }
+   }
+  },
+  {
+   "experiment": "GW-BASE-001",
+   "system": "tesseract",
+   "version": "tesseract v5.4.0.20240606",
+   "settings": {
+    "lang": "eng",
+    "oem": "default (LSTM)",
+    "traineddata": {
+     "path": "C:\\Program Files\\Tesseract-OCR\\tessdata\\eng.traineddata",
+     "bytes": 4113088,
+     "sha256": "7d4322bd2a7749724879683fc3912cb542f19906c83bcc1a52132556427170b2"
+    },
+    "build": [
+     "leptonica-1.84.1",
+     "libgif 5.2.1 : libjpeg 8d (libjpeg-turbo 3.0.1) : libpng 1.6.43 : libtiff 4.6.0 : zlib 1.3 : libwebp 1.4.0 : libopenjp2 2.5.2",
+     "Found AVX2",
+     "Found AVX",
+     "Found FMA",
+     "Found SSE4.1",
+     "Found libarchive 3.7.4 zlib/1.3.1 liblzma/5.6.1 bz2lib/1.0.8 liblz4/1.9.4 libzstd/1.5.6"
+    ],
+    "OMP_THREAD_LIMIT": null,
+    "psm": 7,
+    "invocation": "one process per batch, via a list file"
+   },
+   "task": "rec",
+   "eval_set": "hiertext_val",
+   "split": "validation",
+   "samples": 10000,
+   "expected": 10000,
+   "runs": 1,
+   "legacy_meta": false,
+   "tracks": {
+    "strict": {
+     "samples": 10000,
+     "empty_references": 0,
+     "cer": {
+      "value": 0.24345760046493342,
+      "low": 0.23395431517103824,
+      "high": 0.25418249311450924,
+      "unit": "lines"
+     },
+     "wer": {
+      "value": 0.44673140361473773,
+      "low": 0.4343127624424315,
+      "high": 0.4608999327659039,
+      "unit": "lines"
+     },
+     "ned": 0.6356676579820771,
+     "sequence_accuracy": 0.4094,
+     "charset_ceiling": 0.0027007162025879015
+    },
+    "normalised": {
+     "samples": 10000,
+     "empty_references": 0,
+     "cer": {
+      "value": 0.23259032696267312,
+      "low": 0.22301526771933652,
+      "high": 0.24309783207040878,
+      "unit": "lines"
+     },
+     "wer": {
+      "value": 0.43481694852257946,
+      "low": 0.4222806959594858,
+      "high": 0.4487532415877184,
+      "unit": "lines"
+     },
+     "ned": 0.6522052307318744,
+     "sequence_accuracy": 0.4249,
+     "charset_ceiling": 0.0024349193059198444
+    }
+   }
+  },
+  {
+   "experiment": "GW-BASE-002",
+   "system": "ppocr_mobile",
+   "version": "paddleocr 3.7.0, PP-OCRv5_mobile_det + en_PP-OCRv5_mobile_rec",
+   "settings": {
+    "device": "cpu",
+    "cpu_threads": 10,
+    "precision": "fp32",
+    "module": "PaddleOCR pipeline",
+    "det_model": "PP-OCRv5_mobile_det",
+    "rec_model": "en_PP-OCRv5_mobile_rec",
+    "use_doc_unwarping": false,
+    "use_doc_orientation_classify": true,
+    "use_textline_orientation": true,
+    "detector_run_mode": "paddle (no oneDNN; speed only)",
+    "deviation": "doc unwarping off (it moves polygons)"
+   },
+   "task": "e2e",
+   "eval_set": "gdc_test",
+   "split": "test",
+   "samples": 106,
+   "expected": 106,
+   "runs": 1,
+   "legacy_meta": false,
+   "tracks": {
+    "strict": {
+     "pages": 106,
+     "order_aware_reported": true,
+     "page_cer_bag_of_lines": {
+      "value": 0.27825986922902335,
+      "low": 0.20423984388623648,
+      "high": 0.36436987771134866,
+      "unit": "pages"
+     },
+     "e2e_f1": {
+      "value": 0.5979580260918889,
+      "low": 0.5080269420107267,
+      "high": 0.6855726632646469,
+      "unit": "pages"
+     },
+     "page_cer_order_aware": {
+      "value": 0.4473935766292938,
+      "low": 0.38395280325970166,
+      "high": 0.507351017291833,
+      "unit": "pages"
+     },
+     "page_wer_order_aware": {
+      "value": 0.5855489843147339,
+      "low": 0.518090662990271,
+      "high": 0.6511770733699326,
+      "unit": "pages"
+     },
+     "charset_ceiling": 0.0010264588087578932
+    },
+    "normalised": {
+     "pages": 106,
+     "order_aware_reported": true,
+     "page_cer_bag_of_lines": {
+      "value": 0.2758810452842508,
+      "low": 0.20199128164753116,
+      "high": 0.3617256385767815,
+      "unit": "pages"
+     },
+     "e2e_f1": {
+      "value": 0.6002268859897901,
+      "low": 0.5091295454310832,
+      "high": 0.6881117697951993,
+      "unit": "pages"
+     },
+     "page_cer_order_aware": {
+      "value": 0.44128568493334247,
+      "low": 0.37828552631949286,
+      "high": 0.5007524898901544,
+      "unit": "pages"
+     },
+     "page_wer_order_aware": {
+      "value": 0.5767351766460393,
+      "low": 0.5075778100385125,
+      "high": 0.6442156450669232,
+      "unit": "pages"
+     },
+     "charset_ceiling": 0.0006079027355623101
+    }
+   },
+   "detection": {
+    "pages": 106,
+    "iou_0.5": {
+     "precision": {
+      "value": 0.6287535104774249,
+      "low": 0.5179649374969516,
+      "high": 0.7498880093325906,
+      "unit": "pages"
+     },
+     "recall": {
+      "value": 0.6952938365981844,
+      "low": 0.6342194789582059,
+      "high": 0.7584311715005213,
+      "unit": "pages"
+     },
+     "f1": {
+      "value": 0.6603516732841747,
+      "low": 0.570318818975259,
+      "high": 0.7501303907350078,
+      "unit": "pages"
+     }
+    },
+    "iou_0.7": {
+     "precision": {
+      "value": 0.26276259932513335,
+      "low": 0.1922502668991853,
+      "high": 0.34673413463915687,
+      "unit": "pages"
+     },
+     "recall": {
+      "value": 0.2883420926899188,
+      "low": 0.2285912310697328,
+      "high": 0.35655477871700775,
+      "unit": "pages"
+     },
+     "f1": {
+      "value": 0.274958710632724,
+      "low": 0.21102608872321424,
+      "high": 0.35162785045670925,
+      "unit": "pages"
+     }
+    },
+    "mean_matched_iou": 0.6729959945982755,
+    "gt_lines": 8372
+   },
+   "vertical": {
+    "strict": {
+     "lines": 32,
+     "recall": {
+      "value": 0.15625,
+      "low": 0.0539527027027028,
+      "high": 0.280142857142857,
+      "unit": "pages"
+     },
+     "cer": {
+      "value": 0.9746543778801844,
+      "low": 0.9525423728813559,
+      "high": 0.9937136035406475,
+      "unit": "pages"
+     },
+     "charset_ceiling": 0.002188183807439825
+    },
+    "normalised": {
+     "lines": 32,
+     "recall": {
+      "value": 0.15625,
+      "low": 0.0539527027027028,
+      "high": 0.280142857142857,
+      "unit": "pages"
+     },
+     "cer": {
+      "value": 0.9724770642201835,
+      "low": 0.9494929843178871,
+      "high": 0.9934988476138829,
+      "unit": "pages"
+     },
+     "charset_ceiling": 0.0
+    }
+   }
+  },
+  {
+   "experiment": "GW-BASE-002",
+   "system": "ppocr_mobile",
+   "version": "paddleocr 3.7.0, PP-OCRv5_mobile_det + en_PP-OCRv5_mobile_rec",
+   "settings": {
+    "device": "cpu",
+    "cpu_threads": 10,
+    "precision": "fp32",
+    "module": "PaddleOCR pipeline",
+    "det_model": "PP-OCRv5_mobile_det",
+    "rec_model": "en_PP-OCRv5_mobile_rec",
+    "use_doc_unwarping": false,
+    "use_doc_orientation_classify": true,
+    "use_textline_orientation": true,
+    "detector_run_mode": "paddle (no oneDNN; speed only)",
+    "deviation": "doc unwarping off (it moves polygons)"
+   },
+   "task": "e2e",
+   "eval_set": "hiertext_test",
+   "split": "test",
+   "samples": 1634,
+   "expected": 1634,
+   "runs": 1,
+   "legacy_meta": false,
+   "tracks": {
+    "strict": {
+     "pages": 1634,
+     "order_aware_reported": false,
+     "page_cer_bag_of_lines": {
+      "value": 0.5094712494520816,
+      "low": 0.4845021265576496,
+      "high": 0.5358042953949929,
+      "unit": "pages"
+     },
+     "e2e_f1": {
+      "value": 0.4047047211712453,
+      "low": 0.3879985167072707,
+      "high": 0.42096657410202853,
+      "unit": "pages"
+     },
+     "charset_ceiling": 0.0007627519495989361
+    },
+    "normalised": {
+     "pages": 1634,
+     "order_aware_reported": false,
+     "page_cer_bag_of_lines": {
+      "value": 0.5067594248825564,
+      "low": 0.4816271451533376,
+      "high": 0.5331789965066704,
+      "unit": "pages"
+     },
+     "e2e_f1": {
+      "value": 0.4097219937489719,
+      "low": 0.3927820246977032,
+      "high": 0.42620840701329066,
+      "unit": "pages"
+     },
+     "charset_ceiling": 0.0006870214833474658
+    }
+   },
+   "detection": {
+    "pages": 1634,
+    "iou_0.5": {
+     "precision": {
+      "value": 0.6185609006406696,
+      "low": 0.5991567291543153,
+      "high": 0.6384567420284748,
+      "unit": "pages"
+     },
+     "recall": {
+      "value": 0.4943617367626602,
+      "low": 0.47616006852985565,
+      "high": 0.5114977696129792,
+      "unit": "pages"
+     },
+     "f1": {
+      "value": 0.549531172890278,
+      "low": 0.5323366243540801,
+      "high": 0.5672879644825545,
+      "unit": "pages"
+     }
+    },
+    "iou_0.7": {
+     "precision": {
+      "value": 0.25435720768276193,
+      "low": 0.2410655026567965,
+      "high": 0.2684761217561431,
+      "unit": "pages"
+     },
+     "recall": {
+      "value": 0.20322905259419302,
+      "low": 0.19199354670160607,
+      "high": 0.2151216122379654,
+      "unit": "pages"
+     },
+     "f1": {
+      "value": 0.22593674166083988,
+      "low": 0.21417357621201819,
+      "high": 0.23828589015129345,
+      "unit": "pages"
+     }
+    },
+    "mean_matched_iou": 0.6761211421171067,
+    "gt_lines": 67574
+   }
+  },
+  {
+   "experiment": "GW-BASE-002",
+   "system": "ppocr_mobile",
+   "version": "paddleocr 3.7.0, PP-OCRv5_mobile_det + en_PP-OCRv5_mobile_rec",
+   "settings": {
+    "device": "cpu",
+    "cpu_threads": 10,
+    "precision": "fp32",
+    "module": "PaddleOCR pipeline",
+    "det_model": "PP-OCRv5_mobile_det",
+    "rec_model": "en_PP-OCRv5_mobile_rec",
+    "use_doc_unwarping": false,
+    "use_doc_orientation_classify": true,
+    "use_textline_orientation": true,
+    "detector_run_mode": "paddle (no oneDNN; speed only)",
+    "deviation": "doc unwarping off (it moves polygons)"
+   },
+   "task": "e2e",
+   "eval_set": "hiertext_val",
+   "split": "validation",
+   "samples": 400,
+   "expected": 400,
+   "runs": 1,
+   "legacy_meta": false,
+   "tracks": {
+    "strict": {
+     "pages": 400,
+     "order_aware_reported": false,
+     "page_cer_bag_of_lines": {
+      "value": 0.5084303074757647,
+      "low": 0.45610830054647,
+      "high": 0.5610747895839371,
+      "unit": "pages"
+     },
+     "e2e_f1": {
+      "value": 0.38752387014640355,
+      "low": 0.348928378902599,
+      "high": 0.42574199349597175,
+      "unit": "pages"
+     },
+     "charset_ceiling": 0.00036675058977459705
+    },
+    "normalised": {
+     "pages": 400,
+     "order_aware_reported": false,
+     "page_cer_bag_of_lines": {
+      "value": 0.5061514297181193,
+      "low": 0.4536804324857792,
+      "high": 0.5588694770934391,
+      "unit": "pages"
+     },
+     "e2e_f1": {
+      "value": 0.39242520687460214,
+      "low": 0.3535531489136109,
+      "high": 0.4307343528349004,
+      "unit": "pages"
+     },
+     "charset_ceiling": 0.00031710954648380015
+    }
+   },
+   "detection": {
+    "pages": 400,
+    "iou_0.5": {
+     "precision": {
+      "value": 0.5966218150586888,
+      "low": 0.5539578853513984,
+      "high": 0.6404631039787877,
+      "unit": "pages"
+     },
+     "recall": {
+      "value": 0.4777624942686841,
+      "low": 0.43917154102063305,
+      "high": 0.5174981739667387,
+      "unit": "pages"
+     },
+     "f1": {
+      "value": 0.5306174411203055,
+      "low": 0.49333618044910593,
+      "high": 0.5707621183437364,
+      "unit": "pages"
+     }
+    },
+    "iou_0.7": {
+     "precision": {
+      "value": 0.2561752702799456,
+      "low": 0.2273308969511501,
+      "high": 0.2873153510202947,
+      "unit": "pages"
+     },
+     "recall": {
+      "value": 0.20506648326455754,
+      "low": 0.1809626125109733,
+      "high": 0.23189463334256338,
+      "unit": "pages"
+     },
+     "f1": {
+      "value": 0.22778927264045837,
+      "low": 0.2024922034664524,
+      "high": 0.2563858996538364,
+      "unit": "pages"
+     }
+    },
+    "mean_matched_iou": 0.6797173844944557,
+    "gt_lines": 17448
+   }
+  },
+  {
+   "experiment": "GW-BASE-002",
+   "system": "ppocr_mobile",
+   "version": "paddleocr 3.7.0, PP-OCRv5_mobile_det + en_PP-OCRv5_mobile_rec",
+   "settings": {
+    "device": "cpu",
+    "cpu_threads": 10,
+    "precision": "fp32",
+    "module": "TextRecognition",
+    "rec_model": "en_PP-OCRv5_mobile_rec",
+    "batch_size": "module default (1)",
+    "run_mode": "default (oneDNN)"
+   },
+   "task": "rec",
+   "eval_set": "gdc_test",
+   "split": "test",
+   "samples": 8372,
+   "expected": 8372,
+   "runs": 2,
+   "legacy_meta": false,
+   "tracks": {
+    "strict": {
+     "samples": 8372,
+     "empty_references": 0,
+     "cer": {
+      "value": 0.036778171258367506,
+      "low": 0.0339965231721669,
+      "high": 0.039532331097774515,
+      "unit": "lines"
+     },
+     "wer": {
+      "value": 0.16886923252426334,
+      "low": 0.15577964567142924,
+      "high": 0.18107490928007652,
+      "unit": "lines"
+     },
+     "ned": 0.9327207406950158,
+     "sequence_accuracy": 0.6734352603917821,
+     "charset_ceiling": 0.001026020501755117
+    },
+    "normalised": {
+     "samples": 8372,
+     "empty_references": 0,
+     "cer": {
+      "value": 0.03377741850233961,
+      "low": 0.030989941533539844,
+      "high": 0.03641950126355712,
+      "unit": "lines"
+     },
+     "wer": {
+      "value": 0.15812288306628525,
+      "low": 0.14472076118263924,
+      "high": 0.1702329865033877,
+      "unit": "lines"
+     },
+     "ned": 0.9361986573478865,
+     "sequence_accuracy": 0.7111801242236024,
+     "charset_ceiling": 0.000618713759385639
+    }
+   }
+  },
+  {
+   "experiment": "GW-BASE-002",
+   "system": "ppocr_mobile",
+   "version": "paddleocr 3.7.0, PP-OCRv5_mobile_det + en_PP-OCRv5_mobile_rec",
+   "settings": {
+    "det_model": "PP-OCRv5_mobile_det",
+    "rec_model": "en_PP-OCRv5_mobile_rec",
+    "device": "cpu",
+    "use_doc_unwarping": false,
+    "use_doc_orientation_classify": true,
+    "use_textline_orientation": true,
+    "detector_run_mode": "paddle (no oneDNN)",
+    "deviation": "doc unwarping off (it moves polygons)"
+   },
+   "task": "rec",
+   "eval_set": "glyphsynth_val",
+   "split": "validation",
+   "samples": 10000,
+   "expected": 10000,
+   "runs": 1,
+   "legacy_meta": true,
+   "tracks": {
+    "strict": {
+     "samples": 10000,
+     "empty_references": 0,
+     "cer": {
+      "value": 0.1805749351645542,
+      "low": 0.17239655009589713,
+      "high": 0.18903314536133445,
+      "unit": "lines"
+     },
+     "wer": {
+      "value": 0.24601157995584622,
+      "low": 0.23652010477844232,
+      "high": 0.25591065992367995,
+      "unit": "lines"
+     },
+     "ned": 0.8814594226531751,
+     "sequence_accuracy": 0.7412,
+     "charset_ceiling": 0.0
+    },
+    "normalised": {
+     "samples": 10000,
+     "empty_references": 0,
+     "cer": {
+      "value": 0.17937441404585358,
+      "low": 0.17117165891676325,
+      "high": 0.1878853461368348,
+      "unit": "lines"
+     },
+     "wer": {
+      "value": 0.24083253495508256,
+      "low": 0.2313002027063892,
+      "high": 0.25070298568310784,
+      "unit": "lines"
+     },
+     "ned": 0.8826908058559944,
+     "sequence_accuracy": 0.7638,
+     "charset_ceiling": 0.0
+    }
+   }
+  },
+  {
+   "experiment": "GW-BASE-002",
+   "system": "ppocr_mobile",
+   "version": "paddleocr 3.7.0, PP-OCRv5_mobile_det + en_PP-OCRv5_mobile_rec",
+   "settings": {
+    "device": "cpu",
+    "cpu_threads": 10,
+    "precision": "fp32",
+    "module": "TextRecognition",
+    "rec_model": "en_PP-OCRv5_mobile_rec",
+    "batch_size": "module default (1)",
+    "run_mode": "default (oneDNN)"
+   },
+   "task": "rec",
+   "eval_set": "hiertext_test",
+   "split": "test",
+   "samples": 67574,
+   "expected": 67574,
+   "runs": 2,
+   "legacy_meta": false,
+   "tracks": {
+    "strict": {
+     "samples": 67574,
+     "empty_references": 0,
+     "cer": {
+      "value": 0.09233260937937252,
+      "low": 0.0898308229036675,
+      "high": 0.09497960626175031,
+      "unit": "lines"
+     },
+     "wer": {
+      "value": 0.25021530806140724,
+      "low": 0.24680021815167213,
+      "high": 0.253784837960204,
+      "unit": "lines"
+     },
+     "ned": 0.8781703722056003,
+     "sequence_accuracy": 0.6617486015331341,
+     "charset_ceiling": 0.0007627519495989361
+    },
+    "normalised": {
+     "samples": 67574,
+     "empty_references": 0,
+     "cer": {
+      "value": 0.08710565895263266,
+      "low": 0.0845940537398352,
+      "high": 0.08974631035803848,
+      "unit": "lines"
+     },
+     "wer": {
+      "value": 0.24091996445902536,
+      "low": 0.23753232919168446,
+      "high": 0.24452344914153573,
+      "unit": "lines"
+     },
+     "ned": 0.8869774654577883,
+     "sequence_accuracy": 0.6752005209104093,
+     "charset_ceiling": 0.0006870214833474658
+    }
+   }
+  },
+  {
+   "experiment": "GW-BASE-002",
+   "system": "ppocr_mobile",
+   "version": "paddleocr 3.7.0, PP-OCRv5_mobile_det + en_PP-OCRv5_mobile_rec",
+   "settings": {
+    "device": "cpu",
+    "cpu_threads": 10,
+    "precision": "fp32",
+    "module": "TextRecognition",
+    "rec_model": "en_PP-OCRv5_mobile_rec",
+    "batch_size": "module default (1)",
+    "run_mode": "default (oneDNN)"
+   },
+   "task": "rec",
+   "eval_set": "hiertext_val",
+   "split": "validation",
+   "samples": 10000,
+   "expected": 10000,
+   "runs": 1,
+   "legacy_meta": false,
+   "tracks": {
+    "strict": {
+     "samples": 10000,
+     "empty_references": 0,
+     "cer": {
+      "value": 0.09268755448438541,
+      "low": 0.08629643599138823,
+      "high": 0.0995593045108414,
+      "unit": "lines"
+     },
+     "wer": {
+      "value": 0.2434140222087999,
+      "low": 0.2338717266590658,
+      "high": 0.25388679615199705,
+      "unit": "lines"
+     },
+     "ned": 0.8737031951115976,
+     "sequence_accuracy": 0.663,
+     "charset_ceiling": 0.0027007162025879015
+    },
+    "normalised": {
+     "samples": 10000,
+     "empty_references": 0,
+     "cer": {
+      "value": 0.08675147590284245,
+      "low": 0.08039102626688455,
+      "high": 0.09363969410840964,
+      "unit": "lines"
+     },
+     "wer": {
+      "value": 0.2333674038282847,
+      "low": 0.22366811867414357,
+      "high": 0.24363926498195526,
+      "unit": "lines"
+     },
+     "ned": 0.8816632367094392,
+     "sequence_accuracy": 0.6758,
+     "charset_ceiling": 0.0024349193059198444
+    }
+   }
+  },
+  {
+   "experiment": "GW-BASE-003",
+   "system": "ppocr_server",
+   "version": "paddleocr 3.7.0, PP-OCRv5_server_det + PP-OCRv5_server_rec",
+   "settings": {
+    "device": "cpu",
+    "cpu_threads": 10,
+    "precision": "fp32",
+    "module": "TextRecognition",
+    "rec_model": "PP-OCRv5_server_rec",
+    "batch_size": "module default (1)",
+    "run_mode": "default (oneDNN)"
+   },
+   "task": "rec",
+   "eval_set": "gdc_test",
+   "split": "test",
+   "samples": 8372,
+   "expected": 8372,
+   "runs": 1,
+   "legacy_meta": false,
+   "tracks": {
+    "strict": {
+     "samples": 8372,
+     "empty_references": 0,
+     "cer": {
+      "value": 0.11235235409522092,
+      "low": 0.107072563948427,
+      "high": 0.1179764442444781,
+      "unit": "lines"
+     },
+     "wer": {
+      "value": 0.48675827936608224,
+      "low": 0.47430953392696246,
+      "high": 0.4987146904506338,
+      "unit": "lines"
+     },
+     "ned": 0.8912342988525735,
+     "sequence_accuracy": 0.4377687529861443,
+     "charset_ceiling": 0.001026020501755117
+    },
+    "normalised": {
+     "samples": 8372,
+     "empty_references": 0,
+     "cer": {
+      "value": 0.10788937771075909,
+      "low": 0.10297961576704388,
+      "high": 0.11331627846314708,
+      "unit": "lines"
+     },
+     "wer": {
+      "value": 0.4810024394096278,
+      "low": 0.4682261449334219,
+      "high": 0.4929475879541152,
+      "unit": "lines"
+     },
+     "ned": 0.89555876125832,
+     "sequence_accuracy": 0.453774486383182,
+     "charset_ceiling": 0.000618713759385639
+    }
+   }
+  },
+  {
+   "experiment": "GW-BASE-003",
+   "system": "ppocr_server",
+   "version": "paddleocr 3.7.0, PP-OCRv5_server_det + PP-OCRv5_server_rec",
+   "settings": {
+    "device": "cpu",
+    "cpu_threads": 10,
+    "precision": "fp32",
+    "module": "TextRecognition",
+    "rec_model": "PP-OCRv5_server_rec",
+    "batch_size": "module default (1)",
+    "run_mode": "default (oneDNN)"
+   },
+   "task": "rec",
+   "eval_set": "hiertext_val",
+   "split": "validation",
+   "samples": 10000,
+   "expected": 10000,
+   "runs": 1,
+   "legacy_meta": false,
+   "tracks": {
+    "strict": {
+     "samples": 10000,
+     "empty_references": 0,
+     "cer": {
+      "value": 0.1464711211390869,
+      "low": 0.13793035981423804,
+      "high": 0.15517199006338578,
+      "unit": "lines"
+     },
+     "wer": {
+      "value": 0.4380430237420434,
+      "low": 0.42556050107284843,
+      "high": 0.4501014566577109,
+      "unit": "lines"
+     },
+     "ned": 0.8393320380436842,
+     "sequence_accuracy": 0.5608,
+     "charset_ceiling": 0.0027007162025879015
+    },
+    "normalised": {
+     "samples": 10000,
+     "empty_references": 0,
+     "cer": {
+      "value": 0.14254103052619888,
+      "low": 0.13407863274919957,
+      "high": 0.15124790344864156,
+      "unit": "lines"
+     },
+     "wer": {
+      "value": 0.4297992938115592,
+      "low": 0.4171572966728405,
+      "high": 0.4418618108792747,
+      "unit": "lines"
+     },
+     "ned": 0.8487955832319032,
+     "sequence_accuracy": 0.5752,
+     "charset_ceiling": 0.0024349193059198444
+    }
+   }
+  },
+  {
+   "experiment": "GW-BASE-004",
+   "system": "trocr",
+   "version": "trocr-small-printed, transformers 5.20.2",
+   "settings": {
+    "num_beams": 1,
+    "max_new_tokens": 256,
+    "use_cache": true,
+    "device": "cpu",
+    "precision": "fp32",
+    "torch_threads": 16,
+    "deviation": "max_new_tokens set (default would stop at 20 tokens); use_cache on (checkpoint has it off; speed only)"
+   },
+   "task": "rec",
+   "eval_set": "gdc_test",
+   "split": "test",
+   "samples": 8372,
+   "expected": 8372,
+   "runs": 1,
+   "legacy_meta": false,
+   "tracks": {
+    "strict": {
+     "samples": 8372,
+     "empty_references": 0,
+     "cer": {
+      "value": 0.7233506720434286,
+      "low": 0.7165455522422631,
+      "high": 0.731638433182797,
+      "unit": "lines"
+     },
+     "wer": {
+      "value": 0.9215500447533301,
+      "low": 0.9057668765145696,
+      "high": 0.9416272458005325,
+      "unit": "lines"
+     },
+     "ned": 0.42761652830032804,
+     "sequence_accuracy": 0.1939799331103679,
+     "charset_ceiling": 0.001026020501755117
+    },
+    "normalised": {
+     "samples": 8372,
+     "empty_references": 0,
+     "cer": {
+      "value": 0.1306854042625958,
+      "low": 0.12328273891524212,
+      "high": 0.13983273349966516,
+      "unit": "lines"
+     },
+     "wer": {
+      "value": 0.3649988592688791,
+      "low": 0.344139058595801,
+      "high": 0.3887217224029583,
+      "unit": "lines"
+     },
+     "ned": 0.9024340301058263,
+     "sequence_accuracy": 0.4501911132345915,
+     "charset_ceiling": 0.000618713759385639
+    }
+   }
+  },
+  {
+   "experiment": "GW-BASE-004",
+   "system": "trocr",
+   "version": "trocr-small-printed, transformers 5.20.2",
+   "settings": {
+    "num_beams": 1,
+    "max_new_tokens": 256,
+    "use_cache": true,
+    "device": "cpu",
+    "precision": "fp32",
+    "torch_threads": 16,
+    "deviation": "max_new_tokens set (default would stop at 20 tokens); use_cache on (checkpoint has it off; speed only)"
+   },
+   "task": "rec",
+   "eval_set": "glyphsynth_val",
+   "split": "validation",
+   "samples": 10000,
+   "expected": 10000,
+   "runs": 1,
+   "legacy_meta": false,
+   "tracks": {
+    "strict": {
+     "samples": 10000,
+     "empty_references": 0,
+     "cer": {
+      "value": 0.7075233468483276,
+      "low": 0.7033020319426841,
+      "high": 0.7117013823366833,
+      "unit": "lines"
+     },
+     "wer": {
+      "value": 0.9050138154149484,
+      "low": 0.9005371769784235,
+      "high": 0.9094951232632212,
+      "unit": "lines"
+     },
+     "ned": 0.36004438778540154,
+     "sequence_accuracy": 0.1075,
+     "charset_ceiling": 0.0
+    },
+    "normalised": {
+     "samples": 10000,
+     "empty_references": 0,
+     "cer": {
+      "value": 0.07265466145547966,
+      "low": 0.07018972912237618,
+      "high": 0.07508247997554884,
+      "unit": "lines"
+     },
+     "wer": {
+      "value": 0.22769747712472752,
+      "low": 0.2225529271825644,
+      "high": 0.23285372814199495,
+      "unit": "lines"
+     },
+     "ned": 0.9490921685484324,
+     "sequence_accuracy": 0.4534,
+     "charset_ceiling": 0.0
+    }
+   }
+  },
+  {
+   "experiment": "GW-BASE-004",
+   "system": "trocr",
+   "version": "trocr-small-printed, transformers 5.20.2",
+   "settings": {
+    "num_beams": 1,
+    "max_new_tokens": 256,
+    "use_cache": true,
+    "device": "cpu",
+    "precision": "fp32",
+    "torch_threads": 16,
+    "deviation": "max_new_tokens set (default would stop at 20 tokens); use_cache on (checkpoint has it off; speed only)"
+   },
+   "task": "rec",
+   "eval_set": "hiertext_test",
+   "split": "test",
+   "samples": 67574,
+   "expected": 67574,
+   "runs": 2,
+   "legacy_meta": false,
+   "tracks": {
+    "strict": {
+     "samples": 67574,
+     "empty_references": 0,
+     "cer": {
+      "value": 0.6399587915829827,
+      "low": 0.630102318225729,
+      "high": 0.6510519509995054,
+      "unit": "lines"
+     },
+     "wer": {
+      "value": 0.7984443138166258,
+      "low": 0.789102322461343,
+      "high": 0.8088856743605765,
+      "unit": "lines"
+     },
+     "ned": 0.4983055652875844,
+     "sequence_accuracy": 0.28951963773048806,
+     "charset_ceiling": 0.0007627519495989361
+    },
+    "normalised": {
+     "samples": 67574,
+     "empty_references": 0,
+     "cer": {
+      "value": 0.20207591896860125,
+      "low": 0.19192944945350107,
+      "high": 0.21320008390217077,
+      "unit": "lines"
+     },
+     "wer": {
+      "value": 0.4238397922219944,
+      "low": 0.4138859836456474,
+      "high": 0.43445744235863265,
+      "unit": "lines"
+     },
+     "ned": 0.7790015773502219,
+     "sequence_accuracy": 0.48719921863438603,
+     "charset_ceiling": 0.0006870214833474658
+    }
+   }
+  },
+  {
+   "experiment": "GW-BASE-004",
+   "system": "trocr",
+   "version": "trocr-small-printed, transformers 5.20.2",
+   "settings": {
+    "num_beams": 1,
+    "max_new_tokens": 256,
+    "use_cache": true,
+    "device": "cpu",
+    "precision": "fp32",
+    "torch_threads": 16,
+    "deviation": "max_new_tokens set (default would stop at 20 tokens); use_cache on (checkpoint has it off; speed only)"
+   },
+   "task": "rec",
+   "eval_set": "hiertext_val",
+   "split": "validation",
+   "samples": 10000,
+   "expected": 10000,
+   "runs": 1,
+   "legacy_meta": false,
+   "tracks": {
+    "strict": {
+     "samples": 10000,
+     "empty_references": 0,
+     "cer": {
+      "value": 0.6258311539579167,
+      "low": 0.6097273409649618,
+      "high": 0.6450251628116495,
+      "unit": "lines"
+     },
+     "wer": {
+      "value": 0.779027087301956,
+      "low": 0.7660345383214874,
+      "high": 0.7932192440970545,
+      "unit": "lines"
+     },
+     "ned": 0.5023338300543349,
+     "sequence_accuracy": 0.2945,
+     "charset_ceiling": 0.0027007162025879015
+    },
+    "normalised": {
+     "samples": 10000,
+     "empty_references": 0,
+     "cer": {
+      "value": 0.19135048313925176,
+      "low": 0.17614186484476763,
+      "high": 0.21014656663075854,
+      "unit": "lines"
+     },
+     "wer": {
+      "value": 0.40299200892027504,
+      "low": 0.38915242602466116,
+      "high": 0.4190073100480833,
+      "unit": "lines"
+     },
+     "ned": 0.7719841235448139,
+     "sequence_accuracy": 0.4834,
+     "charset_ceiling": 0.0024349193059198444
+    }
+   }
+  },
+  {
+   "experiment": "GW-BASE-005",
+   "system": "ppocr6_tiny",
+   "version": "paddleocr 3.7.0, PP-OCRv6_tiny_det + PP-OCRv6_tiny_rec",
+   "settings": {
+    "device": "cpu",
+    "cpu_threads": 10,
+    "precision": "fp32",
+    "module": "PaddleOCR pipeline",
+    "det_model": "PP-OCRv6_tiny_det",
+    "rec_model": "PP-OCRv6_tiny_rec",
+    "use_doc_unwarping": false,
+    "use_doc_orientation_classify": true,
+    "use_textline_orientation": true,
+    "detector_run_mode": "paddle (oneDNN crashes on this machine)",
+    "deviation": "doc unwarping off (it moves polygons)"
+   },
+   "task": "e2e",
+   "eval_set": "gdc_test",
+   "split": "test",
+   "samples": 106,
+   "expected": 106,
+   "runs": 1,
+   "legacy_meta": false,
+   "tracks": {
+    "strict": {
+     "pages": 106,
+     "order_aware_reported": true,
+     "page_cer_bag_of_lines": {
+      "value": 0.24177084920296862,
+      "low": 0.1680168705369087,
+      "high": 0.332059323229635,
+      "unit": "pages"
+     },
+     "e2e_f1": {
+      "value": 0.6094323637390567,
+      "low": 0.49184217029628097,
+      "high": 0.7223988203487636,
+      "unit": "pages"
+     },
+     "page_cer_order_aware": {
+      "value": 0.4405592531379819,
+      "low": 0.37478497633750746,
+      "high": 0.5043035988367481,
+      "unit": "pages"
+     },
+     "page_wer_order_aware": {
+      "value": 0.5787948915745265,
+      "low": 0.504982451948253,
+      "high": 0.6482544627472402,
+      "unit": "pages"
+     },
+     "charset_ceiling": 0.0010264588087578932
+    },
+    "normalised": {
+     "pages": 106,
+     "order_aware_reported": true,
+     "page_cer_bag_of_lines": {
+      "value": 0.239964556096196,
+      "low": 0.16604510758300248,
+      "high": 0.33023982804784185,
+      "unit": "pages"
+     },
+     "e2e_f1": {
+      "value": 0.6119175374188083,
+      "low": 0.4934514383415709,
+      "high": 0.7251006323422086,
+      "unit": "pages"
+     },
+     "page_cer_order_aware": {
+      "value": 0.43527653124730137,
+      "low": 0.3701077700314375,
+      "high": 0.4985566807899811,
+      "unit": "pages"
+     },
+     "page_wer_order_aware": {
+      "value": 0.5723640228328505,
+      "low": 0.4980802983191722,
+      "high": 0.6425106536181695,
+      "unit": "pages"
+     },
+     "charset_ceiling": 0.0006079027355623101
+    }
+   },
+   "detection": {
+    "pages": 106,
+    "iou_0.5": {
+     "precision": {
+      "value": 0.6454516232722597,
+      "low": 0.5029418362768256,
+      "high": 0.7959879851981579,
+      "unit": "pages"
+     },
+     "recall": {
+      "value": 0.7195413282369804,
+      "low": 0.6225766338335672,
+      "high": 0.8055739764434952,
+      "unit": "pages"
+     },
+     "f1": {
+      "value": 0.6804857384919514,
+      "low": 0.5559603416536181,
+      "high": 0.7974836542805942,
+      "unit": "pages"
+     }
+    },
+    "iou_0.7": {
+     "precision": {
+      "value": 0.4540958933562675,
+      "low": 0.33883597952907174,
+      "high": 0.5840286018467513,
+      "unit": "pages"
+     },
+     "recall": {
+      "value": 0.504538939321548,
+      "low": 0.41363539429482576,
+      "high": 0.5927623559499176,
+      "unit": "pages"
+     },
+     "f1": {
+      "value": 0.4779902681905624,
+      "low": 0.37242560750052883,
+      "high": 0.5876370044685976,
+      "unit": "pages"
+     }
+    },
+    "mean_matched_iou": 0.7247335733753437,
+    "gt_lines": 8372
+   },
+   "vertical": {
+    "strict": {
+     "lines": 32,
+     "recall": {
+      "value": 0.4375,
+      "low": 0.2,
+      "high": 0.7058823529411765,
+      "unit": "pages"
+     },
+     "cer": {
+      "value": 0.847926267281106,
+      "low": 0.698140748471746,
+      "high": 0.963563490035769,
+      "unit": "pages"
+     },
+     "charset_ceiling": 0.002188183807439825
+    },
+    "normalised": {
+     "lines": 32,
+     "recall": {
+      "value": 0.4375,
+      "low": 0.2,
+      "high": 0.7058823529411765,
+      "unit": "pages"
+     },
+     "cer": {
+      "value": 0.8440366972477065,
+      "low": 0.6990712706651288,
+      "high": 0.960469804179694,
+      "unit": "pages"
+     },
+     "charset_ceiling": 0.0
+    }
+   }
+  },
+  {
+   "experiment": "GW-BASE-005",
+   "system": "ppocr6_tiny",
+   "version": "paddleocr 3.7.0, PP-OCRv6_tiny_det + PP-OCRv6_tiny_rec",
+   "settings": {
+    "device": "cpu",
+    "cpu_threads": 10,
+    "precision": "fp32",
+    "module": "PaddleOCR pipeline",
+    "det_model": "PP-OCRv6_tiny_det",
+    "rec_model": "PP-OCRv6_tiny_rec",
+    "use_doc_unwarping": false,
+    "use_doc_orientation_classify": true,
+    "use_textline_orientation": true,
+    "detector_run_mode": "paddle (oneDNN crashes on this machine)",
+    "deviation": "doc unwarping off (it moves polygons)"
+   },
+   "task": "e2e",
+   "eval_set": "hiertext_test",
+   "split": "test",
+   "samples": 1634,
+   "expected": 1634,
+   "runs": 1,
+   "legacy_meta": false,
+   "tracks": {
+    "strict": {
+     "pages": 1634,
+     "order_aware_reported": false,
+     "page_cer_bag_of_lines": {
+      "value": 0.49510897694656525,
+      "low": 0.46922189915342793,
+      "high": 0.5216842141617463,
+      "unit": "pages"
+     },
+     "e2e_f1": {
+      "value": 0.394983254733101,
+      "low": 0.3783911853411892,
+      "high": 0.41056596719487265,
+      "unit": "pages"
+     },
+     "charset_ceiling": 0.0007627519495989361
+    },
+    "normalised": {
+     "pages": 1634,
+     "order_aware_reported": false,
+     "page_cer_bag_of_lines": {
+      "value": 0.49280360469650364,
+      "low": 0.4670246605447204,
+      "high": 0.5192652040251283,
+      "unit": "pages"
+     },
+     "e2e_f1": {
+      "value": 0.39985305173945734,
+      "low": 0.3830628781282742,
+      "high": 0.41592257805857036,
+      "unit": "pages"
+     },
+     "charset_ceiling": 0.0006870214833474658
+    }
+   },
+   "detection": {
+    "pages": 1634,
+    "iou_0.5": {
+     "precision": {
+      "value": 0.6595383433722763,
+      "low": 0.6402654282374071,
+      "high": 0.6791162707012395,
+      "unit": "pages"
+     },
+     "recall": {
+      "value": 0.4828780300115429,
+      "low": 0.46630453448034415,
+      "high": 0.49904248625154973,
+      "unit": "pages"
+     },
+     "f1": {
+      "value": 0.5575490397102043,
+      "low": 0.5407795955345888,
+      "high": 0.5744477392648457,
+      "unit": "pages"
+     }
+    },
+    "iou_0.7": {
+     "precision": {
+      "value": 0.28054746886624615,
+      "low": 0.2647886106159354,
+      "high": 0.29614965493603534,
+      "unit": "pages"
+     },
+     "recall": {
+      "value": 0.20536004972326635,
+      "low": 0.19327158404119302,
+      "high": 0.2176309647300267,
+      "unit": "pages"
+     },
+     "f1": {
+      "value": 0.23713665647054802,
+      "low": 0.22384398280585974,
+      "high": 0.2504378233572485,
+      "unit": "pages"
+     }
+    },
+    "mean_matched_iou": 0.6803463027598705,
+    "gt_lines": 67574
+   }
+  },
+  {
+   "experiment": "GW-BASE-005",
+   "system": "ppocr6_tiny",
+   "version": "paddleocr 3.7.0, PP-OCRv6_tiny_det + PP-OCRv6_tiny_rec",
+   "settings": {
+    "device": "cpu",
+    "cpu_threads": 10,
+    "precision": "fp32",
+    "module": "PaddleOCR pipeline",
+    "det_model": "PP-OCRv6_tiny_det",
+    "rec_model": "PP-OCRv6_tiny_rec",
+    "use_doc_unwarping": false,
+    "use_doc_orientation_classify": true,
+    "use_textline_orientation": true,
+    "detector_run_mode": "paddle (oneDNN crashes on this machine)",
+    "deviation": "doc unwarping off (it moves polygons)"
+   },
+   "task": "e2e",
+   "eval_set": "hiertext_val",
+   "split": "validation",
+   "samples": 400,
+   "expected": 400,
+   "runs": 1,
+   "legacy_meta": false,
+   "tracks": {
+    "strict": {
+     "pages": 400,
+     "order_aware_reported": false,
+     "page_cer_bag_of_lines": {
+      "value": 0.49647126459568225,
+      "low": 0.44361025206661436,
+      "high": 0.5488004484305632,
+      "unit": "pages"
+     },
+     "e2e_f1": {
+      "value": 0.38691935590749454,
+      "low": 0.3483587971218257,
+      "high": 0.42428172909558143,
+      "unit": "pages"
+     },
+     "charset_ceiling": 0.00036675058977459705
+    },
+    "normalised": {
+     "pages": 400,
+     "order_aware_reported": false,
+     "page_cer_bag_of_lines": {
+      "value": 0.49450756355816733,
+      "low": 0.4419057212235921,
+      "high": 0.5466082831489593,
+      "unit": "pages"
+     },
+     "e2e_f1": {
+      "value": 0.3901663242992512,
+      "low": 0.35148819581909874,
+      "high": 0.42747388039917833,
+      "unit": "pages"
+     },
+     "charset_ceiling": 0.00031710954648380015
+    }
+   },
+   "detection": {
+    "pages": 400,
+    "iou_0.5": {
+     "precision": {
+      "value": 0.6315376158316318,
+      "low": 0.5797146116099349,
+      "high": 0.6760310269420909,
+      "unit": "pages"
+     },
+     "recall": {
+      "value": 0.4609124254928932,
+      "low": 0.4193936329432547,
+      "high": 0.4989492496874551,
+      "unit": "pages"
+     },
+     "f1": {
+      "value": 0.5329004042144324,
+      "low": 0.4936254012949909,
+      "high": 0.5698004105713788,
+      "unit": "pages"
+     }
+    },
+    "iou_0.7": {
+     "precision": {
+      "value": 0.2729986644669652,
+      "low": 0.24087715310062444,
+      "high": 0.30666897100464563,
+      "unit": "pages"
+     },
+     "recall": {
+      "value": 0.1991632278771206,
+      "low": 0.17604419177893274,
+      "high": 0.22351339746465526,
+      "unit": "pages"
+     },
+     "f1": {
+      "value": 0.230307850349604,
+      "low": 0.20557317702275893,
+      "high": 0.25629553646985304,
+      "unit": "pages"
+     }
+    },
+    "mean_matched_iou": 0.6831292616128306,
+    "gt_lines": 17448
+   }
+  },
+  {
+   "experiment": "GW-BASE-005",
+   "system": "ppocr6_tiny",
+   "version": "paddleocr 3.7.0, PP-OCRv6_tiny_det + PP-OCRv6_tiny_rec",
+   "settings": {
+    "device": "cpu",
+    "cpu_threads": 10,
+    "precision": "fp32",
+    "module": "TextRecognition",
+    "rec_model": "PP-OCRv6_tiny_rec",
+    "batch_size": "module default (1)",
+    "run_mode": "default (oneDNN)"
+   },
+   "task": "rec",
+   "eval_set": "gdc_test",
+   "split": "test",
+   "samples": 8372,
+   "expected": 8372,
+   "runs": 1,
+   "legacy_meta": false,
+   "tracks": {
+    "strict": {
+     "samples": 8372,
+     "empty_references": 0,
+     "cer": {
+      "value": 0.039965053119879614,
+      "low": 0.0371133135039743,
+      "high": 0.04336806885478259,
+      "unit": "lines"
+     },
+     "wer": {
+      "value": 0.1863142561294512,
+      "low": 0.17473235659312558,
+      "high": 0.19948063982309197,
+      "unit": "lines"
+     },
+     "ned": 0.9292033722605771,
+     "sequence_accuracy": 0.6417821309125656,
+     "charset_ceiling": 0.001026020501755117
+    },
+    "normalised": {
+     "samples": 8372,
+     "empty_references": 0,
+     "cer": {
+      "value": 0.03784414009669346,
+      "low": 0.034991978383727806,
+      "high": 0.04130290253291601,
+      "unit": "lines"
+     },
+     "wer": {
+      "value": 0.17886663975711203,
+      "low": 0.16698939617068861,
+      "high": 0.19240710850615322,
+      "unit": "lines"
+     },
+     "ned": 0.9325589014941738,
+     "sequence_accuracy": 0.6694935499283325,
+     "charset_ceiling": 0.000618713759385639
+    }
+   }
+  },
+  {
+   "experiment": "GW-BASE-005",
+   "system": "ppocr6_tiny",
+   "version": "paddleocr 3.7.0, PP-OCRv6_tiny_det + PP-OCRv6_tiny_rec",
+   "settings": {
+    "device": "cpu",
+    "cpu_threads": 10,
+    "precision": "fp32",
+    "module": "TextRecognition",
+    "rec_model": "PP-OCRv6_tiny_rec",
+    "batch_size": "module default (1)",
+    "run_mode": "default (oneDNN)"
+   },
+   "task": "rec",
+   "eval_set": "glyphsynth_val",
+   "split": "validation",
+   "samples": 10000,
+   "expected": 10000,
+   "runs": 1,
+   "legacy_meta": false,
+   "tracks": {
+    "strict": {
+     "samples": 10000,
+     "empty_references": 0,
+     "cer": {
+      "value": 0.01629348236354117,
+      "low": 0.015229516959812483,
+      "high": 0.01742455297746488,
+      "unit": "lines"
+     },
+     "wer": {
+      "value": 0.09172324738617903,
+      "low": 0.08781258292145377,
+      "high": 0.09591377349007058,
+      "unit": "lines"
+     },
+     "ned": 0.9833554655943215,
+     "sequence_accuracy": 0.7258,
+     "charset_ceiling": 0.0
+    },
+    "normalised": {
+     "samples": 10000,
+     "empty_references": 0,
+     "cer": {
+      "value": 0.01486405863802949,
+      "low": 0.013864791092119516,
+      "high": 0.015951930479656706,
+      "unit": "lines"
+     },
+     "wer": {
+      "value": 0.085905499784785,
+      "low": 0.08189158496594372,
+      "high": 0.09003716833259018,
+      "unit": "lines"
+     },
+     "ned": 0.9847122892639889,
+     "sequence_accuracy": 0.7491,
+     "charset_ceiling": 0.0
+    }
+   }
+  },
+  {
+   "experiment": "GW-BASE-005",
+   "system": "ppocr6_tiny",
+   "version": "paddleocr 3.7.0, PP-OCRv6_tiny_det + PP-OCRv6_tiny_rec",
+   "settings": {
+    "device": "cpu",
+    "cpu_threads": 10,
+    "precision": "fp32",
+    "module": "TextRecognition",
+    "rec_model": "PP-OCRv6_tiny_rec",
+    "batch_size": "module default (1)",
+    "run_mode": "default (oneDNN)"
+   },
+   "task": "rec",
+   "eval_set": "hiertext_test",
+   "split": "test",
+   "samples": 67574,
+   "expected": 67574,
+   "runs": 1,
+   "legacy_meta": false,
+   "tracks": {
+    "strict": {
+     "samples": 67574,
+     "empty_references": 0,
+     "cer": {
+      "value": 0.10821914755040231,
+      "low": 0.10613694451381941,
+      "high": 0.11021539012770211,
+      "unit": "lines"
+     },
+     "wer": {
+      "value": 0.31844404040956376,
+      "low": 0.31455958846013,
+      "high": 0.3223519896303089,
+      "unit": "lines"
+     },
+     "ned": 0.8358603337062726,
+     "sequence_accuracy": 0.5710332376357771,
+     "charset_ceiling": 0.0007627519495989361
+    },
+    "normalised": {
+     "samples": 67574,
+     "empty_references": 0,
+     "cer": {
+      "value": 0.10306312551449244,
+      "low": 0.10100941521482545,
+      "high": 0.10498809779272837,
+      "unit": "lines"
+     },
+     "wer": {
+      "value": 0.309821611646504,
+      "low": 0.3058516628730055,
+      "high": 0.31367868473532207,
+      "unit": "lines"
+     },
+     "ned": 0.8455407529534789,
+     "sequence_accuracy": 0.585432266848196,
+     "charset_ceiling": 0.0006870214833474658
+    }
+   }
+  },
+  {
+   "experiment": "GW-BASE-005",
+   "system": "ppocr6_tiny",
+   "version": "paddleocr 3.7.0, PP-OCRv6_tiny_det + PP-OCRv6_tiny_rec",
+   "settings": {
+    "device": "cpu",
+    "cpu_threads": 10,
+    "precision": "fp32",
+    "module": "TextRecognition",
+    "rec_model": "PP-OCRv6_tiny_rec",
+    "batch_size": "module default (1)",
+    "run_mode": "default (oneDNN)"
+   },
+   "task": "rec",
+   "eval_set": "hiertext_val",
+   "split": "validation",
+   "samples": 10000,
+   "expected": 10000,
+   "runs": 1,
+   "legacy_meta": false,
+   "tracks": {
+    "strict": {
+     "samples": 10000,
+     "empty_references": 0,
+     "cer": {
+      "value": 0.11096012170316052,
+      "low": 0.10575302239398056,
+      "high": 0.1165161900390144,
+      "unit": "lines"
+     },
+     "wer": {
+      "value": 0.3111555080611439,
+      "low": 0.3010365218144948,
+      "high": 0.3226289360906932,
+      "unit": "lines"
+     },
+     "ned": 0.8290438850215777,
+     "sequence_accuracy": 0.5744,
+     "charset_ceiling": 0.0027007162025879015
+    },
+    "normalised": {
+     "samples": 10000,
+     "empty_references": 0,
+     "cer": {
+      "value": 0.10598306663135322,
+      "low": 0.10096292132432773,
+      "high": 0.1114048484121674,
+      "unit": "lines"
+     },
+     "wer": {
+      "value": 0.3039397881434678,
+      "low": 0.2938291315160835,
+      "high": 0.3152352399895608,
+      "unit": "lines"
+     },
+     "ned": 0.8377139872736983,
+     "sequence_accuracy": 0.5865,
+     "charset_ceiling": 0.0024349193059198444
+    }
+   }
+  },
+  {
+   "experiment": "GW-BASE-006",
+   "system": "ppocr6_small",
+   "version": "paddleocr 3.7.0, PP-OCRv6_small_det + PP-OCRv6_small_rec",
+   "settings": {
+    "device": "cpu",
+    "cpu_threads": 10,
+    "precision": "fp32",
+    "module": "PaddleOCR pipeline",
+    "det_model": "PP-OCRv6_small_det",
+    "rec_model": "PP-OCRv6_small_rec",
+    "use_doc_unwarping": false,
+    "use_doc_orientation_classify": true,
+    "use_textline_orientation": true,
+    "detector_run_mode": "paddle (oneDNN crashes on this machine)",
+    "deviation": "doc unwarping off (it moves polygons)"
+   },
+   "task": "e2e",
+   "eval_set": "gdc_test",
+   "split": "test",
+   "samples": 106,
+   "expected": 106,
+   "runs": 1,
+   "legacy_meta": false,
+   "tracks": {
+    "strict": {
+     "pages": 106,
+     "order_aware_reported": true,
+     "page_cer_bag_of_lines": {
+      "value": 0.22288896281763884,
+      "low": 0.15067997277508074,
+      "high": 0.3091282250229039,
+      "unit": "pages"
+     },
+     "e2e_f1": {
+      "value": 0.6312804808891913,
+      "low": 0.5170185644608212,
+      "high": 0.7397572409956638,
+      "unit": "pages"
+     },
+     "page_cer_order_aware": {
+      "value": 0.4286475782075907,
+      "low": 0.3616369437256307,
+      "high": 0.49197391351383146,
+      "unit": "pages"
+     },
+     "page_wer_order_aware": {
+      "value": 0.556304105596983,
+      "low": 0.4795011726950508,
+      "high": 0.6268892999041381,
+      "unit": "pages"
+     },
+     "charset_ceiling": 0.0010264588087578932
+    },
+    "normalised": {
+     "pages": 106,
+     "order_aware_reported": true,
+     "page_cer_bag_of_lines": {
+      "value": 0.2210518133909556,
+      "low": 0.14894080288848593,
+      "high": 0.3075095011014492,
+      "unit": "pages"
+     },
+     "e2e_f1": {
+      "value": 0.6323012362481569,
+      "low": 0.5180153775777394,
+      "high": 0.7408626225614033,
+      "unit": "pages"
+     },
+     "page_cer_order_aware": {
+      "value": 0.42348751269277385,
+      "low": 0.3560821704439084,
+      "high": 0.4865274037733841,
+      "unit": "pages"
+     },
+     "page_wer_order_aware": {
+      "value": 0.5479884121569502,
+      "low": 0.4704521161143683,
+      "high": 0.6195266106804119,
+      "unit": "pages"
+     },
+     "charset_ceiling": 0.0006079027355623101
+    }
+   },
+   "detection": {
+    "pages": 106,
+    "iou_0.5": {
+     "precision": {
+      "value": 0.6402504858561866,
+      "low": 0.5048727812944577,
+      "high": 0.7843266542557814,
+      "unit": "pages"
+     },
+     "recall": {
+      "value": 0.7083134257047301,
+      "low": 0.6202830893585927,
+      "high": 0.790767382416927,
+      "unit": "pages"
+     },
+     "f1": {
+      "value": 0.6725643642962459,
+      "low": 0.555080670095493,
+      "high": 0.7842548677793668,
+      "unit": "pages"
+     }
+    },
+    "iou_0.7": {
+     "precision": {
+      "value": 0.4263095108990348,
+      "low": 0.31610409028680153,
+      "high": 0.5538986979554057,
+      "unit": "pages"
+     },
+     "recall": {
+      "value": 0.4695413282369804,
+      "low": 0.3873305775467515,
+      "high": 0.5556739360331084,
+      "unit": "pages"
+     },
+     "f1": {
+      "value": 0.4468822827260842,
+      "low": 0.34820916692802584,
+      "high": 0.5542522338973208,
+      "unit": "pages"
+     }
+    },
+    "mean_matched_iou": 0.7175289614996172,
+    "gt_lines": 8372
+   },
+   "vertical": {
+    "strict": {
+     "lines": 32,
+     "recall": {
+      "value": 0.21875,
+      "low": 0.07142857142857142,
+      "high": 0.42857142857142855,
+      "unit": "pages"
+     },
+     "cer": {
+      "value": 0.8894009216589862,
+      "low": 0.8117647058823529,
+      "high": 0.9610414844223134,
+      "unit": "pages"
+     },
+     "charset_ceiling": 0.002188183807439825
+    },
+    "normalised": {
+     "lines": 32,
+     "recall": {
+      "value": 0.21875,
+      "low": 0.07142857142857142,
+      "high": 0.42857142857142855,
+      "unit": "pages"
+     },
+     "cer": {
+      "value": 0.8899082568807339,
+      "low": 0.8129981736899307,
+      "high": 0.9610514485514485,
+      "unit": "pages"
+     },
+     "charset_ceiling": 0.0
+    }
+   }
+  },
+  {
+   "experiment": "GW-BASE-006",
+   "system": "ppocr6_small",
+   "version": "paddleocr 3.7.0, PP-OCRv6_small_det + PP-OCRv6_small_rec",
+   "settings": {
+    "device": "cpu",
+    "cpu_threads": 10,
+    "precision": "fp32",
+    "module": "PaddleOCR pipeline",
+    "det_model": "PP-OCRv6_small_det",
+    "rec_model": "PP-OCRv6_small_rec",
+    "use_doc_unwarping": false,
+    "use_doc_orientation_classify": true,
+    "use_textline_orientation": true,
+    "detector_run_mode": "paddle (oneDNN crashes on this machine)",
+    "deviation": "doc unwarping off (it moves polygons)"
+   },
+   "task": "e2e",
+   "eval_set": "hiertext_test",
+   "split": "test",
+   "samples": 1634,
+   "expected": 1634,
+   "runs": 1,
+   "legacy_meta": false,
+   "tracks": {
+    "strict": {
+     "pages": 1634,
+     "order_aware_reported": false,
+     "page_cer_bag_of_lines": {
+      "value": 0.42927209194628047,
+      "low": 0.40476700546834954,
+      "high": 0.4529016283439921,
+      "unit": "pages"
+     },
+     "e2e_f1": {
+      "value": 0.4632607878357492,
+      "low": 0.44688836867973014,
+      "high": 0.47971770934095415,
+      "unit": "pages"
+     },
+     "charset_ceiling": 0.0007627519495989361
+    },
+    "normalised": {
+     "pages": 1634,
+     "order_aware_reported": false,
+     "page_cer_bag_of_lines": {
+      "value": 0.4277519542975979,
+      "low": 0.40332220173089484,
+      "high": 0.4513312835682871,
+      "unit": "pages"
+     },
+     "e2e_f1": {
+      "value": 0.4679226367016166,
+      "low": 0.4512771716873063,
+      "high": 0.48455584443895416,
+      "unit": "pages"
+     },
+     "charset_ceiling": 0.0006870214833474658
+    }
+   },
+   "detection": {
+    "pages": 1634,
+    "iou_0.5": {
+     "precision": {
+      "value": 0.678901018783216,
+      "low": 0.6601948129431872,
+      "high": 0.6965808776774952,
+      "unit": "pages"
+     },
+     "recall": {
+      "value": 0.5236481486962441,
+      "low": 0.5076677086853286,
+      "high": 0.5408140598025754,
+      "unit": "pages"
+     },
+     "f1": {
+      "value": 0.5912527674506036,
+      "low": 0.5741976653661184,
+      "high": 0.6084197191297128,
+      "unit": "pages"
+     }
+    },
+    "iou_0.7": {
+     "precision": {
+      "value": 0.2660754731467619,
+      "low": 0.2511856337448615,
+      "high": 0.28100045304899585,
+      "unit": "pages"
+     },
+     "recall": {
+      "value": 0.20513807085565455,
+      "low": 0.1931855801301895,
+      "high": 0.21755524925612452,
+      "unit": "pages"
+     },
+     "f1": {
+      "value": 0.23166655525101945,
+      "low": 0.21863378145589246,
+      "high": 0.24507165517594923,
+      "unit": "pages"
+     }
+    },
+    "mean_matched_iou": 0.6731238236994906,
+    "gt_lines": 67574
+   }
+  },
+  {
+   "experiment": "GW-BASE-006",
+   "system": "ppocr6_small",
+   "version": "paddleocr 3.7.0, PP-OCRv6_small_det + PP-OCRv6_small_rec",
+   "settings": {
+    "device": "cpu",
+    "cpu_threads": 10,
+    "precision": "fp32",
+    "module": "PaddleOCR pipeline",
+    "det_model": "PP-OCRv6_small_det",
+    "rec_model": "PP-OCRv6_small_rec",
+    "use_doc_unwarping": false,
+    "use_doc_orientation_classify": true,
+    "use_textline_orientation": true,
+    "detector_run_mode": "paddle (oneDNN crashes on this machine)",
+    "deviation": "doc unwarping off (it moves polygons)"
+   },
+   "task": "e2e",
+   "eval_set": "hiertext_val",
+   "split": "validation",
+   "samples": 400,
+   "expected": 400,
+   "runs": 1,
+   "legacy_meta": false,
+   "tracks": {
+    "strict": {
+     "pages": 400,
+     "order_aware_reported": false,
+     "page_cer_bag_of_lines": {
+      "value": 0.4243750371706679,
+      "low": 0.3758419769571532,
+      "high": 0.4730353122579308,
+      "unit": "pages"
+     },
+     "e2e_f1": {
+      "value": 0.45680023590314867,
+      "low": 0.4215970151418811,
+      "high": 0.4914155826214496,
+      "unit": "pages"
+     },
+     "charset_ceiling": 0.00036675058977459705
+    },
+    "normalised": {
+     "pages": 400,
+     "order_aware_reported": false,
+     "page_cer_bag_of_lines": {
+      "value": 0.4231083672326742,
+      "low": 0.37407012520646027,
+      "high": 0.47193447875217065,
+      "unit": "pages"
+     },
+     "e2e_f1": {
+      "value": 0.45981455391369874,
+      "low": 0.424864413012803,
+      "high": 0.49472961444012364,
+      "unit": "pages"
+     },
+     "charset_ceiling": 0.00031710954648380015
+    }
+   },
+   "detection": {
+    "pages": 400,
+    "iou_0.5": {
+     "precision": {
+      "value": 0.6762793543945537,
+      "low": 0.6370160020690604,
+      "high": 0.7115722464481263,
+      "unit": "pages"
+     },
+     "recall": {
+      "value": 0.5067056396148556,
+      "low": 0.4676039530650747,
+      "high": 0.5434900498182501,
+      "unit": "pages"
+     },
+     "f1": {
+      "value": 0.5793388158972511,
+      "low": 0.5438102485015949,
+      "high": 0.6136744476923625,
+      "unit": "pages"
+     }
+    },
+    "iou_0.7": {
+     "precision": {
+      "value": 0.2691454364623977,
+      "low": 0.23968589764884463,
+      "high": 0.29940785489364097,
+      "unit": "pages"
+     },
+     "recall": {
+      "value": 0.20162769371847777,
+      "low": 0.1775600352834897,
+      "high": 0.22667226415611685,
+      "unit": "pages"
+     },
+     "f1": {
+      "value": 0.2305449064517186,
+      "low": 0.20572488044111828,
+      "high": 0.2578857578785481,
+      "unit": "pages"
+     }
+    },
+    "mean_matched_iou": 0.6750649500835206,
+    "gt_lines": 17448
+   }
+  },
+  {
+   "experiment": "GW-BASE-006",
+   "system": "ppocr6_small",
+   "version": "paddleocr 3.7.0, PP-OCRv6_small_det + PP-OCRv6_small_rec",
+   "settings": {
+    "device": "cpu",
+    "cpu_threads": 10,
+    "precision": "fp32",
+    "module": "TextRecognition",
+    "rec_model": "PP-OCRv6_small_rec",
+    "batch_size": "module default (1)",
+    "run_mode": "default (oneDNN)"
+   },
+   "task": "rec",
+   "eval_set": "gdc_test",
+   "split": "test",
+   "samples": 8372,
+   "expected": 8372,
+   "runs": 1,
+   "legacy_meta": false,
+   "tracks": {
+    "strict": {
+     "samples": 8372,
+     "empty_references": 0,
+     "cer": {
+      "value": 0.03460798243950366,
+      "low": 0.031308049397725406,
+      "high": 0.03843389014691854,
+      "unit": "lines"
+     },
+     "wer": {
+      "value": 0.15656645430772742,
+      "low": 0.14449586182848428,
+      "high": 0.16998314858014585,
+      "unit": "lines"
+     },
+     "ned": 0.9416094120085262,
+     "sequence_accuracy": 0.7301720019111323,
+     "charset_ceiling": 0.001026020501755117
+    },
+    "normalised": {
+     "samples": 8372,
+     "empty_references": 0,
+     "cer": {
+      "value": 0.032073623828252525,
+      "low": 0.028829025049691738,
+      "high": 0.03592482510025434,
+      "unit": "lines"
+     },
+     "wer": {
+      "value": 0.14710166546743653,
+      "low": 0.13514791035565316,
+      "high": 0.16059572703006142,
+      "unit": "lines"
+     },
+     "ned": 0.9445303431895374,
+     "sequence_accuracy": 0.7701863354037267,
+     "charset_ceiling": 0.000618713759385639
+    }
+   }
+  },
+  {
+   "experiment": "GW-BASE-006",
+   "system": "ppocr6_small",
+   "version": "paddleocr 3.7.0, PP-OCRv6_small_det + PP-OCRv6_small_rec",
+   "settings": {
+    "device": "cpu",
+    "cpu_threads": 10,
+    "precision": "fp32",
+    "module": "TextRecognition",
+    "rec_model": "PP-OCRv6_small_rec",
+    "batch_size": "module default (1)",
+    "run_mode": "default (oneDNN)"
+   },
+   "task": "rec",
+   "eval_set": "glyphsynth_val",
+   "split": "validation",
+   "samples": 10000,
+   "expected": 10000,
+   "runs": 1,
+   "legacy_meta": false,
+   "tracks": {
+    "strict": {
+     "samples": 10000,
+     "empty_references": 0,
+     "cer": {
+      "value": 0.009857422897566083,
+      "low": 0.008573343683736911,
+      "high": 0.011240888100708571,
+      "unit": "lines"
+     },
+     "wer": {
+      "value": 0.044542563974396356,
+      "low": 0.040961532525604916,
+      "high": 0.04812726691037403,
+      "unit": "lines"
+     },
+     "ned": 0.9920245113977432,
+     "sequence_accuracy": 0.8751,
+     "charset_ceiling": 0.0
+    },
+    "normalised": {
+     "samples": 10000,
+     "empty_references": 0,
+     "cer": {
+      "value": 0.008669077449440527,
+      "low": 0.007383209503952434,
+      "high": 0.010066512101962764,
+      "unit": "lines"
+     },
+     "wer": {
+      "value": 0.038405465072687134,
+      "low": 0.0348901182642786,
+      "high": 0.04184506758959915,
+      "unit": "lines"
+     },
+     "ned": 0.9931087538249556,
+     "sequence_accuracy": 0.9036,
+     "charset_ceiling": 0.0
+    }
+   }
+  },
+  {
+   "experiment": "GW-BASE-006",
+   "system": "ppocr6_small",
+   "version": "paddleocr 3.7.0, PP-OCRv6_small_det + PP-OCRv6_small_rec",
+   "settings": {
+    "device": "cpu",
+    "cpu_threads": 10,
+    "precision": "fp32",
+    "module": "TextRecognition",
+    "rec_model": "PP-OCRv6_small_rec",
+    "batch_size": "module default (1)",
+    "run_mode": "default (oneDNN)"
+   },
+   "task": "rec",
+   "eval_set": "hiertext_test",
+   "split": "test",
+   "samples": 67574,
+   "expected": 67574,
+   "runs": 1,
+   "legacy_meta": false,
+   "tracks": {
+    "strict": {
+     "samples": 67574,
+     "empty_references": 0,
+     "cer": {
+      "value": 0.07060284645159373,
+      "low": 0.06878989878888384,
+      "high": 0.07263630108585181,
+      "unit": "lines"
+     },
+     "wer": {
+      "value": 0.2263058604803762,
+      "low": 0.2229825547908891,
+      "high": 0.22963303878637878,
+      "unit": "lines"
+     },
+     "ned": 0.8908219375393762,
+     "sequence_accuracy": 0.6854707431852488,
+     "charset_ceiling": 0.0007627519495989361
+    },
+    "normalised": {
+     "samples": 67574,
+     "empty_references": 0,
+     "cer": {
+      "value": 0.06736895529408853,
+      "low": 0.06556176164786469,
+      "high": 0.06933679647285375,
+      "unit": "lines"
+     },
+     "wer": {
+      "value": 0.2195407012507689,
+      "low": 0.21609367638012494,
+      "high": 0.22300518853447432,
+      "unit": "lines"
+     },
+     "ned": 0.8977587382457236,
+     "sequence_accuracy": 0.6971024358481073,
+     "charset_ceiling": 0.0006870214833474658
+    }
+   }
+  },
+  {
+   "experiment": "GW-BASE-006",
+   "system": "ppocr6_small",
+   "version": "paddleocr 3.7.0, PP-OCRv6_small_det + PP-OCRv6_small_rec",
+   "settings": {
+    "device": "cpu",
+    "cpu_threads": 10,
+    "precision": "fp32",
+    "module": "TextRecognition",
+    "rec_model": "PP-OCRv6_small_rec",
+    "batch_size": "module default (1)",
+    "run_mode": "default (oneDNN)"
+   },
+   "task": "rec",
+   "eval_set": "hiertext_val",
+   "split": "validation",
+   "samples": 10000,
+   "expected": 10000,
+   "runs": 1,
+   "legacy_meta": false,
+   "tracks": {
+    "strict": {
+     "samples": 10000,
+     "empty_references": 0,
+     "cer": {
+      "value": 0.07525255115122302,
+      "low": 0.07013199823563762,
+      "high": 0.08064139920765362,
+      "unit": "lines"
+     },
+     "wer": {
+      "value": 0.22599080053895831,
+      "low": 0.21723487931549335,
+      "high": 0.2355972747796297,
+      "unit": "lines"
+     },
+     "ned": 0.8856682358013691,
+     "sequence_accuracy": 0.6847,
+     "charset_ceiling": 0.0027007162025879015
+    },
+    "normalised": {
+     "samples": 10000,
+     "empty_references": 0,
+     "cer": {
+      "value": 0.07216759079685939,
+      "low": 0.06700604492196088,
+      "high": 0.07769051091870219,
+      "unit": "lines"
+     },
+     "wer": {
+      "value": 0.22040512915814905,
+      "low": 0.21170018635151772,
+      "high": 0.22998710047569518,
+      "unit": "lines"
+     },
+     "ned": 0.8916282149531868,
+     "sequence_accuracy": 0.6942,
+     "charset_ceiling": 0.0024349193059198444
+    }
+   }
+  },
+  {
+   "experiment": "GW-BASE-007",
+   "system": "ppocr6_medium",
+   "version": "paddleocr 3.7.0, PP-OCRv6_medium_det + PP-OCRv6_medium_rec",
+   "settings": {
+    "device": "cpu",
+    "cpu_threads": 10,
+    "precision": "fp32",
+    "module": "PaddleOCR pipeline",
+    "det_model": "PP-OCRv6_medium_det",
+    "rec_model": "PP-OCRv6_medium_rec",
+    "use_doc_unwarping": false,
+    "use_doc_orientation_classify": true,
+    "use_textline_orientation": true,
+    "detector_run_mode": "paddle (oneDNN crashes on this machine)",
+    "deviation": "doc unwarping off (it moves polygons)"
+   },
+   "task": "e2e",
+   "eval_set": "gdc_test",
+   "split": "test",
+   "samples": 106,
+   "expected": 106,
+   "runs": 1,
+   "legacy_meta": false,
+   "tracks": {
+    "strict": {
+     "pages": 106,
+     "order_aware_reported": true,
+     "page_cer_bag_of_lines": {
+      "value": 0.209619097661606,
+      "low": 0.13574988363490859,
+      "high": 0.29780105222671205,
+      "unit": "pages"
+     },
+     "e2e_f1": {
+      "value": 0.6546824173942818,
+      "low": 0.536117555089694,
+      "high": 0.7654123185085169,
+      "unit": "pages"
+     },
+     "page_cer_order_aware": {
+      "value": 0.4286505561263233,
+      "low": 0.3618015402228058,
+      "high": 0.4935510142612427,
+      "unit": "pages"
+     },
+     "page_wer_order_aware": {
+      "value": 0.5551555669838004,
+      "low": 0.47870879414012985,
+      "high": 0.6254367709246531,
+      "unit": "pages"
+     },
+     "charset_ceiling": 0.0010264588087578932
+    },
+    "normalised": {
+     "pages": 106,
+     "order_aware_reported": true,
+     "page_cer_bag_of_lines": {
+      "value": 0.2077541312357175,
+      "low": 0.1335851005501289,
+      "high": 0.2963258903993966,
+      "unit": "pages"
+     },
+     "e2e_f1": {
+      "value": 0.6559379101751983,
+      "low": 0.537610781717047,
+      "high": 0.7665138200355818,
+      "unit": "pages"
+     },
+     "page_cer_order_aware": {
+      "value": 0.42342795715574666,
+      "low": 0.356883382082967,
+      "high": 0.48771139495169297,
+      "unit": "pages"
+     },
+     "page_wer_order_aware": {
+      "value": 0.5466684951231637,
+      "low": 0.46898039415812187,
+      "high": 0.6178281471897298,
+      "unit": "pages"
+     },
+     "charset_ceiling": 0.0006079027355623101
+    }
+   },
+   "detection": {
+    "pages": 106,
+    "iou_0.5": {
+     "precision": {
+      "value": 0.670090700469894,
+      "low": 0.526816164424655,
+      "high": 0.816683058693963,
+      "unit": "pages"
+     },
+     "recall": {
+      "value": 0.7324414715719063,
+      "low": 0.6410238389744743,
+      "high": 0.8110497276973843,
+      "unit": "pages"
+     },
+     "f1": {
+      "value": 0.6998801575072762,
+      "low": 0.5782699854041967,
+      "high": 0.8110402893098495,
+      "unit": "pages"
+     }
+    },
+    "iou_0.7": {
+     "precision": {
+      "value": 0.47382859651047954,
+      "low": 0.3540928147870349,
+      "high": 0.6065387299688467,
+      "unit": "pages"
+     },
+     "recall": {
+      "value": 0.5157668418537984,
+      "low": 0.4258654248097925,
+      "high": 0.6036671669908874,
+      "unit": "pages"
+     },
+     "f1": {
+      "value": 0.49390906491278236,
+      "low": 0.3874081557556522,
+      "high": 0.6046246869142072,
+      "unit": "pages"
+     }
+    },
+    "mean_matched_iou": 0.7331619891520418,
+    "gt_lines": 8372
+   },
+   "vertical": {
+    "strict": {
+     "lines": 32,
+     "recall": {
+      "value": 0.34375,
+      "low": 0.15997727272727275,
+      "high": 0.6334090909090908,
+      "unit": "pages"
+     },
+     "cer": {
+      "value": 0.8133640552995391,
+      "low": 0.6653217475339909,
+      "high": 0.9268844561804168,
+      "unit": "pages"
+     },
+     "charset_ceiling": 0.002188183807439825
+    },
+    "normalised": {
+     "lines": 32,
+     "recall": {
+      "value": 0.34375,
+      "low": 0.15997727272727275,
+      "high": 0.6334090909090908,
+      "unit": "pages"
+     },
+     "cer": {
+      "value": 0.8096330275229358,
+      "low": 0.6623986230235137,
+      "high": 0.921129665334103,
+      "unit": "pages"
+     },
+     "charset_ceiling": 0.0
+    }
+   }
+  },
+  {
+   "experiment": "GW-BASE-007",
+   "system": "ppocr6_medium",
+   "version": "paddleocr 3.7.0, PP-OCRv6_medium_det + PP-OCRv6_medium_rec",
+   "settings": {
+    "device": "cpu",
+    "cpu_threads": 10,
+    "precision": "fp32",
+    "module": "TextRecognition",
+    "rec_model": "PP-OCRv6_medium_rec",
+    "batch_size": "module default (1)",
+    "run_mode": "default (oneDNN)"
+   },
+   "task": "rec",
+   "eval_set": "gdc_test",
+   "split": "test",
+   "samples": 8372,
+   "expected": 8372,
+   "runs": 1,
+   "legacy_meta": false,
+   "tracks": {
+    "strict": {
+     "samples": 8372,
+     "empty_references": 0,
+     "cer": {
+      "value": 0.031986966430474675,
+      "low": 0.029108170759125362,
+      "high": 0.03555768780333038,
+      "unit": "lines"
+     },
+     "wer": {
+      "value": 0.15470611979852225,
+      "low": 0.14258379721130454,
+      "high": 0.16799223275173766,
+      "unit": "lines"
+     },
+     "ned": 0.9443978053595045,
+     "sequence_accuracy": 0.7404443382704252,
+     "charset_ceiling": 0.001026020501755117
+    },
+    "normalised": {
+     "samples": 8372,
+     "empty_references": 0,
+     "cer": {
+      "value": 0.029440203957902592,
+      "low": 0.02651251993051374,
+      "high": 0.03288300595418532,
+      "unit": "lines"
+     },
+     "wer": {
+      "value": 0.1449957003211597,
+      "low": 0.1328300501652612,
+      "high": 0.15848574710840818,
+      "unit": "lines"
+     },
+     "ned": 0.9471629462354378,
+     "sequence_accuracy": 0.7827281414237935,
+     "charset_ceiling": 0.000618713759385639
+    }
+   }
+  },
+  {
+   "experiment": "GW-BASE-007",
+   "system": "ppocr6_medium",
+   "version": "paddleocr 3.7.0, PP-OCRv6_medium_det + PP-OCRv6_medium_rec",
+   "settings": {
+    "device": "cpu",
+    "cpu_threads": 10,
+    "precision": "fp32",
+    "module": "TextRecognition",
+    "rec_model": "PP-OCRv6_medium_rec",
+    "batch_size": "module default (1)",
+    "run_mode": "default (oneDNN)"
+   },
+   "task": "rec",
+   "eval_set": "hiertext_val",
+   "split": "validation",
+   "samples": 10000,
+   "expected": 10000,
+   "runs": 1,
+   "legacy_meta": false,
+   "tracks": {
+    "strict": {
+     "samples": 10000,
+     "empty_references": 0,
+     "cer": {
+      "value": 0.07536365656462062,
+      "low": 0.06943268686556692,
+      "high": 0.08161692077648972,
+      "unit": "lines"
+     },
+     "wer": {
+      "value": 0.21795288760860476,
+      "low": 0.20826175931634822,
+      "high": 0.2281251498594587,
+      "unit": "lines"
+     },
+     "ned": 0.8948551848879331,
+     "sequence_accuracy": 0.7026,
+     "charset_ceiling": 0.0027007162025879015
+    },
+    "normalised": {
+     "samples": 10000,
+     "empty_references": 0,
+     "cer": {
+      "value": 0.0718002170068434,
+      "low": 0.06588460970252362,
+      "high": 0.0780033077507016,
+      "unit": "lines"
+     },
+     "wer": {
+      "value": 0.2116242334138636,
+      "low": 0.20184865955139955,
+      "high": 0.22154546595438906,
+      "unit": "lines"
+     },
+     "ned": 0.9019165571237778,
+     "sequence_accuracy": 0.7131,
+     "charset_ceiling": 0.0024349193059198444
+    }
+   }
+  }
+ ],
+ "efficiency": [
+  {
+   "experiment": "GW-BASE-001",
+   "system": "tesseract",
+   "task": "e2e",
+   "eval_set": "hiertext_val",
+   "timed": 100,
+   "warmup": 10,
+   "batch": 1,
+   "mean_ms": 430.81966,
+   "p95_ms": 807.0937499999999,
+   "throughput_per_s": 2.321156838571387,
+   "peak_mem_mib": 281.3,
+   "child_peak_mib": 58.3,
+   "median_input": [
+    1271,
+    1132
+   ],
+   "invocation_overhead_ms": 96.4,
+   "threads": {
+    "OMP_THREAD_LIMIT": null
+   },
+   "on_ac_power": true,
+   "power_plan": "Power Scheme GUID: 381b4222-f694-41f0-9685-ff5bb260df2e  (Balanced)",
+   "cpu_busy_before": 6.2,
+   "cpu_busy_after": 3.6,
+   "cpu": "Intel(R) Core(TM) i7-14650HX",
+   "model_mib": 3.92
+  },
+  {
+   "experiment": "GW-BASE-001",
+   "system": "tesseract",
+   "task": "rec",
+   "eval_set": "hiertext_val",
+   "timed": 100,
+   "warmup": 10,
+   "batch": 1,
+   "mean_ms": 141.83562,
+   "p95_ms": 303.7116,
+   "throughput_per_s": 7.050415121391932,
+   "peak_mem_mib": 113.2,
+   "child_peak_mib": 28.3,
+   "median_input": [
+    207,
+    64
+   ],
+   "invocation_overhead_ms": 97.1,
+   "threads": {
+    "OMP_THREAD_LIMIT": null
+   },
+   "on_ac_power": true,
+   "power_plan": "Power Scheme GUID: 381b4222-f694-41f0-9685-ff5bb260df2e  (Balanced)",
+   "cpu_busy_before": 12.1,
+   "cpu_busy_after": 13.1,
+   "cpu": "Intel(R) Core(TM) i7-14650HX",
+   "model_mib": 3.92
+  },
+  {
+   "experiment": "GW-BASE-002",
+   "system": "ppocr_mobile",
+   "task": "e2e",
+   "eval_set": "hiertext_val",
+   "timed": 100,
+   "warmup": 10,
+   "batch": 1,
+   "mean_ms": 3408.1694,
+   "p95_ms": 5802.799499999999,
+   "throughput_per_s": 0.2934126455099327,
+   "peak_mem_mib": 1959.6,
+   "child_peak_mib": 0.0,
+   "median_input": [
+    1271,
+    1132
+   ],
+   "invocation_overhead_ms": null,
+   "threads": {
+    "cpu_threads": 10
+   },
+   "on_ac_power": true,
+   "power_plan": "Power Scheme GUID: 381b4222-f694-41f0-9685-ff5bb260df2e  (Balanced)",
+   "cpu_busy_before": 5.2,
+   "cpu_busy_after": 11.1,
+   "cpu": "Intel(R) Core(TM) i7-14650HX",
+   "model_mib": 25.41
+  },
+  {
+   "experiment": "GW-BASE-002",
+   "system": "ppocr_mobile",
+   "task": "rec",
+   "eval_set": "hiertext_val",
+   "timed": 100,
+   "warmup": 10,
+   "batch": 1,
+   "mean_ms": 61.361050000000006,
+   "p95_ms": 184.25359999999998,
+   "throughput_per_s": 16.2969831839579,
+   "peak_mem_mib": 923.9,
+   "child_peak_mib": 0.0,
+   "median_input": [
+    207,
+    64
+   ],
+   "invocation_overhead_ms": null,
+   "threads": {
+    "cpu_threads": 10
+   },
+   "on_ac_power": true,
+   "power_plan": "Power Scheme GUID: 381b4222-f694-41f0-9685-ff5bb260df2e  (Balanced)",
+   "cpu_busy_before": 4.8,
+   "cpu_busy_after": 7.9,
+   "cpu": "Intel(R) Core(TM) i7-14650HX",
+   "model_mib": 7.63
+  },
+  {
+   "experiment": "GW-BASE-003",
+   "system": "ppocr_server",
+   "task": "e2e",
+   "eval_set": "hiertext_val",
+   "timed": 100,
+   "warmup": 10,
+   "batch": 1,
+   "mean_ms": 80861.6077,
+   "p95_ms": 148634.41919999992,
+   "throughput_per_s": 0.012366808284470952,
+   "peak_mem_mib": 9789.8,
+   "child_peak_mib": 0.0,
+   "median_input": [
+    1271,
+    1132
+   ],
+   "invocation_overhead_ms": null,
+   "threads": {
+    "cpu_threads": 10
+   },
+   "on_ac_power": true,
+   "power_plan": "Power Scheme GUID: 381b4222-f694-41f0-9685-ff5bb260df2e  (Balanced)",
+   "cpu_busy_before": 3.2,
+   "cpu_busy_after": 7.5,
+   "cpu": "Intel(R) Core(TM) i7-14650HX",
+   "model_mib": 178.59
+  },
+  {
+   "experiment": "GW-BASE-003",
+   "system": "ppocr_server",
+   "task": "rec",
+   "eval_set": "hiertext_val",
+   "timed": 100,
+   "warmup": 10,
+   "batch": 1,
+   "mean_ms": 2266.70768,
+   "p95_ms": 3199.7073999999993,
+   "throughput_per_s": 0.4411684880337106,
+   "peak_mem_mib": 1914.5,
+   "child_peak_mib": 0.0,
+   "median_input": [
+    207,
+    64
+   ],
+   "invocation_overhead_ms": null,
+   "threads": {
+    "cpu_threads": 10
+   },
+   "on_ac_power": true,
+   "power_plan": "Power Scheme GUID: 381b4222-f694-41f0-9685-ff5bb260df2e  (Balanced)",
+   "cpu_busy_before": 3.8,
+   "cpu_busy_after": 9.1,
+   "cpu": "Intel(R) Core(TM) i7-14650HX",
+   "model_mib": 81.27
+  },
+  {
+   "experiment": "GW-BASE-004",
+   "system": "trocr",
+   "task": "rec",
+   "eval_set": "hiertext_val",
+   "timed": 100,
+   "warmup": 10,
+   "batch": 1,
+   "mean_ms": 133.3261,
+   "p95_ms": 183.6366,
+   "throughput_per_s": 7.500406897074167,
+   "peak_mem_mib": 701.2,
+   "child_peak_mib": 0.0,
+   "median_input": [
+    207,
+    64
+   ],
+   "invocation_overhead_ms": null,
+   "threads": {
+    "torch_threads": 16
+   },
+   "on_ac_power": true,
+   "power_plan": "Power Scheme GUID: 381b4222-f694-41f0-9685-ff5bb260df2e  (Balanced)",
+   "cpu_busy_before": 6.1,
+   "cpu_busy_after": 13.5,
+   "cpu": "Intel(R) Core(TM) i7-14650HX",
+   "model_mib": 235.75
+  },
+  {
+   "experiment": "GW-BASE-005",
+   "system": "ppocr6_tiny",
+   "task": "e2e",
+   "eval_set": "hiertext_val",
+   "timed": 100,
+   "warmup": 10,
+   "batch": 1,
+   "mean_ms": 1726.5517799999998,
+   "p95_ms": 2729.03275,
+   "throughput_per_s": 0.579189116471213,
+   "peak_mem_mib": 1836.0,
+   "child_peak_mib": 0.0,
+   "median_input": [
+    1271,
+    1132
+   ],
+   "invocation_overhead_ms": null,
+   "threads": {
+    "cpu_threads": 10
+   },
+   "on_ac_power": true,
+   "power_plan": "Power Scheme GUID: 381b4222-f694-41f0-9685-ff5bb260df2e  (Balanced)",
+   "cpu_busy_before": 9.9,
+   "cpu_busy_after": 8.3,
+   "cpu": "Intel(R) Core(TM) i7-14650HX",
+   "model_mib": 19.31
+  },
+  {
+   "experiment": "GW-BASE-005",
+   "system": "ppocr6_tiny",
+   "task": "rec",
+   "eval_set": "hiertext_val",
+   "timed": 100,
+   "warmup": 10,
+   "batch": 1,
+   "mean_ms": 21.615850000000005,
+   "p95_ms": 66.44815,
+   "throughput_per_s": 46.26234915582777,
+   "peak_mem_mib": 819.2,
+   "child_peak_mib": 0.0,
+   "median_input": [
+    207,
+    64
+   ],
+   "invocation_overhead_ms": null,
+   "threads": {
+    "cpu_threads": 10
+   },
+   "on_ac_power": true,
+   "power_plan": "Power Scheme GUID: 381b4222-f694-41f0-9685-ff5bb260df2e  (Balanced)",
+   "cpu_busy_before": 3.5,
+   "cpu_busy_after": 13.8,
+   "cpu": "Intel(R) Core(TM) i7-14650HX",
+   "model_mib": 4.37
+  },
+  {
+   "experiment": "GW-BASE-006",
+   "system": "ppocr6_small",
+   "task": "e2e",
+   "eval_set": "hiertext_val",
+   "timed": 100,
+   "warmup": 10,
+   "batch": 1,
+   "mean_ms": 3714.158929999999,
+   "p95_ms": 6308.3308499999985,
+   "throughput_per_s": 0.26923995952968016,
+   "peak_mem_mib": 2051.0,
+   "child_peak_mib": 0.0,
+   "median_input": [
+    1271,
+    1132
+   ],
+   "invocation_overhead_ms": null,
+   "threads": {
+    "cpu_threads": 10
+   },
+   "on_ac_power": true,
+   "power_plan": "Power Scheme GUID: 381b4222-f694-41f0-9685-ff5bb260df2e  (Balanced)",
+   "cpu_busy_before": 6.6,
+   "cpu_busy_after": 9.3,
+   "cpu": "Intel(R) Core(TM) i7-14650HX",
+   "model_mib": 43.1
+  },
+  {
+   "experiment": "GW-BASE-006",
+   "system": "ppocr6_small",
+   "task": "rec",
+   "eval_set": "hiertext_val",
+   "timed": 100,
+   "warmup": 10,
+   "batch": 1,
+   "mean_ms": 46.0436,
+   "p95_ms": 114.43995,
+   "throughput_per_s": 21.71854503123127,
+   "peak_mem_mib": 999.6,
+   "child_peak_mib": 0.0,
+   "median_input": [
+    207,
+    64
+   ],
+   "invocation_overhead_ms": null,
+   "threads": {
+    "cpu_threads": 10
+   },
+   "on_ac_power": true,
+   "power_plan": "Power Scheme GUID: 381b4222-f694-41f0-9685-ff5bb260df2e  (Balanced)",
+   "cpu_busy_before": 5.7,
+   "cpu_busy_after": 13.8,
+   "cpu": "Intel(R) Core(TM) i7-14650HX",
+   "model_mib": 20.44
+  },
+  {
+   "experiment": "GW-BASE-007",
+   "system": "ppocr6_medium",
+   "task": "e2e",
+   "eval_set": "hiertext_val",
+   "timed": 100,
+   "warmup": 10,
+   "batch": 1,
+   "mean_ms": 32528.510420000002,
+   "p95_ms": 56305.36269999999,
+   "throughput_per_s": 0.030742262313528956,
+   "peak_mem_mib": 3015.5,
+   "child_peak_mib": 0.0,
+   "median_input": [
+    1271,
+    1132
+   ],
+   "invocation_overhead_ms": null,
+   "threads": {
+    "cpu_threads": 10
+   },
+   "on_ac_power": true,
+   "power_plan": "Power Scheme GUID: 381b4222-f694-41f0-9685-ff5bb260df2e  (Balanced)",
+   "cpu_busy_before": 6.0,
+   "cpu_busy_after": 5.8,
+   "cpu": "Intel(R) Core(TM) i7-14650HX",
+   "model_mib": 145.74
+  },
+  {
+   "experiment": "GW-BASE-007",
+   "system": "ppocr6_medium",
+   "task": "rec",
+   "eval_set": "hiertext_val",
+   "timed": 100,
+   "warmup": 10,
+   "batch": 1,
+   "mean_ms": 552.47463,
+   "p95_ms": 971.6551499999999,
+   "throughput_per_s": 1.8100378654491336,
+   "peak_mem_mib": 1574.8,
+   "child_peak_mib": 0.0,
+   "median_input": [
+    207,
+    64
+   ],
+   "invocation_overhead_ms": null,
+   "threads": {
+    "cpu_threads": 10
+   },
+   "on_ac_power": true,
+   "power_plan": "Power Scheme GUID: 381b4222-f694-41f0-9685-ff5bb260df2e  (Balanced)",
+   "cpu_busy_before": 7.3,
+   "cpu_busy_after": 8.2,
+   "cpu": "Intel(R) Core(TM) i7-14650HX",
+   "model_mib": 73.28
+  }
+ ]
+}

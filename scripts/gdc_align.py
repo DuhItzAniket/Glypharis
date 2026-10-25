@@ -8,7 +8,12 @@ For every image in the captures folder:
 2. refine it with smooth optical flow against the clean sheet (rendered from the print pack), which
    corrects bent or curled paper and lens distortion (`glypharis.data.gdc.refine_alignment`);
 3. map the sheet's ground-truth lines (densified along their top and bottom edges) and ignore
-   regions into the photo, and score each line's local alignment.
+   regions into the photo, and score each line's local alignment. The ignore regions are the source
+   PDF's raster images plus the sheet outside the content box (markers and the printed sheet label,
+   which has no ground truth).
+
+Re-running over an existing pages file must reproduce every ground-truth line exactly (text,
+polygon, flags and alignment score); otherwise nothing is written. Only ignore regions may change.
 
 Writes:
     data/processed/gdc/pages_test.jsonl.gz     one page record per aligned capture (split "test")
@@ -16,6 +21,7 @@ Writes:
     data/manifests/gdc/alignment.json          per-capture result, missing and duplicate sheets
 With --freeze (only when every sheet is aligned without problems):
     data/manifests/gdc/gdc_v1.json             hashes of captures and pages: the frozen record
+                                               (version 1.1 adds the sheet-margin ignore regions)
 """
 
 from __future__ import annotations
@@ -40,8 +46,9 @@ from glypharis.data.gdc import (
     edge_irregularity,
     ncc,
     refine_alignment,
+    sheet_margin_bands,
 )
-from glypharis.data.pages import Page, PageLine, write_pages
+from glypharis.data.pages import Page, PageLine, read_pages, write_pages
 from glypharis.data.text import Charset
 
 IMAGE_SUFFIXES = {".jpg", ".jpeg", ".png", ".tif", ".tiff", ".webp"}
@@ -50,6 +57,7 @@ MIN_PAGE_NCC = 0.5  # refined sheet/photo agreement below this asks for a retake
 MIN_LINE_SCORE = 0.3  # lines below this have uncertain boxes (text ground truth is still exact)
 MAX_IRREGULARITY = 0.25  # zigzag mapped polygons (in line heights) get score 0
 DENSIFY_STEP = 100.0  # sheet pixels between polygon points along a line
+GDC_VERSION = "1.1"  # 1.0: lines frozen 2026-10-21; 1.1: sheet-margin ignore regions added
 
 
 def _sha256(path: Path) -> str:
@@ -96,6 +104,7 @@ def capture_to_page(
     i0: np.ndarray,
     refined: np.ndarray,
     charset: Charset,
+    layout: PackLayout,
 ) -> Page:
     def mapped_pts(poly: list[list[float]]) -> np.ndarray:
         return ref.map_points(densify_box(poly, DENSIFY_STEP))
@@ -110,7 +119,9 @@ def capture_to_page(
         height=size[1],
         source="gdc",
         split="test",
-        ignore=[as_list(mapped_pts(p)) for p in sheet.get("ignore", [])],
+        ignore=[
+            as_list(mapped_pts(p)) for p in [*sheet.get("ignore", []), *sheet_margin_bands(layout)]
+        ],
     )
     for i, ln in enumerate(sheet["lines"]):
         if ln["vertical"]:
@@ -138,6 +149,15 @@ def capture_to_page(
             )
         )
     return page
+
+
+def changed_lines(old: list[Page], new: list[Page]) -> list[str]:
+    """Existing ground-truth lines that a new run would change or drop (ignore regions excluded).
+
+    New lines, from sheets captured since the last run, are allowed."""
+    before = {ln.line_id: ln for p in old for ln in p.lines}
+    after = {ln.line_id: ln for p in new for ln in p.lines}
+    return sorted(k for k in before if k not in after or before[k] != after[k])
 
 
 def main(argv: list[str] | None = None) -> int:
@@ -179,7 +199,7 @@ def main(argv: list[str] | None = None) -> int:
             sheet_img = render_sheet(pack_pdf, a.pack_page, dpi * WORK_SCALE)
             photo_gray = np.asarray(img.convert("L"))
             ref, i0, refined = refine_alignment(photo_gray, sheet_img, a.homography, WORK_SCALE)
-            page = capture_to_page(rel, img.size, sheet, ref, i0, refined, charset)
+            page = capture_to_page(rel, img.size, sheet, ref, i0, refined, charset, layout)
             pages.append(page)
             scores = [ln.align_score or 0.0 for ln in page.lines if not ln.vertical]
             low = sum(1 for s in scores if s < MIN_LINE_SCORE)
@@ -209,6 +229,12 @@ def main(argv: list[str] | None = None) -> int:
 
     pages.sort(key=lambda p: p.lines[0].line_id if p.lines else p.doc_id)
     out_pages = root / "processed" / "gdc" / "pages_test.jsonl.gz"
+    if out_pages.exists():
+        changed = changed_lines(list(read_pages(out_pages)), pages)
+        if changed:
+            print(f"refusing to write: {len(changed)} ground-truth lines would change, e.g. "
+                  f"{changed[:3]}; the frozen lines must stay as they are")  # fmt: skip
+            return 1
     write_pages(out_pages, pages)
     missing = sorted(set(sheets) - set(seen))
     report = {
@@ -235,7 +261,12 @@ def main(argv: list[str] | None = None) -> int:
             print("not freezing: every sheet must be aligned without problems")
             return 1
         frozen = {
-            "gdc_version": 1,
+            "gdc_version": GDC_VERSION,
+            "changes": {
+                "1.0": "ground-truth lines frozen 2026-10-21",
+                "1.1": "ignore regions for the sheet outside the content box (markers and "
+                "the printed sheet label); lines unchanged",
+            },
             "frozen_utc": report["generated_utc"],
             "frozen": True,
             "pages": len(pages),
@@ -247,7 +278,7 @@ def main(argv: list[str] | None = None) -> int:
         (root / "manifests" / "gdc" / "gdc_v1.json").write_text(
             json.dumps(frozen, indent=1) + "\n", encoding="utf-8", newline="\n"
         )
-        print("GDC v1 frozen")
+        print(f"GDC v{GDC_VERSION} frozen")
     return 0
 
 

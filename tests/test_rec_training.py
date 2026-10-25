@@ -741,3 +741,37 @@ def test_ctc_aware_batching_is_opt_in_and_keeps_the_cap_at_stride_8(tiny):
     for batch in trainer._loader(trainer.train_ds, trainer.sampler, 1):
         n, width = batch["images"].shape[0], batch["images"].shape[-1]
         assert n * width <= cap + n * PAD_MULTIPLE  # collate rounds widths up to PAD_MULTIPLE
+
+
+def test_cpu_profile_times_a_trained_run_like_the_baselines(tiny, monkeypatch):
+    import rec_profile
+
+    RecTrainer(_cfg(tiny, "a")).fit()
+    data = tiny / "data"
+    lines = [(f"hv{i}", f"hdoc{i}", WORDS[i % len(WORDS)]) for i in range(6)]
+    _pack(data / "processed/hiertext/lines_validation_eval", lines, "validation")
+    monkeypatch.setattr(rec_profile, "WARMUP", 1)
+    monkeypatch.setattr(rec_profile, "PROFILE_SAMPLES", 3)
+    monkeypatch.setattr(rec_profile, "cpu_busy_percent", lambda interval=2.0: 2.0)
+    conditions = {"cpu_busy_percent_before": 1.0, "power_plan": "Balanced"}
+    monkeypatch.setattr(rec_profile, "run_conditions", lambda: conditions)
+    out = tiny / "lat"
+    args = ["--runs", str(tiny / "a/runs"), "--data-root", str(data), "--out", str(out)]
+    assert rec_profile.main([*args, "--run", "GW-REC-999", "--table"]) == 0
+    res = json.loads((out / "GW-REC-999.json").read_text(encoding="utf-8"))
+    assert len(res["warmup_times_ms"]) == 1 and len(res["times_ms"]) == 3 and res["batch"] == 1
+    assert res["model_name"] == "crnn" and res["parameters"] > 0 and res["val_cer"] is not None
+    assert res["peak_mem_mib"] > 0 and res["eval_set"] == "hiertext_val"
+    md = (tiny / "cpu_latency.md").read_text(encoding="utf-8")
+    assert "| GW-REC-999 | crnn | 32 | 4 |" in md and "mean at most 25 ms" in md
+    with pytest.raises(SystemExit, match="one --run per process"):
+        rec_profile.main([*args, "--run", "GW-REC-999", "--run", "GW-REC-998"])
+
+
+def test_memory_probe_takes_the_worst_batches_and_runs_a_step(tiny):
+    import rec_memory_probe
+
+    cfg = _cfg(tiny, "probe", **{"data.max_width": 300, "data.max_batch_columns": 600})
+    assert rec_memory_probe.worst_batches(cfg) == [(2, 320), (8, 96)]  # widest lines; fullest batch
+    rows = rec_memory_probe.probe(cfg, torch.device("cpu"), 28)
+    assert [r["fits"] for r in rows] == [True, True] and rows[0]["height"] == 32
