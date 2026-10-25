@@ -1,0 +1,73 @@
+{
+ "lines": 73888,
+ "track": "strict",
+ "first": {
+  "experiment_id": "GW-REC-022",
+  "config_hash": "bd959b40b49f78792bb808118d6592fea68735643d1d9879752a457802fd8dcf",
+  "best_epoch": 7,
+  "steps": 45295,
+  "train_seconds": 16738.954000000027,
+  "train_lines": 348935,
+  "parameters": 7928835
+ },
+ "second": {
+  "experiment_id": "GW-REC-020",
+  "config_hash": "2adea41a8bc6945ae91cb632db76f4c159230b89b060e6890525ba690a06c166",
+  "best_epoch": 7,
+  "steps": 45301,
+  "train_seconds": 16712.97,
+  "train_lines": 348935,
+  "parameters": 7928835
+ },
+ "cer": {
+  "first": {
+   "value": 0.07558762129581469,
+   "low": 0.07397670041589587,
+   "high": 0.07712740736567224,
+   "resamples": 1000,
+   "unit": "lines"
+  },
+  "second": {
+   "value": 0.08183745948961027,
+   "low": 0.080112249902083,
+   "high": 0.0834589309491805,
+   "resamples": 1000,
+   "unit": "lines"
+  },
+  "difference": {
+   "value": -0.006249838193795585,
+   "low": -0.0067384196472532985,
+   "high": -0.005777344039104637,
+   "resamples": 1000,
+   "unit": "lines"
+  }
+ },
+ "wer": {
+  "first": {
+   "value": 0.22083210424388555,
+   "low": 0.21763480265799237,
+   "high": 0.22393029854022525,
+   "resamples": 1000,
+   "unit": "lines"
+  },
+  "second": {
+   "value": 0.23185543343037796,
+   "low": 0.22849075679097852,
+   "high": 0.2352223099590348,
+   "resamples": 1000,
+   "unit": "lines"
+  },
+  "difference": {
+   "value": -0.011023329186492414,
+   "low": -0.012640265640804112,
+   "high": -0.00952102093928314,
+   "resamples": 1000,
+   "unit": "lines"
+  }
+ },
+ "lines_fewer_char_errors": {
+  "first": 9033,
+  "second": 6280,
+  "tied": 58575
+ }
+}

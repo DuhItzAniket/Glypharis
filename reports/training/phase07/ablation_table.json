@@ -361,6 +361,29 @@
     "unit": "lines"
    },
    "verdict": "worse"
+  },
+  {
+   "run": "GW-REC-022",
+   "status": "done",
+   "change": "data.image_height: 48, data.max_batch_columns: 6144, data.max_width: 1536, model.svtr.dims: [96, 192, 256], model.svtr.global_blocks: [0, 3, 6], model.svtr.heads: [3, 6, 8], model.svtr.local_blocks: [3, 3, 0], model.svtr.local_kernel: [3, 7], model.svtr.mlp_ratio: 4.0, model_name: svtr, train.batch_size: 8, train.gradient_accumulation: 8, train.learning_rate: 0.0005, train.weight_decay: 0.01",
+   "parameters": 7928835,
+   "steps": 45295,
+   "train_seconds": 16738.954000000027,
+   "val_cer": {
+    "value": 0.07558762129581469,
+    "low": 0.07397670041589587,
+    "high": 0.07712740736567224,
+    "resamples": 1000,
+    "unit": "lines"
+   },
+   "difference": {
+    "value": -0.007585474862964854,
+    "low": -0.00813833180301683,
+    "high": -0.007060311971355955,
+    "resamples": 1000,
+    "unit": "lines"
+   },
+   "verdict": "better"
   }
  ]
 }
