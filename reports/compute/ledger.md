@@ -10,22 +10,22 @@ by hand has no end line; its duration is unknown and adds nothing to the hours.
 
 | Phase | GPU-h (all) | GPU-h (jobs that did not finish) | CPU-h (all) | CPU-h (jobs that did not finish) |
 |---|---|---|---|---|
-| 05 | 0.0 | 0.0 | 41.9 | 1.8 |
+| 05 | 0.0 | 0.0 | 45.9 | 1.9 |
 | 06 | 11.5 | 3.8 | 0.0 | 0.0 |
-| 07 | 25.7 | 3.9 | 0.0 | 0.0 |
-| all | 37.2 | 7.7 | 41.9 | 1.8 |
+| 07 | 30.0 | 3.9 | 0.0 | 0.0 |
+| all | 41.6 | 7.7 | 45.9 | 1.9 |
 
 ## By experiment
 
 | Experiment | Phase | Device | Jobs | Failed jobs | Wall-clock h | Training h |
 |---|---|---|---|---|---|---|
-| GW-BASE-001 | 05 | CPU | 14 | 0 | 1.18 |  |
-| GW-BASE-002 | 05 | CPU | 24 | 4 | 3.01 |  |
-| GW-BASE-003 | 05 | CPU | 3 | 0 | 16.49 |  |
-| GW-BASE-004 | 05 | CPU | 9 | 1 | 3.55 |  |
-| GW-BASE-005 | 05 | CPU | 14 | 0 | 2.45 |  |
-| GW-BASE-006 | 05 | CPU | 14 | 0 | 5.24 |  |
-| GW-BASE-007 | 05 | CPU | 3 | 0 | 9.95 |  |
+| GW-BASE-001 | 05 | CPU | 16 | 0 | 1.20 |  |
+| GW-BASE-002 | 05 | CPU | 26 | 4 | 3.13 |  |
+| GW-BASE-003 | 05 | CPU | 6 | 2 | 19.22 |  |
+| GW-BASE-004 | 05 | CPU | 10 | 1 | 3.56 |  |
+| GW-BASE-005 | 05 | CPU | 16 | 0 | 2.51 |  |
+| GW-BASE-006 | 05 | CPU | 16 | 0 | 5.37 |  |
+| GW-BASE-007 | 05 | CPU | 5 | 0 | 10.96 |  |
 | GW-REC-001 | 06 | GPU | 3 | 2 | 5.62 | 4.71 |
 | GW-REC-002 | 06 | GPU | 2 | 1 | 5.92 | 5.32 |
 | GW-REC-003 | 07 | GPU | 1 | 0 | 1.53 | 1.34 |
@@ -36,13 +36,18 @@ by hand has no end line; its duration is unknown and adds nothing to the hours.
 | GW-REC-008 | 07 | GPU | 1 | 0 | 1.67 | 1.52 |
 | GW-REC-009 | 07 | GPU | 1 | 0 | 1.60 | 1.45 |
 | GW-REC-010 | 07 | GPU | 1 | 0 | 1.69 | 1.53 |
-| GW-REC-011 | 07 | GPU | 2 | 1 | 1.23 |  |
+| GW-REC-011 | 07 | GPU | 2 | 1 | 1.57 | 1.40 |
+| GW-REC-012 | 07 | GPU | 1 | 0 | 1.09 | 1.00 |
+| GW-REC-013 | 07 | GPU | 1 | 0 | 1.04 | 0.96 |
+| GW-REC-014 | 07 | GPU | 1 | 0 | 1.05 | 0.97 |
 | GW-REC-015 | 07 | GPU | 1 | 0 | 1.32 | 1.16 |
 | GW-REC-016 | 07 | GPU | 1 | 0 | 1.54 | 1.39 |
 | GW-REC-017 | 07 | GPU | 1 | 0 | 1.31 | 1.16 |
 | GW-REC-018 | 07 | GPU | 1 | 0 | 1.35 | 1.18 |
 | GW-REC-019 | 07 | GPU | 3 | 3 | 0.12 | 0.04 |
 | GW-REC-020 | 07 | GPU | 5 | 3 | 5.62 | 4.64 |
+| GW-REC-021 | 07 | GPU | 1 | 0 | 0.81 | 0.74 |
+| GW-REC-022 | 07 | GPU | 1 | 0 | 0.00 |  |
 
 ## Not in these logs
 

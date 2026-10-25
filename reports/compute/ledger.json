@@ -1164,11 +1164,11 @@
    "device": "cpu",
    "experiment": "GW-BASE-003",
    "kind": "baseline",
-   "detail": "",
+   "detail": "ppocr_server e2e gdc_test",
    "start": "2026-10-24 21:26:31",
-   "end": null,
-   "hours": null,
-   "outcome": "running"
+   "end": "2026-10-24 21:30:55",
+   "hours": 0.07333333333333333,
+   "outcome": "failed"
   },
   {
    "device": "gpu",
@@ -1176,6 +1176,196 @@
    "kind": "resume",
    "detail": "",
    "start": "2026-10-24 21:29:08",
+   "end": "2026-10-24 21:49:32",
+   "hours": 0.34,
+   "outcome": "done"
+  },
+  {
+   "device": "cpu",
+   "experiment": "GW-BASE-003",
+   "kind": "baseline",
+   "detail": "ppocr_server e2e gdc_test",
+   "start": "2026-10-24 21:50:03",
+   "end": "2026-10-24 21:53:22",
+   "hours": 0.05527777777777778,
+   "outcome": "failed (exit 139)"
+  },
+  {
+   "device": "cpu",
+   "experiment": "GW-BASE-001",
+   "kind": "baseline",
+   "detail": "tesseract rec hiertext_val",
+   "start": "2026-10-24 21:53:22",
+   "end": "2026-10-24 21:53:46",
+   "hours": 0.006666666666666667,
+   "outcome": "done"
+  },
+  {
+   "device": "cpu",
+   "experiment": "GW-BASE-001",
+   "kind": "baseline",
+   "detail": "tesseract e2e hiertext_val",
+   "start": "2026-10-24 21:53:46",
+   "end": "2026-10-24 21:54:41",
+   "hours": 0.015277777777777777,
+   "outcome": "done"
+  },
+  {
+   "device": "cpu",
+   "experiment": "GW-BASE-005",
+   "kind": "baseline",
+   "detail": "ppocr6_tiny rec hiertext_val",
+   "start": "2026-10-24 21:54:41",
+   "end": "2026-10-24 21:54:58",
+   "hours": 0.004722222222222222,
+   "outcome": "done"
+  },
+  {
+   "device": "cpu",
+   "experiment": "GW-BASE-005",
+   "kind": "baseline",
+   "detail": "ppocr6_tiny e2e hiertext_val",
+   "start": "2026-10-24 21:54:58",
+   "end": "2026-10-24 21:58:22",
+   "hours": 0.056666666666666664,
+   "outcome": "done"
+  },
+  {
+   "device": "cpu",
+   "experiment": "GW-BASE-002",
+   "kind": "baseline",
+   "detail": "ppocr_mobile rec hiertext_val",
+   "start": "2026-10-24 21:58:22",
+   "end": "2026-10-24 21:58:40",
+   "hours": 0.005,
+   "outcome": "done"
+  },
+  {
+   "device": "cpu",
+   "experiment": "GW-BASE-002",
+   "kind": "baseline",
+   "detail": "ppocr_mobile e2e hiertext_val",
+   "start": "2026-10-24 21:58:40",
+   "end": "2026-10-24 22:05:14",
+   "hours": 0.10944444444444444,
+   "outcome": "done"
+  },
+  {
+   "device": "cpu",
+   "experiment": "GW-BASE-006",
+   "kind": "baseline",
+   "detail": "ppocr6_small rec hiertext_val",
+   "start": "2026-10-24 22:05:14",
+   "end": "2026-10-24 22:05:32",
+   "hours": 0.005,
+   "outcome": "done"
+  },
+  {
+   "device": "cpu",
+   "experiment": "GW-BASE-006",
+   "kind": "baseline",
+   "detail": "ppocr6_small e2e hiertext_val",
+   "start": "2026-10-24 22:05:32",
+   "end": "2026-10-24 22:12:35",
+   "hours": 0.1175,
+   "outcome": "done"
+  },
+  {
+   "device": "cpu",
+   "experiment": "GW-BASE-007",
+   "kind": "baseline",
+   "detail": "ppocr6_medium rec hiertext_val",
+   "start": "2026-10-24 22:12:35",
+   "end": "2026-10-24 22:13:50",
+   "hours": 0.020833333333333332,
+   "outcome": "done"
+  },
+  {
+   "device": "cpu",
+   "experiment": "GW-BASE-007",
+   "kind": "baseline",
+   "detail": "ppocr6_medium e2e hiertext_val",
+   "start": "2026-10-24 22:13:50",
+   "end": "2026-10-24 23:12:56",
+   "hours": 0.985,
+   "outcome": "done"
+  },
+  {
+   "device": "cpu",
+   "experiment": "GW-BASE-003",
+   "kind": "baseline",
+   "detail": "ppocr_server rec hiertext_val",
+   "start": "2026-10-24 23:12:56",
+   "end": "2026-10-24 23:17:20",
+   "hours": 0.07333333333333333,
+   "outcome": "done"
+  },
+  {
+   "device": "cpu",
+   "experiment": "GW-BASE-003",
+   "kind": "baseline",
+   "detail": "ppocr_server e2e hiertext_val",
+   "start": "2026-10-24 23:17:20",
+   "end": "2026-10-25 01:48:52",
+   "hours": 2.5255555555555556,
+   "outcome": "done"
+  },
+  {
+   "device": "cpu",
+   "experiment": "GW-BASE-004",
+   "kind": "baseline",
+   "detail": "trocr rec hiertext_val",
+   "start": "2026-10-25 01:48:52",
+   "end": "2026-10-25 01:49:33",
+   "hours": 0.01138888888888889,
+   "outcome": "done"
+  },
+  {
+   "device": "gpu",
+   "experiment": "GW-REC-012",
+   "kind": "train",
+   "detail": "",
+   "start": "2026-10-25 01:50:04",
+   "end": "2026-10-25 02:55:28",
+   "hours": 1.09,
+   "outcome": "done"
+  },
+  {
+   "device": "gpu",
+   "experiment": "GW-REC-013",
+   "kind": "train",
+   "detail": "",
+   "start": "2026-10-25 02:55:28",
+   "end": "2026-10-25 03:58:02",
+   "hours": 1.0427777777777778,
+   "outcome": "done"
+  },
+  {
+   "device": "gpu",
+   "experiment": "GW-REC-014",
+   "kind": "train",
+   "detail": "",
+   "start": "2026-10-25 03:58:03",
+   "end": "2026-10-25 05:01:13",
+   "hours": 1.0527777777777778,
+   "outcome": "done"
+  },
+  {
+   "device": "gpu",
+   "experiment": "GW-REC-021",
+   "kind": "train",
+   "detail": "",
+   "start": "2026-10-25 05:01:13",
+   "end": "2026-10-25 05:49:58",
+   "hours": 0.8125,
+   "outcome": "done"
+  },
+  {
+   "device": "gpu",
+   "experiment": "GW-REC-022",
+   "kind": "train",
+   "detail": "",
+   "start": "2026-10-25 05:52:34",
    "end": null,
    "hours": null,
    "outcome": "running"
@@ -1185,25 +1375,25 @@
   "GW-BASE-002": {
    "device": "cpu",
    "phase": "05",
-   "jobs": 24,
+   "jobs": 26,
    "failed_jobs": 4,
-   "wall_h": 3.011944444444445,
+   "wall_h": 3.126388888888889,
    "train_h": null
   },
   "GW-BASE-001": {
    "device": "cpu",
    "phase": "05",
-   "jobs": 14,
+   "jobs": 16,
    "failed_jobs": 0,
-   "wall_h": 1.1822222222222223,
+   "wall_h": 1.2041666666666666,
    "train_h": null
   },
   "GW-BASE-005": {
    "device": "cpu",
    "phase": "05",
-   "jobs": 14,
+   "jobs": 16,
    "failed_jobs": 0,
-   "wall_h": 2.4466666666666668,
+   "wall_h": 2.5080555555555555,
    "train_h": null
   },
   "GW-REC-001": {
@@ -1217,9 +1407,9 @@
   "GW-BASE-006": {
    "device": "cpu",
    "phase": "05",
-   "jobs": 14,
+   "jobs": 16,
    "failed_jobs": 0,
-   "wall_h": 5.243611111111111,
+   "wall_h": 5.366111111111111,
    "train_h": null
   },
   "GW-REC-002": {
@@ -1233,17 +1423,17 @@
   "GW-BASE-004": {
    "device": "cpu",
    "phase": "05",
-   "jobs": 9,
+   "jobs": 10,
    "failed_jobs": 1,
-   "wall_h": 3.5505555555555555,
+   "wall_h": 3.5619444444444444,
    "train_h": null
   },
   "GW-BASE-007": {
    "device": "cpu",
    "phase": "05",
-   "jobs": 3,
+   "jobs": 5,
    "failed_jobs": 0,
-   "wall_h": 9.954166666666666,
+   "wall_h": 10.959999999999999,
    "train_h": null
   },
   "GW-REC-003": {
@@ -1297,9 +1487,9 @@
   "GW-BASE-003": {
    "device": "cpu",
    "phase": "05",
-   "jobs": 3,
-   "failed_jobs": 0,
-   "wall_h": 16.494722222222222,
+   "jobs": 6,
+   "failed_jobs": 2,
+   "wall_h": 19.222222222222225,
    "train_h": null
   },
   "GW-REC-008": {
@@ -1371,14 +1561,54 @@
    "phase": "07",
    "jobs": 2,
    "failed_jobs": 1,
-   "wall_h": 1.2308333333333332,
+   "wall_h": 1.5708333333333333,
+   "train_h": 1.3974911111111092
+  },
+  "GW-REC-012": {
+   "device": "gpu",
+   "phase": "07",
+   "jobs": 1,
+   "failed_jobs": 0,
+   "wall_h": 1.09,
+   "train_h": 0.9990361111111027
+  },
+  "GW-REC-013": {
+   "device": "gpu",
+   "phase": "07",
+   "jobs": 1,
+   "failed_jobs": 0,
+   "wall_h": 1.0427777777777778,
+   "train_h": 0.961306388888867
+  },
+  "GW-REC-014": {
+   "device": "gpu",
+   "phase": "07",
+   "jobs": 1,
+   "failed_jobs": 0,
+   "wall_h": 1.0527777777777778,
+   "train_h": 0.9705986111111512
+  },
+  "GW-REC-021": {
+   "device": "gpu",
+   "phase": "07",
+   "jobs": 1,
+   "failed_jobs": 0,
+   "wall_h": 0.8125,
+   "train_h": 0.7406638888888766
+  },
+  "GW-REC-022": {
+   "device": "gpu",
+   "phase": "07",
+   "jobs": 1,
+   "failed_jobs": 0,
+   "wall_h": 0.0,
    "train_h": null
   }
  },
  "totals": {
-  "gpu_h": 37.21805555555556,
+  "gpu_h": 41.55611111111112,
   "gpu_failed_h": 7.711944444444443,
-  "cpu_h": 41.883888888888876,
-  "cpu_failed_h": 1.803611111111111
+  "cpu_h": 45.94888888888887,
+  "cpu_failed_h": 1.932222222222222
  }
 }
