@@ -503,3 +503,11 @@ largest loss being frame stride 8 (GW-REC-021, +2.61). Every architecture tried 
 line target in PyTorch on the CPU, from 6.3 ms (GW-REC-007) to 15.7 ms (GW-REC-006) per line
 (`reports/training/phase07/cpu_latency.md`). Compute so far: 30.0 GPU-hours (`reports/compute/ledger.md`).
 Open: GW-REC-022 and GW-REC-023, then the choice of configuration and its full-budget confirmation.
+
+**Choice and confirmation (2026-10-26).** GW-REC-022 (SVTR-style encoder, input height 48, weight
+decay 1e-2) reached 7.56% on the short budget, −0.76 points against the control and −0.27 against
+input height 48 alone (`reports/training/compare/GW-REC-022_vs_GW-REC-006.md`); it meets ADR-0011's
+line target at 22.8 ms mean and 51.5 ms p95 per line on the CPU. It is the chosen configuration.
+GW-REC-023 was abandoned before it ran (GW-REC-022 answered its question). GW-REC-024 confirms the
+choice at the full budget with **one seed** instead of the planned three, to stay within the Phase 7
+budget; this deviation is recorded in its registry entry.
