@@ -494,3 +494,12 @@ them out; GW-REC-014 (weight decay) and GW-REC-021 (frame stride 8, which would 
 still running and are added under the same rule if they qualify. Every candidate is timed on the
 CPU against ADR-0011's line target (`scripts/rec_profile.py`, `reports/training/phase07/cpu_latency.md`)
 before one configuration is chosen for the full-budget confirmation.
+
+**Results so far (2026-10-25).** All 15 short-budget arms are done (evidence table and
+`research/ablations.md`). Better: input height 48 (GW-REC-006, −0.49 points), the SVTR-style encoder
+(GW-REC-020, −0.13) and weight decay 1e-2 (GW-REC-014, −0.04). No clear difference: geometric
+augmentation only (GW-REC-016) and learning rate 2e-3 (GW-REC-013). Worse: the other ten, the
+largest loss being frame stride 8 (GW-REC-021, +2.61). Every architecture tried meets ADR-0011's
+line target in PyTorch on the CPU, from 6.3 ms (GW-REC-007) to 15.7 ms (GW-REC-006) per line
+(`reports/training/phase07/cpu_latency.md`). Compute so far: 30.0 GPU-hours (`reports/compute/ledger.md`).
+Open: GW-REC-022 and GW-REC-023, then the choice of configuration and its full-budget confirmation.

@@ -118,7 +118,9 @@ def profile(run: str, runs: Path, data: Path, out: Path) -> dict[str, Any]:
         "conditions": conditions, "cpu_busy_percent_after": cpu_busy_percent(), **git_state(),
     }  # fmt: skip
     out.mkdir(parents=True, exist_ok=True)
-    (out / f"{run}.json").write_text(json.dumps(res, indent=1) + "\n", encoding="utf-8")
+    (out / f"{run}.json").write_text(
+        json.dumps(res, indent=1) + "\n", encoding="utf-8", newline="\n"
+    )
     print(f"profile {run}: mean {res['mean_ms']:.1f} ms, p95 {res['p95_ms']:.1f} ms, "
           f"peak {res['peak_mem_mib']} MiB")  # fmt: skip
     return res
