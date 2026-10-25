@@ -1,0 +1,11 @@
+# GW-REC-023: Phase 7 combination step, the candidate without the encoder change: GW-REC-006
+# (input height 48) with weight decay 1e-2 (GW-REC-014), both judged better on the short budget.
+# Registered 2026-10-25 while GW-REC-022 (the same two changes plus the SVTR encoder) was running,
+# before its result was known. Together the two runs show whether the SVTR encoder still adds
+# anything on top of the other two changes, and they give the choice between the two candidates an
+# accuracy and a CPU-latency side (ADR-0011).
+inherits: gw-rec-006.yaml
+experiment_id: GW-REC-023
+
+train:
+  weight_decay: 1.0e-2

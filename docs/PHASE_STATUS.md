@@ -486,7 +486,9 @@ changes with no clear difference that make the model smaller or faster. The evid
 **Combination step (registered 2026-10-25, before it ran).** Two changes were judged better on the
 short budget: input height 48 (GW-REC-006) and the SVTR-style encoder (GW-REC-020); GW-REC-014
 (weight decay 1e-2) finished later and was judged better too. GW-REC-022 combines all three at the
-same budget and seed (amended before it ran). The changes with no clear difference so far (geometric
+same budget and seed (amended before it ran). GW-REC-023, registered while GW-REC-022 ran and
+before its result, is the same without the encoder change (CRNN, input height 48, weight decay
+1e-2): the cheaper candidate, and the run that shows whether the SVTR encoder still adds anything. The changes with no clear difference so far (geometric
 augmentation only, learning rate 2e-3) make the model neither smaller nor faster, so the rule leaves
 them out; GW-REC-014 (weight decay) and GW-REC-021 (frame stride 8, which would make it faster) are
 still running and are added under the same rule if they qualify. Every candidate is timed on the
