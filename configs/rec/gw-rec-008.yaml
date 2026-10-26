@@ -1,0 +1,7 @@
+# GW-REC-008: Phase 7 ablation, BiLSTM hidden size 128 instead of 256. Everything else is the control
+# GW-REC-003 (8-epoch short budget, seed 1337).
+inherits: gw-rec-003.yaml
+experiment_id: GW-REC-008
+
+model:
+  lstm_hidden: 128

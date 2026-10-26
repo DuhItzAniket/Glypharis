@@ -53,6 +53,23 @@ class DataConfig:
     bucket_chunk: int = 50  # batches per width-sorted chunk (bucketing)
     # Cap on padded columns per batch (lines x widest line); bounds GPU memory. null: no cap.
     max_batch_columns: int | None = None
+    # Count the CTC padding (stride x frames a label needs) in the widths that batches are split
+    # by, so the column cap holds for lines denser than their image (Phase 7, GW-REC-021). Off,
+    # and left out of the config hash, by default: earlier runs keep their batches.
+    ctc_aware_batching: bool = False
+
+
+@dataclass
+class SvtrConfig:
+    """GLYPHARIS-Rec-M: an SVTR-style encoder (ARCHITECTURE §4; Phase 7, H6). Three stages at
+    falling height; each stage runs its local mixing blocks, then its global ones."""
+
+    dims: list[int] = field(default_factory=lambda: [96, 192, 256])
+    local_blocks: list[int] = field(default_factory=lambda: [3, 3, 0])
+    global_blocks: list[int] = field(default_factory=lambda: [0, 3, 6])
+    heads: list[int] = field(default_factory=lambda: [3, 6, 8])
+    mlp_ratio: float = 4.0
+    local_kernel: list[int] = field(default_factory=lambda: [3, 7])  # height, width
 
 
 @dataclass
@@ -61,6 +78,10 @@ class ModelConfig:
     lstm_hidden: int = 256
     lstm_layers: int = 2
     dropout: float = 0.1
+    # Added in Phase 7. At their defaults they are left out of the hashed config, so earlier
+    # configs keep their hashes (glypharis.config.loader.config_to_dict).
+    frame_stride: int = 4  # input columns per output frame (CRNN: 4 or 8)
+    svtr: SvtrConfig | None = None  # required when model_name is "svtr"
 
 
 @dataclass
@@ -166,6 +187,21 @@ class RunConfig:
               "model.cnn_channels must list 6 positive widths")  # fmt: skip
         check(m.lstm_hidden > 0 and m.lstm_layers > 0, "model.lstm_* must be > 0")
         check(0 <= m.dropout < 1, "model.dropout must be in [0, 1)")
+        check(m.frame_stride in (4, 8), "model.frame_stride must be 4 or 8")
+        if self.task == "rec" and self.model_name is not None:
+            check((self.model_name == "svtr") == (m.svtr is not None),
+                  "model.svtr is set exactly when model_name is svtr")  # fmt: skip
+        s = m.svtr
+        if s is not None:
+            check(m.frame_stride == 4, "model.frame_stride must be 4 for svtr")
+            lists = (s.dims, s.local_blocks, s.global_blocks, s.heads)
+            check(all(len(x) == 3 for x in lists), "model.svtr lists must have 3 stages")
+            check(all(d > 0 and h > 0 and d % h == 0 for d, h in zip(s.dims, s.heads, strict=True)),
+                  "model.svtr dims must be positive multiples of their heads")  # fmt: skip
+            check(all(b >= 0 for b in s.local_blocks + s.global_blocks), "svtr blocks must be >= 0")
+            check(len(s.local_kernel) == 2 and all(k % 2 == 1 for k in s.local_kernel),
+                  "model.svtr.local_kernel must be two odd sizes")  # fmt: skip
+            check(s.mlp_ratio > 0, "model.svtr.mlp_ratio must be > 0")
         check(t.max_steps is None or t.max_steps > 0, "train.max_steps must be > 0 or null")
         check(c.every_steps is None or c.every_steps > 0, "checkpoint.every_steps must be > 0")
         check(t.epochs > 0, "train.epochs must be > 0")

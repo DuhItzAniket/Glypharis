@@ -13,8 +13,8 @@ Phases run in the order set by [ADR-0008](decisions/ADR-0008-usable-engine-first
 | 3 | Data audit | **COMPLETE** | `phase-03` |
 | 4 | Preprocessing, charset, GlyphSynth, GDC | **COMPLETE** | `phase-04` |
 | 5 | Baseline systems | **COMPLETE** | `phase-05` |
-| 6 | Recognition baseline | **IN PROGRESS** (in parallel with 5, owner approved) | — |
-| 7 | Recognizer improvement | not started | — |
+| 6 | Recognition baseline | **COMPLETE** | `phase-06` |
+| 7 | Recognizer improvement | **IN PROGRESS** (gate: push, CI, merge) | — |
 | 8 | Text detector | not started | — |
 | 9 | Detector error analysis | not started | — |
 | 10 | Full OCR pipeline | not started | — |
@@ -385,9 +385,8 @@ owner on 2026-10-25. For v0.1 through ONNX Runtime on this laptop: line recognit
 
 ## Phase 06 — Recognition baseline (GLYPHARIS-Rec, CRNN)
 
-**Status:** IN PROGRESS. Run in parallel with Phase 5 (owner approved, 2026-10-22). Gate steps 1 to 7
-are done locally. Push, CI and merge wait for the owner and for Phase 5: this branch is stacked on an
-earlier state of `phase/05-baselines`, so Phase 5 merges first.
+**Status:** COMPLETE (2026-10-25). Run in parallel with Phase 5 (owner approved, 2026-10-22) and
+merged after it.
 
 **Objective:** a first stable recognizer with a fully instrumented training loop.
 
@@ -428,7 +427,7 @@ GPU tests were deselected while the GPU was training a Phase 7 run.
 | Run report generated automatically | pass | `reports/training/GW-REC-001/`, `GW-REC-002/` |
 | Validation CER with a bootstrap CI | pass: GW-REC-001 7.53% [7.38, 7.69]; GW-REC-002 7.49% [7.34, 7.64] | run reports; `reports/training/compare/GW-REC-002_vs_GW-REC-001.md` |
 | Parameters, model size and training time recorded | pass: 7,796,435 parameters, 29.8 MiB; 4.71 and 5.32 GPU-hours | run reports |
-| CI green, with a tiny CPU training smoke test | pending the push | `test_training_smoke_writes_metrics_checkpoints_and_summary` |
+| CI green, with a tiny CPU training smoke test | pass: GitHub Actions runs 40132754557 (branch) and 40132758219 (pull request) | `test_training_smoke_writes_metrics_checkpoints_and_summary` |
 
 **Known issues**
 - Two CUDA runs of one config drift apart because CTC backward has no deterministic kernel. Two
@@ -443,5 +442,116 @@ GPU tests were deselected while the GPU was training a Phase 7 run.
 - HierText annotation noise shows up in the worst-line tables. It is recorded, not corrected, and
   left for Phase 7's error analysis to count.
 
-**Git:** branch `phase/06-rec-baseline`, with Phase 5 merged in. Its pull request is based on
-`phase/05-baselines` until Phase 5 merges, then on `main`.
+**Git:** branch `phase/06-rec-baseline` (Phase 5 merged in first), merged through pull request #6.
+Merge commit `608ee3f`, tag `phase-06` (merge re-created with the noreply identity; same tree and
+parents).
+
+**CI status:** green on the branch, the pull request and `main` (run 40133080942).
+
+---
+
+## Phase 07 — Recognizer improvement
+
+**Status:** write-up done (2026-10-26). Gate open: push, pull request, CI and merge. Opened in
+parallel with Phases 5 and 6 at the owner's request (2026-10-23), on `phase/07-rec-improvement`.
+
+**Objective:** improve the recognizer under controlled conditions and settle its architecture and
+hyperparameters. Validation data only.
+
+**Plan.** About 4.7 GPU-hours per full run, so Phase 7 ranks configurations on a short budget and
+confirms the winner on the full one:
+1. Control (GW-REC-003, 004, 005): GW-REC-001's configuration for 8 epochs (OneCycle over those 8
+   epochs), seeds 1337, 2024 and 7. Their spread is the noise floor.
+2. One-variable ablations against that control, each with an ID and expectation registered before it
+   runs: input height 48; a narrower CNN; BiLSTM size; coarser sequence downsampling; optimizer,
+   schedule, learning rate and weight decay (at most 12 short runs together); augmentation presets;
+   and the SVTR-style encoder, GLYPHARIS-Rec-M (H6), at a matched step budget, with CPU latency
+   measured. Each arm is compared line by line with the control (`scripts/rec_compare.py`) and read
+   against the seed spread.
+3. The chosen configuration at the full budget with three seeds against GW-REC-001's configuration,
+   which gives the evidence table.
+
+The optional TrOCR-Small fine-tune comes last and only if the budget allows.
+
+**Decision rule (fixed 2026-10-23, before any ablation ran).** Each arm is paired line by line with
+GW-REC-003, the control with the same seed. It counts as **better** only if the 95% CI of its CER
+difference lies below zero *and* its CER is below all three control seeds. It counts as **worse**
+only if that CI lies above zero *and* its CER is above all three. Otherwise it shows no clear
+difference. The table states how many comparisons were made; no multiplicity correction is
+applied (EXPERIMENT_PROTOCOL §4). The combination step only takes changes judged better, plus
+changes with no clear difference that make the model smaller or faster. The evidence table is
+`reports/training/phase07/ablation_table.md` (`scripts/rec_ablation_table.py`).
+
+
+**Combination step (registered 2026-10-25, before it ran).** Two changes were judged better on the
+short budget: input height 48 (GW-REC-006) and the SVTR-style encoder (GW-REC-020); GW-REC-014
+(weight decay 1e-2) finished later and was judged better too. GW-REC-022 combines all three at the
+same budget and seed (amended before it ran). GW-REC-023, registered while GW-REC-022 ran and
+before its result, is the same without the encoder change (CRNN, input height 48, weight decay
+1e-2): the cheaper candidate, and the run that shows whether the SVTR encoder still adds anything. The changes with no clear difference so far (geometric
+augmentation only, learning rate 2e-3) make the model neither smaller nor faster, so the rule leaves
+them out; GW-REC-014 (weight decay) and GW-REC-021 (frame stride 8, which would make it faster) are
+still running and are added under the same rule if they qualify. Every candidate is timed on the
+CPU against ADR-0011's line target (`scripts/rec_profile.py`, `reports/training/phase07/cpu_latency.md`)
+before one configuration is chosen for the full-budget confirmation.
+
+**Results so far (2026-10-25).** All 15 short-budget arms are done (evidence table and
+`research/ablations.md`). Better: input height 48 (GW-REC-006, −0.49 points), the SVTR-style encoder
+(GW-REC-020, −0.13) and weight decay 1e-2 (GW-REC-014, −0.04). No clear difference: geometric
+augmentation only (GW-REC-016) and learning rate 2e-3 (GW-REC-013). Worse: the other ten, the
+largest loss being frame stride 8 (GW-REC-021, +2.61). Every architecture tried meets ADR-0011's
+line target in PyTorch on the CPU, from 6.3 ms (GW-REC-007) to 15.7 ms (GW-REC-006) per line
+(`reports/training/phase07/cpu_latency.md`). Compute so far: 30.0 GPU-hours (`reports/compute/ledger.md`).
+Open: GW-REC-022 and GW-REC-023, then the choice of configuration and its full-budget confirmation.
+
+**Choice and confirmation (2026-10-26).** GW-REC-022 (SVTR-style encoder, input height 48, weight
+decay 1e-2) reached 7.56% on the short budget, −0.76 points against the control and −0.27 against
+input height 48 alone (`reports/training/compare/GW-REC-022_vs_GW-REC-006.md`); it meets ADR-0011's
+line target at 22.8 ms mean and 51.5 ms p95 per line on the CPU. It is the chosen configuration.
+GW-REC-023 was abandoned before it ran (GW-REC-022 answered its question). GW-REC-024 confirms the
+choice at the full budget with **one seed** instead of the planned three, to stay within the Phase 7
+budget; this deviation is recorded in its registry entry. The owner decided (2026-10-26) to add
+the two missing seeds later, on a college A100 if access is granted, before the paper.
+
+**Chosen configuration.** GLYPHARIS-Rec-M (the SVTR-style encoder) at input height 48 with weight
+decay 1e-2, trained with GW-REC-001's recipe otherwise (`configs/rec/gw-rec-024.yaml`). At the full
+budget (GW-REC-024) it reaches 6.46% validation CER [6.33, 6.60], −1.07 points [−1.13, −1.01]
+against GW-REC-001, with 7,928,835 parameters, and reads a line in 24.4 ms mean, 60.3 ms p95 on the
+CPU (PyTorch), inside ADR-0011's line target with little margin on the mean. One seed; the owner
+decided (2026-10-26) to add the two missing seeds later, on a college A100 if access is granted.
+
+**Implemented**
+- `glypharis/models/rec/svtr.py` (GLYPHARIS-Rec-M), `glypharis/models/rec/base.py`, the CRNN frame
+  stride option, CTC-aware batching (`data.ctc_aware_batching`), config fields that keep earlier
+  config hashes unchanged at their defaults.
+- `scripts/rec_ablation_table.py` (evidence table with the decision rule), `scripts/rec_profile.py`
+  (CPU latency like the baselines), `scripts/rec_memory_probe.py` (worst-case batches before a run),
+  `scripts/compute_ledger.py` (`reports/compute/ledger.md`).
+- Runs GW-REC-003 to 024: three control seeds, 15 one-change ablations, two combinations, one
+  full-budget confirmation; GW-REC-019 failed (out of memory) and was re-run as 021; GW-REC-023 was
+  abandoned before it ran.
+
+**Tests:** 314 passed locally (CPU; the 7 GPU tests passed on 2026-10-25 and were deselected now
+because the GPU was training the detector).
+
+**Exit criteria**
+
+| Criterion | Result | Evidence |
+|---|---|---|
+| A chosen recognizer configuration with the evidence table | pass: GW-REC-022's recipe, confirmed at the full budget by GW-REC-024 | `reports/training/phase07/ablation_table.md`, `research/ablations.md`, `reports/training/compare/GW-REC-024_vs_GW-REC-001.md` |
+| All runs have diagnostic reports | pass: every run's report has its diagnostics section (no flags raised in Phase 7) | `reports/training/GW-REC-0*/report.md` |
+| Negative results recorded | pass: ten arms judged worse, the stride-8 OOM, the abandoned GW-REC-023 | `research/ablations.md`, `research/failures.md`, `research/experiments.md` |
+| CI green | pending (after the push) | — |
+
+**Compute:** 55.3 GPU-hours in Phase 7, inside the plan's 30–60 (`reports/compute/ledger.md`; the
+hours of jobs that did not finish include the parts of crashed runs that later resumed).
+
+**Known issues**
+- The chosen recognizer's CPU latency (24.4 ms mean per line in PyTorch) is close to ADR-0011's 25 ms
+  target; the Phase 17 ONNX export has to keep it inside.
+- One seed at the full budget (deviation recorded in GW-REC-024's entry).
+- On this laptop, training crashed with CUDA host-allocation and "unknown" errors under memory
+  pressure; two data-loading workers and the resume path kept every run going.
+- The optional TrOCR-Small fine-tune was not run (budget).
+
+**Git:** branch `phase/07-rec-improvement`; push and merge pending.

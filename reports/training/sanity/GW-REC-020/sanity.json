@@ -1,0 +1,70 @@
+{
+ "experiment_id": "GW-REC-020",
+ "device": "cuda",
+ "precision": "bf16",
+ "git": "6dbacf043f587b6253b9047a314043fa39b577e1",
+ "overfit": {
+  "lines": 64,
+  "steps": 300,
+  "final_cer": 0.0,
+  "target_cer": 0.01,
+  "passed": true,
+  "seconds": 120.9,
+  "curve": [
+   {
+    "step": 50,
+    "cer": 1.0,
+    "loss": 4.26008415222168
+   },
+   {
+    "step": 100,
+    "cer": 1.0,
+    "loss": 4.138985633850098
+   },
+   {
+    "step": 150,
+    "cer": 0.9477124183006536,
+    "loss": 2.594031810760498
+   },
+   {
+    "step": 200,
+    "cer": 0.5973856209150327,
+    "loss": 1.1804649829864502
+   },
+   {
+    "step": 250,
+    "cer": 0.07712418300653595,
+    "loss": 0.08547530323266983
+   },
+   {
+    "step": 300,
+    "cer": 0.0,
+    "loss": 0.007751535624265671
+   }
+  ]
+ },
+ "lr_range": {
+  "steps": 367,
+  "lr_at_min_loss": 0.004731512589614886,
+  "suggested_lr": 0.0004731512589614886,
+  "configured_lr": 0.0005,
+  "configured_within_3x_of_suggestion": true
+ },
+ "dry_run": {
+  "minutes": 10.0,
+  "steps": 7484,
+  "lines": 115142,
+  "lines_per_s": 191.9,
+  "ms_per_step": 80.2,
+  "data_wait_share": 0.004,
+  "peak_vram_mib": 2734.3,
+  "gpu_temperature_c_max": 56,
+  "loss_first_last": [
+   22.73780059814453,
+   4.044311890602112
+  ],
+  "finite": true,
+  "estimated_minutes_per_epoch": 30.3,
+  "parameters": 7928835
+ }
+}

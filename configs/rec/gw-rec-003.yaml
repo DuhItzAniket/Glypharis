@@ -1,0 +1,9 @@
+# GW-REC-003: Phase 7 control. GW-REC-001's configuration on the Phase 7 short budget (8 epochs),
+# seed 1337. GW-REC-003, 004 and 005 differ only in the seed (1337, 2024, 7, EXPERIMENT_PROTOCOL §4):
+# their spread is the noise floor every Phase 7 ablation is read against.
+inherits: gw-rec-001.yaml
+experiment_id: GW-REC-003
+seed: 1337
+
+train:
+  epochs: 8

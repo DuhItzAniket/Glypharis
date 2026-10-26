@@ -6,4 +6,39 @@ Results are filled in only from generated reports.
 
 | Ablation | Control ID | Variant ID(s) | Variable changed | Metric (val) | Δ vs control (95% CI) | Seeds | Verdict |
 |---|---|---|---|---|---|---|---|
-| — | — | — | No ablations run yet. | — | — | — | — |
+| Input height | GW-REC-003 | GW-REC-006 | height 32 → 48 | CER 7.83% | -0.49 [-0.54, -0.44] | 1 (control: 3) | better |
+| CNN width | GW-REC-003 | GW-REC-007 | CNN channels halved | CER 8.83% | +0.51 [+0.47, +0.56] | 1 (control: 3) | worse |
+| Encoder (H6) | GW-REC-003 | GW-REC-020 | CRNN → SVTR-style (GLYPHARIS-Rec-M) | CER 8.18% | -0.13 [-0.18, -0.09] | 1 (control: 3) | better |
+| BiLSTM size | GW-REC-003 | GW-REC-008 | hidden 256 → 128 | CER 8.78% | +0.46 [+0.42, +0.51] | 1 (control: 3) | worse |
+| BiLSTM depth | GW-REC-003 | GW-REC-009 | 2 layers → 1 | CER 8.78% | +0.46 [+0.42, +0.51] | 1 (control: 3) | worse |
+| Augmentation | GW-REC-003 | GW-REC-015 | full preset → none | CER 8.68% | +0.36 [+0.32, +0.41] | 1 (control: 3) | worse |
+| Augmentation | GW-REC-003 | GW-REC-016 | full preset → geometric only | CER 8.34% | +0.02 [-0.02, +0.06] | 1 (control: 3) | no clear difference |
+| Augmentation | GW-REC-003 | GW-REC-017 | full preset → photometric only | CER 8.59% | +0.28 [+0.23, +0.32] | 1 (control: 3) | worse |
+| Augmentation | GW-REC-003 | GW-REC-018 | full preset → degradation only | CER 8.68% | +0.36 [+0.32, +0.41] | 1 (control: 3) | worse |
+| Optimizer | GW-REC-003 | GW-REC-010 | AdamW → Adam | CER 9.17% | +0.85 [+0.81, +0.90] | 1 (control: 3) | worse |
+| LR schedule | GW-REC-003 | GW-REC-011 | OneCycle → cosine with warm-up | CER 8.44% | +0.12 [+0.08, +0.17] | 1 (control: 3) | worse |
+| Learning rate | GW-REC-003 | GW-REC-012 | 1e-3 → 5e-4 | CER 8.51% | +0.19 [+0.15, +0.23] | 1 (control: 3) | worse |
+| Learning rate | GW-REC-003 | GW-REC-013 | 1e-3 → 2e-3 | CER 8.34% | +0.02 [-0.02, +0.06] | 1 (control: 3) | no clear difference |
+| Weight decay | GW-REC-003 | GW-REC-014 | 1e-4 → 1e-2 | CER 8.28% | -0.04 [-0.08, -0.00] | 1 (control: 3) | better |
+| Sequence downsampling | GW-REC-003 | GW-REC-021 | frame stride 4 → 8 | CER 10.93% | +2.61 [+2.48, +2.74] | 1 (control: 3) | worse |
+
+**Phase 7 (short budget).** One change at a time against GW-REC-003 (8 epochs, seed 1337), paired
+line by line; Δ in percentage points with a 95% bootstrap CI over the 73,888 validation lines. The
+decision rule (`docs/PHASE_STATUS.md`, Phase 07) also requires the arm's CER to lie outside all
+three control seeds (8.30 to 8.32%). 15 comparisons, no multiplicity correction. Source:
+`reports/training/phase07/ablation_table.md`. GW-REC-019 (stride 8 without CTC-aware batching)
+failed and was re-run as GW-REC-021 (`research/failures.md`).
+
+CPU latency of the architectures tried (PyTorch, fp32, batch 1, the baselines' 100 HierText
+validation lines; `reports/training/phase07/cpu_latency.md`), against ADR-0011's line target of
+25 ms mean and 70 ms p95:
+
+| Run | Model | Height | Frame stride | ms mean | ms p95 |
+|---|---|---|---|---|---|
+| GW-REC-003 | crnn | 32 | 4 | 10.7 | 22.5 |
+| GW-REC-006 | crnn | 48 | 4 | 15.7 | 38.5 |
+| GW-REC-007 | crnn | 32 | 4 | 6.3 | 12.4 |
+| GW-REC-008 | crnn | 32 | 4 | 8.6 | 18.9 |
+| GW-REC-009 | crnn | 32 | 4 | 8.3 | 18.2 |
+| GW-REC-020 | svtr | 32 | 4 | 13.5 | 26.6 |
+| GW-REC-021 | crnn | 32 | 8 | 7.1 | 15.0 |

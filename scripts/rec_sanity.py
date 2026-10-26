@@ -22,6 +22,7 @@ import json
 import math
 import sys
 import time
+from functools import partial
 from pathlib import Path
 from typing import Any
 
@@ -36,7 +37,7 @@ from glypharis.data.rec_dataset import RecLineDataset, WidthBucketBatchSampler, 
 from glypharis.data.text import Charset
 from glypharis.models.rec.crnn import build_recognizer, count_parameters
 from glypharis.training.rec_trainer import ctc_loss, evaluate
-from glypharis.utils.device import AmpPolicy, resolve_amp, select_device
+from glypharis.utils.device import AmpPolicy, limit_gpu_memory, resolve_amp, select_device
 from glypharis.utils.monitor import reset_peak, snapshot
 from glypharis.utils.seed import make_generator, seed_everything
 
@@ -60,7 +61,8 @@ class Parts:
         self.ctc = nn.CTCLoss(blank=Charset.BLANK, zero_infinity=True)
 
     def model(self) -> nn.Module:
-        return build_recognizer(self.charset.num_classes, self.cfg.model).to(self.device)
+        name = self.cfg.model_name or "crnn"
+        return build_recognizer(self.charset.num_classes, self.cfg.model, name).to(self.device)
 
     def dataset(self, augment: bool, subset: int | None = None) -> RecLineDataset:
         d = self.cfg.data
@@ -77,7 +79,9 @@ class Parts:
         # Workers are new processes on Windows; for tiny sets, loading in-process is far faster.
         w = self.cfg.data.num_workers if workers is None else workers
         gen = make_generator(self.cfg.seed + epoch)
-        return torch.utils.data.DataLoader(ds, batch_sampler=sampler, collate_fn=collate,
+        stride = self.cfg.model.frame_stride  # 4 for the SVTR encoder
+        return torch.utils.data.DataLoader(ds, batch_sampler=sampler,
+                                           collate_fn=partial(collate, stride=stride),
                                            num_workers=w, pin_memory=self.device.type == "cuda",
                                            generator=gen)  # fmt: skip
 
@@ -91,7 +95,7 @@ def _step(p: Parts, model: nn.Module, opt: torch.optim.Optimizer, batch: dict[st
     return float(loss.detach())
 
 
-def overfit(p: Parts, out: Path) -> dict[str, Any]:
+def overfit(p: Parts, out: Path, max_steps: int | None = None) -> dict[str, Any]:
     """All lines in one batch: BatchNorm then learns exactly the statistics evaluation uses.
 
     With several small batches drawn from 64 lines, each batch's statistics differ so much that
@@ -102,8 +106,9 @@ def overfit(p: Parts, out: Path) -> dict[str, Any]:
     model = p.model()
     opt = torch.optim.AdamW(model.parameters(), lr=p.cfg.train.learning_rate)
     curve, step, cer = [], 0, 1.0
+    limit = max_steps or OVERFIT_MAX_STEPS
     t0 = time.monotonic()
-    while step < OVERFIT_MAX_STEPS:
+    while step < limit:
         for batch in p.loader(ds, len(ds), shuffle=True, epoch=step, workers=0, cap=False):
             _step(p, model, opt, batch)
             step += 1
@@ -244,10 +249,18 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--checks", nargs="+", default=["overfit", "lr_range", "dry_run"],
                         choices=["overfit", "lr_range", "dry_run"])  # fmt: skip
     parser.add_argument("--dry-run-minutes", type=float, default=10.0)
+    # Attention encoders sit longer on CTC's all-blank plateau than the CRNN does (GW-REC-020).
+    parser.add_argument(
+        "--overfit-max-steps",
+        type=int,
+        default=None,
+        help=f"step budget of the overfit check (default {OVERFIT_MAX_STEPS})",
+    )
     args = parser.parse_args(argv)
     cfg = config_from_args(args)
     cfg.require_run_identity()
     assert cfg.experiment_id is not None
+    limit_gpu_memory(select_device(cfg.device))
     out = Path(cfg.paths.reports_dir) / "training" / "sanity" / cfg.experiment_id
     out.mkdir(parents=True, exist_ok=True)
     path = out / "sanity.json"
@@ -259,7 +272,7 @@ def main(argv: list[str] | None = None) -> int:
                    git=git_info().commit)  # fmt: skip
     for check in args.checks:
         if check == "overfit":
-            results["overfit"] = overfit(p, out)
+            results["overfit"] = overfit(p, out, args.overfit_max_steps)
         elif check == "lr_range":
             results["lr_range"] = lr_range(p, out)
         else:

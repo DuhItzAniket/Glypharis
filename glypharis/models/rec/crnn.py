@@ -2,10 +2,11 @@
 
 Input: grayscale line images ``(N, 1, H, W)``, normalised to [-1, 1], right-padded to the widest
 line in the batch. The CNN halves height and width twice, then the height twice more, so a frame
-covers 4 columns (``STRIDE``); whatever height is left is averaged away, so the same network works
-for H = 32 and H = 48 (Phase 7 ablation). About 7.8M parameters with the default config.
-Output: per-frame logits ``(T, N, C)`` with ``T = W // 4`` and ``C = |charset| + 1`` (index 0 is the
-CTC blank).
+covers 4 columns; with ``model.frame_stride: 8`` the third pooling halves the width too (Phase 7
+ablation). Whatever height is left is averaged away, so the same network works for H = 32 and
+H = 48. About 7.8M parameters with the default config.
+Output: per-frame logits ``(T, N, C)`` with ``T = W // stride`` and ``C = |charset| + 1`` (index 0
+is the CTC blank).
 """
 
 from __future__ import annotations
@@ -17,9 +18,10 @@ import torch
 from torch import nn
 from torch.nn.utils.rnn import PackedSequence
 
-from glypharis.config.schema import ModelConfig
+from glypharis.config.schema import ConfigError, ModelConfig
+from glypharis.models.rec.base import LineRecognizer
 
-STRIDE = 4  # input columns per output frame
+STRIDE = 4  # input columns per output frame at the default config
 # A stacked nn.LSTM names layer k's tensors rnn.weight_ih_l{k}[_reverse]; the per-layer modules
 # name the same tensors rnn.{k}.weight_ih_l0[_reverse].
 _STACKED_KEY = re.compile(r"^rnn\.((?:weight|bias)_(?:ih|hh))_l(\d+)(_reverse)?$")
@@ -39,11 +41,13 @@ def _conv(c_in: int, c_out: int) -> list[nn.Module]:
     return [nn.Conv2d(c_in, c_out, 3, padding=1, bias=False), nn.BatchNorm2d(c_out), nn.ReLU(True)]
 
 
-class CRNN(nn.Module):
+class CRNN(LineRecognizer):
     def __init__(self, num_classes: int, cfg: ModelConfig | None = None) -> None:
         super().__init__()
         cfg = cfg or ModelConfig()
         c1, c2, c3, c4, c5, c6 = cfg.cnn_channels
+        self.stride = cfg.frame_stride
+        third = (2, 2) if self.stride == 8 else (2, 1)
         self.cnn = nn.Sequential(
             *_conv(1, c1),
             nn.MaxPool2d(2, 2),  # H/2, W/2
@@ -51,7 +55,7 @@ class CRNN(nn.Module):
             nn.MaxPool2d(2, 2),  # H/4, W/4
             *_conv(c2, c3),
             *_conv(c3, c4),
-            nn.MaxPool2d((2, 1), (2, 1)),  # H/8, W/4
+            nn.MaxPool2d(third, third),  # H/8, W/4 (W/8 at stride 8)
             *_conv(c4, c5),
             *_conv(c5, c6),
             nn.MaxPool2d((2, 1), (2, 1)),  # H/16, W/4
@@ -81,11 +85,6 @@ class CRNN(nn.Module):
                 nn.init.zeros_(m.bias)
         nn.init.zeros_(self.head.bias)
 
-    @staticmethod
-    def frames(widths: torch.Tensor) -> torch.Tensor:
-        """Output frames for input widths (each conv keeps width; two 2x pools floor it)."""
-        return torch.div(torch.div(widths, 2, rounding_mode="floor"), 2, rounding_mode="floor")
-
     def forward(self, x: torch.Tensor, widths: torch.Tensor | None = None) -> torch.Tensor:
         """Per-frame logits. ``widths`` (input columns of each line before padding) makes the
         BiLSTM read each line only up to its own end: without it, the backward direction starts in
@@ -112,7 +111,14 @@ class CRNN(nn.Module):
             return self.head(self.dropout(f))  # T, N, classes
 
 
-def build_recognizer(num_classes: int, cfg: ModelConfig) -> CRNN:
+def build_recognizer(num_classes: int, cfg: ModelConfig, name: str = "crnn") -> LineRecognizer:
+    """The recognizer named by the run's ``model_name``: ``crnn`` or ``svtr`` (GLYPHARIS-Rec-M)."""
+    if name == "svtr":
+        from glypharis.models.rec.svtr import SVTR
+
+        return SVTR(num_classes, cfg)
+    if name != "crnn":
+        raise ConfigError(f"model_name {name!r}: the recognizer is crnn or svtr")
     return CRNN(num_classes, cfg)
 
 
