@@ -510,4 +510,5 @@ input height 48 alone (`reports/training/compare/GW-REC-022_vs_GW-REC-006.md`); 
 line target at 22.8 ms mean and 51.5 ms p95 per line on the CPU. It is the chosen configuration.
 GW-REC-023 was abandoned before it ran (GW-REC-022 answered its question). GW-REC-024 confirms the
 choice at the full budget with **one seed** instead of the planned three, to stay within the Phase 7
-budget; this deviation is recorded in its registry entry.
+budget; this deviation is recorded in its registry entry. The owner decided (2026-10-26) to add
+the two missing seeds later, on a college A100 if access is granted, before the paper.
