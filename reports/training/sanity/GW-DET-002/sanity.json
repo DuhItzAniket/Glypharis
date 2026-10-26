@@ -1,0 +1,64 @@
+{
+ "experiment_id": "GW-DET-002",
+ "device": "cuda",
+ "precision": "bf16",
+ "git": "03eb2ac63192826ab95668f03e3410b624491bfe",
+ "lr_range": {
+  "steps": 300,
+  "lr_at_min_loss": 0.15135612484362368,
+  "suggested_lr": 0.015135612484362368,
+  "configured_lr": 0.001,
+  "configured_within_3x_of_suggestion": false
+ },
+ "dry_run": {
+  "minutes": 10.0,
+  "steps": 3455,
+  "crops": 27640,
+  "crops_per_s": 46.06,
+  "ms_per_step": 173.7,
+  "data_wait_share": 0.022,
+  "clipped_share": 0.049,
+  "train_peak_alloc_gib": 2.1363916397094727,
+  "train_peak_reserved_gib": 2.57421875,
+  "val_peak_alloc_gib": 0.3161334991455078,
+  "val_peak_reserved_gib": 2.57421875,
+  "rss_gb_max": 7.24,
+  "gpu_temperature_c_max": 60,
+  "loss_first_last": [
+   6.81403923034668,
+   1.6766492414474488
+  ],
+  "finite": true,
+  "label_stats": {
+   "care_drawn": 539928,
+   "demoted_small": 127354,
+   "demoted_thin_kernel": 0,
+   "multipart_kernel": 0,
+   "dont_care": 256432,
+   "kernel_px": 325045811,
+   "masked_px": 300337023
+  },
+  "nondeterminism_warnings": [],
+  "val_seconds": 230.6,
+  "val_pages": 1000,
+  "val_seconds_parts": {
+   "data_wait": 5.043090900144307,
+   "forward": 210.29593880019092,
+   "post": 53.87509170015983,
+   "match": 11.432538599896361,
+   "total": 228.77195270000084
+  },
+  "steps_per_epoch": 4106,
+  "estimated_minutes_per_epoch": 11.9,
+  "validation_share": 0.323,
+  "epochs_by_9h_rule": 24,
+  "estimated_gpu_hours": 6.29,
+  "gates": {
+   "vram_reserved_le_4gib": true,
+   "data_wait_le_10pct": true,
+   "rss_le_8gb": true,
+   "validation_le_15pct": false
+  },
+  "passed": false
+ }
+}
