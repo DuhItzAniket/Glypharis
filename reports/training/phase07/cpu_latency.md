@@ -16,6 +16,7 @@ ADR-0011's line target: mean at most 25 ms and p95 at most 70 ms.
 | GW-REC-020 | svtr | 32 | 4 | 7,928,835 | 8.18 | 13.5 | 26.6 | 694 | 16 | 4.1 / 11.3 | yes |
 | GW-REC-021 | crnn | 32 | 8 | 7,796,435 | 10.93 | 7.1 | 15.0 | 685 | 16 | 6.2 / 8.2 | yes |
 | GW-REC-022 | svtr | 48 | 4 | 7,928,835 | 7.56 | 22.8 | 51.5 | 711 | 16 | 3.3 / 8.3 | yes |
+| GW-REC-024 | svtr | 48 | 4 | 7,928,835 | 6.46 | 24.4 | 60.3 | 708 | 16 | 4.9 / 9.6 | yes |
 
 Baselines on the same lines (`reports/baselines/efficiency.md`):
 
