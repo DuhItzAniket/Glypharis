@@ -152,3 +152,17 @@ the bottom. Experiments get their full record in `experiments.md`; this log is t
 - Set a CPU latency target for v0.1 from the measured speeds (ADR-0011, accepted by the owner),
   anchored on PP-OCRv6 tiny, the fastest modern pipeline; Tesseract is faster on pages but finds too
   few HierText lines to be the bar.
+
+### 2026-10-26 — Phase 7: recognizer improvement
+
+- Three seeds of the short-budget control landed within 0.02 points of each other (8.30 to 8.32%),
+  so even small differences could be judged; the decision rule was fixed before any arm ran.
+- Of 15 one-change arms, three helped: input height 48 (−0.49), the SVTR-style encoder (−0.13) and
+  weight decay 1e-2 (−0.04). Frame stride 8 was by far the worst (+2.61): HierText lines are too
+  dense for one frame per 8 columns. Its first attempt ran out of GPU memory because CTC padding was
+  not counted in the batch cap, which led to CTC-aware batching and a memory probe before runs.
+- The three helpful changes combined to more than their sum (GW-REC-022, −0.76), and the combination
+  held at the full budget: GW-REC-024 reached 6.46%, −1.07 against the CRNN baseline, at 24.4 ms per
+  line on the CPU, just inside the v0.1 target. One seed for now (owner decision).
+- Training on the laptop crashed several times from memory pressure (Windows commit limit, a kernel
+  token leak, other apps); two loader workers and resuming from checkpoints carried every run through.
