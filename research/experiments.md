@@ -37,7 +37,7 @@ Rows link to a full entry below. Numbers are copied from generated reports only,
 | [GW-REC-021](#gw-rec-021) | 2026-10-24 | 07 | Phase 7 ablation: frame stride 8 with CTC-aware batching (re-run of GW-REC-019; short budget, vs GW-REC-003) | done | val CER 10.93% [10.70, 11.16]; +2.61 [+2.48, +2.74] vs GW-REC-003 (worse) | `reports/training/GW-REC-021/` |
 | [GW-REC-022](#gw-rec-022) | 2026-10-25 | 07 | Phase 7 combination: GLYPHARIS-Rec-M (SVTR) at input height 48 with weight decay 1e-2 (short budget, vs GW-REC-003) | planned | — | `reports/training/GW-REC-022/` |
 | [GW-REC-023](#gw-rec-023) | 2026-10-25 | 07 | Phase 7 combination without the encoder change: CRNN at input height 48 with weight decay 1e-2 (short budget, vs GW-REC-003) | abandoned | not run: GW-REC-022 settled the question (see entry) | `reports/training/GW-REC-023/` |
-| [GW-REC-024](#gw-rec-024) | 2026-10-26 | 07 | Phase 7 full-budget confirmation: GW-REC-022's recipe at GW-REC-001's budget (30 epochs, one seed), vs GW-REC-001 | planned | — | `reports/training/GW-REC-024/` |
+| [GW-REC-024](#gw-rec-024) | 2026-10-26 | 07 | Phase 7 full-budget confirmation: GW-REC-022's recipe at GW-REC-001's budget (30 epochs, one seed), vs GW-REC-001 | done | val CER 6.46% [6.33, 6.60]; -1.07 [-1.13, -1.01] vs GW-REC-001 | `reports/training/GW-REC-024/` |
 
 ### GW-BASE-001 — Tesseract 5 (LSTM, eng): recognition and end to end
 
@@ -621,7 +621,7 @@ Rows link to a full entry below. Numbers are copied from generated reports only,
 
 ### GW-REC-024 — Phase 7 full-budget confirmation: GW-REC-022's recipe at 30 epochs
 
-- **Date allocated / run:** 2026-10-26 / —
+- **Date allocated / run:** 2026-10-26 / 2026-10-26
 - **Phase:** 07
 - **Git commit:** recorded in the run summary   **Config:** `configs/rec/gw-rec-024.yaml`   **Seed(s):** 1337 (single seed)
 - **Dataset version(s):** as GW-REC-001
@@ -632,12 +632,12 @@ Rows link to a full entry below. Numbers are copied from generated reports only,
 - **Variables:** independent: the configuration (encoder, input height, weight decay together) at the full budget; controlled: data, budget, seed, schedule shape
 - **Control:** GW-REC-001
 - **Deviation from the plan:** the Phase 7 plan confirms the chosen configuration with three seeds. This run uses one, to stay within the 30–60 GPU-hour Phase 7 budget (about 35 GPU-hours used before it, about 17 for it). The full-budget seed spread is therefore not measured; the short-budget control seeds (8.30 to 8.32%) are the only seed-noise estimate. Owner decision (2026-10-26): keep one seed for v0.1; the two missing seeds (1337 is this run; 2024 and 7 as in the control) are added later, on a college A100 if access is granted, before the paper (Phase 21), each under its own ID and with the hardware recorded.
-- **Result:**
-- **Training diagnostics:**
-- **Interpretation:**
+- **Result:** val CER 6.46% [6.33, 6.60] (95% bootstrap CI over 73,888 lines); against GW-REC-001 (7.53%) -1.07 [-1.13, -1.01] points CER and -1.94 [-2.10, -1.79] points WER (paired, `reports/training/compare/GW-REC-024_vs_GW-REC-001.md`). 30 epochs, 169,860 optimizer steps; 7,928,835 parameters. CPU latency 24.4 ms mean and 60.3 ms p95 per line (PyTorch, idle machine; `reports/training/phase07/cpu_latency.md`): within ADR-0011's line target, with little margin on the mean.
+- **Training diagnostics:** No flags raised. One crash mid-run (CUDA "unknown error" at epoch 23 under memory pressure); the queue resumed it from its last checkpoint the same minute (`reports/training/GW-REC-024/report.md`, Notes).
+- **Interpretation:** the hypothesis holds: the configuration chosen on the short budget also wins at the full budget, by about 1.1 points of CER, more than its short-budget gain against the control (−0.76). It is the Phase 7 recognizer configuration for v0.1. Its CPU latency is the main cost: about 2.3 times the CRNN control's per line, just inside the target.
 - **Limitations:** one seed; compared with a single GW-REC-001 run.
 - **Next experiment:** Phase 8 detector runs; the recognizer is exported in Phase 17.
-- **Training time:**
+- **Training time:** 19.31 GPU-hours (RTX 4050 Laptop, bf16)
 
 ---
 
