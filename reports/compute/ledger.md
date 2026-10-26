@@ -12,8 +12,8 @@ by hand has no end line; its duration is unknown and adds nothing to the hours.
 |---|---|---|---|---|
 | 05 | 0.0 | 0.0 | 45.9 | 1.9 |
 | 06 | 11.5 | 3.8 | 0.0 | 0.0 |
-| 07 | 30.0 | 3.9 | 0.0 | 0.0 |
-| all | 41.6 | 7.7 | 45.9 | 1.9 |
+| 07 | 55.3 | 17.9 | 0.0 | 0.0 |
+| all | 66.8 | 21.8 | 45.9 | 1.9 |
 
 ## By experiment
 
@@ -47,7 +47,8 @@ by hand has no end line; its duration is unknown and adds nothing to the hours.
 | GW-REC-019 | 07 | GPU | 3 | 3 | 0.12 | 0.04 |
 | GW-REC-020 | 07 | GPU | 5 | 3 | 5.62 | 4.64 |
 | GW-REC-021 | 07 | GPU | 1 | 0 | 0.81 | 0.74 |
-| GW-REC-022 | 07 | GPU | 1 | 0 | 0.00 |  |
+| GW-REC-022 | 07 | GPU | 1 | 0 | 4.90 | 4.65 |
+| GW-REC-024 | 07 | GPU | 2 | 1 | 20.37 | 19.31 |
 
 ## Not in these logs
 
