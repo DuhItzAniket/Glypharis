@@ -1,6 +1,11 @@
 # GW-DET-001: GLYPHARIS-Det baseline (Phase 8). DBNet-style, MobileNetV3-Large, ImageNet init, HierText
 # pages. Pre-registered values. epochs, and the LR, val_subset and batch fallbacks, are frozen from the
 # sanity sequence by a dated registry amendment before the main run starts.
+# Frozen 2026-10-26 from reports/training/sanity/GW-DET-00{1,2,3}/sanity.md (registry amendment):
+# learning rate 5e-3 (the configured 1e-3 was outside 3x of GW-DET-001's suggestion 6.03e-3; 5e-3 is
+# inside it and inside GW-DET-002's band too), val_subset 400 (validation took 32-37% of an epoch,
+# limit 15%), num_workers 4 (GW-DET-001's dry-run RSS was 8.13 GB against the 8 GB gate, with 2%
+# data wait), epochs 24 (the 9-hour rule gives 24).
 inherits: ../base.yaml
 experiment_id: GW-DET-001
 task: det
@@ -10,7 +15,7 @@ det:
   data:
     train_pages: [processed/hiertext/pages_train.jsonl.gz]
     val_pages: [processed/hiertext/pages_validation.jsonl.gz]
-    val_subset: 800
+    val_subset: 400
     train_eval_subset: 200
     crops_per_page: 4
     crop_size: 640
@@ -19,7 +24,7 @@ det:
     rotate_max_deg: 10.0
     text_crop_p: 0.8
     reduced_decode: true
-    num_workers: 6
+    num_workers: 4
     eval_workers: 3
   labels: {shrink_ratio: 0.4, thresh_min: 0.3, thresh_max: 0.7, min_text_size: 6.0}
   model:
@@ -47,7 +52,7 @@ train:
   batch_size: 8
   gradient_accumulation: 1
   optimizer: adamw
-  learning_rate: 1.0e-3
+  learning_rate: 5.0e-3
   weight_decay: 1.0e-4
   scheduler: cosine
   warmup_steps: 2000

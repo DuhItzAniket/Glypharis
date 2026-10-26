@@ -85,6 +85,9 @@ def test_schema_defaults_are_the_gw_det_001_values(repo_root):
         ours, theirs = getattr(cfg.det, section), getattr(ref, section)
         if section == "data":  # the page files have no default
             theirs.train_pages, theirs.val_pages = ours.train_pages, ours.val_pages
+            # frozen from the sanity sequence by the 2026-10-26 registry amendment
+            assert (ours.val_subset, ours.num_workers) == (400, 4)
+            theirs.val_subset, theirs.num_workers = ours.val_subset, ours.num_workers
         assert ours == theirs, section
     m = cfg.det.model
     assert (m.backbone, m.init, m.inner_channels, m.channels_last) == (
