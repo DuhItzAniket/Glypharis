@@ -32,3 +32,23 @@ disappointing experiment here, including bugs that invalidated a run.
 - **Root cause (probable):** the server-size text detector at near-full page resolution needs more memory on the CPU than this 16 GB laptop can give it. PP-OCRv6 medium ran the same pages without trouble.
 - **What we changed:** nothing in the runner. The run is recorded as not runnable on this hardware, as the Phase 5 exit criteria allow; running it with a smaller detector input would be a different, non-default configuration.
 - **Lesson / implication for the paper:** the server pipeline's page-level memory is itself a deployment finding for a laptop-class target; the report states the missing cell and why.
+
+### 2026-10-28 — GW-EFF-003 / GW-EFF-004 / GW-E2E-004 — the first v0.1 bundle had the wrong post-processing
+
+- **What we tried:** building the v0.1 bundle with Phase 9's settings and running the Phase 17 and 18
+  checks on it, from a local script that runs them in order.
+- **What happened:** the bundle carried long side 1536 and temperature 2.35 but the detector's old
+  post-processing (`inverse10`, `box_thresh` 0.6, `min_component_area` 3). Its own checks passed
+  (ONNX matched PyTorch: probability maps within 7e-6, logits within 4e-4, all 5,000 lines' text and
+  the page CER identical), but the package check against Phase 10 failed: page CER 26.28% against
+  24.33%, 32 lines per page against 41. Outputs kept in
+  `reports/export/GW-EFF-003/attempt1_record_post/` and `reports/package/attempt1_record_post/`.
+- **Root cause:** the script built the post-processing overrides before changing into the Phase 17
+  checkout; the helper it called failed silently there, the override list came out empty, and the
+  config's defaults were used.
+- **What we changed:** the script now builds the overrides in the right checkout and stops if they
+  are missing; the bundle was rebuilt and every check rerun as registered. The package check did
+  its job: it is what caught this.
+- **Lesson / implication for the paper:** an export can be perfectly equivalent and still be the
+  wrong model; the release needs a check against the measured pipeline, not only against itself.
+
