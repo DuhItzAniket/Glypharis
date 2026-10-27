@@ -1,0 +1,37 @@
+{
+ "label_a": "GW-DET-004",
+ "label_b": "record",
+ "arm_a": {
+  "file": "runs/phase09/d004_B.jsonl",
+  "setting": null,
+  "op": "inverse09"
+ },
+ "arm_b": {
+  "file": "runs/phase09/rec_B.jsonl",
+  "setting": null,
+  "op": "inverse10"
+ },
+ "pages": 858,
+ "a": {
+  "tp": 25722,
+  "fp": 4313,
+  "fn": 12443,
+  "precision": 0.8564008656567338,
+  "recall": 0.673968295558758,
+  "f1_50": 0.7543108504398827
+ },
+ "b": {
+  "tp": 22644,
+  "fp": 1867,
+  "fn": 15521,
+  "precision": 0.923830117090286,
+  "recall": 0.5933184855233853,
+  "f1_50": 0.7225732337736933
+ },
+ "diff": {
+  "value": 0.03173761666618935,
+  "low": 0.02474312542502443,
+  "high": 0.038741099160769996
+ },
+ "adopt": true
+}
