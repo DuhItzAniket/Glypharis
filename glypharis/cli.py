@@ -42,7 +42,7 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--output", type=Path, default=Path("results"))
     parser.add_argument("--format", nargs="+", choices=["json", "txt"], default=["json", "txt"])
     parser.add_argument("--model", default="glypharis-0.1.0", help="bundle name or directory")
-    parser.add_argument("--backend", choices=["onnx", "torch"], default="onnx")
+    parser.add_argument("--backend", choices=["torch", "onnx"], default="torch")
     parser.add_argument("--threads", type=int, default=None)
     args = parser.parse_args(argv)
     if not args.image and args.input_dir is None:

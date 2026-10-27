@@ -130,12 +130,13 @@ class GlypharisOCR:
     def from_pretrained(
         cls,
         name_or_path: str | Path = "glypharis-0.1.0",
-        backend: str = "onnx",
+        backend: str = "torch",
         threads: int | None = None,
     ) -> GlypharisOCR:
         """A model bundle by path, or by name from the model directories
-        (`glypharis.export.bundle.find_bundle`). Nothing is downloaded. ``backend`` is ``onnx``
-        (the default, ONNX Runtime on the CPU) or ``torch``."""
+        (`glypharis.export.bundle.find_bundle`). Nothing is downloaded. ``backend`` is ``torch``
+        (the default, PyTorch on the CPU) or ``onnx`` (ONNX Runtime; reads the same, but its
+        recognizer is slower for now, Phase 17)."""
         from glypharis.export.bundle import find_bundle, load_bundle
 
         return load_bundle(find_bundle(name_or_path), backend, threads)  # type: ignore[arg-type]

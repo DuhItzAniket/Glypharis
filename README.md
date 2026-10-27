@@ -19,12 +19,12 @@ a generated report.
 from glypharis import GlypharisOCR
 
 ocr = GlypharisOCR.from_pretrained("glypharis-0.1.0")  # a model bundle by name or path
-result = ocr.predict("page.png")                       # path, PIL image or numpy array
+result = ocr.predict("page.png")  # path, PIL image or numpy array
 
-print(result.text)            # lines in reading order
+print(result.text)  # lines in reading order
 for line in result.lines:
     print(line.text, line.confidence, line.bbox)
-print(result.to_json())       # the same as structured JSON
+print(result.to_json())  # the same as structured JSON
 ```
 
 From the command line (`pip install -e .` provides `glypharis-ocr`; `python infer.py` is the same):
@@ -37,7 +37,7 @@ glypharis-ocr --input-dir scans/ --recursive --format json txt
 Each image gives `results/<name>.json` and `results/<name>.txt`. Model bundles are not downloaded:
 `from_pretrained` looks in `$GLYPHARIS_MODELS`, `~/.glypharis/models` and `./models` (a bundle is a
 directory with `manifest.json`, two release files and two ONNX files; Phase 17). The default backend is
-ONNX Runtime on the CPU; `backend="torch"` uses PyTorch.
+PyTorch on the CPU; `backend="onnx"` uses ONNX Runtime, which reads the same but is slower for now.
 
 ```
 image ─▶ preprocessing ─▶ GLYPHARIS-Det (line detector) ─▶ crop + rectify
