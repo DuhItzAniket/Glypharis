@@ -41,8 +41,8 @@ Rows link to a full entry below. Numbers are copied from generated reports only,
 | [GW-DET-001](#gw-det-001) | 2026-10-25 | 08 | GLYPHARIS-Det baseline: DBNet-style, MobileNetV3-Large, ImageNet init, HierText pages (control for H9 and H10) | done | full val F1@0.5 0.724 [0.708, 0.739] (P 0.924, R 0.595) | `reports/training/GW-DET-001/` |
 | [GW-DET-002](#gw-det-002) | 2026-10-25 | 08 | GW-DET-001 with a randomly initialised backbone (H9: ImageNet vs scratch, exploratory) | done | full val F1@0.5 0.704 [0.689, 0.719]; −0.020 [−0.023, −0.016] vs GW-DET-001: H9 supported | `reports/training/GW-DET-002/` |
 | [GW-DET-003](#gw-det-003) | 2026-10-25 | 08 | GW-DET-001 with a MobileNetV3-Small backbone (H10: Small within 0.03 F1@0.5 of Large, exploratory) | done | full val F1@0.5 0.668 [0.651, 0.685]; −0.056 [−0.062, −0.051] vs GW-DET-001: H10 not supported | `reports/training/GW-DET-003/` |
-| [GW-DET-004](#gw-det-004) | 2026-10-27 | 09 | GW-DET-001 with post-processing calibrated on validation half A, checked on half B (no retraining) | planned | — | `reports/error_cases/detector/` |
-| [GW-EFF-001](#gw-eff-001) | 2026-10-27 | 09 | GW-DET-001 detector CPU latency at five input resolutions (PyTorch, batch 1) | planned | — | `reports/efficiency/` |
+| [GW-DET-004](#gw-det-004) | 2026-10-27 | 09 | GW-DET-001 with post-processing calibrated on validation half A, checked on half B (no retraining) | done | half B F1@0.5 0.754 [0.728, 0.775]; +0.032 [+0.025, +0.039] vs the record: adopted | `reports/error_cases/detector/` |
+| [GW-EFF-001](#gw-eff-001) | 2026-10-27 | 09 | GW-DET-001 detector CPU latency at five input resolutions (PyTorch, batch 1) | done | detector 203 ms mean per page at 1280; long sides up to 1536 fit the page target | `reports/efficiency/` |
 | [GW-DET-005](#gw-det-005) | 2026-10-27 | 09 | GW-DET-001 at the best input resolution that fits ADR-0011's page target (no retraining) | planned | — | `reports/error_cases/detector/` |
 | [GW-DET-006](#gw-det-006) | 2026-10-27 | 09 | Box shape `quad` vs `poly` on validation and its curved lines (RISK_REGISTER R-22) | planned | — | `reports/error_cases/detector/` |
 
@@ -718,7 +718,7 @@ Rows link to a full entry below. Numbers are copied from generated reports only,
 
 ### GW-DET-004 — Post-processing calibrated on validation
 
-- **Date allocated / run:** 2026-10-27 / —
+- **Date allocated / run:** 2026-10-27 / 2026-10-27 to 2026-10-28
 - **Phase:** 09
 - **Git commit:** recorded in the result file   **Config:** `configs/det/gw-det-001.yaml` with overrides   **Seed(s):** none (no training)
 - **Dataset version(s):** HierText validation pages as in GW-DET-001 (`processed/hiertext/pages_validation.jsonl.gz`, sha256 0655c5f795a6)
@@ -728,14 +728,14 @@ Rows link to a full entry below. Numbers are copied from generated reports only,
 - **Method:** `docs/PHASE_STATUS.md` Phase 09, plan items 2 and 3. GW-DET-001 `best.pt`, long side 1280; 8-bit probability maps cached once by `scripts/det_eval.py --save-prob-maps`; 440 settings scored on half A (`scripts/det_sweep.py`); the arg-max is compared with `inverse10` at the default thresholds on half B (paired page bootstrap, 1,000 resamples) and adopted only if that CI lies above 0; the adopted setting is re-scored once on float maps for half B, which gives the reported number.
 - **Variables:** independent: `bin_thresh`, `box_thresh`, `min_component_area`, unclip mode and ratio; controlled: checkpoint, input resolution, box type, pages
 - **Control:** GW-DET-001 at its operating point of record (`inverse10`, `bin_thresh` 0.3, `box_thresh` 0.6, `min_component_area` 3)
-- **Result:**
-- **Interpretation:**
+- **Result:** half A (857 pages, 8-bit maps): the arg-max of the 440 settings is `bin_thresh` 0.3, `min_component_area` 1, unclip `inverse09`, `box_thresh` 0.5, F1@0.5 0.7626 against 0.7252 for the record (`min_component_area` 1 and 3 tie: the filter never changes a box). Half B (858 pages): 0.7543 against 0.7227, **+0.0316 [+0.0247, +0.0386]** (`reports/error_cases/detector/GW-DET-004/pair_B.json`): adopted. Float re-check on half B: F1@0.5 0.754 [0.728, 0.775], precision 0.856, recall 0.674, F1@0.7 0.645, against the record's 0.723 [0.695, 0.745], precision 0.924, recall 0.593; paired +0.0317 [+0.0247, +0.0387] (`pair_B_float.json`, `eval_B_adopted.json`, `eval_B_record.json`). The chosen `box_thresh` (0.5) and `bin_thresh` (0.3) lie inside the grid.
+- **Interpretation:** the pre-registered `box_thresh` 0.6 was too strict for this network: lowering it to 0.5 and growing boxes slightly less (`inverse09`) recovers about eight points of recall for seven of precision, a net gain of about 0.03 F1@0.5 on the check half. The error analysis predicted it: 46% of the missed lines had a candidate below the old threshold. Phase 10 uses these settings.
 - **Limitations:** chosen and checked on two halves of one validation set from one checkpoint; the uint8 maps differ slightly from float maps, hence the float re-check.
 - **Next experiment:** GW-DET-005 uses the adopted setting.
 
 ### GW-EFF-001 — Detector CPU latency by input resolution
 
-- **Date allocated / run:** 2026-10-27 / —
+- **Date allocated / run:** 2026-10-27 / 2026-10-28
 - **Phase:** 09
 - **Git commit:** recorded in the result file   **Config:** `configs/det/gw-det-001.yaml` with overrides   **Seed(s):** none (no training)
 - **Dataset version(s):** HierText validation pages as in GW-DET-001 (`processed/hiertext/pages_validation.jsonl.gz`, sha256 0655c5f795a6)
@@ -745,8 +745,8 @@ Rows link to a full entry below. Numbers are copied from generated reports only,
 - **Method:** `scripts/det_profile.py --long-side N`, one process per long side, on an otherwise idle machine with no training running: the 110 Phase 5 validation pages the baselines' page profiles used (10 warm-up, 100 timed), batch 1, PyTorch fp32 with default threads, timing a decoded page to boxes (resize, normalise, forward, post-processing at GW-DET-004's adopted setting or the record's). Records mean and p95 time, peak RAM and the number of boxes per page, with run conditions as for the baselines.
 - **Variables:** independent: long side; controlled: checkpoint, post-processing, pages, threads
 - **Control:** long side 1280
-- **Result:**
-- **Interpretation:**
+- **Result:** PyTorch fp32, 16 threads, at GW-DET-004's post-processing (`reports/efficiency/det_latency.md`): detector mean / p95 per page 132 / 176 ms at long side 1024, 203 / 301 at 1280, 326 / 435 at 1536, 452 / 595 at 1792, 615 / 872 at 2048; peak RAM 1,235 to 1,779 MiB. Estimated page time (plus 24.4 ms per predicted box): 954 / 1,812 ms, 1,130 / 2,175, 1,323 / 2,523, 1,514 / 2,788 and 1,708 / 3,025 ms. Eligible under ADR-0011's page target: 1024, 1280 and 1536.
+- **Interpretation:** recognition dominates the page time at every resolution (34 to 45 lines at 24.4 ms each), so the detector's input size can grow to 1536 before the page target binds; 1792 misses the mean by 14 ms.
 - **Limitations:** PyTorch stands in for the Phase 17 ONNX Runtime build; recognition time is estimated from GW-REC-024's mean line time, not measured on the detected crops (Phase 10 measures the pipeline).
 - **Next experiment:** GW-DET-005's eligibility rule.
 
