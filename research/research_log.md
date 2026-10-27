@@ -197,3 +197,18 @@ the bottom. Experiments get their full record in `experiments.md`; this log is t
 - One registered check had nothing to measure: HierText's line annotations are all four-point
   polygons, so whether curved outlines help on GDC (R-22) stays open.
 
+### 2026-10-28 — Phase 10: the full pipeline
+
+- `GlypharisOCR` now reads a page end to end: detect at 1536 px with Phase 9's settings, cut each
+  line exactly as the training crops were cut, read them in width-sorted batches, and order them
+  by XY-cut. A fixed padding margin makes a line read the same alone or in any batch.
+- On the 400 HierText pages the baselines were scored on, GLYPHARIS's page CER is 24.3% against
+  42.4% for PP-OCRv6 small, the best of them; on all 1,715 validation pages it is 27.6%.
+- With ground-truth boxes the page CER would be 6.7%: detection is now the bottleneck, on sharp and
+  blurry pages alike, so H4's expectation that recognition dominates on clean pages does not hold
+  on HierText.
+- Raw confidence is over-confident; a temperature of 2.35 fitted on half of validation cuts ECE
+  from 0.22 to 0.09 on the other half (H8). The v0.1 model carries it.
+- The PyTorch pipeline misses the page-time target: 2.0 s per page, mostly recognition. Phase 17
+  measures the ONNX build, which is what the target is judged on.
+
