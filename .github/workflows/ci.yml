@@ -55,6 +55,11 @@ jobs:
       - name: Validate configs
         run: python scripts/validate_configs.py
 
+      - name: Installed command (fresh environment)
+        run: |
+          glypharis-ocr --help
+          python -c "import glypharis, glypharis.pipeline; print(glypharis.__version__)"
+
       - name: Environment report
         run: python scripts/env_report.py --out ci-env-report
 

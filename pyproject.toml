@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "glypharis"
-version = "0.0.1"
+version = "0.1.0.dev0"
 description = "Lightweight OCR engine for document images: text-line detector + CTC line recognizer."
 readme = "README.md"
 requires-python = ">=3.11,<3.12"
@@ -28,6 +28,9 @@ dependencies = [
     "onnx",
     "onnxruntime",
 ]
+
+[project.scripts]
+glypharis-ocr = "glypharis.cli:main"
 
 [project.optional-dependencies]
 dev = ["pytest", "ruff", "mypy", "types-PyYAML", "types-psutil"]
