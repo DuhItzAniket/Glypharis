@@ -22,10 +22,12 @@ from __future__ import annotations
 import json
 import logging
 import math
+import os
 import time
 from collections import Counter
 from collections.abc import Callable, Iterable
 from dataclasses import asdict, dataclass, field, replace
+from functools import partial
 from pathlib import Path
 from typing import Any, NoReturn
 
@@ -42,6 +44,7 @@ from glypharis.data.rec_dataset import (
     WidthBucketBatchSampler,
     assert_no_leakage,
     collate,
+    ctc_frames_needed,
 )
 from glypharis.data.text import Charset
 from glypharis.diagnostics import (
@@ -54,7 +57,8 @@ from glypharis.diagnostics import (
     check_underfitting,
 )
 from glypharis.eval.text_metrics import RecAccumulator, score_pair
-from glypharis.models.rec.crnn import CRNN, build_recognizer, count_parameters
+from glypharis.models.rec.base import LineRecognizer
+from glypharis.models.rec.crnn import build_recognizer, count_parameters
 from glypharis.training.checkpoint import (
     load_checkpoint,
     prune_epoch_checkpoints,
@@ -74,14 +78,18 @@ CHECKPOINT_FORMAT = 1
 
 
 def ctc_loss(
-    model: nn.Module, batch: dict[str, Any], amp: AmpPolicy, device: torch.device, ctc: nn.CTCLoss
+    model: LineRecognizer,
+    batch: dict[str, Any],
+    amp: AmpPolicy,
+    device: torch.device,
+    ctc: nn.CTCLoss,
 ) -> tuple[torch.Tensor, torch.Tensor, torch.Tensor]:
     """Forward pass under autocast; CTC in fp32. Returns (loss, logits, frame lengths)."""
     images = batch["images"].to(device, non_blocking=True)
     with amp.autocast():
         logits = model(images, batch["widths"])
     t = logits.shape[0]
-    lengths = CRNN.frames(batch["widths"]).clamp(max=t)
+    lengths = model.frames(batch["widths"]).clamp(max=t)
     with fp32_region(device.type):
         log_probs = logits.float().log_softmax(2)
         loss = ctc(log_probs, batch["targets"], lengths, batch["target_lengths"])
@@ -112,7 +120,7 @@ class EvalResult:
 
 @torch.no_grad()
 def evaluate(
-    model: nn.Module,
+    model: LineRecognizer,
     loader: Iterable[dict[str, Any]],
     charset: Charset,
     amp: AmpPolicy,
@@ -264,6 +272,15 @@ def model_bytes(state: dict[str, torch.Tensor]) -> int:
     return sum(t.numel() * t.element_size() for t in state.values())
 
 
+def batching_widths(ds: RecLineDataset, charset: Charset, stride: int) -> np.ndarray:
+    """Columns each line takes once padded for CTC: at least ``stride`` per frame its label needs.
+    At stride 8, 3% of HierText training lines are denser than that, up to 3,256 columns, which
+    the image widths alone never showed the column cap (GW-REC-019 ran out of memory)."""
+    need = np.array([stride * ctc_frames_needed(charset.encode(r.label)) for r in ds.refs],
+                    dtype=np.int64)  # fmt: skip
+    return np.maximum(ds.widths, need)
+
+
 def run_config_hash(cfg: RunConfig) -> str:
     """The run's config hash. The resume pointer says how a run was continued, not what it is,
     so a resumed run reports the same hash as at its start."""
@@ -317,10 +334,13 @@ class RecTrainer:
             self.train_eval_ds.refs = [self.train_eval_ds.refs[int(i)] for i in np.sort(keep)]
             self.train_eval_ds.widths = self.train_eval_ds.widths[np.sort(keep)]
 
-        self.model = build_recognizer(self.charset.num_classes, cfg.model).to(self.device)
+        self.model = build_recognizer(
+            self.charset.num_classes, cfg.model, cfg.model_name or "crnn"
+        ).to(self.device)
         self.optimizer = make_optimizer(cfg, self.model)
         t = cfg.train
-        self.sampler = WidthBucketBatchSampler(self.train_ds.widths, t.batch_size, cfg.seed,
+        self.sampler = WidthBucketBatchSampler(self._batching_widths(self.train_ds), t.batch_size,
+                                               cfg.seed,
                                                d.bucket_chunk,
                                                max_columns=d.max_batch_columns)  # fmt: skip
         # With a column cap the batch count can differ between epochs; it is known in advance.
@@ -336,15 +356,26 @@ class RecTrainer:
         self._clock = time.monotonic()
         self.git = git_info()
         self.params = count_parameters(self.model)
+        # Data-loading processes. Each loads its own torch and CUDA (about 2 GB of commit memory on
+        # Windows); GW-REC-005 and 007 crashed when the system ran out of commit, so the queue can
+        # lower this without touching the config. Batches do not depend on it.
+        self.workers = int(os.environ.get("GLYPHARIS_NUM_WORKERS", cfg.data.num_workers))
+
+    def _batching_widths(self, ds: RecLineDataset) -> np.ndarray:
+        """The widths batches are bucketed and capped by: each line's image width, or with
+        ``data.ctc_aware_batching`` the width collate pads it to for CTC, whichever is larger."""
+        if not self.cfg.data.ctc_aware_batching:
+            return ds.widths
+        return batching_widths(ds, self.charset, self.model.stride)
 
     # ---------------------------------------------------------------------------- loaders
 
     def _loader(self, ds: RecLineDataset, sampler: Any, seed: int) -> DataLoader[Any]:
-        workers = self.cfg.data.num_workers
+        workers = self.workers
         return DataLoader(
             ds,
             batch_sampler=sampler,
-            collate_fn=collate,
+            collate_fn=partial(collate, stride=self.model.stride),
             num_workers=workers,
             pin_memory=self.device.type == "cuda",
             worker_init_fn=worker_init_fn if workers else None,
@@ -354,7 +385,8 @@ class RecTrainer:
 
     def _eval_loader(self, ds: RecLineDataset) -> DataLoader[Any]:
         cap = self.cfg.data.max_batch_columns
-        sampler = WidthBucketBatchSampler(ds.widths, self.cfg.train.batch_size * 2, self.cfg.seed,
+        sampler = WidthBucketBatchSampler(self._batching_widths(ds), self.cfg.train.batch_size * 2,
+                                          self.cfg.seed,
                                           shuffle=False,
                                           max_columns=2 * cap if cap else None)  # fmt: skip
         return self._loader(ds, sampler, self.cfg.seed + 7)
@@ -393,8 +425,40 @@ class RecTrainer:
         self.state = state_from_checkpoint(ck["state"])
         self.gradmon.load_state_dict(ck["gradmon"])
         set_rng_state(ck["rng"])
+        dropped = self._trim_log(self.state.step)
+        self._log({"type": "resume", "from": str(path), "epoch": self.state.epoch,
+                   "step": self.state.step, "dropped_records": dropped})  # fmt: skip
         log.info("resumed from %s at epoch %d, batch %d, step %d", path, self.state.epoch,
                  self.state.batch_in_epoch, self.state.step)  # fmt: skip
+
+    def _trim_log(self, step: int) -> int:
+        """Move log records written after the checkpoint at ``step`` (a run that died between two
+        saves) to metrics.dropped.jsonl, so the resumed run does not log those steps twice.
+        Returns how many were moved."""
+        path = self.run_dir / "metrics.jsonl"
+        if not path.exists():
+            return 0
+        keep: list[str] = []
+        drop: list[str] = []
+        for line in path.read_text(encoding="utf-8").splitlines():
+            if line.strip():
+                (drop if json.loads(line).get("step", 0) > step else keep).append(line)
+        if drop:
+            text = "\n".join(keep) + "\n"
+            tmp = path.with_suffix(".jsonl.tmp")
+            tmp.write_text(text, encoding="utf-8", newline="\n")
+            try:
+                tmp.replace(path)
+            except PermissionError:
+                # On Windows a file another process holds open (a log viewer, `tail -F`) cannot be
+                # replaced, but it can be rewritten; the full copy in tmp covers a crash meanwhile.
+                path.write_text(text, encoding="utf-8", newline="\n")
+                tmp.unlink()
+            # Only once the log no longer holds them, so a failed attempt cannot copy them twice.
+            with (self.run_dir / "metrics.dropped.jsonl").open("a", encoding="utf-8",
+                                                              newline="\n") as fh:  # fmt: skip
+                fh.write("\n".join(drop) + "\n")
+        return len(drop)
 
     # --------------------------------------------------------------------------- logging
 
@@ -591,6 +655,7 @@ class RecTrainer:
             "config_hash": run_config_hash(self.cfg),
             "git": self.git.to_dict(),
             "parameters": self.params,
+            "data_workers": self.workers,
             "model_bytes": model_bytes(self.model.state_dict()),
             "device": str(self.device),
             "gpu": torch.cuda.get_device_name() if self.device.type == "cuda" else None,

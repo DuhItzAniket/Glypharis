@@ -1,0 +1,7 @@
+# GW-REC-010: Phase 7 ablation, Adam instead of AdamW (same learning rate and weight decay). Everything else is the control
+# GW-REC-003 (8-epoch short budget, seed 1337).
+inherits: gw-rec-003.yaml
+experiment_id: GW-REC-010
+
+train:
+  optimizer: adam

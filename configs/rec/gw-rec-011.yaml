@@ -1,0 +1,8 @@
+# GW-REC-011: Phase 7 ablation, cosine schedule with 2,000 warm-up steps instead of OneCycle. Everything else is the control
+# GW-REC-003 (8-epoch short budget, seed 1337).
+inherits: gw-rec-003.yaml
+experiment_id: GW-REC-011
+
+train:
+  scheduler: cosine
+  warmup_steps: 2000

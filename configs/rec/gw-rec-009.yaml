@@ -1,0 +1,7 @@
+# GW-REC-009: Phase 7 ablation, one BiLSTM layer instead of two. Everything else is the control
+# GW-REC-003 (8-epoch short budget, seed 1337).
+inherits: gw-rec-003.yaml
+experiment_id: GW-REC-009
+
+model:
+  lstm_layers: 1

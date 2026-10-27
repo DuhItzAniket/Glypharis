@@ -285,12 +285,23 @@ def load_config(path: str | Path, overrides: Iterable[str] = ()) -> RunConfig:
     return build_config(load_raw(path), overrides)
 
 
+# Fields added in Phase 7, left out of the dict at their defaults: every earlier config
+# (GW-REC-001 to 020) keeps its hash and still matches the runs it produced.
+_ADDED_DEFAULTS: dict[tuple[str, str], Any] = {
+    ("model", "frame_stride"): 4,
+    ("model", "svtr"): None,
+    ("data", "ctc_aware_batching"): False,
+}
+
+
 def config_to_dict(cfg: RunConfig) -> dict[str, Any]:
     """The resolved config as plain data: what is hashed, saved and compared on resume.
 
     An absent ``det`` section is left out, and a det run leaves out the recognizer ``data`` and
     ``model`` sections (validated to be defaults). The detector schema therefore cannot move a
-    recognizer hash, and recognizer schema growth cannot move a detector hash.
+    recognizer hash, and recognizer schema growth cannot move a detector hash. Recognizer fields
+    added after runs were hashed are left out while they hold their defaults, so older runs keep
+    their hashes.
     """
     d = dataclasses.asdict(cfg)
     if d.get("det") is None:
@@ -298,6 +309,10 @@ def config_to_dict(cfg: RunConfig) -> dict[str, Any]:
     if cfg.task == "det":
         d.pop("data", None)
         d.pop("model", None)
+    for (section, key), default in _ADDED_DEFAULTS.items():
+        part = d.get(section, {})
+        if key in part and part[key] == default:
+            del part[key]
     return d
 
 

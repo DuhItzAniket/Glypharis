@@ -1,0 +1,10 @@
+# GW-REC-024: Phase 7 full-budget confirmation of the chosen configuration: GW-REC-022's recipe (SVTR
+# encoder, input height 48, weight decay 1e-2) at GW-REC-001's budget, 30 epochs with OneCycle over
+# those 30 epochs, seed 1337. Compared line by line with GW-REC-001. One seed instead of the plan's
+# three, to stay within the Phase 7 budget (decided 2026-10-26): the full-budget seed spread is not
+# measured, and the short-budget control spread stands in for it.
+inherits: gw-rec-022.yaml
+experiment_id: GW-REC-024
+
+train:
+  epochs: 30

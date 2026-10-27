@@ -32,7 +32,7 @@ from glypharis.data.augment import Augmenter
 from glypharis.data.linepack import LinePackReader
 from glypharis.data.text import Charset
 
-STRIDE = 4  # must match glypharis.models.rec.crnn.STRIDE
+STRIDE = 4  # default input columns per frame; the trainer passes its model's stride to collate
 PAD_MULTIPLE = 32  # padded batch widths are multiples of this
 
 
@@ -110,13 +110,14 @@ class RecLineDataset(Dataset[dict[str, Any]]):
         return {"image": x, "target": target, "key": ref.key, "label": ref.label, "index": i}
 
 
-def collate(batch: list[dict[str, Any]]) -> dict[str, Any]:
-    """Right-pad to the widest line (and to what CTC needs), stack, and concatenate targets.
+def collate(batch: list[dict[str, Any]], stride: int = STRIDE) -> dict[str, Any]:
+    """Right-pad to the widest line (and to what CTC needs at ``stride`` columns per frame), stack,
+    and concatenate targets.
 
     The padded width is rounded up to a multiple of ``PAD_MULTIPLE``: far fewer distinct tensor
     shapes reach the GPU, which keeps the CUDA memory cache from fragmenting.
     """
-    need = [max(b["image"].shape[1], STRIDE * ctc_frames_needed(b["target"])) for b in batch]
+    need = [max(b["image"].shape[1], stride * ctc_frames_needed(b["target"])) for b in batch]
     width = int(math.ceil(max(need) / PAD_MULTIPLE) * PAD_MULTIPLE)
     height = batch[0]["image"].shape[0]
     images = torch.empty(len(batch), 1, height, width)

@@ -285,7 +285,7 @@ def test_stacked_lstm_checkpoints_load_and_compute_the_same():
     x, widths = torch.randn(3, 1, 32, 96), torch.tensor([96, 60, 33])
     with torch.no_grad():
         feats = model.cnn(x).mean(dim=2).permute(2, 0, 1)
-        lengths = CRNN.frames(widths).clamp(min=1, max=feats.shape[0])
+        lengths = model.frames(widths).clamp(min=1, max=feats.shape[0])
         packed = nn.utils.rnn.pack_padded_sequence(feats, lengths, enforce_sorted=False)
         ref, _ = nn.utils.rnn.pad_packed_sequence(stacked(packed)[0], total_length=len(feats))
         assert torch.allclose(model(x, widths), model.head(ref), atol=1e-6)
@@ -562,3 +562,216 @@ def test_out_of_memory_saves_the_state_and_still_writes_a_report(tiny, monkeypat
     ]
     assert [r["step"] for r in recs if r["type"] == "oom"] == [1]
     assert (tiny / "oom/reports/training/GW-REC-999/report.md").exists()
+
+
+@pytest.mark.parametrize(
+    "extra",
+    [
+        {
+            "model_name": "svtr",
+            "model.svtr": "{dims: [16, 32, 48], heads: [2, 4, 4], "
+            "local_blocks: [1, 1, 0], global_blocks: [0, 1, 1]}",
+        },
+        {"model.frame_stride": 8},
+    ],
+    ids=["svtr", "crnn-stride-8"],
+)
+def test_the_phase_7_encoders_train_resume_and_report(tiny, extra):
+    import train
+
+    cfg_path = _yaml(_cfg(tiny, "p7", **extra), tiny / "p7.yaml")
+    assert train.main(["--config", str(cfg_path)]) == 0
+    summary = json.loads((tiny / "p7/runs/GW-REC-999/summary.json").read_text(encoding="utf-8"))
+    assert summary["steps"] == 6 and np.isfinite(summary["final"]["val_loss"])
+    # A mid-epoch resume reproduces the uninterrupted run exactly on the CPU.
+    full = RecTrainer(_cfg(tiny, "pf", **extra))
+    full.fit()
+    cut = RecTrainer(_cfg(tiny, "pc", **extra, **{"train.max_steps": 4}))
+    cut.fit()
+    resumed = RecTrainer(
+        _cfg(tiny, "pc", **extra, **{"checkpoint.resume": str(tiny / "pc/ckpt/last.pt")})
+    )
+    resumed.fit()
+    for a, b in zip(
+        full.model.state_dict().values(), resumed.model.state_dict().values(), strict=True
+    ):
+        assert torch.equal(a, b)
+
+
+PHASE_6_AND_7_CONFIG_HASHES = {
+    "gw-rec-001": "a13d7c4c367626da272252a16539d407ae1e244dde376745f1c904577401bdfa",
+    "gw-rec-002": "5e33f43cb53dd5745091ffcb68bfdb650b5195dd8379ef25e6086781cb4bebf2",
+    "gw-rec-003": "e06f26593818f217eff90be468d0d02ef143cce88e72f8ae8f8f14f723db8a51",
+    "gw-rec-004": "13c409430f8519597559d981b864df58a69c8406cb860a241ab56656c893cdb4",
+    "gw-rec-005": "3723c56e1c5c78dc2c7d811dc8c2b3611684756309c6582151fac225ac846588",
+    "gw-rec-006": "37ff03a6a4e2b7bcbb1296597bc81e6d8c3b93f3b965e8b4721e29637c31aa6b",
+    "gw-rec-007": "4bb1c04c26fad0a262966f7dae70f51af6084aa45e9ec477b42904dbfd97494c",
+    "gw-rec-008": "1d41e0167901ed9a143fe795ff24d73a417ab6b6a3295b890439cd1723ea2e05",
+    "gw-rec-009": "b935fc8dabb293251f3880605101d573c10d3cd63270d2892a7e2c771592a325",
+    "gw-rec-010": "2045c19597180730a63a76cbc8b1aa88fc948acc355de3e00d0ff757b67e3af6",
+    "gw-rec-011": "5e4593b643cf63e94080011f4bfb9f4080550cabca8c3f9b973aac23d3a9191b",
+    "gw-rec-012": "56071b24884d28f81a909be0385ab807a914ea0bfc1265eea4aa8e9336e01e7d",
+    "gw-rec-013": "ab5a198536d17275d8b8fbb810e12f2e63cefc6cf0a42e8f8a50cebf594c0889",
+    "gw-rec-014": "c0bdfae67510a5833611695a0930b54e3da048b3b7ead17594ff8519ee49423a",
+    "gw-rec-015": "c2a25e146da37d65e14ba4b44f7f0c853da9c0a16aa5514eb8c0295923ccc221",
+    "gw-rec-016": "4ab81243410aacc96fb150a475521c5cc690a7fa0c8ba3e6fdcc7fc2c5204775",
+    "gw-rec-017": "c538853fd93dbece789d66c5c0edd8df906d95812e9a8f840135a522807bd2ed",
+    "gw-rec-018": "b166c17245a2c205ed7d830fca66ea1bb7c515df6e49a34ea49da1411fb0b311",
+}
+
+
+def test_phase_7_schema_growth_leaves_every_earlier_config_hash_alone(repo_root):
+    from glypharis.config.loader import config_hash, load_config
+
+    for name, want in PHASE_6_AND_7_CONFIG_HASHES.items():
+        assert config_hash(load_config(repo_root / "configs/rec" / f"{name}.yaml")) == want, name
+
+
+def test_ablation_table_reads_changes_from_saved_configs_and_marks_pending_arms(tiny):
+    import rec_ablation_table
+
+    import train
+
+    for tag, extra in (("c1", {"seed": 1}), ("c2", {"seed": 2}), ("c3", {"seed": 3}),
+                       ("lr", {"seed": 1, "train.learning_rate": 1.0e-3})):  # fmt: skip
+        cfg_path = _yaml(_cfg(tiny, tag, **extra), tiny / f"{tag}.yaml")
+        assert train.main(["--config", str(cfg_path)]) == 0
+    run = lambda tag: str(tiny / tag / "runs/GW-REC-999")  # noqa: E731
+    (tiny / "never/runs/GW-REC-999").mkdir(parents=True)
+    out = tiny / "table"
+    argv = ["--control", run("c1"), run("c2"), run("c3"), "--arms", run("lr"), run("never"),
+            "--out", str(out)]  # fmt: skip
+    assert rec_ablation_table.main(argv) == 0
+    res = json.loads((out / "ablation_table.json").read_text(encoding="utf-8"))
+    assert len(res["control"]["val_cer"]) == 3
+    done, pending = res["arms"]
+    assert "train.learning_rate: 0.001" in done["change"] and done["verdict"] in (
+        "better",
+        "worse",
+        "no clear difference",
+    )
+    assert pending["status"] == "pending"
+    assert "1 comparisons" in (out / "ablation_table.md").read_text(encoding="utf-8")
+
+
+def test_a_resume_after_a_crash_moves_the_records_past_the_checkpoint_aside(tiny):
+    import train
+
+    cut = RecTrainer(_cfg(tiny, "cr", **{"train.max_steps": 4}))
+    cut.fit()  # last.pt at step 4
+    log = tiny / "cr/runs/GW-REC-999/metrics.jsonl"
+    # A crash between two saves leaves records the checkpoint never saw.
+    ghost = {"type": "step", "epoch": 1, "step": 5, "loss": 1.0, "step_loss": 1.0}
+    with log.open("a", encoding="utf-8") as fh:
+        fh.write(json.dumps(ghost) + "\n")
+    cfg = _cfg(tiny, "cr", **{"checkpoint.resume": str(tiny / "cr/ckpt/last.pt")})
+    assert train.main(["--config", str(_yaml(cfg, tiny / "cr.yaml"))]) == 0
+    recs = [json.loads(x) for x in log.read_text(encoding="utf-8").splitlines()]
+    steps = [r["step"] for r in recs if r["type"] == "step"]
+    assert steps == sorted(set(steps)) and steps[-1] == 6  # each step once
+    assert [r["dropped_records"] for r in recs if r["type"] == "resume"] == [1]
+    dropped = (tiny / "cr/runs/GW-REC-999/metrics.dropped.jsonl").read_text(encoding="utf-8")
+    assert json.loads(dropped) == ghost
+    report = (tiny / "cr/reports/training/GW-REC-999/report.md").read_text(encoding="utf-8")
+    assert "Resumed from `last.pt` at step 4" in report and "1 log records" in report
+
+
+def test_trimming_the_log_works_while_another_process_holds_it_open(tiny, monkeypatch):
+    from pathlib import Path
+
+    cut = RecTrainer(_cfg(tiny, "op", **{"train.max_steps": 4}))
+    cut.fit()
+    log = tiny / "op/runs/GW-REC-999/metrics.jsonl"
+    with log.open("a", encoding="utf-8") as fh:
+        fh.write(json.dumps({"type": "step", "epoch": 1, "step": 5}) + "\n")
+
+    def held_open(self, target):  # what Windows does while `tail -F` has the file open
+        raise PermissionError(13, "Access is denied")
+
+    monkeypatch.setattr(Path, "replace", held_open)
+    resumed = RecTrainer(_cfg(tiny, "op", **{"checkpoint.resume": str(tiny / "op/ckpt/last.pt")}))
+    resumed.resume(tiny / "op/ckpt/last.pt")
+    steps = [json.loads(x).get("step") for x in log.read_text(encoding="utf-8").splitlines()]
+    assert max(steps) == 4 and not (tiny / "op/runs/GW-REC-999/metrics.jsonl.tmp").exists()
+    dropped = (tiny / "op/runs/GW-REC-999/metrics.dropped.jsonl").read_text(encoding="utf-8")
+    assert len(dropped.splitlines()) == 1
+
+
+def test_the_number_of_data_loading_processes_does_not_change_training(tiny, monkeypatch):
+    runs = {}
+    for workers in ("0", "2"):
+        monkeypatch.setenv("GLYPHARIS_NUM_WORKERS", workers)
+        trainer = RecTrainer(_cfg(tiny, f"w{workers}"))
+        trainer.fit()
+        assert trainer._summary()["data_workers"] == int(workers)
+        runs[workers] = trainer
+    for a, b in zip(runs["0"].model.state_dict().values(), runs["2"].model.state_dict().values(),
+                    strict=True):  # fmt: skip
+        assert torch.equal(a, b)
+    assert [h["val_cer"] for h in runs["0"].state.history] == [
+        h["val_cer"] for h in runs["2"].state.history
+    ]
+
+
+def test_ctc_aware_batching_counts_the_padding_ctc_needs():
+    from types import SimpleNamespace
+
+    from glypharis.training.rec_trainer import batching_widths
+
+    cs = Charset(list(" abcdefghijklmnopqrstuvwxyz"))
+    refs = [SimpleNamespace(label="cat"), SimpleNamespace(label="hello world")]
+    ds = SimpleNamespace(widths=np.array([100, 30]), refs=refs)
+    need = 8 * ctc_frames_needed(cs.encode("hello world"))  # 12 frames: the "ll" needs a blank
+    assert batching_widths(ds, cs, 8).tolist() == [100, need] and need == 96
+
+
+def test_ctc_aware_batching_is_opt_in_and_keeps_the_cap_at_stride_8(tiny):
+    from glypharis.config.loader import config_hash
+    from glypharis.data.rec_dataset import PAD_MULTIPLE
+
+    assert config_hash(_cfg(tiny, "cb")) != config_hash(
+        _cfg(tiny, "cb", **{"data.ctc_aware_batching": True})
+    )
+    cap = 600
+    trainer = RecTrainer(_cfg(tiny, "cb", **{"data.ctc_aware_batching": True,
+                                             "model.frame_stride": 8,
+                                             "data.max_batch_columns": cap,
+                                             "data.max_width": 300}))  # fmt: skip
+    trainer.sampler.set_epoch(0, 0)
+    for batch in trainer._loader(trainer.train_ds, trainer.sampler, 1):
+        n, width = batch["images"].shape[0], batch["images"].shape[-1]
+        assert n * width <= cap + n * PAD_MULTIPLE  # collate rounds widths up to PAD_MULTIPLE
+
+
+def test_cpu_profile_times_a_trained_run_like_the_baselines(tiny, monkeypatch):
+    import rec_profile
+
+    RecTrainer(_cfg(tiny, "a")).fit()
+    data = tiny / "data"
+    lines = [(f"hv{i}", f"hdoc{i}", WORDS[i % len(WORDS)]) for i in range(6)]
+    _pack(data / "processed/hiertext/lines_validation_eval", lines, "validation")
+    monkeypatch.setattr(rec_profile, "WARMUP", 1)
+    monkeypatch.setattr(rec_profile, "PROFILE_SAMPLES", 3)
+    monkeypatch.setattr(rec_profile, "cpu_busy_percent", lambda interval=2.0: 2.0)
+    conditions = {"cpu_busy_percent_before": 1.0, "power_plan": "Balanced"}
+    monkeypatch.setattr(rec_profile, "run_conditions", lambda: conditions)
+    out = tiny / "lat"
+    args = ["--runs", str(tiny / "a/runs"), "--data-root", str(data), "--out", str(out)]
+    assert rec_profile.main([*args, "--run", "GW-REC-999", "--table"]) == 0
+    res = json.loads((out / "GW-REC-999.json").read_text(encoding="utf-8"))
+    assert len(res["warmup_times_ms"]) == 1 and len(res["times_ms"]) == 3 and res["batch"] == 1
+    assert res["model_name"] == "crnn" and res["parameters"] > 0 and res["val_cer"] is not None
+    assert res["peak_mem_mib"] > 0 and res["eval_set"] == "hiertext_val"
+    md = (tiny / "cpu_latency.md").read_text(encoding="utf-8")
+    assert "| GW-REC-999 | crnn | 32 | 4 |" in md and "mean at most 25 ms" in md
+    with pytest.raises(SystemExit, match="one --run per process"):
+        rec_profile.main([*args, "--run", "GW-REC-999", "--run", "GW-REC-998"])
+
+
+def test_memory_probe_takes_the_worst_batches_and_runs_a_step(tiny):
+    import rec_memory_probe
+
+    cfg = _cfg(tiny, "probe", **{"data.max_width": 300, "data.max_batch_columns": 600})
+    assert rec_memory_probe.worst_batches(cfg) == [(2, 320), (8, 96)]  # widest lines; fullest batch
+    rows = rec_memory_probe.probe(cfg, torch.device("cpu"), 28)
+    assert [r["fits"] for r in rows] == [True, True] and rows[0]["height"] == 32

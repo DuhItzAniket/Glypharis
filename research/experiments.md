@@ -16,6 +16,28 @@ Rows link to a full entry below. Numbers are copied from generated reports only,
 | [GW-BASE-007](#gw-base-007) | 2026-10-21 | 05 | PaddleOCR PP-OCRv6 medium (PaddleOCR 3.7's English default): reduced scope | done | lines 7.54% CER (HierText val); 553 ms per line, 32.5 s per page | `reports/baselines/` |
 | [GW-REC-001](#gw-rec-001) | 2026-10-22 | 06 | CRNN baseline on HierText lines | done | val CER 7.53% [7.38, 7.69] | `reports/training/GW-REC-001/` |
 | [GW-REC-002](#gw-rec-002) | 2026-10-22 | 06 | GW-REC-001 plus 35,000 GlyphSynth lines (exploratory look at H2′a) | done | val CER 7.49% [7.34, 7.64]; −0.05 points [−0.09, −0.01] vs GW-REC-001 (one seed, not budget-matched) | `reports/training/GW-REC-002/` |
+| [GW-REC-003](#gw-rec-003) | 2026-10-23 | 07 | Phase 7 control: GW-REC-001 on the 8-epoch short budget, seed 1337 (noise floor) | done | val CER 8.32% [8.16, 8.47] (control) | `reports/training/GW-REC-003/` |
+| [GW-REC-004](#gw-rec-004) | 2026-10-23 | 07 | Phase 7 control: GW-REC-001 on the 8-epoch short budget, seed 2024 (noise floor) | done | val CER 8.30% [8.15, 8.47] (control) | `reports/training/GW-REC-004/` |
+| [GW-REC-005](#gw-rec-005) | 2026-10-23 | 07 | Phase 7 control: GW-REC-001 on the 8-epoch short budget, seed 7 (noise floor) | done | val CER 8.31% [8.15, 8.47] (control) | `reports/training/GW-REC-005/` |
+| [GW-REC-006](#gw-rec-006) | 2026-10-23 | 07 | Phase 7 ablation: input height 48 (short budget, vs GW-REC-003) | done | val CER 7.83% [7.66, 7.98]; -0.49 [-0.54, -0.44] vs GW-REC-003 (better) | `reports/training/GW-REC-006/` |
+| [GW-REC-007](#gw-rec-007) | 2026-10-23 | 07 | Phase 7 ablation: CNN half as wide (short budget, vs GW-REC-003) | done | val CER 8.83% [8.65, 9.00]; +0.51 [+0.47, +0.56] vs GW-REC-003 (worse) | `reports/training/GW-REC-007/` |
+| [GW-REC-008](#gw-rec-008) | 2026-10-23 | 07 | Phase 7 ablation: BiLSTM hidden 128 (short budget, vs GW-REC-003) | done | val CER 8.78% [8.60, 8.94]; +0.46 [+0.42, +0.51] vs GW-REC-003 (worse) | `reports/training/GW-REC-008/` |
+| [GW-REC-009](#gw-rec-009) | 2026-10-23 | 07 | Phase 7 ablation: one BiLSTM layer (short budget, vs GW-REC-003) | done | val CER 8.78% [8.60, 8.94]; +0.46 [+0.42, +0.51] vs GW-REC-003 (worse) | `reports/training/GW-REC-009/` |
+| [GW-REC-010](#gw-rec-010) | 2026-10-23 | 07 | Phase 7 ablation: Adam (short budget, vs GW-REC-003) | done | val CER 9.17% [8.99, 9.34]; +0.85 [+0.81, +0.90] vs GW-REC-003 (worse) | `reports/training/GW-REC-010/` |
+| [GW-REC-011](#gw-rec-011) | 2026-10-23 | 07 | Phase 7 ablation: cosine schedule (short budget, vs GW-REC-003) | done | val CER 8.44% [8.26, 8.60]; +0.12 [+0.08, +0.17] vs GW-REC-003 (worse) | `reports/training/GW-REC-011/` |
+| [GW-REC-012](#gw-rec-012) | 2026-10-23 | 07 | Phase 7 ablation: learning rate 5e-4 (short budget, vs GW-REC-003) | done | val CER 8.51% [8.34, 8.67]; +0.19 [+0.15, +0.23] vs GW-REC-003 (worse) | `reports/training/GW-REC-012/` |
+| [GW-REC-013](#gw-rec-013) | 2026-10-23 | 07 | Phase 7 ablation: learning rate 2e-3 (short budget, vs GW-REC-003) | done | val CER 8.34% [8.17, 8.50]; +0.02 [-0.02, +0.06] vs GW-REC-003 (no clear difference) | `reports/training/GW-REC-013/` |
+| [GW-REC-014](#gw-rec-014) | 2026-10-23 | 07 | Phase 7 ablation: weight decay 1e-2 (short budget, vs GW-REC-003) | done | val CER 8.28% [8.11, 8.44]; -0.04 [-0.08, -0.00] vs GW-REC-003 (better) | `reports/training/GW-REC-014/` |
+| [GW-REC-015](#gw-rec-015) | 2026-10-23 | 07 | Phase 7 ablation: no augmentation (short budget, vs GW-REC-003) | done | val CER 8.68% [8.50, 8.84]; +0.36 [+0.32, +0.41] vs GW-REC-003 (worse) | `reports/training/GW-REC-015/` |
+| [GW-REC-016](#gw-rec-016) | 2026-10-23 | 07 | Phase 7 ablation: geometric augmentation only (short budget, vs GW-REC-003) | done | val CER 8.34% [8.16, 8.50]; +0.02 [-0.02, +0.06] vs GW-REC-003 (no clear difference) | `reports/training/GW-REC-016/` |
+| [GW-REC-017](#gw-rec-017) | 2026-10-23 | 07 | Phase 7 ablation: photometric augmentation only (short budget, vs GW-REC-003) | done | val CER 8.59% [8.42, 8.75]; +0.28 [+0.23, +0.32] vs GW-REC-003 (worse) | `reports/training/GW-REC-017/` |
+| [GW-REC-018](#gw-rec-018) | 2026-10-23 | 07 | Phase 7 ablation: degradation augmentation only (short budget, vs GW-REC-003) | done | val CER 8.68% [8.50, 8.85]; +0.36 [+0.32, +0.41] vs GW-REC-003 (worse) | `reports/training/GW-REC-018/` |
+| [GW-REC-019](#gw-rec-019) | 2026-10-23 | 07 | Phase 7 ablation: frame stride 8 (short budget, vs GW-REC-003) | failed | out of GPU memory at step 1,444 (see failures.md); re-run as GW-REC-021 | `reports/training/GW-REC-019/` |
+| [GW-REC-020](#gw-rec-020) | 2026-10-23 | 07 | GLYPHARIS-Rec-M (SVTR-style) vs CRNN at matched budget (H6, exploratory) | done | val CER 8.18% [8.01, 8.35]; -0.13 [-0.18, -0.09] vs GW-REC-003 (better) | `reports/training/GW-REC-020/` |
+| [GW-REC-021](#gw-rec-021) | 2026-10-24 | 07 | Phase 7 ablation: frame stride 8 with CTC-aware batching (re-run of GW-REC-019; short budget, vs GW-REC-003) | done | val CER 10.93% [10.70, 11.16]; +2.61 [+2.48, +2.74] vs GW-REC-003 (worse) | `reports/training/GW-REC-021/` |
+| [GW-REC-022](#gw-rec-022) | 2026-10-25 | 07 | Phase 7 combination: GLYPHARIS-Rec-M (SVTR) at input height 48 with weight decay 1e-2 (short budget, vs GW-REC-003) | planned | — | `reports/training/GW-REC-022/` |
+| [GW-REC-023](#gw-rec-023) | 2026-10-25 | 07 | Phase 7 combination without the encoder change: CRNN at input height 48 with weight decay 1e-2 (short budget, vs GW-REC-003) | abandoned | not run: GW-REC-022 settled the question (see entry) | `reports/training/GW-REC-023/` |
+| [GW-REC-024](#gw-rec-024) | 2026-10-26 | 07 | Phase 7 full-budget confirmation: GW-REC-022's recipe at GW-REC-001's budget (30 epochs, one seed), vs GW-REC-001 | done | val CER 6.46% [6.33, 6.60]; -1.07 [-1.13, -1.01] vs GW-REC-001 | `reports/training/GW-REC-024/` |
 | [GW-DET-001](#gw-det-001) | 2026-10-25 | 08 | GLYPHARIS-Det baseline: DBNet-style, MobileNetV3-Large, ImageNet init, HierText pages (control for H9 and H10) | planned | — | `reports/training/GW-DET-001/` |
 | [GW-DET-002](#gw-det-002) | 2026-10-25 | 08 | GW-DET-001 with a randomly initialised backbone (H9: ImageNet vs scratch, exploratory) | planned | — | `reports/training/GW-DET-002/` |
 | [GW-DET-003](#gw-det-003) | 2026-10-25 | 08 | GW-DET-001 with a MobileNetV3-Small backbone (H10: Small within 0.03 F1@0.5 of Large, exploratory) | planned | — | `reports/training/GW-DET-003/` |
@@ -197,6 +219,428 @@ Rows link to a full entry below. Numbers are copied from generated reports only,
 - **Limitations:** single seed, one mix size; more steps per epoch than GW-REC-001 (not budget-matched, EXPERIMENT_PROTOCOL §5), so a difference is not attributable to the data alone; scored on all HierText validation lines, not the document-style slice.
 - **Next experiment:** Phase 12 (GW-DATA-*): several GlyphSynth sizes and seeds, budget-matched, on the document-style slice.
 - **Training time:** 5.32 GPU-hours (RTX 4050 Laptop), 30 epochs, with one planned stop and resume.
+
+### GW-REC-003 — Phase 7 control, short budget, seed 1337
+
+- **Date allocated / run:** 2026-10-23 / —
+- **Phase:** 07
+- **Git commit:** recorded in the run summary   **Config:** `configs/rec/gw-rec-003.yaml`   **Seed(s):** 1337
+- **Dataset version(s):** as GW-REC-001
+- **Hardware:** as GW-REC-001
+- **Research question:** how far apart do three seeds of the GW-REC-001 configuration land on the Phase 7 short budget (8 epochs, OneCycle over those 8 epochs)?
+- **Hypothesis (written before the run):** none tested. GW-REC-003, 004 and 005 are the Phase 7 control: every short-budget ablation is compared with them, and their spread is the noise floor a difference has to clear. Expectation, not a claim: the three validation CERs lie within a few tenths of a point of each other, above GW-REC-001's 7.53% because the budget is shorter.
+- **Method:** `python train.py --config configs/rec/gw-rec-003.yaml`. Identical to GW-REC-001 except `train.epochs: 8` and the seed. Selection on validation CER (strict track).
+- **Variables:** independent: seed; controlled: everything else
+- **Control:** —
+- **Result:** val CER 8.32% [8.16, 8.47] (95% bootstrap CI over 73,888 lines). The three control seeds: 8.32%, 8.30%, 8.31%; mean 8.31%, standard deviation 0.01 points. 8 epochs, 45,360 optimizer steps, the final epoch was the best.
+- **Training diagnostics:** No flags raised. (`reports/training/GW-REC-003/report.md`)
+- **Interpretation:** The three control seeds land within 0.02 points of each other, a much tighter spread than the expected few tenths, so the decision rule's "outside every control seed" condition is a strict bar only when combined with the paired CI. As expected, the short budget ends above GW-REC-001's full-budget 7.53%.
+- **Limitations:** a short budget ranks configurations, it does not show their full-budget accuracy; the winner is confirmed at the full budget at the end of Phase 7.
+- **Next experiment:** the Phase 7 ablations against this control
+- **Training time:** 1.34 GPU-hours (RTX 4050 Laptop, bf16)
+
+### GW-REC-004 — Phase 7 control, short budget, seed 2024
+
+- **Date allocated / run:** 2026-10-23 / —
+- **Phase:** 07
+- **Git commit:** recorded in the run summary   **Config:** `configs/rec/gw-rec-004.yaml`   **Seed(s):** 2024
+- **Dataset version(s):** as GW-REC-001
+- **Hardware:** as GW-REC-001
+- **Research question:** how far apart do three seeds of the GW-REC-001 configuration land on the Phase 7 short budget (8 epochs, OneCycle over those 8 epochs)?
+- **Hypothesis (written before the run):** none tested. GW-REC-003, 004 and 005 are the Phase 7 control: every short-budget ablation is compared with them, and their spread is the noise floor a difference has to clear. Expectation, not a claim: the three validation CERs lie within a few tenths of a point of each other, above GW-REC-001's 7.53% because the budget is shorter.
+- **Method:** `python train.py --config configs/rec/gw-rec-004.yaml`. Identical to GW-REC-001 except `train.epochs: 8` and the seed. Selection on validation CER (strict track).
+- **Variables:** independent: seed; controlled: everything else
+- **Control:** —
+- **Result:** val CER 8.30% [8.15, 8.47] (95% bootstrap CI over 73,888 lines). The three control seeds: 8.32%, 8.30%, 8.31%; mean 8.31%, standard deviation 0.01 points. 8 epochs, 45,368 optimizer steps, the final epoch was the best.
+- **Training diagnostics:** No flags raised. (`reports/training/GW-REC-004/report.md`)
+- **Interpretation:** Second control seed; see GW-REC-003.
+- **Limitations:** a short budget ranks configurations, it does not show their full-budget accuracy; the winner is confirmed at the full budget at the end of Phase 7.
+- **Next experiment:** the Phase 7 ablations against this control
+- **Training time:** 1.31 GPU-hours (RTX 4050 Laptop, bf16)
+
+### GW-REC-005 — Phase 7 control, short budget, seed 7
+
+- **Date allocated / run:** 2026-10-23 / 2026-10-23 to 2026-10-24
+- **Phase:** 07
+- **Git commit:** recorded in the run summary   **Config:** `configs/rec/gw-rec-005.yaml`   **Seed(s):** 7
+- **Dataset version(s):** as GW-REC-001
+- **Hardware:** as GW-REC-001
+- **Research question:** how far apart do three seeds of the GW-REC-001 configuration land on the Phase 7 short budget (8 epochs, OneCycle over those 8 epochs)?
+- **Hypothesis (written before the run):** none tested. GW-REC-003, 004 and 005 are the Phase 7 control: every short-budget ablation is compared with them, and their spread is the noise floor a difference has to clear. Expectation, not a claim: the three validation CERs lie within a few tenths of a point of each other, above GW-REC-001's 7.53% because the budget is shorter.
+- **Method:** `python train.py --config configs/rec/gw-rec-005.yaml`. Identical to GW-REC-001 except `train.epochs: 8` and the seed. Selection on validation CER (strict track).
+- **Variables:** independent: seed; controlled: everything else
+- **Control:** —
+- **Result:** val CER 8.31% [8.15, 8.47] (95% bootstrap CI over 73,888 lines). The three control seeds: 8.32%, 8.30%, 8.31%; mean 8.31%, standard deviation 0.01 points. 8 epochs, 45,367 optimizer steps, the final epoch was the best.
+- **Training diagnostics:** No flags raised. (`reports/training/GW-REC-005/report.md`)
+- **Interpretation:** Third control seed; see GW-REC-003.
+- **Limitations:** a short budget ranks configurations, it does not show their full-budget accuracy; the winner is confirmed at the full budget at the end of Phase 7.
+- **Next experiment:** the Phase 7 ablations against this control
+- **Training time:** 1.31 GPU-hours (RTX 4050 Laptop, bf16)
+
+### GW-REC-006 — Phase 7 ablation: input height 48
+
+- **Date allocated / run:** 2026-10-23 / 2026-10-23 to 2026-10-24
+- **Phase:** 07
+- **Git commit:** recorded in the run summary   **Config:** `configs/rec/gw-rec-006.yaml`   **Seed(s):** 1337 (single seed: exploratory)
+- **Dataset version(s):** as GW-REC-001
+- **Hardware:** as GW-REC-001
+- **Research question:** what does changing one thing, input height 48 instead of 32 (max width scaled to 1536; micro-batches of 32 with 2-step accumulation, so 64 lines per step as in the control), do to validation CER on the Phase 7 short budget?
+- **Hypothesis (written before the run):** expectation, not a claim: lower validation CER than the control, because small glyphs keep more detail, at about 1.5 times the compute per line.
+- **Method:** `python train.py --config configs/rec/gw-rec-006.yaml`; the control GW-REC-003 with only this change. Compared line by line with GW-REC-003 (`scripts/rec_compare.py`) and read against the spread of GW-REC-003, 004 and 005.
+- **Variables:** independent: input height 48 instead of 32 (max width scaled to 1536; micro-batches of 32 with 2-step accumulation, so 64 lines per step as in the control); controlled: everything else
+- **Control:** GW-REC-003 (seed spread: GW-REC-004, 005)
+- **Result:** val CER 7.83% [7.66, 7.98]; against GW-REC-003 -0.49 points [-0.54, -0.44] (paired bootstrap over lines, 1,000 resamples): **better** under the Phase 7 decision rule (`reports/training/phase07/ablation_table.md`). 8 epochs, 45,339 optimizer steps, the final epoch was the best; 7,796,435 parameters.
+- **Training diagnostics:** No flags raised. (`reports/training/GW-REC-006/report.md`)
+- **Interpretation:** The largest gain of any single change: a taller input gives small and dense text more pixels per character. It costs about twice the training time of the control at the same parameter count.
+- **Limitations:** single seed; short budget. BatchNorm sees micro-batches of 32 instead of 64.
+- **Next experiment:** the Phase 7 combination and full-budget confirmation
+- **Training time:** 2.44 GPU-hours (RTX 4050 Laptop, bf16)
+
+### GW-REC-007 — Phase 7 ablation: CNN half as wide
+
+- **Date allocated / run:** 2026-10-23 / 2026-10-24
+- **Phase:** 07
+- **Git commit:** recorded in the run summary   **Config:** `configs/rec/gw-rec-007.yaml`   **Seed(s):** 1337 (single seed: exploratory)
+- **Dataset version(s):** as GW-REC-001
+- **Hardware:** as GW-REC-001
+- **Research question:** what does changing one thing, CNN channels [32, 64, 128, 128, 256, 256] instead of [64, 128, 256, 256, 512, 512], do to validation CER on the Phase 7 short budget?
+- **Hypothesis (written before the run):** expectation, not a claim: somewhat higher validation CER with far fewer parameters and faster inference; it shows how much CNN width the task needs.
+- **Method:** `python train.py --config configs/rec/gw-rec-007.yaml`; the control GW-REC-003 with only this change. Compared line by line with GW-REC-003 (`scripts/rec_compare.py`) and read against the spread of GW-REC-003, 004 and 005.
+- **Variables:** independent: CNN channels [32, 64, 128, 128, 256, 256] instead of [64, 128, 256, 256, 512, 512]; controlled: everything else
+- **Control:** GW-REC-003 (seed spread: GW-REC-004, 005)
+- **Result:** val CER 8.83% [8.65, 9.00]; against GW-REC-003 +0.51 points [+0.47, +0.56] (paired bootstrap over lines, 1,000 resamples): **worse** under the Phase 7 decision rule (`reports/training/phase07/ablation_table.md`). 8 epochs, 45,360 optimizer steps, the final epoch was the best; 3,897,075 parameters.
+- **Training diagnostics:** No flags raised. (`reports/training/GW-REC-007/report.md`)
+- **Interpretation:** Halving the CNN width halves the parameters but costs half a point; with GW-REC-008 and 009, every capacity reduction tried costs 0.46 to 0.51 points at this budget.
+- **Limitations:** single seed; short budget.
+- **Next experiment:** the Phase 7 combination and full-budget confirmation
+- **Training time:** 0.95 GPU-hours (RTX 4050 Laptop, bf16)
+
+### GW-REC-008 — Phase 7 ablation: BiLSTM hidden 128
+
+- **Date allocated / run:** 2026-10-23 / 2026-10-24
+- **Phase:** 07
+- **Git commit:** recorded in the run summary   **Config:** `configs/rec/gw-rec-008.yaml`   **Seed(s):** 1337 (single seed: exploratory)
+- **Dataset version(s):** as GW-REC-001
+- **Hardware:** as GW-REC-001
+- **Research question:** what does changing one thing, BiLSTM hidden size 128 per direction instead of 256, do to validation CER on the Phase 7 short budget?
+- **Hypothesis (written before the run):** expectation, not a claim: slightly higher validation CER with a much smaller sequence model.
+- **Method:** `python train.py --config configs/rec/gw-rec-008.yaml`; the control GW-REC-003 with only this change. Compared line by line with GW-REC-003 (`scripts/rec_compare.py`) and read against the spread of GW-REC-003, 004 and 005.
+- **Variables:** independent: BiLSTM hidden size 128 per direction instead of 256; controlled: everything else
+- **Control:** GW-REC-003 (seed spread: GW-REC-004, 005)
+- **Result:** val CER 8.78% [8.60, 8.94]; against GW-REC-003 +0.46 points [+0.42, +0.51] (paired bootstrap over lines, 1,000 resamples): **worse** under the Phase 7 decision rule (`reports/training/phase07/ablation_table.md`). 8 epochs, 45,360 optimizer steps, the final epoch was the best; 5,624,787 parameters.
+- **Training diagnostics:** No flags raised. (`reports/training/GW-REC-008/report.md`)
+- **Interpretation:** A smaller BiLSTM costs about as much as a narrower CNN or a single layer (GW-REC-007, 009): the CRNN has no obviously redundant capacity at this budget.
+- **Limitations:** single seed; short budget.
+- **Next experiment:** the Phase 7 combination and full-budget confirmation
+- **Training time:** 1.52 GPU-hours (RTX 4050 Laptop, bf16)
+
+### GW-REC-009 — Phase 7 ablation: one BiLSTM layer
+
+- **Date allocated / run:** 2026-10-23 / 2026-10-24
+- **Phase:** 07
+- **Git commit:** recorded in the run summary   **Config:** `configs/rec/gw-rec-009.yaml`   **Seed(s):** 1337 (single seed: exploratory)
+- **Dataset version(s):** as GW-REC-001
+- **Hardware:** as GW-REC-001
+- **Research question:** what does changing one thing, one BiLSTM layer instead of two, do to validation CER on the Phase 7 short budget?
+- **Hypothesis (written before the run):** expectation, not a claim: slightly higher validation CER.
+- **Method:** `python train.py --config configs/rec/gw-rec-009.yaml`; the control GW-REC-003 with only this change. Compared line by line with GW-REC-003 (`scripts/rec_compare.py`) and read against the spread of GW-REC-003, 004 and 005.
+- **Variables:** independent: one BiLSTM layer instead of two; controlled: everything else
+- **Control:** GW-REC-003 (seed spread: GW-REC-004, 005)
+- **Result:** val CER 8.78% [8.60, 8.94]; against GW-REC-003 +0.46 points [+0.42, +0.51] (paired bootstrap over lines, 1,000 resamples): **worse** under the Phase 7 decision rule (`reports/training/phase07/ablation_table.md`). 8 epochs, 45,360 optimizer steps, the final epoch was the best; 6,219,475 parameters.
+- **Training diagnostics:** No flags raised. (`reports/training/GW-REC-009/report.md`)
+- **Interpretation:** One BiLSTM layer instead of two costs as much as halving its width (GW-REC-008).
+- **Limitations:** single seed; short budget.
+- **Next experiment:** the Phase 7 combination and full-budget confirmation
+- **Training time:** 1.45 GPU-hours (RTX 4050 Laptop, bf16)
+
+### GW-REC-010 — Phase 7 ablation: Adam
+
+- **Date allocated / run:** 2026-10-23 / 2026-10-24
+- **Phase:** 07
+- **Git commit:** recorded in the run summary   **Config:** `configs/rec/gw-rec-010.yaml`   **Seed(s):** 1337 (single seed: exploratory)
+- **Dataset version(s):** as GW-REC-001
+- **Hardware:** as GW-REC-001
+- **Research question:** what does changing one thing, Adam instead of AdamW, same learning rate and weight decay, do to validation CER on the Phase 7 short budget?
+- **Hypothesis (written before the run):** expectation, not a claim: no difference beyond the seed spread, since the weight decay is small.
+- **Method:** `python train.py --config configs/rec/gw-rec-010.yaml`; the control GW-REC-003 with only this change. Compared line by line with GW-REC-003 (`scripts/rec_compare.py`) and read against the spread of GW-REC-003, 004 and 005.
+- **Variables:** independent: Adam instead of AdamW, same learning rate and weight decay; controlled: everything else
+- **Control:** GW-REC-003 (seed spread: GW-REC-004, 005)
+- **Result:** val CER 9.17% [8.99, 9.34]; against GW-REC-003 +0.85 points [+0.81, +0.90] (paired bootstrap over lines, 1,000 resamples): **worse** under the Phase 7 decision rule (`reports/training/phase07/ablation_table.md`). 8 epochs, 45,360 optimizer steps, the final epoch was the best; 7,796,435 parameters.
+- **Training diagnostics:** No flags raised. (`reports/training/GW-REC-010/report.md`)
+- **Interpretation:** The worst arm: Adam with coupled L2 weight decay is clearly behind AdamW at the same learning rate and schedule.
+- **Limitations:** single seed; short budget.
+- **Next experiment:** the Phase 7 combination and full-budget confirmation
+- **Training time:** 1.53 GPU-hours (RTX 4050 Laptop, bf16)
+
+### GW-REC-011 — Phase 7 ablation: cosine schedule
+
+- **Date allocated / run:** 2026-10-23 / 2026-10-24
+- **Phase:** 07
+- **Git commit:** recorded in the run summary   **Config:** `configs/rec/gw-rec-011.yaml`   **Seed(s):** 1337 (single seed: exploratory)
+- **Dataset version(s):** as GW-REC-001
+- **Hardware:** as GW-REC-001
+- **Research question:** what does changing one thing, cosine schedule with 2,000 warm-up steps instead of OneCycle (30% warm-up), do to validation CER on the Phase 7 short budget?
+- **Hypothesis (written before the run):** expectation, not a claim: no difference beyond the seed spread.
+- **Method:** `python train.py --config configs/rec/gw-rec-011.yaml`; the control GW-REC-003 with only this change. Compared line by line with GW-REC-003 (`scripts/rec_compare.py`) and read against the spread of GW-REC-003, 004 and 005.
+- **Variables:** independent: cosine schedule with 2,000 warm-up steps instead of OneCycle (30% warm-up); controlled: everything else
+- **Control:** GW-REC-003 (seed spread: GW-REC-004, 005)
+- **Result:** val CER 8.44% [8.26, 8.60]; against GW-REC-003 +0.12 points [+0.08, +0.17] (paired bootstrap over lines, 1,000 resamples): **worse** under the Phase 7 decision rule (`reports/training/phase07/ablation_table.md`). 8 epochs, 45,360 optimizer steps, the final epoch was the best; 7,796,435 parameters.
+- **Training diagnostics:** No flags raised. (`reports/training/GW-REC-011/report.md`)
+- **Interpretation:** Cosine with warm-up is slightly behind OneCycle at this budget; the difference is small but its CI excludes zero.
+- **Limitations:** single seed; short budget.
+- **Next experiment:** the Phase 7 combination and full-budget confirmation
+- **Training time:** 1.40 GPU-hours (RTX 4050 Laptop, bf16)
+
+### GW-REC-012 — Phase 7 ablation: learning rate 5e-4
+
+- **Date allocated / run:** 2026-10-23 / 2026-10-25
+- **Phase:** 07
+- **Git commit:** recorded in the run summary   **Config:** `configs/rec/gw-rec-012.yaml`   **Seed(s):** 1337 (single seed: exploratory)
+- **Dataset version(s):** as GW-REC-001
+- **Hardware:** as GW-REC-001
+- **Research question:** what does changing one thing, peak learning rate 5e-4 instead of 1e-3, do to validation CER on the Phase 7 short budget?
+- **Hypothesis (written before the run):** expectation, not a claim: slightly higher validation CER on the short budget (slower progress).
+- **Method:** `python train.py --config configs/rec/gw-rec-012.yaml`; the control GW-REC-003 with only this change. Compared line by line with GW-REC-003 (`scripts/rec_compare.py`) and read against the spread of GW-REC-003, 004 and 005.
+- **Variables:** independent: peak learning rate 5e-4 instead of 1e-3; controlled: everything else
+- **Control:** GW-REC-003 (seed spread: GW-REC-004, 005)
+- **Result:** val CER 8.51% [8.34, 8.67]; against GW-REC-003 +0.19 points [+0.15, +0.23] (paired bootstrap over lines, 1,000 resamples): **worse** under the Phase 7 decision rule (`reports/training/phase07/ablation_table.md`). 8 epochs, 45,360 optimizer steps, the final epoch was the best; 7,796,435 parameters.
+- **Training diagnostics:** No flags raised. (`reports/training/GW-REC-012/report.md`)
+- **Interpretation:** Half the learning rate undertrains in 8 epochs.
+- **Limitations:** single seed; short budget.
+- **Next experiment:** the Phase 7 combination and full-budget confirmation
+- **Training time:** 1.00 GPU-hours (RTX 4050 Laptop, bf16)
+
+### GW-REC-013 — Phase 7 ablation: learning rate 2e-3
+
+- **Date allocated / run:** 2026-10-23 / 2026-10-25
+- **Phase:** 07
+- **Git commit:** recorded in the run summary   **Config:** `configs/rec/gw-rec-013.yaml`   **Seed(s):** 1337 (single seed: exploratory)
+- **Dataset version(s):** as GW-REC-001
+- **Hardware:** as GW-REC-001
+- **Research question:** what does changing one thing, peak learning rate 2e-3 instead of 1e-3, do to validation CER on the Phase 7 short budget?
+- **Hypothesis (written before the run):** expectation, not a claim: similar validation CER, possibly less stable; the Phase 6 LR range test put the lowest smoothed loss at 3.72e-3 (`reports/training/sanity/GW-REC-001/sanity.md`).
+- **Method:** `python train.py --config configs/rec/gw-rec-013.yaml`; the control GW-REC-003 with only this change. Compared line by line with GW-REC-003 (`scripts/rec_compare.py`) and read against the spread of GW-REC-003, 004 and 005.
+- **Variables:** independent: peak learning rate 2e-3 instead of 1e-3; controlled: everything else
+- **Control:** GW-REC-003 (seed spread: GW-REC-004, 005)
+- **Result:** val CER 8.34% [8.17, 8.50]; against GW-REC-003 +0.02 points [-0.02, +0.06] (paired bootstrap over lines, 1,000 resamples): **no clear difference** under the Phase 7 decision rule (`reports/training/phase07/ablation_table.md`). 8 epochs, 45,360 optimizer steps, the final epoch was the best; 7,796,435 parameters.
+- **Training diagnostics:** No flags raised. (`reports/training/GW-REC-013/report.md`)
+- **Interpretation:** Twice the learning rate lands on the control: together with GW-REC-012, the configured 1e-3 sits on a flat stretch between 1e-3 and 2e-3. It makes the model neither smaller nor faster, so the combination step leaves it out.
+- **Limitations:** single seed; short budget.
+- **Next experiment:** the Phase 7 combination and full-budget confirmation
+- **Training time:** 0.96 GPU-hours (RTX 4050 Laptop, bf16)
+
+### GW-REC-014 — Phase 7 ablation: weight decay 1e-2
+
+- **Date allocated / run:** 2026-10-23 / 2026-10-25
+- **Phase:** 07
+- **Git commit:** recorded in the run summary   **Config:** `configs/rec/gw-rec-014.yaml`   **Seed(s):** 1337 (single seed: exploratory)
+- **Dataset version(s):** as GW-REC-001
+- **Hardware:** as GW-REC-001
+- **Research question:** what does changing one thing, weight decay 1e-2 instead of 1e-4, do to validation CER on the Phase 7 short budget?
+- **Hypothesis (written before the run):** expectation, not a claim: similar or slightly lower validation CER.
+- **Method:** `python train.py --config configs/rec/gw-rec-014.yaml`; the control GW-REC-003 with only this change. Compared line by line with GW-REC-003 (`scripts/rec_compare.py`) and read against the spread of GW-REC-003, 004 and 005.
+- **Variables:** independent: weight decay 1e-2 instead of 1e-4; controlled: everything else
+- **Control:** GW-REC-003 (seed spread: GW-REC-004, 005)
+- **Result:** val CER 8.28% [8.11, 8.44]; against GW-REC-003 -0.04 points [-0.08, -0.00] (paired bootstrap over lines, 1,000 resamples): **better** under the Phase 7 decision rule (`reports/training/phase07/ablation_table.md`). 8 epochs, 45,360 optimizer steps, the final epoch was the best; 7,796,435 parameters.
+- **Training diagnostics:** No flags raised. (`reports/training/GW-REC-014/report.md`)
+- **Interpretation:** Weight decay 1e-2 instead of 1e-4 is a small gain whose CI only just excludes zero, but it lies below all three control seeds, so the rule counts it as better and the combination (GW-REC-022) takes it.
+- **Limitations:** single seed; short budget.
+- **Next experiment:** the Phase 7 combination and full-budget confirmation
+- **Training time:** 0.97 GPU-hours (RTX 4050 Laptop, bf16)
+
+### GW-REC-015 — Phase 7 ablation: no augmentation
+
+- **Date allocated / run:** 2026-10-23 / 2026-10-24
+- **Phase:** 07
+- **Git commit:** recorded in the run summary   **Config:** `configs/rec/gw-rec-015.yaml`   **Seed(s):** 1337 (single seed: exploratory)
+- **Dataset version(s):** as GW-REC-001
+- **Hardware:** as GW-REC-001
+- **Research question:** what does changing one thing, augmentation preset none instead of full, do to validation CER on the Phase 7 short budget?
+- **Hypothesis (written before the run):** expectation, not a claim: lower train CER and somewhat higher validation CER than the control.
+- **Method:** `python train.py --config configs/rec/gw-rec-015.yaml`; the control GW-REC-003 with only this change. Compared line by line with GW-REC-003 (`scripts/rec_compare.py`) and read against the spread of GW-REC-003, 004 and 005.
+- **Variables:** independent: augmentation preset none instead of full; controlled: everything else
+- **Control:** GW-REC-003 (seed spread: GW-REC-004, 005)
+- **Result:** val CER 8.68% [8.50, 8.84]; against GW-REC-003 +0.36 points [+0.32, +0.41] (paired bootstrap over lines, 1,000 resamples): **worse** under the Phase 7 decision rule (`reports/training/phase07/ablation_table.md`). 8 epochs, 45,360 optimizer steps, the final epoch was the best; 7,796,435 parameters.
+- **Training diagnostics:** No flags raised. (`reports/training/GW-REC-015/report.md`)
+- **Interpretation:** Training without augmentation costs 0.36 points, so augmentation helps even on the validation split of the same dataset.
+- **Limitations:** single seed; short budget. First pass only; the full augmentation study is Phase 11 (H3).
+- **Next experiment:** the Phase 7 combination and full-budget confirmation
+- **Training time:** 1.16 GPU-hours (RTX 4050 Laptop, bf16)
+
+### GW-REC-016 — Phase 7 ablation: geometric augmentation only
+
+- **Date allocated / run:** 2026-10-23 / 2026-10-24
+- **Phase:** 07
+- **Git commit:** recorded in the run summary   **Config:** `configs/rec/gw-rec-016.yaml`   **Seed(s):** 1337 (single seed: exploratory)
+- **Dataset version(s):** as GW-REC-001
+- **Hardware:** as GW-REC-001
+- **Research question:** what does changing one thing, augmentation preset geometric instead of full, do to validation CER on the Phase 7 short budget?
+- **Hypothesis (written before the run):** expectation, not a claim: between none (GW-REC-015) and full.
+- **Method:** `python train.py --config configs/rec/gw-rec-016.yaml`; the control GW-REC-003 with only this change. Compared line by line with GW-REC-003 (`scripts/rec_compare.py`) and read against the spread of GW-REC-003, 004 and 005.
+- **Variables:** independent: augmentation preset geometric instead of full; controlled: everything else
+- **Control:** GW-REC-003 (seed spread: GW-REC-004, 005)
+- **Result:** val CER 8.34% [8.16, 8.50]; against GW-REC-003 +0.02 points [-0.02, +0.06] (paired bootstrap over lines, 1,000 resamples): **no clear difference** under the Phase 7 decision rule (`reports/training/phase07/ablation_table.md`). 8 epochs, 45,360 optimizer steps, the final epoch was the best; 7,796,435 parameters.
+- **Training diagnostics:** No flags raised. (`reports/training/GW-REC-016/report.md`)
+- **Interpretation:** Geometric augmentation alone matches the full preset: it carries the benefit (compare GW-REC-015, 017, 018). It does not make the model smaller or faster, so the combination step leaves it out; the full augmentation study is Phase 11.
+- **Limitations:** single seed; short budget. First pass only; the full augmentation study is Phase 11 (H3).
+- **Next experiment:** the Phase 7 combination and full-budget confirmation
+- **Training time:** 1.39 GPU-hours (RTX 4050 Laptop, bf16)
+
+### GW-REC-017 — Phase 7 ablation: photometric augmentation only
+
+- **Date allocated / run:** 2026-10-23 / 2026-10-24
+- **Phase:** 07
+- **Git commit:** recorded in the run summary   **Config:** `configs/rec/gw-rec-017.yaml`   **Seed(s):** 1337 (single seed: exploratory)
+- **Dataset version(s):** as GW-REC-001
+- **Hardware:** as GW-REC-001
+- **Research question:** what does changing one thing, augmentation preset photometric instead of full, do to validation CER on the Phase 7 short budget?
+- **Hypothesis (written before the run):** expectation, not a claim: between none (GW-REC-015) and full.
+- **Method:** `python train.py --config configs/rec/gw-rec-017.yaml`; the control GW-REC-003 with only this change. Compared line by line with GW-REC-003 (`scripts/rec_compare.py`) and read against the spread of GW-REC-003, 004 and 005.
+- **Variables:** independent: augmentation preset photometric instead of full; controlled: everything else
+- **Control:** GW-REC-003 (seed spread: GW-REC-004, 005)
+- **Result:** val CER 8.59% [8.42, 8.75]; against GW-REC-003 +0.28 points [+0.23, +0.32] (paired bootstrap over lines, 1,000 resamples): **worse** under the Phase 7 decision rule (`reports/training/phase07/ablation_table.md`). 8 epochs, 45,360 optimizer steps, the final epoch was the best; 7,796,435 parameters.
+- **Training diagnostics:** No flags raised. (`reports/training/GW-REC-017/report.md`)
+- **Interpretation:** Photometric augmentation alone recovers only part of the benefit of the full preset.
+- **Limitations:** single seed; short budget. First pass only; the full augmentation study is Phase 11 (H3).
+- **Next experiment:** the Phase 7 combination and full-budget confirmation
+- **Training time:** 1.16 GPU-hours (RTX 4050 Laptop, bf16)
+
+### GW-REC-018 — Phase 7 ablation: degradation augmentation only
+
+- **Date allocated / run:** 2026-10-23 / 2026-10-24
+- **Phase:** 07
+- **Git commit:** recorded in the run summary   **Config:** `configs/rec/gw-rec-018.yaml`   **Seed(s):** 1337 (single seed: exploratory)
+- **Dataset version(s):** as GW-REC-001
+- **Hardware:** as GW-REC-001
+- **Research question:** what does changing one thing, augmentation preset degradation instead of full, do to validation CER on the Phase 7 short budget?
+- **Hypothesis (written before the run):** expectation, not a claim: between none (GW-REC-015) and full.
+- **Method:** `python train.py --config configs/rec/gw-rec-018.yaml`; the control GW-REC-003 with only this change. Compared line by line with GW-REC-003 (`scripts/rec_compare.py`) and read against the spread of GW-REC-003, 004 and 005.
+- **Variables:** independent: augmentation preset degradation instead of full; controlled: everything else
+- **Control:** GW-REC-003 (seed spread: GW-REC-004, 005)
+- **Result:** val CER 8.68% [8.50, 8.85]; against GW-REC-003 +0.36 points [+0.32, +0.41] (paired bootstrap over lines, 1,000 resamples): **worse** under the Phase 7 decision rule (`reports/training/phase07/ablation_table.md`). 8 epochs, 45,360 optimizer steps, the final epoch was the best; 7,796,435 parameters.
+- **Training diagnostics:** No flags raised. (`reports/training/GW-REC-018/report.md`)
+- **Interpretation:** Degradation augmentation alone is no better than no augmentation (GW-REC-015): on HierText validation it adds nothing by itself.
+- **Limitations:** single seed; short budget. First pass only; the full augmentation study is Phase 11 (H3).
+- **Next experiment:** the Phase 7 combination and full-budget confirmation
+- **Training time:** 1.18 GPU-hours (RTX 4050 Laptop, bf16)
+
+### GW-REC-019 — Phase 7 ablation: frame stride 8
+
+- **Date allocated / run:** 2026-10-23 / —
+- **Phase:** 07
+- **Git commit:** recorded in the run summary   **Config:** `configs/rec/gw-rec-019.yaml`   **Seed(s):** 1337 (single seed: exploratory)
+- **Dataset version(s):** as GW-REC-001
+- **Hardware:** as GW-REC-001
+- **Research question:** what does halving the number of frames per line (a frame covers 8 input columns instead of 4) do to validation CER on the Phase 7 short budget?
+- **Hypothesis (written before the run):** expectation, not a claim: similar or slightly higher validation CER, with the BiLSTM reading half as many frames (faster). Lines dense in characters may lose most, because CTC needs at least one frame per character.
+- **Method:** `python train.py --config configs/rec/gw-rec-019.yaml`; the control GW-REC-003 with `model.frame_stride: 8`. Compared line by line with GW-REC-003 and read against the spread of GW-REC-003, 004 and 005.
+- **Variables:** independent: frame stride (8 instead of 4); controlled: everything else
+- **Control:** GW-REC-003 (seed spread: GW-REC-004, 005)
+- **Result:** failed. Out of GPU memory at step 1,444 of epoch 1, three times at the same batch (64 lines padded to 3,264 columns); see `research/failures.md`. No result; re-run as GW-REC-021.
+- **Training diagnostics:**
+- **Interpretation:**
+- **Limitations:** single seed; short budget.
+- **Next experiment:** the Phase 7 combination and full-budget confirmation
+- **Training time:**
+
+### GW-REC-020 — GLYPHARIS-Rec-M vs CRNN at matched budget (H6)
+
+- **Date allocated / run:** 2026-10-23 / 2026-10-23 to 2026-10-24
+- **Phase:** 07
+- **Git commit:** recorded in the run summary   **Config:** `configs/rec/gw-rec-020.yaml`   **Seed(s):** 1337 (single seed: exploratory)
+- **Dataset version(s):** as GW-REC-001
+- **Hardware:** as GW-REC-001
+- **Research question:** does the SVTR-style encoder reach lower validation CER than the CRNN at the same training budget?
+- **Hypothesis (written before the run):** [H6](hypotheses.md): GLYPHARIS-Rec-M reaches lower validation CER than the CRNN at equal training steps, with CPU latency within 1.5 times the CRNN's. This run is the exploratory single-seed test on the short budget; H6's latency half is measured separately on a quiet machine.
+- **Method:** the sanity sequence first (`scripts/rec_sanity.py --config configs/rec/gw-rec-020.yaml`: overfit 64 lines, LR range test, dry run with peak VRAM), then `python train.py --config configs/rec/gw-rec-020.yaml`. Same data, batches, steps, schedule and learning rate as the control GW-REC-003; about as many parameters as the CRNN (both counts are in the run reports). If the LR range test puts the control's learning rate far outside the encoder's useful range, the learning rate is changed here, with the reason, before the main run.
+- **Variables:** independent: encoder (SVTR-style vs CRNN); controlled: data, budget, schedule, optimizer
+- **Amendment (2026-10-24, before the main run):** the first sanity attempt (`reports/training/sanity/GW-REC-020/attempt1/`) found three things. The LR range test put the lowest smoothed loss at 3.24e-3 (suggestion 3.24e-4), so the control's 1e-3 was outside the 3x band the CRNN met. The overfit check stopped at 12.5% CER after 1,500 steps, still falling fast after a long all-blank plateau. The dry run ran out of GPU memory at the control's batch. The run therefore uses learning rate 5e-4, which is inside the band, chosen by the same procedure that checked the CRNN's rate. It uses micro-batches of 32 lines with 2-step accumulation and a column cap of 16,384: still 64 lines per optimizer step, with wide batches split at the same widths as the control's. The sanity sequence is re-run with these settings and a 4,000-step overfit allowance before the main run. The learning rate now differs between the arms, so the comparison is CRNN at its checked rate against Rec-M at its checked rate.
+- **Second amendment (2026-10-24, before the main run):** the second sanity attempt (`reports/training/sanity/GW-REC-020/attempt2/`) used learning rate 5e-4. The overfit check passed, reaching 0% CER after 300 steps, and the LR range test put 5e-4 inside the 3x band (lowest smoothed loss at 2.07e-3). The dry run still ran out of GPU memory at micro-batches of 32 (4.73 GiB allocated under the 85% cap). The run therefore uses micro-batches of 16 with 4-step accumulation and a column cap of 8,192: still 64 lines per optimizer step, with wide batches split at the same widths as the control's. BatchNorm in the stem now sees 16 lines per micro-batch. The sanity sequence is re-run with these settings before the main run.
+- **Control:** GW-REC-003 (seed spread: GW-REC-004, 005)
+- **Result:** val CER 8.18% [8.01, 8.35]; against GW-REC-003 -0.13 points [-0.18, -0.09] (paired bootstrap over lines, 1,000 resamples): **better** under the Phase 7 decision rule (`reports/training/phase07/ablation_table.md`). 8 epochs, 45,301 optimizer steps, the final epoch was the best; 7,928,835 parameters.
+- **Training diagnostics:** No flags raised. (`reports/training/GW-REC-020/report.md`)
+- **Interpretation:** The SVTR-style encoder beats the CRNN at the same step budget and a similar parameter count, a smaller gain than input height 48, and it takes about four times the control's training time. CPU latency is measured separately (`scripts/rec_profile.py`). Its gain and GW-REC-006's are combined in GW-REC-022.
+- **Limitations:** single seed; short budget; a transformer may need a longer schedule than a CRNN, so a short-budget loss for Rec-M is weaker evidence against H6 than a win would be for it.
+- **Next experiment:** if it is competitive, three seeds at the full budget
+- **Training time:** 4.64 GPU-hours (RTX 4050 Laptop, bf16)
+
+### GW-REC-021 — Phase 7 ablation: frame stride 8, CTC-aware batching (re-run of GW-REC-019)
+
+- **Date allocated / run:** 2026-10-24 / 2026-10-25
+- **Phase:** 07
+- **Git commit:** recorded in the run summary   **Config:** `configs/rec/gw-rec-021.yaml`   **Seed(s):** 1337 (single seed: exploratory)
+- **Dataset version(s):** as GW-REC-001
+- **Hardware:** as GW-REC-001
+- **Research question:** as GW-REC-019: what does halving the number of frames per line do to validation CER on the Phase 7 short budget?
+- **Hypothesis (written before the run):** as GW-REC-019: similar or slightly higher validation CER with a faster BiLSTM. Lines denser than 8 columns per character lose most; 3% of the training lines are, against 0.27% at stride 4.
+- **Method:** `python train.py --config configs/rec/gw-rec-021.yaml`; the control GW-REC-003 with `model.frame_stride: 8` and `data.ctc_aware_batching: true`, so the column cap bounds the padded batches. Compared line by line with GW-REC-003 and read against the spread of GW-REC-003, 004 and 005.
+- **Variables:** independent: frame stride (8 instead of 4); batching follows from it (only lines padded beyond their image change buckets); controlled: everything else
+- **Control:** GW-REC-003 (seed spread: GW-REC-004, 005)
+- **Result:** val CER 10.93% [10.70, 11.16]; against GW-REC-003 +2.61 points [+2.48, +2.74] (paired bootstrap over lines, 1,000 resamples): **worse** under the Phase 7 decision rule (`reports/training/phase07/ablation_table.md`). 8 epochs, 45,371 optimizer steps, the final epoch was the best; 7,796,435 parameters.
+- **Training diagnostics:** No flags raised. (`reports/training/GW-REC-021/report.md`)
+- **Interpretation:** Halving the frames per line is by far the costliest change: about 2.6 points worse, although it is the fastest CRNN on the CPU after the half-width one (7.1 ms per line against the control's 10.7 ms, `reports/training/phase07/cpu_latency.md`). At stride 8 a frame covers 8 input columns, and many HierText lines are too dense for that. Not a candidate.
+- **Limitations:** single seed; short budget; batches are not identical to the control's.
+- **Next experiment:** the Phase 7 combination and full-budget confirmation
+- **Training time:** 0.74 GPU-hours (RTX 4050 Laptop, bf16)
+
+### GW-REC-022 — Phase 7 combination: GLYPHARIS-Rec-M (SVTR) at input height 48, weight decay 1e-2
+
+- **Date allocated / run:** 2026-10-25 / —
+- **Phase:** 07
+- **Git commit:** recorded in the run summary   **Config:** `configs/rec/gw-rec-022.yaml`   **Seed(s):** 1337 (single seed: exploratory)
+- **Dataset version(s):** as GW-REC-001
+- **Hardware:** as GW-REC-001
+- **Research question:** do the two changes judged better on the short budget, input height 48 (GW-REC-006, −0.49 points) and the SVTR-style encoder (GW-REC-020, −0.13 points), add up when combined?
+- **Hypothesis (written before the run):** lower validation CER than either change alone, but by less than the sum of the two gains: both help with small and dense text, so part of their effect overlaps. Expected CPU latency above GW-REC-020's (1.5 times the columns per line), possibly above ADR-0011's line target.
+- **Method:** `python train.py --config configs/rec/gw-rec-022.yaml`; GW-REC-020 with `data.image_height: 48` and `data.max_width: 1536` as in GW-REC-006, micro-batches of 8 with 8-step accumulation (64 lines per optimizer step) and a column cap that splits wide batches at the same scaled widths. Learning rate as GW-REC-020 (5e-4); no new LR range test, because only the input height changes. Before the run, one forward and backward pass on the widest batches the sampler can form checks that it fits in GPU memory. Compared line by line with GW-REC-003 (the evidence table), with GW-REC-006 and GW-REC-020 (`scripts/rec_compare.py`), and timed on the CPU with `scripts/rec_profile.py`.
+- **Variables:** independent: input height, encoder and weight decay together; batching follows from the height; controlled: everything else
+- **Control:** GW-REC-003 (seed spread: GW-REC-004, 005); GW-REC-006, GW-REC-014 and GW-REC-020 for the parts
+- **Amendment (2026-10-25, before the run):** GW-REC-014 (weight decay 1e-2 instead of 1e-4) finished after this entry was written and was judged better under the decision rule (−0.04 points [−0.08, −0.00], below all three control seeds; `reports/training/phase07/ablation_table.md`), so the combination includes it. Its gain is small and its CI touches zero at the second decimal, so this run cannot separate its share from the other two changes. GW-REC-021 (frame stride 8) cannot join an SVTR combination whatever its result: the SVTR encoder's frame stride is fixed at 4 (`model.frame_stride must be 4 for svtr`).
+- **Result:**
+- **Training diagnostics:**
+- **Interpretation:**
+- **Limitations:** single seed; short budget; micro-batches differ from the control's.
+- **Next experiment:** the full-budget confirmation of the chosen configuration
+- **Training time:**
+
+### GW-REC-023 — Phase 7 combination without the encoder change: CRNN at input height 48, weight decay 1e-2
+
+- **Date allocated / run:** 2026-10-25 / —
+- **Phase:** 07
+- **Git commit:** recorded in the run summary   **Config:** `configs/rec/gw-rec-023.yaml`   **Seed(s):** 1337 (single seed: exploratory)
+- **Dataset version(s):** as GW-REC-001
+- **Hardware:** as GW-REC-001
+- **Research question:** with the CRNN kept, do input height 48 and weight decay 1e-2 add up, and does GW-REC-022's SVTR encoder still help on top of them?
+- **Hypothesis (written before the run, while GW-REC-022 was running and before its result):** validation CER close to GW-REC-006's or slightly lower, since weight decay's gain was small (GW-REC-014, −0.04 points). If GW-REC-022 does not beat this run by a clear margin, the SVTR encoder's gain does not survive the combination, and this cheaper, faster candidate is preferred for the full-budget confirmation.
+- **Method:** `python train.py --config configs/rec/gw-rec-023.yaml`; GW-REC-006 with `train.weight_decay: 1e-2`. Compared line by line with GW-REC-003 (the evidence table), with GW-REC-006 and with GW-REC-022 (`scripts/rec_compare.py`), and timed on the CPU with `scripts/rec_profile.py`.
+- **Variables:** independent: input height and weight decay together; batching as GW-REC-006; controlled: everything else
+- **Control:** GW-REC-003 (seed spread: GW-REC-004, 005); GW-REC-006 and GW-REC-014 for the parts; GW-REC-022 for the encoder
+- **Result:** not run (abandoned 2026-10-26, before it started). GW-REC-022 beat GW-REC-006 by −0.27 points [−0.32, −0.22] (`reports/training/compare/GW-REC-022_vs_GW-REC-006.md`), so the SVTR encoder's gain survives the combination; weight decay alone was worth −0.04 (GW-REC-014), so this run could only have isolated that small share. Its GPU time went to the full-budget confirmation instead.
+- **Training diagnostics:**
+- **Interpretation:**
+- **Limitations:** single seed; short budget.
+- **Next experiment:** the full-budget confirmation of the chosen configuration
+- **Training time:**
+
+### GW-REC-024 — Phase 7 full-budget confirmation: GW-REC-022's recipe at 30 epochs
+
+- **Date allocated / run:** 2026-10-26 / 2026-10-26
+- **Phase:** 07
+- **Git commit:** recorded in the run summary   **Config:** `configs/rec/gw-rec-024.yaml`   **Seed(s):** 1337 (single seed)
+- **Dataset version(s):** as GW-REC-001
+- **Hardware:** as GW-REC-001
+- **Research question:** does the configuration chosen on the short budget (SVTR-style encoder, input height 48, weight decay 1e-2; GW-REC-022, −0.76 points against the control) also beat GW-REC-001's configuration at the full budget?
+- **Hypothesis (written before the run):** validation CER below GW-REC-001's 7.53% with a paired 95% CI entirely below zero. The gap may be smaller than on the short budget, since longer training narrows differences between configurations.
+- **Method:** `python train.py --config configs/rec/gw-rec-024.yaml`; GW-REC-022 with `train.epochs: 30` (OneCycle over 30 epochs, early stopping as GW-REC-001). Compared line by line with GW-REC-001 (`scripts/rec_compare.py`) and timed on the CPU (`scripts/rec_profile.py`). The memory probe of GW-REC-022 covers it (same micro-batches).
+- **Variables:** independent: the configuration (encoder, input height, weight decay together) at the full budget; controlled: data, budget, seed, schedule shape
+- **Control:** GW-REC-001
+- **Deviation from the plan:** the Phase 7 plan confirms the chosen configuration with three seeds. This run uses one, to stay within the 30–60 GPU-hour Phase 7 budget (about 35 GPU-hours used before it, about 17 for it). The full-budget seed spread is therefore not measured; the short-budget control seeds (8.30 to 8.32%) are the only seed-noise estimate. Owner decision (2026-10-26): keep one seed for v0.1; the two missing seeds (1337 is this run; 2024 and 7 as in the control) are added later, on a college A100 if access is granted, before the paper (Phase 21), each under its own ID and with the hardware recorded.
+- **Result:** val CER 6.46% [6.33, 6.60] (95% bootstrap CI over 73,888 lines); against GW-REC-001 (7.53%) -1.07 [-1.13, -1.01] points CER and -1.94 [-2.10, -1.79] points WER (paired, `reports/training/compare/GW-REC-024_vs_GW-REC-001.md`). 30 epochs, 169,860 optimizer steps; 7,928,835 parameters. CPU latency 24.4 ms mean and 60.3 ms p95 per line (PyTorch, idle machine; `reports/training/phase07/cpu_latency.md`): within ADR-0011's line target, with little margin on the mean.
+- **Training diagnostics:** No flags raised. One crash mid-run (CUDA "unknown error" at epoch 23 under memory pressure); the queue resumed it from its last checkpoint the same minute (`reports/training/GW-REC-024/report.md`, Notes).
+- **Interpretation:** the hypothesis holds: the configuration chosen on the short budget also wins at the full budget, by about 1.1 points of CER, more than its short-budget gain against the control (−0.76). It is the Phase 7 recognizer configuration for v0.1. Its CPU latency is the main cost: about 2.3 times the CRNN control's per line, just inside the target.
+- **Limitations:** one seed; compared with a single GW-REC-001 run.
+- **Next experiment:** Phase 8 detector runs; the recognizer is exported in Phase 17.
+- **Training time:** 19.31 GPU-hours (RTX 4050 Laptop, bf16)
 
 ### GW-DET-001 — GLYPHARIS-Det baseline: DBNet-style, MobileNetV3-Large, ImageNet init
 
