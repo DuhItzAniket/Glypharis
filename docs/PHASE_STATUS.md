@@ -27,7 +27,7 @@ Phases run in the order set by [ADR-0008](decisions/ADR-0008-usable-engine-first
 | 17 | Model export | **IN PROGRESS** (gate: push, CI, merge; after Phase 10) | — |
 | 18 | Inference package | **IN PROGRESS** (gate: push, CI, merge; after Phase 17) | — |
 | 19 | Optional HTTP API | not started | — |
-| 20 | Production engineering | **IN PROGRESS** (built while Phases 9 to 18 are open) | — |
+| 20 | Production engineering | **IN PROGRESS** (gate: push, CI, merge; after Phase 18) | — |
 | 21 | Research package | not started | — |
 | 22 | Final validation | not started | — |
 | 23 | Release v1.0 | not started | — |
@@ -1046,7 +1046,9 @@ default backend is PyTorch, whose reading GW-EFF-003 showed to be identical.
 
 ## Phase 20 — Production engineering
 
-**Status:** IN PROGRESS (opened 2026-10-28 on `phase/20-hardening`, branched from Phase 18).
+**Status:** write-up done (2026-10-28). Gate open: push, pull request, CI and merge, after Phase 18.
+Opened 2026-10-28 on `phase/20-hardening`, branched from Phase 18. With it the v0.1 path
+(ADR-0008: Phases 10, 17, 18, 20) is complete; v0.1 is tagged once the owner has merged 9 to 20.
 
 **Objective:** a library BookWorm can call without surprises: every failure it can cause or meet is
 a clear, typed error.
@@ -1073,4 +1075,15 @@ a clear, typed error.
 |---|---|---|
 | Failure-path tests: corrupt image, huge image, empty page, non-image | pass | `tests/test_hardening.py` |
 | No unhandled exceptions in the fuzz-lite test (120 seeded cases: random arrays, random bytes, damaged PNGs) | pass | `tests/test_hardening.py::test_fuzz_lite_never_raises_anything_but_glypharis_errors` |
+| CI green | pending (after the push) | — |
+
+**Known issues**
+- `max_pixels` (64 million) is a guess at a safe upper bound for this laptop, not a measurement;
+  BookWorm may want its own.
+- The fuzz test is seeded and small (120 cases); it guards the input edge, not the models.
+- Owner decisions carried into v0.1: ADR-0011's page time (Phase 17) and how bundles are
+  distributed.
+
+**Git:** branch `phase/20-hardening`, with Phase 18 merged in; push and merge pending (after
+Phase 18).
 

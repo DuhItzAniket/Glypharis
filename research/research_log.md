@@ -223,3 +223,15 @@ the bottom. Experiments get their full record in `experiments.md`; this log is t
   PyTorch, and the runtime's memory arena grew to 11 GB. v0.1 uses PyTorch by default; ADR-0011's
   speed target is now an owner decision, and speed work is Phase 16's.
 
+### 2026-10-28 — Phases 18 and 20: the package and its edge
+
+- GLYPHARIS installs as a package with `from_pretrained`, `predict`, a JSON result and a
+  `glypharis-ocr` command; the shipped path reads validation pages exactly as Phase 10 measured
+  (GW-E2E-004).
+- Every input the caller can get wrong (missing, corrupt, truncated, huge, empty or odd images,
+  wrong types, damaged model files) now ends in a typed error with a clear message; a seeded fuzz
+  test found no other exception.
+- That completes the v0.1 path: on HierText validation it reads pages at 24.3% page CER against
+  42.4% for the best baseline, at about 2 s per page on the laptop's CPU, which is above ADR-0011's
+  target and is the owner's call.
+
