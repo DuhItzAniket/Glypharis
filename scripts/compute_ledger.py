@@ -4,13 +4,16 @@ statement.
     python scripts/compute_ledger.py
 
 Reads the queue logs, where each job has a START line and a DONE or FAIL line with timestamps:
-``runs/gpu_queue.log`` (Phase 6), ``runs/phase07_queue.log`` (Phase 7) and
-``data/processed/baselines/chain.log`` (Phase 5 baselines). A START is paired with the next end
-line for the same experiment and kind (training, resume, sanity, resume check, baseline run), so
-overlapping jobs still pair correctly. Wall-clock time is what the job occupied the device; the
-training time in each run summary (``runs/<id>/summary.json``) is listed beside it. Jobs run by hand
-outside a queue (the Phase 6 sanity sequence, the GPU resume check, crash probes, tests) are not in
-these logs; the ledger says so instead of guessing them.
+``runs/gpu_queue.log`` (Phase 6), ``runs/phase07_queue.log`` (Phase 7),
+``runs/chain_2026-10-26.log`` (the Phase 8 GPU sanity sequence), ``runs/chain_det.log`` (the
+Phase 8 detector runs) and ``data/processed/baselines/chain.log`` (Phase 5 baselines). CPU steps
+logged in a GPU chain (latency profiles, comparisons) are left out of the GPU hours. A START is
+paired with the next end line for the same experiment and kind (training, resume, sanity, resume
+check, baseline run), so overlapping jobs still pair correctly. Wall-clock time is what the job
+occupied the device; the training time in each run summary (``<runs>/<id>/summary.json``) is listed
+beside it. ``--runs`` takes several directories, since the detector runs live in their own
+worktree. Jobs run by hand outside a queue (the Phase 6 sanity sequence, the GPU resume check,
+crash probes, tests) are not in these logs; the ledger says so instead of guessing them.
 
 Writes ``reports/compute/ledger.md`` and ``ledger.json``.
 """
@@ -45,12 +48,17 @@ class Job:
 def phase_of(experiment: str) -> str:
     if experiment.startswith("GW-BASE"):
         return "05"
+    if experiment.startswith("GW-DET"):
+        return "08"
     n = int(experiment.rsplit("-", 1)[1]) if experiment.startswith("GW-REC") else -1
     return "06" if n in (1, 2) else "07" if n >= 3 else "?"
 
 
-def classify(text: str, device: str) -> tuple[str, str, str]:
-    """(experiment, kind, detail) for a log line's text."""
+CPU_STEPS = ("rec_profile", "latency table", "rec_compare", "det_compare")
+
+
+def classify(text: str, device: str) -> tuple[str, str, str] | None:
+    """(experiment, kind, detail) for a log line's text; None for a CPU step in a GPU chain."""
     if device == "cpu":
         # Flags ("--experiment GW-BASE-002 --system ... --task ... --eval-set ...") or, in the
         # first days, positional fields ("GW-BASE-002 ppocr_mobile rec hiertext_val").
@@ -59,9 +67,11 @@ def classify(text: str, device: str) -> tuple[str, str, str]:
         if not detail and exp:
             detail = " ".join(text[exp.end() :].split("::")[0].split()[:3])
         return (exp.group(1) if exp else "?"), "baseline", detail
-    exp = re.search(r"gw-rec-(\d{3})", text, re.IGNORECASE)
-    experiment = f"GW-REC-{exp.group(1)}" if exp else "?"
-    if "rec_resume_check" in text:
+    if text.startswith(CPU_STEPS):
+        return None
+    exp = re.search(r"gw-(rec|det)-(\d{3})", text, re.IGNORECASE)
+    experiment = f"GW-{exp.group(1).upper()}-{exp.group(2)}" if exp else "?"
+    if "resume_check" in text:
         return experiment, "resume_check", ""
     if "sanity" in text:
         return experiment, "sanity", ""
@@ -76,7 +86,10 @@ def parse(log: Path, device: str) -> list[Job]:
         if not m:
             continue
         stamp, what, text = m.groups()
-        experiment, kind, detail = classify(text, device)
+        found = classify(text, device)
+        if found is None:
+            continue
+        experiment, kind, detail = found
         key_kind = "train" if kind == "resume" else kind
         if device == "cpu":
             key_kind = detail
@@ -110,13 +123,13 @@ def hours_between(start: str, end: str) -> float:
     ).total_seconds() / 3600
 
 
-def finished_runs(runs: Path) -> set[str]:
+def finished_runs(runs: list[Path]) -> set[str]:
     """Runs whose summary shows every planned epoch (or an early stop): their last training job
     finished even if its process then exited non-zero (the Phase 6 exit crash, fixed in c58c063)."""
     import yaml
 
     done = set()
-    for summary in runs.glob("GW-REC-*/summary.json"):
+    for summary in summaries(runs):
         s = json.loads(summary.read_text(encoding="utf-8"))
         cfg = summary.parent / "config.resolved.yaml"
         epochs = (
@@ -129,17 +142,23 @@ def finished_runs(runs: Path) -> set[str]:
     return done
 
 
+def summaries(runs: list[Path]) -> list[Path]:
+    return [p for d in runs for pattern in ("GW-REC-*", "GW-DET-*")
+            for p in sorted(d.glob(f"{pattern}/summary.json"))]  # fmt: skip
+
+
 def failed(job: Job) -> bool:
     return job.outcome.startswith("failed") or job.outcome == "interrupted"
 
 
 def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(description=__doc__.splitlines()[0])
-    gpu_logs = [Path("runs/gpu_queue.log"), Path("runs/phase07_queue.log")]
+    gpu_logs = [Path("runs/gpu_queue.log"), Path("runs/phase07_queue.log"),
+                Path("runs/chain_2026-10-26.log"), Path("runs/chain_det.log")]  # fmt: skip
     parser.add_argument("--gpu-logs", nargs="*", type=Path, default=gpu_logs)
     parser.add_argument("--cpu-logs", nargs="*", type=Path,
                         default=[Path("data/processed/baselines/chain.log")])  # fmt: skip
-    parser.add_argument("--runs", type=Path, default=Path("runs"))
+    parser.add_argument("--runs", nargs="*", type=Path, default=[Path("runs")])
     parser.add_argument("--out", type=Path, default=Path("reports/compute"))
     args = parser.parse_args(argv)
     jobs = [j for log in args.gpu_logs if log.exists() for j in parse(log, "gpu")]
@@ -147,7 +166,7 @@ def main(argv: list[str] | None = None) -> int:
     jobs.sort(key=lambda j: j.start)
 
     train_h: dict[str, float] = {}
-    for summary in args.runs.glob("GW-REC-*/summary.json"):
+    for summary in summaries(args.runs):
         s = json.loads(summary.read_text(encoding="utf-8"))
         train_h[s["experiment_id"]] = s["train_seconds"] / 3600
 
@@ -212,7 +231,8 @@ def main(argv: list[str] | None = None) -> int:
         "",
         "Jobs run by hand outside a queue: the Phase 6 sanity sequence (its own report gives the",
         "durations), the redesigned GPU resume check, the exit-crash probes, the GW-REC-001/002",
-        "re-scores, and all test runs. They are short next to the totals above but not counted.",
+        "re-scores, the Phase 8 training-crop preview and CPU label-ceiling check, and all test",
+        "runs. They are short next to the totals above but not counted.",
         "",
     ]  # fmt: skip
     args.out.mkdir(parents=True, exist_ok=True)

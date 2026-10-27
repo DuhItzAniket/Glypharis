@@ -13,7 +13,8 @@ by hand has no end line; its duration is unknown and adds nothing to the hours.
 | 05 | 0.0 | 0.0 | 45.9 | 1.9 |
 | 06 | 11.5 | 3.8 | 0.0 | 0.0 |
 | 07 | 55.3 | 17.9 | 0.0 | 0.0 |
-| all | 66.8 | 21.8 | 45.9 | 1.9 |
+| 08 | 16.2 | 0.8 | 0.0 | 0.0 |
+| all | 83.0 | 22.6 | 45.9 | 1.9 |
 
 ## By experiment
 
@@ -26,6 +27,9 @@ by hand has no end line; its duration is unknown and adds nothing to the hours.
 | GW-BASE-005 | 05 | CPU | 16 | 0 | 2.51 |  |
 | GW-BASE-006 | 05 | CPU | 16 | 0 | 5.37 |  |
 | GW-BASE-007 | 05 | CPU | 5 | 0 | 10.96 |  |
+| GW-DET-001 | 08 | GPU | 3 | 1 | 5.74 | 4.86 |
+| GW-DET-002 | 08 | GPU | 2 | 1 | 5.42 | 4.72 |
+| GW-DET-003 | 08 | GPU | 2 | 1 | 5.02 | 4.33 |
 | GW-REC-001 | 06 | GPU | 3 | 2 | 5.62 | 4.71 |
 | GW-REC-002 | 06 | GPU | 2 | 1 | 5.92 | 5.32 |
 | GW-REC-003 | 07 | GPU | 1 | 0 | 1.53 | 1.34 |
@@ -54,4 +58,5 @@ by hand has no end line; its duration is unknown and adds nothing to the hours.
 
 Jobs run by hand outside a queue: the Phase 6 sanity sequence (its own report gives the
 durations), the redesigned GPU resume check, the exit-crash probes, the GW-REC-001/002
-re-scores, and all test runs. They are short next to the totals above but not counted.
+re-scores, the Phase 8 training-crop preview and CPU label-ceiling check, and all test
+runs. They are short next to the totals above but not counted.
