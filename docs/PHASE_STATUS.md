@@ -27,7 +27,7 @@ Phases run in the order set by [ADR-0008](decisions/ADR-0008-usable-engine-first
 | 17 | Model export | **IN PROGRESS** (built while Phases 9 and 10 are open) | — |
 | 18 | Inference package | **IN PROGRESS** (built while Phases 9, 10 and 17 are open) | — |
 | 19 | Optional HTTP API | not started | — |
-| 20 | Production engineering | not started | — |
+| 20 | Production engineering | **IN PROGRESS** (built while Phases 9 to 18 are open) | — |
 | 21 | Research package | not started | — |
 | 22 | Final validation | not started | — |
 | 23 | Release v1.0 | not started | — |
@@ -897,4 +897,36 @@ equivalence tests pass and are recorded; CI runs ONNX equivalence on the tiny mo
 
 **Exit criteria** (IMPLEMENTATION_PLAN Phase 18): API tests on fixtures; clean-venv install test;
 outputs match the Phase 10 pipeline on the validation sample.
+
+---
+
+## Phase 20 — Production engineering
+
+**Status:** IN PROGRESS (opened 2026-10-28 on `phase/20-hardening`, branched from Phase 18).
+
+**Objective:** a library BookWorm can call without surprises: every failure it can cause or meet is
+a clear, typed error.
+
+**Implemented**
+- `glypharis.errors`: `GlypharisError` (stable `code`, `to_dict`), `InvalidImageError`,
+  `ImageTooLargeError`, `ModelLoadError`.
+- Input checks (`load_rgb`): paths that do not exist or are not files; files that are not images,
+  empty, truncated or corrupt; arrays of the wrong shape, NaN or infinite values, negative or
+  out-of-range values, unsupported types; empty images. Pixel limit `max_pixels` (default 64 million,
+  about 8000 by 8000), checked from the file header before decoding, and PIL's decompression-bomb
+  guard mapped to `ImageTooLargeError`. Accepted: grey, RGB, RGBA, palette and CMYK images, 16-bit
+  and float images, booleans; a blank page gives no lines.
+- Model loading: a missing bundle, a missing or changed file, an unreadable or foreign manifest, or
+  a file that fails to load all raise `ModelLoadError`; loaded bundles are cached per process
+  (`from_pretrained(..., cache=True)`).
+- Logging through the `glypharis` logger (model load at INFO, per page at DEBUG); `stats()` on a
+  `GlypharisOCR` (pages, lines, refused inputs, mean seconds per page); `glypharis.version_info()`
+  and `glypharis-ocr --version`; the CLI reports each refused image with its error code.
+
+**Exit criteria** (IMPLEMENTATION_PLAN Phase 20)
+
+| Criterion | Result | Evidence |
+|---|---|---|
+| Failure-path tests: corrupt image, huge image, empty page, non-image | pass | `tests/test_hardening.py` |
+| No unhandled exceptions in the fuzz-lite test (120 seeded cases: random arrays, random bytes, damaged PNGs) | pass | `tests/test_hardening.py::test_fuzz_lite_never_raises_anything_but_glypharis_errors` |
 
