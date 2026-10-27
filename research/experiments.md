@@ -51,6 +51,7 @@ Rows link to a full entry below. Numbers are copied from generated reports only,
 | [GW-EFF-002](#gw-eff-002) | 2026-10-28 | 10 | Whole-pipeline CPU page time and memory on the Phase 5 profile pages (ADR-0011) | planned | — | `reports/efficiency/` |
 | [GW-EFF-003](#gw-eff-003) | 2026-10-28 | 17 | ONNX equivalence of the v0.1 bundle against PyTorch on validation data | planned | — | `reports/export/GW-EFF-003/` |
 | [GW-EFF-004](#gw-eff-004) | 2026-10-28 | 17 | Whole-pipeline CPU page time on ONNX Runtime (ADR-0011's measurement) | planned | — | `reports/efficiency/` |
+| [GW-E2E-004](#gw-e2e-004) | 2026-10-28 | 18 | The installed package (v0.1 bundle, ONNX) against the Phase 10 pipeline on the Phase 5 validation pages | planned | — | `reports/package/` |
 
 ### GW-BASE-001 — Tesseract 5 (LSTM, eng): recognition and end to end
 
@@ -891,6 +892,23 @@ Rows link to a full entry below. Numbers are copied from generated reports only,
 - **Interpretation:**
 - **Limitations:** one machine; default threads.
 - **Next experiment:** Phase 18 packages the bundle.
+
+### GW-E2E-004 — The package against the Phase 10 pipeline
+
+- **Date allocated / run:** 2026-10-28 / —
+- **Phase:** 18
+- **Git commit:** recorded in the result file   **Config:** the v0.1 bundle's manifest   **Seed(s):** none
+- **Dataset version(s):** the 400 Phase 5 HierText validation pages
+- **Hardware:** i7-14650HX CPU (package); GW-E2E-001 ran on the RTX 4050
+- **Research question:** does the shipped path (bundle, `from_pretrained`, ONNX Runtime) read validation pages like the pipeline Phase 10 measured?
+- **Hypothesis (written before the run):** none; pass criterion: page CER within 0.05 points.
+- **Method:** `docs/PHASE_STATUS.md` Phase 18, plan item 1; `scripts/package_check.py`.
+- **Variables:** independent: how the pipeline is built and run; controlled: weights, settings, pages
+- **Control:** GW-E2E-001 on the same pages
+- **Result:**
+- **Interpretation:**
+- **Limitations:** GW-E2E-001 ran on the GPU in PyTorch; small numeric differences can move a box or a character.
+- **Next experiment:** Phase 20.
 
 ---
 

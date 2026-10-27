@@ -25,7 +25,7 @@ Phases run in the order set by [ADR-0008](decisions/ADR-0008-usable-engine-first
 | 15 | Error analysis | not started | — |
 | 16 | Efficiency optimisation | not started | — |
 | 17 | Model export | **IN PROGRESS** (built while Phases 9 and 10 are open) | — |
-| 18 | Inference package | not started | — |
+| 18 | Inference package | **IN PROGRESS** (built while Phases 9, 10 and 17 are open) | — |
 | 19 | Optional HTTP API | not started | — |
 | 20 | Production engineering | not started | — |
 | 21 | Research package | not started | — |
@@ -865,4 +865,36 @@ proven equivalent to PyTorch.
 
 **Exit criteria** (IMPLEMENTATION_PLAN Phase 17): export declared successful only after the
 equivalence tests pass and are recorded; CI runs ONNX equivalence on the tiny model.
+
+---
+
+## Phase 18 — Inference package
+
+**Status:** IN PROGRESS (opened 2026-10-28 on `phase/18-package`, branched from Phase 17).
+
+**Objective:** GLYPHARIS installable and usable without the training code.
+
+**Implemented**
+- `GlypharisOCR.from_pretrained(name_or_path, backend="onnx")`: a model bundle by path, or by name
+  from `$GLYPHARIS_MODELS`, `~/.glypharis/models` or `./models`; every file's hash is checked;
+  nothing is downloaded.
+- `predict` and `predict_batch` on file paths, PIL images and arrays (grey or RGB); `OCRResult`
+  with `to_dict` / `to_json` (version, model version, size, text in reading order, lines with text,
+  confidence, detection score, polygon and quad, and the time per step).
+- `infer.py --image ... | --input-dir ... [--recursive]` and the `glypharis-ocr` command: one JSON
+  and one text file per image; unreadable images are reported and skipped (exit code 1); a missing
+  model is exit code 2. Package version `0.1.0.dev0`.
+- Tests on a tiny bundle: loading by path and name, every input type, the JSON fields, the CLI's
+  outputs and exit codes, and `infer.py` run as a program. CI installs the package into a fresh
+  environment on every run and now also runs the installed command: that is the clean-install test.
+
+**Plan** (registered 2026-10-28, before the check ran)
+1. **GW-E2E-004, the package against Phase 10:** `scripts/package_check.py` runs
+   `GlypharisOCR.from_pretrained` on the v0.1 bundle (ONNX backend, as shipped) over the 400 Phase 5
+   validation pages and compares it with GW-E2E-001's predictions on those pages. It passes when the
+   bag-of-lines page CER (strict) differs by at most 0.05 points; the share of lines with identical
+   text and box (corners within 1 px) is reported.
+
+**Exit criteria** (IMPLEMENTATION_PLAN Phase 18): API tests on fixtures; clean-venv install test;
+outputs match the Phase 10 pipeline on the validation sample.
 
