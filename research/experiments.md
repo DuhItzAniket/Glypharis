@@ -49,8 +49,8 @@ Rows link to a full entry below. Numbers are copied from generated reports only,
 | [GW-E2E-001](#gw-e2e-001) | 2026-10-28 | 10 | GLYPHARIS pipeline (GW-DET-001 at Phase 9 settings + GW-REC-024) on HierText validation, with the baselines on the Phase 5 pages (H1) | done | page CER 27.6% [25.1, 30.4] on 1,715 pages; 24.3% vs 42.4% for PP-OCRv6 small on the Phase 5 pages (−18.1 [−21.4, −15.1]) | `reports/e2e/GW-E2E-001/` |
 | [GW-E2E-002](#gw-e2e-002) | 2026-10-28 | 10 | Oracle analysis: ground-truth lines into the recognizer, to split page error between detection and recognition (H4) | done | oracle page CER 6.7% vs 27.6%: recognition's share 0.24 (0.20–0.29 per blur quartile); H4 not supported on HierText | `reports/e2e/GW-E2E-002/` |
 | [GW-EFF-002](#gw-eff-002) | 2026-10-28 | 10 | Whole-pipeline CPU page time and memory on the Phase 5 profile pages (ADR-0011) | done | PyTorch page mean 2.0 s, p95 4.0 s: misses ADR-0011's page target (recognition 1.7 s); RAM 1,624 MiB meets it | `reports/efficiency/` |
-| [GW-EFF-003](#gw-eff-003) | 2026-10-28 | 17 | ONNX equivalence of the v0.1 bundle against PyTorch on validation data | planned | — | `reports/export/GW-EFF-003/` |
-| [GW-EFF-004](#gw-eff-004) | 2026-10-28 | 17 | Whole-pipeline CPU page time on ONNX Runtime (ADR-0011's measurement) | planned | — | `reports/efficiency/` |
+| [GW-EFF-003](#gw-eff-003) | 2026-10-28 | 17 | ONNX equivalence of the v0.1 bundle against PyTorch on validation data | done | maps 7.3e-6, logits 3.7e-4, text identical on 5,000 lines, page CER equal: export successful | `reports/export/GW-EFF-003/` |
+| [GW-EFF-004](#gw-eff-004) | 2026-10-28 | 17 | Whole-pipeline CPU page time on ONNX Runtime (ADR-0011's measurement) | done | ONNX page mean 5.5 s, p95 12.7 s, 11.2 GB: misses ADR-0011 by far (recognizer); PyTorch default for v0.1 | `reports/efficiency/` |
 
 ### GW-BASE-001 — Tesseract 5 (LSTM, eng): recognition and end to end
 
@@ -860,7 +860,7 @@ Rows link to a full entry below. Numbers are copied from generated reports only,
 
 ### GW-EFF-003 — ONNX equivalence of the v0.1 bundle
 
-- **Date allocated / run:** 2026-10-28 / —
+- **Date allocated / run:** 2026-10-28 / 2026-10-28
 - **Phase:** 17
 - **Git commit:** recorded in the result file   **Config:** the v0.1 bundle's manifest   **Seed(s):** 20261028 (line sample)
 - **Dataset version(s):** HierText validation pages and lines as in GW-E2E-001
@@ -870,14 +870,14 @@ Rows link to a full entry below. Numbers are copied from generated reports only,
 - **Method:** `docs/PHASE_STATUS.md` Phase 17, plan item 2.
 - **Variables:** independent: backend; controlled: weights, settings, data
 - **Control:** the PyTorch backend of the same bundle
-- **Result:**
-- **Interpretation:**
+- **Result:** bundle `glypharis-0.1.0` (GW-DET-001 at long side 1536 with GW-DET-004's post-processing; GW-REC-024 at T = 2.35), `reports/export/GW-EFF-003/equivalence.md`: detector probability maps on 110 pages, max abs difference 7.3e-6 (tolerance 1e-4); recognizer logits on 5,000 lines, 3.7e-4 (1e-3); greedy text identical on all 5,000 lines, no near ties; page CER on the 400 Phase 5 pages 24.33% on both backends, difference 0.000 points (0.05). **Export successful.** A first bundle built with the wrong post-processing also passed these checks and was caught by GW-E2E-004 (`research/failures.md`).
+- **Interpretation:** the ONNX build reads exactly like the PyTorch models: the two backends are interchangeable for accuracy, and every Phase 10 number holds for either.
 - **Limitations:** CPU only; one ONNX Runtime version.
 - **Next experiment:** GW-EFF-004.
 
 ### GW-EFF-004 — Page time on ONNX Runtime
 
-- **Date allocated / run:** 2026-10-28 / —
+- **Date allocated / run:** 2026-10-28 / 2026-10-28
 - **Phase:** 17
 - **Git commit:** recorded in the result file   **Config:** the v0.1 bundle's manifest   **Seed(s):** 20261028 (line sample)
 - **Dataset version(s):** HierText validation pages and lines as in GW-E2E-001
@@ -887,8 +887,8 @@ Rows link to a full entry below. Numbers are copied from generated reports only,
 - **Method:** `docs/PHASE_STATUS.md` Phase 17, plan item 3.
 - **Variables:** none; conditions recorded as for the baselines
 - **Control:** ADR-0011's page target; GW-EFF-002
-- **Result:**
-- **Interpretation:**
+- **Result:** ONNX Runtime 1.31.1, default threads, the bundle's ONNX backend (`reports/efficiency/GW-EFF-004.json`): page mean **5,515 ms**, p95 12,691 ms (detection 442 ms, recognition 5,063 ms for 40.9 lines), peak RAM 11,221 MiB: **misses ADR-0011's page target on time and memory**, by far. PyTorch on the same pages (GW-EFF-002): 1,998 ms, p95 3,955 ms, 1,624 MiB. A direct comparison on 40 recognizer batches of varied shape: PyTorch 37 s, ONNX Runtime 170 s with its memory arena (+8.4 GB) and 219 s without it (+8 MB); detector on 12 pages: PyTorch 243 ms per page, ONNX Runtime 113 ms with the arena (+398 MB) and 265 ms without it.
+- **Interpretation:** the exported recognizer is the problem: its SVTR global attention becomes plain matrix products over every pair of tokens (12 rows by up to 384 columns per line), where PyTorch runs a fused attention kernel, and ONNX Runtime's arena keeps a buffer for every new input shape. The exported detector is fine (twice PyTorch's speed). v0.1 therefore ships with PyTorch as the default backend and ONNX Runtime without its arena; ADR-0011's revisit condition is met and the trade-off goes to the owner (ADR-0011, Phase 17 measurement). Making the exported recognizer fast is Phase 16 work.
 - **Limitations:** one machine; default threads.
 - **Next experiment:** Phase 18 packages the bundle.
 
