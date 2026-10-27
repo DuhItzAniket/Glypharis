@@ -1,0 +1,12 @@
+{
+ "model": "glypharis-0.1.0",
+ "backend": "onnx",
+ "model_version": "0.1.0",
+ "pages": 400,
+ "page_cer_package": 0.24332910413734313,
+ "page_cer_phase10": 0.24331919195924112,
+ "difference": 9.912178102006175e-06,
+ "lines_same_text_and_box": 16827,
+ "lines": 16835,
+ "pass": true
+}
