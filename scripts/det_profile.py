@@ -60,8 +60,13 @@ def profile(args: argparse.Namespace) -> dict[str, Any]:
         raise SystemExit(f"{args.config}: not a detector config")
     proc = psutil.Process()
     conditions = run_conditions()  # before the model loads, so the CPU check sees an idle machine
-    detector = TextLineDetector.from_checkpoint(args.checkpoint, "cpu", args.op)
-    spec = dataclasses.replace(detector.spec, infer=cfg.det.infer, post=cfg.det.post)
+    detector = TextLineDetector.from_checkpoint(args.checkpoint, "cpu")
+    spec = dataclasses.replace(
+        detector.spec,
+        infer=cfg.det.infer,
+        post=cfg.det.post,
+        operating_point=args.op or detector.spec.operating_point,
+    )
     detector = TextLineDetector(detector.backend, spec)
     times, sizes, n_boxes = [], [], []
     pages = e2e_samples(Path(cfg.paths.data_root), EVAL_SET)
