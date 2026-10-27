@@ -43,8 +43,8 @@ Rows link to a full entry below. Numbers are copied from generated reports only,
 | [GW-DET-003](#gw-det-003) | 2026-10-25 | 08 | GW-DET-001 with a MobileNetV3-Small backbone (H10: Small within 0.03 F1@0.5 of Large, exploratory) | done | full val F1@0.5 0.668 [0.651, 0.685]; −0.056 [−0.062, −0.051] vs GW-DET-001: H10 not supported | `reports/training/GW-DET-003/` |
 | [GW-DET-004](#gw-det-004) | 2026-10-27 | 09 | GW-DET-001 with post-processing calibrated on validation half A, checked on half B (no retraining) | done | half B F1@0.5 0.754 [0.728, 0.775]; +0.032 [+0.025, +0.039] vs the record: adopted | `reports/error_cases/detector/` |
 | [GW-EFF-001](#gw-eff-001) | 2026-10-27 | 09 | GW-DET-001 detector CPU latency at five input resolutions (PyTorch, batch 1) | done | detector 203 ms mean per page at 1280; long sides up to 1536 fit the page target | `reports/efficiency/` |
-| [GW-DET-005](#gw-det-005) | 2026-10-27 | 09 | GW-DET-001 at the best input resolution that fits ADR-0011's page target (no retraining) | planned | — | `reports/error_cases/detector/` |
-| [GW-DET-006](#gw-det-006) | 2026-10-27 | 09 | Box shape `quad` vs `poly` on validation and its curved lines (RISK_REGISTER R-22) | planned | — | `reports/error_cases/detector/` |
+| [GW-DET-005](#gw-det-005) | 2026-10-27 | 09 | GW-DET-001 at the best input resolution that fits ADR-0011's page target (no retraining) | done | half B +0.018 [+0.013, +0.022] vs 1280: 1536 adopted; full val F1@0.5 0.778 [0.762, 0.792] | `reports/error_cases/detector/` |
+| [GW-DET-006](#gw-det-006) | 2026-10-27 | 09 | Box shape `quad` vs `poly` on validation and its curved lines (RISK_REGISTER R-22) | done | no curved lines in HierText validation (all 4-point); quad kept; R-22 stays open | `reports/error_cases/detector/` |
 
 ### GW-BASE-001 — Tesseract 5 (LSTM, eng): recognition and end to end
 
@@ -752,7 +752,7 @@ Rows link to a full entry below. Numbers are copied from generated reports only,
 
 ### GW-DET-005 — Input resolution
 
-- **Date allocated / run:** 2026-10-27 / —
+- **Date allocated / run:** 2026-10-27 / 2026-10-28
 - **Phase:** 09
 - **Git commit:** recorded in the result file   **Config:** `configs/det/gw-det-001.yaml` with overrides   **Seed(s):** none (no training)
 - **Dataset version(s):** HierText validation pages as in GW-DET-001 (`processed/hiertext/pages_validation.jsonl.gz`, sha256 0655c5f795a6)
@@ -762,14 +762,14 @@ Rows link to a full entry below. Numbers are copied from generated reports only,
 - **Method:** `docs/PHASE_STATUS.md` Phase 09, plan items 2 and 5. Float forward passes of GW-DET-001 at long side 1024, 1280, 1536, 1792 and 2048 on both halves (`scripts/det_eval.py --set det.infer.long_side=N --pages-half A|B`) with GW-DET-004's adopted post-processing. Eligibility from GW-EFF-001 (estimated page time within ADR-0011's page target); the eligible arg-max on half A is adopted against 1280 if its paired CI on half B lies above 0. If no long side of 1280 or more is eligible, 1280 stays and the gap is recorded for Phases 16 and 17.
 - **Variables:** independent: `det.infer.long_side`; controlled: checkpoint, post-processing, box type, pages
 - **Control:** long side 1280 with the same post-processing
-- **Result:**
-- **Interpretation:**
+- **Result:** half A, float maps with GW-DET-004's post-processing (`reports/error_cases/detector/GW-DET-005/resolution_A.md`): F1@0.5 0.718 at long side 1024, 0.763 at 1280, 0.784 at 1536, 0.793 at 1792 and 0.796 at 2048; eligible under the page target (GW-EFF-001): 1024, 1280 and 1536, so the choice is 1536. Half B: 0.772 [0.746, 0.793] against 0.754 at 1280, **+0.0177 [+0.0131, +0.0221]** (`pair_B.json`): adopted. With both Phase 9 changes, all 1,715 validation pages: F1@0.5 0.778 [0.762, 0.792], precision 0.852, recall 0.716, F1@0.7 0.671 (`reports/error_cases/detector/phase09_adopted/eval_full.json` and `analysis.md`), against GW-DET-001's 0.724 at its operating point of record.
+- **Interpretation:** resolution is the cheapest lever left for small text: recall keeps rising up to 2048 while precision slips slowly, and the page-time budget, not accuracy, stops it at 1536. Lines under 8 px (now measured at 1536) are found 34% of the time, against 20% under 8 px at 1280. The detector keeps its training-time scale range, so this is within what it was trained for (scale jitter 0.5 to 2.0).
 - **Limitations:** the network was trained with scale jitter 0.5–2.0 around the 1280 scale, so other resolutions test its scale tolerance as much as resolution; post-processing is not re-tuned per resolution.
 - **Next experiment:** GW-DET-006 at the adopted resolution.
 
 ### GW-DET-006 — Box shape: `quad` or `poly`
 
-- **Date allocated / run:** 2026-10-27 / —
+- **Date allocated / run:** 2026-10-27 / 2026-10-28
 - **Phase:** 09
 - **Git commit:** recorded in the result file   **Config:** `configs/det/gw-det-001.yaml` with overrides   **Seed(s):** none (no training)
 - **Dataset version(s):** HierText validation pages as in GW-DET-001 (`processed/hiertext/pages_validation.jsonl.gz`, sha256 0655c5f795a6)
@@ -779,8 +779,8 @@ Rows link to a full entry below. Numbers are copied from generated reports only,
 - **Method:** `docs/PHASE_STATUS.md` Phase 09, plan item 6. Both box types from the same candidates at the adopted settings, on all validation pages. Curved lines: care lines with at least six polygon vertices whose polygon area is below 0.8 of their minimum-area rectangle's. `poly` is adopted for Phase 14 if, on the curved lines, the paired CI of recall@0.5 (poly minus quad) lies above 0 and, on all pages, the CI of F1@0.5 (poly minus quad) does not lie below 0.
 - **Variables:** independent: `det.post.box_type`; controlled: everything else
 - **Control:** `quad` at the same settings
-- **Result:**
-- **Interpretation:**
+- **Result:** every one of the 74,500 HierText validation care lines is a four-point polygon, so the registered curved-line subset is empty and its recall comparison is undefined. On all pages, at the adopted settings: `poly` minus `quad` F1@0.5 +0.0004 [-0.0001, +0.0009] (`reports/error_cases/detector/GW-DET-006/box_shape.md`). The rule therefore keeps `quad` for Phase 14.
+- **Interpretation:** the check could not answer its question: HierText's line annotations carry no curvature, so validation data cannot say whether `poly` helps on GDC's curved phone-captured lines. RISK_REGISTER R-22 stays open (Phase 9 known issues).
 - **Limitations:** HierText's curved lines stand in for GDC's phone-captured ones, which cannot be looked at before Phase 14.
 - **Next experiment:** Phase 10 uses the adopted detector settings.
 
