@@ -14,7 +14,7 @@ Phases run in the order set by [ADR-0008](decisions/ADR-0008-usable-engine-first
 | 4 | Preprocessing, charset, GlyphSynth, GDC | **COMPLETE** | `phase-04` |
 | 5 | Baseline systems | **COMPLETE** | `phase-05` |
 | 6 | Recognition baseline | **COMPLETE** | `phase-06` |
-| 7 | Recognizer improvement | **IN PROGRESS** (gate: push, CI, merge) | — |
+| 7 | Recognizer improvement | **COMPLETE** | `phase-07` |
 | 8 | Text detector | **IN PROGRESS** (code built in parallel with 7, owner approved 2026-10-23; runs wait for the GPU) | — |
 | 9 | Detector error analysis | not started | — |
 | 10 | Full OCR pipeline | not started | — |
@@ -452,8 +452,8 @@ parents).
 
 ## Phase 07 — Recognizer improvement
 
-**Status:** write-up done (2026-10-26). Gate open: push, pull request, CI and merge. Opened in
-parallel with Phases 5 and 6 at the owner's request (2026-10-23), on `phase/07-rec-improvement`.
+**Status:** COMPLETE (2026-10-27). Opened in parallel with Phases 5 and 6 at the owner's request
+(2026-10-23), on `phase/07-rec-improvement`.
 
 **Objective:** improve the recognizer under controlled conditions and settle its architecture and
 hyperparameters. Validation data only.
@@ -541,7 +541,7 @@ because the GPU was training the detector).
 | A chosen recognizer configuration with the evidence table | pass: GW-REC-022's recipe, confirmed at the full budget by GW-REC-024 | `reports/training/phase07/ablation_table.md`, `research/ablations.md`, `reports/training/compare/GW-REC-024_vs_GW-REC-001.md` |
 | All runs have diagnostic reports | pass: every run's report has its diagnostics section (no flags raised in Phase 7) | `reports/training/GW-REC-0*/report.md` |
 | Negative results recorded | pass: ten arms judged worse, the stride-8 OOM, the abandoned GW-REC-023 | `research/ablations.md`, `research/failures.md`, `research/experiments.md` |
-| CI green | pending (after the push) | — |
+| CI green | pass | runs 40363336641 (branch), 40363358399 (pull request), 40365154402 (`main`) |
 
 **Compute:** 55.3 GPU-hours in Phase 7, inside the plan's 30–60 (`reports/compute/ledger.md`; the
 hours of jobs that did not finish include the parts of crashed runs that later resumed).
@@ -554,7 +554,10 @@ hours of jobs that did not finish include the parts of crashed runs that later r
   pressure; two data-loading workers and the resume path kept every run going.
 - The optional TrOCR-Small fine-tune was not run (budget).
 
-**Git:** branch `phase/07-rec-improvement`; push and merge pending.
+**Git:** branch `phase/07-rec-improvement`, merged through pull request #7. Merge commit `9efb1f9`,
+tag `phase-07` (merge re-created with the noreply identity; same tree and parents).
+
+**CI status:** green on the branch, the pull request and `main` (run 40365154402).
 
 ---
 
