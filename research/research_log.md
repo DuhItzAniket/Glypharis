@@ -212,3 +212,14 @@ the bottom. Experiments get their full record in `experiments.md`; this log is t
 - The PyTorch pipeline misses the page-time target: 2.0 s per page, mostly recognition. Phase 17
   measures the ONNX build, which is what the target is judged on.
 
+### 2026-10-28 — Phase 17: model export
+
+- The v0.1 model now ships as one bundle: release files, ONNX files and a manifest of their hashes.
+  Its ONNX build reads exactly like PyTorch on validation data (identical text on 5,000 lines,
+  identical page CER on 400 pages).
+- The first bundle was built with the old detector settings because of a scripting slip; its
+  equivalence checks passed anyway, and only the check against Phase 10's pipeline caught it.
+- ONNX Runtime turned out slower, not faster: the exported recognizer takes 4.5 times as long as in
+  PyTorch, and the runtime's memory arena grew to 11 GB. v0.1 uses PyTorch by default; ADR-0011's
+  speed target is now an owner decision, and speed work is Phase 16's.
+

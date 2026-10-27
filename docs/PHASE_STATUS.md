@@ -24,7 +24,7 @@ Phases run in the order set by [ADR-0008](decisions/ADR-0008-usable-engine-first
 | 14 | External evaluation | not started | — |
 | 15 | Error analysis | not started | — |
 | 16 | Efficiency optimisation | not started | — |
-| 17 | Model export | **IN PROGRESS** (built while Phases 9 and 10 are open) | — |
+| 17 | Model export | **IN PROGRESS** (gate: push, CI, merge; after Phase 10) | — |
 | 18 | Inference package | not started | — |
 | 19 | Optional HTTP API | not started | — |
 | 20 | Production engineering | not started | — |
@@ -917,8 +917,9 @@ calibration and the tiny-model smoke test are covered (`tests/test_pipeline.py`,
 
 ## Phase 17 — Model export
 
-**Status:** IN PROGRESS (opened 2026-10-28 on `phase/17-export`, branched from Phase 10; Phases 11
-to 16 come after v0.1, ADR-0008). The owner approved installing `onnx` 1.23.2 and `onnxruntime`
+**Status:** write-up done (2026-10-28). Gate open: push, pull request, CI and merge, after Phase 10.
+Opened 2026-10-28 on `phase/17-export`, branched from Phase 10; Phases 11 to 16 come after v0.1
+(ADR-0008). The owner approved installing `onnx` 1.23.2 and `onnxruntime`
 1.31.1 from PyPI (2026-10-28); both are pinned in `requirements/lock.txt`, so CI runs the ONNX
 checks too.
 
@@ -952,4 +953,40 @@ proven equivalent to PyTorch.
 
 **Exit criteria** (IMPLEMENTATION_PLAN Phase 17): export declared successful only after the
 equivalence tests pass and are recorded; CI runs ONNX equivalence on the tiny model.
+
+**Results (2026-10-28)**
+
+| Experiment | Result | Evidence |
+|---|---|---|
+| GW-EFF-003, equivalence | maps 7.3e-6, logits 3.7e-4, text identical on 5,000 lines, page CER 24.33% on both backends: **export successful** | `reports/export/GW-EFF-003/` |
+| GW-EFF-004, ONNX Runtime page time | mean 5,515 ms, p95 12,691 ms, peak RAM 11,221 MiB: misses ADR-0011 on time and memory | `reports/efficiency/GW-EFF-004.json` |
+
+The first bundle was built with the detector's old post-processing (a slip in the local script that
+ran the checks); it passed GW-EFF-003 but failed the Phase 18 check against Phase 10, and was rebuilt
+and rechecked (`research/failures.md`; its outputs are kept in
+`reports/export/GW-EFF-003/attempt1_record_post/`).
+
+**Decision taken here** (reversible, for the owner to confirm): PyTorch is the default backend of
+v0.1 (`load_bundle`, `from_pretrained`, the CLI), and ONNX Runtime runs without its memory arena,
+which kept a buffer per input shape. ONNX stays available (`backend="onnx"`).
+
+**Exit criteria**
+
+| Criterion | Result | Evidence |
+|---|---|---|
+| Export declared successful only after the equivalence tests pass and are recorded | pass | `reports/export/GW-EFF-003/equivalence.md` |
+| CI runs ONNX equivalence on the tiny model | pass locally; CI pending the push | `tests/test_export.py` |
+
+**Known issues**
+- **Owner decision needed: ADR-0011.** Its revisit condition is met (the exported v0.1 misses the page
+  target by a wide margin). Options are listed in ADR-0011.
+- The exported recognizer is slow because the SVTR's global attention is exported as plain matrix
+  products; a fused attention export (or a rewritten attention) is the first Phase 16 task. The
+  exported detector is already twice PyTorch's speed and could be used on its own then.
+- The newer `torch.export`-based exporter needs `onnxscript`, which is not installed; the
+  TorchScript exporter works but is deprecated upstream.
+- Model bundles are not distributed: `runs/release/glypharis-0.1.0` exists on the laptop only. How
+  BookWorm gets the bundle (a release asset, a shared drive) is an owner decision.
+
+**Git:** branch `phase/17-export`; push and merge pending (after Phase 10).
 
