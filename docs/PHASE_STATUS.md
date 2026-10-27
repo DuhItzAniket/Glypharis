@@ -17,7 +17,7 @@ Phases run in the order set by [ADR-0008](decisions/ADR-0008-usable-engine-first
 | 7 | Recognizer improvement | **COMPLETE** | `phase-07` |
 | 8 | Text detector | **COMPLETE** | `phase-08` |
 | 9 | Detector error analysis | **IN PROGRESS** (gate: push, CI, merge) | — |
-| 10 | Full OCR pipeline | **IN PROGRESS** (built while Phase 9's gate is open) | — |
+| 10 | Full OCR pipeline | **IN PROGRESS** (gate: push, CI, merge; after Phase 9) | — |
 | 11 | Robustness training | not started | — |
 | 12 | Synthetic data study | not started | — |
 | 13 | Ablation study | not started | — |
@@ -813,8 +813,9 @@ all 440 settings; the error categories, the curved-line rule and the pairing hav
 
 ## Phase 10 — Full OCR pipeline
 
-**Status:** IN PROGRESS (opened 2026-10-28 on `phase/10-pipeline`, branched from Phase 9 while its
-gate is open; the owner approved working through the night). Validation data only.
+**Status:** write-up done (2026-10-28). Gate open: push, pull request, CI and merge, after Phase 9.
+Opened 2026-10-28 on `phase/10-pipeline`, branched from Phase 9 while its gate was open (the owner
+approved working through the night). Validation data only.
 
 **Objective:** `GlypharisOCR.predict(image)` end to end, measured on validation.
 
@@ -873,4 +874,42 @@ gate is open; the owner approved working through the night). Validation data onl
 **Exit criteria** (IMPLEMENTATION_PLAN Phase 10): pipeline unit- and integration-tested on
 fixtures; validation E2E metrics reported; calibration either validated (ECE reduced, with numbers)
 or confidence documented as raw; CI green with an inference smoke test on a tiny bundled model.
+
+**Results (2026-10-28)** (strict track; percent with 95% page-bootstrap CIs)
+
+| Experiment | Result | Evidence |
+|---|---|---|
+| GW-E2E-003, calibration | T = 2.35 fitted on half A; ECE on half B 0.217 → 0.089, −0.128 [−0.133, −0.124]: **adopted**; H8 supported on validation | `reports/calibration/GW-E2E-003/` |
+| GW-E2E-001, all 1,715 pages | bag-of-lines page CER 27.56 [25.14, 30.36], E2E line F1 57.96, detection F1 77.79 | `reports/e2e/GW-E2E-001/` |
+| GW-E2E-001, the 400 Phase 5 pages | page CER 24.33 against 42.44 (PP-OCRv6 small), 49.65 (PP-OCRv6 tiny), 50.84 (PP-OCRv5 mobile), 94.50 (Tesseract 5); paired against PP-OCRv6 small −18.11 [−21.43, −15.08] CER, +14.50 [+11.93, +17.05] E2E F1 | `reports/e2e/GW-E2E-001/` |
+| GW-E2E-002, oracle | page CER 6.67 with ground-truth boxes; recognition's share 0.24 overall, 0.20 to 0.29 per blur quartile: detection dominates; H4 not supported on HierText | `reports/e2e/GW-E2E-002/` |
+| GW-EFF-002, CPU page time (PyTorch) | mean 1,998 ms, p95 3,955 ms (recognition 1,721 ms for 40.9 lines), peak RAM 1,624 MiB: misses ADR-0011 on time, meets it on memory | `reports/efficiency/GW-EFF-002.json` |
+
+**Compute:** about 0.6 GPU-hours (calibration and the end-to-end and oracle runs) and 0.2 CPU-hours
+(chain log `runs/phase_progress.log`, local).
+
+**Tests:** the CPU suite passes locally with Phase 9 merged in; the pipeline, reading order,
+calibration and the tiny-model smoke test are covered (`tests/test_pipeline.py`,
+`tests/test_reading_order.py`).
+
+**Exit criteria**
+
+| Criterion | Result | Evidence |
+|---|---|---|
+| Pipeline unit- and integration-tested on fixtures | pass: batching, confidence, calibration, end to end on known lines, a smoke run on tiny models; reading order on six layouts | `tests/test_pipeline.py`, `tests/test_reading_order.py` |
+| Validation E2E metrics reported | pass: GW-E2E-001 and GW-E2E-002 | `reports/e2e/` |
+| Calibration validated or confidence documented as raw | pass: validated (ECE 0.217 → 0.089 on the held-out half) | `reports/calibration/GW-E2E-003/` |
+| CI green with an inference smoke test on a tiny bundled model | pending (after the push) | `tests/test_pipeline.py::test_smoke_tiny_bundled_models_run_end_to_end` |
+
+**Known issues**
+- The PyTorch pipeline misses ADR-0011's page time (2.0 s mean against 1.5 s; recognition is 86%
+  of it). ADR-0011 is judged on the ONNX Runtime build: Phase 17 measures it (GW-EFF-004). Speed
+  work, such as a smaller padding margin, fewer padded columns per batch or INT8, belongs to
+  Phase 16 under registered IDs.
+- Reading order is tested on synthetic layouts only; GDC measures it in Phase 14.
+- Detection is the bottleneck on HierText (three quarters of page error). The retraining fixes
+  Phase 9 deferred to Phase 11 are where it can improve.
+- The recognizer trainer's move onto the shared loop is deferred to Phase 11 (plan item 8).
+
+**Git:** branch `phase/10-pipeline`, with Phase 9 merged in; push and merge pending (after Phase 9).
 
