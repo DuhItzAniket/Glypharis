@@ -1,4 +1,5 @@
-"""Trainer for the line recognizer (Phase 6): CTC training, validation, diagnostics, resume.
+"""Trainer for the line recognizer (Phase 6; on the shared loop since Phase 11): CTC training,
+validation, diagnostics, resume.
 
 Steps are optimizer steps; with gradient accumulation one step spans ``gradient_accumulation``
 batches. The learning-rate schedule is stepped once per optimizer step and sized from the epoch
@@ -23,20 +24,19 @@ import json
 import logging
 import math
 import os
-import time
 from collections import Counter
 from collections.abc import Callable, Iterable
-from dataclasses import asdict, dataclass, field, replace
+from dataclasses import dataclass, field, replace
 from functools import partial
 from pathlib import Path
-from typing import Any, NoReturn
+from typing import Any, cast
 
 import numpy as np
 import torch
 from torch import nn
 from torch.utils.data import DataLoader
 
-from glypharis.config.loader import config_hash, config_to_dict, save_resolved
+from glypharis.config.loader import config_hash, config_to_dict
 from glypharis.config.schema import ConfigError, EarlyStoppingConfig, RunConfig
 from glypharis.data.augment import Augmenter
 from glypharis.data.rec_dataset import (
@@ -49,9 +49,6 @@ from glypharis.data.rec_dataset import (
 from glypharis.data.text import Charset
 from glypharis.diagnostics import (
     EpochPoint,
-    Flag,
-    GradientMonitor,
-    NonFiniteLoss,
     check_collapse,
     check_overfitting,
     check_underfitting,
@@ -61,17 +58,23 @@ from glypharis.models.rec.base import LineRecognizer
 from glypharis.models.rec.crnn import build_recognizer, count_parameters
 from glypharis.training.checkpoint import (
     load_checkpoint,
-    prune_epoch_checkpoints,
-    rng_state,
-    save_checkpoint,
     set_rng_state,
 )
-from glypharis.utils.device import AmpPolicy, fp32_region, resolve_amp, select_device
-from glypharis.utils.gitinfo import git_info
-from glypharis.utils.seed import make_generator, seed_everything, worker_init_fn
+from glypharis.training.loop import EpochResult, LoopState, StepResult, TrainerCore
+from glypharis.training.loop import record_validation as loop_record_validation
+from glypharis.training.optim import make_optimizer, make_scheduler
+from glypharis.utils.device import AmpPolicy, fp32_region
+from glypharis.utils.seed import make_generator, worker_init_fn
 
 log = logging.getLogger(__name__)
-CHECKPOINT_FORMAT = 1
+__all__ = [
+    "RecTrainer",
+    "ctc_loss",
+    "evaluate",
+    "greedy_decode",
+    "make_optimizer",
+    "make_scheduler",
+]
 
 
 # ------------------------------------------------------------------------------ building blocks
@@ -166,40 +169,6 @@ def evaluate(
     )
 
 
-def make_optimizer(cfg: RunConfig, model: nn.Module) -> torch.optim.Optimizer:
-    t = cfg.train
-    params, lr, wd = model.parameters(), t.learning_rate, t.weight_decay
-    if t.optimizer == "adamw":
-        return torch.optim.AdamW(params, lr=lr, weight_decay=wd)
-    if t.optimizer == "adam":
-        return torch.optim.Adam(params, lr=lr, weight_decay=wd)
-    return torch.optim.SGD(params, lr=lr, momentum=0.9, weight_decay=wd)
-
-
-def make_scheduler(
-    cfg: RunConfig, optimizer: torch.optim.Optimizer, total_steps: int
-) -> torch.optim.lr_scheduler.LRScheduler | None:
-    t = cfg.train
-    if t.scheduler == "none":
-        return None
-    if t.scheduler == "onecycle":
-        pct = t.warmup_steps / total_steps if t.warmup_steps else 0.3
-        return torch.optim.lr_scheduler.OneCycleLR(
-            optimizer, max_lr=t.learning_rate, total_steps=total_steps, pct_start=min(pct, 0.5)
-        )
-    if t.scheduler == "cosine":
-        warm = t.warmup_steps
-
-        def factor(step: int) -> float:
-            if step < warm:
-                return (step + 1) / warm
-            progress = (step - warm) / max(1, total_steps - warm)
-            return 0.5 * (1 + math.cos(math.pi * min(progress, 1.0)))
-
-        return torch.optim.lr_scheduler.LambdaLR(optimizer, factor)
-    raise ConfigError(f"train.scheduler {t.scheduler!r} is not supported by the recognizer trainer")
-
-
 def _pack_versions(data_root: Path, packs: Iterable[str]) -> dict[str, Any]:
     out = {}
     for p in packs:
@@ -209,52 +178,6 @@ def _pack_versions(data_root: Path, packs: Iterable[str]) -> dict[str, Any]:
 
 
 # --------------------------------------------------------------------------------- the trainer
-
-
-@dataclass
-class TrainState:
-    epoch: int = 0
-    batch_in_epoch: int = 0  # batches of the current epoch already consumed
-    step: int = 0  # optimizer steps
-    best_metric: float = math.inf  # lowest validation metric so far: selects best.pt
-    best_epoch: int = -1
-    patience_ref: float = math.inf  # what early stopping measures progress against
-    bad_epochs: int = 0
-    stopped_early: bool = False
-    history: list[dict[str, Any]] = field(default_factory=list)
-    flags: list[dict[str, Any]] = field(default_factory=list)
-    train_seconds: float = 0.0
-    epoch_loss_sum: float = 0.0  # running training loss of the current epoch
-    epoch_loss_n: int = 0
-
-
-def record_validation(
-    state: TrainState, metric: float, epoch: int, es: EarlyStoppingConfig
-) -> bool:
-    """Update checkpoint selection and early stopping with one epoch's validation metric.
-
-    The selected checkpoint is the one with the strictly lowest validation metric (protocol §7; ties
-    keep the earlier epoch). ``min_delta`` only decides whether an epoch counts as progress for the
-    patience counter, so a small improvement still becomes the best checkpoint. Returns True when
-    this epoch is the new best.
-    """
-    best = metric < state.best_metric
-    if best:
-        state.best_metric, state.best_epoch = metric, epoch
-    if metric < state.patience_ref - es.min_delta:
-        state.patience_ref, state.bad_epochs = metric, 0
-    else:
-        state.bad_epochs += 1
-        if es.enabled and state.bad_epochs >= es.patience:
-            state.stopped_early = True
-    return best
-
-
-def state_from_checkpoint(saved: dict[str, Any]) -> TrainState:
-    """Rebuild the state. Before ``patience_ref`` existed, ``best_metric`` played its part."""
-    saved = dict(saved)
-    saved.setdefault("patience_ref", saved.get("best_metric", math.inf))
-    return TrainState(**saved)
 
 
 def config_matches(saved: dict[str, Any], cfg: RunConfig) -> bool:
@@ -276,8 +199,9 @@ def batching_widths(ds: RecLineDataset, charset: Charset, stride: int) -> np.nda
     """Columns each line takes once padded for CTC: at least ``stride`` per frame its label needs.
     At stride 8, 3% of HierText training lines are denser than that, up to 3,256 columns, which
     the image widths alone never showed the column cap (GW-REC-019 ran out of memory)."""
-    need = np.array([stride * ctc_frames_needed(charset.encode(r.label)) for r in ds.refs],
-                    dtype=np.int64)  # fmt: skip
+    need = np.array(
+        [stride * ctc_frames_needed(charset.encode(r.label)) for r in ds.refs], dtype=np.int64
+    )
     return np.maximum(ds.widths, need)
 
 
@@ -287,28 +211,47 @@ def run_config_hash(cfg: RunConfig) -> str:
     return config_hash(replace(cfg, checkpoint=replace(cfg.checkpoint, resume=None)))
 
 
-class RecTrainer:
+def _loop_state(saved: dict[str, Any]) -> LoopState:
+    """The loop state of a recognizer checkpoint. Phase 6 and 7 checkpoints hold the same fields
+    without ``extra``; before ``patience_ref`` existed, ``best_metric`` played its part."""
+    saved = dict(saved)
+    saved.setdefault("patience_ref", saved.get("best_metric", math.inf))
+    return LoopState(**saved)
+
+
+# The Phase 6 names, kept for the scripts and tests that use them.
+TrainState = LoopState
+state_from_checkpoint = _loop_state
+
+
+def record_validation(state: LoopState, metric: float, epoch: int, es: EarlyStoppingConfig) -> bool:
+    """`glypharis.training.loop.record_validation` for a metric to minimise (CER)."""
+    return loop_record_validation(state, metric, epoch, es, maximize=False)
+
+
+class RecTrainer(TrainerCore):
+    """CTC training of a line recognizer on the shared loop (`glypharis.training.loop`).
+
+    Checkpoints keep the Phase 6 layout (model, optimizer, scheduler, scaler, state, gradient
+    monitor, RNG states, the resolved config and its run hash, the charset), so a run started before
+    the move resumes on it. A resume also moves the log records written after its checkpoint to
+    ``metrics.dropped.jsonl``, as before.
+    """
+
+    task = "rec"
+    throughput_key = "lines_per_s"
+
     def __init__(
         self,
         cfg: RunConfig,
         on_step: Callable[[dict[str, Any]], None] | None = None,
     ) -> None:
-        cfg.require_run_identity()
-        if cfg.task != "rec":
-            raise ConfigError(f"RecTrainer needs task 'rec', got {cfg.task!r}")
-        self.cfg = cfg
-        self.on_step = on_step
-        assert cfg.experiment_id is not None
-        self.run_dir = Path(cfg.paths.runs_dir) / cfg.experiment_id
-        self.ckpt_dir = Path(cfg.checkpoint.dir)
-        self.report_dir = Path(cfg.paths.reports_dir) / "training" / cfg.experiment_id
-        self.data_root = Path(cfg.paths.data_root)
-
-        seed_everything(cfg.seed, cfg.train.deterministic)
-        self.device = select_device(cfg.device)
-        self.amp = resolve_amp(cfg.train.mixed_precision, self.device)
-        charset_path = Path(cfg.data.charset) if cfg.data.charset else (
-            self.data_root / "manifests" / "charset.json")  # fmt: skip
+        super().__init__(cfg, on_step)
+        charset_path = (
+            Path(cfg.data.charset)
+            if cfg.data.charset
+            else (self.data_root / "manifests" / "charset.json")
+        )
         self.charset = Charset.load(charset_path)
 
         d = cfg.data
@@ -319,54 +262,76 @@ class RecTrainer:
         aug = Augmenter(d.augmentation, d.augmentation_params)
         train_packs = [self.data_root / p for p in d.train]
         limits = {str(self.data_root / k): v for k, v in d.train_limits.items()}
-        self.train_ds = RecLineDataset(train_packs, self.charset, d.image_height, d.max_width, aug,
-                                       cfg.seed, limits, d.dataset_subset)  # fmt: skip
-        self.val_ds = RecLineDataset([self.data_root / p for p in d.val], self.charset,
-                                     d.image_height, d.max_width, None, cfg.seed,
-                                     subset=d.val_subset)  # fmt: skip
+        self.train_ds = RecLineDataset(
+            train_packs,
+            self.charset,
+            d.image_height,
+            d.max_width,
+            aug,
+            cfg.seed,
+            limits,
+            d.dataset_subset,
+        )
+        self.val_ds = RecLineDataset(
+            [self.data_root / p for p in d.val],
+            self.charset,
+            d.image_height,
+            d.max_width,
+            None,
+            cfg.seed,
+            subset=d.val_subset,
+        )
         assert_no_leakage(self.train_ds, self.val_ds)
         # A fixed, un-augmented sample of the training lines, scored like validation each epoch.
-        self.train_eval_ds = RecLineDataset(train_packs, self.charset, d.image_height, d.max_width,
-                                            None, cfg.seed, limits, d.dataset_subset)  # fmt: skip
+        self.train_eval_ds = RecLineDataset(
+            train_packs,
+            self.charset,
+            d.image_height,
+            d.max_width,
+            None,
+            cfg.seed,
+            limits,
+            d.dataset_subset,
+        )
         if d.train_eval_subset and d.train_eval_subset < len(self.train_eval_ds):
             keep = np.random.default_rng([cfg.seed, 3]).choice(
-                len(self.train_eval_ds), d.train_eval_subset, replace=False)  # fmt: skip
+                len(self.train_eval_ds), d.train_eval_subset, replace=False
+            )
             self.train_eval_ds.refs = [self.train_eval_ds.refs[int(i)] for i in np.sort(keep)]
             self.train_eval_ds.widths = self.train_eval_ds.widths[np.sort(keep)]
 
-        self.model = build_recognizer(
-            self.charset.num_classes, cfg.model, cfg.model_name or "crnn"
-        ).to(self.device)
-        self.optimizer = make_optimizer(cfg, self.model)
+        model = build_recognizer(self.charset.num_classes, cfg.model, cfg.model_name or "crnn").to(
+            self.device
+        )
+        self.model = model
         t = cfg.train
-        self.sampler = WidthBucketBatchSampler(self._batching_widths(self.train_ds), t.batch_size,
-                                               cfg.seed,
-                                               d.bucket_chunk,
-                                               max_columns=d.max_batch_columns)  # fmt: skip
+        self.sampler = WidthBucketBatchSampler(
+            self._batching_widths(self.train_ds),
+            t.batch_size,
+            cfg.seed,
+            d.bucket_chunk,
+            max_columns=d.max_batch_columns,
+        )
         # With a column cap the batch count can differ between epochs; it is known in advance.
-        self.epoch_batches = [self.sampler.num_batches(e) for e in range(t.epochs)]
-        accum = t.gradient_accumulation
-        self.steps_per_epoch = [math.ceil(n / accum) for n in self.epoch_batches]
-        self.total_steps = sum(self.steps_per_epoch)
-        self.scheduler = make_scheduler(cfg, self.optimizer, self.total_steps)
-        self.scaler = torch.amp.GradScaler(self.device.type, enabled=self.amp.needs_grad_scaler)
+        self.setup_optimization(model, [self.sampler.num_batches(e) for e in range(t.epochs)])
         self.ctc = nn.CTCLoss(blank=Charset.BLANK, zero_infinity=True)
-        self.gradmon = GradientMonitor(cfg.diagnostics)
-        self.state = TrainState()
-        self._clock = time.monotonic()
-        self.git = git_info()
         self.params = count_parameters(self.model)
+        self._val_samples: list[dict[str, Any]] = []
         # Data-loading processes. Each loads its own torch and CUDA (about 2 GB of commit memory on
         # Windows); GW-REC-005 and 007 crashed when the system ran out of commit, so the queue can
         # lower this without touching the config. Batches do not depend on it.
         self.workers = int(os.environ.get("GLYPHARIS_NUM_WORKERS", cfg.data.num_workers))
+
+    @property
+    def rec_model(self) -> LineRecognizer:
+        return cast(LineRecognizer, self.model)
 
     def _batching_widths(self, ds: RecLineDataset) -> np.ndarray:
         """The widths batches are bucketed and capped by: each line's image width, or with
         ``data.ctc_aware_batching`` the width collate pads it to for CTC, whichever is larger."""
         if not self.cfg.data.ctc_aware_batching:
             return ds.widths
-        return batching_widths(ds, self.charset, self.model.stride)
+        return batching_widths(ds, self.charset, self.rec_model.stride)
 
     # ---------------------------------------------------------------------------- loaders
 
@@ -375,7 +340,7 @@ class RecTrainer:
         return DataLoader(
             ds,
             batch_sampler=sampler,
-            collate_fn=partial(collate, stride=self.model.stride),
+            collate_fn=partial(collate, stride=self.rec_model.stride),
             num_workers=workers,
             pin_memory=self.device.type == "cuda",
             worker_init_fn=worker_init_fn if workers else None,
@@ -385,33 +350,96 @@ class RecTrainer:
 
     def _eval_loader(self, ds: RecLineDataset) -> DataLoader[Any]:
         cap = self.cfg.data.max_batch_columns
-        sampler = WidthBucketBatchSampler(self._batching_widths(ds), self.cfg.train.batch_size * 2,
-                                          self.cfg.seed,
-                                          shuffle=False,
-                                          max_columns=2 * cap if cap else None)  # fmt: skip
+        sampler = WidthBucketBatchSampler(
+            self._batching_widths(ds),
+            self.cfg.train.batch_size * 2,
+            self.cfg.seed,
+            shuffle=False,
+            max_columns=2 * cap if cap else None,
+        )
         return self._loader(ds, sampler, self.cfg.seed + 7)
 
-    # ------------------------------------------------------------------------ checkpoints
+    # ---------------------------------------------------------------------- task interface
 
-    def _payload(self, metric: float | None) -> dict[str, Any]:
-        return {
-            "format": CHECKPOINT_FORMAT,
-            "model": self.model.state_dict(),
-            "optimizer": self.optimizer.state_dict(),
-            "scheduler": self.scheduler.state_dict() if self.scheduler else None,
-            "scaler": self.scaler.state_dict(),
-            "state": asdict(self.state),
-            "gradmon": self.gradmon.state_dict(),
-            "metric": metric,
-            "config": config_to_dict(self.cfg),
-            "config_hash": run_config_hash(self.cfg),
-            "git": self.git.to_dict(),
-            "charset": self.charset.characters,
-            "rng": rng_state(),
+    def train_batches(self, epoch: int, start_batch: int) -> Iterable[dict[str, Any]]:
+        self.sampler.set_epoch(epoch, start_batch)
+        return self._loader(self.train_ds, self.sampler, self.cfg.seed + 1000 + epoch)
+
+    def train_step(self, batch: dict[str, Any]) -> StepResult:
+        loss, _, _ = ctc_loss(self.rec_model, batch, self.amp, self.device, self.ctc)
+        return StepResult(loss, len(batch["keys"]), list(batch["keys"]), {})
+
+    def step_extra(self) -> dict[str, Any]:
+        if self.device.type != "cuda":
+            return {}
+        return {"vram_peak_mib": torch.cuda.max_memory_allocated() / 2**20}
+
+    def validate(self) -> EpochResult:
+        cfg, st = self.cfg, self.state
+        model = self.rec_model
+        val = evaluate(
+            model,
+            self._eval_loader(self.val_ds),
+            self.charset,
+            self.amp,
+            self.device,
+            self.ctc,
+        )
+        tr = evaluate(
+            model,
+            self._eval_loader(self.train_eval_ds),
+            self.charset,
+            self.amp,
+            self.device,
+            self.ctc,
+        )
+        point: dict[str, Any] = {
+            "train_eval_loss": tr.loss,
+            "train_cer": tr.cer,
+            "val_loss": val.loss,
+            "val_cer": val.cer,
+            "val_wer": val.wer,
+            "val_ned": val.ned,
+            "val_sequence_accuracy": val.sequence_accuracy,
+            "val_cer_normalised": val.cer_normalised,
+            "blank_ratio": val.blank_ratio,
+            "empty_ratio": val.empty_ratio,
+            "identical_ratio": val.identical_ratio,
         }
+        if self.device.type == "cuda":
+            point["vram_peak_mib"] = torch.cuda.max_memory_allocated() / 2**20
+            torch.cuda.reset_peak_memory_stats()
+        epoch, step = st.epoch, st.step
+        hist = [
+            EpochPoint(
+                p["epoch"],
+                p["step"],
+                p["train_eval_loss"],
+                p["val_loss"],
+                p["train_cer"],
+                p["val_cer"],
+            )
+            for p in st.history
+        ]
+        hist.append(EpochPoint(epoch, step, tr.loss, val.loss, tr.cer, val.cer))
+        d = cfg.diagnostics
+        flags = [
+            check_overfitting(hist, d),
+            check_underfitting(hist, d, step / max(self.total_steps, 1)),
+            *check_collapse(val.blank_ratio, val.empty_ratio, val.identical_ratio, d, epoch, step),
+        ]
+        self._val_samples = val.samples
+        # early_stopping.monitor is a validation metric (validated); the recognizer minimises CER
+        return EpochResult(point, val.cer, [f for f in flags if f is not None])
 
-    def save(self, name: str, metric: float | None = None) -> Path:
-        return save_checkpoint(self.ckpt_dir / name, self._payload(metric))
+    def on_best(self) -> None:
+        self._write_samples(self._val_samples)
+
+    def payload_extra(self) -> dict[str, Any]:
+        # The run hash, not the hash with the resume pointer: as Phase 6 and 7 checkpoints hold it.
+        return {"config_hash": run_config_hash(self.cfg), "charset": self.charset.characters}
+
+    # ------------------------------------------------------------------------- resume
 
     def resume(self, path: str | Path) -> None:
         ck = load_checkpoint(path, self.device)
@@ -422,14 +450,26 @@ class RecTrainer:
         if self.scheduler and ck["scheduler"]:
             self.scheduler.load_state_dict(ck["scheduler"])
         self.scaler.load_state_dict(ck["scaler"])
-        self.state = state_from_checkpoint(ck["state"])
+        self.state = _loop_state(ck["state"])
         self.gradmon.load_state_dict(ck["gradmon"])
         set_rng_state(ck["rng"])
         dropped = self._trim_log(self.state.step)
-        self._log({"type": "resume", "from": str(path), "epoch": self.state.epoch,
-                   "step": self.state.step, "dropped_records": dropped})  # fmt: skip
-        log.info("resumed from %s at epoch %d, batch %d, step %d", path, self.state.epoch,
-                 self.state.batch_in_epoch, self.state.step)  # fmt: skip
+        self._log(
+            {
+                "type": "resume",
+                "from": str(path),
+                "epoch": self.state.epoch,
+                "step": self.state.step,
+                "dropped_records": dropped,
+            }
+        )
+        log.info(
+            "resumed from %s at epoch %d, batch %d, step %d",
+            path,
+            self.state.epoch,
+            self.state.batch_in_epoch,
+            self.state.step,
+        )
 
     def _trim_log(self, step: int) -> int:
         """Move log records written after the checkpoint at ``step`` (a run that died between two
@@ -455,224 +495,39 @@ class RecTrainer:
                 path.write_text(text, encoding="utf-8", newline="\n")
                 tmp.unlink()
             # Only once the log no longer holds them, so a failed attempt cannot copy them twice.
-            with (self.run_dir / "metrics.dropped.jsonl").open("a", encoding="utf-8",
-                                                              newline="\n") as fh:  # fmt: skip
+            with (self.run_dir / "metrics.dropped.jsonl").open(
+                "a", encoding="utf-8", newline="\n"
+            ) as fh:
                 fh.write("\n".join(drop) + "\n")
         return len(drop)
 
-    # --------------------------------------------------------------------------- logging
-
-    def _log(self, record: dict[str, Any]) -> None:
-        self.run_dir.mkdir(parents=True, exist_ok=True)
-        with (self.run_dir / "metrics.jsonl").open("a", encoding="utf-8", newline="\n") as fh:
-            fh.write(json.dumps(record) + "\n")
-        if self.on_step is not None:
-            self.on_step(record)
-
-    def _flag(self, flag: Flag | None) -> None:
-        if flag is not None:
-            self.state.flags.append(flag.to_dict())
-            log.warning("%s at epoch %d step %d: %s", flag.name, flag.epoch, flag.step,
-                        flag.evidence)  # fmt: skip
-            self._log({"type": "flag", **flag.to_dict()})
-
-    # ----------------------------------------------------------------------------- train
-
-    def _tick(self) -> None:
-        """Add the time since the last tick to the state (saved with every checkpoint)."""
-        now = time.monotonic()
-        self.state.train_seconds += now - self._clock
-        self._clock = now
-
-    def _optimizer_step(self, keys: list[str]) -> float:
-        """Clip and apply the accumulated gradients of the batches ``keys``; returns the norm
-        before clipping.
-
-        A finite loss can still back-propagate to an inf or NaN gradient (a bf16 overflow, a 0/0 in
-        a backward). Stepping on it would turn every weight into NaN with no flag, and the next
-        batch's loss would take the blame. The fp16 scaler skips such a step by itself; without it
-        the run stops here with the weights untouched (or skips the step if stop_on_nan is off).
-        """
-        if self.amp.needs_grad_scaler:
-            self.scaler.unscale_(self.optimizer)
-        clip = self.cfg.train.grad_clip_norm
-        norm = float(nn.utils.clip_grad_norm_(self.model.parameters(),
-                                              clip if clip is not None else math.inf))  # fmt: skip
-        if math.isfinite(norm) or self.amp.needs_grad_scaler:
-            self.scaler.step(self.optimizer)
-            self.scaler.update()
-        elif self.cfg.diagnostics.stop_on_nan:
-            self._non_finite(keys, "grad_norm", norm)
-        else:
-            self._log({"type": "nonfinite_grad_skipped", "epoch": self.state.epoch,
-                       "step": self.state.step, "grad_norm": str(norm), "keys": keys})  # fmt: skip
-        self.optimizer.zero_grad(set_to_none=True)
-        if self.scheduler is not None:
-            self.scheduler.step()
-        self.state.step += 1
-        return norm
-
-    def _non_finite(self, keys: list[str], what: str, value: float) -> NoReturn:
-        """Save nonfinite.pt and the batch keys, then stop the run; ``what`` names the value."""
-        self.save("nonfinite.pt")
-        self._log({"type": "nonfinite", "epoch": self.state.epoch, "step": self.state.step,
-                   what: str(value), "keys": keys})  # fmt: skip
-        raise NonFiniteLoss(f"non-finite {what} {value} at step {self.state.step}; "
-                            f"batch keys and state saved")  # fmt: skip
-
-    def fit(self) -> dict[str, Any]:
-        cfg, t = self.cfg, self.cfg.train
-        if cfg.checkpoint.resume:
-            self.resume(cfg.checkpoint.resume)
-        else:
-            save_resolved(cfg, self.run_dir / "config.resolved.yaml")
-        self.model.train()
-        accum = t.gradient_accumulation
-        done = False
-        while self.state.epoch < t.epochs and not done and not self.state.stopped_early:
-            epoch = self.state.epoch
-            self.sampler.set_epoch(epoch, self.state.batch_in_epoch)
-            loader = self._loader(self.train_ds, self.sampler, cfg.seed + 1000 + epoch)
-            # The epoch's running loss and the training time live in the state, so a resumed
-            # epoch continues them instead of starting over at the resume point.
-            st = self.state
-            t0, lines, step_sum, step_n = time.monotonic(), 0, 0.0, 0
-            group: list[str] = []  # keys of the batches the next optimizer step applies
-            self._clock = time.monotonic()
-            for batch in loader:
-                try:
-                    loss, _, _ = ctc_loss(self.model, batch, self.amp, self.device, self.ctc)
-                except torch.cuda.OutOfMemoryError:
-                    self._log({"type": "oom", "epoch": epoch, "step": self.state.step,
-                               "batch_shape": list(batch["images"].shape)})  # fmt: skip
-                    raise
-                if torch.isfinite(loss):
-                    self.scaler.scale(loss / accum).backward()
-                    lines += len(batch["keys"])
-                    value = float(loss.detach())
-                    st.epoch_loss_sum += value
-                    st.epoch_loss_n += 1
-                    step_sum += value
-                    step_n += 1
-                    group += batch["keys"]
-                elif cfg.diagnostics.stop_on_nan:
-                    self._non_finite(batch["keys"], "loss", float(loss))
-                else:
-                    self._log({"type": "nonfinite_skipped", "epoch": epoch, "step": st.step,
-                               "loss": str(float(loss)), "keys": batch["keys"]})  # fmt: skip
-                # A skipped batch counts too: the sampler resumes by position, and the epoch's
-                # last optimizer step is triggered by the count.
-                st.batch_in_epoch += 1
-                last_of_epoch = st.batch_in_epoch == self.epoch_batches[epoch]
-                if st.batch_in_epoch % accum and not last_of_epoch:
-                    continue
-                norm = self._optimizer_step(group)
-                group = []
-                self._flag(self.gradmon.update(norm, epoch, st.step))
-                if st.step % cfg.logging.log_every_n_steps == 0:
-                    elapsed = time.monotonic() - t0
-                    rec = {"type": "step", "epoch": epoch, "step": st.step,
-                           "loss": st.epoch_loss_sum / max(st.epoch_loss_n, 1),
-                           "step_loss": step_sum / max(step_n, 1), "grad_norm": norm,
-                           "lr": self.optimizer.param_groups[0]["lr"],
-                           "lines_per_s": lines / max(elapsed, 1e-9)}  # fmt: skip
-                    if self.device.type == "cuda":
-                        rec["vram_peak_mib"] = torch.cuda.max_memory_allocated() / 2**20
-                    self._log(rec)
-                step_sum, step_n = 0.0, 0
-                every = cfg.checkpoint.every_steps
-                if every and st.step % every == 0 and not last_of_epoch:
-                    self._tick()
-                    self.save("last.pt")
-                if t.max_steps is not None and st.step >= t.max_steps:
-                    done = True
-                    break
-            self._tick()
-            if done and st.batch_in_epoch < self.epoch_batches[epoch]:
-                self.save("last.pt")  # cut short mid-epoch: resumable from here
-                break
-            self._end_epoch(st.epoch_loss_sum / max(st.epoch_loss_n, 1))
-        summary = self._summary()
-        (self.run_dir / "summary.json").write_text(json.dumps(summary, indent=1) + "\n",
-                                                   encoding="utf-8")  # fmt: skip
-        return summary
-
-    def _end_epoch(self, train_loss: float) -> None:
-        cfg, epoch, step = self.cfg, self.state.epoch, self.state.step
-        val = evaluate(self.model, self._eval_loader(self.val_ds), self.charset, self.amp,
-                       self.device, self.ctc)  # fmt: skip
-        tr = evaluate(self.model, self._eval_loader(self.train_eval_ds), self.charset, self.amp,
-                      self.device, self.ctc)  # fmt: skip
-        point = {"type": "epoch", "epoch": epoch, "step": step, "train_loss": train_loss,
-                 "train_eval_loss": tr.loss, "train_cer": tr.cer, "val_loss": val.loss,
-                 "val_cer": val.cer, "val_wer": val.wer, "val_ned": val.ned,
-                 "val_sequence_accuracy": val.sequence_accuracy,
-                 "val_cer_normalised": val.cer_normalised, "blank_ratio": val.blank_ratio,
-                 "empty_ratio": val.empty_ratio, "identical_ratio": val.identical_ratio,
-                 "lr": self.optimizer.param_groups[0]["lr"],
-                 "train_seconds": self.state.train_seconds}  # fmt: skip
-        if self.device.type == "cuda":
-            point["vram_peak_mib"] = torch.cuda.max_memory_allocated() / 2**20
-            torch.cuda.reset_peak_memory_stats()
-        self.state.history.append(point)
-        self._log(point)
-        hist = [EpochPoint(p["epoch"], p["step"], p["train_eval_loss"], p["val_loss"],
-                           p["train_cer"], p["val_cer"]) for p in self.state.history]  # fmt: skip
-        d = cfg.diagnostics
-        self._flag(check_overfitting(hist, d))
-        self._flag(check_underfitting(hist, d, step / max(self.total_steps, 1)))
-        for f in check_collapse(val.blank_ratio, val.empty_ratio, val.identical_ratio, d,
-                                epoch, step):  # fmt: skip
-            self._flag(f)
-
-        metric = val.cer  # early_stopping.monitor is validated to be a validation metric
-        improved = record_validation(self.state, metric, epoch, cfg.early_stopping)
-        self.state.epoch += 1
-        self.state.batch_in_epoch = 0
-        self.state.epoch_loss_sum, self.state.epoch_loss_n = 0.0, 0
-        if improved:
-            self.save("best.pt", metric)
-            self._write_samples(val.samples)
-        if (epoch + 1) % cfg.checkpoint.checkpoint_interval == 0:
-            self.save(f"epoch_{epoch:03d}.pt", metric)
-            prune_epoch_checkpoints(self.ckpt_dir, cfg.checkpoint.keep_last)
-        self.save("last.pt", metric)
+    # ------------------------------------------------------------------------ outputs
 
     def _write_samples(self, samples: list[dict[str, Any]]) -> None:
         """Per-line validation results of the best checkpoint, for the report and the CI."""
         self.run_dir.mkdir(parents=True, exist_ok=True)
-        with (self.run_dir / "val_best_samples.jsonl").open("w", encoding="utf-8",
-                                                           newline="\n") as fh:  # fmt: skip
+        with (self.run_dir / "val_best_samples.jsonl").open(
+            "w", encoding="utf-8", newline="\n"
+        ) as fh:
             for s in samples:
                 fh.write(json.dumps(s, ensure_ascii=False) + "\n")
 
+    def summary(self) -> dict[str, Any]:
+        s = super().summary()
+        s.update(
+            config_hash=run_config_hash(self.cfg),
+            parameters=self.params,
+            data_workers=self.workers,
+            model_bytes=model_bytes(self.model.state_dict()),
+            train_lines=len(self.train_ds),
+            val_lines=len(self.val_ds),
+            data=_pack_versions(self.data_root, [*self.cfg.data.train, *self.cfg.data.val]),
+        )
+        return s
+
     def _summary(self) -> dict[str, Any]:
-        st = self.state
-        last = st.history[-1] if st.history else {}
-        best = next((p for p in st.history if p["epoch"] == st.best_epoch), {})
-        return {
-            "experiment_id": self.cfg.experiment_id,
-            "config_hash": run_config_hash(self.cfg),
-            "git": self.git.to_dict(),
-            "parameters": self.params,
-            "data_workers": self.workers,
-            "model_bytes": model_bytes(self.model.state_dict()),
-            "device": str(self.device),
-            "gpu": torch.cuda.get_device_name() if self.device.type == "cuda" else None,
-            "precision": self.amp.name,
-            "torch": torch.__version__,
-            "epochs_run": st.epoch,
-            "steps": st.step,
-            "stopped_early": st.stopped_early,
-            "best_epoch": st.best_epoch,
-            "best": best,
-            "final": last,
-            "flags": st.flags,
-            "train_seconds": st.train_seconds,
-            "train_lines": len(self.train_ds),
-            "val_lines": len(self.val_ds),
-            "data": _pack_versions(self.data_root, [*self.cfg.data.train, *self.cfg.data.val]),
-        }
+        """The run summary (the Phase 6 name, kept for train.py and the tests)."""
+        return self.summary()
 
 
 def score_samples(samples: Iterable[dict[str, Any]]) -> list[dict[str, Any]]:

@@ -1,0 +1,21 @@
+{
+ "device": "cuda",
+ "precision": "bf16",
+ "steps": 400,
+ "cut": 201,
+ "cut_mid_epoch": true,
+ "steps_compared": 199,
+ "boundary_rel_diff": 0.0,
+ "boundary_tol": 1e-06,
+ "lr_identical": true,
+ "max_rel_loss_diff_resumed": 5.858323746975621e-05,
+ "max_rel_loss_diff_two_uninterrupted": 5.531127185896878e-05,
+ "allowed": 0.00011062254371793756,
+ "noise_factor": 2.0,
+ "rel_tol": 0.0001,
+ "max_rel_weight_diff_resumed": 1.2592558860778809,
+ "max_rel_weight_diff_two_uninterrupted": 0.8145605325698853,
+ "val_cer_b": 1.0,
+ "val_cer_c": 1.0,
+ "passed": true
+}

@@ -64,7 +64,7 @@ from glypharis.training.checkpoint import (
     save_checkpoint,
     set_rng_state,
 )
-from glypharis.training.rec_trainer import make_optimizer, make_scheduler
+from glypharis.training.optim import make_optimizer, make_scheduler
 from glypharis.utils.device import resolve_amp, select_device
 from glypharis.utils.gitinfo import git_info
 from glypharis.utils.monitor import snapshot
