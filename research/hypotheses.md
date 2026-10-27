@@ -94,7 +94,9 @@ CI of the difference excludes zero, on validation unless stated otherwise.
   identical). One seed each, so exploratory.
 - **Success criterion:** the paired page-bootstrap 95% CI of F1@0.5(GW-DET-001) − F1@0.5(GW-DET-002),
   on all HierText validation pages, lies entirely above 0 (`scripts/det_compare.py`).
-- **Status:** open (written 2026-10-25, before the sanity sequence and the runs)
+- **Status:** supported, exploratory (2026-10-27). GW-DET-001 minus GW-DET-002: +0.0197
+  [+0.0161, +0.0232] F1@0.5 over the 1,715 validation pages, one seed each
+  (`reports/training/GW-DET-001_vs_GW-DET-002.md`). Written 2026-10-25, before the runs.
 
 ### H10 — MobileNetV3-Small is non-inferior to Large for detection (RQ7)
 
@@ -103,7 +105,9 @@ CI of the difference excludes zero, on validation unless stated otherwise.
 - **Test:** Phase 8: GW-DET-001 (Large) against GW-DET-003 (Small). One seed each, so exploratory.
 - **Success criterion:** the upper bound of the paired page-bootstrap 95% CI of F1@0.5(GW-DET-001) −
   F1@0.5(GW-DET-003), on all HierText validation pages, is ≤ 0.03 (`scripts/det_compare.py`).
-- **Status:** open (written 2026-10-25, before the sanity sequence and the runs)
+- **Status:** not supported (2026-10-27). GW-DET-001 minus GW-DET-003: +0.0556 [+0.0505,
+  +0.0616] F1@0.5, upper bound above the 0.03 margin; one seed each
+  (`reports/training/GW-DET-001_vs_GW-DET-003.md`). Written 2026-10-25, before the runs.
 
 **Operating point of record (H9, H10).** A detector run has exactly one operating point of record:
 the one stored in its `best.pt` (`selected_op`). It is chosen from the operating points pre-registered
