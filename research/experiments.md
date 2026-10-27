@@ -45,10 +45,10 @@ Rows link to a full entry below. Numbers are copied from generated reports only,
 | [GW-EFF-001](#gw-eff-001) | 2026-10-27 | 09 | GW-DET-001 detector CPU latency at five input resolutions (PyTorch, batch 1) | done | detector 203 ms mean per page at 1280; long sides up to 1536 fit the page target | `reports/efficiency/` |
 | [GW-DET-005](#gw-det-005) | 2026-10-27 | 09 | GW-DET-001 at the best input resolution that fits ADR-0011's page target (no retraining) | done | half B +0.018 [+0.013, +0.022] vs 1280: 1536 adopted; full val F1@0.5 0.778 [0.762, 0.792] | `reports/error_cases/detector/` |
 | [GW-DET-006](#gw-det-006) | 2026-10-27 | 09 | Box shape `quad` vs `poly` on validation and its curved lines (RISK_REGISTER R-22) | done | no curved lines in HierText validation (all 4-point); quad kept; R-22 stays open | `reports/error_cases/detector/` |
-| [GW-E2E-003](#gw-e2e-003) | 2026-10-28 | 10 | Line-confidence calibration: temperature fitted on validation half A, ECE on half B (H8) | planned | — | `reports/calibration/GW-E2E-003/` |
-| [GW-E2E-001](#gw-e2e-001) | 2026-10-28 | 10 | GLYPHARIS pipeline (GW-DET-001 at Phase 9 settings + GW-REC-024) on HierText validation, with the baselines on the Phase 5 pages (H1) | planned | — | `reports/e2e/GW-E2E-001/` |
-| [GW-E2E-002](#gw-e2e-002) | 2026-10-28 | 10 | Oracle analysis: ground-truth lines into the recognizer, to split page error between detection and recognition (H4) | planned | — | `reports/e2e/GW-E2E-002/` |
-| [GW-EFF-002](#gw-eff-002) | 2026-10-28 | 10 | Whole-pipeline CPU page time and memory on the Phase 5 profile pages (ADR-0011) | planned | — | `reports/efficiency/` |
+| [GW-E2E-003](#gw-e2e-003) | 2026-10-28 | 10 | Line-confidence calibration: temperature fitted on validation half A, ECE on half B (H8) | done | ECE half B 0.217 → 0.089 at T = 2.35 (−0.128 [−0.133, −0.124]): adopted; H8 supported on validation | `reports/calibration/GW-E2E-003/` |
+| [GW-E2E-001](#gw-e2e-001) | 2026-10-28 | 10 | GLYPHARIS pipeline (GW-DET-001 at Phase 9 settings + GW-REC-024) on HierText validation, with the baselines on the Phase 5 pages (H1) | done | page CER 27.6% [25.1, 30.4] on 1,715 pages; 24.3% vs 42.4% for PP-OCRv6 small on the Phase 5 pages (−18.1 [−21.4, −15.1]) | `reports/e2e/GW-E2E-001/` |
+| [GW-E2E-002](#gw-e2e-002) | 2026-10-28 | 10 | Oracle analysis: ground-truth lines into the recognizer, to split page error between detection and recognition (H4) | done | oracle page CER 6.7% vs 27.6%: recognition's share 0.24 (0.20–0.29 per blur quartile); H4 not supported on HierText | `reports/e2e/GW-E2E-002/` |
+| [GW-EFF-002](#gw-eff-002) | 2026-10-28 | 10 | Whole-pipeline CPU page time and memory on the Phase 5 profile pages (ADR-0011) | done | PyTorch page mean 2.0 s, p95 4.0 s: misses ADR-0011's page target (recognition 1.7 s); RAM 1,624 MiB meets it | `reports/efficiency/` |
 
 ### GW-BASE-001 — Tesseract 5 (LSTM, eng): recognition and end to end
 
@@ -790,7 +790,7 @@ Rows link to a full entry below. Numbers are copied from generated reports only,
 
 ### GW-E2E-003 — Line-confidence calibration
 
-- **Date allocated / run:** 2026-10-28 / —
+- **Date allocated / run:** 2026-10-28 / 2026-10-28
 - **Phase:** 10
 - **Git commit:** recorded in the result file   **Config:** `configs/det/gw-det-001.yaml` with Phase 9's overrides; `runs/GW-REC-024/config.resolved.yaml`   **Seed(s):** none (no training)
 - **Dataset version(s):** HierText validation pages and lines as in GW-DET-001 and GW-REC-024
@@ -800,14 +800,14 @@ Rows link to a full entry below. Numbers are copied from generated reports only,
 - **Method:** `docs/PHASE_STATUS.md` Phase 10, plan items 2 and 3; `scripts/rec_calibrate.py`.
 - **Variables:** independent: temperature; controlled: model, lines, confidence definition
 - **Control:** T = 1
-- **Result:**
-- **Interpretation:**
+- **Result:** 73,888 validation lines (half A 35,976, half B 37,912; accuracy on half B 0.721). Fitted T = 2.35 (binary NLL on half A 0.412 against 0.784 at T = 1). ECE on half B: 0.2172 at T = 1, 0.0888 at T = 2.35, difference **−0.128 [−0.133, −0.124]** (`reports/calibration/GW-E2E-003/calibration.md`, reliability diagram there): adopted. On the pipeline's own 62,591 validation lines (GW-E2E-001), ECE 0.344 at T = 1 and 0.134 at T = 2.35, as information.
+- **Interpretation:** **H8 supported on validation**: the raw confidence is strongly over-confident (ECE 0.22, above 0.05) and one temperature cuts the error by 59%, more than half. The remaining ECE (0.09) and the larger one on pipeline lines (0.13, where detection errors also make lines wrong) say a single temperature is not the whole story. The v0.1 bundle carries T = 2.35. Transfer to GDC is H8's Phase 14 test.
 - **Limitations:** fitted and checked on two halves of one validation set; exact match is a strict notion of right.
 - **Next experiment:** GW-E2E-001 records confidence at the fitted T too.
 
 ### GW-E2E-001 — The pipeline on HierText validation
 
-- **Date allocated / run:** 2026-10-28 / —
+- **Date allocated / run:** 2026-10-28 / 2026-10-28
 - **Phase:** 10
 - **Git commit:** recorded in the result file   **Config:** `configs/det/gw-det-001.yaml` with Phase 9's overrides; `runs/GW-REC-024/config.resolved.yaml`   **Seed(s):** none (no training)
 - **Dataset version(s):** HierText validation pages and lines as in GW-DET-001 and GW-REC-024
@@ -817,14 +817,14 @@ Rows link to a full entry below. Numbers are copied from generated reports only,
 - **Method:** `docs/PHASE_STATUS.md` Phase 10, plan items 1 and 4; `scripts/e2e_eval.py --mode pipeline --pages all` and `--pages baseline --baselines`.
 - **Variables:** independent: system; controlled: pages, scoring code, normalisation track
 - **Control:** the Phase 5 baselines (GW-BASE-001, 002, 005, 006) on the same 400 pages
-- **Result:**
-- **Interpretation:**
+- **Result:** all 1,715 validation pages, strict track (`reports/e2e/GW-E2E-001/report.md`): bag-of-lines page CER **27.56% [25.14, 30.36]**, E2E line F1 57.96% [56.37, 59.64], detection P 85.19%, R 71.57%, F1 77.79%; normalised track page CER 27.37%. On the 400 Phase 5 pages (strict): page CER 24.33% [20.90, 28.17] and E2E F1 60.18% [56.52, 63.67], against PP-OCRv6 small 42.44% and 45.68% (paired differences **−18.11 [−21.43, −15.08]** points CER, +14.50 [+11.93, +17.05] F1), PP-OCRv5 mobile 50.84% and 38.75% (−26.51 [−30.46, −22.76], +21.42), PP-OCRv6 tiny 49.65% and 38.69%, Tesseract 5 94.50% and 12.65%. H1's ratio (information): 0.48 of PP-OCRv5 mobile's page CER.
+- **Interpretation:** the expectation holds and by a wide margin: on HierText validation GLYPHARIS reads pages with about 18 points less page CER than the best baseline and wins every paired comparison on both tracks. The page CER of 24 to 28% is mostly detection (GW-E2E-002). For H1 the CER half of the criterion is already far inside its 2× bound on these pages; its latency half is GW-EFF-002 and Phase 17's ONNX measurement, and its test is Phase 14's GDC clean slice.
 - **Limitations:** HierText pages are mostly scene photographs, not the documents GLYPHARIS targets; no reading order can be scored on them.
 - **Next experiment:** GW-E2E-002 splits its error.
 
 ### GW-E2E-002 — Oracle analysis
 
-- **Date allocated / run:** 2026-10-28 / —
+- **Date allocated / run:** 2026-10-28 / 2026-10-28
 - **Phase:** 10
 - **Git commit:** recorded in the result file   **Config:** `configs/det/gw-det-001.yaml` with Phase 9's overrides; `runs/GW-REC-024/config.resolved.yaml`   **Seed(s):** none (no training)
 - **Dataset version(s):** HierText validation pages and lines as in GW-DET-001 and GW-REC-024
@@ -834,14 +834,14 @@ Rows link to a full entry below. Numbers are copied from generated reports only,
 - **Method:** `docs/PHASE_STATUS.md` Phase 10, plan item 5; `scripts/e2e_eval.py --mode oracle --pages all`.
 - **Variables:** independent: where the line outlines come from (detector or ground truth); controlled: recognizer, crops, pages, scoring
 - **Control:** GW-E2E-001
-- **Result:**
-- **Interpretation:**
+- **Result:** all 1,715 pages, strict track (`reports/e2e/GW-E2E-002/report.md`): oracle page CER **6.67% [6.11, 7.34]** against the pipeline's 27.56%; recognition's share of page error 0.24. Per blur quartile (Q1 blurriest to Q4 sharpest): pipeline 36.5, 29.5, 29.7, 21.2%; oracle 8.8, 8.5, 7.4, 4.3%; recognition's share 0.24, 0.29, 0.25, 0.20. Oracle E2E line F1 76.9%.
+- **Interpretation:** detection causes about three quarters of the page error on HierText, on sharp pages as much as on blurry ones. **H4's Phase 10 reading is not supported**: recognition's share is below one half on every quartile, the sharpest included. HierText's pages are mostly photographs of scenes and signs, not the clean documents H4 is about, so this is a statement about this data; Phase 15 tests H4 on the frozen model with GDC's slices. The oracle's 6.7% matches the recognizer's own validation CER (6.46%), so cutting lines from page polygons reproduces the training crops.
 - **Limitations:** ground-truth outlines are cut exactly like training crops, so the oracle also removes any crop-shape mismatch between detector quads and training crops.
 - **Next experiment:** Phase 15 repeats it on the frozen model.
 
 ### GW-EFF-002 — Whole-pipeline CPU page time
 
-- **Date allocated / run:** 2026-10-28 / —
+- **Date allocated / run:** 2026-10-28 / 2026-10-28
 - **Phase:** 10
 - **Git commit:** recorded in the result file   **Config:** `configs/det/gw-det-001.yaml` with Phase 9's overrides; `runs/GW-REC-024/config.resolved.yaml`   **Seed(s):** none (no training)
 - **Dataset version(s):** HierText validation pages and lines as in GW-DET-001 and GW-REC-024
@@ -851,8 +851,8 @@ Rows link to a full entry below. Numbers are copied from generated reports only,
 - **Method:** `docs/PHASE_STATUS.md` Phase 10, plan item 6; `scripts/e2e_profile.py`.
 - **Variables:** none; conditions recorded as for the baselines
 - **Control:** ADR-0011's page target and the baselines' page profiles
-- **Result:**
-- **Interpretation:**
+- **Result:** PyTorch fp32, 16 threads, long side 1536, idle machine (CPU busy 6.3% before, 6.6% after) (`reports/efficiency/GW-EFF-002.json`): page mean **1,998 ms**, p95 3,955 ms; detection 269 ms and recognition 1,721 ms per page on average (40.9 lines); peak RAM 1,624 MiB. ADR-0011's page target (mean 1.5 s, p95 2.7 s, RAM below 1,836 MiB): **missed** on time, met on memory. Baselines on the same pages: PP-OCRv6 tiny 1,727 ms, PP-OCRv5 mobile 3,408 ms, PP-OCRv6 small 3,714 ms (`reports/baselines/efficiency.md`).
+- **Interpretation:** the PyTorch build is faster than PP-OCRv5 mobile and PP-OCRv6 small but misses ADR-0011's page target. The miss is recognition: about 42 ms per line inside the pipeline against 24.4 ms for one line at a time (GW-REC-024), so Phase 9's estimate (1.32 s) was too low. Cutting the lines costs under 1 ms each; the model is the cost, and the padding that keeps every line's reading independent of its batch (64 columns, about 40% of a typical line) is a likely part of it. ADR-0011 is judged on the ONNX Runtime build (GW-EFF-004, Phase 17); speed work belongs to Phase 16.
 - **Limitations:** PyTorch stands in for the Phase 17 ONNX Runtime build.
 - **Next experiment:** Phase 17 measures the exported pipeline.
 
