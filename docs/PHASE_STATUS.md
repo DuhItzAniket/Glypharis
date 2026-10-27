@@ -25,7 +25,7 @@ Phases run in the order set by [ADR-0008](decisions/ADR-0008-usable-engine-first
 | 15 | Error analysis | not started | — |
 | 16 | Efficiency optimisation | not started | — |
 | 17 | Model export | **IN PROGRESS** (gate: push, CI, merge; after Phase 10) | — |
-| 18 | Inference package | **IN PROGRESS** (built while Phases 9, 10 and 17 are open) | — |
+| 18 | Inference package | **IN PROGRESS** (gate: push, CI, merge; after Phase 17) | — |
 | 19 | Optional HTTP API | not started | — |
 | 20 | Production engineering | not started | — |
 | 21 | Research package | not started | — |
@@ -994,7 +994,8 @@ which kept a buffer per input shape. ONNX stays available (`backend="onnx"`).
 
 ## Phase 18 — Inference package
 
-**Status:** IN PROGRESS (opened 2026-10-28 on `phase/18-package`, branched from Phase 17).
+**Status:** write-up done (2026-10-28). Gate open: push, pull request, CI and merge, after Phase 17.
+Opened 2026-10-28 on `phase/18-package`, branched from Phase 17.
 
 **Objective:** GLYPHARIS installable and usable without the training code.
 
@@ -1021,4 +1022,23 @@ which kept a buffer per input shape. ONNX stays available (`backend="onnx"`).
 
 **Exit criteria** (IMPLEMENTATION_PLAN Phase 18): API tests on fixtures; clean-venv install test;
 outputs match the Phase 10 pipeline on the validation sample.
+
+**Results (2026-10-28):** GW-E2E-004 passes: the package reads the 400 Phase 5 pages with 24.33% page
+CER, as Phase 10's pipeline did (+0.001 points), with 16,827 of 16,835 lines identical
+(`reports/package/GW-E2E-004.json`). It ran on the ONNX backend as registered; since Phase 17 the
+default backend is PyTorch, whose reading GW-EFF-003 showed to be identical.
+
+**Exit criteria**
+
+| Criterion | Result | Evidence |
+|---|---|---|
+| API tests on fixtures | pass | `tests/test_api.py` |
+| Clean-venv install test | pass in CI: every run installs the package into a fresh environment and runs the installed `glypharis-ocr`; locally the editable install and the command were checked | `.github/workflows/ci.yml` |
+| Outputs match the Phase 10 pipeline on the validation sample | pass (GW-E2E-004) | `reports/package/GW-E2E-004.json` |
+
+**Known issues**
+- The default backend is PyTorch (Phase 17's decision, for the owner to confirm with ADR-0011).
+- Model bundles are not distributed; `from_pretrained` finds one only where it is placed.
+
+**Git:** branch `phase/18-package`, with Phase 17 merged in; push and merge pending (after Phase 17).
 
