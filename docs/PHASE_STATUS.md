@@ -816,6 +816,11 @@ gate is open; the owner approved working through the night). Validation data onl
    Phase 9's estimate.
 7. **Reading order** is checked by its unit tests only: no validation set here has a reading order;
    GDC measures it in Phase 14.
+8. **Moving the recognizer trainer onto the shared loop** (owner approved 2026-10-27) is deferred
+   to the start of Phase 11, the next phase that trains the recognizer: nothing in Phases 10 to 20
+   trains it, and `train.py` and five recognizer scripts depend on the current trainer, so the move
+   is best made and checked (recognizer tests unchanged, an existing GW-REC `last.pt` resumes) when
+   it is next used.
 
 **Exit criteria** (IMPLEMENTATION_PLAN Phase 10): pipeline unit- and integration-tested on
 fixtures; validation E2E metrics reported; calibration either validated (ECE reduced, with numbers)
