@@ -46,6 +46,13 @@ class OcrLine:
     det_score: float
     conf_at: dict[float, float] = field(default_factory=dict)  # at other temperatures, if asked
 
+    @property
+    def bbox(self) -> tuple[float, float, float, float]:
+        """x0, y0, x1, y1 of the polygon, in page pixels."""
+        xs = [p[0] for p in self.polygon]
+        ys = [p[1] for p in self.polygon]
+        return (min(xs), min(ys), max(xs), max(ys))
+
     def to_dict(self) -> dict[str, Any]:
         return asdict(self)
 
@@ -76,6 +83,7 @@ class OCRResult:
                 "text": ln.text,
                 "confidence": ln.confidence,
                 "det_score": ln.det_score,
+                "bbox": list(ln.bbox),
                 "polygon": ln.polygon,
                 "quad": ln.quad,
             }
