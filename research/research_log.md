@@ -166,3 +166,20 @@ the bottom. Experiments get their full record in `experiments.md`; this log is t
   line on the CPU, just inside the v0.1 target. One seed for now (owner decision).
 - Training on the laptop crashed several times from memory pressure (Windows commit limit, a kernel
   token leak, other apps); two loader workers and resuming from checkpoints carried every run through.
+
+### 2026-10-27 — Phase 8: text detector
+
+- The DBNet-style detector (MobileNetV3-Large, ImageNet start) reached F1@0.5 0.724 [0.708, 0.739]
+  on all HierText validation pages (GW-DET-001), against a label ceiling of 0.948. On the Phase 5
+  pages it beats the best baseline detector, PP-OCRv6 small, by about 0.15, though only it was
+  trained on HierText's line definition.
+- Its errors are misses: precision 0.92, recall 0.59. Small text (under 8 px, recall 0.20) and
+  rotated or vertical lines (recall 0.18 beyond 45°) account for most of them; that is where Phase 9
+  starts.
+- H9 held: starting from ImageNet weights is worth 0.020 F1@0.5 [0.016, 0.023] over a random start
+  at the same budget (GW-DET-002). H10 did not: MobileNetV3-Small lost 0.056 [0.051, 0.062], about
+  twice the margin allowed (GW-DET-003). v0.1 keeps Large with ImageNet weights.
+- The sanity sequence changed the plan before any main run: the learning rate rose from 1e-3 to
+  5e-3 after the range test, and the per-epoch validation subset fell to 400 pages. All three runs
+  finished without a crash; 16.2 GPU-hours in all.
+

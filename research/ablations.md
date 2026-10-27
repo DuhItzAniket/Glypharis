@@ -29,6 +29,18 @@ three control seeds (8.30 to 8.32%). 15 comparisons, no multiplicity correction.
 `reports/training/phase07/ablation_table.md`. GW-REC-019 (stride 8 without CTC-aware batching)
 failed and was re-run as GW-REC-021 (`research/failures.md`).
 
+**Phase 8 (detector, full budget).** One change at a time against GW-DET-001 (MobileNetV3-Large,
+ImageNet initialisation, 24 epochs, seed 1337), each arm at the operating point stored in its
+`best.pt`; paired page bootstrap over all 1,715 HierText validation pages (1,000 resamples),
+`scripts/det_compare.py`. Decision rules are the pre-registered hypotheses H9 and H10.
+
+| Ablation | Control ID | Variant ID | Variable changed | F1@0.5 (val) | Δ vs control (95% CI) | Seeds | Verdict |
+|---|---|---|---|---|---|---|---|
+| Backbone initialisation (H9) | GW-DET-001 (0.724) | GW-DET-002 | ImageNet → random | 0.704 | -0.0197 [-0.0232, -0.0161] | 1 | worse (H9 supported) |
+| Backbone size (H10) | GW-DET-001 (0.724) | GW-DET-003 | MobileNetV3-Large → Small | 0.668 | -0.0556 [-0.0616, -0.0505] | 1 | worse, outside the 0.03 margin (H10 not supported) |
+
+Sources: `reports/training/GW-DET-001_vs_GW-DET-002.md`, `reports/training/GW-DET-001_vs_GW-DET-003.md`.
+
 CPU latency of the architectures tried (PyTorch, fp32, batch 1, the baselines' 100 HierText
 validation lines; `reports/training/phase07/cpu_latency.md`), against ADR-0011's line target of
 25 ms mean and 70 ms p95:

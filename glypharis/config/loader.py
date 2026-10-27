@@ -5,7 +5,8 @@ Resolution order:
      and deep-merge them, parents first. Mappings merge key by key; lists and scalars replace.
   2. Apply ``key.path=value`` overrides (values parsed as YAML, so ``32`` is an int).
   3. Fill in schema defaults, then resolve ``${dotted.key}`` references inside strings.
-  4. Convert to typed dataclasses. Unknown keys and wrong types raise ConfigError.
+  4. Convert to typed dataclasses. Unknown keys, missing required keys and wrong types raise
+     ConfigError.
   5. Run value checks (`RunConfig.validate`).
 """
 
@@ -233,15 +234,28 @@ def _convert(value: Any, tp: Any, where: str) -> Any:
 def from_dict(cls: type[T], data: Mapping[str, Any], where: str = "") -> T:
     """Build dataclass ``cls`` from a mapping, rejecting unknown keys and wrong types."""
     hints = get_type_hints(cls)
-    names = {f.name for f in dataclasses.fields(cls)}  # type: ignore[arg-type]
+    fields = dataclasses.fields(cls)  # type: ignore[arg-type]
+    names = {f.name for f in fields}
+    prefix = f"{where}." if where else ""
     unknown = sorted(set(data) - names)
     if unknown:
-        prefix = f"{where}." if where else ""
         raise ConfigError(
             "unknown config key(s): "
             + ", ".join(prefix + str(k) for k in unknown)
             + f" (allowed: {', '.join(sorted(names))})"
         )
+    # A field without a default (a detector operating point) must be given. Sections merged onto
+    # nothing, and list items, never receive defaults, so name the missing key instead of letting
+    # cls(**kwargs) raise TypeError.
+    missing = sorted(
+        f.name
+        for f in fields
+        if f.default is dataclasses.MISSING
+        and f.default_factory is dataclasses.MISSING
+        and f.name not in data
+    )
+    if missing:
+        raise ConfigError("missing config key(s): " + ", ".join(prefix + k for k in missing))
     kwargs = {
         key: _convert(value, hints[key], f"{where}.{key}" if where else key)
         for key, value in data.items()
@@ -281,8 +295,20 @@ _ADDED_DEFAULTS: dict[tuple[str, str], Any] = {
 
 
 def config_to_dict(cfg: RunConfig) -> dict[str, Any]:
-    """The resolved config as plain data: what is hashed, saved and compared on resume."""
+    """The resolved config as plain data: what is hashed, saved and compared on resume.
+
+    An absent ``det`` section is left out, and a det run leaves out the recognizer ``data`` and
+    ``model`` sections (validated to be defaults). The detector schema therefore cannot move a
+    recognizer hash, and recognizer schema growth cannot move a detector hash. Recognizer fields
+    added after runs were hashed are left out while they hold their defaults, so older runs keep
+    their hashes.
+    """
     d = dataclasses.asdict(cfg)
+    if d.get("det") is None:
+        d.pop("det", None)
+    if cfg.task == "det":
+        d.pop("data", None)
+        d.pop("model", None)
     for (section, key), default in _ADDED_DEFAULTS.items():
         part = d.get(section, {})
         if key in part and part[key] == default:

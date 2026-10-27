@@ -1389,6 +1389,76 @@
    "end": "2026-10-26 21:10:55",
    "hours": 6.295555555555556,
    "outcome": "done"
+  },
+  {
+   "device": "gpu",
+   "experiment": "GW-DET-001",
+   "kind": "sanity",
+   "detail": "",
+   "start": "2026-10-26 21:12:15",
+   "end": "2026-10-26 21:29:59",
+   "hours": 0.29555555555555557,
+   "outcome": "failed"
+  },
+  {
+   "device": "gpu",
+   "experiment": "GW-DET-002",
+   "kind": "sanity",
+   "detail": "",
+   "start": "2026-10-26 21:29:59",
+   "end": "2026-10-26 21:45:30",
+   "hours": 0.2586111111111111,
+   "outcome": "failed"
+  },
+  {
+   "device": "gpu",
+   "experiment": "GW-DET-003",
+   "kind": "sanity",
+   "detail": "",
+   "start": "2026-10-26 21:45:30",
+   "end": "2026-10-26 21:58:57",
+   "hours": 0.22416666666666665,
+   "outcome": "failed"
+  },
+  {
+   "device": "gpu",
+   "experiment": "GW-DET-001",
+   "kind": "resume_check",
+   "detail": "",
+   "start": "2026-10-26 21:58:57",
+   "end": "2026-10-26 22:04:44",
+   "hours": 0.09638888888888889,
+   "outcome": "done"
+  },
+  {
+   "device": "gpu",
+   "experiment": "GW-DET-001",
+   "kind": "train",
+   "detail": "",
+   "start": "2026-10-26 22:08:46",
+   "end": "2026-10-27 03:29:33",
+   "hours": 5.346388888888889,
+   "outcome": "done"
+  },
+  {
+   "device": "gpu",
+   "experiment": "GW-DET-002",
+   "kind": "train",
+   "detail": "",
+   "start": "2026-10-27 03:29:33",
+   "end": "2026-10-27 08:39:25",
+   "hours": 5.164444444444444,
+   "outcome": "done"
+  },
+  {
+   "device": "gpu",
+   "experiment": "GW-DET-003",
+   "kind": "train",
+   "detail": "",
+   "start": "2026-10-27 17:25:21",
+   "end": "2026-10-27 22:12:57",
+   "hours": 4.793333333333333,
+   "outcome": "done"
   }
  ],
  "experiments": {
@@ -1631,11 +1701,35 @@
    "failed_jobs": 1,
    "wall_h": 20.37361111111111,
    "train_h": 19.3109988888889
+  },
+  "GW-DET-001": {
+   "device": "gpu",
+   "phase": "08",
+   "jobs": 3,
+   "failed_jobs": 1,
+   "wall_h": 5.738333333333333,
+   "train_h": 4.862521928750005
+  },
+  "GW-DET-002": {
+   "device": "gpu",
+   "phase": "08",
+   "jobs": 2,
+   "failed_jobs": 1,
+   "wall_h": 5.423055555555555,
+   "train_h": 4.716744660222248
+  },
+  "GW-DET-003": {
+   "device": "gpu",
+   "phase": "08",
+   "jobs": 2,
+   "failed_jobs": 1,
+   "wall_h": 5.0175,
+   "train_h": 4.327413966083333
   }
  },
  "totals": {
-  "gpu_h": 66.83083333333335,
-  "gpu_failed_h": 21.79,
+  "gpu_h": 83.00972222222222,
+  "gpu_failed_h": 22.56833333333333,
   "cpu_h": 45.94888888888887,
   "cpu_failed_h": 1.932222222222222
  }

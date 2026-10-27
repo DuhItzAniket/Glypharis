@@ -84,3 +84,39 @@ def paired_ratio_diff_ci(
     q = (1 - level) / 2
     lo, hi = np.quantile(diff, [q, 1 - q])
     return Interval(value, float(lo), float(hi), resamples, unit)
+
+
+def paired_ratios_diff_ci(
+    num_a: np.ndarray,
+    den_a: np.ndarray,
+    num_b: np.ndarray,
+    den_b: np.ndarray,
+    unit: str,
+    resamples: int = DEFAULT_RESAMPLES,
+    seed: int = DEFAULT_SEED,
+    level: float = 0.95,
+) -> Interval:
+    """CI for sum(num_a)/sum(den_a) - sum(num_b)/sum(den_b) on the same resampled units.
+
+    Unlike `paired_ratio_diff_ci`, each system has its own denominator, as for detection F1
+    (num = 2tp, den = 2tp + fp + fn per page): two detectors predict different boxes on a page.
+    """
+    arrays = [np.asarray(x, dtype=np.float64) for x in (num_a, den_a, num_b, den_b)]
+    if arrays[0].ndim != 1 or any(x.shape != arrays[0].shape for x in arrays):
+        raise ValueError("numerators and denominators must be 1-D arrays of the same length")
+    na, da, nb, db = arrays
+
+    def ratio(num: float, den: float) -> float:
+        return num / den if den else 0.0
+
+    value = ratio(float(na.sum()), float(da.sum())) - ratio(float(nb.sum()), float(db.sum()))
+    n = na.size
+    if n == 0:
+        return Interval(value, value, value, 0, unit)
+    idx = _indices(n, resamples, seed)
+    sums = [x[idx].sum(axis=1) for x in arrays]
+    ra = np.divide(sums[0], sums[1], out=np.zeros(resamples), where=sums[1] > 0)
+    rb = np.divide(sums[2], sums[3], out=np.zeros(resamples), where=sums[3] > 0)
+    q = (1 - level) / 2
+    lo, hi = np.quantile(ra - rb, [q, 1 - q])
+    return Interval(value, float(lo), float(hi), resamples, unit)

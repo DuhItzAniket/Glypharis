@@ -21,12 +21,23 @@ Note: PyYAML reads `1e-3` (no decimal point) as text. Write floats as `1.0e-3`.
 | `base.yaml` | 1 | Shared defaults: seed, device, precision, logging, paths |
 | `glypharis_rec.yaml` | 6 | CRNN recognizer baseline (GW-REC-001) |
 | `glypharis_rec_svtr.yaml` | 7 | SVTR-style recognizer candidate |
-| `glypharis_det.yaml` | 8 | DBNet-style detector baseline |
+| `det/gw-det-001.yaml` | 8 | GLYPHARIS-Det baseline (GW-DET-001): DBNet-style, MobileNetV3-Large, ImageNet init, HierText pages |
+| `det/gw-det-002.yaml` | 8 | GW-DET-001 with a randomly initialised backbone (GW-DET-002, H9) |
+| `det/gw-det-003.yaml` | 8 | GW-DET-001 with a MobileNetV3-Small backbone (GW-DET-003, H10) |
 | `pipeline.yaml` | 10 | Detector + recognizer + reading order + confidence |
 | `experiments/GW-*.yaml` | 6+ | One small override file per registered experiment |
 
 Experiment files only contain the keys that differ from their parent, and declare the parent with
 `inherits:`. The resolved, fully-expanded config is saved next to every checkpoint.
+
+Detector configs (`task: det`) put every detector key under one `det:` section (data, augment, labels,
+model, loss, infer, post, diagnostics; `DetConfig` in the schema). The recognizer sections `data` and
+`model` must stay at their defaults there and are left out of the config hash: adding the detector
+left every recognizer hash unchanged (a test pins them), and changes to the recognizer's `data` and
+`model` sections cannot move a detector hash. `gw-det-002.yaml` and `gw-det-003.yaml` inherit
+`gw-det-001.yaml` and change only the backbone keys, which a test checks. `epochs`, and the learning
+rate, `val_subset`, worker and batch fallbacks, are frozen from the sanity sequence by a dated
+amendment in `research/experiments.md` before the main runs start.
 
 ## Planned schema (training)
 

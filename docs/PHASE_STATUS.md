@@ -14,8 +14,8 @@ Phases run in the order set by [ADR-0008](decisions/ADR-0008-usable-engine-first
 | 4 | Preprocessing, charset, GlyphSynth, GDC | **COMPLETE** | `phase-04` |
 | 5 | Baseline systems | **COMPLETE** | `phase-05` |
 | 6 | Recognition baseline | **COMPLETE** | `phase-06` |
-| 7 | Recognizer improvement | **IN PROGRESS** (gate: push, CI, merge) | — |
-| 8 | Text detector | not started | — |
+| 7 | Recognizer improvement | **COMPLETE** | `phase-07` |
+| 8 | Text detector | **IN PROGRESS** (gate: push, CI, merge) | — |
 | 9 | Detector error analysis | not started | — |
 | 10 | Full OCR pipeline | not started | — |
 | 11 | Robustness training | not started | — |
@@ -452,8 +452,8 @@ parents).
 
 ## Phase 07 — Recognizer improvement
 
-**Status:** write-up done (2026-10-26). Gate open: push, pull request, CI and merge. Opened in
-parallel with Phases 5 and 6 at the owner's request (2026-10-23), on `phase/07-rec-improvement`.
+**Status:** COMPLETE (2026-10-27). Opened in parallel with Phases 5 and 6 at the owner's request
+(2026-10-23), on `phase/07-rec-improvement`.
 
 **Objective:** improve the recognizer under controlled conditions and settle its architecture and
 hyperparameters. Validation data only.
@@ -541,7 +541,7 @@ because the GPU was training the detector).
 | A chosen recognizer configuration with the evidence table | pass: GW-REC-022's recipe, confirmed at the full budget by GW-REC-024 | `reports/training/phase07/ablation_table.md`, `research/ablations.md`, `reports/training/compare/GW-REC-024_vs_GW-REC-001.md` |
 | All runs have diagnostic reports | pass: every run's report has its diagnostics section (no flags raised in Phase 7) | `reports/training/GW-REC-0*/report.md` |
 | Negative results recorded | pass: ten arms judged worse, the stride-8 OOM, the abandoned GW-REC-023 | `research/ablations.md`, `research/failures.md`, `research/experiments.md` |
-| CI green | pending (after the push) | — |
+| CI green | pass | runs 40363336641 (branch), 40363358399 (pull request), 40365154402 (`main`) |
 
 **Compute:** 55.3 GPU-hours in Phase 7, inside the plan's 30–60 (`reports/compute/ledger.md`; the
 hours of jobs that did not finish include the parts of crashed runs that later resumed).
@@ -554,4 +554,137 @@ hours of jobs that did not finish include the parts of crashed runs that later r
   pressure; two data-loading workers and the resume path kept every run going.
 - The optional TrOCR-Small fine-tune was not run (budget).
 
-**Git:** branch `phase/07-rec-improvement`; push and merge pending.
+**Git:** branch `phase/07-rec-improvement`, merged through pull request #7. Merge commit `9efb1f9`,
+tag `phase-07` (merge re-created with the noreply identity; same tree and parents).
+
+**CI status:** green on the branch, the pull request and `main` (run 40365154402).
+
+---
+
+## Phase 08 — Text detector (GLYPHARIS-Det)
+
+**Status:** write-up done (2026-10-27). Gate open: push, pull request, CI and merge. The code was
+built in parallel with Phase 7 (owner approved, 2026-10-23) on `phase/08-detector`, which now
+includes `main` with Phases 5 to 7. The runs used the GPU only after Phase 7's runs had finished.
+
+**Objective:** a lightweight line detector, trained and evaluated on its own.
+
+**Implemented**
+- Config: one optional `det:` section (`DetConfig` in `glypharis.config.schema`) for data,
+  augmentation, labels, model, loss, inference, post-processing and diagnostics. For `task: det` the
+  recognizer's `data` and `model` sections must keep their defaults and are left out of the config
+  hash, so the recognizer hashes did not move (pinned by a test). A missing required key is a config
+  error, not a crash. Configs `configs/det/gw-det-001.yaml` to `003`.
+- The MobileNetV3 Large and Small ImageNet weights, registered as a pinned source
+  (`data/sources.yaml`, DATASETS.md): size and SHA-256 are checked before loading, and nothing is
+  downloaded at run time.
+- Data (`glypharis.data.det_labels`, `det_geometry`, `det_augment`, `det_dataset`): DBNet shrink and
+  threshold maps sampled exactly at pixel centres, with the shrink done by a shapely mitre offset
+  instead of pyclipper; don't-care lines handled as the evaluator handles them; lines too small at
+  the training scale, or with too thin a kernel, become don't care in that sample; one affine warp
+  per crop, deterministic per seed, epoch and index; a memory-mapped page index for spawned workers;
+  start-up guards against test or GDC pages, a page-file hash check and a train/validation leakage
+  check.
+- Model (`glypharis.models.det`): DBNet on MobileNetV3 features (FPN neck at 1/4 resolution,
+  probability and threshold heads with their final layers in fp32), normalisation inside the model
+  on uint8 RGB input, and the SE pooling replaced by a plain mean so that its CUDA backward is
+  deterministic. The DB loss (BCE with sort-based OHEM 3:1, Dice, masked L1) runs in fp32.
+- Post-processing (`postprocess.py`, no torch): connected components scored by their mean
+  probability, two pre-registered unclip operating points (`dbnet15`, `inverse10`) from one forward
+  pass, `quad` (default) or `poly` box output, and a text-direction rule for the TL/TR/BR/BL quad.
+  `TextLineDetector` is the API for Phases 10, 17 and 18, with a release-file export.
+- Evaluation (`glypharis.eval.det_matching`, `det_slices`, `det_overlay`): per-box match details for
+  merge and split counts; pruned matching that gives the same counts as `evaluate_page` at bounded
+  cost (a test checks the parity); the Phase 5 baseline page set; the five plan slices, defined
+  before any result; overlays. `glypharis.eval.stats` gains a paired page-bootstrap CI for the
+  difference of two F1 scores.
+- Training (`glypharis.training.loop`, `det_trainer`, `det_eval`, `det_report`): a task-agnostic
+  loop with exact resume, which the recognizer moves onto after Phase 7 merges; the detector
+  trainer, with a GPU headroom check at start-up (exit 4 when another process holds the GPU),
+  validation on a seeded subset every epoch and full validation of `best.pt` and `last.pt` at the
+  end; a run report written on every exit path, with a failure banner, CIs, curves, slices, overlays
+  and the label ceiling. `glypharis.diagnostics.det` adds the detection flags (EXPERIMENT_PROTOCOL
+  §6).
+- Scripts: `det_sanity.py` (label ceiling, overfit one batch, LR range test, dry run),
+  `det_resume_check.py`, `det_eval.py`, `det_compare.py`, `det_preview.py`, `det_report.py`.
+  `train.py` runs `task: det`.
+
+**Plan** (registered 2026-10-25, before any GPU run)
+1. Sanity sequence under the planned IDs: label ceiling (once, CPU only), the label preview, overfit
+   one batch (GW-DET-001), LR range test (001 and 002), a 10-minute dry run with its VRAM gate for
+   each of 001, 002 and 003, and the resume check (001). Reports go to
+   `reports/training/sanity/<ID>/`.
+2. Freeze: the pre-declared decision rules in the GW-DET-001 entry of `research/experiments.md` turn
+   the measurements into `epochs` and any fallback, the same for all three configs. A dated
+   amendment to each entry cites its sanity report and final config hash before any main run starts.
+3. Main runs GW-DET-001, 002 and 003 at equal step budgets.
+4. `scripts/det_compare.py` at each arm's stored operating point: H9 (001 vs 002) and H10 (001 vs
+   003), into `research/ablations.md`.
+
+**Sanity sequence and freeze (2026-10-26).** Label ceiling F1@0.5 0.948, overfit one batch and the
+resume check passed (`reports/training/sanity/`). The pre-declared rules then changed the plan
+before any main run, in a dated amendment to each registry entry: learning rate 1e-3 → 5e-3 (the
+range test suggested 6.0e-3), 24 epochs, a 400-page validation subset per epoch instead of 800
+(validation took 32–37% of an epoch), and 4 loader workers instead of 6 (peak RSS 8.13 GB against
+an 8 GB gate). Final config hashes `ebd82071f0a36782`, `26340926cb03c343`, `2ba0a429ed5ba49c`.
+
+**Results (2026-10-27).** All three runs finished their 24 epochs without a crash. On all 1,715
+HierText validation pages, each `best.pt` at its stored operating point (`inverse10` for all three):
+
+| Run | Backbone | Init | Parameters (inference) | F1@0.5 [95% CI] | Precision | Recall | Δ vs GW-DET-001 [95% CI] |
+|---|---|---|---|---|---|---|---|
+| GW-DET-001 | MobileNetV3-Large | ImageNet | 3,187,209 | 0.724 [0.708, 0.739] | 0.924 | 0.595 | — |
+| GW-DET-002 | MobileNetV3-Large | random | 3,187,209 | 0.704 [0.689, 0.719] | 0.911 | 0.574 | −0.020 [−0.023, −0.016] |
+| GW-DET-003 | MobileNetV3-Small | ImageNet | 1,096,953 | 0.668 [0.651, 0.685] | 0.914 | 0.527 | −0.056 [−0.062, −0.051] |
+
+- H9 (ImageNet initialisation helps) is supported, exploratory with one seed; H10 (Small within 0.03
+  of Large) is not: the whole CI lies beyond the margin. `research/hypotheses.md`,
+  `research/ablations.md`.
+- **Chosen detector:** GW-DET-001, MobileNetV3-Large from ImageNet weights, `inverse10`, `quad`
+  boxes (ADR-0012). On the 400 Phase 5 validation pages it reaches F1@0.5 0.726 [0.688, 0.760],
+  against 0.579 [0.544, 0.614] for the best baseline detector there (PP-OCRv6 small); only
+  GLYPHARIS-Det was trained on HierText's line definition, so part of that gap is the definition.
+- Its errors are misses (finding F5): recall 0.20 for lines under 8 px high and 0.18 beyond 45° of
+  rotation, against 0.72 for 12–20 px lines; slice F1@0.5 from 0.536 (rotated) to 0.859
+  (multi-line). This is Phase 9's starting point.
+
+**Descoped / moved (documented)**
+- CLEval-style detection metrics: descoped from Phase 8, with the reason, in the IMPLEMENTATION_PLAN
+  §8 deviations table and EXPERIMENT_PROTOCOL §11 (2026-10-25). The owner signs the descope off at
+  the Phase 8 gate.
+- HierText's native PQ-style metric: computed from Phase 14 with the official code, for the detector
+  as for every system (EXPERIMENT_PROTOCOL §11, 2026-10-22 and 2026-10-25).
+
+**Tests:** 569 pass locally with `main` merged in, the GPU-marked tests included (2026-10-27, GPU
+idle). `scripts/compute_ledger.py` now counts the Phase 8 jobs and has a test for the detector logs.
+
+**Exit criteria**
+
+| Criterion | Result | Evidence |
+|---|---|---|
+| Overfit-one-batch passes | pass: Dice 0.973, threshold L1 0.018, F1@0.5 0.944 against a batch ceiling of 0.990 | `reports/training/sanity/GW-DET-001/sanity.md` |
+| Validation F1 reported with CI | pass: full validation with page-bootstrap CIs for all three runs | `reports/training/GW-DET-00N/report.md` |
+| Overlays saved for each slice (small text, rotated, dense, multi-line, noisy background) | pass: one sheet per slice plus the worst pages, for each run | `reports/training/GW-DET-00N/overlays/` |
+| Diagnostics report generated | pass: each run report has its diagnostics section, slice and line-level recall tables and post-processing counters | `reports/training/GW-DET-00N/report.md` |
+| CI green (post-processing unit tests on synthetic masks) | pending the push | `tests/test_det_postprocess.py` |
+
+**Compute:** 16.2 GPU-hours in Phase 8, inside the plan's 20–40 (`reports/compute/ledger.md`): 13.9 h
+of training, the rest the sanity sequence, the resume check and full-validation scoring. The 0.8 h
+counted as jobs that did not finish are the three sanity runs that reported FAIL because a
+pre-declared rule fired; they finished, and the rules were applied as planned.
+
+**Known issues**
+- The ImageNet weight terms are an owner decision before v0.1 ships a detector (RISK_REGISTER R-05).
+  GW-DET-002 measured the fallback: training from scratch costs about 0.02 F1@0.5.
+- The CLEval descope (above) needs the owner's sign-off at this gate.
+- The recognizer trainer is not on the shared loop yet. Phase 7 has merged, but the move is left out
+  of this gate to keep it to the detector; it is done in its own commit before Phase 10 builds the
+  pipeline, accepted only if the recognizer tests pass unchanged and an existing GW-REC `last.pt`
+  still resumes.
+- `LABEL_VERSION` 2, the fallback for a slow data loader, was not needed: the Large runs waited for
+  data 2–3% of each epoch. The Small run waited 21–31%, which cost wall-clock time, not steps.
+- Detector CPU latency is not measured yet. ADR-0011's page target is checked when the pipeline
+  exists (Phase 10) and again after export (Phase 17).
+- One seed per arm; the paired CIs cover page sampling, not training randomness.
+
+**Git:** branch `phase/08-detector`, with `main` (Phases 5 to 7) merged in; push and merge pending.

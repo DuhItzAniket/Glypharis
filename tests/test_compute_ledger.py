@@ -61,3 +61,28 @@ def test_killed_jobs_and_a_finished_runs_exit_crash_are_accounted(tmp_path):
     assert first["outcome"] == "interrupted" and first["hours"] is None  # no end line: unknown
     assert last["outcome"].startswith("done")  # it finished the run, then exited non-zero
     assert res["experiments"]["GW-REC-007"]["failed_jobs"] == 1
+
+
+def test_detector_chain_lines_pair_and_cpu_steps_are_skipped(tmp_path):
+    gpu = tmp_path / "chain.log"
+    gpu.write_text(
+        "2026-10-26 21:11:55 START rec_profile GW-REC-024\n"
+        "2026-10-26 21:12:06 DONE  rec_profile GW-REC-024 :: profile GW-REC-024: mean 24.8 ms\n"
+        "2026-10-26 21:12:15 START det_sanity GW-DET-001 overfit lr_range dry_run\n"
+        "2026-10-26 21:42:15 FAIL  det_sanity GW-DET-001 overfit lr_range dry_run :: lr_range\n"
+        "2026-10-26 21:58:57 START det_resume_check GW-DET-001\n"
+        "2026-10-26 22:04:57 DONE  det_resume_check GW-DET-001 :: identical\n"
+        "2026-10-26 22:08:46 START train.py --config configs/det/gw-det-001.yaml\n"
+        "2026-10-27 03:08:46 DONE  GW-DET-001\n",
+        encoding="utf-8",
+    )
+    out = tmp_path / "out"
+    assert compute_ledger.main(["--gpu-logs", str(gpu), "--cpu-logs", "--runs", str(tmp_path),
+                                "--out", str(out)]) == 0  # fmt: skip
+    res = json.loads((out / "ledger.json").read_text(encoding="utf-8"))
+    jobs = {(j["experiment"], j["kind"]): j for j in res["jobs"]}
+    assert set(jobs) == {("GW-DET-001", "sanity"), ("GW-DET-001", "resume_check"),
+                         ("GW-DET-001", "train")}  # fmt: skip
+    assert jobs[("GW-DET-001", "train")]["hours"] == 5.0
+    assert jobs[("GW-DET-001", "sanity")]["outcome"] == "failed"
+    assert res["experiments"]["GW-DET-001"]["phase"] == "08"
