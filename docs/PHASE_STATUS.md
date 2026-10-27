@@ -16,7 +16,7 @@ Phases run in the order set by [ADR-0008](decisions/ADR-0008-usable-engine-first
 | 6 | Recognition baseline | **COMPLETE** | `phase-06` |
 | 7 | Recognizer improvement | **COMPLETE** | `phase-07` |
 | 8 | Text detector | **COMPLETE** | `phase-08` |
-| 9 | Detector error analysis | not started | — |
+| 9 | Detector error analysis | **IN PROGRESS** | — |
 | 10 | Full OCR pipeline | not started | — |
 | 11 | Robustness training | not started | — |
 | 12 | Synthetic data study | not started | — |
@@ -694,3 +694,70 @@ request #8. Merge commit `60659f3`, tag `phase-08` (merge re-created with the no
 tree and parents).
 
 **CI status:** green on the branch, the pull request and `main` (run 40556174553).
+
+---
+
+## Phase 09 — Detector error analysis
+
+**Status:** IN PROGRESS (opened 2026-10-27, on `phase/09-det-analysis`). Validation data only.
+
+**Objective:** understand GW-DET-001's failures before the pipeline is built, and fix what can be
+fixed without retraining: post-processing, input resolution and box shape.
+
+**Plan** (registered 2026-10-27, before any Phase 9 number was computed)
+
+1. **Error analysis of GW-DET-001** (`best.pt`, operating point of record `inverse10`, all 1,715
+   validation pages; descriptive, nothing is selected on it). Written to
+   `reports/error_cases/detector/` by `scripts/det_analysis.py` from the run's saved boxes and
+   candidates:
+   - *Slices:* recall by line height and text angle (as in the run report), and page-level
+     precision, recall and F1 by quartile of care-line density, blur (variance of the Laplacian)
+     and contrast, from the Phase 3 audit, with page-bootstrap CIs.
+   - *Merges and splits* at IoU 0.5, counting care lines only. A **merge** is a prediction that
+     covers at least two care lines, each with intersection / line area ≥ 0.5. A **split** line is
+     a care line with at least two predictions, each with intersection / prediction area ≥ 0.5.
+   - *Missed lines (fn)*, each in the first category it fits: merged; split; poorly localised (best
+     IoU with any prediction in [0.3, 0.5)); partly found (some prediction covers ≥ 0.1 of the
+     line); missed. Missed lines are further split by whether a post-processing candidate existed
+     (a component whose area-rectangle centre lies inside the line, dropped by `box_thresh` or the
+     size filter: recoverable without retraining) or not (the network did not fire).
+   - *False alarms (fp)*, likewise: merge; fragment (a prediction mostly inside one care line,
+     intersection / prediction ≥ 0.5); poorly localised (best IoU with a care line in [0.3, 0.5));
+     background (intersection / prediction < 0.1 with every line, don't care included); other.
+   - *Galleries:* up to 24 crops per fn and fp category, drawn with `default_rng([20261027, k])`
+     over the sorted members, independent of results, plus the 12 worst pages.
+   - *Kernel excess* (RISK_REGISTER R-21): which unclip regime the trained map is in.
+2. **Two halves of validation for every choice.** The 1,715 pages are split once, seeded
+   (`det_matching.calibration_halves`, seed 20261027): half A selects, half B checks. A setting is
+   adopted only if, on half B, the paired page-bootstrap 95% CI of its F1@0.5 minus the current
+   setting's lies above 0. The B number is the one reported.
+3. **GW-DET-004: post-processing calibration** of GW-DET-001, at long side 1280, from cached 8-bit
+   probability maps on the CPU. Grid: `bin_thresh` 0.20–0.40 (step 0.05), `box_thresh` 0.4, 0.5,
+   0.6, 0.7, `min_component_area` 1 or 3, and unclip `inverse` 0.8–1.3 (step 0.1) or `dbnet`
+   1.3–2.1 (step 0.2): 440 settings. The arg-max of F1@0.5 on half A (ties: first in grid order)
+   against the operating point of record, by rule 2, then re-checked once on float maps.
+4. **GW-EFF-001: detector CPU latency** at long side 1024, 1280, 1536, 1792 and 2048:
+   `scripts/det_profile.py`, PyTorch fp32 with default threads, batch 1, on the 110 Phase 5
+   validation pages the baselines' page profiles used (10 warm-up, 100 timed), timing a decoded
+   page to boxes (resize, normalise, forward, post-processing).
+5. **GW-DET-005: input resolution.** The same five long sides with GW-DET-004's adopted
+   post-processing (or the record's). A long side is **eligible** if the estimated page time on
+   the profiled pages, its detector time plus 24.4 ms (GW-REC-024's mean line time) per predicted
+   box, meets ADR-0011's page target (mean ≤ 1.5 s, p95 ≤ 2.7 s). Among eligible long sides the
+   arg-max of F1@0.5 on half A is adopted against 1280 by rule 2. If no long side of 1280 or more
+   is eligible, 1280 stays and the gap goes to Phases 16 and 17 as a risk: a lower resolution is
+   not adopted on PyTorch timings, since ADR-0011 is judged on the ONNX Runtime build.
+6. **GW-DET-006: box shape** (ADR-0012 point 3, RISK_REGISTER R-22). `quad` against `poly` at the
+   adopted settings, on all validation pages and on the curved lines: care lines with at least six
+   polygon vertices whose polygon area is below 0.8 of their minimum-area rectangle's. Phase 14 uses
+   `poly` if, on the curved lines, the paired CI of recall@0.5 (poly minus quad) lies above 0 and,
+   on all pages, the CI of F1@0.5 does not lie below 0; otherwise `quad`. Recall is used on the
+   curved subset because precision cannot be restricted to a subset of lines. Phase 10 rectifies
+   the quad in either case.
+7. **Fixes that need retraining** (for example training labels for lines under 6 px, which
+   `min_text_size` turns into don't care) are not run in Phase 9. Each is either registered with
+   its cost for the owner to approve, or deferred to Phase 11 or 13 with the reason.
+
+**Exit criteria** (IMPLEMENTATION_PLAN Phase 9): `reports/error_cases/detector/` and written findings
+in `research/findings.md`; fixes either applied under a new experiment ID or deferred with a reason.
+
