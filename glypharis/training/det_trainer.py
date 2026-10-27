@@ -45,6 +45,7 @@ from glypharis.data.det_dataset import (
     TRAIN_EVAL_STREAM,
     TRAIN_SUBSET_STREAM,
     VAL_SUBSET_STREAM,
+    WORKER_CONTEXT,
     CropBatchSampler,
     DetEvalDataset,
     DetTrainDataset,
@@ -243,6 +244,7 @@ class DetTrainer(TrainerCore):
             prefetch_factor=2 if w else None,
             pin_memory=self.device.type == "cuda",
             worker_init_fn=det_worker_init if w else None,
+            multiprocessing_context=WORKER_CONTEXT if w else None,
             generator=make_generator(self.cfg.seed + 1000),  # never touches the global RNG
         )
 
@@ -257,6 +259,7 @@ class DetTrainer(TrainerCore):
             persistent_workers=persistent and w > 0,
             prefetch_factor=2 if w else None,
             worker_init_fn=det_worker_init if w else None,
+            multiprocessing_context=WORKER_CONTEXT if w else None,
             generator=make_generator(self.cfg.seed + 7),
         )
 

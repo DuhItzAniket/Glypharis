@@ -38,7 +38,13 @@ import torch
 
 from glypharis.config.cli import add_config_args, overrides_from_args
 from glypharis.config.loader import load_config
-from glypharis.data.det_dataset import DetEvalDataset, PageIndex, collate_eval, read_gt_pages
+from glypharis.data.det_dataset import (
+    WORKER_CONTEXT,
+    DetEvalDataset,
+    PageIndex,
+    collate_eval,
+    read_gt_pages,
+)
 from glypharis.data.download import sha256_file
 from glypharis.eval.access import open_test_access
 from glypharis.eval.det_matching import baseline_doc_ids
@@ -148,7 +154,11 @@ def main(argv: list[str] | None = None) -> int:
             backend = TorchProbMap(model, device)
             ds = DetEvalDataset([("val", index)], root, det, with_labels=False)
             loader = torch.utils.data.DataLoader(
-                ds, batch_size=1, collate_fn=collate_eval, num_workers=det.data.eval_workers
+                ds,
+                batch_size=1,
+                collate_fn=collate_eval,
+                num_workers=det.data.eval_workers,
+                multiprocessing_context=WORKER_CONTEXT if det.data.eval_workers else None,
             )
             if cache is not None:
                 cache.mkdir(parents=True, exist_ok=True)

@@ -506,6 +506,11 @@ def collate_eval(batch: list[dict[str, Any]]) -> dict[str, Any]:
     return out
 
 
+# Workers are always spawned, as on Windows. Forking would copy a process that already runs
+# threads (post-processing pool, torch and OpenCV threads), which can deadlock the child on Linux.
+WORKER_CONTEXT: Final = "spawn"
+
+
 def det_worker_init(worker_id: int) -> None:
     """Seed the worker like every loader does, and keep it to one OpenCV and one torch thread:
     six workers each spawning a thread per core would oversubscribe the CPU."""
