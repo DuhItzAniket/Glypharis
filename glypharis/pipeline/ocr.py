@@ -213,15 +213,16 @@ class GlypharisOCR:
     def from_pretrained(
         cls,
         name_or_path: str | Path = "glypharis-0.1.0",
-        backend: str = "onnx",
+        backend: str = "torch",
         threads: int | None = None,
         cache: bool = True,
     ) -> GlypharisOCR:
         """A model bundle by path, or by name from the model directories
-        (`glypharis.export.bundle.find_bundle`). Nothing is downloaded. ``backend`` is ``onnx``
-        (the default, ONNX Runtime on the CPU) or ``torch``. With ``cache`` a bundle already
-        loaded in this process with the same backend and threads is returned again. A missing or
-        damaged bundle raises `glypharis.errors.ModelLoadError`."""
+        (`glypharis.export.bundle.find_bundle`). Nothing is downloaded. ``backend`` is ``torch``
+        (the default, PyTorch on the CPU) or ``onnx`` (ONNX Runtime; reads the same, but its
+        recognizer is slower for now, Phase 17). With ``cache`` a bundle already loaded in this
+        process with the same backend and threads is returned again. A missing or damaged bundle
+        raises `glypharis.errors.ModelLoadError`."""
         from glypharis.export.bundle import find_bundle, load_bundle
 
         path = find_bundle(name_or_path)

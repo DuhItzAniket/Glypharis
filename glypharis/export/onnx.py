@@ -8,7 +8,12 @@ traced through data-dependent branches: both models were written for this.
 
 `OnnxProbMap` is a `ProbMapBackend` for `TextLineDetector`; `OnnxLineModel` stands in for the
 recognizer module inside `TextRecognizer` (same call, same ``frames``). ONNX Runtime runs on the
-CPU with its default threads unless ``threads`` is given.
+CPU with its default threads unless ``threads`` is given, and without its memory arena.
+
+Measured (Phase 17): the exported detector runs about twice as fast as PyTorch, but the exported
+recognizer about four and a half times slower, because the SVTR's global attention is exported as
+plain matrix products over every token pair, where PyTorch uses a fused kernel. Until that is
+fixed (Phase 16), PyTorch is the default backend.
 """
 
 from __future__ import annotations
@@ -34,6 +39,10 @@ def _session(path: str | Path, threads: int | None) -> Any:
     if threads:
         opts.intra_op_num_threads = threads
     opts.graph_optimization_level = ort.GraphOptimizationLevel.ORT_ENABLE_ALL
+    # Every page and batch has its own shape; with the memory arena on, ONNX Runtime kept the
+    # buffers of each one and grew past 10 GB on the 110 profile pages (GW-EFF-004).
+    opts.enable_cpu_mem_arena = False
+    opts.enable_mem_pattern = False
     return ort.InferenceSession(str(path), opts, providers=["CPUExecutionProvider"])
 
 

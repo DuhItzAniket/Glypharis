@@ -50,6 +50,16 @@ Phases 9, 10 and 14 rely on, and each of them changes the numbers:
 - `quad` output may under-cover long curved lines at IoU 0.5; the risk is tracked as R-22 and
   measured in Phase 9 before any test-set evaluation.
 
+## Phase 9 outcome (2026-10-28)
+- The trained network sits in the regime `inverse` unclip assumes: its kernels are as wide as the
+  label kernels (median ratio 1.00, `reports/error_cases/detector/GW-DET-001/analysis.md`). The
+  `inverse` family won every post-processing comparison that mattered (GW-DET-004).
+- As this ADR allowed, Phase 9 moved the operating point as its own registered change: `inverse09`
+  with `box_thresh` 0.5 and `min_component_area` 1 (GW-DET-004), at long side 1536 (GW-DET-005).
+  These settings go into the v0.1 release file; training checkpoints keep their stored point.
+- `poly` against `quad` could not be judged: HierText's validation lines are all four-point
+  polygons (GW-DET-006). `quad` stays; R-22 stays open.
+
 ## Revisit if
 - Phase 9's calibration shows a single operating point dominates on validation.
 - Phase 9 finds `poly` better on curved validation lines, in which case the Phase 14 setting changes

@@ -1,0 +1,116 @@
+{
+ "format": "glypharis-bundle-1",
+ "version": "0.1.0",
+ "files": {
+  "detector.pt": "3b53997a9d031556b5b1bc039e1be99af43f9d2e08fe9ae7335f5324de2846de",
+  "detector.onnx": "378c1feda480c1bb1dde838dd4a5f4579a904710a7f7b222d978c583b5bddcb7",
+  "recognizer.pt": "4541f5aedb117fad80352558f3465ff81a387330f7e51bb2c537812e27535baf",
+  "recognizer.onnx": "074ba6acd540171bf62f854a154077780414bdc31cd80f08d435987e1b8df550"
+ },
+ "detector": {
+  "spec": {
+   "model": {
+    "backbone": "mobilenet_v3_large",
+    "init": "imagenet",
+    "weights": "raw/imagenet_backbones/mobilenet_v3_large-8738ca79.pth",
+    "weights_sha256": "8738ca797c879b547d18bbd15da5736ff2557b2036a9af72225393ca61759a04",
+    "inner_channels": 96,
+    "channels_last": true
+   },
+   "labels": {
+    "shrink_ratio": 0.4,
+    "thresh_min": 0.3,
+    "thresh_max": 0.7,
+    "min_text_size": 6.0
+   },
+   "infer": {
+    "long_side": 1536
+   },
+   "post": {
+    "bin_thresh": 0.3,
+    "box_thresh": 0.6,
+    "min_component_area": 3,
+    "min_box_side": 3.0,
+    "max_candidates": 5000,
+    "box_type": "quad",
+    "operating_points": [
+     {
+      "name": "dbnet15",
+      "unclip_mode": "dbnet",
+      "unclip_ratio": 1.5
+     },
+     {
+      "name": "inverse10",
+      "unclip_mode": "inverse",
+      "unclip_ratio": 1.0
+     }
+    ]
+   },
+   "operating_point": "inverse10",
+   "label_version": 1
+  }
+ },
+ "recognizer": {
+  "height": 48,
+  "max_width": 1536,
+  "temperature": 2.35,
+  "arch": {
+   "model_name": "svtr",
+   "model": {
+    "cnn_channels": [
+     64,
+     128,
+     256,
+     256,
+     512,
+     512
+    ],
+    "lstm_hidden": 256,
+    "lstm_layers": 2,
+    "dropout": 0.1,
+    "frame_stride": 4,
+    "svtr": {
+     "dims": [
+      96,
+      192,
+      256
+     ],
+     "local_blocks": [
+      3,
+      3,
+      0
+     ],
+     "global_blocks": [
+      0,
+      3,
+      6
+     ],
+     "heads": [
+      3,
+      6,
+      8
+     ],
+     "mlp_ratio": 4.0,
+     "local_kernel": [
+      3,
+      7
+     ]
+    }
+   }
+  },
+  "classes": 275
+ },
+ "onnx_opset": 17,
+ "torch": "2.14.1+cu126",
+ "sources": {
+  "detector": {
+   "experiment": "GW-DET-001",
+   "checkpoint": "checkpoints/GW-DET-001/best.pt",
+   "settings": "Phase 9: GW-DET-004 post-processing, GW-DET-005 resolution"
+  },
+  "recognizer": {
+   "run": "GW-REC-024",
+   "temperature": "GW-E2E-003"
+  }
+ }
+}

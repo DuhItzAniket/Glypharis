@@ -67,7 +67,7 @@ def main(argv: list[str] | None = None) -> int:
         cer[name] = sum(r.bag_errors for r in rs) / sum(r.bag_ref_chars for r in rs)
     diff = cer["package"] - cer["phase10"]
     res = {
-        "model": str(args.model),
+        "model": Path(args.model).name,  # the bundle name; never a local path
         "backend": args.backend,
         "model_version": ocr.model_version,
         "pages": len(ids),

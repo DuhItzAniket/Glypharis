@@ -1,0 +1,61 @@
+{
+ "rows": [
+  {
+   "long_side": 1024,
+   "f1_50": 0.7177284124119648,
+   "precision": 0.8549958146259797,
+   "recall": 0.6184395211228843,
+   "pages": 857,
+   "det_ms_mean": 132.26644,
+   "est_page_ms_mean": 954.05844,
+   "est_page_ms_p95": 1812.3267999999998,
+   "eligible": true
+  },
+  {
+   "long_side": 1280,
+   "f1_50": 0.7626751320167272,
+   "precision": 0.8560660568061124,
+   "recall": 0.6876565295169946,
+   "pages": 857,
+   "det_ms_mean": 203.29798000000002,
+   "est_page_ms_mean": 1129.76598,
+   "est_page_ms_p95": 2174.8150499999997,
+   "eligible": true
+  },
+  {
+   "long_side": 1536,
+   "f1_50": 0.7840255210041441,
+   "precision": 0.8552704328877614,
+   "recall": 0.7237374432365488,
+   "pages": 857,
+   "det_ms_mean": 326.16539,
+   "est_page_ms_mean": 1322.90539,
+   "est_page_ms_p95": 2523.3432999999995,
+   "eligible": true
+  },
+  {
+   "long_side": 1792,
+   "f1_50": 0.7930868096679388,
+   "precision": 0.8460194659346144,
+   "recall": 0.7463877803770469,
+   "pages": 857,
+   "det_ms_mean": 451.66168999999996,
+   "est_page_ms_mean": 1514.2816899999996,
+   "est_page_ms_p95": 2788.323699999998,
+   "eligible": false
+  },
+  {
+   "long_side": 2048,
+   "f1_50": 0.7962957620517555,
+   "precision": 0.8366524203570671,
+   "recall": 0.7596532269161965,
+   "pages": 857,
+   "det_ms_mean": 615.13441,
+   "est_page_ms_mean": 1708.25441,
+   "est_page_ms_p95": 3025.4102999999977,
+   "eligible": false
+  }
+ ],
+ "choice": 1536,
+ "note": "the eligible long side with the highest F1@0.5 on half A"
+}
