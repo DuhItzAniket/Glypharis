@@ -2,7 +2,7 @@
 
     python scripts/det_profile.py --config configs/det/gw-det-001.yaml \
         --checkpoint checkpoints/GW-DET-001/best.pt --set det.infer.long_side=1536
-    python scripts/det_profile.py --table      # the table from every profiled long side
+    python scripts/det_profile.py --config configs/det/gw-det-001.yaml --table  # all long sides
 
 Same protocol as `scripts/run_baselines.py --profile` (EXPERIMENT_PROTOCOL §3), on the same pages:
 the seeded Phase 5 HierText validation page sample the baselines' page profiles used, one page at a
