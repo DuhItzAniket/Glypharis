@@ -59,6 +59,8 @@ ignore_missing_imports = true
 [tool.pytest.ini_options]
 testpaths = ["tests"]
 addopts = "-ra"
+# A test still running after this many seconds dumps every thread's stack (a hang shows where).
+faulthandler_timeout = 120
 markers = [
     "gpu: needs a CUDA device (skipped automatically when none is available)",
 ]
