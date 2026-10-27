@@ -1,6 +1,6 @@
 # ADR-0011: CPU latency target for GLYPHARIS v0.1
 
-- **Status:** Accepted (2026-10-25, Phase 5; approved by the owner)
+- **Status:** Accepted; revisit triggered at Phase 17 (owner decision pending, see below) (2026-10-25, Phase 5; approved by the owner)
 
 ## Context
 ADR-0008 makes CPU latency the primary efficiency number and leaves the target to be set from
@@ -41,6 +41,18 @@ up accuracy is reported as such, and the accuracy-against-speed trade-off is the
 - Phase 17 measures the exported v0.1 against all three; Phase 16 may tighten them for v1.0.
 - GLYPHARIS is timed under the same power plan as the baselines (Balanced, on AC) so the comparison
   stays like for like.
+
+## Phase 17 measurement (2026-10-28): revisit triggered, owner decision pending
+The exported v0.1 misses the page target by a wide margin (GW-EFF-004): through ONNX Runtime a page
+takes 5.5 s on average (p95 12.7 s) and 11.2 GB of RAM. The cause is the exported recognizer, about
+4.5 times slower than in PyTorch; the exported detector is twice as fast. The PyTorch build misses
+the target by less (GW-EFF-002): 2.0 s mean, 4.0 s p95, 1.6 GB, on pages it reads with 24.3% page
+CER against 42.4% for the best baseline (GW-E2E-001). Until the owner decides, v0.1 ships with
+PyTorch as its default backend. The options as they stand:
+1. accept v0.1 at about 2.0 s per page and make speed Phase 16's first task (fused or rewritten
+   attention for the export, padding and batching, INT8, the ONNX detector);
+2. trade accuracy for speed now, under new registered runs (a smaller input, a lighter recognizer);
+3. restate the target for the PyTorch build (the ONNX Runtime premise did not hold).
 
 ## Revisit if
 - The exported v0.1 misses the target by a wide margin and the trade-off needs an owner decision.
