@@ -18,7 +18,7 @@ Phases run in the order set by [ADR-0008](decisions/ADR-0008-usable-engine-first
 | 8 | Text detector | **COMPLETE** | `phase-08` |
 | 9 | Detector error analysis | **IN PROGRESS** (gate: push, CI, merge) | — |
 | 10 | Full OCR pipeline | **IN PROGRESS** (gate: push, CI, merge; after Phase 9) | — |
-| 11 | Robustness training | not started | — |
+| 11 | Robustness training | **IN PROGRESS** (trainer move done; plan awaits the owner) | — |
 | 12 | Synthetic data study | not started | — |
 | 13 | Ablation study | not started | — |
 | 14 | External evaluation | not started | — |
@@ -1086,4 +1086,38 @@ a clear, typed error.
 
 **Git:** branch `phase/20-hardening`, with Phase 18 merged in; push and merge pending (after
 Phase 18).
+
+---
+
+## Phase 11 — Robustness training
+
+**Status:** IN PROGRESS (opened 2026-10-28 on `phase/11-robustness`, branched from Phase 20, at the
+owner's request to continue through the night). Nothing is registered or trained yet.
+
+**Objective:** find out which degradation augmentations help (RQ3, H3).
+
+**Done**
+- The recognizer trainer now runs on the shared training loop (owner approved 2026-10-27; deferred
+  here from Phase 10). Both acceptance conditions hold: the recognizer tests pass unchanged (48,
+  GPU tests included), and a GW-REC-024 checkpoint written by the old trainer resumes on the new one
+  with identical learning rates and losses within CUDA's run-to-run noise; the A/B/C resume check
+  passes too (`reports/training/phase11/trainer_move/`).
+
+**Proposed plan, for the owner** (2026-10-28; not registered: it commits 20 to 70 GPU-hours)
+
+The IMPLEMENTATION_PLAN design: arms A (none), B (geometric), C (photometric), D (document
+degradation), E (full); three seeds each; equal steps; clean validation and the frozen GLYPH-C v1
+suite (CER per corruption and severity, mean corruption error); a paired comparison against A and
+a verdict per family. Phase 7 already ran these five arms once, on the CRNN short budget
+(GW-REC-003 and 015 to 018), without GLYPH-C. Decisions needed before registration:
+1. **Which recipe.** The CRNN baseline recipe costs about 1.3 GPU-hours per short run (15 runs,
+   about 20 GPU-hours, inside the 20 to 40 budget, and Phase 7's runs can serve as seed 1 if their
+   setup matches); the v0.1 recognizer's recipe (SVTR, height 48) about 4.7 (about 70 GPU-hours),
+   which is where the result matters for the shipped model.
+2. **Seeds and machine.** Three seeds per arm as planned, or three for A and D (H3's test) and one
+   for B, C and E; and whether to wait for the college A100.
+3. **Decision rule.** Phase 7's rule (paired CI and outside the control seeds' range) applied to
+   GLYPH-C mean corruption error, with H3's clean-validation guard (at most 5% relative).
+
+**Git:** branch `phase/11-robustness`; not for merge until the phase is done.
 
