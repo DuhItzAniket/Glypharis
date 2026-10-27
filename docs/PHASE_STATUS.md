@@ -17,7 +17,7 @@ Phases run in the order set by [ADR-0008](decisions/ADR-0008-usable-engine-first
 | 7 | Recognizer improvement | **COMPLETE** | `phase-07` |
 | 8 | Text detector | **COMPLETE** | `phase-08` |
 | 9 | Detector error analysis | **IN PROGRESS** | — |
-| 10 | Full OCR pipeline | not started | — |
+| 10 | Full OCR pipeline | **IN PROGRESS** (built while Phase 9's gate is open) | — |
 | 11 | Robustness training | not started | — |
 | 12 | Synthetic data study | not started | — |
 | 13 | Ablation study | not started | — |
@@ -760,4 +760,64 @@ fixed without retraining: post-processing, input resolution and box shape.
 
 **Exit criteria** (IMPLEMENTATION_PLAN Phase 9): `reports/error_cases/detector/` and written findings
 in `research/findings.md`; fixes either applied under a new experiment ID or deferred with a reason.
+
+---
+
+## Phase 10 — Full OCR pipeline
+
+**Status:** IN PROGRESS (opened 2026-10-28 on `phase/10-pipeline`, branched from Phase 9 while its
+gate is open; the owner approved working through the night). Validation data only.
+
+**Objective:** `GlypharisOCR.predict(image)` end to end, measured on validation.
+
+**Implemented so far**
+- `glypharis.pipeline`: `TextRecognizer` (width-sorted batches with a fixed padding margin, so a
+  line reads the same alone or in any batch; tested on GW-REC-024 too), `GlypharisOCR` (detect, cut
+  each line exactly as the training crops were cut, read, order), `reading_order` (deskew, then
+  recursive XY-cut; tests for single column, two columns, mixed blocks, ragged lines, rotated pages
+  and blocks), `calibration` (ECE with 15 equal-mass bins, temperature fit).
+- `scripts/e2e_eval.py` (pipeline or oracle on validation pages, scored by the code that scored the
+  baselines, with paired comparisons) and `scripts/rec_calibrate.py`.
+- An inference smoke test on tiny untrained models built from a fixed seed (no weight files in the
+  repository), in CI with the rest of the tests.
+
+**Plan** (registered 2026-10-28, before any Phase 10 number was computed)
+
+1. **Pipeline settings.** Detector GW-DET-001 at Phase 9's adopted settings (GW-DET-004's
+   post-processing and GW-DET-005's input resolution); recognizer GW-REC-024 at temperature 1 for
+   text (temperature changes confidence only). Line crops: `cut_line`, 64 px high with a 15%
+   margin, the training-crop settings.
+2. **Line confidence** (`glypharis.pipeline.recognizer`): the geometric mean of the top-class
+   probability over the frames whose top class is not blank, at temperature T; for a line read as
+   empty, the mean blank probability. A line is right when its text equals the label exactly on the
+   strict track.
+3. **GW-E2E-003, calibration (H8, RQ8).** Every line of the recognizer's validation pack, read by
+   the pipeline's recognizer. T is fitted on the lines of Phase 9's validation half A (binary NLL,
+   grid 0.50 to 4.00 in steps of 0.05, ties to the T nearest 1). ECE at T = 1 and at the fitted T on
+   half B, with a 95% line-bootstrap CI of the difference; the fitted T is adopted if that CI lies
+   below 0, otherwise confidence is documented as raw. H8's Phase 10 reading: raw ECE above 0.05,
+   and the fitted T at least halving it. The fitted T is also applied to the pipeline's own lines
+   (GW-E2E-001), as information.
+4. **GW-E2E-001, the pipeline on validation (H1, RQ1).** All 1,715 HierText validation pages, and
+   the 400 Phase 5 pages with the baselines' validation predictions scored by the same code and
+   paired page by page (bag-of-lines page CER and E2E line F1, strict track primary, normalised
+   secondary). HierText has no reading order, so order-aware metrics are n/a. H1 is judged on GDC's
+   clean slice in Phase 14; here its ratio (GLYPHARIS page CER over PP-OCRv5 mobile's, on the 400
+   pages) is reported as information.
+5. **GW-E2E-002, oracle analysis (H4, RQ5).** The ground-truth care lines of all 1,715 pages, cut
+   and read like the pipeline's. Recognition's share of page error = oracle bag-of-lines CER over
+   pipeline bag-of-lines CER; detection's share is the rest. Reported on all pages and per blur
+   quartile (Phase 9's quartiles: Q4 sharpest, Q1 blurriest). H4's Phase 10 reading, exploratory:
+   recognition's share above one half on Q4 and below one half on Q1.
+6. **GW-EFF-002, page time on the CPU.** The whole pipeline, decoded page to ordered text, on the
+   110 Phase 5 profile pages (10 warm-up, 100 timed), PyTorch fp32 with default threads, batch 1
+   page, on an otherwise idle machine: mean and p95 page time and peak RAM against ADR-0011's page
+   target (mean at most 1.5 s, p95 at most 2.7 s, RAM below 1,836 MiB). This measurement replaces
+   Phase 9's estimate.
+7. **Reading order** is checked by its unit tests only: no validation set here has a reading order;
+   GDC measures it in Phase 14.
+
+**Exit criteria** (IMPLEMENTATION_PLAN Phase 10): pipeline unit- and integration-tested on
+fixtures; validation E2E metrics reported; calibration either validated (ECE reduced, with numbers)
+or confidence documented as raw; CI green with an inference smoke test on a tiny bundled model.
 

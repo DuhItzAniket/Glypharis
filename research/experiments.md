@@ -45,6 +45,10 @@ Rows link to a full entry below. Numbers are copied from generated reports only,
 | [GW-EFF-001](#gw-eff-001) | 2026-10-27 | 09 | GW-DET-001 detector CPU latency at five input resolutions (PyTorch, batch 1) | planned | — | `reports/efficiency/` |
 | [GW-DET-005](#gw-det-005) | 2026-10-27 | 09 | GW-DET-001 at the best input resolution that fits ADR-0011's page target (no retraining) | planned | — | `reports/error_cases/detector/` |
 | [GW-DET-006](#gw-det-006) | 2026-10-27 | 09 | Box shape `quad` vs `poly` on validation and its curved lines (RISK_REGISTER R-22) | planned | — | `reports/error_cases/detector/` |
+| [GW-E2E-003](#gw-e2e-003) | 2026-10-28 | 10 | Line-confidence calibration: temperature fitted on validation half A, ECE on half B (H8) | planned | — | `reports/calibration/GW-E2E-003/` |
+| [GW-E2E-001](#gw-e2e-001) | 2026-10-28 | 10 | GLYPHARIS pipeline (GW-DET-001 at Phase 9 settings + GW-REC-024) on HierText validation, with the baselines on the Phase 5 pages (H1) | planned | — | `reports/e2e/GW-E2E-001/` |
+| [GW-E2E-002](#gw-e2e-002) | 2026-10-28 | 10 | Oracle analysis: ground-truth lines into the recognizer, to split page error between detection and recognition (H4) | planned | — | `reports/e2e/GW-E2E-002/` |
+| [GW-EFF-002](#gw-eff-002) | 2026-10-28 | 10 | Whole-pipeline CPU page time and memory on the Phase 5 profile pages (ADR-0011) | planned | — | `reports/efficiency/` |
 
 ### GW-BASE-001 — Tesseract 5 (LSTM, eng): recognition and end to end
 
@@ -783,6 +787,74 @@ Rows link to a full entry below. Numbers are copied from generated reports only,
 - **Interpretation:**
 - **Limitations:** HierText's curved lines stand in for GDC's phone-captured ones, which cannot be looked at before Phase 14.
 - **Next experiment:** Phase 10 uses the adopted detector settings.
+
+### GW-E2E-003 — Line-confidence calibration
+
+- **Date allocated / run:** 2026-10-28 / —
+- **Phase:** 10
+- **Git commit:** recorded in the result file   **Config:** `configs/det/gw-det-001.yaml` with Phase 9's overrides; `runs/GW-REC-024/config.resolved.yaml`   **Seed(s):** none (no training)
+- **Dataset version(s):** HierText validation pages and lines as in GW-DET-001 and GW-REC-024
+- **Hardware:** RTX 4050 Laptop 6 GB for the validation runs; i7-14650HX CPU for GW-EFF-002
+- **Research question:** is the recognizer's raw line confidence calibrated, and does one temperature fix it (RQ8)?
+- **Hypothesis (written before the run):** [H8](hypotheses.md): raw ECE above 0.05 on validation; temperature scaling at least halves it.
+- **Method:** `docs/PHASE_STATUS.md` Phase 10, plan items 2 and 3; `scripts/rec_calibrate.py`.
+- **Variables:** independent: temperature; controlled: model, lines, confidence definition
+- **Control:** T = 1
+- **Result:**
+- **Interpretation:**
+- **Limitations:** fitted and checked on two halves of one validation set; exact match is a strict notion of right.
+- **Next experiment:** GW-E2E-001 records confidence at the fitted T too.
+
+### GW-E2E-001 — The pipeline on HierText validation
+
+- **Date allocated / run:** 2026-10-28 / —
+- **Phase:** 10
+- **Git commit:** recorded in the result file   **Config:** `configs/det/gw-det-001.yaml` with Phase 9's overrides; `runs/GW-REC-024/config.resolved.yaml`   **Seed(s):** none (no training)
+- **Dataset version(s):** HierText validation pages and lines as in GW-DET-001 and GW-REC-024
+- **Hardware:** RTX 4050 Laptop 6 GB for the validation runs; i7-14650HX CPU for GW-EFF-002
+- **Research question:** how well does the whole GLYPHARIS pipeline read HierText validation pages, and how does it compare with the Phase 5 baselines on the same pages (RQ1)?
+- **Hypothesis (written before the run):** [H1](hypotheses.md) is judged in Phase 14; here its ratio is information. Expectation, not a claim: lower bag-of-lines page CER than every baseline on the 400 Phase 5 pages, since both stages beat the baselines on their own.
+- **Method:** `docs/PHASE_STATUS.md` Phase 10, plan items 1 and 4; `scripts/e2e_eval.py --mode pipeline --pages all` and `--pages baseline --baselines`.
+- **Variables:** independent: system; controlled: pages, scoring code, normalisation track
+- **Control:** the Phase 5 baselines (GW-BASE-001, 002, 005, 006) on the same 400 pages
+- **Result:**
+- **Interpretation:**
+- **Limitations:** HierText pages are mostly scene photographs, not the documents GLYPHARIS targets; no reading order can be scored on them.
+- **Next experiment:** GW-E2E-002 splits its error.
+
+### GW-E2E-002 — Oracle analysis
+
+- **Date allocated / run:** 2026-10-28 / —
+- **Phase:** 10
+- **Git commit:** recorded in the result file   **Config:** `configs/det/gw-det-001.yaml` with Phase 9's overrides; `runs/GW-REC-024/config.resolved.yaml`   **Seed(s):** none (no training)
+- **Dataset version(s):** HierText validation pages and lines as in GW-DET-001 and GW-REC-024
+- **Hardware:** RTX 4050 Laptop 6 GB for the validation runs; i7-14650HX CPU for GW-EFF-002
+- **Research question:** how much of the pipeline's page error comes from detection and how much from recognition (RQ5)?
+- **Hypothesis (written before the run):** [H4](hypotheses.md), exploratory here: recognition's share of bag-of-lines CER above one half on the sharpest quartile and below one half on the blurriest.
+- **Method:** `docs/PHASE_STATUS.md` Phase 10, plan item 5; `scripts/e2e_eval.py --mode oracle --pages all`.
+- **Variables:** independent: where the line outlines come from (detector or ground truth); controlled: recognizer, crops, pages, scoring
+- **Control:** GW-E2E-001
+- **Result:**
+- **Interpretation:**
+- **Limitations:** ground-truth outlines are cut exactly like training crops, so the oracle also removes any crop-shape mismatch between detector quads and training crops.
+- **Next experiment:** Phase 15 repeats it on the frozen model.
+
+### GW-EFF-002 — Whole-pipeline CPU page time
+
+- **Date allocated / run:** 2026-10-28 / —
+- **Phase:** 10
+- **Git commit:** recorded in the result file   **Config:** `configs/det/gw-det-001.yaml` with Phase 9's overrides; `runs/GW-REC-024/config.resolved.yaml`   **Seed(s):** none (no training)
+- **Dataset version(s):** HierText validation pages and lines as in GW-DET-001 and GW-REC-024
+- **Hardware:** RTX 4050 Laptop 6 GB for the validation runs; i7-14650HX CPU for GW-EFF-002
+- **Research question:** does the PyTorch pipeline meet ADR-0011's page target on the CPU?
+- **Hypothesis (written before the run):** none. Expectation from GW-EFF-001's estimate: inside the mean target, close to the p95 one.
+- **Method:** `docs/PHASE_STATUS.md` Phase 10, plan item 6; `scripts/e2e_profile.py`.
+- **Variables:** none; conditions recorded as for the baselines
+- **Control:** ADR-0011's page target and the baselines' page profiles
+- **Result:**
+- **Interpretation:**
+- **Limitations:** PyTorch stands in for the Phase 17 ONNX Runtime build.
+- **Next experiment:** Phase 17 measures the exported pipeline.
 
 ---
 
