@@ -7,8 +7,9 @@ Files: ``detector.pt`` and ``recognizer.pt`` (release files, readable with
 ``torch.load(..., weights_only=True)``), ``detector.onnx`` and ``recognizer.onnx``, and
 ``manifest.json`` with the SHA-256 of each, the detector spec (resolution, post-processing,
 operating point), the recognizer's input settings and temperature, and where they came from.
-`load_bundle` checks every hash before it loads anything. The ONNX backend is the one ADR-0011's
-latency target is judged on; the PyTorch backend is the reference it is checked against.
+`load_bundle` checks every hash before it loads anything. Both backends read the same: ONNX
+matches PyTorch on validation (GW-EFF-003). PyTorch is the default because it is faster here: the
+exported recognizer is slower than PyTorch's (GW-EFF-004; `glypharis.export.onnx`).
 """
 
 from __future__ import annotations
@@ -113,7 +114,7 @@ def read_manifest(bundle: str | Path) -> dict[str, Any]:
 
 def load_bundle(
     bundle: str | Path,
-    backend: Backend = "onnx",
+    backend: Backend = "torch",
     threads: int | None = None,
     temperature: float | None = None,
 ) -> GlypharisOCR:

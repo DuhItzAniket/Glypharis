@@ -17,7 +17,9 @@ CI of the difference excludes zero, on validation unless stated otherwise.
   PaddleOCR PP-OCRv5 mobile while running at lower or equal CPU latency.
 - **Test:** Phase 10 (validation), confirmed once in Phase 14 (GDC clean slice, external sets).
 - **Success criterion:** stated ratio met on the GDC clean slice in Phase 14.
-- **Status:** open
+- **Status:** open. Phase 10 evidence (HierText validation, not clean documents): page CER 0.48 of
+  PP-OCRv5 mobile's on the Phase 5 pages, at 2.0 s per page in PyTorch against its 3.4 s
+  (GW-E2E-001, GW-EFF-002).
 
 ### H2 — Synthetic data helps, and its domain matters (RQ2)
 
@@ -55,7 +57,9 @@ CI of the difference excludes zero, on validation unless stated otherwise.
   clean slices, while detection (missed / merged / split lines) accounts for the majority on photographed
   and heavily degraded slices.
 - **Test:** Phase 10 (validation), Phase 15 (frozen model).
-- **Status:** open
+- **Status:** open; not supported by Phase 10's exploratory reading on HierText validation:
+  recognition's share of page error is 0.20 to 0.29 on every blur quartile, the sharpest included
+  (GW-E2E-002). HierText pages are mostly scene photographs; Phase 15 tests H4 on GDC.
 
 ### H5 — Domain gap is large (RQ6)
 
@@ -84,7 +88,8 @@ CI of the difference excludes zero, on validation unless stated otherwise.
 - **Statement:** Raw line confidence has ECE above 0.05 on validation; temperature scaling fitted on
   validation reduces ECE by at least half, and the reduction transfers to GDC.
 - **Test:** Phase 10 (validation), Phase 14 (transfer).
-- **Status:** open
+- **Status:** supported on validation (2026-10-28): ECE 0.217 at T = 1, 0.089 at T = 2.35, a 59%
+  reduction (GW-E2E-003). The transfer to GDC is Phase 14's test.
 
 ### H9 — An ImageNet backbone helps the detector at equal steps (RQ1, ADR-0007)
 

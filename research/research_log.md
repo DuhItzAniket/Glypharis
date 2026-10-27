@@ -183,3 +183,43 @@ the bottom. Experiments get their full record in `experiments.md`; this log is t
   5e-3 after the range test, and the per-epoch validation subset fell to 400 pages. All three runs
   finished without a crash; 16.2 GPU-hours in all.
 
+### 2026-10-28 — Phase 9: detector error analysis
+
+- The detector's misses were mostly not the network's: 46% of GW-DET-001's missed validation lines
+  had a candidate that only the confidence threshold removed. A post-processing sweep chosen on one
+  half of validation and checked on the other (GW-DET-004) and a larger input, 1536 px (GW-DET-005),
+  raised F1@0.5 from 0.724 to 0.778 without retraining; recall from 0.595 to 0.716, precision down
+  from 0.924 to 0.852.
+- Timing the detector on the CPU (GW-EFF-001) showed recognition, not detection, fills most of the
+  page budget; 1536 px was the largest input inside ADR-0011's page target.
+- What is left needs training: lines under 8 px and steeply rotated or vertical lines are still the
+  weakest (recall 0.34 and 0.38), and merges and fragments grew with the looser threshold.
+- One registered check had nothing to measure: HierText's line annotations are all four-point
+  polygons, so whether curved outlines help on GDC (R-22) stays open.
+
+### 2026-10-28 — Phase 10: the full pipeline
+
+- `GlypharisOCR` now reads a page end to end: detect at 1536 px with Phase 9's settings, cut each
+  line exactly as the training crops were cut, read them in width-sorted batches, and order them
+  by XY-cut. A fixed padding margin makes a line read the same alone or in any batch.
+- On the 400 HierText pages the baselines were scored on, GLYPHARIS's page CER is 24.3% against
+  42.4% for PP-OCRv6 small, the best of them; on all 1,715 validation pages it is 27.6%.
+- With ground-truth boxes the page CER would be 6.7%: detection is now the bottleneck, on sharp and
+  blurry pages alike, so H4's expectation that recognition dominates on clean pages does not hold
+  on HierText.
+- Raw confidence is over-confident; a temperature of 2.35 fitted on half of validation cuts ECE
+  from 0.22 to 0.09 on the other half (H8). The v0.1 model carries it.
+- The PyTorch pipeline misses the page-time target: 2.0 s per page, mostly recognition. Phase 17
+  measures the ONNX build, which is what the target is judged on.
+
+### 2026-10-28 — Phase 17: model export
+
+- The v0.1 model now ships as one bundle: release files, ONNX files and a manifest of their hashes.
+  Its ONNX build reads exactly like PyTorch on validation data (identical text on 5,000 lines,
+  identical page CER on 400 pages).
+- The first bundle was built with the old detector settings because of a scripting slip; its
+  equivalence checks passed anyway, and only the check against Phase 10's pipeline caught it.
+- ONNX Runtime turned out slower, not faster: the exported recognizer takes 4.5 times as long as in
+  PyTorch, and the runtime's memory arena grew to 11 GB. v0.1 uses PyTorch by default; ADR-0011's
+  speed target is now an owner decision, and speed work is Phase 16's.
+

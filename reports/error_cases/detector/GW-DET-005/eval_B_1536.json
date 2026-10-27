@@ -1,0 +1,109 @@
+{
+ "experiment_id": "GW-DET-001",
+ "checkpoint": "checkpoints\\GW-DET-001\\best.pt",
+ "checkpoint_sha256": "016b2b69d257d9165afd9aa4a7ef5ce36cdf3ad5d2c5926aa6b1b60c43705cd5",
+ "stored_op": "inverse10",
+ "op": "inverse09",
+ "max_op_this_run": "inverse09",
+ "long_side": 1536,
+ "pages": 858,
+ "care_lines": 38165,
+ "page_set": "validation_half_B",
+ "prob_maps": "float32",
+ "post": {
+  "bin_thresh": 0.3,
+  "box_thresh": 0.5,
+  "min_component_area": 1,
+  "min_box_side": 3.0,
+  "max_candidates": 5000,
+  "box_type": "quad",
+  "operating_points": [
+   {
+    "name": "inverse09",
+    "unclip_mode": "inverse",
+    "unclip_ratio": 0.9
+   }
+  ]
+ },
+ "headline": {
+  "op": "inverse09",
+  "pages": 858,
+  "precision": {
+   "value": 0.8486685089812838,
+   "low": 0.8273595835173285,
+   "high": 0.8661365713063462
+  },
+  "recall": {
+   "value": 0.7081095244333814,
+   "low": 0.6728597063841438,
+   "high": 0.7378419926433731
+  },
+  "f1_50": {
+   "value": 0.7720435943950064,
+   "low": 0.7457810017226725,
+   "high": 0.7930177239165889
+  },
+  "f1_70": {
+   "value": 0.6689808862603925,
+   "low": 0.642574987069058,
+   "high": 0.6898491003521746
+  },
+  "mean_iou": 0.8238087430800334,
+  "tp_fp_fn_50": [
+   27025,
+   4819,
+   11140
+  ],
+  "counters": {
+   "components": 74611,
+   "tiny": 0,
+   "truncated": 0,
+   "low_score": 37234,
+   "too_thin": 12,
+   "outside": 0,
+   "kept": 37365,
+   "poly_fallback": 0
+  }
+ },
+ "ops": {
+  "inverse09": {
+   "pages": 858,
+   "precision": {
+    "value": 0.8486685089812838,
+    "low": 0.8273595835173285,
+    "high": 0.8661365713063462
+   },
+   "recall": {
+    "value": 0.7081095244333814,
+    "low": 0.6728597063841438,
+    "high": 0.7378419926433731
+   },
+   "f1_50": {
+    "value": 0.7720435943950064,
+    "low": 0.7457810017226725,
+    "high": 0.7930177239165889
+   },
+   "f1_70": {
+    "value": 0.6689808862603925,
+    "low": 0.642574987069058,
+    "high": 0.6898491003521746
+   },
+   "mean_iou": 0.8238087430800334,
+   "tp_fp_fn_50": [
+    27025,
+    4819,
+    11140
+   ],
+   "counters": {
+    "components": 74611,
+    "tiny": 0,
+    "truncated": 0,
+    "low_score": 37234,
+    "too_thin": 12,
+    "outside": 0,
+    "kept": 37365,
+    "poly_fallback": 0
+   }
+  }
+ }
+}
