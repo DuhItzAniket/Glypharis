@@ -44,7 +44,14 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--model", default="glypharis-0.1.0", help="bundle name or directory")
     parser.add_argument("--backend", choices=["onnx", "torch"], default="onnx")
     parser.add_argument("--threads", type=int, default=None)
+    parser.add_argument("--version", action="store_true", help="print versions and exit")
     args = parser.parse_args(argv)
+    if args.version:
+        from glypharis import version_info
+
+        for name, version in version_info().items():
+            print(f"{name} {version}")
+        return 0
     if not args.image and args.input_dir is None:
         parser.error("give --image (one or more) or --input-dir")
     if args.input_dir is not None and not args.input_dir.is_dir():
@@ -56,11 +63,12 @@ def main(argv: list[str] | None = None) -> int:
         print(f"no images found in {args.input_dir}", file=sys.stderr)
         return 1
 
+    from glypharis.errors import GlypharisError
     from glypharis.pipeline.ocr import GlypharisOCR
 
     try:
         ocr = GlypharisOCR.from_pretrained(args.model, args.backend, args.threads)
-    except (FileNotFoundError, ValueError) as exc:
+    except GlypharisError as exc:
         print(f"cannot load the model: {exc}", file=sys.stderr)
         return 2
     args.output.mkdir(parents=True, exist_ok=True)
@@ -68,9 +76,9 @@ def main(argv: list[str] | None = None) -> int:
     for path, root in jobs:
         try:
             result = ocr.predict(path)
-        except (OSError, ValueError) as exc:  # unreadable or not an image
+        except GlypharisError as exc:  # not a readable image, too large, empty
             failed += 1
-            print(f"FAILED {path}: {exc}", file=sys.stderr)
+            print(f"FAILED {path}: [{exc.code}] {exc}", file=sys.stderr)
             continue
         name = _out_name(path, root)
         if "json" in args.format:

@@ -16,6 +16,7 @@ from test_pipeline import _page, tiny_detector, tiny_recognizer
 
 from glypharis import __version__
 from glypharis.cli import main
+from glypharis.errors import ModelLoadError
 from glypharis.export.bundle import write_bundle
 from glypharis.pipeline import GlypharisOCR, OCRResult
 
@@ -37,7 +38,7 @@ def test_from_pretrained_by_path_and_by_name(bundle, monkeypatch, tmp_path):
     assert GlypharisOCR.from_pretrained("tiny-0.0.1", backend="torch").model_version == "0.0.1-test"
     monkeypatch.chdir(tmp_path)
     monkeypatch.setenv("GLYPHARIS_MODELS", str(tmp_path / "nowhere"))
-    with pytest.raises(FileNotFoundError, match="looked in"):
+    with pytest.raises(ModelLoadError, match="looked in"):
         GlypharisOCR.from_pretrained("tiny-0.0.1")
 
 

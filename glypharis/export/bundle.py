@@ -22,6 +22,7 @@ from typing import Any, Final, Literal
 import torch
 
 from glypharis.data.download import sha256_file
+from glypharis.errors import ModelLoadError
 from glypharis.export.onnx import (
     OPSET,
     OnnxLineModel,
@@ -93,21 +94,30 @@ def find_bundle(name_or_path: str | Path) -> Path:
         if (d / str(name_or_path) / "manifest.json").is_file():
             return d / str(name_or_path)
     looked = ", ".join(str(d) for d in model_dirs())
-    raise FileNotFoundError(
+    raise ModelLoadError(
         f"no GLYPHARIS model bundle {str(name_or_path)!r} (a directory with manifest.json); "
         f"looked in: {looked}"
     )
 
 
 def read_manifest(bundle: str | Path) -> dict[str, Any]:
+    """The manifest, after checking that every file it lists is there and unchanged."""
     path = Path(bundle)
-    manifest = json.loads((path / "manifest.json").read_text(encoding="utf-8"))
-    if manifest.get("format") != BUNDLE_FORMAT:
-        raise ValueError(f"{path} is not a {BUNDLE_FORMAT} directory")
-    for name, want in manifest["files"].items():
+    try:
+        manifest = json.loads((path / "manifest.json").read_text(encoding="utf-8"))
+    except (OSError, json.JSONDecodeError) as exc:
+        raise ModelLoadError(f"{path}: no readable manifest.json ({exc})") from exc
+    if not isinstance(manifest, dict) or manifest.get("format") != BUNDLE_FORMAT:
+        raise ModelLoadError(f"{path} is not a {BUNDLE_FORMAT} directory")
+    for name, want in manifest.get("files", {}).items():
+        if not (path / name).is_file():
+            raise ModelLoadError(f"{path / name}: missing from the bundle")
         got = sha256_file(path / name)
         if got != want:
-            raise ValueError(f"{path / name}: SHA-256 {got[:12]} does not match the manifest")
+            raise ModelLoadError(f"{path / name}: SHA-256 {got[:12]} does not match the manifest")
+    missing = [f for f in FILES if f not in manifest.get("files", {})]
+    if missing:
+        raise ModelLoadError(f"{path}: the manifest does not list {', '.join(missing)}")
     return dict(manifest)
 
 
@@ -120,6 +130,25 @@ def load_bundle(
     """`GlypharisOCR` from a bundle directory, on the CPU, with the chosen backend."""
     path = Path(bundle)
     manifest = read_manifest(path)
+    if backend not in ("onnx", "torch"):
+        raise ValueError(f"backend {backend!r}: onnx or torch")
+    try:
+        return _load(path, manifest, backend, threads, temperature)
+    except ModelLoadError:
+        raise
+    except Exception as exc:  # a damaged file that still matches its hash, a runtime mismatch
+        raise ModelLoadError(
+            f"{path}: cannot load the bundle ({type(exc).__name__}: {exc})"
+        ) from exc
+
+
+def _load(
+    path: Path,
+    manifest: dict[str, Any],
+    backend: Backend,
+    threads: int | None,
+    temperature: float | None,
+) -> GlypharisOCR:
     rec = TextRecognizer.from_release(path / "recognizer.pt", "cpu", temperature)
     det = TextLineDetector.from_release(path / "detector.pt")
     if backend == "onnx":
@@ -136,8 +165,6 @@ def load_bundle(
             rec.temperature,
             rec.arch,
         )
-    elif backend != "torch":
-        raise ValueError(f"backend {backend!r}: onnx or torch")
     elif threads:
         torch.set_num_threads(threads)
     if dataclasses.asdict(det.spec) != manifest["detector"]["spec"]:
