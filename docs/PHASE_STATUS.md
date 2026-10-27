@@ -24,7 +24,7 @@ Phases run in the order set by [ADR-0008](decisions/ADR-0008-usable-engine-first
 | 14 | External evaluation | not started | — |
 | 15 | Error analysis | not started | — |
 | 16 | Efficiency optimisation | not started | — |
-| 17 | Model export | not started | — |
+| 17 | Model export | **IN PROGRESS** (built while Phases 9 and 10 are open) | — |
 | 18 | Inference package | not started | — |
 | 19 | Optional HTTP API | not started | — |
 | 20 | Production engineering | not started | — |
@@ -825,4 +825,44 @@ gate is open; the owner approved working through the night). Validation data onl
 **Exit criteria** (IMPLEMENTATION_PLAN Phase 10): pipeline unit- and integration-tested on
 fixtures; validation E2E metrics reported; calibration either validated (ECE reduced, with numbers)
 or confidence documented as raw; CI green with an inference smoke test on a tiny bundled model.
+
+---
+
+## Phase 17 — Model export
+
+**Status:** IN PROGRESS (opened 2026-10-28 on `phase/17-export`, branched from Phase 10; Phases 11
+to 16 come after v0.1, ADR-0008). The owner approved installing `onnx` 1.23.2 and `onnxruntime`
+1.31.1 from PyPI (2026-10-28); both are pinned in `requirements/lock.txt`, so CI runs the ONNX
+checks too.
+
+**Objective:** a release of the v0.1 models that runs without the training code, and an ONNX build
+proven equivalent to PyTorch.
+
+**Implemented**
+- Release files: the detector's (`export_detector`, now with the spec chosen later, here Phase 9's)
+  and the recognizer's (`TextRecognizer.release` / `from_release`), both readable with
+  `torch.load(..., weights_only=True)`.
+- `glypharis.export.onnx`: both models exported with dynamic axes (TorchScript exporter, opset 17),
+  and ONNX Runtime backends that slot into `TextLineDetector` and `TextRecognizer`.
+- `glypharis.export.bundle`: one directory with both release files, both ONNX files and a manifest
+  of their SHA-256s and settings; loading checks every hash and picks the backend.
+- `scripts/export_check.py` (equivalence) and `scripts/e2e_profile.py --bundle` (page time).
+- CI's equivalence on tiny models: ONNX against PyTorch for both models and the whole bundle.
+
+**Plan** (registered 2026-10-28, before the export of the trained models was checked)
+1. **Bundle v0.1.0:** GW-DET-001 with Phase 9's settings (GW-DET-004's post-processing, GW-DET-005's
+   resolution) and GW-REC-024 at GW-E2E-003's temperature if adopted, else 1.
+2. **GW-EFF-003, equivalence** (`scripts/export_check.py`), both backends loaded from the bundle:
+   detector probability maps on the 110 Phase 5 profile pages, max abs difference at most 1e-4;
+   recognizer logits on 5,000 seeded validation lines, max abs difference at most 1e-3; greedy text
+   identical on every line except near ties (a PyTorch top-2 gap below 1e-3 at the first frame that
+   differs), at most 0.1% of lines; bag-of-lines page CER (strict) of the whole pipeline on the 400
+   Phase 5 pages within 0.05 points between the backends. The export counts as successful only if
+   all four pass.
+3. **GW-EFF-004, page time on ONNX Runtime:** `scripts/e2e_profile.py --bundle ... --backend onnx`,
+   the protocol of GW-EFF-002, against ADR-0011's page target. This is the measurement ADR-0011 is
+   judged on.
+
+**Exit criteria** (IMPLEMENTATION_PLAN Phase 17): export declared successful only after the
+equivalence tests pass and are recorded; CI runs ONNX equivalence on the tiny model.
 

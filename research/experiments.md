@@ -49,6 +49,8 @@ Rows link to a full entry below. Numbers are copied from generated reports only,
 | [GW-E2E-001](#gw-e2e-001) | 2026-10-28 | 10 | GLYPHARIS pipeline (GW-DET-001 at Phase 9 settings + GW-REC-024) on HierText validation, with the baselines on the Phase 5 pages (H1) | planned | — | `reports/e2e/GW-E2E-001/` |
 | [GW-E2E-002](#gw-e2e-002) | 2026-10-28 | 10 | Oracle analysis: ground-truth lines into the recognizer, to split page error between detection and recognition (H4) | planned | — | `reports/e2e/GW-E2E-002/` |
 | [GW-EFF-002](#gw-eff-002) | 2026-10-28 | 10 | Whole-pipeline CPU page time and memory on the Phase 5 profile pages (ADR-0011) | planned | — | `reports/efficiency/` |
+| [GW-EFF-003](#gw-eff-003) | 2026-10-28 | 17 | ONNX equivalence of the v0.1 bundle against PyTorch on validation data | planned | — | `reports/export/GW-EFF-003/` |
+| [GW-EFF-004](#gw-eff-004) | 2026-10-28 | 17 | Whole-pipeline CPU page time on ONNX Runtime (ADR-0011's measurement) | planned | — | `reports/efficiency/` |
 
 ### GW-BASE-001 — Tesseract 5 (LSTM, eng): recognition and end to end
 
@@ -855,6 +857,40 @@ Rows link to a full entry below. Numbers are copied from generated reports only,
 - **Interpretation:**
 - **Limitations:** PyTorch stands in for the Phase 17 ONNX Runtime build.
 - **Next experiment:** Phase 17 measures the exported pipeline.
+
+### GW-EFF-003 — ONNX equivalence of the v0.1 bundle
+
+- **Date allocated / run:** 2026-10-28 / —
+- **Phase:** 17
+- **Git commit:** recorded in the result file   **Config:** the v0.1 bundle's manifest   **Seed(s):** 20261028 (line sample)
+- **Dataset version(s):** HierText validation pages and lines as in GW-E2E-001
+- **Hardware:** i7-14650HX CPU, ONNX Runtime 1.31.1 and PyTorch 2.14.1
+- **Research question:** does the ONNX build of the v0.1 models read validation data like the PyTorch models?
+- **Hypothesis (written before the run):** none; the tolerances are pass criteria.
+- **Method:** `docs/PHASE_STATUS.md` Phase 17, plan item 2.
+- **Variables:** independent: backend; controlled: weights, settings, data
+- **Control:** the PyTorch backend of the same bundle
+- **Result:**
+- **Interpretation:**
+- **Limitations:** CPU only; one ONNX Runtime version.
+- **Next experiment:** GW-EFF-004.
+
+### GW-EFF-004 — Page time on ONNX Runtime
+
+- **Date allocated / run:** 2026-10-28 / —
+- **Phase:** 17
+- **Git commit:** recorded in the result file   **Config:** the v0.1 bundle's manifest   **Seed(s):** 20261028 (line sample)
+- **Dataset version(s):** HierText validation pages and lines as in GW-E2E-001
+- **Hardware:** i7-14650HX CPU, ONNX Runtime 1.31.1 and PyTorch 2.14.1
+- **Research question:** does the ONNX build meet ADR-0011's page target on the CPU?
+- **Hypothesis (written before the run):** none. Expectation: faster than PyTorch (GW-EFF-002).
+- **Method:** `docs/PHASE_STATUS.md` Phase 17, plan item 3.
+- **Variables:** none; conditions recorded as for the baselines
+- **Control:** ADR-0011's page target; GW-EFF-002
+- **Result:**
+- **Interpretation:**
+- **Limitations:** one machine; default threads.
+- **Next experiment:** Phase 18 packages the bundle.
 
 ---
 
