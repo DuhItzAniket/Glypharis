@@ -16,8 +16,8 @@ Phases run in the order set by [ADR-0008](decisions/ADR-0008-usable-engine-first
 | 6 | Recognition baseline | **COMPLETE** | `phase-06` |
 | 7 | Recognizer improvement | **COMPLETE** | `phase-07` |
 | 8 | Text detector | **COMPLETE** | `phase-08` |
-| 9 | Detector error analysis | **IN PROGRESS** | — |
-| 10 | Full OCR pipeline | **IN PROGRESS** (built while Phase 9's gate is open) | — |
+| 9 | Detector error analysis | **IN PROGRESS** (gate: push, CI, merge) | — |
+| 10 | Full OCR pipeline | **IN PROGRESS** (gate: push, CI, merge; after Phase 9) | — |
 | 11 | Robustness training | not started | — |
 | 12 | Synthetic data study | not started | — |
 | 13 | Ablation study | not started | — |
@@ -699,7 +699,9 @@ tree and parents).
 
 ## Phase 09 — Detector error analysis
 
-**Status:** IN PROGRESS (opened 2026-10-27, on `phase/09-det-analysis`). Validation data only.
+**Status:** write-up done (2026-10-28). Gate open: push, pull request, CI and merge. Opened
+2026-10-27 on `phase/09-det-analysis`. Validation data only; the owner approved working through the
+night (2026-10-27).
 
 **Objective:** understand GW-DET-001's failures before the pipeline is built, and fix what can be
 fixed without retraining: post-processing, input resolution and box shape.
@@ -761,12 +763,59 @@ fixed without retraining: post-processing, input resolution and box shape.
 **Exit criteria** (IMPLEMENTATION_PLAN Phase 9): `reports/error_cases/detector/` and written findings
 in `research/findings.md`; fixes either applied under a new experiment ID or deferred with a reason.
 
+**Results (2026-10-28)**
+
+| Step | What was found | Evidence |
+|---|---|---|
+| Error analysis, GW-DET-001 | 30,184 missed care lines: 46% had a candidate the 0.6 threshold removed, 37% no candidate (mostly under 8 px), 11% merged; 3,631 false alarms, mostly fragments and merges. Recall 0.20 under 8 px, 0.18 beyond 45°. Kernels as wide as the labels (median ratio 1.00): the `inverse` regime | `reports/error_cases/detector/GW-DET-001/` |
+| GW-DET-004, post-processing | half A arg-max `bin_thresh` 0.3, `min_component_area` 1, `inverse09`, `box_thresh` 0.5; half B +0.032 [+0.025, +0.039] F1@0.5 (float maps: +0.032 [+0.025, +0.039]): **adopted** | `reports/error_cases/detector/GW-DET-004/` |
+| GW-EFF-001, detector CPU time | 132 to 615 ms per page from long side 1024 to 2048; with 24.4 ms per line for recognition, long sides up to 1536 fit ADR-0011's page target | `reports/efficiency/det_latency.md` |
+| GW-DET-005, resolution | half A: F1 rises with resolution up to 2048; 1536 is the best eligible; half B +0.018 [+0.013, +0.022] over 1280: **adopted** | `reports/error_cases/detector/GW-DET-005/` |
+| Both changes, all validation pages | F1@0.5 0.778 [0.762, 0.792], precision 0.852, recall 0.716, F1@0.7 0.671 (GW-DET-001 at its record point: 0.724, 0.924, 0.595, 0.631) | `reports/error_cases/detector/phase09_adopted/` |
+| GW-DET-006, box shape | no curved care lines in HierText validation (all four-point), so the check is empty; `quad` kept | `reports/error_cases/detector/GW-DET-006/` |
+
+**Fixes that need retraining** (plan item 7), deferred with their reasons:
+- *Small text.* Lines under 8 px at the inference scale are still found only 34% of the time.
+  Labels below `min_text_size` (6 px at the training scale) are don't care, so the network was never
+  asked to find them. Lowering it, or training at a larger scale, is a new GW-DET run of about five
+  GPU-hours; deferred to Phase 11 (robustness training), which retrains anyway, so one run tests it.
+- *Rotated and vertical lines.* Recall 0.48 at 15–45° and 0.38 beyond 45°. Training rotation is at
+  most 10°; a wider rotation range belongs to the same Phase 11 run.
+- *Merges and fragments* grew with the looser threshold (1,982 merge boxes, 3,396 fragments); the
+  shrink ratio and threshold-map weight that would change them are Phase 13 ablations.
+
+**Compute:** about one GPU-hour of forward passes and three CPU-hours of sweeps and timing (chain log
+`runs/phase09/chain.log`, local; the compute ledger counts training queues only).
+
+**Tests:** the CPU suite passes locally (`scripts/det_sweep.py` is checked against `score_page` at
+all 440 settings; the error categories, the curved-line rule and the pairing have tests).
+
+**Exit criteria**
+
+| Criterion | Result | Evidence |
+|---|---|---|
+| `reports/error_cases/detector/` | pass: analysis, galleries per category, worst pages, before and after the Phase 9 settings | `reports/error_cases/detector/` |
+| Written findings in `research/findings.md` | pass: F7, F8, F9 | `research/findings.md` |
+| Fixes applied under a new experiment ID or deferred with a reason | pass: GW-DET-004 and 005 applied; retraining fixes deferred above; GW-DET-006 could not decide | `research/experiments.md` |
+| CI green | pending (after the push) | — |
+
+**Known issues**
+- RISK_REGISTER R-22 stays open: no validation set has curved line annotations, so whether `poly`
+  boxes would score better on GDC's curved lines is unknown before Phase 14. Phase 14 uses `quad`,
+  as fixed here. The owner may decide before Phase 14 to also report `poly` there, labelled
+  exploratory.
+- The looser post-processing finds more of everything: false alarms rose 2.5 times (3,631 to 9,269),
+  a quarter of them on background. Phase 10 measures what that does to page text.
+
+**Git:** branch `phase/09-det-analysis`; push and merge pending.
+
 ---
 
 ## Phase 10 — Full OCR pipeline
 
-**Status:** IN PROGRESS (opened 2026-10-28 on `phase/10-pipeline`, branched from Phase 9 while its
-gate is open; the owner approved working through the night). Validation data only.
+**Status:** write-up done (2026-10-28). Gate open: push, pull request, CI and merge, after Phase 9.
+Opened 2026-10-28 on `phase/10-pipeline`, branched from Phase 9 while its gate was open (the owner
+approved working through the night). Validation data only.
 
 **Objective:** `GlypharisOCR.predict(image)` end to end, measured on validation.
 
@@ -825,6 +874,44 @@ gate is open; the owner approved working through the night). Validation data onl
 **Exit criteria** (IMPLEMENTATION_PLAN Phase 10): pipeline unit- and integration-tested on
 fixtures; validation E2E metrics reported; calibration either validated (ECE reduced, with numbers)
 or confidence documented as raw; CI green with an inference smoke test on a tiny bundled model.
+
+**Results (2026-10-28)** (strict track; percent with 95% page-bootstrap CIs)
+
+| Experiment | Result | Evidence |
+|---|---|---|
+| GW-E2E-003, calibration | T = 2.35 fitted on half A; ECE on half B 0.217 → 0.089, −0.128 [−0.133, −0.124]: **adopted**; H8 supported on validation | `reports/calibration/GW-E2E-003/` |
+| GW-E2E-001, all 1,715 pages | bag-of-lines page CER 27.56 [25.14, 30.36], E2E line F1 57.96, detection F1 77.79 | `reports/e2e/GW-E2E-001/` |
+| GW-E2E-001, the 400 Phase 5 pages | page CER 24.33 against 42.44 (PP-OCRv6 small), 49.65 (PP-OCRv6 tiny), 50.84 (PP-OCRv5 mobile), 94.50 (Tesseract 5); paired against PP-OCRv6 small −18.11 [−21.43, −15.08] CER, +14.50 [+11.93, +17.05] E2E F1 | `reports/e2e/GW-E2E-001/` |
+| GW-E2E-002, oracle | page CER 6.67 with ground-truth boxes; recognition's share 0.24 overall, 0.20 to 0.29 per blur quartile: detection dominates; H4 not supported on HierText | `reports/e2e/GW-E2E-002/` |
+| GW-EFF-002, CPU page time (PyTorch) | mean 1,998 ms, p95 3,955 ms (recognition 1,721 ms for 40.9 lines), peak RAM 1,624 MiB: misses ADR-0011 on time, meets it on memory | `reports/efficiency/GW-EFF-002.json` |
+
+**Compute:** about 0.6 GPU-hours (calibration and the end-to-end and oracle runs) and 0.2 CPU-hours
+(chain log `runs/phase_progress.log`, local).
+
+**Tests:** the CPU suite passes locally with Phase 9 merged in; the pipeline, reading order,
+calibration and the tiny-model smoke test are covered (`tests/test_pipeline.py`,
+`tests/test_reading_order.py`).
+
+**Exit criteria**
+
+| Criterion | Result | Evidence |
+|---|---|---|
+| Pipeline unit- and integration-tested on fixtures | pass: batching, confidence, calibration, end to end on known lines, a smoke run on tiny models; reading order on six layouts | `tests/test_pipeline.py`, `tests/test_reading_order.py` |
+| Validation E2E metrics reported | pass: GW-E2E-001 and GW-E2E-002 | `reports/e2e/` |
+| Calibration validated or confidence documented as raw | pass: validated (ECE 0.217 → 0.089 on the held-out half) | `reports/calibration/GW-E2E-003/` |
+| CI green with an inference smoke test on a tiny bundled model | pending (after the push) | `tests/test_pipeline.py::test_smoke_tiny_bundled_models_run_end_to_end` |
+
+**Known issues**
+- The PyTorch pipeline misses ADR-0011's page time (2.0 s mean against 1.5 s; recognition is 86%
+  of it). ADR-0011 is judged on the ONNX Runtime build: Phase 17 measures it (GW-EFF-004). Speed
+  work, such as a smaller padding margin, fewer padded columns per batch or INT8, belongs to
+  Phase 16 under registered IDs.
+- Reading order is tested on synthetic layouts only; GDC measures it in Phase 14.
+- Detection is the bottleneck on HierText (three quarters of page error). The retraining fixes
+  Phase 9 deferred to Phase 11 are where it can improve.
+- The recognizer trainer's move onto the shared loop is deferred to Phase 11 (plan item 8).
+
+**Git:** branch `phase/10-pipeline`, with Phase 9 merged in; push and merge pending (after Phase 9).
 
 ---
 

@@ -1,0 +1,109 @@
+{
+ "experiment_id": "GW-DET-001",
+ "checkpoint": "checkpoints\\GW-DET-001\\best.pt",
+ "checkpoint_sha256": "016b2b69d257d9165afd9aa4a7ef5ce36cdf3ad5d2c5926aa6b1b60c43705cd5",
+ "stored_op": "inverse10",
+ "op": "inverse09",
+ "max_op_this_run": "inverse09",
+ "long_side": 1280,
+ "pages": 858,
+ "care_lines": 38165,
+ "page_set": "validation_half_B",
+ "prob_maps": "float32",
+ "post": {
+  "bin_thresh": 0.3,
+  "box_thresh": 0.5,
+  "min_component_area": 1,
+  "min_box_side": 3.0,
+  "max_candidates": 5000,
+  "box_type": "quad",
+  "operating_points": [
+   {
+    "name": "inverse09",
+    "unclip_mode": "inverse",
+    "unclip_ratio": 0.9
+   }
+  ]
+ },
+ "headline": {
+  "op": "inverse09",
+  "pages": 858,
+  "precision": {
+   "value": 0.8564008656567338,
+   "low": 0.8374358662292105,
+   "high": 0.8715165587580831
+  },
+  "recall": {
+   "value": 0.673968295558758,
+   "low": 0.6394364611150665,
+   "high": 0.7042308388301097
+  },
+  "f1_50": {
+   "value": 0.7543108504398827,
+   "low": 0.7283003217636334,
+   "high": 0.7747752659667192
+  },
+  "f1_70": {
+   "value": 0.6446712417150566,
+   "low": 0.6185920662152794,
+   "high": 0.6660791850709412
+  },
+  "mean_iou": 0.81783540077791,
+  "tp_fp_fn_50": [
+   25722,
+   4313,
+   12443
+  ],
+  "counters": {
+   "components": 65580,
+   "tiny": 0,
+   "truncated": 0,
+   "low_score": 30845,
+   "too_thin": 7,
+   "outside": 0,
+   "kept": 34728,
+   "poly_fallback": 0
+  }
+ },
+ "ops": {
+  "inverse09": {
+   "pages": 858,
+   "precision": {
+    "value": 0.8564008656567338,
+    "low": 0.8374358662292105,
+    "high": 0.8715165587580831
+   },
+   "recall": {
+    "value": 0.673968295558758,
+    "low": 0.6394364611150665,
+    "high": 0.7042308388301097
+   },
+   "f1_50": {
+    "value": 0.7543108504398827,
+    "low": 0.7283003217636334,
+    "high": 0.7747752659667192
+   },
+   "f1_70": {
+    "value": 0.6446712417150566,
+    "low": 0.6185920662152794,
+    "high": 0.6660791850709412
+   },
+   "mean_iou": 0.81783540077791,
+   "tp_fp_fn_50": [
+    25722,
+    4313,
+    12443
+   ],
+   "counters": {
+    "components": 65580,
+    "tiny": 0,
+    "truncated": 0,
+    "low_score": 30845,
+    "too_thin": 7,
+    "outside": 0,
+    "kept": 34728,
+    "poly_fallback": 0
+   }
+  }
+ }
+}

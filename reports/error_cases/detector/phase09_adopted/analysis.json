@@ -1,0 +1,88 @@
+{
+ "label": "GW-DET-001 at the Phase 9 settings",
+ "run": "runs/phase09/final_full",
+ "op": "inverse09",
+ "pages": 1715,
+ "care_lines": 74500,
+ "tp": 53322,
+ "fp": 9269,
+ "fn": 21178,
+ "fn_categories": {
+  "merged": 4228,
+  "split": 747,
+  "poorly_localised": 1342,
+  "partly_found": 892,
+  "missed_low_score": 6107,
+  "missed_dropped": 53,
+  "missed_no_candidate": 7809
+ },
+ "fn_by_height": {
+  "merged": [
+   796,
+   767,
+   1239,
+   1154,
+   272
+  ],
+  "split": [
+   29,
+   80,
+   212,
+   268,
+   158
+  ],
+  "poorly_localised": [
+   231,
+   290,
+   427,
+   290,
+   104
+  ],
+  "partly_found": [
+   227,
+   176,
+   193,
+   197,
+   99
+  ],
+  "missed_low_score": [
+   1662,
+   1655,
+   1657,
+   873,
+   260
+  ],
+  "missed_dropped": [
+   7,
+   8,
+   7,
+   11,
+   20
+  ],
+  "missed_no_candidate": [
+   3489,
+   1770,
+   1435,
+   847,
+   268
+  ]
+ },
+ "fp_categories": {
+  "merge": 1164,
+  "fragment": 3396,
+  "poorly_localised": 487,
+  "background": 3848,
+  "other": 374
+ },
+ "merge_predictions": 1982,
+ "split_lines": 1401,
+ "kernel_excess": {
+  "candidates": 82330,
+  "excess_px_median": -0.3242381524659834,
+  "ratio_median": 0.9407405638402799,
+  "ratio_iqr": [
+   0.5127044568280743,
+   1.091470336018015
+  ]
+ }
+}

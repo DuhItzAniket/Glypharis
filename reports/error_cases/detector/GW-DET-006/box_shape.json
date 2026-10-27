@@ -1,0 +1,37 @@
+{
+ "label": "GW-DET-006",
+ "run": "runs/phase09/final_full",
+ "op": "inverse09",
+ "pages": 1715,
+ "curved_lines": 0,
+ "post": {
+  "bin_thresh": 0.3,
+  "box_thresh": 0.5,
+  "min_component_area": 1,
+  "min_box_side": 3.0,
+  "max_candidates": 5000,
+  "box_type": "quad",
+  "operating_points": [
+   {
+    "name": "inverse09",
+    "unclip_mode": "inverse",
+    "unclip_ratio": 0.9
+   }
+  ]
+ },
+ "f1_quad": 0.7779066459505001,
+ "f1_poly": 0.7783387075594205,
+ "curved_recall_quad": null,
+ "curved_recall_poly": null,
+ "f1_diff_poly_minus_quad": {
+  "value": 0.0004320616089203977,
+  "low": -6.348411713227858e-05,
+  "high": 0.000917397278065235
+ },
+ "curved_recall_diff_poly_minus_quad": {
+  "value": 0.0,
+  "low": 0.0,
+  "high": 0.0
+ },
+ "phase14_box_type": "quad"
+}

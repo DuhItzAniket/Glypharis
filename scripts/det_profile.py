@@ -2,7 +2,7 @@
 
     python scripts/det_profile.py --config configs/det/gw-det-001.yaml \
         --checkpoint checkpoints/GW-DET-001/best.pt --set det.infer.long_side=1536
-    python scripts/det_profile.py --table      # the table from every profiled long side
+    python scripts/det_profile.py --config configs/det/gw-det-001.yaml --table  # all long sides
 
 Same protocol as `scripts/run_baselines.py --profile` (EXPERIMENT_PROTOCOL §3), on the same pages:
 the seeded Phase 5 HierText validation page sample the baselines' page profiles used, one page at a
@@ -60,8 +60,13 @@ def profile(args: argparse.Namespace) -> dict[str, Any]:
         raise SystemExit(f"{args.config}: not a detector config")
     proc = psutil.Process()
     conditions = run_conditions()  # before the model loads, so the CPU check sees an idle machine
-    detector = TextLineDetector.from_checkpoint(args.checkpoint, "cpu", args.op)
-    spec = dataclasses.replace(detector.spec, infer=cfg.det.infer, post=cfg.det.post)
+    detector = TextLineDetector.from_checkpoint(args.checkpoint, "cpu")
+    spec = dataclasses.replace(
+        detector.spec,
+        infer=cfg.det.infer,
+        post=cfg.det.post,
+        operating_point=args.op or detector.spec.operating_point,
+    )
     detector = TextLineDetector(detector.backend, spec)
     times, sizes, n_boxes = [], [], []
     pages = e2e_samples(Path(cfg.paths.data_root), EVAL_SET)
