@@ -15,7 +15,7 @@ Phases run in the order set by [ADR-0008](decisions/ADR-0008-usable-engine-first
 | 5 | Baseline systems | **COMPLETE** | `phase-05` |
 | 6 | Recognition baseline | **COMPLETE** | `phase-06` |
 | 7 | Recognizer improvement | **COMPLETE** | `phase-07` |
-| 8 | Text detector | **IN PROGRESS** (gate: push, CI, merge) | — |
+| 8 | Text detector | **COMPLETE** | `phase-08` |
 | 9 | Detector error analysis | not started | — |
 | 10 | Full OCR pipeline | not started | — |
 | 11 | Robustness training | not started | — |
@@ -519,6 +519,7 @@ budget (GW-REC-024) it reaches 6.46% validation CER [6.33, 6.60], −1.07 points
 against GW-REC-001, with 7,928,835 parameters, and reads a line in 24.4 ms mean, 60.3 ms p95 on the
 CPU (PyTorch), inside ADR-0011's line target with little margin on the mean. One seed; the owner
 decided (2026-10-26) to add the two missing seeds later, on a college A100 if access is granted.
+The A100 slot is still booked (2026-10-27), so the seeds wait; nothing before the paper depends on them.
 
 **Implemented**
 - `glypharis/models/rec/svtr.py` (GLYPHARIS-Rec-M), `glypharis/models/rec/base.py`, the CRNN frame
@@ -563,8 +564,7 @@ tag `phase-07` (merge re-created with the noreply identity; same tree and parent
 
 ## Phase 08 — Text detector (GLYPHARIS-Det)
 
-**Status:** write-up done (2026-10-27). Gate open: push, pull request, CI and merge. The code was
-built in parallel with Phase 7 (owner approved, 2026-10-23) on `phase/08-detector`, which now
+**Status:** COMPLETE (2026-10-27). The code was built in parallel with Phase 7 (owner approved, 2026-10-23) on `phase/08-detector`, which now
 includes `main` with Phases 5 to 7. The runs used the GPU only after Phase 7's runs had finished.
 
 **Objective:** a lightweight line detector, trained and evaluated on its own.
@@ -650,8 +650,8 @@ HierText validation pages, each `best.pt` at its stored operating point (`invers
 
 **Descoped / moved (documented)**
 - CLEval-style detection metrics: descoped from Phase 8, with the reason, in the IMPLEMENTATION_PLAN
-  §8 deviations table and EXPERIMENT_PROTOCOL §11 (2026-10-25). The owner signs the descope off at
-  the Phase 8 gate.
+  §8 deviations table and EXPERIMENT_PROTOCOL §11 (2026-10-25). Signed off by the owner at the
+  Phase 8 gate (2026-10-27).
 - HierText's native PQ-style metric: computed from Phase 14 with the official code, for the detector
   as for every system (EXPERIMENT_PROTOCOL §11, 2026-10-22 and 2026-10-25).
 
@@ -666,7 +666,7 @@ idle). `scripts/compute_ledger.py` now counts the Phase 8 jobs and has a test fo
 | Validation F1 reported with CI | pass: full validation with page-bootstrap CIs for all three runs | `reports/training/GW-DET-00N/report.md` |
 | Overlays saved for each slice (small text, rotated, dense, multi-line, noisy background) | pass: one sheet per slice plus the worst pages, for each run | `reports/training/GW-DET-00N/overlays/` |
 | Diagnostics report generated | pass: each run report has its diagnostics section, slice and line-level recall tables and post-processing counters | `reports/training/GW-DET-00N/report.md` |
-| CI green (post-processing unit tests on synthetic masks) | pending the push | `tests/test_det_postprocess.py` |
+| CI green (post-processing unit tests on synthetic masks) | pass | runs 40553993755 (branch), 40554005155 (pull request), 40556174553 (`main`) |
 
 **Compute:** 16.2 GPU-hours in Phase 8, inside the plan's 20–40 (`reports/compute/ledger.md`): 13.9 h
 of training, the rest the sanity sequence, the resume check and full-validation scoring. The 0.8 h
@@ -676,15 +676,21 @@ pre-declared rule fired; they finished, and the rules were applied as planned.
 **Known issues**
 - The ImageNet weight terms are an owner decision before v0.1 ships a detector (RISK_REGISTER R-05).
   GW-DET-002 measured the fallback: training from scratch costs about 0.02 F1@0.5.
-- The CLEval descope (above) needs the owner's sign-off at this gate.
 - The recognizer trainer is not on the shared loop yet. Phase 7 has merged, but the move is left out
-  of this gate to keep it to the detector; it is done in its own commit before Phase 10 builds the
-  pipeline, accepted only if the recognizer tests pass unchanged and an existing GW-REC `last.pt`
-  still resumes.
+  of this gate to keep it to the detector. The owner approved it (2026-10-27) for its own commit at
+  the start of Phase 10, accepted only if the recognizer tests pass unchanged and an existing GW-REC
+  `last.pt` still resumes.
+- CI first hung in `tests/test_det_training.py`: on Linux the DataLoader forked its workers while
+  the trainer's post-processing threads ran. Detector loaders now always spawn their workers
+  (`c73451c`), and pytest dumps every thread's stack after two minutes (`faulthandler_timeout`).
 - `LABEL_VERSION` 2, the fallback for a slow data loader, was not needed: the Large runs waited for
   data 2–3% of each epoch. The Small run waited 21–31%, which cost wall-clock time, not steps.
 - Detector CPU latency is not measured yet. ADR-0011's page target is checked when the pipeline
   exists (Phase 10) and again after export (Phase 17).
 - One seed per arm; the paired CIs cover page sampling, not training randomness.
 
-**Git:** branch `phase/08-detector`, with `main` (Phases 5 to 7) merged in; push and merge pending.
+**Git:** branch `phase/08-detector` (`main` with Phases 5 to 7 merged in first), merged through pull
+request #8. Merge commit `60659f3`, tag `phase-08` (merge re-created with the noreply identity; same
+tree and parents).
+
+**CI status:** green on the branch, the pull request and `main` (run 40556174553).
