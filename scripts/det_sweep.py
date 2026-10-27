@@ -11,8 +11,10 @@ larger minimum is a filter on their pixel area) and boxes once per operating poi
 ``box_thresh``, the higher ones are a filter on the box score), so every setting gives exactly
 the boxes `score_page` would. Counts are at IoU 0.5 (`fast_det_counts`).
 
-Writes ``--out`` (per-page tp, fp, fn for every setting, with the grid) and prints the settings
-ranked by micro F1@0.5. Nothing here reads a test split.
+Writes ``--out`` (per-page tp, fp, fn for every setting, with the grid) and ``<out>.json`` (the
+settings ranked by micro F1@0.5, the record and the arg-max, ties to the first in grid order).
+``--only`` scores just the listed settings (a JSON list of grid settings), as half B needs.
+Nothing here reads a test split.
 """
 
 from __future__ import annotations
@@ -62,13 +64,20 @@ def grid() -> list[tuple[float, int, str, float]]:
 _STATE: dict[str, Any] = {}
 
 
-def _init(det_json: str, pages: dict[str, dict[str, Any]], long_side: int, maps: str) -> None:
+def _init(
+    det_json: str,
+    pages: dict[str, dict[str, Any]],
+    long_side: int,
+    maps: str,
+    only: list[tuple[float, int, str, float]] | None = None,
+) -> None:
     from glypharis.config.loader import from_dict
 
     _STATE["det"] = from_dict(DetConfig, json.loads(det_json), "det")
     _STATE["pages"] = {k: Page.from_dict(v) for k, v in pages.items()}
     _STATE["long_side"] = long_side
     _STATE["maps"] = Path(maps)
+    _STATE["settings"] = [tuple(x) for x in only] if only else grid()
 
 
 def _read_map(path: Path, h: int, w: int, pad_h: int, pad_w: int) -> np.ndarray:
@@ -89,7 +98,7 @@ def score_page_grid(doc_id: str) -> tuple[str, np.ndarray]:
     info = ceiling_geometry(page, _STATE["long_side"])
     prob = _read_map(_STATE["maps"] / f"{doc_id}.png", info.h, info.w, info.pad_h, info.pad_w)
     r = det.labels.shrink_ratio
-    index = {s: i for i, s in enumerate(grid())}
+    index = {s: i for i, s in enumerate(_STATE["settings"])}
     out = np.zeros((len(index), 3), dtype=np.int64)
     for b in BIN_THRESH:
         post = dataclasses.replace(det.post, bin_thresh=b, min_component_area=min(MIN_AREA),
@@ -100,6 +109,8 @@ def score_page_grid(doc_id: str) -> tuple[str, np.ndarray]:
             for op in UNCLIP:
                 boxes, _ = boxes_from_candidates(kept, op, post, r, info)
                 for t in BOX_THRESH:
+                    if (b, a, op.name, t) not in index:
+                        continue
                     preds = [x.to_pred_line() for x in boxes if x.score >= t]
                     tp, fp, fn = fast_det_counts(page, preds, (0.5,)).det[0.5]
                     out[index[(b, a, op.name, t)]] = (tp, fp, fn)
@@ -118,6 +129,7 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--half", choices=["A", "B", "all"], required=True)
     parser.add_argument("--out", type=Path, required=True, help=".npz with the per-page counts")
     parser.add_argument("--workers", type=int, default=8)
+    parser.add_argument("--only", default=None, help="JSON list of grid settings to score")
     args = parser.parse_args(argv)
     cfg = load_config(args.config, overrides_from_args(args))
     if cfg.det is None:
@@ -133,12 +145,16 @@ def main(argv: list[str] | None = None) -> int:
         ids = calibration_halves(ids)["AB".index(args.half)]
     gt = read_gt_pages(pages_file, ids)
     settings = grid()
+    if args.only:
+        settings = [tuple(x) for x in json.loads(args.only)]
+        if missing := [x for x in settings if x not in grid()]:
+            raise SystemExit(f"--only: not grid settings: {missing}")
     det_json = json.dumps(dataclasses.asdict(det))
     pages = {d: gt[d].to_dict() for d in ids}
     counts: dict[str, np.ndarray] = {}
     with ProcessPoolExecutor(
         args.workers, mp_context=get_context("spawn"), initializer=_init,
-        initargs=(det_json, pages, det.infer.long_side, str(args.maps)),
+        initargs=(det_json, pages, det.infer.long_side, str(args.maps), settings),
     ) as pool:  # fmt: skip
         for n, (doc_id, c) in enumerate(pool.map(score_page_grid, ids, chunksize=4), 1):
             counts[doc_id] = c
@@ -157,8 +173,18 @@ def main(argv: list[str] | None = None) -> int:
     )
     totals = arr.sum(axis=0)
     ranked = sorted(range(len(settings)), key=lambda i: (-f1(totals[i]), i))
-    rec = settings.index(RECORD)
-    print(f"half {args.half}: {len(docs)} pages; record {RECORD}: F1@0.5 {f1(totals[rec]):.4f}")
+    summary = {
+        "half": args.half, "pages": len(docs), "settings": len(settings),
+        "best": list(settings[ranked[0]]), "best_f1_50": f1(totals[ranked[0]]),
+        "record": list(RECORD) if RECORD in settings else None,
+        "record_f1_50": f1(totals[settings.index(RECORD)]) if RECORD in settings else None,
+        "ranked": [{"setting": list(settings[i]), "f1_50": f1(totals[i]),
+                    "tp_fp_fn": [int(x) for x in totals[i]]} for i in ranked[:20]],
+    }  # fmt: skip
+    summary_text = json.dumps(summary, indent=1) + "\n"
+    args.out.with_suffix(".json").write_text(summary_text, encoding="utf-8")
+    print(f"half {args.half}: {len(docs)} pages; record {RECORD}: F1@0.5 "
+          f"{summary['record_f1_50']}")  # fmt: skip
     for i in ranked[:10]:
         print(f"  {settings[i]}: F1@0.5 {f1(totals[i]):.4f} (tp, fp, fn {tuple(totals[i])})")
     return 0

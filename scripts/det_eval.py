@@ -205,6 +205,7 @@ def main(argv: list[str] | None = None) -> int:
         "stored_op": stored,
         "op": op,
         "max_op_this_run": res.selected_op,
+        "long_side": det.infer.long_side,
         "pages": res.pages,
         "care_lines": res.care_lines,
         "page_set": (
