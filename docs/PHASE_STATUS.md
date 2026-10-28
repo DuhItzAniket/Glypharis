@@ -24,7 +24,7 @@ Phases run in the order set by [ADR-0008](decisions/ADR-0008-usable-engine-first
 | 14 | External evaluation | not started | — |
 | 15 | Error analysis | not started | — |
 | 16 | Efficiency optimisation | not started | — |
-| 17 | Model export | **IN PROGRESS** (gate: push, CI, merge; after Phase 10) | — |
+| 17 | Model export | **COMPLETE** | `phase-17` |
 | 18 | Inference package | **IN PROGRESS** (gate: push, CI, merge; after Phase 17) | — |
 | 19 | Optional HTTP API | not started | — |
 | 20 | Production engineering | not started | — |
@@ -923,8 +923,7 @@ calibration and the tiny-model smoke test are covered (`tests/test_pipeline.py`,
 
 ## Phase 17 — Model export
 
-**Status:** write-up done (2026-10-28). Gate open: push, pull request, CI and merge, after Phase 10.
-Opened 2026-10-28 on `phase/17-export`, branched from Phase 10; Phases 11 to 16 come after v0.1
+**Status:** COMPLETE (2026-10-28). Opened 2026-10-28 on `phase/17-export`, branched from Phase 10; Phases 11 to 16 come after v0.1
 (ADR-0008). The owner approved installing `onnx` 1.23.2 and `onnxruntime`
 1.31.1 from PyPI (2026-10-28); both are pinned in `requirements/lock.txt`, so CI runs the ONNX
 checks too.
@@ -981,7 +980,7 @@ which kept a buffer per input shape. ONNX stays available (`backend="onnx"`).
 | Criterion | Result | Evidence |
 |---|---|---|
 | Export declared successful only after the equivalence tests pass and are recorded | pass | `reports/export/GW-EFF-003/equivalence.md` |
-| CI runs ONNX equivalence on the tiny model | pass locally; CI pending the push | `tests/test_export.py` |
+| CI runs ONNX equivalence on the tiny model | pass: runs 40621722608 (branch), 40621740954 (pull request), 40622745727 (`main`) | `tests/test_export.py` |
 
 **Known issues**
 - **Owner decision needed: ADR-0011.** Its revisit condition is met (the exported v0.1 misses the page
@@ -994,7 +993,12 @@ which kept a buffer per input shape. ONNX stays available (`backend="onnx"`).
 - Model bundles are not distributed: `runs/release/glypharis-0.1.0` exists on the laptop only. How
   BookWorm gets the bundle (a release asset, a shared drive) is an owner decision.
 
-**Git:** branch `phase/17-export`; push and merge pending (after Phase 10).
+**Git:** branch `phase/17-export` (`main` with Phase 10 merged in first), merged through pull request
+#12. Merge commit `99805d8`, tag `phase-17` (merge re-created with the noreply identity; same tree
+and parents).
+
+**CI status:** green on the branch, the pull request and `main` (run 40622745727, on the merge as
+GitHub made it; the re-created merge has the same tree).
 
 ---
 
