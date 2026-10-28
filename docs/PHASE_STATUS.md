@@ -16,7 +16,7 @@ Phases run in the order set by [ADR-0008](decisions/ADR-0008-usable-engine-first
 | 6 | Recognition baseline | **COMPLETE** | `phase-06` |
 | 7 | Recognizer improvement | **COMPLETE** | `phase-07` |
 | 8 | Text detector | **COMPLETE** | `phase-08` |
-| 9 | Detector error analysis | **IN PROGRESS** (gate: push, CI, merge) | — |
+| 9 | Detector error analysis | **COMPLETE** | `phase-09` |
 | 10 | Full OCR pipeline | **IN PROGRESS** (gate: push, CI, merge; after Phase 9) | — |
 | 11 | Robustness training | not started | — |
 | 12 | Synthetic data study | not started | — |
@@ -699,9 +699,8 @@ tree and parents).
 
 ## Phase 09 — Detector error analysis
 
-**Status:** write-up done (2026-10-28). Gate open: push, pull request, CI and merge. Opened
-2026-10-27 on `phase/09-det-analysis`. Validation data only; the owner approved working through the
-night (2026-10-27).
+**Status:** COMPLETE (2026-10-28). Opened 2026-10-27 on `phase/09-det-analysis`. Validation data
+only; the owner approved working through the night (2026-10-27).
 
 **Objective:** understand GW-DET-001's failures before the pipeline is built, and fix what can be
 fixed without retraining: post-processing, input resolution and box shape.
@@ -797,7 +796,7 @@ all 440 settings; the error categories, the curved-line rule and the pairing hav
 | `reports/error_cases/detector/` | pass: analysis, galleries per category, worst pages, before and after the Phase 9 settings | `reports/error_cases/detector/` |
 | Written findings in `research/findings.md` | pass: F7, F8, F9 | `research/findings.md` |
 | Fixes applied under a new experiment ID or deferred with a reason | pass: GW-DET-004 and 005 applied; retraining fixes deferred above; GW-DET-006 could not decide | `research/experiments.md` |
-| CI green | pending (after the push) | — |
+| CI green | pass | runs 40570430877 (branch), 40619874396 (pull request), 40620241350 (`main`) |
 
 **Known issues**
 - RISK_REGISTER R-22 stays open: no validation set has curved line annotations, so whether `poly`
@@ -807,7 +806,10 @@ all 440 settings; the error categories, the curved-line rule and the pairing hav
 - The looser post-processing finds more of everything: false alarms rose 2.5 times (3,631 to 9,269),
   a quarter of them on background. Phase 10 measures what that does to page text.
 
-**Git:** branch `phase/09-det-analysis`; push and merge pending.
+**Git:** branch `phase/09-det-analysis`, merged through pull request #9. Merge commit `def522b`, tag
+`phase-09` (merge re-created with the noreply identity; same tree and parents).
+
+**CI status:** green on the branch, the pull request and `main` (run 40620241350, on the merge as GitHub made it; the re-created merge has the same tree).
 
 ---
 
