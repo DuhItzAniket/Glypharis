@@ -15,6 +15,7 @@ its detection score and its recognition confidence apart; ``confidence`` is the 
 from __future__ import annotations
 
 import json
+import logging
 import time
 from collections.abc import Iterable, Sequence
 from dataclasses import asdict, dataclass, field
@@ -25,11 +26,15 @@ import numpy as np
 from PIL import Image, ImageOps
 
 from glypharis.data.crops import CropSettings, background_grey, cut_line
+from glypharis.errors import GlypharisError, ImageTooLargeError, InvalidImageError
 from glypharis.models.det.detector import TextLineDetector
 from glypharis.pipeline.reading_order import reading_order
 from glypharis.pipeline.recognizer import LineReading, TextRecognizer
 
 ImageInput = str | Path | Image.Image | np.ndarray
+DEFAULT_MAX_PIXELS = 64_000_000  # about 8000 x 8000; a page scanned at 600 dpi is about 35 M
+log = logging.getLogger(__name__)
+_BUNDLE_CACHE: dict[tuple[str, str, int | None], GlypharisOCR] = {}
 
 
 @dataclass
@@ -102,14 +107,88 @@ class OCRResult:
 OcrPage = OCRResult  # the Phase 10 name
 
 
-def load_rgb(image: ImageInput) -> np.ndarray:
-    """HWC uint8 RGB; a file is opened with its EXIF orientation applied, as the pages were."""
-    if isinstance(image, np.ndarray):
-        if image.ndim == 2:
-            return np.repeat(image[..., None], 3, axis=2).astype(np.uint8)
-        return np.ascontiguousarray(image[..., :3]).astype(np.uint8)
-    img = image if isinstance(image, Image.Image) else ImageOps.exif_transpose(Image.open(image))
+def _check_size(w: int, h: int, max_pixels: int) -> None:
+    if w < 1 or h < 1:
+        raise InvalidImageError(f"the image is empty ({w}x{h} pixels)")
+    if w * h > max_pixels:
+        raise ImageTooLargeError(
+            f"the image has {w}x{h} = {w * h:,} pixels, more than the limit of {max_pixels:,} "
+            "(GlypharisOCR(max_pixels=...)); scale it down first"
+        )
+
+
+def _to_uint8(a: np.ndarray) -> np.ndarray:
+    """Pixel values as uint8: uint8 as is, bool as 0/255, uint16 to its high byte, floats in [0, 1]
+    or [0, 255] scaled; anything else is refused."""
+    if a.dtype == np.uint8:
+        return a
+    if a.dtype == np.bool_:
+        return a.astype(np.uint8) * 255
+    if a.dtype == np.uint16:
+        return (a >> 8).astype(np.uint8)
+    if np.issubdtype(a.dtype, np.floating):
+        if not np.isfinite(a).all():
+            raise InvalidImageError("the array holds NaN or infinite values")
+        hi = float(a.max())
+        if float(a.min()) < 0 or hi > 255:
+            raise InvalidImageError("float pixel values must lie in [0, 1] or [0, 255]")
+        return np.round(a * 255 if hi <= 1.0 else a).astype(np.uint8)
+    if np.issubdtype(a.dtype, np.integer) and a.min() >= 0 and a.max() <= 255:
+        return a.astype(np.uint8)
+    raise InvalidImageError(f"unsupported pixel type {a.dtype}")
+
+
+def _array_rgb(a: np.ndarray, max_pixels: int) -> np.ndarray:
+    if a.ndim == 3 and a.shape[2] == 1:
+        a = a[..., 0]
+    if a.ndim not in (2, 3) or (a.ndim == 3 and a.shape[2] not in (3, 4)):
+        raise InvalidImageError(
+            f"an image array must be (H, W), (H, W, 1), (H, W, 3) or (H, W, 4); got {a.shape}"
+        )
+    _check_size(a.shape[1], a.shape[0], max_pixels)
+    a = _to_uint8(a)
+    if a.ndim == 2:
+        return np.repeat(a[..., None], 3, axis=2)
+    return np.ascontiguousarray(a[..., :3])
+
+
+def _pil_rgb(img: Image.Image, max_pixels: int) -> np.ndarray:
+    _check_size(img.width, img.height, max_pixels)
+    if img.mode in ("I;16", "I;16B", "I;16L", "I", "F"):
+        a = np.asarray(img).astype(np.float64)
+        top = float(np.nanmax(a)) if a.size else 1.0
+        a = np.nan_to_num(a / top if top > 1.0 else a, nan=0.0, posinf=1.0, neginf=0.0)
+        return _array_rgb(np.clip(a, 0.0, 1.0), max_pixels)
     return np.asarray(img.convert("RGB"))
+
+
+def load_rgb(image: ImageInput, max_pixels: int = DEFAULT_MAX_PIXELS) -> np.ndarray:
+    """HWC uint8 RGB from a path, a PIL image or an array; a file is opened with its EXIF
+    orientation applied, as the pages were. Anything that is not a readable image of at most
+    ``max_pixels`` pixels raises `InvalidImageError` (or `ImageTooLargeError`)."""
+    if isinstance(image, np.ndarray):
+        return _array_rgb(image, max_pixels)
+    if isinstance(image, Image.Image):
+        return _pil_rgb(image, max_pixels)
+    if not isinstance(image, str | Path):
+        raise InvalidImageError(
+            f"unsupported input type {type(image).__name__}: give a file path, a PIL image or a "
+            "numpy array"
+        )
+    path = Path(image)
+    if not path.is_file():
+        raise InvalidImageError(f"{path}: no such file")
+    try:
+        with Image.open(path) as opened:
+            _check_size(opened.width, opened.height, max_pixels)  # from the header, before decoding
+            opened.load()
+            return _pil_rgb(ImageOps.exif_transpose(opened), max_pixels)
+    except Image.DecompressionBombError as exc:
+        raise ImageTooLargeError(f"{path}: {exc}") from exc
+    except GlypharisError:
+        raise
+    except (OSError, SyntaxError, ValueError) as exc:  # unidentified, truncated or corrupt
+        raise InvalidImageError(f"{path}: not a readable image ({exc})") from exc
 
 
 class GlypharisOCR:
@@ -119,12 +198,16 @@ class GlypharisOCR:
         recognizer: TextRecognizer,
         crop: CropSettings | None = None,
         order: bool = True,
+        max_pixels: int = DEFAULT_MAX_PIXELS,
     ) -> None:
         self.detector = detector
         self.recognizer = recognizer
         self.crop = crop or CropSettings()
         self.order = order
+        self.max_pixels = max_pixels
         self.model_version = ""
+        self._counts = {"pages": 0, "lines": 0, "failed": 0}
+        self._seconds = 0.0
 
     @classmethod
     def from_pretrained(
@@ -132,14 +215,41 @@ class GlypharisOCR:
         name_or_path: str | Path = "glypharis-0.1.0",
         backend: str = "torch",
         threads: int | None = None,
+        cache: bool = True,
     ) -> GlypharisOCR:
         """A model bundle by path, or by name from the model directories
         (`glypharis.export.bundle.find_bundle`). Nothing is downloaded. ``backend`` is ``torch``
         (the default, PyTorch on the CPU) or ``onnx`` (ONNX Runtime; reads the same, but its
-        recognizer is slower for now, Phase 17)."""
+        recognizer is slower for now, Phase 17). With ``cache`` a bundle already loaded in this
+        process with the same backend and threads is returned again. A missing or damaged bundle
+        raises `glypharis.errors.ModelLoadError`."""
         from glypharis.export.bundle import find_bundle, load_bundle
 
-        return load_bundle(find_bundle(name_or_path), backend, threads)  # type: ignore[arg-type]
+        path = find_bundle(name_or_path)
+        key = (str(path.resolve()), backend, threads)
+        if cache and key in _BUNDLE_CACHE:
+            return _BUNDLE_CACHE[key]
+        t0 = time.perf_counter()
+        ocr = load_bundle(path, backend, threads)  # type: ignore[arg-type]
+        log.info(
+            "loaded GLYPHARIS model %s (%s backend) from %s in %.2f s",
+            ocr.model_version,
+            backend,
+            path,
+            time.perf_counter() - t0,
+        )
+        if cache:
+            _BUNDLE_CACHE[key] = ocr
+        return ocr
+
+    def stats(self) -> dict[str, float]:
+        """Pages read, lines found, inputs refused and mean seconds per page so far."""
+        n = self._counts["pages"]
+        return {
+            **self._counts,
+            "seconds": self._seconds,
+            "mean_page_seconds": self._seconds / n if n else 0.0,
+        }
 
     def read_quads(
         self,
@@ -156,7 +266,11 @@ class GlypharisOCR:
 
     def predict(self, image: ImageInput, temperatures: Sequence[float] = ()) -> OCRResult:
         t0 = time.perf_counter()
-        rgb = load_rgb(image)
+        try:
+            rgb = load_rgb(image, self.max_pixels)
+        except GlypharisError:
+            self._counts["failed"] += 1
+            raise
         t1 = time.perf_counter()
         boxes = self.detector.detect(rgb)
         t2 = time.perf_counter()
@@ -182,6 +296,12 @@ class GlypharisOCR:
             "order": t4 - t3,
             "total": t4 - t0,
         }
+        self._counts["pages"] += 1
+        self._counts["lines"] += len(lines)
+        self._seconds += secs["total"]
+        log.debug(
+            "page %dx%d: %d lines in %.3f s", rgb.shape[1], rgb.shape[0], len(lines), secs["total"]
+        )
         return OCRResult(rgb.shape[1], rgb.shape[0], lines, secs, self.model_version)
 
     def predict_batch(self, images: Iterable[ImageInput]) -> list[OCRResult]:

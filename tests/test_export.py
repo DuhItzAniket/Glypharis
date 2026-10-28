@@ -10,6 +10,7 @@ import torch
 from det_fixtures import rect_polygon
 from test_pipeline import KernelMap, _page, tiny_detector, tiny_recognizer
 
+from glypharis.errors import ModelLoadError
 from glypharis.export.bundle import load_bundle, read_manifest, write_bundle
 from glypharis.export.onnx import (
     OnnxLineModel,
@@ -105,5 +106,5 @@ def test_bundle_backends_agree_and_hashes_are_checked(tmp_path):
     m = json.loads((out / "manifest.json").read_text(encoding="utf-8"))
     m["files"]["recognizer.onnx"] = "0" * 64
     (out / "manifest.json").write_text(json.dumps(m), encoding="utf-8")
-    with pytest.raises(ValueError, match="SHA-256"):
+    with pytest.raises(ModelLoadError, match="SHA-256"):
         load_bundle(out)

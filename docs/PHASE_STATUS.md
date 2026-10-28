@@ -27,7 +27,7 @@ Phases run in the order set by [ADR-0008](decisions/ADR-0008-usable-engine-first
 | 17 | Model export | **COMPLETE** | `phase-17` |
 | 18 | Inference package | **IN PROGRESS** (gate: push, CI, merge; after Phase 17) | — |
 | 19 | Optional HTTP API | not started | — |
-| 20 | Production engineering | not started | — |
+| 20 | Production engineering | **IN PROGRESS** (gate: push, CI, merge; after Phase 18) | — |
 | 21 | Research package | not started | — |
 | 22 | Final validation | not started | — |
 | 23 | Release v1.0 | not started | — |
@@ -1051,4 +1051,49 @@ default backend is PyTorch, whose reading GW-EFF-003 showed to be identical.
 - Model bundles are not distributed; `from_pretrained` finds one only where it is placed.
 
 **Git:** branch `phase/18-package`, with Phase 17 merged in; push and merge pending (after Phase 17).
+
+---
+
+## Phase 20 — Production engineering
+
+**Status:** write-up done (2026-10-28). Gate open: push, pull request, CI and merge, after Phase 18.
+Opened 2026-10-28 on `phase/20-hardening`, branched from Phase 18. With it the v0.1 path
+(ADR-0008: Phases 10, 17, 18, 20) is complete; v0.1 is tagged once the owner has merged 9 to 20.
+
+**Objective:** a library BookWorm can call without surprises: every failure it can cause or meet is
+a clear, typed error.
+
+**Implemented**
+- `glypharis.errors`: `GlypharisError` (stable `code`, `to_dict`), `InvalidImageError`,
+  `ImageTooLargeError`, `ModelLoadError`.
+- Input checks (`load_rgb`): paths that do not exist or are not files; files that are not images,
+  empty, truncated or corrupt; arrays of the wrong shape, NaN or infinite values, negative or
+  out-of-range values, unsupported types; empty images. Pixel limit `max_pixels` (default 64 million,
+  about 8000 by 8000), checked from the file header before decoding, and PIL's decompression-bomb
+  guard mapped to `ImageTooLargeError`. Accepted: grey, RGB, RGBA, palette and CMYK images, 16-bit
+  and float images, booleans; a blank page gives no lines.
+- Model loading: a missing bundle, a missing or changed file, an unreadable or foreign manifest, or
+  a file that fails to load all raise `ModelLoadError`; loaded bundles are cached per process
+  (`from_pretrained(..., cache=True)`).
+- Logging through the `glypharis` logger (model load at INFO, per page at DEBUG); `stats()` on a
+  `GlypharisOCR` (pages, lines, refused inputs, mean seconds per page); `glypharis.version_info()`
+  and `glypharis-ocr --version`; the CLI reports each refused image with its error code.
+
+**Exit criteria** (IMPLEMENTATION_PLAN Phase 20)
+
+| Criterion | Result | Evidence |
+|---|---|---|
+| Failure-path tests: corrupt image, huge image, empty page, non-image | pass | `tests/test_hardening.py` |
+| No unhandled exceptions in the fuzz-lite test (120 seeded cases: random arrays, random bytes, damaged PNGs) | pass | `tests/test_hardening.py::test_fuzz_lite_never_raises_anything_but_glypharis_errors` |
+| CI green | pending (after the push) | — |
+
+**Known issues**
+- `max_pixels` (64 million) is a guess at a safe upper bound for this laptop, not a measurement;
+  BookWorm may want its own.
+- The fuzz test is seeded and small (120 cases); it guards the input edge, not the models.
+- Owner decisions carried into v0.1: ADR-0011's page time (Phase 17) and how bundles are
+  distributed.
+
+**Git:** branch `phase/20-hardening`, with Phase 18 merged in; push and merge pending (after
+Phase 18).
 
