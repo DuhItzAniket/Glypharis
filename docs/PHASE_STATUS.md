@@ -1110,7 +1110,8 @@ GitHub made it; the re-created merge has the same tree).
 ## Phase 11 — Robustness training
 
 **Status:** IN PROGRESS (opened 2026-10-28 on `phase/11-robustness`, branched from Phase 20, at the
-owner's request to continue through the night). Nothing is registered or trained yet.
+owner's request to continue through the night). Plan registered 2026-10-28 (below); training runs on
+the laptop GPU while the college GPU slot is queued.
 
 **Objective:** find out which degradation augmentations help (RQ3, H3).
 
@@ -1121,21 +1122,52 @@ owner's request to continue through the night). Nothing is registered or trained
   with identical learning rates and losses within CUDA's run-to-run noise; the A/B/C resume check
   passes too (`reports/training/phase11/trainer_move/`).
 
-**Proposed plan, for the owner** (2026-10-28; not registered: it commits 20 to 70 GPU-hours)
+**Plan** (registered 2026-10-28, before any Phase 11 number was computed; the owner chose the
+CRNN recipe and the reuse of Phase 7's runs on 2026-10-28)
 
-The IMPLEMENTATION_PLAN design: arms A (none), B (geometric), C (photometric), D (document
-degradation), E (full); three seeds each; equal steps; clean validation and the frozen GLYPH-C v1
-suite (CER per corruption and severity, mean corruption error); a paired comparison against A and
-a verdict per family. Phase 7 already ran these five arms once, on the CRNN short budget
-(GW-REC-003 and 015 to 018), without GLYPH-C. Decisions needed before registration:
-1. **Which recipe.** The CRNN baseline recipe costs about 1.3 GPU-hours per short run (15 runs,
-   about 20 GPU-hours, inside the 20 to 40 budget, and Phase 7's runs can serve as seed 1 if their
-   setup matches); the v0.1 recognizer's recipe (SVTR, height 48) about 4.7 (about 70 GPU-hours),
-   which is where the result matters for the shipped model.
-2. **Seeds and machine.** Three seeds per arm as planned, or three for A and D (H3's test) and one
-   for B, C and E; and whether to wait for the college A100.
-3. **Decision rule.** Phase 7's rule (paired CI and outside the control seeds' range) applied to
-   GLYPH-C mean corruption error, with H3's clean-validation guard (at most 5% relative).
+1. **Arms and runs.** The CRNN short budget of Phase 7 (GW-REC-003's configuration: 8 epochs,
+   height 32, batch 64, HierText training lines), changing only `data.augmentation`. Three seeds
+   (1337, 2024, 7) per arm, 15 runs:
+
+   | Arm | Augmentation | Seed 1337 | Seed 2024 | Seed 7 |
+   |---|---|---|---|---|
+   | A | none | GW-REC-015 | GW-DATA-001 | GW-DATA-002 |
+   | B | geometric | GW-REC-016 | GW-DATA-003 | GW-DATA-004 |
+   | C | photometric | GW-REC-017 | GW-DATA-005 | GW-DATA-006 |
+   | D | document degradation | GW-REC-018 | GW-DATA-007 | GW-DATA-008 |
+   | E | full (all three) | GW-REC-003 | GW-REC-004 | GW-REC-005 |
+
+   The seed-1337 runs of A to D and all of E already exist (Phase 7); the 8 GW-DATA runs are new
+   (`configs/rec/gw-data-001.yaml` to `008`, each Phase 7's arm config with the seed changed).
+   Every arm sees the same lines for the same number of optimizer steps. About 1.3 GPU-hours per
+   run on the RTX 4050, so about 11 GPU-hours.
+2. **Robustness metric.** Each run's `best.pt` (chosen on clean validation CER, as in Phase 7) reads
+   all 216,000 crops of the frozen GLYPH-C v1 pack (`scripts/glyph_c_eval.py score`, GW-DATA-009):
+   CER on the strict track per corruption and level, and the **mean corruption error (mCE)**, the
+   unweighted mean over the 35 corruption-level cells (7 corruptions, 5 levels) of each cell's
+   micro CER. The clean copies are scored too and reported, not used in the rule.
+3. **Decision rule** (Phase 7's rule, moved to mCE). For each of B to E against A: the paired 95%
+   CI of mCE(arm) − mCE(A), pooling each arm's three seeds and resampling the 6,000 GLYPH-C source
+   lines (1,000 resamples), and the seed ranges. **Helps**: CI entirely below 0 and all three of
+   the arm's seeds below all three of A's. **Hurts**: the mirror. Otherwise **no clear effect**.
+4. **H3.** Supported if arm D helps under rule 3 and its mean clean validation CER (HierText
+   validation pack, the three runs' best checkpoints) is at most 5% (relative) above arm A's.
+   Otherwise not supported, with the reason (no clear effect, or the clean guard).
+5. **Reported but not decided on:** CER per corruption and level for every arm (where each family
+   helps), clean validation CER per arm, and the clean GLYPH-C CER.
+6. **Data:** training and validation splits and GLYPH-C (built from validation lines) only. No test
+   set is read in this phase.
+
+**Known limitations, stated in advance**
+- The seed-1337 runs and arm E were trained by Phase 7's recognizer trainer; the new runs by the
+  shared training loop it moved onto. The move was checked (same learning rates, losses within
+  run-to-run noise), but for arms A to D one seed in three comes from the older code.
+- GLYPH-C's HierText half comes from the validation lines that picked each run's best epoch. Every
+  arm is selected the same way, so the comparison is fair, but the absolute CERs are slightly
+  optimistic.
+- The CRNN short budget is Phase 7's ablation recipe, not the v0.1 recognizer (SVTR, height 48, 30
+  epochs). The verdicts are about the augmentation families on this recipe; whether they carry
+  over to the shipped model is a later check on the college GPU.
 
 **Git:** branch `phase/11-robustness`; not for merge until the phase is done.
 

@@ -1,0 +1,5 @@
+# GW-DATA-008: Phase 11, arm D (degradation augmentation), seed 7. Phase 7's GW-REC-018 with only
+# the seed changed; seed 1337 of this arm is GW-REC-018 itself (docs/PHASE_STATUS.md, Phase 11).
+inherits: gw-rec-018.yaml
+experiment_id: GW-DATA-008
+seed: 7

@@ -52,6 +52,15 @@ Rows link to a full entry below. Numbers are copied from generated reports only,
 | [GW-EFF-003](#gw-eff-003) | 2026-10-28 | 17 | ONNX equivalence of the v0.1 bundle against PyTorch on validation data | done | maps 7.3e-6, logits 3.7e-4, text identical on 5,000 lines, page CER equal: export successful | `reports/export/GW-EFF-003/` |
 | [GW-EFF-004](#gw-eff-004) | 2026-10-28 | 17 | Whole-pipeline CPU page time on ONNX Runtime (ADR-0011's measurement) | done | ONNX page mean 5.5 s, p95 12.7 s, 11.2 GB: misses ADR-0011 by far (recognizer); PyTorch default for v0.1 | `reports/efficiency/` |
 | [GW-E2E-004](#gw-e2e-004) | 2026-10-28 | 18 | The installed package (v0.1 bundle, ONNX) against the Phase 10 pipeline on the Phase 5 validation pages | done | page CER 24.33% vs 24.33% (+0.001 points), 16,827/16,835 lines identical: pass | `reports/package/` |
+| [GW-DATA-001](#gw-data-001) | 2026-10-28 | 11 | Phase 11 arm A (none augmentation), seed 2024: GW-REC-015 with the seed changed | planned | — | `reports/training/GW-DATA-001/` |
+| [GW-DATA-002](#gw-data-002) | 2026-10-28 | 11 | Phase 11 arm A (none augmentation), seed 7: GW-REC-015 with the seed changed | planned | — | `reports/training/GW-DATA-002/` |
+| [GW-DATA-003](#gw-data-003) | 2026-10-28 | 11 | Phase 11 arm B (geometric augmentation), seed 2024: GW-REC-016 with the seed changed | planned | — | `reports/training/GW-DATA-003/` |
+| [GW-DATA-004](#gw-data-004) | 2026-10-28 | 11 | Phase 11 arm B (geometric augmentation), seed 7: GW-REC-016 with the seed changed | planned | — | `reports/training/GW-DATA-004/` |
+| [GW-DATA-005](#gw-data-005) | 2026-10-28 | 11 | Phase 11 arm C (photometric augmentation), seed 2024: GW-REC-017 with the seed changed | planned | — | `reports/training/GW-DATA-005/` |
+| [GW-DATA-006](#gw-data-006) | 2026-10-28 | 11 | Phase 11 arm C (photometric augmentation), seed 7: GW-REC-017 with the seed changed | planned | — | `reports/training/GW-DATA-006/` |
+| [GW-DATA-007](#gw-data-007) | 2026-10-28 | 11 | Phase 11 arm D (degradation augmentation), seed 2024: GW-REC-018 with the seed changed | planned | — | `reports/training/GW-DATA-007/` |
+| [GW-DATA-008](#gw-data-008) | 2026-10-28 | 11 | Phase 11 arm D (degradation augmentation), seed 7: GW-REC-018 with the seed changed | planned | — | `reports/training/GW-DATA-008/` |
+| [GW-DATA-009](#gw-data-009) | 2026-10-28 | 11 | Phase 11 robustness: the 15 arm runs on GLYPH-C v1 (mCE), paired comparison against arm A, verdict per family (H3) | planned | — | `reports/robustness/` |
 
 ### GW-BASE-001 — Tesseract 5 (LSTM, eng): recognition and end to end
 
@@ -909,6 +918,175 @@ Rows link to a full entry below. Numbers are copied from generated reports only,
 - **Interpretation:** the shipped path reproduces the pipeline Phase 10 measured, on a different device (CPU instead of GPU) and runtime; the 8 lines that differ are numeric noise. The check is also the one that caught a mis-built bundle the equivalence checks could not see.
 - **Limitations:** GW-E2E-001 ran on the GPU in PyTorch; small numeric differences can move a box or a character.
 - **Next experiment:** Phase 20.
+
+### GW-DATA-001 — Phase 11 arm A (none augmentation), seed 2024
+
+- **Date allocated / run:** 2026-10-28 / —
+- **Phase:** 11
+- **Git commit:** recorded in the run summary   **Config:** `configs/rec/gw-data-001.yaml`   **Seed(s):** 2024
+- **Dataset version(s):** as GW-REC-001; GLYPH-C v1 for the robustness score
+- **Hardware:** RTX 4050 Laptop 6 GB, bf16
+- **Research question:** RQ3: which augmentation families make the recognizer robust to degraded input?
+- **Hypothesis (written before the run):** [H3](hypotheses.md#h3--document-degradation-augmentation-improves-robustness-rq3) (tested on arm D against A, three seeds each)
+- **Method:** `python train.py --config configs/rec/gw-data-001.yaml`; one of three seeds of arm A (with GW-REC-015 and the other GW-DATA seed); scored on GLYPH-C by GW-DATA-009. Plan and decision rule: `docs/PHASE_STATUS.md`, Phase 11.
+- **Variables:** independent: the seed (the arm's augmentation is fixed); controlled: everything else
+- **Control:** arm A (GW-REC-015, GW-DATA-001, 002)
+- **Result:** —
+- **Training diagnostics:** —
+- **Interpretation:** —
+- **Limitations:** trained by the shared training loop; GW-REC-015 (seed 1337) by Phase 7's trainer.
+- **Next experiment:** GW-DATA-009
+- **Training time:** —
+
+### GW-DATA-002 — Phase 11 arm A (none augmentation), seed 7
+
+- **Date allocated / run:** 2026-10-28 / —
+- **Phase:** 11
+- **Git commit:** recorded in the run summary   **Config:** `configs/rec/gw-data-002.yaml`   **Seed(s):** 7
+- **Dataset version(s):** as GW-REC-001; GLYPH-C v1 for the robustness score
+- **Hardware:** RTX 4050 Laptop 6 GB, bf16
+- **Research question:** RQ3: which augmentation families make the recognizer robust to degraded input?
+- **Hypothesis (written before the run):** [H3](hypotheses.md#h3--document-degradation-augmentation-improves-robustness-rq3) (tested on arm D against A, three seeds each)
+- **Method:** `python train.py --config configs/rec/gw-data-002.yaml`; one of three seeds of arm A (with GW-REC-015 and the other GW-DATA seed); scored on GLYPH-C by GW-DATA-009. Plan and decision rule: `docs/PHASE_STATUS.md`, Phase 11.
+- **Variables:** independent: the seed (the arm's augmentation is fixed); controlled: everything else
+- **Control:** arm A (GW-REC-015, GW-DATA-001, 002)
+- **Result:** —
+- **Training diagnostics:** —
+- **Interpretation:** —
+- **Limitations:** trained by the shared training loop; GW-REC-015 (seed 1337) by Phase 7's trainer.
+- **Next experiment:** GW-DATA-009
+- **Training time:** —
+
+### GW-DATA-003 — Phase 11 arm B (geometric augmentation), seed 2024
+
+- **Date allocated / run:** 2026-10-28 / —
+- **Phase:** 11
+- **Git commit:** recorded in the run summary   **Config:** `configs/rec/gw-data-003.yaml`   **Seed(s):** 2024
+- **Dataset version(s):** as GW-REC-001; GLYPH-C v1 for the robustness score
+- **Hardware:** RTX 4050 Laptop 6 GB, bf16
+- **Research question:** RQ3: which augmentation families make the recognizer robust to degraded input?
+- **Hypothesis (written before the run):** [H3](hypotheses.md#h3--document-degradation-augmentation-improves-robustness-rq3) (tested on arm D against A, three seeds each)
+- **Method:** `python train.py --config configs/rec/gw-data-003.yaml`; one of three seeds of arm B (with GW-REC-016 and the other GW-DATA seed); scored on GLYPH-C by GW-DATA-009. Plan and decision rule: `docs/PHASE_STATUS.md`, Phase 11.
+- **Variables:** independent: the seed (the arm's augmentation is fixed); controlled: everything else
+- **Control:** arm A (GW-REC-015, GW-DATA-001, 002)
+- **Result:** —
+- **Training diagnostics:** —
+- **Interpretation:** —
+- **Limitations:** trained by the shared training loop; GW-REC-016 (seed 1337) by Phase 7's trainer.
+- **Next experiment:** GW-DATA-009
+- **Training time:** —
+
+### GW-DATA-004 — Phase 11 arm B (geometric augmentation), seed 7
+
+- **Date allocated / run:** 2026-10-28 / —
+- **Phase:** 11
+- **Git commit:** recorded in the run summary   **Config:** `configs/rec/gw-data-004.yaml`   **Seed(s):** 7
+- **Dataset version(s):** as GW-REC-001; GLYPH-C v1 for the robustness score
+- **Hardware:** RTX 4050 Laptop 6 GB, bf16
+- **Research question:** RQ3: which augmentation families make the recognizer robust to degraded input?
+- **Hypothesis (written before the run):** [H3](hypotheses.md#h3--document-degradation-augmentation-improves-robustness-rq3) (tested on arm D against A, three seeds each)
+- **Method:** `python train.py --config configs/rec/gw-data-004.yaml`; one of three seeds of arm B (with GW-REC-016 and the other GW-DATA seed); scored on GLYPH-C by GW-DATA-009. Plan and decision rule: `docs/PHASE_STATUS.md`, Phase 11.
+- **Variables:** independent: the seed (the arm's augmentation is fixed); controlled: everything else
+- **Control:** arm A (GW-REC-015, GW-DATA-001, 002)
+- **Result:** —
+- **Training diagnostics:** —
+- **Interpretation:** —
+- **Limitations:** trained by the shared training loop; GW-REC-016 (seed 1337) by Phase 7's trainer.
+- **Next experiment:** GW-DATA-009
+- **Training time:** —
+
+### GW-DATA-005 — Phase 11 arm C (photometric augmentation), seed 2024
+
+- **Date allocated / run:** 2026-10-28 / —
+- **Phase:** 11
+- **Git commit:** recorded in the run summary   **Config:** `configs/rec/gw-data-005.yaml`   **Seed(s):** 2024
+- **Dataset version(s):** as GW-REC-001; GLYPH-C v1 for the robustness score
+- **Hardware:** RTX 4050 Laptop 6 GB, bf16
+- **Research question:** RQ3: which augmentation families make the recognizer robust to degraded input?
+- **Hypothesis (written before the run):** [H3](hypotheses.md#h3--document-degradation-augmentation-improves-robustness-rq3) (tested on arm D against A, three seeds each)
+- **Method:** `python train.py --config configs/rec/gw-data-005.yaml`; one of three seeds of arm C (with GW-REC-017 and the other GW-DATA seed); scored on GLYPH-C by GW-DATA-009. Plan and decision rule: `docs/PHASE_STATUS.md`, Phase 11.
+- **Variables:** independent: the seed (the arm's augmentation is fixed); controlled: everything else
+- **Control:** arm A (GW-REC-015, GW-DATA-001, 002)
+- **Result:** —
+- **Training diagnostics:** —
+- **Interpretation:** —
+- **Limitations:** trained by the shared training loop; GW-REC-017 (seed 1337) by Phase 7's trainer.
+- **Next experiment:** GW-DATA-009
+- **Training time:** —
+
+### GW-DATA-006 — Phase 11 arm C (photometric augmentation), seed 7
+
+- **Date allocated / run:** 2026-10-28 / —
+- **Phase:** 11
+- **Git commit:** recorded in the run summary   **Config:** `configs/rec/gw-data-006.yaml`   **Seed(s):** 7
+- **Dataset version(s):** as GW-REC-001; GLYPH-C v1 for the robustness score
+- **Hardware:** RTX 4050 Laptop 6 GB, bf16
+- **Research question:** RQ3: which augmentation families make the recognizer robust to degraded input?
+- **Hypothesis (written before the run):** [H3](hypotheses.md#h3--document-degradation-augmentation-improves-robustness-rq3) (tested on arm D against A, three seeds each)
+- **Method:** `python train.py --config configs/rec/gw-data-006.yaml`; one of three seeds of arm C (with GW-REC-017 and the other GW-DATA seed); scored on GLYPH-C by GW-DATA-009. Plan and decision rule: `docs/PHASE_STATUS.md`, Phase 11.
+- **Variables:** independent: the seed (the arm's augmentation is fixed); controlled: everything else
+- **Control:** arm A (GW-REC-015, GW-DATA-001, 002)
+- **Result:** —
+- **Training diagnostics:** —
+- **Interpretation:** —
+- **Limitations:** trained by the shared training loop; GW-REC-017 (seed 1337) by Phase 7's trainer.
+- **Next experiment:** GW-DATA-009
+- **Training time:** —
+
+### GW-DATA-007 — Phase 11 arm D (degradation augmentation), seed 2024
+
+- **Date allocated / run:** 2026-10-28 / —
+- **Phase:** 11
+- **Git commit:** recorded in the run summary   **Config:** `configs/rec/gw-data-007.yaml`   **Seed(s):** 2024
+- **Dataset version(s):** as GW-REC-001; GLYPH-C v1 for the robustness score
+- **Hardware:** RTX 4050 Laptop 6 GB, bf16
+- **Research question:** RQ3: which augmentation families make the recognizer robust to degraded input?
+- **Hypothesis (written before the run):** [H3](hypotheses.md#h3--document-degradation-augmentation-improves-robustness-rq3) (tested on arm D against A, three seeds each)
+- **Method:** `python train.py --config configs/rec/gw-data-007.yaml`; one of three seeds of arm D (with GW-REC-018 and the other GW-DATA seed); scored on GLYPH-C by GW-DATA-009. Plan and decision rule: `docs/PHASE_STATUS.md`, Phase 11.
+- **Variables:** independent: the seed (the arm's augmentation is fixed); controlled: everything else
+- **Control:** arm A (GW-REC-015, GW-DATA-001, 002)
+- **Result:** —
+- **Training diagnostics:** —
+- **Interpretation:** —
+- **Limitations:** trained by the shared training loop; GW-REC-018 (seed 1337) by Phase 7's trainer.
+- **Next experiment:** GW-DATA-009
+- **Training time:** —
+
+### GW-DATA-008 — Phase 11 arm D (degradation augmentation), seed 7
+
+- **Date allocated / run:** 2026-10-28 / —
+- **Phase:** 11
+- **Git commit:** recorded in the run summary   **Config:** `configs/rec/gw-data-008.yaml`   **Seed(s):** 7
+- **Dataset version(s):** as GW-REC-001; GLYPH-C v1 for the robustness score
+- **Hardware:** RTX 4050 Laptop 6 GB, bf16
+- **Research question:** RQ3: which augmentation families make the recognizer robust to degraded input?
+- **Hypothesis (written before the run):** [H3](hypotheses.md#h3--document-degradation-augmentation-improves-robustness-rq3) (tested on arm D against A, three seeds each)
+- **Method:** `python train.py --config configs/rec/gw-data-008.yaml`; one of three seeds of arm D (with GW-REC-018 and the other GW-DATA seed); scored on GLYPH-C by GW-DATA-009. Plan and decision rule: `docs/PHASE_STATUS.md`, Phase 11.
+- **Variables:** independent: the seed (the arm's augmentation is fixed); controlled: everything else
+- **Control:** arm A (GW-REC-015, GW-DATA-001, 002)
+- **Result:** —
+- **Training diagnostics:** —
+- **Interpretation:** —
+- **Limitations:** trained by the shared training loop; GW-REC-018 (seed 1337) by Phase 7's trainer.
+- **Next experiment:** GW-DATA-009
+- **Training time:** —
+
+### GW-DATA-009 — Phase 11: augmentation families on GLYPH-C
+
+- **Date allocated / run:** 2026-10-28 / —
+- **Phase:** 11
+- **Git commit:** recorded in the result files   **Config:** the 15 runs' resolved configs   **Seed(s):** 1337, 2024, 7 per arm; bootstrap seed 20261028
+- **Dataset version(s):** GLYPH-C v1 (`data/processed/glyph_c/lines`, sha256 in each result file); HierText validation pack for clean CER
+- **Hardware:** RTX 4050 Laptop 6 GB
+- **Research question:** RQ3: which augmentation families (geometric, photometric, document degradation, all) lower the recognizer's error on corrupted lines, and at what cost on clean lines?
+- **Hypothesis (written before the run):** [H3](hypotheses.md#h3--document-degradation-augmentation-improves-robustness-rq3): arm D lowers mCE against A without raising clean validation CER by more than 5% relative.
+- **Method:** `scripts/glyph_c_eval.py score` on each run's best checkpoint, then `scripts/glyph_c_eval.py compare`; plan, metric and decision rule registered in `docs/PHASE_STATUS.md`, Phase 11.
+- **Variables:** independent: `data.augmentation` (none, geometric, photometric, degradation, full); controlled: recipe, data, steps; seeds 1337, 2024, 7 in every arm
+- **Control:** arm A (no augmentation)
+- **Result:** —
+- **Interpretation:** —
+- **Limitations:** stated with the plan in `docs/PHASE_STATUS.md` (trainer versions across seeds; GLYPH-C's HierText half overlaps the selection set; CRNN short budget, not the v0.1 recognizer).
+- **Next experiment:** —
 
 ---
 
