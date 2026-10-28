@@ -361,3 +361,16 @@ def test_overlay_draws_statuses_and_contact_sheet_lays_out_tiles():
     sheet = contact_sheet([img] * 4, cols=3, tile_long=200)
     assert sheet.size == (3 * 200 + 4 * 4, 2 * 200 + 3 * 4)
     assert contact_sheet([], cols=3, tile_long=200).width == 200
+
+
+def test_calibration_halves_are_disjoint_complete_and_order_free():
+    from glypharis.eval.det_matching import calibration_halves
+
+    ids = [f"p{i:04d}" for i in range(101)]
+    a, b = calibration_halves(ids)
+    assert len(a) == 50 and len(b) == 51
+    assert not set(a) & set(b) and set(a) | set(b) == set(ids)
+    assert calibration_halves(list(reversed(ids))) == (a, b)
+    assert a == sorted(a) and b == sorted(b)
+    with pytest.raises(ValueError):
+        calibration_halves(["x", "x"])

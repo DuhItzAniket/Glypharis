@@ -2,12 +2,16 @@
 
     python scripts/det_eval.py --config configs/det/gw-det-001.yaml \
         --checkpoint checkpoints/GW-DET-001/best.pt [--op inverse10] [--baseline-pages] \
-        [--set det.post.box_thresh=0.5] [--out reports/eval/det/GW-DET-001_best.json]
+        [--set det.post.box_thresh=0.5] [--out reports/eval/det/GW-DET-001_best.json] \
+        [--pages-half A|B] [--pages-out pages.jsonl] [--save-full DIR]
 
 Every operating point in ``det.post`` is scored from one forward pass per page (fp32, IEEE); the
 headline is ``--op``, by default the checkpoint's stored ``selected_op`` (the operating point of
 record). ``--set det.post.*`` changes post-processing without retraining. ``--baseline-pages``
-scores only the Phase 5 validation page sample.
+scores only the Phase 5 validation page sample; ``--pages-half`` only half A or B of Phase 9's
+fixed split (`calibration_halves`). ``--pages-out`` writes the per-page counts that
+`scripts/det_pair.py` pairs, and ``--save-full DIR`` the candidates and boxes of every
+page in the files a training run leaves (``val_full_best_*``), for `scripts/det_analysis.py`.
 
 Cached maps, for Phase 9 sweeps on the CPU:
 
@@ -47,19 +51,21 @@ from glypharis.data.det_dataset import (
 )
 from glypharis.data.download import sha256_file
 from glypharis.eval.access import open_test_access
-from glypharis.eval.det_matching import baseline_doc_ids
+from glypharis.eval.det_matching import baseline_doc_ids, calibration_halves
 from glypharis.models.det.dbnet import build_detector
 from glypharis.models.det.runtime import TorchProbMap
 from glypharis.training.checkpoint import load_checkpoint
 from glypharis.training.det_eval import (
+    boxes_rows,
     ceiling_geometry,
     op_metrics_json,
     score_page,
     summarise_pages,
+    write_records,
 )
 from glypharis.utils.device import select_device
 
-PHASE = 8
+PHASE = 9
 POST_WORKERS = 2
 
 
@@ -91,7 +97,11 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--checkpoint", required=True)
     parser.add_argument("--op", default=None, help="headline operating point (default: stored)")
     parser.add_argument("--split", default="validation", choices=["validation", "test"])
-    parser.add_argument("--baseline-pages", action="store_true")
+    pages = parser.add_mutually_exclusive_group()
+    pages.add_argument("--baseline-pages", action="store_true")
+    pages.add_argument("--pages-half", choices=["A", "B"], default=None)
+    parser.add_argument("--pages-out", type=Path, default=None, help="per-page counts (JSONL)")
+    parser.add_argument("--save-full", type=Path, default=None, metavar="DIR")
     maps = parser.add_mutually_exclusive_group()
     maps.add_argument("--save-prob-maps", type=Path, default=None, metavar="DIR")
     maps.add_argument("--from-prob-maps", type=Path, default=None, metavar="DIR")
@@ -114,7 +124,12 @@ def main(argv: list[str] | None = None) -> int:
         keep = set(baseline_doc_ids(ids))
         index = index.subset(np.array([i for i, d in enumerate(ids) if d in keep]))
         ids = index.doc_ids()
+    if args.pages_half:
+        keep = set(calibration_halves(ids)["AB".index(args.pages_half)])
+        index = index.subset(np.array([i for i, d in enumerate(ids) if d in keep]))
+        ids = index.doc_ids()
     gt = read_gt_pages(pages_file, ids)
+    full = args.save_full is not None
 
     ck = load_checkpoint(checkpoint, "cpu")
     sha = sha256_file(checkpoint)
@@ -145,7 +160,7 @@ def main(argv: list[str] | None = None) -> int:
                     raise SystemExit(f"{doc_id}: cached map {levels.shape} does not fit the page")
                 prob = np.zeros((info.pad_h, info.pad_w), np.float32)
                 prob[: info.h, : info.w] = levels.astype(np.float32) / 255.0
-                futures.append(pool.submit(score_page, prob, info, page, "val", det, False))
+                futures.append(pool.submit(score_page, prob, info, page, "val", det, full))
             outcomes = [f.result() for f in futures]
         else:
             device = select_device(cfg.device)
@@ -170,7 +185,7 @@ def main(argv: list[str] | None = None) -> int:
                     levels, prob = _quantise(prob, info.h, info.w)
                     _write_png(cache / f"{batch['doc_id']}.png", levels)
                 futures.append(
-                    pool.submit(score_page, prob, info, gt[batch["doc_id"]], "val", det, False)
+                    pool.submit(score_page, prob, info, gt[batch["doc_id"]], "val", det, full)
                 )
             outcomes = [f.result() for f in futures]
             if cache is not None:
@@ -181,7 +196,7 @@ def main(argv: list[str] | None = None) -> int:
                 }
                 (cache / "meta.json").write_text(json.dumps(meta, indent=1), encoding="utf-8")
 
-    res = summarise_pages("val", outcomes, det)
+    res = summarise_pages("val", outcomes, det, keep=full)
     ops = {n: op_metrics_json(res.records, n, m.counters) for n, m in res.ops.items()}
     result: dict[str, Any] = {
         "experiment_id": cfg.experiment_id,
@@ -190,14 +205,31 @@ def main(argv: list[str] | None = None) -> int:
         "stored_op": stored,
         "op": op,
         "max_op_this_run": res.selected_op,
+        "long_side": det.infer.long_side,
         "pages": res.pages,
         "care_lines": res.care_lines,
-        "page_set": "phase5_baseline" if args.baseline_pages else "validation",
+        "page_set": (
+            "phase5_baseline"
+            if args.baseline_pages
+            else f"validation_half_{args.pages_half}"
+            if args.pages_half
+            else "validation"
+        ),
         "prob_maps": "uint8" if cache is not None else "float32",
         "post": dataclasses.asdict(det.post),
         "headline": {"op": op, **ops[op]},
         "ops": ops,
     }
+    if args.pages_out is not None:
+        write_records(args.pages_out, [r.to_dict() for r in res.records])
+    if args.save_full is not None:
+        out = args.save_full
+        write_records(out / "val_full_best_pages.jsonl", [r.to_dict() for r in res.records])
+        write_records(out / "val_full_best_candidates.jsonl.gz", res.candidates or [])
+        write_records(out / "val_full_best_boxes.jsonl.gz", boxes_rows(res.boxes or {}))
+        (out / "eval_full_best.json").write_text(
+            json.dumps({**result, "stored_op": op}, indent=1) + "\n", encoding="utf-8"
+        )
     text = json.dumps(result, indent=1)
     if args.out is not None:
         args.out.parent.mkdir(parents=True, exist_ok=True)

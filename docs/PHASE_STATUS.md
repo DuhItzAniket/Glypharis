@@ -15,8 +15,8 @@ Phases run in the order set by [ADR-0008](decisions/ADR-0008-usable-engine-first
 | 5 | Baseline systems | **COMPLETE** | `phase-05` |
 | 6 | Recognition baseline | **COMPLETE** | `phase-06` |
 | 7 | Recognizer improvement | **COMPLETE** | `phase-07` |
-| 8 | Text detector | **IN PROGRESS** (gate: push, CI, merge) | — |
-| 9 | Detector error analysis | not started | — |
+| 8 | Text detector | **COMPLETE** | `phase-08` |
+| 9 | Detector error analysis | **IN PROGRESS** (gate: push, CI, merge) | — |
 | 10 | Full OCR pipeline | not started | — |
 | 11 | Robustness training | not started | — |
 | 12 | Synthetic data study | not started | — |
@@ -519,6 +519,7 @@ budget (GW-REC-024) it reaches 6.46% validation CER [6.33, 6.60], −1.07 points
 against GW-REC-001, with 7,928,835 parameters, and reads a line in 24.4 ms mean, 60.3 ms p95 on the
 CPU (PyTorch), inside ADR-0011's line target with little margin on the mean. One seed; the owner
 decided (2026-10-26) to add the two missing seeds later, on a college A100 if access is granted.
+The A100 slot is still booked (2026-10-27), so the seeds wait; nothing before the paper depends on them.
 
 **Implemented**
 - `glypharis/models/rec/svtr.py` (GLYPHARIS-Rec-M), `glypharis/models/rec/base.py`, the CRNN frame
@@ -563,8 +564,7 @@ tag `phase-07` (merge re-created with the noreply identity; same tree and parent
 
 ## Phase 08 — Text detector (GLYPHARIS-Det)
 
-**Status:** write-up done (2026-10-27). Gate open: push, pull request, CI and merge. The code was
-built in parallel with Phase 7 (owner approved, 2026-10-23) on `phase/08-detector`, which now
+**Status:** COMPLETE (2026-10-27). The code was built in parallel with Phase 7 (owner approved, 2026-10-23) on `phase/08-detector`, which now
 includes `main` with Phases 5 to 7. The runs used the GPU only after Phase 7's runs had finished.
 
 **Objective:** a lightweight line detector, trained and evaluated on its own.
@@ -650,8 +650,8 @@ HierText validation pages, each `best.pt` at its stored operating point (`invers
 
 **Descoped / moved (documented)**
 - CLEval-style detection metrics: descoped from Phase 8, with the reason, in the IMPLEMENTATION_PLAN
-  §8 deviations table and EXPERIMENT_PROTOCOL §11 (2026-10-25). The owner signs the descope off at
-  the Phase 8 gate.
+  §8 deviations table and EXPERIMENT_PROTOCOL §11 (2026-10-25). Signed off by the owner at the
+  Phase 8 gate (2026-10-27).
 - HierText's native PQ-style metric: computed from Phase 14 with the official code, for the detector
   as for every system (EXPERIMENT_PROTOCOL §11, 2026-10-22 and 2026-10-25).
 
@@ -666,7 +666,7 @@ idle). `scripts/compute_ledger.py` now counts the Phase 8 jobs and has a test fo
 | Validation F1 reported with CI | pass: full validation with page-bootstrap CIs for all three runs | `reports/training/GW-DET-00N/report.md` |
 | Overlays saved for each slice (small text, rotated, dense, multi-line, noisy background) | pass: one sheet per slice plus the worst pages, for each run | `reports/training/GW-DET-00N/overlays/` |
 | Diagnostics report generated | pass: each run report has its diagnostics section, slice and line-level recall tables and post-processing counters | `reports/training/GW-DET-00N/report.md` |
-| CI green (post-processing unit tests on synthetic masks) | pending the push | `tests/test_det_postprocess.py` |
+| CI green (post-processing unit tests on synthetic masks) | pass | runs 40553993755 (branch), 40554005155 (pull request), 40556174553 (`main`) |
 
 **Compute:** 16.2 GPU-hours in Phase 8, inside the plan's 20–40 (`reports/compute/ledger.md`): 13.9 h
 of training, the rest the sanity sequence, the resume check and full-validation scoring. The 0.8 h
@@ -676,15 +676,136 @@ pre-declared rule fired; they finished, and the rules were applied as planned.
 **Known issues**
 - The ImageNet weight terms are an owner decision before v0.1 ships a detector (RISK_REGISTER R-05).
   GW-DET-002 measured the fallback: training from scratch costs about 0.02 F1@0.5.
-- The CLEval descope (above) needs the owner's sign-off at this gate.
 - The recognizer trainer is not on the shared loop yet. Phase 7 has merged, but the move is left out
-  of this gate to keep it to the detector; it is done in its own commit before Phase 10 builds the
-  pipeline, accepted only if the recognizer tests pass unchanged and an existing GW-REC `last.pt`
-  still resumes.
+  of this gate to keep it to the detector. The owner approved it (2026-10-27) for its own commit at
+  the start of Phase 10, accepted only if the recognizer tests pass unchanged and an existing GW-REC
+  `last.pt` still resumes.
+- CI first hung in `tests/test_det_training.py`: on Linux the DataLoader forked its workers while
+  the trainer's post-processing threads ran. Detector loaders now always spawn their workers
+  (`c73451c`), and pytest dumps every thread's stack after two minutes (`faulthandler_timeout`).
 - `LABEL_VERSION` 2, the fallback for a slow data loader, was not needed: the Large runs waited for
   data 2–3% of each epoch. The Small run waited 21–31%, which cost wall-clock time, not steps.
 - Detector CPU latency is not measured yet. ADR-0011's page target is checked when the pipeline
   exists (Phase 10) and again after export (Phase 17).
 - One seed per arm; the paired CIs cover page sampling, not training randomness.
 
-**Git:** branch `phase/08-detector`, with `main` (Phases 5 to 7) merged in; push and merge pending.
+**Git:** branch `phase/08-detector` (`main` with Phases 5 to 7 merged in first), merged through pull
+request #8. Merge commit `60659f3`, tag `phase-08` (merge re-created with the noreply identity; same
+tree and parents).
+
+**CI status:** green on the branch, the pull request and `main` (run 40556174553).
+
+---
+
+## Phase 09 — Detector error analysis
+
+**Status:** write-up done (2026-10-28). Gate open: push, pull request, CI and merge. Opened
+2026-10-27 on `phase/09-det-analysis`. Validation data only; the owner approved working through the
+night (2026-10-27).
+
+**Objective:** understand GW-DET-001's failures before the pipeline is built, and fix what can be
+fixed without retraining: post-processing, input resolution and box shape.
+
+**Plan** (registered 2026-10-27, before any Phase 9 number was computed)
+
+1. **Error analysis of GW-DET-001** (`best.pt`, operating point of record `inverse10`, all 1,715
+   validation pages; descriptive, nothing is selected on it). Written to
+   `reports/error_cases/detector/` by `scripts/det_analysis.py` from the run's saved boxes and
+   candidates:
+   - *Slices:* recall by line height and text angle (as in the run report), and page-level
+     precision, recall and F1 by quartile of care-line density, blur (variance of the Laplacian)
+     and contrast, from the Phase 3 audit, with page-bootstrap CIs.
+   - *Merges and splits* at IoU 0.5, counting care lines only. A **merge** is a prediction that
+     covers at least two care lines, each with intersection / line area ≥ 0.5. A **split** line is
+     a care line with at least two predictions, each with intersection / prediction area ≥ 0.5.
+   - *Missed lines (fn)*, each in the first category it fits: merged; split; poorly localised (best
+     IoU with any prediction in [0.3, 0.5)); partly found (some prediction covers ≥ 0.1 of the
+     line); missed. Missed lines are further split by whether a post-processing candidate existed
+     (a component whose area-rectangle centre lies inside the line, dropped by `box_thresh` or the
+     size filter: recoverable without retraining) or not (the network did not fire).
+   - *False alarms (fp)*, likewise: merge; fragment (a prediction mostly inside one care line,
+     intersection / prediction ≥ 0.5); poorly localised (best IoU with a care line in [0.3, 0.5));
+     background (intersection / prediction < 0.1 with every line, don't care included); other.
+   - *Galleries:* up to 24 crops per fn and fp category, drawn with `default_rng([20261027, k])`
+     over the sorted members, independent of results, plus the 12 worst pages.
+   - *Kernel excess* (RISK_REGISTER R-21): which unclip regime the trained map is in.
+2. **Two halves of validation for every choice.** The 1,715 pages are split once, seeded
+   (`det_matching.calibration_halves`, seed 20261027): half A selects, half B checks. A setting is
+   adopted only if, on half B, the paired page-bootstrap 95% CI of its F1@0.5 minus the current
+   setting's lies above 0. The B number is the one reported.
+3. **GW-DET-004: post-processing calibration** of GW-DET-001, at long side 1280, from cached 8-bit
+   probability maps on the CPU. Grid: `bin_thresh` 0.20–0.40 (step 0.05), `box_thresh` 0.4, 0.5,
+   0.6, 0.7, `min_component_area` 1 or 3, and unclip `inverse` 0.8–1.3 (step 0.1) or `dbnet`
+   1.3–2.1 (step 0.2): 440 settings. The arg-max of F1@0.5 on half A (ties: first in grid order)
+   against the operating point of record, by rule 2, then re-checked once on float maps.
+4. **GW-EFF-001: detector CPU latency** at long side 1024, 1280, 1536, 1792 and 2048:
+   `scripts/det_profile.py`, PyTorch fp32 with default threads, batch 1, on the 110 Phase 5
+   validation pages the baselines' page profiles used (10 warm-up, 100 timed), timing a decoded
+   page to boxes (resize, normalise, forward, post-processing).
+5. **GW-DET-005: input resolution.** The same five long sides with GW-DET-004's adopted
+   post-processing (or the record's). A long side is **eligible** if the estimated page time on
+   the profiled pages, its detector time plus 24.4 ms (GW-REC-024's mean line time) per predicted
+   box, meets ADR-0011's page target (mean ≤ 1.5 s, p95 ≤ 2.7 s). Among eligible long sides the
+   arg-max of F1@0.5 on half A is adopted against 1280 by rule 2. If no long side of 1280 or more
+   is eligible, 1280 stays and the gap goes to Phases 16 and 17 as a risk: a lower resolution is
+   not adopted on PyTorch timings, since ADR-0011 is judged on the ONNX Runtime build.
+6. **GW-DET-006: box shape** (ADR-0012 point 3, RISK_REGISTER R-22). `quad` against `poly` at the
+   adopted settings, on all validation pages and on the curved lines: care lines with at least six
+   polygon vertices whose polygon area is below 0.8 of their minimum-area rectangle's. Phase 14 uses
+   `poly` if, on the curved lines, the paired CI of recall@0.5 (poly minus quad) lies above 0 and,
+   on all pages, the CI of F1@0.5 does not lie below 0; otherwise `quad`. Recall is used on the
+   curved subset because precision cannot be restricted to a subset of lines. Phase 10 rectifies
+   the quad in either case.
+7. **Fixes that need retraining** (for example training labels for lines under 6 px, which
+   `min_text_size` turns into don't care) are not run in Phase 9. Each is either registered with
+   its cost for the owner to approve, or deferred to Phase 11 or 13 with the reason.
+
+**Exit criteria** (IMPLEMENTATION_PLAN Phase 9): `reports/error_cases/detector/` and written findings
+in `research/findings.md`; fixes either applied under a new experiment ID or deferred with a reason.
+
+**Results (2026-10-28)**
+
+| Step | What was found | Evidence |
+|---|---|---|
+| Error analysis, GW-DET-001 | 30,184 missed care lines: 46% had a candidate the 0.6 threshold removed, 37% no candidate (mostly under 8 px), 11% merged; 3,631 false alarms, mostly fragments and merges. Recall 0.20 under 8 px, 0.18 beyond 45°. Kernels as wide as the labels (median ratio 1.00): the `inverse` regime | `reports/error_cases/detector/GW-DET-001/` |
+| GW-DET-004, post-processing | half A arg-max `bin_thresh` 0.3, `min_component_area` 1, `inverse09`, `box_thresh` 0.5; half B +0.032 [+0.025, +0.039] F1@0.5 (float maps: +0.032 [+0.025, +0.039]): **adopted** | `reports/error_cases/detector/GW-DET-004/` |
+| GW-EFF-001, detector CPU time | 132 to 615 ms per page from long side 1024 to 2048; with 24.4 ms per line for recognition, long sides up to 1536 fit ADR-0011's page target | `reports/efficiency/det_latency.md` |
+| GW-DET-005, resolution | half A: F1 rises with resolution up to 2048; 1536 is the best eligible; half B +0.018 [+0.013, +0.022] over 1280: **adopted** | `reports/error_cases/detector/GW-DET-005/` |
+| Both changes, all validation pages | F1@0.5 0.778 [0.762, 0.792], precision 0.852, recall 0.716, F1@0.7 0.671 (GW-DET-001 at its record point: 0.724, 0.924, 0.595, 0.631) | `reports/error_cases/detector/phase09_adopted/` |
+| GW-DET-006, box shape | no curved care lines in HierText validation (all four-point), so the check is empty; `quad` kept | `reports/error_cases/detector/GW-DET-006/` |
+
+**Fixes that need retraining** (plan item 7), deferred with their reasons:
+- *Small text.* Lines under 8 px at the inference scale are still found only 34% of the time.
+  Labels below `min_text_size` (6 px at the training scale) are don't care, so the network was never
+  asked to find them. Lowering it, or training at a larger scale, is a new GW-DET run of about five
+  GPU-hours; deferred to Phase 11 (robustness training), which retrains anyway, so one run tests it.
+- *Rotated and vertical lines.* Recall 0.48 at 15–45° and 0.38 beyond 45°. Training rotation is at
+  most 10°; a wider rotation range belongs to the same Phase 11 run.
+- *Merges and fragments* grew with the looser threshold (1,982 merge boxes, 3,396 fragments); the
+  shrink ratio and threshold-map weight that would change them are Phase 13 ablations.
+
+**Compute:** about one GPU-hour of forward passes and three CPU-hours of sweeps and timing (chain log
+`runs/phase09/chain.log`, local; the compute ledger counts training queues only).
+
+**Tests:** the CPU suite passes locally (`scripts/det_sweep.py` is checked against `score_page` at
+all 440 settings; the error categories, the curved-line rule and the pairing have tests).
+
+**Exit criteria**
+
+| Criterion | Result | Evidence |
+|---|---|---|
+| `reports/error_cases/detector/` | pass: analysis, galleries per category, worst pages, before and after the Phase 9 settings | `reports/error_cases/detector/` |
+| Written findings in `research/findings.md` | pass: F7, F8, F9 | `research/findings.md` |
+| Fixes applied under a new experiment ID or deferred with a reason | pass: GW-DET-004 and 005 applied; retraining fixes deferred above; GW-DET-006 could not decide | `research/experiments.md` |
+| CI green | pending (after the push) | — |
+
+**Known issues**
+- RISK_REGISTER R-22 stays open: no validation set has curved line annotations, so whether `poly`
+  boxes would score better on GDC's curved lines is unknown before Phase 14. Phase 14 uses `quad`,
+  as fixed here. The owner may decide before Phase 14 to also report `poly` there, labelled
+  exploratory.
+- The looser post-processing finds more of everything: false alarms rose 2.5 times (3,631 to 9,269),
+  a quarter of them on background. Phase 10 measures what that does to page text.
+
+**Git:** branch `phase/09-det-analysis`; push and merge pending.
+

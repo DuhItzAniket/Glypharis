@@ -16,6 +16,8 @@ without changing that file, and adds:
 - `det_cis`: page-bootstrap CIs for precision, recall and F1.
 - the Phase 5 validation page set (`baseline_doc_ids`), reproduced here because package code never
   imports `scripts/run_baselines.py`; a test ties the two together.
+- `calibration_halves`: the fixed split of the validation pages into a selection half (A) and a
+  check half (B) for Phase 9's post-processing and resolution choices.
 """
 
 from __future__ import annotations
@@ -43,6 +45,7 @@ from glypharis.eval.stats import Interval, ratio_ci
 
 BASELINE_VAL_PAGES: Final = 400  # the Phase 5 validation page sample (run_baselines.E2E_VAL_PAGES)
 BASELINE_SEED: Final = 5  # run_baselines.SEED
+HALVES_SEED: Final = 20261027  # Phase 9: validation half A selects, half B checks
 
 PredStatus = Literal["tp", "fp", "ignored"]
 GtStatus = Literal["tp", "fn", "dont_care"]
@@ -212,3 +215,17 @@ def baseline_doc_ids(doc_ids_in_file_order: Sequence[str]) -> list[str]:
         return ids
     idx = np.sort(np.random.default_rng(BASELINE_SEED).choice(n, BASELINE_VAL_PAGES, replace=False))
     return [ids[int(i)] for i in idx]
+
+
+def calibration_halves(doc_ids: Sequence[str]) -> tuple[list[str], list[str]]:
+    """Validation pages split once into half A (selects) and half B (checks), Phase 9 plan item 2.
+
+    A seeded permutation of the sorted doc IDs, so the split does not depend on file order; A gets
+    the first ``n // 2`` of it. Each half is returned sorted.
+    """
+    ids = sorted(set(doc_ids))
+    if len(ids) != len(doc_ids):
+        raise ValueError("doc IDs must be unique")
+    perm = np.random.default_rng(HALVES_SEED).permutation(len(ids))
+    half = len(ids) // 2
+    return sorted(ids[int(i)] for i in perm[:half]), sorted(ids[int(i)] for i in perm[half:])
