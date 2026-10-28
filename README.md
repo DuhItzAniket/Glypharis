@@ -8,22 +8,36 @@ GLYPHARIS is built as a research project. Every model is trained and evaluated o
 (RTX 4050, 6 GB), every experiment is registered before it runs, and every reported number traces back to
 a generated report.
 
-> **Status: Phase 4 — preprocessing, charset, synthetic data and test set (in gate).** No model has been trained yet. Nothing below is a result.
-> See [docs/PHASE_STATUS.md](docs/PHASE_STATUS.md). First usable version (v0.1) is planned right after the
-> end-to-end pipeline works ([ADR-0008](docs/decisions/ADR-0008-usable-engine-first.md)).
+> **Status: working towards v0.1** (Phases 0 to 8 merged; 9, 10, 17, 18 and 20 in review).
+> See [docs/PHASE_STATUS.md](docs/PHASE_STATUS.md) for what is done and every number behind it.
+> v0.1 is the usable engine ([ADR-0008](docs/decisions/ADR-0008-usable-engine-first.md)); the
+> research phases follow it.
 
-## What it will do
+## Using it
 
 ```python
 from glypharis import GlypharisOCR
 
-ocr = GlypharisOCR.from_pretrained("glypharis-0.1")
-result = ocr.predict("page.png")
+ocr = GlypharisOCR.from_pretrained("glypharis-0.1.0")  # a model bundle by name or path
+result = ocr.predict("page.png")  # path, PIL image or numpy array
 
-print(result.text)
+print(result.text)  # lines in reading order
 for line in result.lines:
     print(line.text, line.confidence, line.bbox)
+print(result.to_json())  # the same as structured JSON
 ```
+
+From the command line (`pip install -e .` provides `glypharis-ocr`; `python infer.py` is the same):
+
+```
+glypharis-ocr --image page.png --output results
+glypharis-ocr --input-dir scans/ --recursive --format json txt
+```
+
+Each image gives `results/<name>.json` and `results/<name>.txt`. Model bundles are not downloaded:
+`from_pretrained` looks in `$GLYPHARIS_MODELS`, `~/.glypharis/models` and `./models` (a bundle is a
+directory with `manifest.json`, two release files and two ONNX files; Phase 17). The default backend is
+PyTorch on the CPU; `backend="onnx"` uses ONNX Runtime, which reads the same but is slower for now.
 
 ```
 image ─▶ preprocessing ─▶ GLYPHARIS-Det (line detector) ─▶ crop + rectify

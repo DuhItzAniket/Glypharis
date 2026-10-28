@@ -24,8 +24,8 @@ Phases run in the order set by [ADR-0008](decisions/ADR-0008-usable-engine-first
 | 14 | External evaluation | not started | — |
 | 15 | Error analysis | not started | — |
 | 16 | Efficiency optimisation | not started | — |
-| 17 | Model export | **IN PROGRESS** (gate: push, CI, merge; after Phase 10) | — |
-| 18 | Inference package | not started | — |
+| 17 | Model export | **COMPLETE** | `phase-17` |
+| 18 | Inference package | **IN PROGRESS** (gate: push, CI, merge; after Phase 17) | — |
 | 19 | Optional HTTP API | not started | — |
 | 20 | Production engineering | not started | — |
 | 21 | Research package | not started | — |
@@ -923,8 +923,7 @@ calibration and the tiny-model smoke test are covered (`tests/test_pipeline.py`,
 
 ## Phase 17 — Model export
 
-**Status:** write-up done (2026-10-28). Gate open: push, pull request, CI and merge, after Phase 10.
-Opened 2026-10-28 on `phase/17-export`, branched from Phase 10; Phases 11 to 16 come after v0.1
+**Status:** COMPLETE (2026-10-28). Opened 2026-10-28 on `phase/17-export`, branched from Phase 10; Phases 11 to 16 come after v0.1
 (ADR-0008). The owner approved installing `onnx` 1.23.2 and `onnxruntime`
 1.31.1 from PyPI (2026-10-28); both are pinned in `requirements/lock.txt`, so CI runs the ONNX
 checks too.
@@ -981,7 +980,7 @@ which kept a buffer per input shape. ONNX stays available (`backend="onnx"`).
 | Criterion | Result | Evidence |
 |---|---|---|
 | Export declared successful only after the equivalence tests pass and are recorded | pass | `reports/export/GW-EFF-003/equivalence.md` |
-| CI runs ONNX equivalence on the tiny model | pass locally; CI pending the push | `tests/test_export.py` |
+| CI runs ONNX equivalence on the tiny model | pass: runs 40621722608 (branch), 40621740954 (pull request), 40622745727 (`main`) | `tests/test_export.py` |
 
 **Known issues**
 - **Owner decision needed: ADR-0011.** Its revisit condition is met (the exported v0.1 misses the page
@@ -994,5 +993,62 @@ which kept a buffer per input shape. ONNX stays available (`backend="onnx"`).
 - Model bundles are not distributed: `runs/release/glypharis-0.1.0` exists on the laptop only. How
   BookWorm gets the bundle (a release asset, a shared drive) is an owner decision.
 
-**Git:** branch `phase/17-export`; push and merge pending (after Phase 10).
+**Git:** branch `phase/17-export` (`main` with Phase 10 merged in first), merged through pull request
+#12. Merge commit `99805d8`, tag `phase-17` (merge re-created with the noreply identity; same tree
+and parents).
+
+**CI status:** green on the branch, the pull request and `main` (run 40622745727, on the merge as
+GitHub made it; the re-created merge has the same tree).
+
+---
+
+## Phase 18 — Inference package
+
+**Status:** write-up done (2026-10-28). Gate open: push, pull request, CI and merge, after Phase 17.
+Opened 2026-10-28 on `phase/18-package`, branched from Phase 17.
+
+**Objective:** GLYPHARIS installable and usable without the training code.
+
+**Implemented**
+- `GlypharisOCR.from_pretrained(name_or_path, backend="onnx")`: a model bundle by path, or by name
+  from `$GLYPHARIS_MODELS`, `~/.glypharis/models` or `./models`; every file's hash is checked;
+  nothing is downloaded.
+- `predict` and `predict_batch` on file paths, PIL images and arrays (grey or RGB); `OCRResult`
+  with `to_dict` / `to_json` (version, model version, size, text in reading order, lines with text,
+  confidence, detection score, polygon and quad, and the time per step).
+- `infer.py --image ... | --input-dir ... [--recursive]` and the `glypharis-ocr` command: one JSON
+  and one text file per image; unreadable images are reported and skipped (exit code 1); a missing
+  model is exit code 2. Package version `0.1.0.dev0`.
+- Tests on a tiny bundle: loading by path and name, every input type, the JSON fields, the CLI's
+  outputs and exit codes, and `infer.py` run as a program. CI installs the package into a fresh
+  environment on every run and now also runs the installed command: that is the clean-install test.
+
+**Plan** (registered 2026-10-28, before the check ran)
+1. **GW-E2E-004, the package against Phase 10:** `scripts/package_check.py` runs
+   `GlypharisOCR.from_pretrained` on the v0.1 bundle (ONNX backend, as shipped) over the 400 Phase 5
+   validation pages and compares it with GW-E2E-001's predictions on those pages. It passes when the
+   bag-of-lines page CER (strict) differs by at most 0.05 points; the share of lines with identical
+   text and box (corners within 1 px) is reported.
+
+**Exit criteria** (IMPLEMENTATION_PLAN Phase 18): API tests on fixtures; clean-venv install test;
+outputs match the Phase 10 pipeline on the validation sample.
+
+**Results (2026-10-28):** GW-E2E-004 passes: the package reads the 400 Phase 5 pages with 24.33% page
+CER, as Phase 10's pipeline did (+0.001 points), with 16,827 of 16,835 lines identical
+(`reports/package/GW-E2E-004.json`). It ran on the ONNX backend as registered; since Phase 17 the
+default backend is PyTorch, whose reading GW-EFF-003 showed to be identical.
+
+**Exit criteria**
+
+| Criterion | Result | Evidence |
+|---|---|---|
+| API tests on fixtures | pass | `tests/test_api.py` |
+| Clean-venv install test | pass in CI: every run installs the package into a fresh environment and runs the installed `glypharis-ocr`; locally the editable install and the command were checked | `.github/workflows/ci.yml` |
+| Outputs match the Phase 10 pipeline on the validation sample | pass (GW-E2E-004) | `reports/package/GW-E2E-004.json` |
+
+**Known issues**
+- The default backend is PyTorch (Phase 17's decision, for the owner to confirm with ADR-0011).
+- Model bundles are not distributed; `from_pretrained` finds one only where it is placed.
+
+**Git:** branch `phase/18-package`, with Phase 17 merged in; push and merge pending (after Phase 17).
 

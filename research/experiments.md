@@ -51,6 +51,7 @@ Rows link to a full entry below. Numbers are copied from generated reports only,
 | [GW-EFF-002](#gw-eff-002) | 2026-10-28 | 10 | Whole-pipeline CPU page time and memory on the Phase 5 profile pages (ADR-0011) | done | PyTorch page mean 2.0 s, p95 4.0 s: misses ADR-0011's page target (recognition 1.7 s); RAM 1,624 MiB meets it | `reports/efficiency/` |
 | [GW-EFF-003](#gw-eff-003) | 2026-10-28 | 17 | ONNX equivalence of the v0.1 bundle against PyTorch on validation data | done | maps 7.3e-6, logits 3.7e-4, text identical on 5,000 lines, page CER equal: export successful | `reports/export/GW-EFF-003/` |
 | [GW-EFF-004](#gw-eff-004) | 2026-10-28 | 17 | Whole-pipeline CPU page time on ONNX Runtime (ADR-0011's measurement) | done | ONNX page mean 5.5 s, p95 12.7 s, 11.2 GB: misses ADR-0011 by far (recognizer); PyTorch default for v0.1 | `reports/efficiency/` |
+| [GW-E2E-004](#gw-e2e-004) | 2026-10-28 | 18 | The installed package (v0.1 bundle, ONNX) against the Phase 10 pipeline on the Phase 5 validation pages | done | page CER 24.33% vs 24.33% (+0.001 points), 16,827/16,835 lines identical: pass | `reports/package/` |
 
 ### GW-BASE-001 — Tesseract 5 (LSTM, eng): recognition and end to end
 
@@ -891,6 +892,23 @@ Rows link to a full entry below. Numbers are copied from generated reports only,
 - **Interpretation:** the exported recognizer is the problem: its SVTR global attention becomes plain matrix products over every pair of tokens (12 rows by up to 384 columns per line), where PyTorch runs a fused attention kernel, and ONNX Runtime's arena keeps a buffer for every new input shape. The exported detector is fine (twice PyTorch's speed). v0.1 therefore ships with PyTorch as the default backend and ONNX Runtime without its arena; ADR-0011's revisit condition is met and the trade-off goes to the owner (ADR-0011, Phase 17 measurement). Making the exported recognizer fast is Phase 16 work.
 - **Limitations:** one machine; default threads.
 - **Next experiment:** Phase 18 packages the bundle.
+
+### GW-E2E-004 — The package against the Phase 10 pipeline
+
+- **Date allocated / run:** 2026-10-28 / 2026-10-28
+- **Phase:** 18
+- **Git commit:** recorded in the result file   **Config:** the v0.1 bundle's manifest   **Seed(s):** none
+- **Dataset version(s):** the 400 Phase 5 HierText validation pages
+- **Hardware:** i7-14650HX CPU (package); GW-E2E-001 ran on the RTX 4050
+- **Research question:** does the shipped path (bundle, `from_pretrained`, ONNX Runtime) read validation pages like the pipeline Phase 10 measured?
+- **Hypothesis (written before the run):** none; pass criterion: page CER within 0.05 points.
+- **Method:** `docs/PHASE_STATUS.md` Phase 18, plan item 1; `scripts/package_check.py`.
+- **Variables:** independent: how the pipeline is built and run; controlled: weights, settings, pages
+- **Control:** GW-E2E-001 on the same pages
+- **Result:** `GlypharisOCR.from_pretrained` on the corrected v0.1 bundle, ONNX backend, 400 Phase 5 pages (`reports/package/GW-E2E-004.json`): page CER 24.33% against GW-E2E-001's 24.33%, difference +0.001 points (tolerance 0.05); 16,827 of 16,835 lines with the same text and a box within 1 px: **pass**. The first bundle (old post-processing) failed this check: 26.28% against 24.33%, 2,891 lines identical (`reports/package/attempt1_record_post/`, `research/failures.md`).
+- **Interpretation:** the shipped path reproduces the pipeline Phase 10 measured, on a different device (CPU instead of GPU) and runtime; the 8 lines that differ are numeric noise. The check is also the one that caught a mis-built bundle the equivalence checks could not see.
+- **Limitations:** GW-E2E-001 ran on the GPU in PyTorch; small numeric differences can move a box or a character.
+- **Next experiment:** Phase 20.
 
 ---
 

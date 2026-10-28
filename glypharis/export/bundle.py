@@ -16,6 +16,7 @@ from __future__ import annotations
 
 import dataclasses
 import json
+import os
 from pathlib import Path
 from typing import Any, Final, Literal
 
@@ -75,6 +76,30 @@ def write_bundle(
     return out
 
 
+MODEL_DIRS_ENV: Final = "GLYPHARIS_MODELS"
+
+
+def model_dirs() -> list[Path]:
+    """Where bundles are looked up by name: ``$GLYPHARIS_MODELS`` (``os.pathsep``-separated),
+    ``~/.glypharis/models`` and ``./models``."""
+    dirs = [Path(d) for d in os.environ.get(MODEL_DIRS_ENV, "").split(os.pathsep) if d]
+    return [*dirs, Path.home() / ".glypharis" / "models", Path("models")]
+
+
+def find_bundle(name_or_path: str | Path) -> Path:
+    path = Path(name_or_path)
+    if (path / "manifest.json").is_file():
+        return path
+    for d in model_dirs():
+        if (d / str(name_or_path) / "manifest.json").is_file():
+            return d / str(name_or_path)
+    looked = ", ".join(str(d) for d in model_dirs())
+    raise FileNotFoundError(
+        f"no GLYPHARIS model bundle {str(name_or_path)!r} (a directory with manifest.json); "
+        f"looked in: {looked}"
+    )
+
+
 def read_manifest(bundle: str | Path) -> dict[str, Any]:
     path = Path(bundle)
     manifest = json.loads((path / "manifest.json").read_text(encoding="utf-8"))
@@ -118,4 +143,6 @@ def load_bundle(
         torch.set_num_threads(threads)
     if dataclasses.asdict(det.spec) != manifest["detector"]["spec"]:
         raise ValueError("the detector release does not hold the manifest's spec")
-    return GlypharisOCR(det, rec)
+    ocr = GlypharisOCR(det, rec)
+    ocr.model_version = str(manifest["version"])
+    return ocr
