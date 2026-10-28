@@ -25,6 +25,8 @@ dependencies = [
     "rapidfuzz",
     "shapely",
     "scipy",
+    "onnx",
+    "onnxruntime",
 ]
 
 [project.optional-dependencies]
@@ -53,7 +55,7 @@ warn_redundant_casts = true
 strict_equality = true
 
 [[tool.mypy.overrides]]
-module = ["pynvml", "pynvml.*", "fontTools", "fontTools.*", "cv2", "cv2.*", "pypdfium2", "pypdfium2.*", "shapely", "shapely.*", "scipy", "scipy.*", "torchvision", "torchvision.*"]
+module = ["pynvml", "pynvml.*", "fontTools", "fontTools.*", "cv2", "cv2.*", "pypdfium2", "pypdfium2.*", "shapely", "shapely.*", "scipy", "scipy.*", "torchvision", "torchvision.*", "onnxruntime", "onnxruntime.*", "onnx", "onnx.*"]
 ignore_missing_imports = true
 
 [tool.pytest.ini_options]

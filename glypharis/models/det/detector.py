@@ -165,13 +165,14 @@ class TextLineDetector:
         return boxes
 
 
-def export_detector(checkpoint: Path, out: Path) -> Path:
-    """Write the release file for a training checkpoint, at its ``selected_op``.
+def export_detector(checkpoint: Path, out: Path, spec: DetectorSpec | None = None) -> Path:
+    """Write the release file for a training checkpoint, at its ``selected_op`` unless ``spec``
+    (settings chosen later on validation, such as Phase 9's) replaces the stored one.
 
     Holds tensors and plain types only, so ``torch.load(out, weights_only=True)`` reads it.
     """
     ck = load_checkpoint(checkpoint, "cpu")
-    spec = _spec_from_checkpoint(ck, None)
+    spec = spec or _spec_from_checkpoint(ck, None)
     config = ck.get("config") or {}
     state = ck.get("state") or {}
     git = ck.get("git") or {}

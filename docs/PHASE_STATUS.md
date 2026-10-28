@@ -17,14 +17,14 @@ Phases run in the order set by [ADR-0008](decisions/ADR-0008-usable-engine-first
 | 7 | Recognizer improvement | **COMPLETE** | `phase-07` |
 | 8 | Text detector | **COMPLETE** | `phase-08` |
 | 9 | Detector error analysis | **COMPLETE** | `phase-09` |
-| 10 | Full OCR pipeline | **IN PROGRESS** (gate: push, CI, merge; after Phase 9) | — |
+| 10 | Full OCR pipeline | **COMPLETE** | `phase-10` |
 | 11 | Robustness training | not started | — |
 | 12 | Synthetic data study | not started | — |
 | 13 | Ablation study | not started | — |
 | 14 | External evaluation | not started | — |
 | 15 | Error analysis | not started | — |
 | 16 | Efficiency optimisation | not started | — |
-| 17 | Model export | not started | — |
+| 17 | Model export | **IN PROGRESS** (gate: push, CI, merge; after Phase 10) | — |
 | 18 | Inference package | not started | — |
 | 19 | Optional HTTP API | not started | — |
 | 20 | Production engineering | not started | — |
@@ -815,7 +815,7 @@ all 440 settings; the error categories, the curved-line rule and the pairing hav
 
 ## Phase 10 — Full OCR pipeline
 
-**Status:** write-up done (2026-10-28). Gate open: push, pull request, CI and merge, after Phase 9.
+**Status:** COMPLETE (2026-10-28).
 Opened 2026-10-28 on `phase/10-pipeline`, branched from Phase 9 while its gate was open (the owner
 approved working through the night). Validation data only.
 
@@ -901,7 +901,7 @@ calibration and the tiny-model smoke test are covered (`tests/test_pipeline.py`,
 | Pipeline unit- and integration-tested on fixtures | pass: batching, confidence, calibration, end to end on known lines, a smoke run on tiny models; reading order on six layouts | `tests/test_pipeline.py`, `tests/test_reading_order.py` |
 | Validation E2E metrics reported | pass: GW-E2E-001 and GW-E2E-002 | `reports/e2e/` |
 | Calibration validated or confidence documented as raw | pass: validated (ECE 0.217 → 0.089 on the held-out half) | `reports/calibration/GW-E2E-003/` |
-| CI green with an inference smoke test on a tiny bundled model | pending (after the push) | `tests/test_pipeline.py::test_smoke_tiny_bundled_models_run_end_to_end` |
+| CI green with an inference smoke test on a tiny bundled model | pass | runs 40620770935 (branch), 40620789850 (pull request), 40621254147 (`main`) |
 
 **Known issues**
 - The PyTorch pipeline misses ADR-0011's page time (2.0 s mean against 1.5 s; recognition is 86%
@@ -913,5 +913,86 @@ calibration and the tiny-model smoke test are covered (`tests/test_pipeline.py`,
   Phase 9 deferred to Phase 11 are where it can improve.
 - The recognizer trainer's move onto the shared loop is deferred to Phase 11 (plan item 8).
 
-**Git:** branch `phase/10-pipeline`, with Phase 9 merged in; push and merge pending (after Phase 9).
+**Git:** branch `phase/10-pipeline` (Phase 9 merged in first), merged through pull request #11
+(#10 had been merged into the Phase 9 branch instead of `main`). Merge commit `f060380`, tag
+`phase-10` (merge re-created with the noreply identity; same tree and parents).
+
+**CI status:** green on the branch, the pull request and `main` (run 40621254147).
+
+---
+
+## Phase 17 — Model export
+
+**Status:** write-up done (2026-10-28). Gate open: push, pull request, CI and merge, after Phase 10.
+Opened 2026-10-28 on `phase/17-export`, branched from Phase 10; Phases 11 to 16 come after v0.1
+(ADR-0008). The owner approved installing `onnx` 1.23.2 and `onnxruntime`
+1.31.1 from PyPI (2026-10-28); both are pinned in `requirements/lock.txt`, so CI runs the ONNX
+checks too.
+
+**Objective:** a release of the v0.1 models that runs without the training code, and an ONNX build
+proven equivalent to PyTorch.
+
+**Implemented**
+- Release files: the detector's (`export_detector`, now with the spec chosen later, here Phase 9's)
+  and the recognizer's (`TextRecognizer.release` / `from_release`), both readable with
+  `torch.load(..., weights_only=True)`.
+- `glypharis.export.onnx`: both models exported with dynamic axes (TorchScript exporter, opset 17),
+  and ONNX Runtime backends that slot into `TextLineDetector` and `TextRecognizer`.
+- `glypharis.export.bundle`: one directory with both release files, both ONNX files and a manifest
+  of their SHA-256s and settings; loading checks every hash and picks the backend.
+- `scripts/export_check.py` (equivalence) and `scripts/e2e_profile.py --bundle` (page time).
+- CI's equivalence on tiny models: ONNX against PyTorch for both models and the whole bundle.
+
+**Plan** (registered 2026-10-28, before the export of the trained models was checked)
+1. **Bundle v0.1.0:** GW-DET-001 with Phase 9's settings (GW-DET-004's post-processing, GW-DET-005's
+   resolution) and GW-REC-024 at GW-E2E-003's temperature if adopted, else 1.
+2. **GW-EFF-003, equivalence** (`scripts/export_check.py`), both backends loaded from the bundle:
+   detector probability maps on the 110 Phase 5 profile pages, max abs difference at most 1e-4;
+   recognizer logits on 5,000 seeded validation lines, max abs difference at most 1e-3; greedy text
+   identical on every line except near ties (a PyTorch top-2 gap below 1e-3 at the first frame that
+   differs), at most 0.1% of lines; bag-of-lines page CER (strict) of the whole pipeline on the 400
+   Phase 5 pages within 0.05 points between the backends. The export counts as successful only if
+   all four pass.
+3. **GW-EFF-004, page time on ONNX Runtime:** `scripts/e2e_profile.py --bundle ... --backend onnx`,
+   the protocol of GW-EFF-002, against ADR-0011's page target. This is the measurement ADR-0011 is
+   judged on.
+
+**Exit criteria** (IMPLEMENTATION_PLAN Phase 17): export declared successful only after the
+equivalence tests pass and are recorded; CI runs ONNX equivalence on the tiny model.
+
+**Results (2026-10-28)**
+
+| Experiment | Result | Evidence |
+|---|---|---|
+| GW-EFF-003, equivalence | maps 7.3e-6, logits 3.7e-4, text identical on 5,000 lines, page CER 24.33% on both backends: **export successful** | `reports/export/GW-EFF-003/` |
+| GW-EFF-004, ONNX Runtime page time | mean 5,515 ms, p95 12,691 ms, peak RAM 11,221 MiB: misses ADR-0011 on time and memory | `reports/efficiency/GW-EFF-004.json` |
+
+The first bundle was built with the detector's old post-processing (a slip in the local script that
+ran the checks); it passed GW-EFF-003 but failed the Phase 18 check against Phase 10, and was rebuilt
+and rechecked (`research/failures.md`; its outputs are kept in
+`reports/export/GW-EFF-003/attempt1_record_post/`).
+
+**Decision taken here** (reversible, for the owner to confirm): PyTorch is the default backend of
+v0.1 (`load_bundle`, `from_pretrained`, the CLI), and ONNX Runtime runs without its memory arena,
+which kept a buffer per input shape. ONNX stays available (`backend="onnx"`).
+
+**Exit criteria**
+
+| Criterion | Result | Evidence |
+|---|---|---|
+| Export declared successful only after the equivalence tests pass and are recorded | pass | `reports/export/GW-EFF-003/equivalence.md` |
+| CI runs ONNX equivalence on the tiny model | pass locally; CI pending the push | `tests/test_export.py` |
+
+**Known issues**
+- **Owner decision needed: ADR-0011.** Its revisit condition is met (the exported v0.1 misses the page
+  target by a wide margin). Options are listed in ADR-0011.
+- The exported recognizer is slow because the SVTR's global attention is exported as plain matrix
+  products; a fused attention export (or a rewritten attention) is the first Phase 16 task. The
+  exported detector is already twice PyTorch's speed and could be used on its own then.
+- The newer `torch.export`-based exporter needs `onnxscript`, which is not installed; the
+  TorchScript exporter works but is deprecated upstream.
+- Model bundles are not distributed: `runs/release/glypharis-0.1.0` exists on the laptop only. How
+  BookWorm gets the bundle (a release asset, a shared drive) is an owner decision.
+
+**Git:** branch `phase/17-export`; push and merge pending (after Phase 10).
 

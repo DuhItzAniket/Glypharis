@@ -3,6 +3,7 @@ tiny bundled models (built here from a fixed seed, so the repository carries no 
 
 from __future__ import annotations
 
+import dataclasses
 import math
 from pathlib import Path
 
@@ -37,7 +38,8 @@ def tiny_recognizer(seed: int = 0) -> TextRecognizer:
     charset = Charset.load(CHARSET)
     cfg = ModelConfig(cnn_channels=[8, 8, 16, 16, 16, 16], lstm_hidden=16, lstm_layers=1,
                       dropout=0.0)  # fmt: skip
-    return TextRecognizer(build_recognizer(charset.num_classes, cfg), charset, 32, 512)
+    arch = {"model_name": "crnn", "model": dataclasses.asdict(cfg)}
+    return TextRecognizer(build_recognizer(charset.num_classes, cfg), charset, 32, 512, arch=arch)
 
 
 def tiny_detector(seed: int = 0) -> TextLineDetector:

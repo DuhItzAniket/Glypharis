@@ -1,0 +1,32 @@
+{
+ "bundle": "glypharis-0.1.0",
+ "version": "0.1.0",
+ "detector": {
+  "pages": 110,
+  "prob_max_abs_diff": 7.331371307373047e-06,
+  "pass": true
+ },
+ "recognizer": {
+  "lines": 5000,
+  "logit_max_abs_diff": 0.00036525726318359375,
+  "identical_text": 5000,
+  "near_tie_differences": 0,
+  "other_differences": [],
+  "pass": true
+ },
+ "end_to_end": {
+  "pages": 400,
+  "page_cer_torch": 0.24332910413734313,
+  "page_cer_onnx": 0.24332910413734313,
+  "difference": 0.0,
+  "pass": true
+ },
+ "tolerances": {
+  "prob": 0.0001,
+  "logits": 0.001,
+  "near_tie": 0.001,
+  "near_tie_share": 0.001,
+  "page_cer": 0.0005
+ },
+ "export_successful": true
+}

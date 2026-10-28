@@ -17,6 +17,7 @@ Decoding is greedy CTC and does not depend on ``T``.
 
 from __future__ import annotations
 
+import dataclasses
 import math
 from collections.abc import Sequence
 from dataclasses import dataclass, field
@@ -27,13 +28,15 @@ import numpy as np
 import torch
 from PIL import Image
 
-from glypharis.config.loader import load_config
+from glypharis.config.loader import from_dict, load_config
+from glypharis.config.schema import ModelConfig
 from glypharis.data.rec_dataset import PAD_MULTIPLE, resized_width
 from glypharis.data.text import Charset
 from glypharis.models.rec.base import LineRecognizer
 from glypharis.models.rec.crnn import build_recognizer
 from glypharis.training.checkpoint import load_checkpoint
 
+REC_RELEASE_FORMAT = "glypharis-rec-release-1"
 MAX_BATCH_LINES = 32
 MAX_BATCH_COLUMNS = 16384
 PAD_MARGIN = 64  # padding columns every line keeps before the tensor edge (32 already suffice)
@@ -82,8 +85,10 @@ class TextRecognizer:
         max_width: int,
         device: str | torch.device = "cpu",
         temperature: float = 1.0,
+        arch: dict[str, Any] | None = None,
     ) -> None:
         self.model = model.to(device).eval()
+        self.arch = arch or {}  # model_name and model config, for a release file
         self.charset = charset
         self.height = height
         self.max_width = max_width
@@ -106,17 +111,40 @@ class TextRecognizer:
         model = build_recognizer(charset.num_classes, cfg.model, cfg.model_name or "crnn")
         path = Path(checkpoint) if checkpoint else Path(cfg.checkpoint.dir) / "best.pt"
         model.load_state_dict(load_checkpoint(path, "cpu")["model"])
-        return cls(model, charset, cfg.data.image_height, cfg.data.max_width, device, temperature)
+        arch = {"model_name": cfg.model_name or "crnn", "model": dataclasses.asdict(cfg.model)}
+        return cls(model, charset, cfg.data.image_height, cfg.data.max_width, device, temperature,
+                   arch)  # fmt: skip
 
     def release(self) -> dict[str, Any]:
-        """Plain data for a release file: weights, charset and the input settings."""
+        """Plain data for a release file (`REC_RELEASE_FORMAT`): weights, architecture, charset
+        and input settings; ``torch.load(..., weights_only=True)`` reads it."""
+        if not self.arch:
+            raise ValueError("this recognizer was built without its architecture; no release")
         return {
-            "state_dict": self.model.state_dict(),
+            "format": REC_RELEASE_FORMAT,
+            "state_dict": {k: v.detach().cpu() for k, v in self.model.state_dict().items()},
+            "arch": self.arch,
             "characters": self.charset.characters,
             "height": self.height,
             "max_width": self.max_width,
             "temperature": self.temperature,
         }
+
+    @classmethod
+    def from_release(
+        cls, path: str | Path, device: str | torch.device = "cpu", temperature: float | None = None
+    ) -> TextRecognizer:
+        """A release file written from `release`; anything else is refused."""
+        obj = torch.load(path, map_location="cpu", weights_only=True)
+        if not isinstance(obj, dict) or obj.get("format") != REC_RELEASE_FORMAT:
+            raise ValueError(f"{path} is not a {REC_RELEASE_FORMAT} file")
+        charset = Charset(list(obj["characters"]))
+        cfg = from_dict(ModelConfig, obj["arch"]["model"], "arch.model")
+        model = build_recognizer(charset.num_classes, cfg, obj["arch"]["model_name"])
+        model.load_state_dict(obj["state_dict"])
+        t = obj["temperature"] if temperature is None else temperature
+        return cls(model, charset, int(obj["height"]), int(obj["max_width"]), device, float(t),
+                   dict(obj["arch"]))  # fmt: skip
 
     def _batches(self, widths: Sequence[int]) -> list[list[int]]:
         order = sorted(range(len(widths)), key=lambda i: (widths[i], i))
