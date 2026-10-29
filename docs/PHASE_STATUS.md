@@ -26,7 +26,7 @@ Phases run in the order set by [ADR-0008](decisions/ADR-0008-usable-engine-first
 | 16 | Efficiency optimisation | not started | — |
 | 17 | Model export | **COMPLETE** | `phase-17` |
 | 18 | Inference package | **COMPLETE** | `phase-18` |
-| 19 | Optional HTTP API | **IN PROGRESS** (gate: push, CI, merge) | — |
+| 19 | Optional HTTP API | **COMPLETE** | `phase-19` |
 | 20 | Production engineering | **COMPLETE** | `phase-20`, `v0.1` |
 | 21 | Research package | not started | — |
 | 22 | Final validation | not started | — |
@@ -1061,7 +1061,7 @@ run for that merge, which contains Phase 18, passed (40624323452).
 
 ## Phase 19 — Optional HTTP API
 
-**Status:** write-up done (2026-10-29). Gate open: push, pull request, CI and merge. Opened
+**Status:** COMPLETE (2026-10-29). Opened
 2026-10-29 on `phase/19-http-api`, branched from `main` after Phase 11, at the owner's request
 (2026-10-29) to do it while Phase 12 waits; it uses no model results and no evaluation data.
 
@@ -1101,14 +1101,18 @@ environment.
 |---|---|---|
 | API tests with a test client | pass | `tests/test_server.py` |
 | Documented as an integration boundary only | pass | `glypharis/server.py` docstring, README |
-| CI green | pending (after the push) | — |
+| CI green | pass | runs 40822321310 (branch), 40822344940 (pull request), 40824345618 (`main`) |
 
 **Known issues**
 - Not for exposure to a network as is: no authentication, no TLS, one request at a time. A
   multi-worker deployment needs one model per worker process.
 - The 25 MiB body limit is a round number above a 600 dpi A4 PNG, not a measurement.
 
-**Git:** branch `phase/19-http-api`; push and merge pending.
+**Git:** branch `phase/19-http-api`, merged through pull request #16. Merge commit `8dfb634`, tag
+`phase-19` (merge re-created with the noreply identity; same tree and parents).
+
+**CI status:** green on the branch, the pull request and `main` (run 40824345618; the run on the
+merge as GitHub made it was cancelled by the re-created merge's run, which has the same tree).
 
 ---
 
