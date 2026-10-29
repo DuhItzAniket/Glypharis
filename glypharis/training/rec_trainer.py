@@ -311,6 +311,7 @@ class RecTrainer(TrainerCore):
             cfg.seed,
             d.bucket_chunk,
             max_columns=d.max_batch_columns,
+            epoch_lines=d.epoch_lines,
         )
         # With a column cap the batch count can differ between epochs; it is known in advance.
         self.setup_optimization(model, [self.sampler.num_batches(e) for e in range(t.epochs)])

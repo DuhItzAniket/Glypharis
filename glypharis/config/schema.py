@@ -48,6 +48,9 @@ class DataConfig:
     augmentation_params: dict[str, dict[str, float]] = field(default_factory=dict)
     # Cap on lines taken from a training pack (pack prefix -> count), a fixed seeded subset.
     train_limits: dict[str, int] = field(default_factory=dict)
+    # Lines per epoch, drawn afresh each epoch from all training lines (no line twice in an epoch).
+    # Keeps the step budget fixed when the training pool grows (Phase 12). null: every line.
+    epoch_lines: int | None = None
     val_subset: int | None = None  # seeded subset of validation lines scored each epoch
     train_eval_subset: int = 2000  # training lines scored each epoch (over/underfitting checks)
     bucket_chunk: int = 50  # batches per width-sorted chunk (bucketing)
@@ -424,6 +427,7 @@ class RunConfig:
         check(d.max_batch_columns is None or d.max_batch_columns >= d.max_width,
               "data.max_batch_columns must be null or at least data.max_width")  # fmt: skip
         check(all(v > 0 for v in d.train_limits.values()), "data.train_limits must be > 0")
+        check(d.epoch_lines is None or d.epoch_lines > 0, "data.epoch_lines must be > 0 or null")
         m = self.model
         check(len(m.cnn_channels) == 6 and all(c > 0 for c in m.cnn_channels),
               "model.cnn_channels must list 6 positive widths")  # fmt: skip

@@ -19,7 +19,7 @@ Phases run in the order set by [ADR-0008](decisions/ADR-0008-usable-engine-first
 | 9 | Detector error analysis | **COMPLETE** | `phase-09` |
 | 10 | Full OCR pipeline | **COMPLETE** | `phase-10` |
 | 11 | Robustness training | **COMPLETE** | `phase-11` |
-| 12 | Synthetic data study | not started | — |
+| 12 | Synthetic data study | **IN PROGRESS** (plan registered; training) | — |
 | 13 | Ablation study | not started | — |
 | 14 | External evaluation | not started | — |
 | 15 | Error analysis | not started | — |
@@ -1301,3 +1301,79 @@ verdicts, the H3 guard, the per-corruption table) and the ledger's Phase 11 line
 
 **CI status:** green on the branch, the pull request and `main` (run 40819192658).
 
+---
+
+## Phase 12 — Synthetic data study
+
+**Status:** IN PROGRESS. Opened 2026-10-29 on `phase/12-synthetic`, branched from `main` after Phase
+19; the owner approved running it on the laptop GPU in batches that can pause (2026-10-29).
+Validation data only.
+
+**Objective:** measure how much document-style synthetic data (GlyphSynth) helps the recognizer,
+how it scales, and which generator factors matter (RQ2, H2′).
+
+**Done before registration**
+- `data.epoch_lines`: each epoch draws that many lines afresh from the whole training pool (no line
+  twice in an epoch), so a larger pool does not mean more steps. Earlier configs keep their hashes;
+  at the pool size or above nothing changes.
+- `scripts/build_glyphsynth_variants.py`: the extra GlyphSynth packs. Its first lines reproduce the
+  v1 training pack byte for byte, so the extension continues v1 exactly.
+- `scripts/synth_study.py`: GlyphSynth validation scoring and the comparison below, with tests.
+
+**Plan** (registered 2026-10-29, before any Phase 12 run was trained or scored)
+
+1. **Recipe and control.** The CRNN short budget of Phases 7 and 11 (GW-REC-003's configuration:
+   8 epochs, height 32, full augmentation). The control is HierText only: GW-REC-003, 004 and 005
+   (seeds 1337, 2024, 7), already trained. Every synthetic arm adds GlyphSynth v1 training lines
+   to HierText and sets `data.epoch_lines` to 348,935, the HierText training set's size, so all
+   arms see as many lines per epoch, and take as many steps, as the control. The cost of this
+   equal budget: the more synthetic lines in the pool, the fewer HierText lines per epoch.
+2. **Runs** (12 new, about 11 GPU-hours on the RTX 4050):
+
+   | Arm | GlyphSynth lines added | Seeds | Runs |
+   |---|---|---|---|
+   | +25K | 25,000 (seeded subset of v1) | 1337, 2024, 7 | GW-DATA-010, 011, 012 |
+   | +50K | 50,000 (seeded subset of v1) | 1337 | GW-DATA-013 |
+   | +100K | 100,000 (all of v1) | 1337, 2024, 7 | GW-DATA-014, 015, 016 |
+   | +250K | 250,000 (v1 and its extension) | 1337, 2024, 7 | GW-DATA-017, 018, 019 |
+   | +100K, 6 fonts | 100,000 from 6 of the 85 training families | 1337 | GW-DATA-020 |
+   | +100K, no capture | the v1 lines without capture effects | 1337 | GW-DATA-021 |
+
+   The plan asked for three seeds at 25K and 250K; +100K gets three as well, because it is the
+   control for both generator factors.
+3. **Readouts** (GW-DATA-022, `scripts/synth_study.py`), each run's best checkpoint (selected on
+   HierText validation CER, as before):
+   - **Document slice** (primary): the HierText validation lines on pages with at least 100 lines
+     in the validation pack, 104 pages and 16,782 lines (22.7%). HierText has no document label,
+     and pages this dense are likely to be printed text; this was chosen from line counts only and
+     not checked page by page, so it is a proxy.
+   - HierText validation, all lines; GlyphSynth validation (10,000 lines in held-out font
+     families, optimistic for synthetic arms: same generator); GLYPH-C mean corruption error for
+     the capture factor (the +100K and no-capture runs).
+4. **Decision rule** (Phase 7's, as in Phase 11). An arm's value pools its seeds. Differences are
+   paired over pages (HierText readouts: lines on a page are not independent) or lines
+   (GlyphSynth, GLYPH-C source lines), 95% bootstrap CI, 1,000 resamples. **Helps**: CI below 0 and
+   every seed of the arm below every seed of its control; **hurts**: the mirror; otherwise **no
+   clear effect**.
+5. **H2′a** is supported if at least one size helps on the document slice against HierText only.
+   Diminishing returns are reported, not decided: document-slice CER points gained per 1,000
+   added lines from 25K to 100K against 100K to 250K.
+6. **H2′b.** Fonts: many fonts help if +100K, 6 fonts is worse than +100K on the document slice
+   under rule 4. Capture: capture effects help if the no-capture run's GLYPH-C mCE is higher than
+   +100K's (CI above 0, its seed above all three +100K seeds), and the clean guard holds (+100K's
+   mean HierText validation CER at most 5% relative above the no-capture run's). H2′b is supported
+   if both factors help (and the guard holds).
+7. **Data:** HierText training and validation, GlyphSynth training and validation, GLYPH-C. No
+   test set is read.
+
+**Known limitations, stated in advance**
+- Equal steps, not equal epochs: the synthetic arms see fewer HierText lines per epoch, so a gain
+  has to beat the loss of real data, and a loss may come from that displacement, not from the
+  synthetic lines being harmful.
+- The document slice is a density proxy, not a labelled domain; GDC (Phase 14) is the real
+  document test. GlyphSynth validation flatters the synthetic arms.
+- The factor arms have one seed each; their control (+100K) has three.
+- The CRNN short budget, not the v0.1 recognizer; the control runs were trained by Phase 7's
+  trainer, the new ones by the shared loop (as in Phase 11, where the two agreed).
+
+**Git:** branch `phase/12-synthetic`; not for merge until the phase is done.

@@ -61,6 +61,19 @@ Rows link to a full entry below. Numbers are copied from generated reports only,
 | [GW-DATA-007](#gw-data-007) | 2026-10-28 | 11 | Phase 11 arm D (degradation augmentation), seed 2024: GW-REC-018 with the seed changed | done | val CER 8.66% [8.50, 8.82]; GLYPH-C mCE 10.03% (arm D: helps) | `reports/training/GW-DATA-007/` |
 | [GW-DATA-008](#gw-data-008) | 2026-10-28 | 11 | Phase 11 arm D (degradation augmentation), seed 7: GW-REC-018 with the seed changed | done | val CER 8.70% [8.54, 8.87]; GLYPH-C mCE 10.04% (arm D: helps) | `reports/training/GW-DATA-008/` |
 | [GW-DATA-009](#gw-data-009) | 2026-10-28 | 11 | Phase 11 robustness: the 15 arm runs on GLYPH-C v1 (mCE), paired comparison against arm A, verdict per family (H3) | done | ΔmCE vs no augmentation: geometric −1.67 [−1.73, −1.62], photometric −0.06 [−0.08, −0.02], degradation −0.25 [−0.30, −0.19], full −1.83 [−1.90, −1.75] points; H3 supported | `reports/robustness/` |
+| [GW-DATA-010](#gw-data-010) | 2026-10-29 | 12 | Phase 12 arm +25K: HierText + 25,000 GlyphSynth lines at the control's step budget, seed 1337 | planned | — | `reports/training/GW-DATA-010/` |
+| [GW-DATA-011](#gw-data-011) | 2026-10-29 | 12 | Phase 12 arm +25K: HierText + 25,000 GlyphSynth lines at the control's step budget, seed 2024 | planned | — | `reports/training/GW-DATA-011/` |
+| [GW-DATA-012](#gw-data-012) | 2026-10-29 | 12 | Phase 12 arm +25K: HierText + 25,000 GlyphSynth lines at the control's step budget, seed 7 | planned | — | `reports/training/GW-DATA-012/` |
+| [GW-DATA-013](#gw-data-013) | 2026-10-29 | 12 | Phase 12 arm +50K: HierText + 50,000 GlyphSynth lines at the control's step budget, seed 1337 | planned | — | `reports/training/GW-DATA-013/` |
+| [GW-DATA-014](#gw-data-014) | 2026-10-29 | 12 | Phase 12 arm +100K: HierText + 100,000 GlyphSynth lines at the control's step budget, seed 1337 | planned | — | `reports/training/GW-DATA-014/` |
+| [GW-DATA-015](#gw-data-015) | 2026-10-29 | 12 | Phase 12 arm +100K: HierText + 100,000 GlyphSynth lines at the control's step budget, seed 2024 | planned | — | `reports/training/GW-DATA-015/` |
+| [GW-DATA-016](#gw-data-016) | 2026-10-29 | 12 | Phase 12 arm +100K: HierText + 100,000 GlyphSynth lines at the control's step budget, seed 7 | planned | — | `reports/training/GW-DATA-016/` |
+| [GW-DATA-017](#gw-data-017) | 2026-10-29 | 12 | Phase 12 arm +250K: HierText + 250,000 GlyphSynth lines at the control's step budget, seed 1337 | planned | — | `reports/training/GW-DATA-017/` |
+| [GW-DATA-018](#gw-data-018) | 2026-10-29 | 12 | Phase 12 arm +250K: HierText + 250,000 GlyphSynth lines at the control's step budget, seed 2024 | planned | — | `reports/training/GW-DATA-018/` |
+| [GW-DATA-019](#gw-data-019) | 2026-10-29 | 12 | Phase 12 arm +250K: HierText + 250,000 GlyphSynth lines at the control's step budget, seed 7 | planned | — | `reports/training/GW-DATA-019/` |
+| [GW-DATA-020](#gw-data-020) | 2026-10-29 | 12 | Phase 12 arm +100K, 6 fonts: HierText + 100,000 (6 font families) GlyphSynth lines at the control's step budget, seed 1337 | planned | — | `reports/training/GW-DATA-020/` |
+| [GW-DATA-021](#gw-data-021) | 2026-10-29 | 12 | Phase 12 arm +100K, no capture: HierText + 100,000 (no capture effects) GlyphSynth lines at the control's step budget, seed 1337 | planned | — | `reports/training/GW-DATA-021/` |
+| [GW-DATA-022](#gw-data-022) | 2026-10-29 | 12 | Phase 12 comparison: the synthetic arms against HierText only on the document slice (H2′a), and the font and capture factors (H2′b) | planned | — | `reports/synthetic/` |
 
 ### GW-BASE-001 — Tesseract 5 (LSTM, eng): recognition and end to end
 
@@ -1097,6 +1110,251 @@ Rows link to a full entry below. Numbers are copied from generated reports only,
 - **Interpretation:** geometric augmentation does most of the robustness work (−1.67 [−1.73, −1.62] points), on rotation (38.89 → 32.93%) and perspective (7.90 → 5.55%) above all, and it also lowers clean CER. Degradation helps a little (−0.25 [−0.30, −0.19]), through blur (4.93 → 4.53%), low resolution (6.14 → 5.55%) and JPEG (4.68 → 4.48%), not rotation, at no clean cost. Photometric augmentation shows no clear effect, although its preset includes blur, noise and JPEG. The full preset is best on robustness and on clean lines. Rotation beyond the training range (at most ±2°) is the recognizer's largest weakness.
 - **Limitations:** stated with the plan in `docs/PHASE_STATUS.md` (trainer versions across seeds; GLYPH-C's HierText half overlaps the selection set; CRNN short budget, not the v0.1 recognizer). Also: several GLYPH-C corruptions are close relatives of training transforms (rotation and perspective in B, blur, noise and JPEG in C, low resolution in D), so the suite measures robustness to familiar corruptions at higher strength, not to unseen ones; the unweighted mCE is dominated by rotation.
 - **Next experiment:** a wider training rotation range is a Phase 13 candidate; whether the verdicts carry over to the v0.1 recognizer (SVTR, height 48) needs the college GPU.
+
+### GW-DATA-010 — Phase 12 arm +25K, seed 1337
+
+- **Date allocated / run:** 2026-10-29 / —
+- **Phase:** 12
+- **Git commit:** recorded in the run summary   **Config:** `configs/rec/gw-data-010.yaml`   **Seed(s):** 1337
+- **Dataset version(s):** as GW-REC-001; GlyphSynth v1 (`data/manifests/processed/glyphsynth.json`, variants in `glyphsynth_variants.json`)
+- **Hardware:** RTX 4050 Laptop 6 GB, bf16
+- **Research question:** RQ2: does document-style synthetic data help, how does it scale, which generator factors matter?
+- **Hypothesis (written before the run):** [H2′](hypotheses.md#h2--document-style-synthetic-data-helps-and-scales-diversity-matters-rq2-reframed), tested by GW-DATA-022
+- **Method:** `python train.py --config configs/rec/gw-data-010.yaml`; GW-REC-003's recipe with 25,000 GlyphSynth lines added and `data.epoch_lines` 348,935. Plan and decision rule: `docs/PHASE_STATUS.md`, Phase 12.
+- **Variables:** independent: the GlyphSynth lines in the training pool; controlled: recipe, step budget, validation set
+- **Control:** HierText only (GW-REC-003, 004, 005)
+- **Result:** —
+- **Training diagnostics:** —
+- **Interpretation:** —
+- **Limitations:** stated with the plan.
+- **Next experiment:** GW-DATA-022
+- **Training time:** —
+
+### GW-DATA-011 — Phase 12 arm +25K, seed 2024
+
+- **Date allocated / run:** 2026-10-29 / —
+- **Phase:** 12
+- **Git commit:** recorded in the run summary   **Config:** `configs/rec/gw-data-011.yaml`   **Seed(s):** 2024
+- **Dataset version(s):** as GW-REC-001; GlyphSynth v1 (`data/manifests/processed/glyphsynth.json`, variants in `glyphsynth_variants.json`)
+- **Hardware:** RTX 4050 Laptop 6 GB, bf16
+- **Research question:** RQ2: does document-style synthetic data help, how does it scale, which generator factors matter?
+- **Hypothesis (written before the run):** [H2′](hypotheses.md#h2--document-style-synthetic-data-helps-and-scales-diversity-matters-rq2-reframed), tested by GW-DATA-022
+- **Method:** `python train.py --config configs/rec/gw-data-011.yaml`; GW-REC-003's recipe with 25,000 GlyphSynth lines added and `data.epoch_lines` 348,935. Plan and decision rule: `docs/PHASE_STATUS.md`, Phase 12.
+- **Variables:** independent: the GlyphSynth lines in the training pool; controlled: recipe, step budget, validation set
+- **Control:** HierText only (GW-REC-003, 004, 005)
+- **Result:** —
+- **Training diagnostics:** —
+- **Interpretation:** —
+- **Limitations:** stated with the plan.
+- **Next experiment:** GW-DATA-022
+- **Training time:** —
+
+### GW-DATA-012 — Phase 12 arm +25K, seed 7
+
+- **Date allocated / run:** 2026-10-29 / —
+- **Phase:** 12
+- **Git commit:** recorded in the run summary   **Config:** `configs/rec/gw-data-012.yaml`   **Seed(s):** 7
+- **Dataset version(s):** as GW-REC-001; GlyphSynth v1 (`data/manifests/processed/glyphsynth.json`, variants in `glyphsynth_variants.json`)
+- **Hardware:** RTX 4050 Laptop 6 GB, bf16
+- **Research question:** RQ2: does document-style synthetic data help, how does it scale, which generator factors matter?
+- **Hypothesis (written before the run):** [H2′](hypotheses.md#h2--document-style-synthetic-data-helps-and-scales-diversity-matters-rq2-reframed), tested by GW-DATA-022
+- **Method:** `python train.py --config configs/rec/gw-data-012.yaml`; GW-REC-003's recipe with 25,000 GlyphSynth lines added and `data.epoch_lines` 348,935. Plan and decision rule: `docs/PHASE_STATUS.md`, Phase 12.
+- **Variables:** independent: the GlyphSynth lines in the training pool; controlled: recipe, step budget, validation set
+- **Control:** HierText only (GW-REC-003, 004, 005)
+- **Result:** —
+- **Training diagnostics:** —
+- **Interpretation:** —
+- **Limitations:** stated with the plan.
+- **Next experiment:** GW-DATA-022
+- **Training time:** —
+
+### GW-DATA-013 — Phase 12 arm +50K, seed 1337
+
+- **Date allocated / run:** 2026-10-29 / —
+- **Phase:** 12
+- **Git commit:** recorded in the run summary   **Config:** `configs/rec/gw-data-013.yaml`   **Seed(s):** 1337
+- **Dataset version(s):** as GW-REC-001; GlyphSynth v1 (`data/manifests/processed/glyphsynth.json`, variants in `glyphsynth_variants.json`)
+- **Hardware:** RTX 4050 Laptop 6 GB, bf16
+- **Research question:** RQ2: does document-style synthetic data help, how does it scale, which generator factors matter?
+- **Hypothesis (written before the run):** [H2′](hypotheses.md#h2--document-style-synthetic-data-helps-and-scales-diversity-matters-rq2-reframed), tested by GW-DATA-022
+- **Method:** `python train.py --config configs/rec/gw-data-013.yaml`; GW-REC-003's recipe with 50,000 GlyphSynth lines added and `data.epoch_lines` 348,935. Plan and decision rule: `docs/PHASE_STATUS.md`, Phase 12.
+- **Variables:** independent: the GlyphSynth lines in the training pool; controlled: recipe, step budget, validation set
+- **Control:** HierText only (GW-REC-003, 004, 005)
+- **Result:** —
+- **Training diagnostics:** —
+- **Interpretation:** —
+- **Limitations:** stated with the plan.
+- **Next experiment:** GW-DATA-022
+- **Training time:** —
+
+### GW-DATA-014 — Phase 12 arm +100K, seed 1337
+
+- **Date allocated / run:** 2026-10-29 / —
+- **Phase:** 12
+- **Git commit:** recorded in the run summary   **Config:** `configs/rec/gw-data-014.yaml`   **Seed(s):** 1337
+- **Dataset version(s):** as GW-REC-001; GlyphSynth v1 (`data/manifests/processed/glyphsynth.json`, variants in `glyphsynth_variants.json`)
+- **Hardware:** RTX 4050 Laptop 6 GB, bf16
+- **Research question:** RQ2: does document-style synthetic data help, how does it scale, which generator factors matter?
+- **Hypothesis (written before the run):** [H2′](hypotheses.md#h2--document-style-synthetic-data-helps-and-scales-diversity-matters-rq2-reframed), tested by GW-DATA-022
+- **Method:** `python train.py --config configs/rec/gw-data-014.yaml`; GW-REC-003's recipe with 100,000 GlyphSynth lines added and `data.epoch_lines` 348,935. Plan and decision rule: `docs/PHASE_STATUS.md`, Phase 12.
+- **Variables:** independent: the GlyphSynth lines in the training pool; controlled: recipe, step budget, validation set
+- **Control:** HierText only (GW-REC-003, 004, 005)
+- **Result:** —
+- **Training diagnostics:** —
+- **Interpretation:** —
+- **Limitations:** stated with the plan.
+- **Next experiment:** GW-DATA-022
+- **Training time:** —
+
+### GW-DATA-015 — Phase 12 arm +100K, seed 2024
+
+- **Date allocated / run:** 2026-10-29 / —
+- **Phase:** 12
+- **Git commit:** recorded in the run summary   **Config:** `configs/rec/gw-data-015.yaml`   **Seed(s):** 2024
+- **Dataset version(s):** as GW-REC-001; GlyphSynth v1 (`data/manifests/processed/glyphsynth.json`, variants in `glyphsynth_variants.json`)
+- **Hardware:** RTX 4050 Laptop 6 GB, bf16
+- **Research question:** RQ2: does document-style synthetic data help, how does it scale, which generator factors matter?
+- **Hypothesis (written before the run):** [H2′](hypotheses.md#h2--document-style-synthetic-data-helps-and-scales-diversity-matters-rq2-reframed), tested by GW-DATA-022
+- **Method:** `python train.py --config configs/rec/gw-data-015.yaml`; GW-REC-003's recipe with 100,000 GlyphSynth lines added and `data.epoch_lines` 348,935. Plan and decision rule: `docs/PHASE_STATUS.md`, Phase 12.
+- **Variables:** independent: the GlyphSynth lines in the training pool; controlled: recipe, step budget, validation set
+- **Control:** HierText only (GW-REC-003, 004, 005)
+- **Result:** —
+- **Training diagnostics:** —
+- **Interpretation:** —
+- **Limitations:** stated with the plan.
+- **Next experiment:** GW-DATA-022
+- **Training time:** —
+
+### GW-DATA-016 — Phase 12 arm +100K, seed 7
+
+- **Date allocated / run:** 2026-10-29 / —
+- **Phase:** 12
+- **Git commit:** recorded in the run summary   **Config:** `configs/rec/gw-data-016.yaml`   **Seed(s):** 7
+- **Dataset version(s):** as GW-REC-001; GlyphSynth v1 (`data/manifests/processed/glyphsynth.json`, variants in `glyphsynth_variants.json`)
+- **Hardware:** RTX 4050 Laptop 6 GB, bf16
+- **Research question:** RQ2: does document-style synthetic data help, how does it scale, which generator factors matter?
+- **Hypothesis (written before the run):** [H2′](hypotheses.md#h2--document-style-synthetic-data-helps-and-scales-diversity-matters-rq2-reframed), tested by GW-DATA-022
+- **Method:** `python train.py --config configs/rec/gw-data-016.yaml`; GW-REC-003's recipe with 100,000 GlyphSynth lines added and `data.epoch_lines` 348,935. Plan and decision rule: `docs/PHASE_STATUS.md`, Phase 12.
+- **Variables:** independent: the GlyphSynth lines in the training pool; controlled: recipe, step budget, validation set
+- **Control:** HierText only (GW-REC-003, 004, 005)
+- **Result:** —
+- **Training diagnostics:** —
+- **Interpretation:** —
+- **Limitations:** stated with the plan.
+- **Next experiment:** GW-DATA-022
+- **Training time:** —
+
+### GW-DATA-017 — Phase 12 arm +250K, seed 1337
+
+- **Date allocated / run:** 2026-10-29 / —
+- **Phase:** 12
+- **Git commit:** recorded in the run summary   **Config:** `configs/rec/gw-data-017.yaml`   **Seed(s):** 1337
+- **Dataset version(s):** as GW-REC-001; GlyphSynth v1 (`data/manifests/processed/glyphsynth.json`, variants in `glyphsynth_variants.json`)
+- **Hardware:** RTX 4050 Laptop 6 GB, bf16
+- **Research question:** RQ2: does document-style synthetic data help, how does it scale, which generator factors matter?
+- **Hypothesis (written before the run):** [H2′](hypotheses.md#h2--document-style-synthetic-data-helps-and-scales-diversity-matters-rq2-reframed), tested by GW-DATA-022
+- **Method:** `python train.py --config configs/rec/gw-data-017.yaml`; GW-REC-003's recipe with 250,000 GlyphSynth lines added and `data.epoch_lines` 348,935. Plan and decision rule: `docs/PHASE_STATUS.md`, Phase 12.
+- **Variables:** independent: the GlyphSynth lines in the training pool; controlled: recipe, step budget, validation set
+- **Control:** HierText only (GW-REC-003, 004, 005)
+- **Result:** —
+- **Training diagnostics:** —
+- **Interpretation:** —
+- **Limitations:** stated with the plan.
+- **Next experiment:** GW-DATA-022
+- **Training time:** —
+
+### GW-DATA-018 — Phase 12 arm +250K, seed 2024
+
+- **Date allocated / run:** 2026-10-29 / —
+- **Phase:** 12
+- **Git commit:** recorded in the run summary   **Config:** `configs/rec/gw-data-018.yaml`   **Seed(s):** 2024
+- **Dataset version(s):** as GW-REC-001; GlyphSynth v1 (`data/manifests/processed/glyphsynth.json`, variants in `glyphsynth_variants.json`)
+- **Hardware:** RTX 4050 Laptop 6 GB, bf16
+- **Research question:** RQ2: does document-style synthetic data help, how does it scale, which generator factors matter?
+- **Hypothesis (written before the run):** [H2′](hypotheses.md#h2--document-style-synthetic-data-helps-and-scales-diversity-matters-rq2-reframed), tested by GW-DATA-022
+- **Method:** `python train.py --config configs/rec/gw-data-018.yaml`; GW-REC-003's recipe with 250,000 GlyphSynth lines added and `data.epoch_lines` 348,935. Plan and decision rule: `docs/PHASE_STATUS.md`, Phase 12.
+- **Variables:** independent: the GlyphSynth lines in the training pool; controlled: recipe, step budget, validation set
+- **Control:** HierText only (GW-REC-003, 004, 005)
+- **Result:** —
+- **Training diagnostics:** —
+- **Interpretation:** —
+- **Limitations:** stated with the plan.
+- **Next experiment:** GW-DATA-022
+- **Training time:** —
+
+### GW-DATA-019 — Phase 12 arm +250K, seed 7
+
+- **Date allocated / run:** 2026-10-29 / —
+- **Phase:** 12
+- **Git commit:** recorded in the run summary   **Config:** `configs/rec/gw-data-019.yaml`   **Seed(s):** 7
+- **Dataset version(s):** as GW-REC-001; GlyphSynth v1 (`data/manifests/processed/glyphsynth.json`, variants in `glyphsynth_variants.json`)
+- **Hardware:** RTX 4050 Laptop 6 GB, bf16
+- **Research question:** RQ2: does document-style synthetic data help, how does it scale, which generator factors matter?
+- **Hypothesis (written before the run):** [H2′](hypotheses.md#h2--document-style-synthetic-data-helps-and-scales-diversity-matters-rq2-reframed), tested by GW-DATA-022
+- **Method:** `python train.py --config configs/rec/gw-data-019.yaml`; GW-REC-003's recipe with 250,000 GlyphSynth lines added and `data.epoch_lines` 348,935. Plan and decision rule: `docs/PHASE_STATUS.md`, Phase 12.
+- **Variables:** independent: the GlyphSynth lines in the training pool; controlled: recipe, step budget, validation set
+- **Control:** HierText only (GW-REC-003, 004, 005)
+- **Result:** —
+- **Training diagnostics:** —
+- **Interpretation:** —
+- **Limitations:** stated with the plan.
+- **Next experiment:** GW-DATA-022
+- **Training time:** —
+
+### GW-DATA-020 — Phase 12 arm +100K, 6 fonts, seed 1337
+
+- **Date allocated / run:** 2026-10-29 / —
+- **Phase:** 12
+- **Git commit:** recorded in the run summary   **Config:** `configs/rec/gw-data-020.yaml`   **Seed(s):** 1337
+- **Dataset version(s):** as GW-REC-001; GlyphSynth v1 (`data/manifests/processed/glyphsynth.json`, variants in `glyphsynth_variants.json`)
+- **Hardware:** RTX 4050 Laptop 6 GB, bf16
+- **Research question:** RQ2: does document-style synthetic data help, how does it scale, which generator factors matter?
+- **Hypothesis (written before the run):** [H2′](hypotheses.md#h2--document-style-synthetic-data-helps-and-scales-diversity-matters-rq2-reframed), tested by GW-DATA-022
+- **Method:** `python train.py --config configs/rec/gw-data-020.yaml`; GW-REC-003's recipe with 100,000 (6 font families) GlyphSynth lines added and `data.epoch_lines` 348,935. Plan and decision rule: `docs/PHASE_STATUS.md`, Phase 12.
+- **Variables:** independent: the GlyphSynth lines in the training pool; controlled: recipe, step budget, validation set
+- **Control:** HierText only (GW-REC-003, 004, 005); for the factor, +100K (GW-DATA-014, 015, 016)
+- **Result:** —
+- **Training diagnostics:** —
+- **Interpretation:** —
+- **Limitations:** stated with the plan.
+- **Next experiment:** GW-DATA-022
+- **Training time:** —
+
+### GW-DATA-021 — Phase 12 arm +100K, no capture, seed 1337
+
+- **Date allocated / run:** 2026-10-29 / —
+- **Phase:** 12
+- **Git commit:** recorded in the run summary   **Config:** `configs/rec/gw-data-021.yaml`   **Seed(s):** 1337
+- **Dataset version(s):** as GW-REC-001; GlyphSynth v1 (`data/manifests/processed/glyphsynth.json`, variants in `glyphsynth_variants.json`)
+- **Hardware:** RTX 4050 Laptop 6 GB, bf16
+- **Research question:** RQ2: does document-style synthetic data help, how does it scale, which generator factors matter?
+- **Hypothesis (written before the run):** [H2′](hypotheses.md#h2--document-style-synthetic-data-helps-and-scales-diversity-matters-rq2-reframed), tested by GW-DATA-022
+- **Method:** `python train.py --config configs/rec/gw-data-021.yaml`; GW-REC-003's recipe with 100,000 (no capture effects) GlyphSynth lines added and `data.epoch_lines` 348,935. Plan and decision rule: `docs/PHASE_STATUS.md`, Phase 12.
+- **Variables:** independent: the GlyphSynth lines in the training pool; controlled: recipe, step budget, validation set
+- **Control:** HierText only (GW-REC-003, 004, 005); for the factor, +100K (GW-DATA-014, 015, 016)
+- **Result:** —
+- **Training diagnostics:** —
+- **Interpretation:** —
+- **Limitations:** stated with the plan.
+- **Next experiment:** GW-DATA-022
+- **Training time:** —
+
+### GW-DATA-022 — Phase 12: synthetic data against HierText only
+
+- **Date allocated / run:** 2026-10-29 / —
+- **Phase:** 12
+- **Git commit:** recorded in the result files   **Config:** the runs' resolved configs   **Seed(s):** as the runs
+- **Dataset version(s):** HierText validation pack; GlyphSynth v1 validation; GLYPH-C v1
+- **Hardware:** RTX 4050 Laptop 6 GB
+- **Research question:** RQ2 (reframed by ADR-0009)
+- **Hypothesis (written before the run):** [H2′a and H2′b](hypotheses.md#h2--document-style-synthetic-data-helps-and-scales-diversity-matters-rq2-reframed)
+- **Method:** `scripts/synth_study.py score` (GlyphSynth validation) and `scripts/glyph_c_eval.py score` (factor runs), then `scripts/synth_study.py compare`; readouts and rules registered in `docs/PHASE_STATUS.md`, Phase 12.
+- **Variables:** independent: GlyphSynth lines added (0, 25K, 50K, 100K, 250K), font families (85 or 6), capture effects (on or off); controlled: recipe and step budget
+- **Control:** HierText only (GW-REC-003, 004, 005); +100K for the factors
+- **Result:** —
+- **Interpretation:** —
+- **Limitations:** stated with the plan (equal steps displace real lines; the document slice is a proxy; one seed per factor arm).
+- **Next experiment:** —
 
 ---
 
