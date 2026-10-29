@@ -26,7 +26,7 @@ Phases run in the order set by [ADR-0008](decisions/ADR-0008-usable-engine-first
 | 16 | Efficiency optimisation | not started | — |
 | 17 | Model export | **COMPLETE** | `phase-17` |
 | 18 | Inference package | **COMPLETE** | `phase-18` |
-| 19 | Optional HTTP API | not started | — |
+| 19 | Optional HTTP API | **IN PROGRESS** (gate: push, CI, merge) | — |
 | 20 | Production engineering | **COMPLETE** | `phase-20`, `v0.1` |
 | 21 | Research package | not started | — |
 | 22 | Final validation | not started | — |
@@ -1056,6 +1056,59 @@ and parents).
 **CI status:** green on the branch (run 40623224823) and the pull request (run 40623231007). On
 `main`, the run for this merge (40624284890) was cancelled when Phase 20 merged a minute later; the
 run for that merge, which contains Phase 18, passed (40624323452).
+
+---
+
+## Phase 19 — Optional HTTP API
+
+**Status:** write-up done (2026-10-29). Gate open: push, pull request, CI and merge. Opened
+2026-10-29 on `phase/19-http-api`, branched from `main` after Phase 11, at the owner's request
+(2026-10-29) to do it while Phase 12 waits; it uses no model results and no evaluation data.
+
+**Objective:** a minimal HTTP endpoint around the package, documented as an integration boundary.
+
+**Implemented**
+- `glypharis.server` and the `glypharis-serve` command: `POST /ocr` (the image file as the request
+  body; the answer is `OCRResult.to_dict`, which carries `model_version` and `glypharis_version`)
+  and `GET /health`. One process, one request at a time, Python's standard-library HTTP server, so
+  no new dependency; it listens on 127.0.0.1 by default.
+- Limits: request body at most 25 MiB by default (`--max-bytes`, 413 `request_too_large`), and the
+  library's pixel limit (`--max-pixels`, 413 `image_too_large`). Unreadable bodies are 400
+  `invalid_image`, a missing Content-Length 411, unknown paths and methods 404 and 405, anything
+  unexpected 500 `internal_error`, logged with its traceback but never sent to the client.
+- Each connection carries one request and closes after the answer, and a client silent for 30
+  seconds is dropped. A first smoke run found that, with keep-alive, one idle client blocked the
+  single-request server; this is the fix, and a test covers it.
+- `GlypharisOCR.predict` (and `load_rgb`) now also accept the bytes of an image file, checked like a
+  file on disk (pixel limit from the header before decoding).
+
+**Plan check:** the IMPLEMENTATION_PLAN asks for "FastAPI or similar, single process". FastAPI is not
+installed and would add several packages for one endpoint, so the standard library serves it; the
+schema and limits are the same either way.
+
+**Smoke check (validation data, not a result):** with the v0.1 bundle on the CPU, one HierText
+validation page through `POST /ocr` returned the same 47 lines as `predict` on the same bytes.
+
+**Tests:** `tests/test_server.py` (a real socket on a free port, a tiny bundle from untrained models):
+health, the documented JSON matching `predict`, unreadable and empty bodies, both size limits, the
+missing length, unknown paths and methods, a 500 without internals, an idle client not blocking the
+next, and a missing model at start-up. CI also runs `glypharis-serve --help` in its fresh
+environment.
+
+**Exit criteria** (IMPLEMENTATION_PLAN Phase 19)
+
+| Criterion | Result | Evidence |
+|---|---|---|
+| API tests with a test client | pass | `tests/test_server.py` |
+| Documented as an integration boundary only | pass | `glypharis/server.py` docstring, README |
+| CI green | pending (after the push) | — |
+
+**Known issues**
+- Not for exposure to a network as is: no authentication, no TLS, one request at a time. A
+  multi-worker deployment needs one model per worker process.
+- The 25 MiB body limit is a round number above a 600 dpi A4 PNG, not a measurement.
+
+**Git:** branch `phase/19-http-api`; push and merge pending.
 
 ---
 

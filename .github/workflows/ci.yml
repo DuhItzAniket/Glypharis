@@ -58,6 +58,7 @@ jobs:
       - name: Installed command (fresh environment)
         run: |
           glypharis-ocr --help
+          glypharis-serve --help
           python -c "import glypharis, glypharis.pipeline; print(glypharis.__version__)"
 
       - name: Environment report

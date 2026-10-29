@@ -1,7 +1,7 @@
 """`GlypharisOCR`: a page image in, its text lines in reading order out (Phase 10).
 
     ocr = GlypharisOCR.from_pretrained("glypharis-0.1.0")   # a model bundle (Phase 17/18)
-    result = ocr.predict(image)   # path, PIL image or HWC uint8 RGB array -> OCRResult
+    result = ocr.predict(image)   # path, file bytes, PIL image or HWC uint8 RGB array -> OCRResult
     result.text                   # the lines joined with newlines, in reading order
     result.to_json()              # the documented JSON (OCRResult.to_dict)
 
@@ -14,6 +14,7 @@ its detection score and its recognition confidence apart; ``confidence`` is the 
 
 from __future__ import annotations
 
+import io
 import json
 import logging
 import time
@@ -31,7 +32,7 @@ from glypharis.models.det.detector import TextLineDetector
 from glypharis.pipeline.reading_order import reading_order
 from glypharis.pipeline.recognizer import LineReading, TextRecognizer
 
-ImageInput = str | Path | Image.Image | np.ndarray
+ImageInput = str | Path | Image.Image | np.ndarray | bytes
 DEFAULT_MAX_PIXELS = 64_000_000  # about 8000 x 8000; a page scanned at 600 dpi is about 35 M
 log = logging.getLogger(__name__)
 _BUNDLE_CACHE: dict[tuple[str, str, int | None], GlypharisOCR] = {}
@@ -163,32 +164,40 @@ def _pil_rgb(img: Image.Image, max_pixels: int) -> np.ndarray:
 
 
 def load_rgb(image: ImageInput, max_pixels: int = DEFAULT_MAX_PIXELS) -> np.ndarray:
-    """HWC uint8 RGB from a path, a PIL image or an array; a file is opened with its EXIF
-    orientation applied, as the pages were. Anything that is not a readable image of at most
-    ``max_pixels`` pixels raises `InvalidImageError` (or `ImageTooLargeError`)."""
+    """HWC uint8 RGB from a path, the bytes of an image file, a PIL image or an array; a file is
+    opened with its EXIF orientation applied, as the pages were. Anything that is not a readable
+    image of at most ``max_pixels`` pixels raises `InvalidImageError` (or `ImageTooLargeError`)."""
     if isinstance(image, np.ndarray):
         return _array_rgb(image, max_pixels)
     if isinstance(image, Image.Image):
         return _pil_rgb(image, max_pixels)
+    if isinstance(image, bytes):
+        if not image:
+            raise InvalidImageError("empty input: no image bytes")
+        return _open_rgb(io.BytesIO(image), "image bytes", max_pixels)
     if not isinstance(image, str | Path):
         raise InvalidImageError(
-            f"unsupported input type {type(image).__name__}: give a file path, a PIL image or a "
-            "numpy array"
+            f"unsupported input type {type(image).__name__}: give a file path, image file bytes, "
+            "a PIL image or a numpy array"
         )
     path = Path(image)
     if not path.is_file():
         raise InvalidImageError(f"{path}: no such file")
+    return _open_rgb(path, str(path), max_pixels)
+
+
+def _open_rgb(source: Path | io.BytesIO, name: str, max_pixels: int) -> np.ndarray:
     try:
-        with Image.open(path) as opened:
+        with Image.open(source) as opened:
             _check_size(opened.width, opened.height, max_pixels)  # from the header, before decoding
             opened.load()
             return _pil_rgb(ImageOps.exif_transpose(opened), max_pixels)
     except Image.DecompressionBombError as exc:
-        raise ImageTooLargeError(f"{path}: {exc}") from exc
+        raise ImageTooLargeError(f"{name}: {exc}") from exc
     except GlypharisError:
         raise
     except (OSError, SyntaxError, ValueError) as exc:  # unidentified, truncated or corrupt
-        raise InvalidImageError(f"{path}: not a readable image ({exc})") from exc
+        raise InvalidImageError(f"{name}: not a readable image ({exc})") from exc
 
 
 class GlypharisOCR:
