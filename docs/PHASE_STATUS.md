@@ -18,7 +18,7 @@ Phases run in the order set by [ADR-0008](decisions/ADR-0008-usable-engine-first
 | 8 | Text detector | **COMPLETE** | `phase-08` |
 | 9 | Detector error analysis | **COMPLETE** | `phase-09` |
 | 10 | Full OCR pipeline | **COMPLETE** | `phase-10` |
-| 11 | Robustness training | **IN PROGRESS** (gate: push, CI, merge) | — |
+| 11 | Robustness training | **COMPLETE** | `phase-11` |
 | 12 | Synthetic data study | not started | — |
 | 13 | Ablation study | not started | — |
 | 14 | External evaluation | not started | — |
@@ -1109,9 +1109,9 @@ GitHub made it; the re-created merge has the same tree).
 
 ## Phase 11 — Robustness training
 
-**Status:** write-up done (2026-10-29). Gate open: push, pull request, CI and merge. Opened
-2026-10-28 on `phase/11-robustness`, branched from Phase 20; plan registered 2026-10-28 (below) and
-run on the laptop GPU while the college GPU slot is queued. Validation data only.
+**Status:** COMPLETE (2026-10-29). Opened 2026-10-28 on `phase/11-robustness`, branched from Phase
+20; plan registered 2026-10-28 (below) and run on the laptop GPU while the college GPU slot is
+queued. Validation data only.
 
 **Objective:** find out which degradation augmentations help (RQ3, H3).
 
@@ -1229,7 +1229,7 @@ verdicts, the H3 guard, the per-corruption table) and the ledger's Phase 11 line
 | Results table with CIs and a paired comparison against A | pass | `reports/robustness/phase11_comparison.md` |
 | A clear verdict per family (helps / no effect / hurts) | pass: geometric helps, photometric no clear effect, degradation helps, full helps | same |
 | Recorded in `research/ablations.md` | pass | `research/ablations.md`, Phase 11 |
-| CI green | pending (after the push) | — |
+| CI green | pass | runs 40817268680 (branch), 40817332338 (pull request), 40819192658 (`main`) |
 
 **Known issues**
 - The verdicts hold for the CRNN short budget. The v0.1 recognizer (SVTR, height 48, 30 epochs)
@@ -1239,5 +1239,8 @@ verdicts, the H3 guard, the per-corruption table) and the ledger's Phase 11 line
 - Rotation within a line box is the recognizer's largest weakness (F15). A wider rotation range in
   the geometric preset is a Phase 13 candidate.
 
-**Git:** branch `phase/11-robustness`; push and merge pending.
+**Git:** branch `phase/11-robustness`, merged through pull request #15. Merge commit `456b095`, tag
+`phase-11` (merge re-created with the noreply identity; same tree and parents).
+
+**CI status:** green on the branch, the pull request and `main` (run 40819192658).
 
