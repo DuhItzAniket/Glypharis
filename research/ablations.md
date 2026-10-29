@@ -29,6 +29,15 @@ three control seeds (8.30 to 8.32%). 15 comparisons, no multiplicity correction.
 `reports/training/phase07/ablation_table.md`. GW-REC-019 (stride 8 without CTC-aware batching)
 failed and was re-run as GW-REC-021 (`research/failures.md`).
 
+**Phase 11 (robustness, CRNN short budget).** Augmentation families against no augmentation (arm A), three seeds per arm (1337, 2024, 7), scored on the frozen GLYPH-C v1 suite. Metric: mean corruption error (mCE), the unweighted mean of the micro CER over 7 corruptions × 5 levels. Δ pools each arm's three seeds, paired over the 6,000 GLYPH-C source lines (1,000 resamples). Decision rule (`docs/PHASE_STATUS.md`, Phase 11): CI on one side of zero and all three seeds beyond all three of A's. Source: `reports/robustness/phase11_comparison.md`.
+
+| Ablation | Control | Variant runs | Variable changed | mCE (GLYPH-C) | Δ vs control (95% CI) | Clean val CER | Seeds | Verdict |
+|---|---|---|---|---|---|---|---|---|
+| Augmentation family | A, none (10.28%) | GW-REC-016, GW-DATA-003, GW-DATA-004 | none → geometric | 8.61% | −1.67 [−1.73, −1.62] | 8.34% (A 8.66%) | 3 | helps |
+| Augmentation family | A, none (10.28%) | GW-REC-017, GW-DATA-005, GW-DATA-006 | none → photometric | 10.23% | −0.06 [−0.08, −0.02] | 8.57% (A 8.66%) | 3 | no clear effect |
+| Augmentation family | A, none (10.28%) | GW-REC-018, GW-DATA-007, GW-DATA-008 | none → document degradation | 10.04% | −0.25 [−0.30, −0.19] | 8.68% (A 8.66%) | 3 | helps (H3 supported) |
+| Augmentation family | A, none (10.28%) | GW-REC-003, GW-REC-004, GW-REC-005 | none → full (all three) | 8.46% | −1.83 [−1.90, −1.75] | 8.31% (A 8.66%) | 3 | helps |
+
 **Phase 8 (detector, full budget).** One change at a time against GW-DET-001 (MobileNetV3-Large,
 ImageNet initialisation, 24 epochs, seed 1337), each arm at the operating point stored in its
 `best.pt`; paired page bootstrap over all 1,715 HierText validation pages (1,000 resamples),

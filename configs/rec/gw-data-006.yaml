@@ -1,0 +1,5 @@
+# GW-DATA-006: Phase 11, arm C (photometric augmentation), seed 7. Phase 7's GW-REC-017 with only
+# the seed changed; seed 1337 of this arm is GW-REC-017 itself (docs/PHASE_STATUS.md, Phase 11).
+inherits: gw-rec-017.yaml
+experiment_id: GW-DATA-006
+seed: 7

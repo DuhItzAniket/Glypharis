@@ -1,0 +1,5 @@
+# GW-DATA-003: Phase 11, arm B (geometric augmentation), seed 2024. Phase 7's GW-REC-016 with only
+# the seed changed; seed 1337 of this arm is GW-REC-016 itself (docs/PHASE_STATUS.md, Phase 11).
+inherits: gw-rec-016.yaml
+experiment_id: GW-DATA-003
+seed: 2024

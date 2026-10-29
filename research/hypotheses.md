@@ -49,7 +49,11 @@ CI of the difference excludes zero, on validation unless stated otherwise.
 - **Statement:** The document-degradation augmentation arm (D) lowers mean corruption CER on GLYPH-C
   compared with no augmentation (A), without raising clean validation CER by more than 5% relative.
 - **Test:** Phase 11 (arms A–E, 3 seeds).
-- **Status:** open
+- **Status:** supported on validation (2026-10-29), CRNN short budget: mCE 10.04% against
+  10.28%, −0.25 [−0.30, −0.19] points, all three D seeds below all three A seeds; clean validation
+  CER 8.68% against 8.66% (+0.2%
+  relative). The effect is small and comes from blur, low resolution and JPEG; geometric
+  augmentation does far more (−1.67 [−1.73, −1.62]). Untested on the v0.1 recognizer (GW-DATA-009).
 
 ### H4 — Recognizer errors dominate on clean pages, detector errors on degraded ones (RQ5)
 

@@ -1,0 +1,23 @@
+{
+ "experiment_id": "GW-DATA-001",
+ "device": "cuda",
+ "precision": "bf16",
+ "git": "ca7eb186d2e815554646a0177ceb9c19304cd905",
+ "dry_run": {
+  "minutes": 10.0,
+  "steps": 9021,
+  "lines": 554752,
+  "lines_per_s": 924.5,
+  "ms_per_step": 66.5,
+  "data_wait_share": 0.028,
+  "peak_vram_mib": 3826.2,
+  "gpu_temperature_c_max": 61,
+  "loss_first_last": [
+   20.952293395996094,
+   0.6242292493581771
+  ],
+  "finite": true,
+  "estimated_minutes_per_epoch": 6.3,
+  "parameters": 7796435
+ }
+}

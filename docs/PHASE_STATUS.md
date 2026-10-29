@@ -18,16 +18,16 @@ Phases run in the order set by [ADR-0008](decisions/ADR-0008-usable-engine-first
 | 8 | Text detector | **COMPLETE** | `phase-08` |
 | 9 | Detector error analysis | **COMPLETE** | `phase-09` |
 | 10 | Full OCR pipeline | **COMPLETE** | `phase-10` |
-| 11 | Robustness training | not started | — |
+| 11 | Robustness training | **IN PROGRESS** (gate: push, CI, merge) | — |
 | 12 | Synthetic data study | not started | — |
 | 13 | Ablation study | not started | — |
 | 14 | External evaluation | not started | — |
 | 15 | Error analysis | not started | — |
 | 16 | Efficiency optimisation | not started | — |
 | 17 | Model export | **COMPLETE** | `phase-17` |
-| 18 | Inference package | **IN PROGRESS** (gate: push, CI, merge; after Phase 17) | — |
+| 18 | Inference package | **COMPLETE** | `phase-18` |
 | 19 | Optional HTTP API | not started | — |
-| 20 | Production engineering | **IN PROGRESS** (gate: push, CI, merge; after Phase 18) | — |
+| 20 | Production engineering | **COMPLETE** | `phase-20`, `v0.1` |
 | 21 | Research package | not started | — |
 | 22 | Final validation | not started | — |
 | 23 | Release v1.0 | not started | — |
@@ -1004,8 +1004,7 @@ GitHub made it; the re-created merge has the same tree).
 
 ## Phase 18 — Inference package
 
-**Status:** write-up done (2026-10-28). Gate open: push, pull request, CI and merge, after Phase 17.
-Opened 2026-10-28 on `phase/18-package`, branched from Phase 17.
+**Status:** COMPLETE (2026-10-28). Opened 2026-10-28 on `phase/18-package`, branched from Phase 17.
 
 **Objective:** GLYPHARIS installable and usable without the training code.
 
@@ -1050,15 +1049,20 @@ default backend is PyTorch, whose reading GW-EFF-003 showed to be identical.
 - The default backend is PyTorch (Phase 17's decision, for the owner to confirm with ADR-0011).
 - Model bundles are not distributed; `from_pretrained` finds one only where it is placed.
 
-**Git:** branch `phase/18-package`, with Phase 17 merged in; push and merge pending (after Phase 17).
+**Git:** branch `phase/18-package` (`main` with Phase 17 merged in first), merged through pull request
+#13. Merge commit `feda915`, tag `phase-18` (merge re-created with the noreply identity; same tree
+and parents).
+
+**CI status:** green on the branch (run 40623224823) and the pull request (run 40623231007). On
+`main`, the run for this merge (40624284890) was cancelled when Phase 20 merged a minute later; the
+run for that merge, which contains Phase 18, passed (40624323452).
 
 ---
 
 ## Phase 20 — Production engineering
 
-**Status:** write-up done (2026-10-28). Gate open: push, pull request, CI and merge, after Phase 18.
-Opened 2026-10-28 on `phase/20-hardening`, branched from Phase 18. With it the v0.1 path
-(ADR-0008: Phases 10, 17, 18, 20) is complete; v0.1 is tagged once the owner has merged 9 to 20.
+**Status:** COMPLETE (2026-10-28). Opened 2026-10-28 on `phase/20-hardening`, branched from Phase 18.
+With it the v0.1 path (ADR-0008: Phases 10, 17, 18, 20) is complete: tag `v0.1`.
 
 **Objective:** a library BookWorm can call without surprises: every failure it can cause or meet is
 a clear, typed error.
@@ -1085,7 +1089,7 @@ a clear, typed error.
 |---|---|---|
 | Failure-path tests: corrupt image, huge image, empty page, non-image | pass | `tests/test_hardening.py` |
 | No unhandled exceptions in the fuzz-lite test (120 seeded cases: random arrays, random bytes, damaged PNGs) | pass | `tests/test_hardening.py::test_fuzz_lite_never_raises_anything_but_glypharis_errors` |
-| CI green | pending (after the push) | — |
+| CI green | pass | runs 40623490172 (branch), 40623496316 (pull request), 40624323452 (`main`) |
 
 **Known issues**
 - `max_pixels` (64 million) is a guess at a safe upper bound for this laptop, not a measurement;
@@ -1094,6 +1098,146 @@ a clear, typed error.
 - Owner decisions carried into v0.1: ADR-0011's page time (Phase 17) and how bundles are
   distributed.
 
-**Git:** branch `phase/20-hardening`, with Phase 18 merged in; push and merge pending (after
-Phase 18).
+**Git:** branch `phase/20-hardening` (Phase 18 merged in first), merged through pull request #14.
+Merge commit `1f910c9`, tags `phase-20` and `v0.1` (merge re-created with the noreply identity;
+same tree and parents).
+
+**CI status:** green on the branch, the pull request and `main` (run 40624323452, on the merge as
+GitHub made it; the re-created merge has the same tree).
+
+---
+
+## Phase 11 — Robustness training
+
+**Status:** write-up done (2026-10-29). Gate open: push, pull request, CI and merge. Opened
+2026-10-28 on `phase/11-robustness`, branched from Phase 20; plan registered 2026-10-28 (below) and
+run on the laptop GPU while the college GPU slot is queued. Validation data only.
+
+**Objective:** find out which degradation augmentations help (RQ3, H3).
+
+**Done**
+- The recognizer trainer now runs on the shared training loop (owner approved 2026-10-27; deferred
+  here from Phase 10). Both acceptance conditions hold: the recognizer tests pass unchanged (48,
+  GPU tests included), and a GW-REC-024 checkpoint written by the old trainer resumes on the new one
+  with identical learning rates and losses within CUDA's run-to-run noise; the A/B/C resume check
+  passes too (`reports/training/phase11/trainer_move/`).
+
+**Plan** (registered 2026-10-28, before any Phase 11 number was computed; the owner chose the
+CRNN recipe and the reuse of Phase 7's runs on 2026-10-28)
+
+1. **Arms and runs.** The CRNN short budget of Phase 7 (GW-REC-003's configuration: 8 epochs,
+   height 32, batch 64, HierText training lines), changing only `data.augmentation`. Three seeds
+   (1337, 2024, 7) per arm, 15 runs:
+
+   | Arm | Augmentation | Seed 1337 | Seed 2024 | Seed 7 |
+   |---|---|---|---|---|
+   | A | none | GW-REC-015 | GW-DATA-001 | GW-DATA-002 |
+   | B | geometric | GW-REC-016 | GW-DATA-003 | GW-DATA-004 |
+   | C | photometric | GW-REC-017 | GW-DATA-005 | GW-DATA-006 |
+   | D | document degradation | GW-REC-018 | GW-DATA-007 | GW-DATA-008 |
+   | E | full (all three) | GW-REC-003 | GW-REC-004 | GW-REC-005 |
+
+   The seed-1337 runs of A to D and all of E already exist (Phase 7); the 8 GW-DATA runs are new
+   (`configs/rec/gw-data-001.yaml` to `008`, each Phase 7's arm config with the seed changed).
+   Every arm sees the same lines for the same number of optimizer steps. About 1.3 GPU-hours per
+   run on the RTX 4050, so about 11 GPU-hours.
+2. **Robustness metric.** Each run's `best.pt` (chosen on clean validation CER, as in Phase 7) reads
+   all 216,000 crops of the frozen GLYPH-C v1 pack (`scripts/glyph_c_eval.py score`, GW-DATA-009):
+   CER on the strict track per corruption and level, and the **mean corruption error (mCE)**, the
+   unweighted mean over the 35 corruption-level cells (7 corruptions, 5 levels) of each cell's
+   micro CER. The clean copies are scored too and reported, not used in the rule.
+3. **Decision rule** (Phase 7's rule, moved to mCE). For each of B to E against A: the paired 95%
+   CI of mCE(arm) − mCE(A), pooling each arm's three seeds and resampling the 6,000 GLYPH-C source
+   lines (1,000 resamples), and the seed ranges. **Helps**: CI entirely below 0 and all three of
+   the arm's seeds below all three of A's. **Hurts**: the mirror. Otherwise **no clear effect**.
+4. **H3.** Supported if arm D helps under rule 3 and its mean clean validation CER (HierText
+   validation pack, the three runs' best checkpoints) is at most 5% (relative) above arm A's.
+   Otherwise not supported, with the reason (no clear effect, or the clean guard).
+5. **Reported but not decided on:** CER per corruption and level for every arm (where each family
+   helps), clean validation CER per arm, and the clean GLYPH-C CER.
+6. **Data:** training and validation splits and GLYPH-C (built from validation lines) only. No test
+   set is read in this phase.
+
+**Known limitations, stated in advance**
+- The seed-1337 runs and arm E were trained by Phase 7's recognizer trainer; the new runs by the
+  shared training loop it moved onto. The move was checked (same learning rates, losses within
+  run-to-run noise), but for arms A to D one seed in three comes from the older code.
+- GLYPH-C's HierText half comes from the validation lines that picked each run's best epoch. Every
+  arm is selected the same way, so the comparison is fair, but the absolute CERs are slightly
+  optimistic.
+- The CRNN short budget is Phase 7's ablation recipe, not the v0.1 recognizer (SVTR, height 48, 30
+  epochs). The verdicts are about the augmentation families on this recipe; whether they carry
+  over to the shipped model is a later check on the college GPU.
+
+**Results (2026-10-29)** (GW-DATA-009, `reports/robustness/phase11_comparison.md`; strict track)
+
+| Arm | Runs (seeds 1337, 2024, 7) | mCE % (pooled) | mCE % per seed | Δ mCE vs A [95% CI] | Clean val CER % (mean) | Verdict |
+|---|---|---|---|---|---|---|
+| A (none) | GW-REC-015, GW-DATA-001, GW-DATA-002 | 10.28 | 10.43, 10.14, 10.28 | — | 8.66 | control |
+| B (geometric) | GW-REC-016, GW-DATA-003, GW-DATA-004 | 8.61 | 8.56, 8.51, 8.76 | −1.67 [−1.73, −1.62] | 8.34 | helps |
+| C (photometric) | GW-REC-017, GW-DATA-005, GW-DATA-006 | 10.23 | 10.17, 10.19, 10.32 | −0.06 [−0.08, −0.02] | 8.57 | no clear effect |
+| D (degradation) | GW-REC-018, GW-DATA-007, GW-DATA-008 | 10.04 | 10.04, 10.03, 10.04 | −0.25 [−0.30, −0.19] | 8.68 | helps |
+| E (full) | GW-REC-003, GW-REC-004, GW-REC-005 | 8.46 | 8.39, 8.45, 8.53 | −1.83 [−1.90, −1.75] | 8.31 | helps |
+
+- **H3: supported** (on validation, this recipe). Arm D helps under the registered rule: CI below
+  zero and all three D seeds (10.04, 10.03, 10.04) below all three A seeds
+  (10.43, 10.14, 10.28); clean validation CER 8.68%
+  against 8.66%, +0.2% relative, inside the 5% guard.
+- **Verdicts:** geometric helps, photometric has no clear effect (CI just below zero, but its seeds
+  overlap A's), document degradation helps, full helps.
+
+**Per corruption** (reported, not decided on; mean over the five levels, pooled over seeds):
+- Rotation dominates: 38.89% for A, 32.93% for B, 39.00%
+  for D and 33.31% for E, against at most 7.90% for any other
+  corruption. GLYPH-C rotates whole lines by 1.2° to 6°; training rotates by at most ±2° (geometric
+  preset), and only 30% of lines. Rotation is more than half of every arm's mCE.
+- Geometric augmentation's gain is mostly rotation and perspective (7.90 →
+  5.55%); degradation's is blur (4.93 →
+  4.53%), low resolution (6.14 →
+  5.55%) and JPEG (4.68 → 4.48%), with nothing on
+  rotation. Photometric augmentation includes blur, noise and JPEG, yet barely moves them.
+- Clean GLYPH-C CER: 4.14% (A), 3.50% (B),
+  4.13% (C), 3.95% (D),
+  3.41% (E).
+
+**Run notes**
+- The 8 new runs trained with no diagnostic flags; each landed close to Phase 7's run of the same
+  arm (per-seed mCE above), so the trainer change and the seeds do not stand out. The new runs took
+  45,367 or 45,368 optimizer steps against 45,360 for the Phase 7 runs: one more batch per epoch
+  (5,671 against 5,670), 0.02% more steps.
+- GW-DATA-003 and GW-DATA-005 were each stopped once by a power cut and resumed from their last
+  checkpoint (steps 40,000 and 11,342), losing under 1,000 steps each; the GLYPH-C scoring chain
+  was also killed once when its terminal closed (GW-REC-018 was scored again from scratch).
+
+**Deferred from Phase 9:** the detector retraining for small and rotated text was to share Phase 11's
+retraining. Phase 11 retrained only the recognizer (the owner chose the CRNN study that fits the
+laptop), so it is deferred again, to Phase 13 or the college GPU, where it is one GW-DET run of
+about five GPU-hours.
+
+**Compute:** 9.5 GPU-hours in the compute ledger (1.3 on jobs that did not finish:
+the two power-cut stops and the killed scoring job), of which 1.26 for 15 GLYPH-C
+scoring jobs; the first scoring run (GW-REC-015, about six minutes) was a timing check run by hand
+and is not in the ledger (`reports/compute/ledger.md`).
+
+**Tests:** the CPU suite passes locally; new tests cover the GLYPH-C scorer (mCE, per-line pooling,
+verdicts, the H3 guard, the per-corruption table) and the ledger's Phase 11 lines.
+
+**Exit criteria** (IMPLEMENTATION_PLAN Phase 11)
+
+| Criterion | Result | Evidence |
+|---|---|---|
+| Results table with CIs and a paired comparison against A | pass | `reports/robustness/phase11_comparison.md` |
+| A clear verdict per family (helps / no effect / hurts) | pass: geometric helps, photometric no clear effect, degradation helps, full helps | same |
+| Recorded in `research/ablations.md` | pass | `research/ablations.md`, Phase 11 |
+| CI green | pending (after the push) | — |
+
+**Known issues**
+- The verdicts hold for the CRNN short budget. The v0.1 recognizer (SVTR, height 48, 30 epochs)
+  was not retrained; checking that they carry over needs the college GPU.
+- GLYPH-C's corruptions are close relatives of the training transforms, so it measures robustness
+  to familiar corruptions at higher strength; Phase 14 (GDC phone photos) is the unseen test.
+- Rotation within a line box is the recognizer's largest weakness (F15). A wider rotation range in
+  the geometric preset is a Phase 13 candidate.
+
+**Git:** branch `phase/11-robustness`; push and merge pending.
 

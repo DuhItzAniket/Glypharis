@@ -14,7 +14,8 @@ by hand has no end line; its duration is unknown and adds nothing to the hours.
 | 06 | 11.5 | 3.8 | 0.0 | 0.0 |
 | 07 | 55.3 | 17.9 | 0.0 | 0.0 |
 | 08 | 16.2 | 0.8 | 0.0 | 0.0 |
-| all | 83.0 | 22.6 | 45.9 | 1.9 |
+| 11 | 9.5 | 1.3 | 0.0 | 0.0 |
+| all | 92.5 | 23.9 | 45.9 | 1.9 |
 
 ## By experiment
 
@@ -27,6 +28,15 @@ by hand has no end line; its duration is unknown and adds nothing to the hours.
 | GW-BASE-005 | 05 | CPU | 16 | 0 | 2.51 |  |
 | GW-BASE-006 | 05 | CPU | 16 | 0 | 5.37 |  |
 | GW-BASE-007 | 05 | CPU | 5 | 0 | 10.96 |  |
+| GW-DATA-001 | 11 | GPU | 2 | 0 | 1.10 | 0.80 |
+| GW-DATA-002 | 11 | GPU | 1 | 0 | 0.94 | 0.81 |
+| GW-DATA-003 | 11 | GPU | 2 | 1 | 1.22 | 1.04 |
+| GW-DATA-004 | 11 | GPU | 1 | 0 | 1.09 | 0.94 |
+| GW-DATA-005 | 11 | GPU | 2 | 1 | 0.99 | 0.83 |
+| GW-DATA-006 | 11 | GPU | 1 | 0 | 0.95 | 0.81 |
+| GW-DATA-007 | 11 | GPU | 1 | 0 | 0.96 | 0.82 |
+| GW-DATA-008 | 11 | GPU | 1 | 0 | 0.93 | 0.80 |
+| GW-DATA-009 | 11 | GPU | 15 | 1 | 1.26 |  |
 | GW-DET-001 | 08 | GPU | 3 | 1 | 5.74 | 4.86 |
 | GW-DET-002 | 08 | GPU | 2 | 1 | 5.42 | 4.72 |
 | GW-DET-003 | 08 | GPU | 2 | 1 | 5.02 | 4.33 |

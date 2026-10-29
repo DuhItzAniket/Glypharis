@@ -235,3 +235,14 @@ the bottom. Experiments get their full record in `experiments.md`; this log is t
   42.4% for the best baseline, at about 2 s per page on the laptop's CPU, which is above ADR-0011's
   target and is the owner's call.
 
+### 2026-10-29 — Phase 11: which augmentations make the recognizer robust
+
+- Five augmentation arms on the CRNN short budget, three seeds each, scored on GLYPH-C (6,000
+  validation lines under 7 corruptions at 5 strengths). Phase 7 had already trained 7 of the 15
+  runs; the other 8 ran overnight on the laptop, through two power cuts.
+- Geometric augmentation does most of the work (−1.67 [−1.73, −1.62] points of mean corruption error); all
+  three families together are best (−1.83 [−1.90, −1.75]) and also best on clean lines. Document degradation
+  helps a little (−0.25 [−0.30, −0.19]) at no clean cost, so H3 is supported; photometric augmentation shows
+  no clear effect.
+- The surprise is rotation: tilting a line by a few degrees costs more than any blur, noise or
+  compression in the suite, and training only ever tilts by 2°.

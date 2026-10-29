@@ -1,0 +1,5 @@
+# GW-DATA-001: Phase 11, arm A (none augmentation), seed 2024. Phase 7's GW-REC-015 with only
+# the seed changed; seed 1337 of this arm is GW-REC-015 itself (docs/PHASE_STATUS.md, Phase 11).
+inherits: gw-rec-015.yaml
+experiment_id: GW-DATA-001
+seed: 2024
