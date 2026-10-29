@@ -19,7 +19,7 @@ a generated report.
 from glypharis import GlypharisOCR
 
 ocr = GlypharisOCR.from_pretrained("glypharis-0.1.0")  # a model bundle by name or path
-result = ocr.predict("page.png")  # path, PIL image or numpy array
+result = ocr.predict("page.png")  # path, image file bytes, PIL image or numpy array
 
 print(result.text)  # lines in reading order
 for line in result.lines:
@@ -38,6 +38,17 @@ Each image gives `results/<name>.json` and `results/<name>.txt`. Model bundles a
 `from_pretrained` looks in `$GLYPHARIS_MODELS`, `~/.glypharis/models` and `./models` (a bundle is a
 directory with `manifest.json`, two release files and two ONNX files; Phase 17). The default backend is
 PyTorch on the CPU; `backend="onnx"` uses ONNX Runtime, which reads the same but is slower for now.
+
+Over HTTP (optional, Phase 19; `glypharis-serve`, standard library only, one request at a time):
+
+```
+glypharis-serve --model glypharis-0.1.0 --port 8080
+curl --data-binary @page.png http://127.0.0.1:8080/ocr
+```
+
+`POST /ocr` takes the image file as the request body and answers with the same JSON; `GET /health`
+reports the versions. It is an integration boundary for local use, without authentication or TLS;
+the limits and error codes are in `glypharis/server.py`.
 
 ```
 image ─▶ preprocessing ─▶ GLYPHARIS-Det (line detector) ─▶ crop + rectify
