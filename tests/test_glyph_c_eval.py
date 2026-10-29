@@ -106,3 +106,12 @@ def test_phase11_arms_are_three_seeds_each():
     assert all(len(ids) == 3 for ids in arms.values())
     ids = [i for ids in arms.values() for i in ids]
     assert len(set(ids)) == 15
+
+
+def test_per_corruption_means_levels_and_keeps_the_worst(tmp_path):
+    cells = [("blur", 1), ("blur", 2), ("noise", 1), ("noise", 2)]
+    err = np.array([[1.0, 3.0, 0.0, 2.0]])
+    ref = np.array([[10.0, 10.0, 10.0, 10.0]])
+    pc = gce.per_corruption(err, ref, cells)
+    assert pc["blur"] == pytest.approx({"mean": 0.2, "worst_level": 0.3})
+    assert pc["noise"] == pytest.approx({"mean": 0.1, "worst_level": 0.2})

@@ -86,3 +86,37 @@ def test_detector_chain_lines_pair_and_cpu_steps_are_skipped(tmp_path):
     assert jobs[("GW-DET-001", "train")]["hours"] == 5.0
     assert jobs[("GW-DET-001", "sanity")]["outcome"] == "failed"
     assert res["experiments"]["GW-DET-001"]["phase"] == "08"
+
+
+def test_phase11_chain_lines(tmp_path):
+    gpu = tmp_path / "chain.log"
+    gpu.write_text(
+        "2026-10-28 17:27:59 START P11 GLYPH-C score GW-REC-018\n"
+        "2026-10-28 17:39:25 START P11 GLYPH-C score GW-REC-018\n"
+        "2026-10-28 17:44:56 DONE  P11 GLYPH-C score GW-REC-018 :: mCE 0.1004\n"
+        "2026-10-28 18:01:00 START P11 dry run GW-DATA-001 (shared training loop)\n"
+        "2026-10-28 18:11:00 DONE  P11 dry run GW-DATA-001 (shared training loop) :: ok\n"
+        "2026-10-28 20:00:00 START P11 train GW-DATA-003\n"
+        "2026-10-28 21:00:00 FAIL  P11 train GW-DATA-003 :: stopped\n"
+        "2026-10-28 22:00:00 START P11 train GW-DATA-003\n"
+        "2026-10-28 22:30:00 DONE  P11 train GW-DATA-003 :: report\n"
+        "2026-10-28 22:30:00 START P11 report GW-DATA-003\n"
+        "2026-10-28 22:30:15 DONE  P11 report GW-DATA-003 :: report\n"
+        "2026-10-29 04:12:58 START P11 compare the arms (GW-DATA-009)\n"
+        "2026-10-29 04:13:16 DONE  P11 compare the arms (GW-DATA-009) :: H3\n",
+        encoding="utf-8",
+    )
+    out = tmp_path / "out"
+    assert compute_ledger.main(["--gpu-logs", str(gpu), "--cpu-logs", "--runs", str(tmp_path),
+                                "--out", str(out)]) == 0  # fmt: skip
+    res = json.loads((out / "ledger.json").read_text(encoding="utf-8"))
+    kinds = [(j["experiment"], j["kind"], j["outcome"]) for j in res["jobs"]]
+    assert kinds == [
+        ("GW-DATA-009", "score", "interrupted"),
+        ("GW-DATA-009", "score", "done"),
+        ("GW-DATA-001", "sanity", "done"),
+        ("GW-DATA-003", "train", "failed"),
+        ("GW-DATA-003", "train", "done"),
+    ]
+    assert res["experiments"]["GW-DATA-003"]["phase"] == "11"
+    assert res["experiments"]["GW-DATA-009"]["phase"] == "11"

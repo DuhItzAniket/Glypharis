@@ -145,6 +145,25 @@ def mce_of(err: np.ndarray, ref: np.ndarray) -> float:
     return float(np.mean(err.sum(axis=0) / np.maximum(ref.sum(axis=0), 1)))
 
 
+def _cells(run: Path) -> list[tuple[str, int]]:
+    """The corrupted cells in the column order of `_per_line_cells`."""
+    z = np.load(run / "glyph_c.npz")
+    return sorted(
+        {(c, int(lv)) for c, lv in zip(z["corruption"], z["level"], strict=True) if c != "clean"}
+    )
+
+
+def per_corruption(err: np.ndarray, ref: np.ndarray, cells: list[tuple[str, int]]) -> dict:
+    """Mean over levels of each corruption's micro CER, and the micro CER at level 5."""
+    cer = err.sum(axis=0) / np.maximum(ref.sum(axis=0), 1)
+    out: dict[str, dict[str, float]] = {}
+    for c in sorted({c for c, _ in cells}):
+        ix = [j for j, (cc, _) in enumerate(cells) if cc == c]
+        top = [j for j in ix if cells[j][1] == max(cells[k][1] for k in ix)]
+        out[c] = {"mean": float(cer[ix].mean()), "worst_level": float(cer[top].mean())}
+    return out
+
+
 def find_run(run_id: str, roots: list[Path]) -> Path:
     """The first ``<root>/<run_id>`` that has been scored (runs live in more than one checkout)."""
     for root in roots:
@@ -163,15 +182,21 @@ def compare(arms: dict[str, list[str]], roots: list[Path], out: Path) -> dict[st
         if any(p[0] != lines for p in per_seed):
             raise SystemExit(f"{arm}: the runs were scored on different lines")
         clean_val = []
+        clean_glyph_c = []
         for rd in dirs:
             s = json.loads((rd / "summary.json").read_text(encoding="utf-8"))
             clean_val.append(float(s["best"]["val_cer"]))
+            z = np.load(rd / "glyph_c.npz")
+            keep = z["corruption"] == "clean"
+            clean_glyph_c.append(float(z["errors"][keep].sum() / max(z["refs"][keep].sum(), 1)))
         data[arm] = {
             "ids": ids,
             "err": sum(p[1] for p in per_seed),
             "ref": sum(p[2] for p in per_seed),
             "seed_mce": [mce_of(p[1], p[2]) for p in per_seed],
             "clean_val": clean_val,
+            "clean_glyph_c": clean_glyph_c,
+            "cells": _cells(dirs[0]),
         }
     base = next(iter(arms))
     a = data[base]
@@ -186,6 +211,8 @@ def compare(arms: dict[str, list[str]], roots: list[Path], out: Path) -> dict[st
             "seed_mce": d["seed_mce"],
             "clean_val_cer": d["clean_val"],
             "clean_val_cer_mean": float(np.mean(d["clean_val"])),
+            "clean_glyph_c_cer_mean": float(np.mean(d["clean_glyph_c"])),
+            "per_corruption": per_corruption(d["err"], d["ref"], d["cells"]),
         }
         if arm != base:
             diffs = np.empty(RESAMPLES)
@@ -246,9 +273,27 @@ def compare(arms: dict[str, list[str]], roots: list[Path], out: Path) -> dict[st
         f"**{h3['d_verdict']}**, clean guard {'holds' if guard else 'fails'}: H3 "
         f"**{'supported' if h3['supported'] else 'not supported'}**.",
         "",
+        "## CER per corruption (reported, not part of the decision rule)",
+        "",
+        "Micro CER % pooled over each arm's three seeds: the mean over the five levels, and in",
+        "brackets level 5 alone. Clean GLYPH-C: the clean copies of the same 6,000 lines (mean of",
+        "the three seeds).",
+        "",
     ]
+    corr = sorted(rows[0]["per_corruption"])
+    md.append("| Arm | Clean GLYPH-C | " + " | ".join(corr) + " |")
+    md.append("|---|---|" + "---|" * len(corr))
+    for r in rows:
+        pc = r["per_corruption"]
+        cols = " | ".join(
+            f"{100 * pc[c]['mean']:.2f} ({100 * pc[c]['worst_level']:.2f})" for c in corr
+        )
+        md.append(f"| {r['arm']} | {100 * r['clean_glyph_c_cer_mean']:.2f} | {cols} |")
+    md.append("")
     (out / "phase11_comparison.md").write_text("\n".join(md), encoding="utf-8", newline="\n")
-    print("\n".join(md))
+    print(
+        f"{out / 'phase11_comparison.md'}: H3 {'supported' if h3['supported'] else 'not supported'}"
+    )
     return res
 
 
