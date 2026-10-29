@@ -52,15 +52,15 @@ Rows link to a full entry below. Numbers are copied from generated reports only,
 | [GW-EFF-003](#gw-eff-003) | 2026-10-28 | 17 | ONNX equivalence of the v0.1 bundle against PyTorch on validation data | done | maps 7.3e-6, logits 3.7e-4, text identical on 5,000 lines, page CER equal: export successful | `reports/export/GW-EFF-003/` |
 | [GW-EFF-004](#gw-eff-004) | 2026-10-28 | 17 | Whole-pipeline CPU page time on ONNX Runtime (ADR-0011's measurement) | done | ONNX page mean 5.5 s, p95 12.7 s, 11.2 GB: misses ADR-0011 by far (recognizer); PyTorch default for v0.1 | `reports/efficiency/` |
 | [GW-E2E-004](#gw-e2e-004) | 2026-10-28 | 18 | The installed package (v0.1 bundle, ONNX) against the Phase 10 pipeline on the Phase 5 validation pages | done | page CER 24.33% vs 24.33% (+0.001 points), 16,827/16,835 lines identical: pass | `reports/package/` |
-| [GW-DATA-001](#gw-data-001) | 2026-10-28 | 11 | Phase 11 arm A (none augmentation), seed 2024: GW-REC-015 with the seed changed | planned | — | `reports/training/GW-DATA-001/` |
-| [GW-DATA-002](#gw-data-002) | 2026-10-28 | 11 | Phase 11 arm A (none augmentation), seed 7: GW-REC-015 with the seed changed | planned | — | `reports/training/GW-DATA-002/` |
-| [GW-DATA-003](#gw-data-003) | 2026-10-28 | 11 | Phase 11 arm B (geometric augmentation), seed 2024: GW-REC-016 with the seed changed | planned | — | `reports/training/GW-DATA-003/` |
-| [GW-DATA-004](#gw-data-004) | 2026-10-28 | 11 | Phase 11 arm B (geometric augmentation), seed 7: GW-REC-016 with the seed changed | planned | — | `reports/training/GW-DATA-004/` |
-| [GW-DATA-005](#gw-data-005) | 2026-10-28 | 11 | Phase 11 arm C (photometric augmentation), seed 2024: GW-REC-017 with the seed changed | planned | — | `reports/training/GW-DATA-005/` |
-| [GW-DATA-006](#gw-data-006) | 2026-10-28 | 11 | Phase 11 arm C (photometric augmentation), seed 7: GW-REC-017 with the seed changed | planned | — | `reports/training/GW-DATA-006/` |
-| [GW-DATA-007](#gw-data-007) | 2026-10-28 | 11 | Phase 11 arm D (degradation augmentation), seed 2024: GW-REC-018 with the seed changed | planned | — | `reports/training/GW-DATA-007/` |
-| [GW-DATA-008](#gw-data-008) | 2026-10-28 | 11 | Phase 11 arm D (degradation augmentation), seed 7: GW-REC-018 with the seed changed | planned | — | `reports/training/GW-DATA-008/` |
-| [GW-DATA-009](#gw-data-009) | 2026-10-28 | 11 | Phase 11 robustness: the 15 arm runs on GLYPH-C v1 (mCE), paired comparison against arm A, verdict per family (H3) | planned | — | `reports/robustness/` |
+| [GW-DATA-001](#gw-data-001) | 2026-10-28 | 11 | Phase 11 arm A (no augmentation), seed 2024: GW-REC-015 with the seed changed | done | val CER 8.62% [8.46, 8.78]; GLYPH-C mCE 10.14% (arm A: control) | `reports/training/GW-DATA-001/` |
+| [GW-DATA-002](#gw-data-002) | 2026-10-28 | 11 | Phase 11 arm A (no augmentation), seed 7: GW-REC-015 with the seed changed | done | val CER 8.69% [8.53, 8.86]; GLYPH-C mCE 10.28% (arm A: control) | `reports/training/GW-DATA-002/` |
+| [GW-DATA-003](#gw-data-003) | 2026-10-28 | 11 | Phase 11 arm B (geometric augmentation), seed 2024: GW-REC-016 with the seed changed | done | val CER 8.29% [8.13, 8.45]; GLYPH-C mCE 8.51% (arm B: helps) | `reports/training/GW-DATA-003/` |
+| [GW-DATA-004](#gw-data-004) | 2026-10-28 | 11 | Phase 11 arm B (geometric augmentation), seed 7: GW-REC-016 with the seed changed | done | val CER 8.38% [8.23, 8.55]; GLYPH-C mCE 8.76% (arm B: helps) | `reports/training/GW-DATA-004/` |
+| [GW-DATA-005](#gw-data-005) | 2026-10-28 | 11 | Phase 11 arm C (photometric augmentation), seed 2024: GW-REC-017 with the seed changed | done | val CER 8.55% [8.39, 8.71]; GLYPH-C mCE 10.19% (arm C: no clear effect) | `reports/training/GW-DATA-005/` |
+| [GW-DATA-006](#gw-data-006) | 2026-10-28 | 11 | Phase 11 arm C (photometric augmentation), seed 7: GW-REC-017 with the seed changed | done | val CER 8.56% [8.40, 8.73]; GLYPH-C mCE 10.32% (arm C: no clear effect) | `reports/training/GW-DATA-006/` |
+| [GW-DATA-007](#gw-data-007) | 2026-10-28 | 11 | Phase 11 arm D (degradation augmentation), seed 2024: GW-REC-018 with the seed changed | done | val CER 8.66% [8.50, 8.82]; GLYPH-C mCE 10.03% (arm D: helps) | `reports/training/GW-DATA-007/` |
+| [GW-DATA-008](#gw-data-008) | 2026-10-28 | 11 | Phase 11 arm D (degradation augmentation), seed 7: GW-REC-018 with the seed changed | done | val CER 8.70% [8.54, 8.87]; GLYPH-C mCE 10.04% (arm D: helps) | `reports/training/GW-DATA-008/` |
+| [GW-DATA-009](#gw-data-009) | 2026-10-28 | 11 | Phase 11 robustness: the 15 arm runs on GLYPH-C v1 (mCE), paired comparison against arm A, verdict per family (H3) | done | ΔmCE vs no augmentation: geometric −1.67 [−1.73, −1.62], photometric −0.06 [−0.08, −0.02], degradation −0.25 [−0.30, −0.19], full −1.83 [−1.90, −1.75] points; H3 supported | `reports/robustness/` |
 
 ### GW-BASE-001 — Tesseract 5 (LSTM, eng): recognition and end to end
 
@@ -919,9 +919,9 @@ Rows link to a full entry below. Numbers are copied from generated reports only,
 - **Limitations:** GW-E2E-001 ran on the GPU in PyTorch; small numeric differences can move a box or a character.
 - **Next experiment:** Phase 20.
 
-### GW-DATA-001 — Phase 11 arm A (none augmentation), seed 2024
+### GW-DATA-001 — Phase 11 arm A (no augmentation), seed 2024
 
-- **Date allocated / run:** 2026-10-28 / —
+- **Date allocated / run:** 2026-10-28 / 2026-10-28
 - **Phase:** 11
 - **Git commit:** recorded in the run summary   **Config:** `configs/rec/gw-data-001.yaml`   **Seed(s):** 2024
 - **Dataset version(s):** as GW-REC-001; GLYPH-C v1 for the robustness score
@@ -931,16 +931,16 @@ Rows link to a full entry below. Numbers are copied from generated reports only,
 - **Method:** `python train.py --config configs/rec/gw-data-001.yaml`; one of three seeds of arm A (with GW-REC-015 and the other GW-DATA seed); scored on GLYPH-C by GW-DATA-009. Plan and decision rule: `docs/PHASE_STATUS.md`, Phase 11.
 - **Variables:** independent: the seed (the arm's augmentation is fixed); controlled: everything else
 - **Control:** arm A (GW-REC-015, GW-DATA-001, 002)
-- **Result:** —
-- **Training diagnostics:** —
-- **Interpretation:** —
+- **Result:** val CER 8.62% [8.46, 8.78] (95% bootstrap CI over the 73,888 validation lines); GLYPH-C mCE 10.14%, clean GLYPH-C CER 4.03% (`reports/robustness/GW-DATA-001.json`). 8 epochs, 45,368, optimizer steps; the final epoch was the best. Arm A as a whole: see GW-DATA-009.
+- **Training diagnostics:** No flags raised. (`reports/training/GW-DATA-001/report.md`)
+- **Interpretation:** one seed of arm A; it lies within the arm's seed range reported in GW-DATA-009, and the arm, not this run, carries the verdict.
 - **Limitations:** trained by the shared training loop; GW-REC-015 (seed 1337) by Phase 7's trainer.
 - **Next experiment:** GW-DATA-009
-- **Training time:** —
+- **Training time:** 0.80 GPU-hours (RTX 4050 Laptop, bf16)
 
-### GW-DATA-002 — Phase 11 arm A (none augmentation), seed 7
+### GW-DATA-002 — Phase 11 arm A (no augmentation), seed 7
 
-- **Date allocated / run:** 2026-10-28 / —
+- **Date allocated / run:** 2026-10-28 / 2026-10-28
 - **Phase:** 11
 - **Git commit:** recorded in the run summary   **Config:** `configs/rec/gw-data-002.yaml`   **Seed(s):** 7
 - **Dataset version(s):** as GW-REC-001; GLYPH-C v1 for the robustness score
@@ -950,16 +950,16 @@ Rows link to a full entry below. Numbers are copied from generated reports only,
 - **Method:** `python train.py --config configs/rec/gw-data-002.yaml`; one of three seeds of arm A (with GW-REC-015 and the other GW-DATA seed); scored on GLYPH-C by GW-DATA-009. Plan and decision rule: `docs/PHASE_STATUS.md`, Phase 11.
 - **Variables:** independent: the seed (the arm's augmentation is fixed); controlled: everything else
 - **Control:** arm A (GW-REC-015, GW-DATA-001, 002)
-- **Result:** —
-- **Training diagnostics:** —
-- **Interpretation:** —
+- **Result:** val CER 8.69% [8.53, 8.86] (95% bootstrap CI over the 73,888 validation lines); GLYPH-C mCE 10.28%, clean GLYPH-C CER 4.18% (`reports/robustness/GW-DATA-002.json`). 8 epochs, 45,367, optimizer steps; the final epoch was the best. Arm A as a whole: see GW-DATA-009.
+- **Training diagnostics:** No flags raised. (`reports/training/GW-DATA-002/report.md`)
+- **Interpretation:** one seed of arm A; it lies within the arm's seed range reported in GW-DATA-009, and the arm, not this run, carries the verdict.
 - **Limitations:** trained by the shared training loop; GW-REC-015 (seed 1337) by Phase 7's trainer.
 - **Next experiment:** GW-DATA-009
-- **Training time:** —
+- **Training time:** 0.81 GPU-hours (RTX 4050 Laptop, bf16)
 
 ### GW-DATA-003 — Phase 11 arm B (geometric augmentation), seed 2024
 
-- **Date allocated / run:** 2026-10-28 / —
+- **Date allocated / run:** 2026-10-28 / 2026-10-28
 - **Phase:** 11
 - **Git commit:** recorded in the run summary   **Config:** `configs/rec/gw-data-003.yaml`   **Seed(s):** 2024
 - **Dataset version(s):** as GW-REC-001; GLYPH-C v1 for the robustness score
@@ -969,16 +969,16 @@ Rows link to a full entry below. Numbers are copied from generated reports only,
 - **Method:** `python train.py --config configs/rec/gw-data-003.yaml`; one of three seeds of arm B (with GW-REC-016 and the other GW-DATA seed); scored on GLYPH-C by GW-DATA-009. Plan and decision rule: `docs/PHASE_STATUS.md`, Phase 11.
 - **Variables:** independent: the seed (the arm's augmentation is fixed); controlled: everything else
 - **Control:** arm A (GW-REC-015, GW-DATA-001, 002)
-- **Result:** —
-- **Training diagnostics:** —
-- **Interpretation:** —
+- **Result:** val CER 8.29% [8.13, 8.45] (95% bootstrap CI over the 73,888 validation lines); GLYPH-C mCE 8.51%, clean GLYPH-C CER 3.48% (`reports/robustness/GW-DATA-003.json`). 8 epochs, 45,368, optimizer steps; the final epoch was the best. Arm B as a whole: see GW-DATA-009.
+- **Training diagnostics:** No flags raised. (`reports/training/GW-DATA-003/report.md`)
+- **Interpretation:** one seed of arm B; it lies within the arm's seed range reported in GW-DATA-009, and the arm, not this run, carries the verdict.
 - **Limitations:** trained by the shared training loop; GW-REC-016 (seed 1337) by Phase 7's trainer.
 - **Next experiment:** GW-DATA-009
-- **Training time:** —
+- **Training time:** 1.04 GPU-hours (RTX 4050 Laptop, bf16); stopped once by a power cut and resumed from its last checkpoint (step 40,000)
 
 ### GW-DATA-004 — Phase 11 arm B (geometric augmentation), seed 7
 
-- **Date allocated / run:** 2026-10-28 / —
+- **Date allocated / run:** 2026-10-28 / 2026-10-28
 - **Phase:** 11
 - **Git commit:** recorded in the run summary   **Config:** `configs/rec/gw-data-004.yaml`   **Seed(s):** 7
 - **Dataset version(s):** as GW-REC-001; GLYPH-C v1 for the robustness score
@@ -988,16 +988,16 @@ Rows link to a full entry below. Numbers are copied from generated reports only,
 - **Method:** `python train.py --config configs/rec/gw-data-004.yaml`; one of three seeds of arm B (with GW-REC-016 and the other GW-DATA seed); scored on GLYPH-C by GW-DATA-009. Plan and decision rule: `docs/PHASE_STATUS.md`, Phase 11.
 - **Variables:** independent: the seed (the arm's augmentation is fixed); controlled: everything else
 - **Control:** arm A (GW-REC-015, GW-DATA-001, 002)
-- **Result:** —
-- **Training diagnostics:** —
-- **Interpretation:** —
+- **Result:** val CER 8.38% [8.23, 8.55] (95% bootstrap CI over the 73,888 validation lines); GLYPH-C mCE 8.76%, clean GLYPH-C CER 3.53% (`reports/robustness/GW-DATA-004.json`). 8 epochs, 45,367, optimizer steps; the final epoch was the best. Arm B as a whole: see GW-DATA-009.
+- **Training diagnostics:** No flags raised. (`reports/training/GW-DATA-004/report.md`)
+- **Interpretation:** one seed of arm B; it lies within the arm's seed range reported in GW-DATA-009, and the arm, not this run, carries the verdict.
 - **Limitations:** trained by the shared training loop; GW-REC-016 (seed 1337) by Phase 7's trainer.
 - **Next experiment:** GW-DATA-009
-- **Training time:** —
+- **Training time:** 0.94 GPU-hours (RTX 4050 Laptop, bf16)
 
 ### GW-DATA-005 — Phase 11 arm C (photometric augmentation), seed 2024
 
-- **Date allocated / run:** 2026-10-28 / —
+- **Date allocated / run:** 2026-10-28 / 2026-10-29
 - **Phase:** 11
 - **Git commit:** recorded in the run summary   **Config:** `configs/rec/gw-data-005.yaml`   **Seed(s):** 2024
 - **Dataset version(s):** as GW-REC-001; GLYPH-C v1 for the robustness score
@@ -1007,16 +1007,16 @@ Rows link to a full entry below. Numbers are copied from generated reports only,
 - **Method:** `python train.py --config configs/rec/gw-data-005.yaml`; one of three seeds of arm C (with GW-REC-017 and the other GW-DATA seed); scored on GLYPH-C by GW-DATA-009. Plan and decision rule: `docs/PHASE_STATUS.md`, Phase 11.
 - **Variables:** independent: the seed (the arm's augmentation is fixed); controlled: everything else
 - **Control:** arm A (GW-REC-015, GW-DATA-001, 002)
-- **Result:** —
-- **Training diagnostics:** —
-- **Interpretation:** —
+- **Result:** val CER 8.55% [8.39, 8.71] (95% bootstrap CI over the 73,888 validation lines); GLYPH-C mCE 10.19%, clean GLYPH-C CER 4.08% (`reports/robustness/GW-DATA-005.json`). 8 epochs, 45,368, optimizer steps; the final epoch was the best. Arm C as a whole: see GW-DATA-009.
+- **Training diagnostics:** No flags raised. (`reports/training/GW-DATA-005/report.md`)
+- **Interpretation:** one seed of arm C; it lies within the arm's seed range reported in GW-DATA-009, and the arm, not this run, carries the verdict.
 - **Limitations:** trained by the shared training loop; GW-REC-017 (seed 1337) by Phase 7's trainer.
 - **Next experiment:** GW-DATA-009
-- **Training time:** —
+- **Training time:** 0.83 GPU-hours (RTX 4050 Laptop, bf16); stopped once by a power cut and resumed from its last checkpoint (step 11,342)
 
 ### GW-DATA-006 — Phase 11 arm C (photometric augmentation), seed 7
 
-- **Date allocated / run:** 2026-10-28 / —
+- **Date allocated / run:** 2026-10-28 / 2026-10-29
 - **Phase:** 11
 - **Git commit:** recorded in the run summary   **Config:** `configs/rec/gw-data-006.yaml`   **Seed(s):** 7
 - **Dataset version(s):** as GW-REC-001; GLYPH-C v1 for the robustness score
@@ -1026,16 +1026,16 @@ Rows link to a full entry below. Numbers are copied from generated reports only,
 - **Method:** `python train.py --config configs/rec/gw-data-006.yaml`; one of three seeds of arm C (with GW-REC-017 and the other GW-DATA seed); scored on GLYPH-C by GW-DATA-009. Plan and decision rule: `docs/PHASE_STATUS.md`, Phase 11.
 - **Variables:** independent: the seed (the arm's augmentation is fixed); controlled: everything else
 - **Control:** arm A (GW-REC-015, GW-DATA-001, 002)
-- **Result:** —
-- **Training diagnostics:** —
-- **Interpretation:** —
+- **Result:** val CER 8.56% [8.40, 8.73] (95% bootstrap CI over the 73,888 validation lines); GLYPH-C mCE 10.32%, clean GLYPH-C CER 4.20% (`reports/robustness/GW-DATA-006.json`). 8 epochs, 45,367, optimizer steps; the final epoch was the best. Arm C as a whole: see GW-DATA-009.
+- **Training diagnostics:** No flags raised. (`reports/training/GW-DATA-006/report.md`)
+- **Interpretation:** one seed of arm C; it lies within the arm's seed range reported in GW-DATA-009, and the arm, not this run, carries the verdict.
 - **Limitations:** trained by the shared training loop; GW-REC-017 (seed 1337) by Phase 7's trainer.
 - **Next experiment:** GW-DATA-009
-- **Training time:** —
+- **Training time:** 0.81 GPU-hours (RTX 4050 Laptop, bf16)
 
 ### GW-DATA-007 — Phase 11 arm D (degradation augmentation), seed 2024
 
-- **Date allocated / run:** 2026-10-28 / —
+- **Date allocated / run:** 2026-10-28 / 2026-10-29
 - **Phase:** 11
 - **Git commit:** recorded in the run summary   **Config:** `configs/rec/gw-data-007.yaml`   **Seed(s):** 2024
 - **Dataset version(s):** as GW-REC-001; GLYPH-C v1 for the robustness score
@@ -1045,16 +1045,16 @@ Rows link to a full entry below. Numbers are copied from generated reports only,
 - **Method:** `python train.py --config configs/rec/gw-data-007.yaml`; one of three seeds of arm D (with GW-REC-018 and the other GW-DATA seed); scored on GLYPH-C by GW-DATA-009. Plan and decision rule: `docs/PHASE_STATUS.md`, Phase 11.
 - **Variables:** independent: the seed (the arm's augmentation is fixed); controlled: everything else
 - **Control:** arm A (GW-REC-015, GW-DATA-001, 002)
-- **Result:** —
-- **Training diagnostics:** —
-- **Interpretation:** —
+- **Result:** val CER 8.66% [8.50, 8.82] (95% bootstrap CI over the 73,888 validation lines); GLYPH-C mCE 10.03%, clean GLYPH-C CER 3.93% (`reports/robustness/GW-DATA-007.json`). 8 epochs, 45,368, optimizer steps; the final epoch was the best. Arm D as a whole: see GW-DATA-009.
+- **Training diagnostics:** No flags raised. (`reports/training/GW-DATA-007/report.md`)
+- **Interpretation:** one seed of arm D; it lies within the arm's seed range reported in GW-DATA-009, and the arm, not this run, carries the verdict.
 - **Limitations:** trained by the shared training loop; GW-REC-018 (seed 1337) by Phase 7's trainer.
 - **Next experiment:** GW-DATA-009
-- **Training time:** —
+- **Training time:** 0.82 GPU-hours (RTX 4050 Laptop, bf16)
 
 ### GW-DATA-008 — Phase 11 arm D (degradation augmentation), seed 7
 
-- **Date allocated / run:** 2026-10-28 / —
+- **Date allocated / run:** 2026-10-28 / 2026-10-29
 - **Phase:** 11
 - **Git commit:** recorded in the run summary   **Config:** `configs/rec/gw-data-008.yaml`   **Seed(s):** 7
 - **Dataset version(s):** as GW-REC-001; GLYPH-C v1 for the robustness score
@@ -1064,16 +1064,16 @@ Rows link to a full entry below. Numbers are copied from generated reports only,
 - **Method:** `python train.py --config configs/rec/gw-data-008.yaml`; one of three seeds of arm D (with GW-REC-018 and the other GW-DATA seed); scored on GLYPH-C by GW-DATA-009. Plan and decision rule: `docs/PHASE_STATUS.md`, Phase 11.
 - **Variables:** independent: the seed (the arm's augmentation is fixed); controlled: everything else
 - **Control:** arm A (GW-REC-015, GW-DATA-001, 002)
-- **Result:** —
-- **Training diagnostics:** —
-- **Interpretation:** —
+- **Result:** val CER 8.70% [8.54, 8.87] (95% bootstrap CI over the 73,888 validation lines); GLYPH-C mCE 10.04%, clean GLYPH-C CER 3.98% (`reports/robustness/GW-DATA-008.json`). 8 epochs, 45,367, optimizer steps; the final epoch was the best. Arm D as a whole: see GW-DATA-009.
+- **Training diagnostics:** No flags raised. (`reports/training/GW-DATA-008/report.md`)
+- **Interpretation:** one seed of arm D; it lies within the arm's seed range reported in GW-DATA-009, and the arm, not this run, carries the verdict.
 - **Limitations:** trained by the shared training loop; GW-REC-018 (seed 1337) by Phase 7's trainer.
 - **Next experiment:** GW-DATA-009
-- **Training time:** —
+- **Training time:** 0.80 GPU-hours (RTX 4050 Laptop, bf16)
 
 ### GW-DATA-009 — Phase 11: augmentation families on GLYPH-C
 
-- **Date allocated / run:** 2026-10-28 / —
+- **Date allocated / run:** 2026-10-28 / 2026-10-28 to 2026-10-29
 - **Phase:** 11
 - **Git commit:** recorded in the result files   **Config:** the 15 runs' resolved configs   **Seed(s):** 1337, 2024, 7 per arm; bootstrap seed 20261028
 - **Dataset version(s):** GLYPH-C v1 (`data/processed/glyph_c/lines`, sha256 in each result file); HierText validation pack for clean CER
@@ -1083,10 +1083,20 @@ Rows link to a full entry below. Numbers are copied from generated reports only,
 - **Method:** `scripts/glyph_c_eval.py score` on each run's best checkpoint, then `scripts/glyph_c_eval.py compare`; plan, metric and decision rule registered in `docs/PHASE_STATUS.md`, Phase 11.
 - **Variables:** independent: `data.augmentation` (none, geometric, photometric, degradation, full); controlled: recipe, data, steps; seeds 1337, 2024, 7 in every arm
 - **Control:** arm A (no augmentation)
-- **Result:** —
-- **Interpretation:** —
-- **Limitations:** stated with the plan in `docs/PHASE_STATUS.md` (trainer versions across seeds; GLYPH-C's HierText half overlaps the selection set; CRNN short budget, not the v0.1 recognizer).
-- **Next experiment:** —
+- **Result:** (`reports/robustness/phase11_comparison.md`)
+
+  | Arm | mCE % (pooled) | mCE % per seed (1337, 2024, 7) | Δ vs A [95% CI] | Clean val CER % | Verdict |
+  |---|---|---|---|---|---|
+  | A (none) | 10.28 | 10.43, 10.14, 10.28 | — | 8.66 | control |
+  | B (geometric) | 8.61 | 8.56, 8.51, 8.76 | −1.67 [−1.73, −1.62] | 8.34 | helps |
+  | C (photometric) | 10.23 | 10.17, 10.19, 10.32 | −0.06 [−0.08, −0.02] | 8.57 | no clear effect |
+  | D (degradation) | 10.04 | 10.04, 10.03, 10.04 | −0.25 [−0.30, −0.19] | 8.68 | helps |
+  | E (full) | 8.46 | 8.39, 8.45, 8.53 | −1.83 [−1.90, −1.75] | 8.31 | helps |
+
+  H3: arm D helps (all three D seeds below all three A seeds, CI below zero) and its clean validation CER is +0.2% relative to A's, inside the 5% guard: **supported**. Per corruption (mean over levels, pooled), rotation dominates: A 38.89%, B 32.93%, D 39.00%, E 33.31%; the other six corruptions stay between 3.69% and 7.90%.
+- **Interpretation:** geometric augmentation does most of the robustness work (−1.67 [−1.73, −1.62] points), on rotation (38.89 → 32.93%) and perspective (7.90 → 5.55%) above all, and it also lowers clean CER. Degradation helps a little (−0.25 [−0.30, −0.19]), through blur (4.93 → 4.53%), low resolution (6.14 → 5.55%) and JPEG (4.68 → 4.48%), not rotation, at no clean cost. Photometric augmentation shows no clear effect, although its preset includes blur, noise and JPEG. The full preset is best on robustness and on clean lines. Rotation beyond the training range (at most ±2°) is the recognizer's largest weakness.
+- **Limitations:** stated with the plan in `docs/PHASE_STATUS.md` (trainer versions across seeds; GLYPH-C's HierText half overlaps the selection set; CRNN short budget, not the v0.1 recognizer). Also: several GLYPH-C corruptions are close relatives of training transforms (rotation and perspective in B, blur, noise and JPEG in C, low resolution in D), so the suite measures robustness to familiar corruptions at higher strength, not to unseen ones; the unweighted mCE is dominated by rotation.
+- **Next experiment:** a wider training rotation range is a Phase 13 candidate; whether the verdicts carry over to the v0.1 recognizer (SVTR, height 48) needs the college GPU.
 
 ---
 

@@ -18,7 +18,7 @@ Phases run in the order set by [ADR-0008](decisions/ADR-0008-usable-engine-first
 | 8 | Text detector | **COMPLETE** | `phase-08` |
 | 9 | Detector error analysis | **COMPLETE** | `phase-09` |
 | 10 | Full OCR pipeline | **COMPLETE** | `phase-10` |
-| 11 | Robustness training | **IN PROGRESS** (trainer move done; plan awaits the owner) | — |
+| 11 | Robustness training | **IN PROGRESS** (gate: push, CI, merge) | — |
 | 12 | Synthetic data study | not started | — |
 | 13 | Ablation study | not started | — |
 | 14 | External evaluation | not started | — |
@@ -1109,9 +1109,9 @@ GitHub made it; the re-created merge has the same tree).
 
 ## Phase 11 — Robustness training
 
-**Status:** IN PROGRESS (opened 2026-10-28 on `phase/11-robustness`, branched from Phase 20, at the
-owner's request to continue through the night). Plan registered 2026-10-28 (below); training runs on
-the laptop GPU while the college GPU slot is queued.
+**Status:** write-up done (2026-10-29). Gate open: push, pull request, CI and merge. Opened
+2026-10-28 on `phase/11-robustness`, branched from Phase 20; plan registered 2026-10-28 (below) and
+run on the laptop GPU while the college GPU slot is queued. Validation data only.
 
 **Objective:** find out which degradation augmentations help (RQ3, H3).
 
@@ -1169,5 +1169,75 @@ CRNN recipe and the reuse of Phase 7's runs on 2026-10-28)
   epochs). The verdicts are about the augmentation families on this recipe; whether they carry
   over to the shipped model is a later check on the college GPU.
 
-**Git:** branch `phase/11-robustness`; not for merge until the phase is done.
+**Results (2026-10-29)** (GW-DATA-009, `reports/robustness/phase11_comparison.md`; strict track)
+
+| Arm | Runs (seeds 1337, 2024, 7) | mCE % (pooled) | mCE % per seed | Δ mCE vs A [95% CI] | Clean val CER % (mean) | Verdict |
+|---|---|---|---|---|---|---|
+| A (none) | GW-REC-015, GW-DATA-001, GW-DATA-002 | 10.28 | 10.43, 10.14, 10.28 | — | 8.66 | control |
+| B (geometric) | GW-REC-016, GW-DATA-003, GW-DATA-004 | 8.61 | 8.56, 8.51, 8.76 | −1.67 [−1.73, −1.62] | 8.34 | helps |
+| C (photometric) | GW-REC-017, GW-DATA-005, GW-DATA-006 | 10.23 | 10.17, 10.19, 10.32 | −0.06 [−0.08, −0.02] | 8.57 | no clear effect |
+| D (degradation) | GW-REC-018, GW-DATA-007, GW-DATA-008 | 10.04 | 10.04, 10.03, 10.04 | −0.25 [−0.30, −0.19] | 8.68 | helps |
+| E (full) | GW-REC-003, GW-REC-004, GW-REC-005 | 8.46 | 8.39, 8.45, 8.53 | −1.83 [−1.90, −1.75] | 8.31 | helps |
+
+- **H3: supported** (on validation, this recipe). Arm D helps under the registered rule: CI below
+  zero and all three D seeds (10.04, 10.03, 10.04) below all three A seeds
+  (10.43, 10.14, 10.28); clean validation CER 8.68%
+  against 8.66%, +0.2% relative, inside the 5% guard.
+- **Verdicts:** geometric helps, photometric has no clear effect (CI just below zero, but its seeds
+  overlap A's), document degradation helps, full helps.
+
+**Per corruption** (reported, not decided on; mean over the five levels, pooled over seeds):
+- Rotation dominates: 38.89% for A, 32.93% for B, 39.00%
+  for D and 33.31% for E, against at most 7.90% for any other
+  corruption. GLYPH-C rotates whole lines by 1.2° to 6°; training rotates by at most ±2° (geometric
+  preset), and only 30% of lines. Rotation is more than half of every arm's mCE.
+- Geometric augmentation's gain is mostly rotation and perspective (7.90 →
+  5.55%); degradation's is blur (4.93 →
+  4.53%), low resolution (6.14 →
+  5.55%) and JPEG (4.68 → 4.48%), with nothing on
+  rotation. Photometric augmentation includes blur, noise and JPEG, yet barely moves them.
+- Clean GLYPH-C CER: 4.14% (A), 3.50% (B),
+  4.13% (C), 3.95% (D),
+  3.41% (E).
+
+**Run notes**
+- The 8 new runs trained with no diagnostic flags; each landed close to Phase 7's run of the same
+  arm (per-seed mCE above), so the trainer change and the seeds do not stand out. The new runs took
+  45,367 or 45,368 optimizer steps against 45,360 for the Phase 7 runs: one more batch per epoch
+  (5,671 against 5,670), 0.02% more steps.
+- GW-DATA-003 and GW-DATA-005 were each stopped once by a power cut and resumed from their last
+  checkpoint (steps 40,000 and 11,342), losing under 1,000 steps each; the GLYPH-C scoring chain
+  was also killed once when its terminal closed (GW-REC-018 was scored again from scratch).
+
+**Deferred from Phase 9:** the detector retraining for small and rotated text was to share Phase 11's
+retraining. Phase 11 retrained only the recognizer (the owner chose the CRNN study that fits the
+laptop), so it is deferred again, to Phase 13 or the college GPU, where it is one GW-DET run of
+about five GPU-hours.
+
+**Compute:** 9.5 GPU-hours in the compute ledger (1.3 on jobs that did not finish:
+the two power-cut stops and the killed scoring job), of which 1.26 for 15 GLYPH-C
+scoring jobs; the first scoring run (GW-REC-015, about six minutes) was a timing check run by hand
+and is not in the ledger (`reports/compute/ledger.md`).
+
+**Tests:** the CPU suite passes locally; new tests cover the GLYPH-C scorer (mCE, per-line pooling,
+verdicts, the H3 guard, the per-corruption table) and the ledger's Phase 11 lines.
+
+**Exit criteria** (IMPLEMENTATION_PLAN Phase 11)
+
+| Criterion | Result | Evidence |
+|---|---|---|
+| Results table with CIs and a paired comparison against A | pass | `reports/robustness/phase11_comparison.md` |
+| A clear verdict per family (helps / no effect / hurts) | pass: geometric helps, photometric no clear effect, degradation helps, full helps | same |
+| Recorded in `research/ablations.md` | pass | `research/ablations.md`, Phase 11 |
+| CI green | pending (after the push) | — |
+
+**Known issues**
+- The verdicts hold for the CRNN short budget. The v0.1 recognizer (SVTR, height 48, 30 epochs)
+  was not retrained; checking that they carry over needs the college GPU.
+- GLYPH-C's corruptions are close relatives of the training transforms, so it measures robustness
+  to familiar corruptions at higher strength; Phase 14 (GDC phone photos) is the unseen test.
+- Rotation within a line box is the recognizer's largest weakness (F15). A wider rotation range in
+  the geometric preset is a Phase 13 candidate.
+
+**Git:** branch `phase/11-robustness`; push and merge pending.
 
