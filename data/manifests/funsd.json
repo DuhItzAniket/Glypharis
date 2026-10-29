@@ -1,0 +1,23 @@
+{
+  "manifest_version": 1,
+  "dataset": "funsd",
+  "title": "FUNSD (Form Understanding in Noisy Scanned Documents)",
+  "version": "dataset.zip dated 2019-07-05",
+  "homepage": "https://guillaumejaume.github.io/FUNSD/",
+  "licence": "custom EPFL licence, non-commercial research and education only (accepted by the owner 2026-10-29); forms remain under their own copyright",
+  "citation": "jaume2019funsd",
+  "role": "external test, end to end on scanned forms (Phase 14); test split only, evaluation only",
+  "files": {
+    "archive": {
+      "bytes": 16838830,
+      "downloaded_utc": "2026-10-29T04:57:58+00:00",
+      "extracted_files": 809,
+      "extracted_to": "raw/funsd/extracted",
+      "path": "raw/funsd/archives/dataset.zip",
+      "sha256": "c31735649e4f441bcbb4fd0f379574f7520b42286e80b01d80b445649d54761f",
+      "sha256_source": "computed",
+      "url": "https://guillaumejaume.github.io/FUNSD/dataset.zip"
+    }
+  },
+  "counts": {}
+}

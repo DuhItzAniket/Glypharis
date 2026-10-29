@@ -1,0 +1,23 @@
+{
+  "manifest_version": 1,
+  "dataset": "iiit5k",
+  "title": "IIIT 5K-Word",
+  "version": "V3.0 (archive dated 2014-03-19)",
+  "homepage": "https://cvit.iiit.ac.in/research/projects/cvit-projects/the-iiit-5k-word-dataset",
+  "licence": "none stated (citation requested); research use, evaluation only",
+  "citation": "mishra2012iiit5k",
+  "role": "external test, word-level recognizer (Phase 14, RQ6); test split only",
+  "files": {
+    "archive": {
+      "bytes": 105861943,
+      "downloaded_utc": "2026-10-29T05:15:14+00:00",
+      "extracted_files": 5006,
+      "extracted_to": "raw/iiit5k/extracted",
+      "path": "raw/iiit5k/archives/IIIT5K-Word_V3.0.tar.gz",
+      "sha256": "7872c9efbec457eb23f3368855e7738f72ce10927f52a382deb4966ca0ffa38e",
+      "sha256_source": "computed",
+      "url": "https://cvit.iiit.ac.in/images/Projects/SceneTextUnderstanding/IIIT5K-Word_V3.0.tar.gz"
+    }
+  },
+  "counts": {}
+}

@@ -21,7 +21,7 @@ Phases run in the order set by [ADR-0008](decisions/ADR-0008-usable-engine-first
 | 11 | Robustness training | **IN PROGRESS** (gate: push, CI, merge) | — |
 | 12 | Synthetic data study | not started | — |
 | 13 | Ablation study | not started | — |
-| 14 | External evaluation | not started | — |
+| 14 | External evaluation | not started (data prepared early, 2026-10-29) | — |
 | 15 | Error analysis | not started | — |
 | 16 | Efficiency optimisation | not started | — |
 | 17 | Model export | **COMPLETE** | `phase-17` |
@@ -918,6 +918,34 @@ calibration and the tiny-model smoke test are covered (`tests/test_pipeline.py`,
 `phase-10` (merge re-created with the noreply identity; same tree and parents).
 
 **CI status:** green on the branch, the pull request and `main` (run 40621254147).
+
+---
+
+## Phase 14 — External evaluation
+
+**Status:** not started; the data side was prepared early (2026-10-29) at the owner's request, on
+`phase/14-data`, while Phase 12 waits. No model has been run on any of it: the evaluation itself
+needs the model Phase 13 freezes.
+
+**Data prepared** (conversion only; nothing scored, so the test-access log is untouched;
+`data/manifests/processed/benchmarks.json`)
+
+| Benchmark | What is ready | Size |
+|---|---|---|
+| IIIT5K (test) | line pack of word crops, published labels (upper case: scored case-insensitively) | 3,000 words |
+| FUNSD (test) | page file; entity words grouped into lines | 50 forms, 2,647 lines |
+| OmniDocBench (English, pinned commit) | page file of text blocks in reading order, plus "don't care" regions | 755 pages, 11,369 blocks |
+| HierText (test) | already prepared in Phase 4 | — |
+| GDC v1 | frozen 2026-10-21 (106 phone captures) | 8,606 lines |
+
+**Still open before Phase 14 runs**
+- GDC-scan: the owner's own scans, transcribed and frozen on their own (owner action).
+- SROIE: skipped by the owner (2026-10-29).
+- The evaluation protocol per benchmark (granularity, normalisation, charset handling), registered
+  when Phase 14 opens.
+
+**Git:** branch `phase/14-data`; not for merge until Phase 14 opens, or merged earlier if the owner
+prefers.
 
 ---
 

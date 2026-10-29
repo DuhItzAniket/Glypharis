@@ -10,6 +10,17 @@
   preprocessing: none (raw download; extraction only)
   split: Phase 5 baselines only; never part of GLYPHARIS (ADR-0007)
   manifest: manifests/baseline_models.json
+- dataset: funsd
+  version: dataset.zip dated 2019-07-05
+  source: https://guillaumejaume.github.io/FUNSD/
+  license: custom EPFL licence, non-commercial research and education only (accepted
+    by the owner 2026-10-29); forms remain under their own copyright
+  download_date: '2026-10-29'
+  samples: {}
+  preprocessing: none (raw download; extraction only)
+  split: external test, end to end on scanned forms (Phase 14); test split only, evaluation
+    only
+  manifest: manifests/funsd.json
 - dataset: gdc_sources
   version: selected and checked 2026-10-10; arXiv versions pinned
   source: see DATASETS.md (GDC)
@@ -79,6 +90,15 @@
   preprocessing: none (raw download; extraction only)
   split: train / validation / test (ADR-0005)
   manifest: manifests/hiertext.json
+- dataset: iiit5k
+  version: V3.0 (archive dated 2014-03-19)
+  source: https://cvit.iiit.ac.in/research/projects/cvit-projects/the-iiit-5k-word-dataset
+  license: none stated (citation requested); research use, evaluation only
+  download_date: '2026-10-29'
+  samples: {}
+  preprocessing: none (raw download; extraction only)
+  split: external test, word-level recognizer (Phase 14, RQ6); test split only
+  manifest: manifests/iiit5k.json
 - dataset: imagenet_backbones
   version: torchvision 0.29.1 weight files
   source: https://pytorch.org/vision/stable/models.html
@@ -90,6 +110,18 @@
   preprocessing: none (raw download; extraction only)
   split: GLYPHARIS-Det backbone initialisation only (ADR-0007)
   manifest: manifests/imagenet_backbones.json
+- dataset: omnidocbench
+  version: Hugging Face opendatalab/OmniDocBench @ aa1ee96d106dbe53d0ae59474d75c6e6d9b53fec
+    (listed 2026-10-29)
+  source: https://github.com/opendatalab/OmniDocBench
+  license: code Apache-2.0; data for research purposes only, not for commercial use;
+    evaluation only
+  download_date: '2026-10-29'
+  samples: {}
+  preprocessing: none (raw download; extraction only)
+  split: external document-domain test, English pages and text blocks only (Phase
+    14)
+  manifest: manifests/omnidocbench.json
 - dataset: pg19
   version: gs://deepmind-gutenberg, listed 2026-10-10
   source: https://github.com/google-deepmind/pg19

@@ -24,10 +24,10 @@ Research-only or unlicensed datasets are used **only for evaluation**.
 | Google Fonts (100 families) | GlyphSynth input | SIL OFL 1.1 (96), Apache 2.0 (2), Ubuntu Font Licence (2) | yes | downloaded (Phase 4) |
 | PG-19 (450 books) | GlyphSynth input | Apache 2.0 packaging; texts public domain in the US | yes | downloaded (Phase 4) |
 | GDC (ours) | internal test | openly licensed source PDFs; our annotations | evaluation only | **v1 frozen** 2026-10-21 (106 pages); GDC-scan pending |
-| IIIT5K | external test | none stated (citation requested) | evaluation only | Phase 14 |
-| FUNSD | external test | custom licence: non-commercial research and education only | evaluation only | Phase 14 |
-| OmniDocBench | external test | data "for research purposes only and not for commercial use"; code Apache-2.0 | evaluation only | Phase 14 |
-| SROIE | external test (optional) | none public; download needs an RRC account | evaluation only | Phase 14, optional |
+| IIIT5K | external test | none stated (citation requested) | evaluation only | downloaded and converted (2026-10-29) |
+| FUNSD | external test | custom licence: non-commercial research and education only | evaluation only | downloaded and converted (2026-10-29; licence accepted by the owner) |
+| OmniDocBench | external test | data "for research purposes only and not for commercial use"; code Apache-2.0 | evaluation only | English pages downloaded and converted (2026-10-29) |
+| SROIE | external test (optional) | none public; download needs an RRC account | evaluation only | **skipped** (owner, 2026-10-29) |
 | DocVQA | reference only | none public; download needs an RRC account | not used for CER | not downloaded |
 | SynthText | — | VGG terms: non-commercial research only, 12-month licence, no redistribution | **no** | **dropped** (ADR-0009) |
 | MobileNetV3 ImageNet-1K weights (torchvision) | detector backbone initialisation (ADR-0007) | BSD-3-Clause code; the weights carry ImageNet-1K terms | owner decision before v0.1 ships a detector (R-05) | registered (Phase 8) |
@@ -145,6 +145,10 @@ version, samples, annotation format, intended task, preprocessing, split usage.
 - **Samples (published):** 5,000 cropped words (2,000 train / 3,000 test per the paper; split sizes not
   stated on the site).
 - **Usage:** test split only, as an out-of-domain word-level recognizer test (RQ6).
+- **Converted (2026-10-29):** the 3,000 test words of `testdata.mat` into the line pack
+  `processed/iiit5k/words_test`, images byte for byte as published
+  (`scripts/prepare_benchmarks.py`; counts and hashes in `data/manifests/processed/benchmarks.json`).
+  The published labels are upper case, so the benchmark is scored case-insensitively.
 
 ### FUNSD
 
@@ -155,6 +159,11 @@ version, samples, annotation format, intended task, preprocessing, split usage.
   owner does before Phase 14.
 - **Samples (published):** 199 forms (149 train / 50 test), 31,485 words.
 - **Usage:** external E2E test on noisy scanned forms; evaluation only.
+- **Converted (2026-10-29):** the 50 test forms into
+  `processed/funsd/pages_test.jsonl.gz`, 2,647 lines. FUNSD annotates entities with
+  their words; each entity's words are grouped into lines by vertical overlap and joined left to
+  right, so a line never crosses two entities. 57 lines have
+  characters outside the GLYPHARIS charset (kept, as in every evaluation set).
 
 ### OmniDocBench
 
@@ -167,13 +176,20 @@ version, samples, annotation format, intended task, preprocessing, split usage.
   pages tagged en / zh / mixed. Pin a commit in Phase 14 and count English pages from its JSON.
 - **Integrity:** Hugging Face LFS SHA-256 per file.
 - **Usage:** external document-domain test, English text blocks only.
+- **Pinned and converted (2026-10-29):** commit `aa1ee96d106dbe53d0ae59474d75c6e6d9b53fec`; the
+  annotation file and the 755 English pages only (each image checked against its
+  Hugging Face SHA-256), into `processed/omnidocbench/pages_test.jsonl.gz`: 11,369
+  text blocks in the published reading order, and 3,222 "don't care" regions
+  (figures, tables, equations, masks, ignored or empty blocks). Its units are layout blocks, not
+  lines, so Phase 14 scores it at page level.
 
 ### SROIE (optional)
 
 - **Source:** ICDAR 2019 RRC, https://rrc.cvc.uab.es/?ch=13 — registration required; licence not visible
   publicly.
 - **Citation:** Huang et al., ICDAR 2019 (`huang2019sroie`).
-- **Samples (published):** 1,000 receipts. Low priority; decided in Phase 14.
+- **Samples (published):** 1,000 receipts. Low priority.
+- **Decision (owner, 2026-10-29):** skipped. It needs an RRC account and the plan marks it optional.
 
 ### DocVQA (reference only)
 
