@@ -285,12 +285,13 @@ def load_config(path: str | Path, overrides: Iterable[str] = ()) -> RunConfig:
     return build_config(load_raw(path), overrides)
 
 
-# Fields added in Phase 7, left out of the dict at their defaults: every earlier config
-# (GW-REC-001 to 020) keeps its hash and still matches the runs it produced.
+# Fields added after runs were hashed (Phase 7; ``epoch_lines`` in Phase 12), left out of the
+# dict at their defaults: every earlier config keeps its hash and still matches its runs.
 _ADDED_DEFAULTS: dict[tuple[str, str], Any] = {
     ("model", "frame_stride"): 4,
     ("model", "svtr"): None,
     ("data", "ctc_aware_batching"): False,
+    ("data", "epoch_lines"): None,
 }
 
 

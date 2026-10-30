@@ -19,14 +19,14 @@ Phases run in the order set by [ADR-0008](decisions/ADR-0008-usable-engine-first
 | 9 | Detector error analysis | **COMPLETE** | `phase-09` |
 | 10 | Full OCR pipeline | **COMPLETE** | `phase-10` |
 | 11 | Robustness training | **COMPLETE** | `phase-11` |
-| 12 | Synthetic data study | not started | — |
+| 12 | Synthetic data study | **IN PROGRESS** (gate: push, CI, merge) | — |
 | 13 | Ablation study | not started | — |
 | 14 | External evaluation | not started | — |
 | 15 | Error analysis | not started | — |
 | 16 | Efficiency optimisation | not started | — |
 | 17 | Model export | **COMPLETE** | `phase-17` |
 | 18 | Inference package | **COMPLETE** | `phase-18` |
-| 19 | Optional HTTP API | **IN PROGRESS** (gate: push, CI, merge) | — |
+| 19 | Optional HTTP API | **COMPLETE** | `phase-19` |
 | 20 | Production engineering | **COMPLETE** | `phase-20`, `v0.1` |
 | 21 | Research package | not started | — |
 | 22 | Final validation | not started | — |
@@ -1061,7 +1061,7 @@ run for that merge, which contains Phase 18, passed (40624323452).
 
 ## Phase 19 — Optional HTTP API
 
-**Status:** write-up done (2026-10-29). Gate open: push, pull request, CI and merge. Opened
+**Status:** COMPLETE (2026-10-29). Opened
 2026-10-29 on `phase/19-http-api`, branched from `main` after Phase 11, at the owner's request
 (2026-10-29) to do it while Phase 12 waits; it uses no model results and no evaluation data.
 
@@ -1101,14 +1101,18 @@ environment.
 |---|---|---|
 | API tests with a test client | pass | `tests/test_server.py` |
 | Documented as an integration boundary only | pass | `glypharis/server.py` docstring, README |
-| CI green | pending (after the push) | — |
+| CI green | pass | runs 40822321310 (branch), 40822344940 (pull request), 40824345618 (`main`) |
 
 **Known issues**
 - Not for exposure to a network as is: no authentication, no TLS, one request at a time. A
   multi-worker deployment needs one model per worker process.
 - The 25 MiB body limit is a round number above a 600 dpi A4 PNG, not a measurement.
 
-**Git:** branch `phase/19-http-api`; push and merge pending.
+**Git:** branch `phase/19-http-api`, merged through pull request #16. Merge commit `8dfb634`, tag
+`phase-19` (merge re-created with the noreply identity; same tree and parents).
+
+**CI status:** green on the branch, the pull request and `main` (run 40824345618; the run on the
+merge as GitHub made it was cancelled by the re-created merge's run, which has the same tree).
 
 ---
 
@@ -1297,3 +1301,143 @@ verdicts, the H3 guard, the per-corruption table) and the ledger's Phase 11 line
 
 **CI status:** green on the branch, the pull request and `main` (run 40819192658).
 
+---
+
+## Phase 12 — Synthetic data study
+
+**Status:** write-up done (2026-10-30). Gate open: push, pull request, CI and merge. Opened
+2026-10-29 on `phase/12-synthetic`, branched from `main` after Phase 19; the owner approved running it
+on the laptop GPU in batches that can pause (2026-10-29). Validation data only.
+
+**Objective:** measure how much document-style synthetic data (GlyphSynth) helps the recognizer,
+how it scales, and which generator factors matter (RQ2, H2′).
+
+**Done before registration**
+- `data.epoch_lines`: each epoch draws that many lines afresh from the whole training pool (no line
+  twice in an epoch), so a larger pool does not mean more steps. Earlier configs keep their hashes;
+  at the pool size or above nothing changes.
+- `scripts/build_glyphsynth_variants.py`: the extra GlyphSynth packs. Its first lines reproduce the
+  v1 training pack byte for byte, so the extension continues v1 exactly.
+- `scripts/synth_study.py`: GlyphSynth validation scoring and the comparison below, with tests.
+
+**Plan** (registered 2026-10-29, before any Phase 12 run was trained or scored)
+
+1. **Recipe and control.** The CRNN short budget of Phases 7 and 11 (GW-REC-003's configuration:
+   8 epochs, height 32, full augmentation). The control is HierText only: GW-REC-003, 004 and 005
+   (seeds 1337, 2024, 7), already trained. Every synthetic arm adds GlyphSynth v1 training lines
+   to HierText and sets `data.epoch_lines` to 348,935, the HierText training set's size, so all
+   arms see as many lines per epoch, and take as many steps, as the control. The cost of this
+   equal budget: the more synthetic lines in the pool, the fewer HierText lines per epoch.
+2. **Runs** (12 new, about 11 GPU-hours on the RTX 4050):
+
+   | Arm | GlyphSynth lines added | Seeds | Runs |
+   |---|---|---|---|
+   | +25K | 25,000 (seeded subset of v1) | 1337, 2024, 7 | GW-DATA-010, 011, 012 |
+   | +50K | 50,000 (seeded subset of v1) | 1337 | GW-DATA-013 |
+   | +100K | 100,000 (all of v1) | 1337, 2024, 7 | GW-DATA-014, 015, 016 |
+   | +250K | 250,000 (v1 and its extension) | 1337, 2024, 7 | GW-DATA-017, 018, 019 |
+   | +100K, 6 fonts | 100,000 from 6 of the 85 training families | 1337 | GW-DATA-020 |
+   | +100K, no capture | the v1 lines without capture effects | 1337 | GW-DATA-021 |
+
+   The plan asked for three seeds at 25K and 250K; +100K gets three as well, because it is the
+   control for both generator factors.
+3. **Readouts** (GW-DATA-022, `scripts/synth_study.py`), each run's best checkpoint (selected on
+   HierText validation CER, as before):
+   - **Document slice** (primary): the HierText validation lines on pages with at least 100 lines
+     in the validation pack, 104 pages and 16,782 lines (22.7%). HierText has no document label,
+     and pages this dense are likely to be printed text; this was chosen from line counts only and
+     not checked page by page, so it is a proxy.
+   - HierText validation, all lines; GlyphSynth validation (10,000 lines in held-out font
+     families, optimistic for synthetic arms: same generator); GLYPH-C mean corruption error for
+     the capture factor (the +100K and no-capture runs).
+4. **Decision rule** (Phase 7's, as in Phase 11). An arm's value pools its seeds. Differences are
+   paired over pages (HierText readouts: lines on a page are not independent) or lines
+   (GlyphSynth, GLYPH-C source lines), 95% bootstrap CI, 1,000 resamples. **Helps**: CI below 0 and
+   every seed of the arm below every seed of its control; **hurts**: the mirror; otherwise **no
+   clear effect**.
+5. **H2′a** is supported if at least one size helps on the document slice against HierText only.
+   Diminishing returns are reported, not decided: document-slice CER points gained per 1,000
+   added lines from 25K to 100K against 100K to 250K.
+6. **H2′b.** Fonts: many fonts help if +100K, 6 fonts is worse than +100K on the document slice
+   under rule 4. Capture: capture effects help if the no-capture run's GLYPH-C mCE is higher than
+   +100K's (CI above 0, its seed above all three +100K seeds), and the clean guard holds (+100K's
+   mean HierText validation CER at most 5% relative above the no-capture run's). H2′b is supported
+   if both factors help (and the guard holds).
+7. **Data:** HierText training and validation, GlyphSynth training and validation, GLYPH-C. No
+   test set is read.
+
+**Known limitations, stated in advance**
+- Equal steps, not equal epochs: the synthetic arms see fewer HierText lines per epoch, so a gain
+  has to beat the loss of real data, and a loss may come from that displacement, not from the
+  synthetic lines being harmful.
+- The document slice is a density proxy, not a labelled domain; GDC (Phase 14) is the real
+  document test. GlyphSynth validation flatters the synthetic arms.
+- The factor arms have one seed each; their control (+100K) has three.
+- The CRNN short budget, not the v0.1 recognizer; the control runs were trained by Phase 7's
+  trainer, the new ones by the shared loop (as in Phase 11, where the two agreed).
+
+**Results (2026-10-30)** (GW-DATA-022, `reports/synthetic/phase12_comparison.md`; strict track;
+scaling plot `reports/synthetic/phase12_scaling.png`)
+
+| Arm | Runs | Document slice CER % | Δ vs HierText only [95% CI] | Verdict | HierText val CER % | GlyphSynth val CER % | WER % (document slice) |
+|---|---|---|---|---|---|---|---|
+| HierText only | GW-REC-003, GW-REC-004, GW-REC-005 | 11.06 | — | control | 8.31 | 1.97 | 27.39 |
+| +25K | GW-DATA-010, GW-DATA-011, GW-DATA-012 | 11.09 | +0.04 [−0.03, +0.11] | no clear effect | 8.29 | 0.94 | 27.34 |
+| +50K | GW-DATA-013 | 11.18 | +0.12 [+0.03, +0.22] | hurts | 8.30 | 0.73 | 27.39 |
+| +100K | GW-DATA-014, GW-DATA-015, GW-DATA-016 | 11.22 | +0.16 [+0.06, +0.26] | hurts | 8.38 | 0.57 | 27.49 |
+| +250K | GW-DATA-017, GW-DATA-018, GW-DATA-019 | 11.44 | +0.39 [+0.25, +0.52] | hurts | 8.56 | 0.38 | 28.08 |
+| +100K, 6 fonts | GW-DATA-020 | 11.13 | +0.07 [−0.04, +0.18] | no clear effect | 8.40 | 0.61 | 27.48 |
+| +100K, no capture | GW-DATA-021 | 11.09 | +0.04 [−0.07, +0.15] | no clear effect | 8.38 | 0.65 | 27.43 |
+
+- **H2′a: not supported.** No size helps on the document slice; +50K, +100K and +250K hurt, and the
+  loss grows steadily with the size (CER rises by 0.0017 and 0.0015 points per 1,000 lines
+  added, from 25K to 100K and from 100K to 250K). HierText validation as a whole tells the same
+  story (+0.25 [+0.20, +0.30] at +250K).
+- **H2′b: not supported.** Font variety: 6 families against 85 at 100K, −0.09 [−0.21, +0.03] on the document
+  slice, no clear difference. Capture effects: without them GLYPH-C mCE is +0.31 [+0.27, +0.35] points higher
+  (helps; the clean guard holds: 8.38% with, 8.38%
+  without). One factor of two.
+- The synthetic lines are learned: GlyphSynth validation CER falls from 1.97%
+  to 0.38%. They do not carry over to photographed text, and each one
+  displaces a HierText line from an epoch.
+
+**Deviation from the plan: steps were not exactly equal.** Every arm saw 348,935 lines per epoch,
+as registered, but batches are capped by padded width (`data.max_batch_columns`), and GlyphSynth
+lines are wider (369 against 169 pixels on average at height 32, first 200,000 lines of each
+pack), so the larger arms made more batches: 45,368 steps at 25K, 45,380 at 50K, 46,133 to 46,141 at 100K, 46,561 to 46,586 at
+250K, against 45,360 to 45,368 for the control (up to 2.7% more). This favours the synthetic arms, so their
+losses are if anything understated; the verdicts stand.
+
+**Run notes**
+- Every run trained with no diagnostic flags. Interruptions, all resumed or restarted cleanly:
+  GW-DATA-011 (paused by the owner before its first checkpoint, restarted), GW-DATA-017 (a blocked
+  checkpoint rename, `research/failures.md`; fixed with a retry), GW-DATA-020 (the chain was killed
+  when the desktop app that launched it restarted; resumed from step 1,000). Several owner-requested
+  pauses for power cuts fell between runs.
+
+**Compute:** 17.1 GPU-hours in the compute ledger (0.3 on jobs that did not finish), plus
+about 17 CPU-minutes for the GlyphSynth packs (`reports/compute/ledger.md`).
+
+**Tests:** the CPU suite passes locally; new tests cover `data.epoch_lines` (no change at or above
+the pool size, a fresh sample per epoch, old config hashes unchanged), the GlyphSynth variant
+builder (byte-identical to v1), the study's readouts and rules, the checkpoint-rename retry and the
+ledger's Phase 12 lines.
+
+**Exit criteria** (IMPLEMENTATION_PLAN Phase 12)
+
+| Criterion | Result | Evidence |
+|---|---|---|
+| Scaling plots and table (CER, WER; latency unchanged by design) | pass | `reports/synthetic/phase12_comparison.md`, `phase12_scaling.png` |
+| Verdict on "more synthetic data ⇒ better?" with CIs | pass: no; it hurts from 50K lines at this budget | same |
+| Verdict on each generator factor with CIs | pass: fonts no clear effect; capture effects help robustness | same |
+| CI green | pending (after the push) | — |
+
+**Known issues**
+- The document slice is a density proxy inside HierText; GDC (Phase 14) is the real test of
+  whether document-style synthetic data helps on documents.
+- The factor arms have one seed each.
+- The verdicts are for the CRNN short budget at a fixed step budget. A larger model, or more steps,
+  could use synthetic data differently; Phase 13 decides the final recipe, and on this evidence it
+  should not add GlyphSynth beyond 25K lines.
+
+**Git:** branch `phase/12-synthetic`; push and merge pending.

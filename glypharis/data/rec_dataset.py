@@ -164,7 +164,9 @@ class WidthBucketBatchSampler(Sampler[list[tuple[int, int]]]):
     chunk by width, split it into batches (also capped at ``max_columns`` padded columns), and
     shuffle the batch order. Evaluation (``shuffle=False``): all lines sorted by width. The number
     of batches can differ from epoch to epoch when ``max_columns`` is set; `num_batches` gives it.
-    ``start_batch`` skips the batches an interrupted epoch already used.
+    ``start_batch`` skips the batches an interrupted epoch already used. With ``epoch_lines``, each
+    training epoch uses only the first ``epoch_lines`` lines of its shuffled order: a fresh sample
+    every epoch, no line twice within one. At ``epoch_lines >= len(widths)`` nothing changes.
     """
 
     def __init__(
@@ -175,9 +177,11 @@ class WidthBucketBatchSampler(Sampler[list[tuple[int, int]]]):
         chunk: int = 50,
         shuffle: bool = True,
         max_columns: int | None = None,
+        epoch_lines: int | None = None,
     ) -> None:
         self.widths, self.batch_size, self.seed = np.asarray(widths), batch_size, seed
         self.chunk, self.shuffle, self.max_columns = chunk, shuffle, max_columns
+        self.epoch_lines = epoch_lines
         self.epoch, self.start_batch = 0, 0
 
     def set_epoch(self, epoch: int, start_batch: int = 0) -> None:
@@ -190,6 +194,9 @@ class WidthBucketBatchSampler(Sampler[list[tuple[int, int]]]):
             return _split(order, self.widths, bs, self.max_columns)
         rng = np.random.default_rng([self.seed, epoch])
         perm = rng.permutation(n)
+        if self.epoch_lines is not None and self.epoch_lines < n:
+            perm = perm[: self.epoch_lines]
+            n = self.epoch_lines
         out: list[list[int]] = []
         step = bs * self.chunk
         for c in range(0, n, step):

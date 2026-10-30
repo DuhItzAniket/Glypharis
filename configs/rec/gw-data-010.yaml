@@ -1,0 +1,12 @@
+# GW-DATA-010: Phase 12, HierText + 25,000 GlyphSynth lines, seed 1337. GW-REC-003's recipe (CRNN
+# short budget, full augmentation) with GlyphSynth lines added; every epoch draws 348,935 lines (the
+# HierText training set's size) from the pool, so all arms take the same number of steps
+# (PHASE_STATUS, Phase 12).
+inherits: gw-rec-003.yaml
+experiment_id: GW-DATA-010
+seed: 1337
+
+data:
+  train: [processed/hiertext/lines_train, processed/glyphsynth/lines_train]
+  epoch_lines: 348935
+  train_limits: {processed/glyphsynth/lines_train: 25000}

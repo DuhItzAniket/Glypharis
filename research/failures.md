@@ -52,3 +52,17 @@ disappointing experiment here, including bugs that invalidated a run.
 - **Lesson / implication for the paper:** an export can be perfectly equivalent and still be the
   wrong model; the release needs a check against the measured pipeline, not only against itself.
 
+
+### 2026-10-30 — GW-DATA-017 — a checkpoint rename was blocked by another process
+
+- **What we tried:** the first 250K run of Phase 12, in the overnight chain.
+- **What happened:** 15 minutes in, at step 8,000, saving `last.pt` failed: Windows refused to
+  rename `last.pt.tmp` over `last.pt` because another process held the file (`WinError 32`). The
+  run stopped, and the chain with it, for about four hours until it was noticed.
+- **Root cause:** most likely the virus scanner reading the 93 MB file just written; the rename
+  had no retry.
+- **What we changed:** `save_checkpoint` retries the rename for about 20 seconds on this error
+  (tested). The run resumed from its previous `last.pt` (step 7,000), losing about 1,000 steps;
+  the half-renamed temporary file was deleted.
+- **Lesson / implication for the paper:** none for the results (the resumed run follows the same
+  schedule); long unattended runs on Windows need retries around file renames.
