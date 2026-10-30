@@ -64,6 +64,20 @@ def make_handler(ocr: Any, max_bytes: int = DEFAULT_MAX_BYTES) -> type[BaseHTTPR
         def _error(self, status: int, code: str, message: str) -> None:
             self._send(status, {"error": code, "message": message})
 
+        def _drain(self) -> None:
+            # Read a refused request's body (up to the size limit) before answering: closing a
+            # socket with unread data can reset the connection before the client reads the answer
+            # (seen on Windows).
+            length = self.headers.get("Content-Length", "")
+            left = int(length) if length.strip().isdigit() else 0
+            if left > max_bytes:
+                return
+            while left > 0:
+                chunk = self.rfile.read(min(left, 1 << 16))
+                if not chunk:
+                    break
+                left -= len(chunk)
+
         def do_GET(self) -> None:
             if self.path == "/health":
                 self._send(
@@ -81,6 +95,7 @@ def make_handler(ocr: Any, max_bytes: int = DEFAULT_MAX_BYTES) -> type[BaseHTTPR
 
         def do_POST(self) -> None:
             if self.path != "/ocr":
+                self._drain()
                 self._error(404, "not_found", f"no endpoint {self.path}; use POST /ocr")
                 return
             length = self.headers.get("Content-Length")
@@ -107,6 +122,7 @@ def make_handler(ocr: Any, max_bytes: int = DEFAULT_MAX_BYTES) -> type[BaseHTTPR
                 self._send(200, result.to_dict())
 
         def do_PUT(self) -> None:
+            self._drain()
             self._error(405, "method_not_allowed", "POST the image file to /ocr")
 
         do_DELETE = do_PATCH = do_PUT
