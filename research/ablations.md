@@ -38,6 +38,19 @@ failed and was re-run as GW-REC-021 (`research/failures.md`).
 | Augmentation family | A, none (10.28%) | GW-REC-018, GW-DATA-007, GW-DATA-008 | none → document degradation | 10.04% | −0.25 [−0.30, −0.19] | 8.68% (A 8.66%) | 3 | helps (H3 supported) |
 | Augmentation family | A, none (10.28%) | GW-REC-003, GW-REC-004, GW-REC-005 | none → full (all three) | 8.46% | −1.83 [−1.90, −1.75] | 8.31% (A 8.66%) | 3 | helps |
 
+**Phase 12 (synthetic data, CRNN short budget).** GlyphSynth lines added to HierText, every arm at the HierText-only control's lines per epoch (`data.epoch_lines` 348,935). Metric: CER on the document slice (HierText validation pages with at least 100 lines, 104 pages); arms pool their seeds; Δ paired over pages, 1,000 resamples; Phase 7's rule. Source: `reports/synthetic/phase12_comparison.md`.
+
+| Ablation | Control | Variant runs | Variable changed | Document-slice CER | Δ vs control (95% CI) | Seeds | Verdict |
+|---|---|---|---|---|---|---|---|
+| Synthetic data | HierText only (11.06%) | GW-DATA-010, GW-DATA-011, GW-DATA-012 | +25,000 GlyphSynth lines | 11.09% | +0.04 [−0.03, +0.11] | 3 (control: 3) | no clear effect |
+| Synthetic data | HierText only (11.06%) | GW-DATA-013 | +50,000 | 11.18% | +0.12 [+0.03, +0.22] | 1 (control: 3) | hurts |
+| Synthetic data | HierText only (11.06%) | GW-DATA-014, GW-DATA-015, GW-DATA-016 | +100,000 | 11.22% | +0.16 [+0.06, +0.26] | 3 (control: 3) | hurts |
+| Synthetic data | HierText only (11.06%) | GW-DATA-017, GW-DATA-018, GW-DATA-019 | +250,000 | 11.44% | +0.39 [+0.25, +0.52] | 3 (control: 3) | hurts |
+| Synthetic data | HierText only (11.06%) | GW-DATA-020 | +100,000 from 6 font families | 11.13% | +0.07 [−0.04, +0.18] | 1 (control: 3) | no clear effect |
+| Synthetic data | HierText only (11.06%) | GW-DATA-021 | +100,000 without capture effects | 11.09% | +0.04 [−0.07, +0.15] | 1 (control: 3) | no clear effect |
+
+Generator factors at 100K against +100K (three seeds): 6 font families −0.09 [−0.21, +0.03] on the document slice (no clear effect); no capture effects +0.31 [+0.27, +0.35] GLYPH-C mCE points (capture helps).
+
 **Phase 8 (detector, full budget).** One change at a time against GW-DET-001 (MobileNetV3-Large,
 ImageNet initialisation, 24 epochs, seed 1337), each arm at the operating point stored in its
 `best.pt`; paired page bootstrap over all 1,715 HierText validation pages (1,000 resamples),

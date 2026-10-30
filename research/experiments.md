@@ -61,19 +61,19 @@ Rows link to a full entry below. Numbers are copied from generated reports only,
 | [GW-DATA-007](#gw-data-007) | 2026-10-28 | 11 | Phase 11 arm D (degradation augmentation), seed 2024: GW-REC-018 with the seed changed | done | val CER 8.66% [8.50, 8.82]; GLYPH-C mCE 10.03% (arm D: helps) | `reports/training/GW-DATA-007/` |
 | [GW-DATA-008](#gw-data-008) | 2026-10-28 | 11 | Phase 11 arm D (degradation augmentation), seed 7: GW-REC-018 with the seed changed | done | val CER 8.70% [8.54, 8.87]; GLYPH-C mCE 10.04% (arm D: helps) | `reports/training/GW-DATA-008/` |
 | [GW-DATA-009](#gw-data-009) | 2026-10-28 | 11 | Phase 11 robustness: the 15 arm runs on GLYPH-C v1 (mCE), paired comparison against arm A, verdict per family (H3) | done | ΔmCE vs no augmentation: geometric −1.67 [−1.73, −1.62], photometric −0.06 [−0.08, −0.02], degradation −0.25 [−0.30, −0.19], full −1.83 [−1.90, −1.75] points; H3 supported | `reports/robustness/` |
-| [GW-DATA-010](#gw-data-010) | 2026-10-29 | 12 | Phase 12 arm +25K: HierText + 25,000 GlyphSynth lines at the control's step budget, seed 1337 | planned | — | `reports/training/GW-DATA-010/` |
-| [GW-DATA-011](#gw-data-011) | 2026-10-29 | 12 | Phase 12 arm +25K: HierText + 25,000 GlyphSynth lines at the control's step budget, seed 2024 | planned | — | `reports/training/GW-DATA-011/` |
-| [GW-DATA-012](#gw-data-012) | 2026-10-29 | 12 | Phase 12 arm +25K: HierText + 25,000 GlyphSynth lines at the control's step budget, seed 7 | planned | — | `reports/training/GW-DATA-012/` |
-| [GW-DATA-013](#gw-data-013) | 2026-10-29 | 12 | Phase 12 arm +50K: HierText + 50,000 GlyphSynth lines at the control's step budget, seed 1337 | planned | — | `reports/training/GW-DATA-013/` |
-| [GW-DATA-014](#gw-data-014) | 2026-10-29 | 12 | Phase 12 arm +100K: HierText + 100,000 GlyphSynth lines at the control's step budget, seed 1337 | planned | — | `reports/training/GW-DATA-014/` |
-| [GW-DATA-015](#gw-data-015) | 2026-10-29 | 12 | Phase 12 arm +100K: HierText + 100,000 GlyphSynth lines at the control's step budget, seed 2024 | planned | — | `reports/training/GW-DATA-015/` |
-| [GW-DATA-016](#gw-data-016) | 2026-10-29 | 12 | Phase 12 arm +100K: HierText + 100,000 GlyphSynth lines at the control's step budget, seed 7 | planned | — | `reports/training/GW-DATA-016/` |
-| [GW-DATA-017](#gw-data-017) | 2026-10-29 | 12 | Phase 12 arm +250K: HierText + 250,000 GlyphSynth lines at the control's step budget, seed 1337 | planned | — | `reports/training/GW-DATA-017/` |
-| [GW-DATA-018](#gw-data-018) | 2026-10-29 | 12 | Phase 12 arm +250K: HierText + 250,000 GlyphSynth lines at the control's step budget, seed 2024 | planned | — | `reports/training/GW-DATA-018/` |
-| [GW-DATA-019](#gw-data-019) | 2026-10-29 | 12 | Phase 12 arm +250K: HierText + 250,000 GlyphSynth lines at the control's step budget, seed 7 | planned | — | `reports/training/GW-DATA-019/` |
-| [GW-DATA-020](#gw-data-020) | 2026-10-29 | 12 | Phase 12 arm +100K, 6 fonts: HierText + 100,000 (6 font families) GlyphSynth lines at the control's step budget, seed 1337 | planned | — | `reports/training/GW-DATA-020/` |
-| [GW-DATA-021](#gw-data-021) | 2026-10-29 | 12 | Phase 12 arm +100K, no capture: HierText + 100,000 (no capture effects) GlyphSynth lines at the control's step budget, seed 1337 | planned | — | `reports/training/GW-DATA-021/` |
-| [GW-DATA-022](#gw-data-022) | 2026-10-29 | 12 | Phase 12 comparison: the synthetic arms against HierText only on the document slice (H2′a), and the font and capture factors (H2′b) | planned | — | `reports/synthetic/` |
+| [GW-DATA-010](#gw-data-010) | 2026-10-29 | 12 | Phase 12 arm +25K: HierText + 25,000 GlyphSynth lines at the control's step budget, seed 1337 | done | val CER 8.29% [8.14, 8.46]; document slice 11.18% (arm +25K: no clear effect) | `reports/training/GW-DATA-010/` |
+| [GW-DATA-011](#gw-data-011) | 2026-10-29 | 12 | Phase 12 arm +25K: HierText + 25,000 GlyphSynth lines at the control's step budget, seed 2024 | done | val CER 8.29% [8.12, 8.46]; document slice 11.05% (arm +25K: no clear effect) | `reports/training/GW-DATA-011/` |
+| [GW-DATA-012](#gw-data-012) | 2026-10-29 | 12 | Phase 12 arm +25K: HierText + 25,000 GlyphSynth lines at the control's step budget, seed 7 | done | val CER 8.28% [8.12, 8.44]; document slice 11.05% (arm +25K: no clear effect) | `reports/training/GW-DATA-012/` |
+| [GW-DATA-013](#gw-data-013) | 2026-10-29 | 12 | Phase 12 arm +50K: HierText + 50,000 GlyphSynth lines at the control's step budget, seed 1337 | done | val CER 8.30% [8.15, 8.46]; document slice 11.18% (arm +50K: hurts) | `reports/training/GW-DATA-013/` |
+| [GW-DATA-014](#gw-data-014) | 2026-10-29 | 12 | Phase 12 arm +100K: HierText + 100,000 GlyphSynth lines at the control's step budget, seed 1337 | done | val CER 8.39% [8.24, 8.56]; document slice 11.22% (arm +100K: hurts) | `reports/training/GW-DATA-014/` |
+| [GW-DATA-015](#gw-data-015) | 2026-10-29 | 12 | Phase 12 arm +100K: HierText + 100,000 GlyphSynth lines at the control's step budget, seed 2024 | done | val CER 8.38% [8.22, 8.54]; document slice 11.22% (arm +100K: hurts) | `reports/training/GW-DATA-015/` |
+| [GW-DATA-016](#gw-data-016) | 2026-10-29 | 12 | Phase 12 arm +100K: HierText + 100,000 GlyphSynth lines at the control's step budget, seed 7 | done | val CER 8.36% [8.21, 8.53]; document slice 11.21% (arm +100K: hurts) | `reports/training/GW-DATA-016/` |
+| [GW-DATA-017](#gw-data-017) | 2026-10-29 | 12 | Phase 12 arm +250K: HierText + 250,000 GlyphSynth lines at the control's step budget, seed 1337 | done | val CER 8.58% [8.42, 8.75]; document slice 11.46% (arm +250K: hurts) | `reports/training/GW-DATA-017/` |
+| [GW-DATA-018](#gw-data-018) | 2026-10-29 | 12 | Phase 12 arm +250K: HierText + 250,000 GlyphSynth lines at the control's step budget, seed 2024 | done | val CER 8.57% [8.40, 8.74]; document slice 11.49% (arm +250K: hurts) | `reports/training/GW-DATA-018/` |
+| [GW-DATA-019](#gw-data-019) | 2026-10-29 | 12 | Phase 12 arm +250K: HierText + 250,000 GlyphSynth lines at the control's step budget, seed 7 | done | val CER 8.52% [8.36, 8.69]; document slice 11.38% (arm +250K: hurts) | `reports/training/GW-DATA-019/` |
+| [GW-DATA-020](#gw-data-020) | 2026-10-29 | 12 | Phase 12 arm +100K, 6 fonts: HierText + 100,000 (6 font families) GlyphSynth lines at the control's step budget, seed 1337 | done | val CER 8.40% [8.24, 8.56]; document slice 11.13% (arm +100K, 6 fonts: no clear effect) | `reports/training/GW-DATA-020/` |
+| [GW-DATA-021](#gw-data-021) | 2026-10-29 | 12 | Phase 12 arm +100K, no capture: HierText + 100,000 (no capture effects) GlyphSynth lines at the control's step budget, seed 1337 | done | val CER 8.38% [8.22, 8.54]; document slice 11.09% (arm +100K, no capture: no clear effect) | `reports/training/GW-DATA-021/` |
+| [GW-DATA-022](#gw-data-022) | 2026-10-29 | 12 | Phase 12 comparison: the synthetic arms against HierText only on the document slice (H2′a), and the font and capture factors (H2′b) | done | document slice vs HierText only: +25K +0.04 [−0.03, +0.11], +100K +0.16 [+0.06, +0.26], +250K +0.39 [+0.25, +0.52]; H2′a and H2′b not supported | `reports/synthetic/` |
 
 ### GW-BASE-001 — Tesseract 5 (LSTM, eng): recognition and end to end
 
@@ -1113,7 +1113,7 @@ Rows link to a full entry below. Numbers are copied from generated reports only,
 
 ### GW-DATA-010 — Phase 12 arm +25K, seed 1337
 
-- **Date allocated / run:** 2026-10-29 / —
+- **Date allocated / run:** 2026-10-29 / 2026-10-29
 - **Phase:** 12
 - **Git commit:** recorded in the run summary   **Config:** `configs/rec/gw-data-010.yaml`   **Seed(s):** 1337
 - **Dataset version(s):** as GW-REC-001; GlyphSynth v1 (`data/manifests/processed/glyphsynth.json`, variants in `glyphsynth_variants.json`)
@@ -1123,16 +1123,16 @@ Rows link to a full entry below. Numbers are copied from generated reports only,
 - **Method:** `python train.py --config configs/rec/gw-data-010.yaml`; GW-REC-003's recipe with 25,000 GlyphSynth lines added and `data.epoch_lines` 348,935. Plan and decision rule: `docs/PHASE_STATUS.md`, Phase 12.
 - **Variables:** independent: the GlyphSynth lines in the training pool; controlled: recipe, step budget, validation set
 - **Control:** HierText only (GW-REC-003, 004, 005)
-- **Result:** —
-- **Training diagnostics:** —
-- **Interpretation:** —
+- **Result:** HierText validation CER 8.29% [8.14, 8.46] (95% bootstrap CI over lines); document slice CER 11.18%; GlyphSynth validation CER 0.96% (`reports/synthetic/GW-DATA-010.json`). 8 epochs, 45,368 optimizer steps (the HierText-only control: 45,360 to 45,368); best epoch 7. Arm +25K as a whole: GW-DATA-022.
+- **Training diagnostics:** No flags raised. (`reports/training/GW-DATA-010/report.md`)
+- **Interpretation:** one run of arm +25K; the arm, not this run, carries the verdict.
 - **Limitations:** stated with the plan.
 - **Next experiment:** GW-DATA-022
-- **Training time:** —
+- **Training time:** 1.02 GPU-hours (RTX 4050 Laptop, bf16)
 
 ### GW-DATA-011 — Phase 12 arm +25K, seed 2024
 
-- **Date allocated / run:** 2026-10-29 / —
+- **Date allocated / run:** 2026-10-29 / 2026-10-29
 - **Phase:** 12
 - **Git commit:** recorded in the run summary   **Config:** `configs/rec/gw-data-011.yaml`   **Seed(s):** 2024
 - **Dataset version(s):** as GW-REC-001; GlyphSynth v1 (`data/manifests/processed/glyphsynth.json`, variants in `glyphsynth_variants.json`)
@@ -1142,16 +1142,16 @@ Rows link to a full entry below. Numbers are copied from generated reports only,
 - **Method:** `python train.py --config configs/rec/gw-data-011.yaml`; GW-REC-003's recipe with 25,000 GlyphSynth lines added and `data.epoch_lines` 348,935. Plan and decision rule: `docs/PHASE_STATUS.md`, Phase 12.
 - **Variables:** independent: the GlyphSynth lines in the training pool; controlled: recipe, step budget, validation set
 - **Control:** HierText only (GW-REC-003, 004, 005)
-- **Result:** —
-- **Training diagnostics:** —
-- **Interpretation:** —
+- **Result:** HierText validation CER 8.29% [8.12, 8.46] (95% bootstrap CI over lines); document slice CER 11.05%; GlyphSynth validation CER 0.93% (`reports/synthetic/GW-DATA-011.json`). 8 epochs, 45,368 optimizer steps (the HierText-only control: 45,360 to 45,368); best epoch 7. Arm +25K as a whole: GW-DATA-022.
+- **Training diagnostics:** No flags raised. (`reports/training/GW-DATA-011/report.md`)
+- **Interpretation:** one run of arm +25K; the arm, not this run, carries the verdict.
 - **Limitations:** stated with the plan.
 - **Next experiment:** GW-DATA-022
-- **Training time:** —
+- **Training time:** 1.02 GPU-hours (RTX 4050 Laptop, bf16); stopped at the owner's request 1.5 minutes in, before its first checkpoint, and restarted from the beginning
 
 ### GW-DATA-012 — Phase 12 arm +25K, seed 7
 
-- **Date allocated / run:** 2026-10-29 / —
+- **Date allocated / run:** 2026-10-29 / 2026-10-29
 - **Phase:** 12
 - **Git commit:** recorded in the run summary   **Config:** `configs/rec/gw-data-012.yaml`   **Seed(s):** 7
 - **Dataset version(s):** as GW-REC-001; GlyphSynth v1 (`data/manifests/processed/glyphsynth.json`, variants in `glyphsynth_variants.json`)
@@ -1161,16 +1161,16 @@ Rows link to a full entry below. Numbers are copied from generated reports only,
 - **Method:** `python train.py --config configs/rec/gw-data-012.yaml`; GW-REC-003's recipe with 25,000 GlyphSynth lines added and `data.epoch_lines` 348,935. Plan and decision rule: `docs/PHASE_STATUS.md`, Phase 12.
 - **Variables:** independent: the GlyphSynth lines in the training pool; controlled: recipe, step budget, validation set
 - **Control:** HierText only (GW-REC-003, 004, 005)
-- **Result:** —
-- **Training diagnostics:** —
-- **Interpretation:** —
+- **Result:** HierText validation CER 8.28% [8.12, 8.44] (95% bootstrap CI over lines); document slice CER 11.05%; GlyphSynth validation CER 0.93% (`reports/synthetic/GW-DATA-012.json`). 8 epochs, 45,368 optimizer steps (the HierText-only control: 45,360 to 45,368); best epoch 7. Arm +25K as a whole: GW-DATA-022.
+- **Training diagnostics:** No flags raised. (`reports/training/GW-DATA-012/report.md`)
+- **Interpretation:** one run of arm +25K; the arm, not this run, carries the verdict.
 - **Limitations:** stated with the plan.
 - **Next experiment:** GW-DATA-022
-- **Training time:** —
+- **Training time:** 1.03 GPU-hours (RTX 4050 Laptop, bf16)
 
 ### GW-DATA-013 — Phase 12 arm +50K, seed 1337
 
-- **Date allocated / run:** 2026-10-29 / —
+- **Date allocated / run:** 2026-10-29 / 2026-10-29
 - **Phase:** 12
 - **Git commit:** recorded in the run summary   **Config:** `configs/rec/gw-data-013.yaml`   **Seed(s):** 1337
 - **Dataset version(s):** as GW-REC-001; GlyphSynth v1 (`data/manifests/processed/glyphsynth.json`, variants in `glyphsynth_variants.json`)
@@ -1180,16 +1180,16 @@ Rows link to a full entry below. Numbers are copied from generated reports only,
 - **Method:** `python train.py --config configs/rec/gw-data-013.yaml`; GW-REC-003's recipe with 50,000 GlyphSynth lines added and `data.epoch_lines` 348,935. Plan and decision rule: `docs/PHASE_STATUS.md`, Phase 12.
 - **Variables:** independent: the GlyphSynth lines in the training pool; controlled: recipe, step budget, validation set
 - **Control:** HierText only (GW-REC-003, 004, 005)
-- **Result:** —
-- **Training diagnostics:** —
-- **Interpretation:** —
+- **Result:** HierText validation CER 8.30% [8.15, 8.46] (95% bootstrap CI over lines); document slice CER 11.18%; GlyphSynth validation CER 0.73% (`reports/synthetic/GW-DATA-013.json`). 8 epochs, 45,380 optimizer steps (the HierText-only control: 45,360 to 45,368); best epoch 7. Arm +50K as a whole: GW-DATA-022.
+- **Training diagnostics:** No flags raised. (`reports/training/GW-DATA-013/report.md`)
+- **Interpretation:** one run of arm +50K; the arm, not this run, carries the verdict.
 - **Limitations:** stated with the plan.
 - **Next experiment:** GW-DATA-022
-- **Training time:** —
+- **Training time:** 1.08 GPU-hours (RTX 4050 Laptop, bf16)
 
 ### GW-DATA-014 — Phase 12 arm +100K, seed 1337
 
-- **Date allocated / run:** 2026-10-29 / —
+- **Date allocated / run:** 2026-10-29 / 2026-10-29
 - **Phase:** 12
 - **Git commit:** recorded in the run summary   **Config:** `configs/rec/gw-data-014.yaml`   **Seed(s):** 1337
 - **Dataset version(s):** as GW-REC-001; GlyphSynth v1 (`data/manifests/processed/glyphsynth.json`, variants in `glyphsynth_variants.json`)
@@ -1199,16 +1199,16 @@ Rows link to a full entry below. Numbers are copied from generated reports only,
 - **Method:** `python train.py --config configs/rec/gw-data-014.yaml`; GW-REC-003's recipe with 100,000 GlyphSynth lines added and `data.epoch_lines` 348,935. Plan and decision rule: `docs/PHASE_STATUS.md`, Phase 12.
 - **Variables:** independent: the GlyphSynth lines in the training pool; controlled: recipe, step budget, validation set
 - **Control:** HierText only (GW-REC-003, 004, 005)
-- **Result:** —
-- **Training diagnostics:** —
-- **Interpretation:** —
+- **Result:** HierText validation CER 8.39% [8.24, 8.56] (95% bootstrap CI over lines); document slice CER 11.22%; GlyphSynth validation CER 0.59%, GLYPH-C mCE 6.45% (`reports/synthetic/GW-DATA-014.json`). 8 epochs, 46,141 optimizer steps (the HierText-only control: 45,360 to 45,368); best epoch 7. Arm +100K as a whole: GW-DATA-022.
+- **Training diagnostics:** No flags raised. (`reports/training/GW-DATA-014/report.md`)
+- **Interpretation:** one run of arm +100K; the arm, not this run, carries the verdict.
 - **Limitations:** stated with the plan.
 - **Next experiment:** GW-DATA-022
-- **Training time:** —
+- **Training time:** 1.24 GPU-hours (RTX 4050 Laptop, bf16)
 
 ### GW-DATA-015 — Phase 12 arm +100K, seed 2024
 
-- **Date allocated / run:** 2026-10-29 / —
+- **Date allocated / run:** 2026-10-29 / 2026-10-29
 - **Phase:** 12
 - **Git commit:** recorded in the run summary   **Config:** `configs/rec/gw-data-015.yaml`   **Seed(s):** 2024
 - **Dataset version(s):** as GW-REC-001; GlyphSynth v1 (`data/manifests/processed/glyphsynth.json`, variants in `glyphsynth_variants.json`)
@@ -1218,16 +1218,16 @@ Rows link to a full entry below. Numbers are copied from generated reports only,
 - **Method:** `python train.py --config configs/rec/gw-data-015.yaml`; GW-REC-003's recipe with 100,000 GlyphSynth lines added and `data.epoch_lines` 348,935. Plan and decision rule: `docs/PHASE_STATUS.md`, Phase 12.
 - **Variables:** independent: the GlyphSynth lines in the training pool; controlled: recipe, step budget, validation set
 - **Control:** HierText only (GW-REC-003, 004, 005)
-- **Result:** —
-- **Training diagnostics:** —
-- **Interpretation:** —
+- **Result:** HierText validation CER 8.38% [8.22, 8.54] (95% bootstrap CI over lines); document slice CER 11.22%; GlyphSynth validation CER 0.55%, GLYPH-C mCE 6.46% (`reports/synthetic/GW-DATA-015.json`). 8 epochs, 46,134 optimizer steps (the HierText-only control: 45,360 to 45,368); best epoch 7. Arm +100K as a whole: GW-DATA-022.
+- **Training diagnostics:** No flags raised. (`reports/training/GW-DATA-015/report.md`)
+- **Interpretation:** one run of arm +100K; the arm, not this run, carries the verdict.
 - **Limitations:** stated with the plan.
 - **Next experiment:** GW-DATA-022
-- **Training time:** —
+- **Training time:** 1.18 GPU-hours (RTX 4050 Laptop, bf16)
 
 ### GW-DATA-016 — Phase 12 arm +100K, seed 7
 
-- **Date allocated / run:** 2026-10-29 / —
+- **Date allocated / run:** 2026-10-29 / 2026-10-30
 - **Phase:** 12
 - **Git commit:** recorded in the run summary   **Config:** `configs/rec/gw-data-016.yaml`   **Seed(s):** 7
 - **Dataset version(s):** as GW-REC-001; GlyphSynth v1 (`data/manifests/processed/glyphsynth.json`, variants in `glyphsynth_variants.json`)
@@ -1237,16 +1237,16 @@ Rows link to a full entry below. Numbers are copied from generated reports only,
 - **Method:** `python train.py --config configs/rec/gw-data-016.yaml`; GW-REC-003's recipe with 100,000 GlyphSynth lines added and `data.epoch_lines` 348,935. Plan and decision rule: `docs/PHASE_STATUS.md`, Phase 12.
 - **Variables:** independent: the GlyphSynth lines in the training pool; controlled: recipe, step budget, validation set
 - **Control:** HierText only (GW-REC-003, 004, 005)
-- **Result:** —
-- **Training diagnostics:** —
-- **Interpretation:** —
+- **Result:** HierText validation CER 8.36% [8.21, 8.53] (95% bootstrap CI over lines); document slice CER 11.21%; GlyphSynth validation CER 0.56%, GLYPH-C mCE 6.39% (`reports/synthetic/GW-DATA-016.json`). 8 epochs, 46,133 optimizer steps (the HierText-only control: 45,360 to 45,368); best epoch 7. Arm +100K as a whole: GW-DATA-022.
+- **Training diagnostics:** No flags raised. (`reports/training/GW-DATA-016/report.md`)
+- **Interpretation:** one run of arm +100K; the arm, not this run, carries the verdict.
 - **Limitations:** stated with the plan.
 - **Next experiment:** GW-DATA-022
-- **Training time:** —
+- **Training time:** 1.16 GPU-hours (RTX 4050 Laptop, bf16)
 
 ### GW-DATA-017 — Phase 12 arm +250K, seed 1337
 
-- **Date allocated / run:** 2026-10-29 / —
+- **Date allocated / run:** 2026-10-29 / 2026-10-30
 - **Phase:** 12
 - **Git commit:** recorded in the run summary   **Config:** `configs/rec/gw-data-017.yaml`   **Seed(s):** 1337
 - **Dataset version(s):** as GW-REC-001; GlyphSynth v1 (`data/manifests/processed/glyphsynth.json`, variants in `glyphsynth_variants.json`)
@@ -1256,16 +1256,16 @@ Rows link to a full entry below. Numbers are copied from generated reports only,
 - **Method:** `python train.py --config configs/rec/gw-data-017.yaml`; GW-REC-003's recipe with 250,000 GlyphSynth lines added and `data.epoch_lines` 348,935. Plan and decision rule: `docs/PHASE_STATUS.md`, Phase 12.
 - **Variables:** independent: the GlyphSynth lines in the training pool; controlled: recipe, step budget, validation set
 - **Control:** HierText only (GW-REC-003, 004, 005)
-- **Result:** —
-- **Training diagnostics:** —
-- **Interpretation:** —
+- **Result:** HierText validation CER 8.58% [8.42, 8.75] (95% bootstrap CI over lines); document slice CER 11.46%; GlyphSynth validation CER 0.36% (`reports/synthetic/GW-DATA-017.json`). 8 epochs, 46,586 optimizer steps (the HierText-only control: 45,360 to 45,368); best epoch 7. Arm +250K as a whole: GW-DATA-022.
+- **Training diagnostics:** No flags raised. (`reports/training/GW-DATA-017/report.md`)
+- **Interpretation:** one run of arm +250K; the arm, not this run, carries the verdict.
 - **Limitations:** stated with the plan.
 - **Next experiment:** GW-DATA-022
-- **Training time:** —
+- **Training time:** 1.41 GPU-hours (RTX 4050 Laptop, bf16); stopped at step 8,000 by a blocked checkpoint rename (`research/failures.md`) and resumed from step 7,000
 
 ### GW-DATA-018 — Phase 12 arm +250K, seed 2024
 
-- **Date allocated / run:** 2026-10-29 / —
+- **Date allocated / run:** 2026-10-29 / 2026-10-30
 - **Phase:** 12
 - **Git commit:** recorded in the run summary   **Config:** `configs/rec/gw-data-018.yaml`   **Seed(s):** 2024
 - **Dataset version(s):** as GW-REC-001; GlyphSynth v1 (`data/manifests/processed/glyphsynth.json`, variants in `glyphsynth_variants.json`)
@@ -1275,16 +1275,16 @@ Rows link to a full entry below. Numbers are copied from generated reports only,
 - **Method:** `python train.py --config configs/rec/gw-data-018.yaml`; GW-REC-003's recipe with 250,000 GlyphSynth lines added and `data.epoch_lines` 348,935. Plan and decision rule: `docs/PHASE_STATUS.md`, Phase 12.
 - **Variables:** independent: the GlyphSynth lines in the training pool; controlled: recipe, step budget, validation set
 - **Control:** HierText only (GW-REC-003, 004, 005)
-- **Result:** —
-- **Training diagnostics:** —
-- **Interpretation:** —
+- **Result:** HierText validation CER 8.57% [8.40, 8.74] (95% bootstrap CI over lines); document slice CER 11.49%; GlyphSynth validation CER 0.38% (`reports/synthetic/GW-DATA-018.json`). 8 epochs, 46,577 optimizer steps (the HierText-only control: 45,360 to 45,368); best epoch 7. Arm +250K as a whole: GW-DATA-022.
+- **Training diagnostics:** No flags raised. (`reports/training/GW-DATA-018/report.md`)
+- **Interpretation:** one run of arm +250K; the arm, not this run, carries the verdict.
 - **Limitations:** stated with the plan.
 - **Next experiment:** GW-DATA-022
-- **Training time:** —
+- **Training time:** 1.37 GPU-hours (RTX 4050 Laptop, bf16)
 
 ### GW-DATA-019 — Phase 12 arm +250K, seed 7
 
-- **Date allocated / run:** 2026-10-29 / —
+- **Date allocated / run:** 2026-10-29 / 2026-10-30
 - **Phase:** 12
 - **Git commit:** recorded in the run summary   **Config:** `configs/rec/gw-data-019.yaml`   **Seed(s):** 7
 - **Dataset version(s):** as GW-REC-001; GlyphSynth v1 (`data/manifests/processed/glyphsynth.json`, variants in `glyphsynth_variants.json`)
@@ -1294,16 +1294,16 @@ Rows link to a full entry below. Numbers are copied from generated reports only,
 - **Method:** `python train.py --config configs/rec/gw-data-019.yaml`; GW-REC-003's recipe with 250,000 GlyphSynth lines added and `data.epoch_lines` 348,935. Plan and decision rule: `docs/PHASE_STATUS.md`, Phase 12.
 - **Variables:** independent: the GlyphSynth lines in the training pool; controlled: recipe, step budget, validation set
 - **Control:** HierText only (GW-REC-003, 004, 005)
-- **Result:** —
-- **Training diagnostics:** —
-- **Interpretation:** —
+- **Result:** HierText validation CER 8.52% [8.36, 8.69] (95% bootstrap CI over lines); document slice CER 11.38%; GlyphSynth validation CER 0.40% (`reports/synthetic/GW-DATA-019.json`). 8 epochs, 46,561 optimizer steps (the HierText-only control: 45,360 to 45,368); best epoch 7. Arm +250K as a whole: GW-DATA-022.
+- **Training diagnostics:** No flags raised. (`reports/training/GW-DATA-019/report.md`)
+- **Interpretation:** one run of arm +250K; the arm, not this run, carries the verdict.
 - **Limitations:** stated with the plan.
 - **Next experiment:** GW-DATA-022
-- **Training time:** —
+- **Training time:** 1.40 GPU-hours (RTX 4050 Laptop, bf16)
 
 ### GW-DATA-020 — Phase 12 arm +100K, 6 fonts, seed 1337
 
-- **Date allocated / run:** 2026-10-29 / —
+- **Date allocated / run:** 2026-10-29 / 2026-10-30
 - **Phase:** 12
 - **Git commit:** recorded in the run summary   **Config:** `configs/rec/gw-data-020.yaml`   **Seed(s):** 1337
 - **Dataset version(s):** as GW-REC-001; GlyphSynth v1 (`data/manifests/processed/glyphsynth.json`, variants in `glyphsynth_variants.json`)
@@ -1313,16 +1313,16 @@ Rows link to a full entry below. Numbers are copied from generated reports only,
 - **Method:** `python train.py --config configs/rec/gw-data-020.yaml`; GW-REC-003's recipe with 100,000 (6 font families) GlyphSynth lines added and `data.epoch_lines` 348,935. Plan and decision rule: `docs/PHASE_STATUS.md`, Phase 12.
 - **Variables:** independent: the GlyphSynth lines in the training pool; controlled: recipe, step budget, validation set
 - **Control:** HierText only (GW-REC-003, 004, 005); for the factor, +100K (GW-DATA-014, 015, 016)
-- **Result:** —
-- **Training diagnostics:** —
-- **Interpretation:** —
+- **Result:** HierText validation CER 8.40% [8.24, 8.56] (95% bootstrap CI over lines); document slice CER 11.13%; GlyphSynth validation CER 0.61% (`reports/synthetic/GW-DATA-020.json`). 8 epochs, 46,198 optimizer steps (the HierText-only control: 45,360 to 45,368); best epoch 7. Arm +100K, 6 fonts as a whole: GW-DATA-022.
+- **Training diagnostics:** No flags raised. (`reports/training/GW-DATA-020/report.md`)
+- **Interpretation:** one run of arm +100K, 6 fonts; the arm, not this run, carries the verdict.
 - **Limitations:** stated with the plan.
 - **Next experiment:** GW-DATA-022
-- **Training time:** —
+- **Training time:** 1.20 GPU-hours (RTX 4050 Laptop, bf16); stopped at step 1,950 when the desktop app that launched the chain restarted, and resumed from step 1,000
 
 ### GW-DATA-021 — Phase 12 arm +100K, no capture, seed 1337
 
-- **Date allocated / run:** 2026-10-29 / —
+- **Date allocated / run:** 2026-10-29 / 2026-10-30
 - **Phase:** 12
 - **Git commit:** recorded in the run summary   **Config:** `configs/rec/gw-data-021.yaml`   **Seed(s):** 1337
 - **Dataset version(s):** as GW-REC-001; GlyphSynth v1 (`data/manifests/processed/glyphsynth.json`, variants in `glyphsynth_variants.json`)
@@ -1332,16 +1332,16 @@ Rows link to a full entry below. Numbers are copied from generated reports only,
 - **Method:** `python train.py --config configs/rec/gw-data-021.yaml`; GW-REC-003's recipe with 100,000 (no capture effects) GlyphSynth lines added and `data.epoch_lines` 348,935. Plan and decision rule: `docs/PHASE_STATUS.md`, Phase 12.
 - **Variables:** independent: the GlyphSynth lines in the training pool; controlled: recipe, step budget, validation set
 - **Control:** HierText only (GW-REC-003, 004, 005); for the factor, +100K (GW-DATA-014, 015, 016)
-- **Result:** —
-- **Training diagnostics:** —
-- **Interpretation:** —
+- **Result:** HierText validation CER 8.38% [8.22, 8.54] (95% bootstrap CI over lines); document slice CER 11.09%; GlyphSynth validation CER 0.65%, GLYPH-C mCE 6.75% (`reports/synthetic/GW-DATA-021.json`). 8 epochs, 46,222 optimizer steps (the HierText-only control: 45,360 to 45,368); best epoch 7. Arm +100K, no capture as a whole: GW-DATA-022.
+- **Training diagnostics:** No flags raised. (`reports/training/GW-DATA-021/report.md`)
+- **Interpretation:** one run of arm +100K, no capture; the arm, not this run, carries the verdict.
 - **Limitations:** stated with the plan.
 - **Next experiment:** GW-DATA-022
-- **Training time:** —
+- **Training time:** 1.29 GPU-hours (RTX 4050 Laptop, bf16)
 
 ### GW-DATA-022 — Phase 12: synthetic data against HierText only
 
-- **Date allocated / run:** 2026-10-29 / —
+- **Date allocated / run:** 2026-10-29 / 2026-10-30
 - **Phase:** 12
 - **Git commit:** recorded in the result files   **Config:** the runs' resolved configs   **Seed(s):** as the runs
 - **Dataset version(s):** HierText validation pack; GlyphSynth v1 validation; GLYPH-C v1
@@ -1351,10 +1351,22 @@ Rows link to a full entry below. Numbers are copied from generated reports only,
 - **Method:** `scripts/synth_study.py score` (GlyphSynth validation) and `scripts/glyph_c_eval.py score` (factor runs), then `scripts/synth_study.py compare`; readouts and rules registered in `docs/PHASE_STATUS.md`, Phase 12.
 - **Variables:** independent: GlyphSynth lines added (0, 25K, 50K, 100K, 250K), font families (85 or 6), capture effects (on or off); controlled: recipe and step budget
 - **Control:** HierText only (GW-REC-003, 004, 005); +100K for the factors
-- **Result:** —
-- **Interpretation:** —
-- **Limitations:** stated with the plan (equal steps displace real lines; the document slice is a proxy; one seed per factor arm).
-- **Next experiment:** —
+- **Result:** (`reports/synthetic/phase12_comparison.md`, `phase12_scaling.png`)
+
+  | Arm | Document slice CER % | Δ vs HierText only [95% CI] | Verdict | HierText val CER % | GlyphSynth val CER % |
+  |---|---|---|---|---|---|
+  | HierText only | 11.06 | — | control | 8.31 | 1.97 |
+  | +25K | 11.09 | +0.04 [−0.03, +0.11] | no clear effect | 8.29 | 0.94 |
+  | +50K | 11.18 | +0.12 [+0.03, +0.22] | hurts | 8.30 | 0.73 |
+  | +100K | 11.22 | +0.16 [+0.06, +0.26] | hurts | 8.38 | 0.57 |
+  | +250K | 11.44 | +0.39 [+0.25, +0.52] | hurts | 8.56 | 0.38 |
+  | +100K, 6 fonts | 11.13 | +0.07 [−0.04, +0.18] | no clear effect | 8.40 | 0.61 |
+  | +100K, no capture | 11.09 | +0.04 [−0.07, +0.15] | no clear effect | 8.38 | 0.65 |
+
+  H2′a: no size helps on the document slice; 50K, 100K and 250K hurt: **not supported**. H2′b: 6 font families against 85 on the document slice −0.09 [−0.21, +0.03] (no clear difference); without capture effects, GLYPH-C mCE +0.31 [+0.27, +0.35] points higher (capture helps, clean guard holds): one factor of two, **not supported**.
+- **Interpretation:** at a fixed step budget, GlyphSynth lines do not help HierText's dense pages, and the more of them, the worse (CER rises roughly in proportion to the lines added). They help a great deal on GlyphSynth's own validation lines (held-out fonts), so the model learns them; the rendered lines are simply not close enough to photographed text to stand in for real lines. Each synthetic line in the pool displaces a HierText line from an epoch, and that trade does not pay. Font variety made no measurable difference at 100K; the capture effects (rotation, blur, noise, lighting) do make the model more robust to corrupted lines, at no clean cost.
+- **Limitations:** stated with the plan (equal steps displace real lines; the document slice is a proxy; one seed per factor arm). Also: the arms did not take exactly equal steps (see GW-DATA-010 to 021: up to 2.7% more for 250K, which favours the synthetic arms, so the losses are if anything understated).
+- **Next experiment:** GDC (Phase 14, phone photos of printed documents) is the real document test of whether GlyphSynth helps; for the final model, Phase 13 should not add GlyphSynth beyond 25K lines on the strength of this phase.
 
 ---
 

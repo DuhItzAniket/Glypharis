@@ -246,3 +246,15 @@ the bottom. Experiments get their full record in `experiments.md`; this log is t
   no clear effect.
 - The surprise is rotation: tilting a line by a few degrees costs more than any blur, noise or
   compression in the suite, and training only ever tilts by 2°.
+
+### 2026-10-30 — Phase 12: does synthetic data help?
+
+- Not on this evidence. Twelve CRNN runs added 25K to 250K GlyphSynth lines to HierText at the same
+  step budget. None improved the document-like HierText pages, and from 50K lines on they got worse,
+  more so the more lines were added (+0.39 [+0.25, +0.52] points at 250K).
+- The model does learn the rendered lines (their own validation error falls from
+  1.97% to 0.38%); they just do not stand
+  in for photographed text, and every synthetic line costs a real one at a fixed budget.
+- Of the generator's factors, the camera-style capture effects matter for robustness; font variety
+  made no difference that three seeds against one could see.
+- The real document test is still to come: GDC's phone photos of printed pages, in Phase 14.

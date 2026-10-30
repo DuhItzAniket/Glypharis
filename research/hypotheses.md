@@ -42,7 +42,12 @@ CI of the difference excludes zero, on validation unless stated otherwise.
 - **Test:** Phase 12 (GW-DATA-*).
 - **Success criterion:** H2′a — CI-separated improvement over HierText-only at ≥ 1 size; H2′b —
   CI-separated difference for each factor at the tested size.
-- **Status:** open
+- **Status:** not supported on validation (2026-10-30), CRNN short budget at a fixed step budget
+  (GW-DATA-022). H2′a: no size lowers document-slice CER against HierText only (+25K
+  +0.04 [−0.03, +0.11], no clear effect); +50K, +100K and +250K raise it (+250K
+  +0.39 [+0.25, +0.52] points). H2′b: 6 font families against 85, −0.09 [−0.21, +0.03] (no clear
+  difference); capture effects lower GLYPH-C mCE by 0.31 points without a clean
+  cost, so only that half holds. GDC (Phase 14) remains the document-domain test.
 
 ### H3 — Document degradation augmentation improves robustness (RQ3)
 
