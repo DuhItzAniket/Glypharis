@@ -19,7 +19,7 @@ Phases run in the order set by [ADR-0008](decisions/ADR-0008-usable-engine-first
 | 9 | Detector error analysis | **COMPLETE** | `phase-09` |
 | 10 | Full OCR pipeline | **COMPLETE** | `phase-10` |
 | 11 | Robustness training | **COMPLETE** | `phase-11` |
-| 12 | Synthetic data study | **IN PROGRESS** (gate: push, CI, merge) | — |
+| 12 | Synthetic data study | **COMPLETE** | `phase-12` |
 | 13 | Ablation study | not started | — |
 | 14 | External evaluation | not started | — |
 | 15 | Error analysis | not started | — |
@@ -1305,7 +1305,7 @@ verdicts, the H3 guard, the per-corruption table) and the ledger's Phase 11 line
 
 ## Phase 12 — Synthetic data study
 
-**Status:** write-up done (2026-10-30). Gate open: push, pull request, CI and merge. Opened
+**Status:** COMPLETE (2026-10-30). Opened
 2026-10-29 on `phase/12-synthetic`, branched from `main` after Phase 19; the owner approved running it
 on the laptop GPU in batches that can pause (2026-10-29). Validation data only.
 
@@ -1430,7 +1430,7 @@ ledger's Phase 12 lines.
 | Scaling plots and table (CER, WER; latency unchanged by design) | pass | `reports/synthetic/phase12_comparison.md`, `phase12_scaling.png` |
 | Verdict on "more synthetic data ⇒ better?" with CIs | pass: no; it hurts from 50K lines at this budget | same |
 | Verdict on each generator factor with CIs | pass: fonts no clear effect; capture effects help robustness | same |
-| CI green | pending (after the push) | — |
+| CI green | pass | runs 41032780845 (branch), 41032809450 (pull request), 41034715295 (`main`) |
 
 **Known issues**
 - The document slice is a density proxy inside HierText; GDC (Phase 14) is the real test of
@@ -1440,4 +1440,7 @@ ledger's Phase 12 lines.
   could use synthetic data differently; Phase 13 decides the final recipe, and on this evidence it
   should not add GlyphSynth beyond 25K lines.
 
-**Git:** branch `phase/12-synthetic`; push and merge pending.
+**Git:** branch `phase/12-synthetic`, merged through pull request #17. Merge commit `c7c709d`, tag
+`phase-12` (merge re-created with the noreply identity; same tree and parents).
+
+**CI status:** green on the branch, the pull request and `main` (run 41034715295).
