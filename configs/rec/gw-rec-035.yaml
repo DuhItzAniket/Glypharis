@@ -1,0 +1,9 @@
+# GW-REC-035: Phase 13 final model, option B (with wider rotation), seed 2024: GW-REC-024's recipe
+# (30 epochs) with row L5's rotation. Trained only if the ladder keeps row L5.
+inherits: gw-rec-024.yaml
+experiment_id: GW-REC-035
+seed: 2024
+
+data:
+  augmentation_params:
+    rotate: {p: 0.5, severity: 1.0}

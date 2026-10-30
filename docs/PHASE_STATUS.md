@@ -20,7 +20,7 @@ Phases run in the order set by [ADR-0008](decisions/ADR-0008-usable-engine-first
 | 10 | Full OCR pipeline | **COMPLETE** | `phase-10` |
 | 11 | Robustness training | **COMPLETE** | `phase-11` |
 | 12 | Synthetic data study | **COMPLETE** | `phase-12` |
-| 13 | Ablation study | not started | — |
+| 13 | Ablation study | **IN PROGRESS** (plan registered; training) | — |
 | 14 | External evaluation | not started | — |
 | 15 | Error analysis | not started | — |
 | 16 | Efficiency optimisation | not started | — |
@@ -1444,3 +1444,68 @@ ledger's Phase 12 lines.
 `phase-12` (merge re-created with the noreply identity; same tree and parents).
 
 **CI status:** green on the branch, the pull request and `main` (run 41034715295).
+
+---
+
+## Phase 13 — Ablation study
+
+**Status:** IN PROGRESS. Opened 2026-10-30 on `phase/13-ablation`, branched from `main` after Phase
+12. The owner chose to run all of it on the laptop GPU (2026-10-30), knowing the cost below (about
+75 to 90 GPU-hours, two weeks with pauses), and a short-budget ladder with a full-budget final
+model. Validation data only.
+
+**Objective:** the main ablation table, and the final recognizer and detector configuration chosen
+on validation and frozen (`configs/final/glypharis_v1.yaml`).
+
+**Plan** (registered 2026-10-30. Rows L0, L1 and L2 and the seed-1337 runs of L3 and L4 were trained
+in Phases 7, 11 and 12, so some of their numbers are already known; the rules below are applied to
+them as written, and every other run is new.)
+
+1. **The ladder** (short budget: 8 epochs, HierText training lines, 64 lines per step; three seeds,
+   1337, 2024 and 7, per row). Each row changes its parent's configuration:
+
+   | Row | Change | Parent | Runs (1337, 2024, 7) |
+   |---|---|---|---|
+   | L0 | baseline: CRNN, height 32, no augmentation | — | GW-REC-015, GW-DATA-001, 002 (Phase 11) |
+   | L1 | + augmentation (full preset) | L0 | GW-REC-003, 004, 005 (Phase 7) |
+   | L2 | + 25,000 GlyphSynth lines (the only size Phase 12 found harmless) | L1 | GW-DATA-010, 011, 012 (Phase 12) |
+   | L3 | + input height 48 (input preprocessing) | L1 | GW-REC-006 (Phase 7), GW-REC-025, 026 (new) |
+   | L4 | full model: + SVTR-style encoder, weight decay 1e-2 (and its learning rate 5e-4 and micro-batching) | L3 | GW-REC-022 (Phase 7), GW-REC-027, 028 (new) |
+   | L5 | + wider rotation: up to ±4° on half the lines, instead of ±2° on 30% (Phase 11, F15) | L4 | GW-REC-029, 030, 031 (new) |
+
+   L3 builds on L1, not L2: Phase 12 already found 25K GlyphSynth lines to make no clear
+   difference on HierText validation (−0.02 [−0.05, +0.01], `reports/synthetic/`), which under
+   rule 2 means L2 is not kept.
+2. **Rules.** Each row against its parent, pooling each row's three seeds: HierText validation CER
+   (the selection metric), paired over pages; Phase 7's verdict (CI on one side of zero and every
+   seed beyond every parent seed). A row is **kept** when it helps. L5 is kept when it helps on
+   GLYPH-C mean corruption error (paired over its 6,000 source lines) and does not hurt on HierText
+   validation CER. The document slice (Phase 12) and GLYPH-C mCE are reported for every row.
+3. **Final recognizer** (full budget: 30 epochs, three seeds): L4's recipe (option A: GW-REC-024,
+   already trained, plus GW-REC-032 and 033), or L4 with L5's rotation if L5 is kept (option B:
+   GW-REC-034, 035, 036). If L4 does not help over L3, nothing is trained until the owner decides.
+   The final runs are reported against the CRNN baseline at the same budget (GW-REC-001, one seed),
+   with GLYPH-C. The shipped checkpoint is the seed-1337 run of the chosen option, fixed now so that
+   no seed is picked on its result.
+4. **Detector** (GW-DET-007): the retraining Phase 9 deferred, GW-DET-001 with labels for smaller
+   text (`min_text_size` 3 px instead of 6) and training rotation up to 30° instead of 10°, one
+   seed. Both detectors are scored on all 1,715 validation pages at Phase 9's adopted
+   post-processing and resolution; GW-DET-007 is **adopted** if its F1@0.5 is higher with a paired
+   page-bootstrap CI above zero. Otherwise GW-DET-001 stays.
+5. **Freezing.** `configs/final/glypharis_v1.yaml` records the chosen recognizer and detector
+   configurations, their checkpoints and hashes, the post-processing and the calibration step,
+   from generated reports only. The test sets stay closed until Phase 14.
+
+**Cost on the laptop** (from the compute ledger's earlier runs): L3 2 × 2.4 h, L4 and L5 5 × 4.7 h,
+the detector about 6 h, the final runs 2 or 3 × 19.3 h: about 75 to 90 GPU-hours.
+
+**Known limitations, stated in advance**
+- The ladder runs at the short budget; only the final configuration is trained at full length.
+- L4 bundles the encoder with weight decay, learning rate and micro-batching (Phase 7's chosen
+  recipe), so it is not a clean test of the encoder alone (H6 stays exploratory).
+- The detector change is one seed against one seed, and the post-processing was tuned on
+  GW-DET-001, which favours it slightly.
+- Seeds 1337 of L3 and L4 and all of L0 to L2 were trained by the earlier recognizer trainer or
+  in earlier phases (as in Phases 11 and 12).
+
+**Git:** branch `phase/13-ablation`; not for merge until the phase is done.

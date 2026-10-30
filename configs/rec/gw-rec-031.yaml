@@ -1,0 +1,10 @@
+# GW-REC-031: Phase 13 ladder row L5 (+ wider rotation), seed 7: the full model (GW-REC-022) with
+# training rotation doubled, at most ±4° instead of ±2°, on half the lines instead of 30%
+# (Phase 11, F15: rotation is the recognizer's largest weakness).
+inherits: gw-rec-022.yaml
+experiment_id: GW-REC-031
+seed: 7
+
+data:
+  augmentation_params:
+    rotate: {p: 0.5, severity: 1.0}

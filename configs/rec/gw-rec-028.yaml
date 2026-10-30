@@ -1,0 +1,5 @@
+# GW-REC-028: Phase 13 ladder row L4 (the full model: SVTR encoder, height 48, weight decay
+# 1e-2), seed 7: GW-REC-022 with the seed changed. Seed 1337 is GW-REC-022 itself.
+inherits: gw-rec-022.yaml
+experiment_id: GW-REC-028
+seed: 7

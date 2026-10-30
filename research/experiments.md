@@ -74,6 +74,20 @@ Rows link to a full entry below. Numbers are copied from generated reports only,
 | [GW-DATA-020](#gw-data-020) | 2026-10-29 | 12 | Phase 12 arm +100K, 6 fonts: HierText + 100,000 (6 font families) GlyphSynth lines at the control's step budget, seed 1337 | done | val CER 8.40% [8.24, 8.56]; document slice 11.13% (arm +100K, 6 fonts: no clear effect) | `reports/training/GW-DATA-020/` |
 | [GW-DATA-021](#gw-data-021) | 2026-10-29 | 12 | Phase 12 arm +100K, no capture: HierText + 100,000 (no capture effects) GlyphSynth lines at the control's step budget, seed 1337 | done | val CER 8.38% [8.22, 8.54]; document slice 11.09% (arm +100K, no capture: no clear effect) | `reports/training/GW-DATA-021/` |
 | [GW-DATA-022](#gw-data-022) | 2026-10-29 | 12 | Phase 12 comparison: the synthetic arms against HierText only on the document slice (H2′a), and the font and capture factors (H2′b) | done | document slice vs HierText only: +25K +0.04 [−0.03, +0.11], +100K +0.16 [+0.06, +0.26], +250K +0.39 [+0.25, +0.52]; H2′a and H2′b not supported | `reports/synthetic/` |
+| [GW-REC-025](#gw-rec-025) | 2026-10-30 | 13 | Phase 13 L3 (+ input height 48), seed 2024: GW-REC-006 with the seed changed | planned | — | `reports/training/GW-REC-025/` |
+| [GW-REC-026](#gw-rec-026) | 2026-10-30 | 13 | Phase 13 L3 (+ input height 48), seed 7: GW-REC-006 with the seed changed | planned | — | `reports/training/GW-REC-026/` |
+| [GW-REC-027](#gw-rec-027) | 2026-10-30 | 13 | Phase 13 L4 (full model), seed 2024: GW-REC-022 with the seed changed | planned | — | `reports/training/GW-REC-027/` |
+| [GW-REC-028](#gw-rec-028) | 2026-10-30 | 13 | Phase 13 L4 (full model), seed 7: GW-REC-022 with the seed changed | planned | — | `reports/training/GW-REC-028/` |
+| [GW-REC-029](#gw-rec-029) | 2026-10-30 | 13 | Phase 13 L5 (+ wider rotation), seed 1337: GW-REC-022 with rotation up to ±4° on half the lines | planned | — | `reports/training/GW-REC-029/` |
+| [GW-REC-030](#gw-rec-030) | 2026-10-30 | 13 | Phase 13 L5 (+ wider rotation), seed 2024: GW-REC-022 with rotation up to ±4° on half the lines | planned | — | `reports/training/GW-REC-030/` |
+| [GW-REC-031](#gw-rec-031) | 2026-10-30 | 13 | Phase 13 L5 (+ wider rotation), seed 7: GW-REC-022 with rotation up to ±4° on half the lines | planned | — | `reports/training/GW-REC-031/` |
+| [GW-REC-032](#gw-rec-032) | 2026-10-30 | 13 | Phase 13 final, option A, seed 2024: GW-REC-024 with the seed changed (trained only for option A) | planned | — | `reports/training/GW-REC-032/` |
+| [GW-REC-033](#gw-rec-033) | 2026-10-30 | 13 | Phase 13 final, option A, seed 7: GW-REC-024 with the seed changed (trained only for option A) | planned | — | `reports/training/GW-REC-033/` |
+| [GW-REC-034](#gw-rec-034) | 2026-10-30 | 13 | Phase 13 final, option B, seed 1337: GW-REC-024 with L5's rotation (trained only for option B) | planned | — | `reports/training/GW-REC-034/` |
+| [GW-REC-035](#gw-rec-035) | 2026-10-30 | 13 | Phase 13 final, option B, seed 2024: GW-REC-024 with L5's rotation (trained only for option B) | planned | — | `reports/training/GW-REC-035/` |
+| [GW-REC-036](#gw-rec-036) | 2026-10-30 | 13 | Phase 13 final, option B, seed 7: GW-REC-024 with L5's rotation (trained only for option B) | planned | — | `reports/training/GW-REC-036/` |
+| [GW-DET-007](#gw-det-007) | 2026-10-30 | 13 | GW-DET-001 with labels for smaller text (min_text_size 3) and training rotation up to 30° (Phase 9's deferred fixes) | planned | — | `reports/training/GW-DET-007/` |
+| [GW-REC-037](#gw-rec-037) | 2026-10-30 | 13 | Phase 13 ablation ladder (L0 to L5) and the final recognizer at the full budget | planned | — | `reports/ablation/` |
 
 ### GW-BASE-001 — Tesseract 5 (LSTM, eng): recognition and end to end
 
@@ -1367,6 +1381,270 @@ Rows link to a full entry below. Numbers are copied from generated reports only,
 - **Interpretation:** at a fixed step budget, GlyphSynth lines do not help HierText's dense pages, and the more of them, the worse (CER rises roughly in proportion to the lines added). They help a great deal on GlyphSynth's own validation lines (held-out fonts), so the model learns them; the rendered lines are simply not close enough to photographed text to stand in for real lines. Each synthetic line in the pool displaces a HierText line from an epoch, and that trade does not pay. Font variety made no measurable difference at 100K; the capture effects (rotation, blur, noise, lighting) do make the model more robust to corrupted lines, at no clean cost.
 - **Limitations:** stated with the plan (equal steps displace real lines; the document slice is a proxy; one seed per factor arm). Also: the arms did not take exactly equal steps (see GW-DATA-010 to 021: up to 2.7% more for 250K, which favours the synthetic arms, so the losses are if anything understated).
 - **Next experiment:** GDC (Phase 14, phone photos of printed documents) is the real document test of whether GlyphSynth helps; for the final model, Phase 13 should not add GlyphSynth beyond 25K lines on the strength of this phase.
+
+### GW-REC-025 — Phase 13 L3 (+ input height 48), seed 2024
+
+- **Date allocated / run:** 2026-10-30 / —
+- **Phase:** 13
+- **Git commit:** recorded in the run summary   **Config:** `configs/rec/gw-rec-025.yaml`   **Seed(s):** 2024
+- **Dataset version(s):** as GW-REC-001; GLYPH-C v1 for robustness
+- **Hardware:** RTX 4050 Laptop 6 GB, bf16
+- **Research question:** the Phase 13 ablation table and final configuration
+- **Hypothesis (written before the run):** none of its own; the ladder rules in `docs/PHASE_STATUS.md`, Phase 13
+- **Method:** `python train.py --config configs/rec/gw-rec-025.yaml`; GW-REC-006 with the seed changed; 8 epochs (short budget). Compared by GW-REC-037.
+- **Variables:** independent: the seed; controlled: everything else
+- **Control:** the row's parent (GW-REC-037)
+- **Result:** —
+- **Training diagnostics:** —
+- **Interpretation:** —
+- **Limitations:** stated with the plan.
+- **Next experiment:** GW-REC-037
+- **Training time:** —
+
+### GW-REC-026 — Phase 13 L3 (+ input height 48), seed 7
+
+- **Date allocated / run:** 2026-10-30 / —
+- **Phase:** 13
+- **Git commit:** recorded in the run summary   **Config:** `configs/rec/gw-rec-026.yaml`   **Seed(s):** 7
+- **Dataset version(s):** as GW-REC-001; GLYPH-C v1 for robustness
+- **Hardware:** RTX 4050 Laptop 6 GB, bf16
+- **Research question:** the Phase 13 ablation table and final configuration
+- **Hypothesis (written before the run):** none of its own; the ladder rules in `docs/PHASE_STATUS.md`, Phase 13
+- **Method:** `python train.py --config configs/rec/gw-rec-026.yaml`; GW-REC-006 with the seed changed; 8 epochs (short budget). Compared by GW-REC-037.
+- **Variables:** independent: the seed; controlled: everything else
+- **Control:** the row's parent (GW-REC-037)
+- **Result:** —
+- **Training diagnostics:** —
+- **Interpretation:** —
+- **Limitations:** stated with the plan.
+- **Next experiment:** GW-REC-037
+- **Training time:** —
+
+### GW-REC-027 — Phase 13 L4 (full model), seed 2024
+
+- **Date allocated / run:** 2026-10-30 / —
+- **Phase:** 13
+- **Git commit:** recorded in the run summary   **Config:** `configs/rec/gw-rec-027.yaml`   **Seed(s):** 2024
+- **Dataset version(s):** as GW-REC-001; GLYPH-C v1 for robustness
+- **Hardware:** RTX 4050 Laptop 6 GB, bf16
+- **Research question:** the Phase 13 ablation table and final configuration
+- **Hypothesis (written before the run):** none of its own; the ladder rules in `docs/PHASE_STATUS.md`, Phase 13
+- **Method:** `python train.py --config configs/rec/gw-rec-027.yaml`; GW-REC-022 with the seed changed; 8 epochs (short budget). Compared by GW-REC-037.
+- **Variables:** independent: the seed; controlled: everything else
+- **Control:** the row's parent (GW-REC-037)
+- **Result:** —
+- **Training diagnostics:** —
+- **Interpretation:** —
+- **Limitations:** stated with the plan.
+- **Next experiment:** GW-REC-037
+- **Training time:** —
+
+### GW-REC-028 — Phase 13 L4 (full model), seed 7
+
+- **Date allocated / run:** 2026-10-30 / —
+- **Phase:** 13
+- **Git commit:** recorded in the run summary   **Config:** `configs/rec/gw-rec-028.yaml`   **Seed(s):** 7
+- **Dataset version(s):** as GW-REC-001; GLYPH-C v1 for robustness
+- **Hardware:** RTX 4050 Laptop 6 GB, bf16
+- **Research question:** the Phase 13 ablation table and final configuration
+- **Hypothesis (written before the run):** none of its own; the ladder rules in `docs/PHASE_STATUS.md`, Phase 13
+- **Method:** `python train.py --config configs/rec/gw-rec-028.yaml`; GW-REC-022 with the seed changed; 8 epochs (short budget). Compared by GW-REC-037.
+- **Variables:** independent: the seed; controlled: everything else
+- **Control:** the row's parent (GW-REC-037)
+- **Result:** —
+- **Training diagnostics:** —
+- **Interpretation:** —
+- **Limitations:** stated with the plan.
+- **Next experiment:** GW-REC-037
+- **Training time:** —
+
+### GW-REC-029 — Phase 13 L5 (+ wider rotation), seed 1337
+
+- **Date allocated / run:** 2026-10-30 / —
+- **Phase:** 13
+- **Git commit:** recorded in the run summary   **Config:** `configs/rec/gw-rec-029.yaml`   **Seed(s):** 1337
+- **Dataset version(s):** as GW-REC-001; GLYPH-C v1 for robustness
+- **Hardware:** RTX 4050 Laptop 6 GB, bf16
+- **Research question:** the Phase 13 ablation table and final configuration
+- **Hypothesis (written before the run):** none of its own; the ladder rules in `docs/PHASE_STATUS.md`, Phase 13
+- **Method:** `python train.py --config configs/rec/gw-rec-029.yaml`; GW-REC-022 with rotation up to ±4° on half the lines; 8 epochs (short budget). Compared by GW-REC-037.
+- **Variables:** independent: the seed and the change of its row; controlled: everything else
+- **Control:** the row's parent (GW-REC-037)
+- **Result:** —
+- **Training diagnostics:** —
+- **Interpretation:** —
+- **Limitations:** stated with the plan.
+- **Next experiment:** GW-REC-037
+- **Training time:** —
+
+### GW-REC-030 — Phase 13 L5 (+ wider rotation), seed 2024
+
+- **Date allocated / run:** 2026-10-30 / —
+- **Phase:** 13
+- **Git commit:** recorded in the run summary   **Config:** `configs/rec/gw-rec-030.yaml`   **Seed(s):** 2024
+- **Dataset version(s):** as GW-REC-001; GLYPH-C v1 for robustness
+- **Hardware:** RTX 4050 Laptop 6 GB, bf16
+- **Research question:** the Phase 13 ablation table and final configuration
+- **Hypothesis (written before the run):** none of its own; the ladder rules in `docs/PHASE_STATUS.md`, Phase 13
+- **Method:** `python train.py --config configs/rec/gw-rec-030.yaml`; GW-REC-022 with rotation up to ±4° on half the lines; 8 epochs (short budget). Compared by GW-REC-037.
+- **Variables:** independent: the seed and the change of its row; controlled: everything else
+- **Control:** the row's parent (GW-REC-037)
+- **Result:** —
+- **Training diagnostics:** —
+- **Interpretation:** —
+- **Limitations:** stated with the plan.
+- **Next experiment:** GW-REC-037
+- **Training time:** —
+
+### GW-REC-031 — Phase 13 L5 (+ wider rotation), seed 7
+
+- **Date allocated / run:** 2026-10-30 / —
+- **Phase:** 13
+- **Git commit:** recorded in the run summary   **Config:** `configs/rec/gw-rec-031.yaml`   **Seed(s):** 7
+- **Dataset version(s):** as GW-REC-001; GLYPH-C v1 for robustness
+- **Hardware:** RTX 4050 Laptop 6 GB, bf16
+- **Research question:** the Phase 13 ablation table and final configuration
+- **Hypothesis (written before the run):** none of its own; the ladder rules in `docs/PHASE_STATUS.md`, Phase 13
+- **Method:** `python train.py --config configs/rec/gw-rec-031.yaml`; GW-REC-022 with rotation up to ±4° on half the lines; 8 epochs (short budget). Compared by GW-REC-037.
+- **Variables:** independent: the seed and the change of its row; controlled: everything else
+- **Control:** the row's parent (GW-REC-037)
+- **Result:** —
+- **Training diagnostics:** —
+- **Interpretation:** —
+- **Limitations:** stated with the plan.
+- **Next experiment:** GW-REC-037
+- **Training time:** —
+
+### GW-REC-032 — Phase 13 final, option A, seed 2024
+
+- **Date allocated / run:** 2026-10-30 / —
+- **Phase:** 13
+- **Git commit:** recorded in the run summary   **Config:** `configs/rec/gw-rec-032.yaml`   **Seed(s):** 2024
+- **Dataset version(s):** as GW-REC-001; GLYPH-C v1 for robustness
+- **Hardware:** RTX 4050 Laptop 6 GB, bf16
+- **Research question:** the Phase 13 ablation table and final configuration
+- **Hypothesis (written before the run):** none of its own; the ladder rules in `docs/PHASE_STATUS.md`, Phase 13
+- **Method:** `python train.py --config configs/rec/gw-rec-032.yaml`; GW-REC-024 with the seed changed (trained only for option A); 30 epochs (full budget). Compared by GW-REC-037.
+- **Variables:** independent: the seed; controlled: everything else
+- **Control:** the row's parent (GW-REC-037)
+- **Result:** —
+- **Training diagnostics:** —
+- **Interpretation:** —
+- **Limitations:** stated with the plan.
+- **Next experiment:** GW-REC-037
+- **Training time:** —
+
+### GW-REC-033 — Phase 13 final, option A, seed 7
+
+- **Date allocated / run:** 2026-10-30 / —
+- **Phase:** 13
+- **Git commit:** recorded in the run summary   **Config:** `configs/rec/gw-rec-033.yaml`   **Seed(s):** 7
+- **Dataset version(s):** as GW-REC-001; GLYPH-C v1 for robustness
+- **Hardware:** RTX 4050 Laptop 6 GB, bf16
+- **Research question:** the Phase 13 ablation table and final configuration
+- **Hypothesis (written before the run):** none of its own; the ladder rules in `docs/PHASE_STATUS.md`, Phase 13
+- **Method:** `python train.py --config configs/rec/gw-rec-033.yaml`; GW-REC-024 with the seed changed (trained only for option A); 30 epochs (full budget). Compared by GW-REC-037.
+- **Variables:** independent: the seed; controlled: everything else
+- **Control:** the row's parent (GW-REC-037)
+- **Result:** —
+- **Training diagnostics:** —
+- **Interpretation:** —
+- **Limitations:** stated with the plan.
+- **Next experiment:** GW-REC-037
+- **Training time:** —
+
+### GW-REC-034 — Phase 13 final, option B, seed 1337
+
+- **Date allocated / run:** 2026-10-30 / —
+- **Phase:** 13
+- **Git commit:** recorded in the run summary   **Config:** `configs/rec/gw-rec-034.yaml`   **Seed(s):** 1337
+- **Dataset version(s):** as GW-REC-001; GLYPH-C v1 for robustness
+- **Hardware:** RTX 4050 Laptop 6 GB, bf16
+- **Research question:** the Phase 13 ablation table and final configuration
+- **Hypothesis (written before the run):** none of its own; the ladder rules in `docs/PHASE_STATUS.md`, Phase 13
+- **Method:** `python train.py --config configs/rec/gw-rec-034.yaml`; GW-REC-024 with L5's rotation (trained only for option B); 30 epochs (full budget). Compared by GW-REC-037.
+- **Variables:** independent: the seed and the change of its row; controlled: everything else
+- **Control:** the row's parent (GW-REC-037)
+- **Result:** —
+- **Training diagnostics:** —
+- **Interpretation:** —
+- **Limitations:** stated with the plan.
+- **Next experiment:** GW-REC-037
+- **Training time:** —
+
+### GW-REC-035 — Phase 13 final, option B, seed 2024
+
+- **Date allocated / run:** 2026-10-30 / —
+- **Phase:** 13
+- **Git commit:** recorded in the run summary   **Config:** `configs/rec/gw-rec-035.yaml`   **Seed(s):** 2024
+- **Dataset version(s):** as GW-REC-001; GLYPH-C v1 for robustness
+- **Hardware:** RTX 4050 Laptop 6 GB, bf16
+- **Research question:** the Phase 13 ablation table and final configuration
+- **Hypothesis (written before the run):** none of its own; the ladder rules in `docs/PHASE_STATUS.md`, Phase 13
+- **Method:** `python train.py --config configs/rec/gw-rec-035.yaml`; GW-REC-024 with L5's rotation (trained only for option B); 30 epochs (full budget). Compared by GW-REC-037.
+- **Variables:** independent: the seed and the change of its row; controlled: everything else
+- **Control:** the row's parent (GW-REC-037)
+- **Result:** —
+- **Training diagnostics:** —
+- **Interpretation:** —
+- **Limitations:** stated with the plan.
+- **Next experiment:** GW-REC-037
+- **Training time:** —
+
+### GW-REC-036 — Phase 13 final, option B, seed 7
+
+- **Date allocated / run:** 2026-10-30 / —
+- **Phase:** 13
+- **Git commit:** recorded in the run summary   **Config:** `configs/rec/gw-rec-036.yaml`   **Seed(s):** 7
+- **Dataset version(s):** as GW-REC-001; GLYPH-C v1 for robustness
+- **Hardware:** RTX 4050 Laptop 6 GB, bf16
+- **Research question:** the Phase 13 ablation table and final configuration
+- **Hypothesis (written before the run):** none of its own; the ladder rules in `docs/PHASE_STATUS.md`, Phase 13
+- **Method:** `python train.py --config configs/rec/gw-rec-036.yaml`; GW-REC-024 with L5's rotation (trained only for option B); 30 epochs (full budget). Compared by GW-REC-037.
+- **Variables:** independent: the seed and the change of its row; controlled: everything else
+- **Control:** the row's parent (GW-REC-037)
+- **Result:** —
+- **Training diagnostics:** —
+- **Interpretation:** —
+- **Limitations:** stated with the plan.
+- **Next experiment:** GW-REC-037
+- **Training time:** —
+
+### GW-DET-007 — Phase 13 detector: smaller text and wider rotation
+
+- **Date allocated / run:** 2026-10-30 / —
+- **Phase:** 13
+- **Git commit:** recorded in the run summary   **Config:** `configs/det/gw-det-007.yaml`   **Seed(s):** 1337
+- **Dataset version(s):** as GW-DET-001
+- **Hardware:** RTX 4050 Laptop 6 GB
+- **Research question:** do labels for smaller text and wider training rotation fix the misses Phase 9 found (lines under 8 px, rotated lines)?
+- **Hypothesis (written before the run):** expectation, not a claim: higher recall on small and rotated lines, and higher F1@0.5 overall.
+- **Method:** `python train.py --config configs/det/gw-det-007.yaml`; GW-DET-001 and GW-DET-007 scored on all validation pages at Phase 9's adopted settings (`scripts/det_eval.py`), paired with `scripts/det_pair.py`. Adopted if the F1@0.5 difference has a CI above zero (`docs/PHASE_STATUS.md`, Phase 13).
+- **Variables:** independent: `labels.min_text_size` 6 → 3, `data.rotate_max_deg` 10 → 30; controlled: everything else
+- **Control:** GW-DET-001
+- **Result:** —
+- **Training diagnostics:** —
+- **Interpretation:** —
+- **Limitations:** one seed each; the post-processing was tuned on GW-DET-001.
+- **Next experiment:** the frozen configuration
+- **Training time:** —
+
+### GW-REC-037 — Phase 13: ablation ladder and final recognizer
+
+- **Date allocated / run:** 2026-10-30 / —
+- **Phase:** 13
+- **Git commit:** recorded in the result files   **Config:** the runs' resolved configs   **Seed(s):** 1337, 2024, 7 per row
+- **Dataset version(s):** HierText validation pack; GLYPH-C v1
+- **Hardware:** RTX 4050 Laptop 6 GB
+- **Research question:** what does each step from the baseline to the full model contribute, and which configuration is final?
+- **Hypothesis (written before the run):** none; the ladder rules in `docs/PHASE_STATUS.md`, Phase 13 (H6 is touched by L4, exploratory)
+- **Method:** `scripts/ablation_ladder.py ladder`, `decide` and `final`; GLYPH-C via `scripts/glyph_c_eval.py score`.
+- **Variables:** independent: the ladder's changes; controlled: data, budget, seeds
+- **Control:** each row's parent; GW-REC-001 for the final model
+- **Result:** —
+- **Interpretation:** —
+- **Limitations:** stated with the plan.
+- **Next experiment:** Phase 14
 
 ---
 

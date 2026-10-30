@@ -1,0 +1,11 @@
+# GW-DET-007: Phase 13, the detector retraining Phase 9 deferred twice: GW-DET-001 with labels for
+# smaller text (min_text_size 3 px instead of 6 at the training scale) and wider training rotation
+# (up to 30° instead of 10°). Everything else, seed included, is GW-DET-001 (docs/PHASE_STATUS.md,
+# Phase 13).
+inherits: gw-det-001.yaml
+experiment_id: GW-DET-007
+
+det:
+  data:
+    rotate_max_deg: 30.0
+  labels: {shrink_ratio: 0.4, thresh_min: 0.3, thresh_max: 0.7, min_text_size: 3.0}

@@ -1,0 +1,5 @@
+# GW-REC-025: Phase 13 ladder row L3 (+ input height 48), seed 2024: GW-REC-006 with the seed
+# changed. Seed 1337 of the row is GW-REC-006 itself (docs/PHASE_STATUS.md, Phase 13).
+inherits: gw-rec-006.yaml
+experiment_id: GW-REC-025
+seed: 2024
