@@ -1,0 +1,51 @@
+{
+ "ext": {
+  "pack": "processed/glyphsynth/lines_train_ext",
+  "seed": 20261010,
+  "indices": [
+   100000,
+   250000
+  ],
+  "capture": true,
+  "families": 85,
+  "count": 150000,
+  "bytes": 2066468250,
+  "bin_sha256": "81f6fcd407ed2383d32c23ecb59ecb86fb18b0193fcaff95fd2224595272f12c",
+  "seconds": 792
+ },
+ "fewfonts": {
+  "pack": "processed/glyphsynth/lines_train_fewfonts",
+  "seed": 20261010,
+  "indices": [
+   0,
+   100000
+  ],
+  "capture": true,
+  "families": [
+   "baskervville",
+   "caladea",
+   "cardo",
+   "dmsans",
+   "jetbrainsmono",
+   "ubuntu"
+  ],
+  "count": 100000,
+  "bytes": 1392329257,
+  "bin_sha256": "a18171febee4398951c2668bfc85b1dfcd059164cc312c776eb94d25a5db4e04",
+  "seconds": 115
+ },
+ "nocapture": {
+  "pack": "processed/glyphsynth/lines_train_nocapture",
+  "seed": 20261010,
+  "indices": [
+   0,
+   100000
+  ],
+  "capture": false,
+  "families": 85,
+  "count": 100000,
+  "bytes": 1145225440,
+  "bin_sha256": "06daffa001d257aedeb5098360af77fcb42f1e514201d4a98750fb4503cd30c6",
+  "seconds": 102
+ }
+}

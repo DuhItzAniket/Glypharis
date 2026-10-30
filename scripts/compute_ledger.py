@@ -5,17 +5,18 @@ statement.
 
 Reads the queue logs, where each job has a START line and a DONE or FAIL line with timestamps:
 ``runs/gpu_queue.log`` (Phase 6), ``runs/phase07_queue.log`` (Phase 7),
-``runs/chain_2026-10-26.log`` (the Phase 8 GPU sanity sequence), ``runs/chain_det.log`` (the
-Phase 8 detector runs), ``runs/phase11_queue.log`` (Phase 11: training, the dry run and the
-GLYPH-C scoring, which counts under GW-DATA-009) and ``data/processed/baselines/chain.log``
-(Phase 5 baselines). CPU steps
-logged in a GPU chain (latency profiles, comparisons) are left out of the GPU hours. A START is
-paired with the next end line for the same experiment and kind (training, resume, sanity, resume
-check, baseline run), so overlapping jobs still pair correctly. Wall-clock time is what the job
-occupied the device; the training time in each run summary (``<runs>/<id>/summary.json``) is listed
-beside it. ``--runs`` takes several directories, since the detector runs live in their own
-worktree. Jobs run by hand outside a queue (the Phase 6 sanity sequence, the GPU resume check,
-crash probes, tests) are not in these logs; the ledger says so instead of guessing them.
+``runs/chain_2026-10-26.log`` (the Phase 8 GPU sanity sequence), ``runs/chain_det.log`` (the Phase
+8 detector runs), ``runs/phase11_queue.log`` (Phase 11: training, the dry run and the GLYPH-C
+scoring, which counts under GW-DATA-009), ``runs/phase12_queue.log`` (Phase 12: the same, scoring
+under GW-DATA-022; building the GlyphSynth packs is CPU work and is left out) and
+``data/processed/baselines/chain.log`` (Phase 5 baselines). CPU steps logged in a GPU chain
+(latency profiles, comparisons) are left out of the GPU hours. A START is paired with the next end
+line for the same experiment and kind (training, resume, sanity, resume check, baseline run), so
+overlapping jobs still pair correctly. Wall-clock time is what the job occupied the device; the
+training time in each run summary (``<runs>/<id>/summary.json``) is listed beside it. ``--runs``
+takes several directories, since the detector runs live in their own worktree. Jobs run by hand
+outside a queue (the Phase 6 sanity sequence, the GPU resume check, crash probes, tests) are not in
+these logs; the ledger says so instead of guessing them.
 
 Writes ``reports/compute/ledger.md`` and ``ledger.json``.
 """
@@ -53,7 +54,7 @@ def phase_of(experiment: str) -> str:
     if experiment.startswith("GW-DET"):
         return "08"
     if experiment.startswith("GW-DATA"):
-        return "11"
+        return "11" if int(experiment.rsplit("-", 1)[1]) <= 9 else "12"
     n = int(experiment.rsplit("-", 1)[1]) if experiment.startswith("GW-REC") else -1
     return "06" if n in (1, 2) else "07" if n >= 3 else "?"
 
@@ -65,6 +66,9 @@ CPU_STEPS = (
     "det_compare",
     "P11 report",
     "P11 compare",
+    "P12 report",
+    "P12 compare",
+    "P12 GlyphSynth pack",
 )
 
 
@@ -80,9 +84,9 @@ def classify(text: str, device: str) -> tuple[str, str, str] | None:
         return (exp.group(1) if exp else "?"), "baseline", detail
     if text.startswith(CPU_STEPS):
         return None
-    score = re.search(r"GLYPH-C score (GW-\w+-\d{3})", text)
-    if score:  # robustness scoring of any arm run is GW-DATA-009's work
-        return "GW-DATA-009", "score", score.group(1)
+    score = re.search(r"(?:GLYPH-C|GlyphSynth val) score (GW-\w+-\d{3})", text)
+    if score:  # scoring a study's runs is that study's comparison work
+        return ("GW-DATA-022" if text.startswith("P12") else "GW-DATA-009"), "score", score.group(1)
     exp = re.search(r"gw-(rec|det|data)-(\d{3})", text, re.IGNORECASE)
     experiment = f"GW-{exp.group(1).upper()}-{exp.group(2)}" if exp else "?"
     if "resume_check" in text:
@@ -169,7 +173,7 @@ def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(description=__doc__.splitlines()[0])
     gpu_logs = [Path("runs/gpu_queue.log"), Path("runs/phase07_queue.log"),
                 Path("runs/chain_2026-10-26.log"), Path("runs/chain_det.log"),
-                Path("runs/phase11_queue.log")]  # fmt: skip
+                Path("runs/phase11_queue.log"), Path("runs/phase12_queue.log")]  # fmt: skip
     parser.add_argument("--gpu-logs", nargs="*", type=Path, default=gpu_logs)
     parser.add_argument("--cpu-logs", nargs="*", type=Path,
                         default=[Path("data/processed/baselines/chain.log")])  # fmt: skip

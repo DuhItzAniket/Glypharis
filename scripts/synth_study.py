@@ -129,6 +129,20 @@ def hiertext_units(run: Path, pages: set[str] | None) -> dict[str, tuple[int, in
     return {k: (v[0], v[1]) for k, v in per.items()}
 
 
+def hiertext_wer(run: Path, pages: set[str] | None) -> float:
+    """WER (strict track) of the run's selected checkpoint on ``pages`` (all if None)."""
+    err = words = 0
+    with open(run / "val_best_samples.jsonl", encoding="utf-8") as f:
+        for line in f:
+            if line.strip():
+                s = json.loads(line)
+                if pages is None or s["key"].split("/", 1)[0] in pages:
+                    sc = score_pair(s["pred"], s["label"])
+                    err += sc.word_errors
+                    words += sc.ref_words
+    return err / max(words, 1)
+
+
 def line_units(path: Path) -> dict[str, tuple[int, int]]:
     z = np.load(path)
     return {
@@ -215,6 +229,10 @@ def compare(
                 "value": float(np.mean(err.sum(axis=1) / ref.sum())),
                 "seeds": (err.sum(axis=1) / ref.sum()).tolist(),
             }
+        row["wer"] = {
+            "doc": float(np.mean([hiertext_wer(d, pages) for d in dirs[a]])),
+            "hiertext_val": float(np.mean([hiertext_wer(d, None) for d in dirs[a]])),
+        }
         if a != CONTROL:
             _, ce, cr = doc[CONTROL]
             row["doc_vs_control"] = verdict(doc[a][1], ce, cr, "pages")
@@ -234,7 +252,8 @@ def compare(
         res["h2a"]["gain_per_1k_lines"] = {
             "25K_to_100K": g1,
             "100K_to_250K": g2,
-            "diminishing": bool(g2 < g1),
+            "diminishing": bool(0 < g2 < g1),
+            "gains": bool(g1 > 0 or g2 > 0),
         }
 
     h2b: dict[str, Any] = {}
@@ -290,11 +309,60 @@ def compare(
         json.dumps(res, indent=1) + "\n", encoding="utf-8", newline="\n"
     )
     (out / "phase12_comparison.md").write_text(render(res), encoding="utf-8", newline="\n")
+    plot_scaling(res, out / "phase12_scaling.png")
     print(
         f"{out / 'phase12_comparison.md'}: H2'a "
         f"{'supported' if res['h2a']['supported'] else 'not supported'}"
     )
     return res
+
+
+def plot_scaling(res: dict[str, Any], path: Path) -> None:
+    """Document-slice and HierText validation CER by GlyphSynth lines added, every seed shown."""
+    import matplotlib
+
+    matplotlib.use("Agg")
+    import matplotlib.pyplot as plt
+
+    arms = res["arms"]
+    xs = {CONTROL: 0, **SIZES}
+    fig, axes = plt.subplots(1, 2, figsize=(10, 3.8), sharex=True)
+    for ax, key, title in (
+        (axes[0], "doc", "Document slice"),
+        (axes[1], "hiertext_val", "HierText validation"),
+    ):
+        pts = [(xs[a] / 1000, arms[a][key]) for a in xs if a in arms]
+        ax.plot(
+            [x for x, _ in pts],
+            [100 * r["value"] for _, r in pts],
+            "-o",
+            color="#3b6ea5",
+            label="mean of seeds",
+        )
+        for x, r in pts:
+            ax.scatter(
+                [x] * len(r["seeds"]),
+                [100 * v for v in r["seeds"]],
+                s=14,
+                color="#9aa7b4",
+                zorder=3,
+            )
+        ctl = arms[CONTROL][key]["seeds"]
+        ax.axhspan(
+            100 * min(ctl),
+            100 * max(ctl),
+            color="#e8b04a",
+            alpha=0.25,
+            label="HierText-only seed range",
+        )
+        ax.set_title(title)
+        ax.set_xlabel("GlyphSynth lines added (thousands)")
+        ax.set_ylabel("CER % (strict)")
+        ax.grid(alpha=0.3)
+    axes[0].legend(fontsize=8)
+    fig.tight_layout()
+    fig.savefig(path, dpi=110)
+    plt.close(fig)
 
 
 def _p(x: float) -> str:
@@ -342,12 +410,30 @@ def render(res: dict[str, Any]) -> str:
     ]
     if "gain_per_1k_lines" in h:
         g = h["gain_per_1k_lines"]
+        trend = (
+            "diminishing returns"
+            if g["diminishing"]
+            else "no diminishing returns"
+            if g.get("gains", True)
+            else "no gain at any size: CER rises as lines are added"
+        )
         md.append(
             "Document-slice CER points gained per 1,000 added lines: "
             f"{100 * g['25K_to_100K']:+.4f} "
-            f"(25K to 100K), {100 * g['100K_to_250K']:+.4f} (100K to 250K): "
-            f"{'diminishing' if g['diminishing'] else 'not diminishing'} returns."
+            f"(25K to 100K), {100 * g['100K_to_250K']:+.4f} (100K to 250K): {trend}."
         )
+    md += [
+        "",
+        "WER % (strict track, mean of the seeds; reported, not decided on):",
+        "",
+        "| Arm | Document slice | HierText val |",
+        "|---|---|---|",
+    ]
+    md += [
+        f"| {a} | {_p(r['wer']['doc'])} | {_p(r['wer']['hiertext_val'])} |"
+        for a, r in res["arms"].items()
+    ]
+    md += ["", "![Document-slice CER by GlyphSynth size](phase12_scaling.png)"]
     b = res["h2b"]
     if b:
         md.append("")
