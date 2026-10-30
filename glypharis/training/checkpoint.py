@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import random
+import time
 from pathlib import Path
 from typing import Any
 
@@ -35,12 +36,27 @@ def set_rng_state(state: dict[str, Any]) -> None:
         torch.cuda.set_rng_state_all([s.cpu() for s in state["cuda"]])
 
 
+REPLACE_RETRIES = 8  # waits of 0.5, 1, 2, 4, 5, 5, 5 s: about 22 s in all
+
+
 def save_checkpoint(path: Path, payload: dict[str, Any]) -> Path:
-    """Write via a temporary file and rename, so a crash never leaves half a checkpoint."""
+    """Write via a temporary file and rename, so a crash never leaves half a checkpoint.
+
+    On Windows the rename fails while another process holds the target open, as a virus scanner
+    does for a moment after a large file is written (Phase 12: one run lost to this). The rename is
+    retried for about 20 seconds before the error is raised.
+    """
     path.parent.mkdir(parents=True, exist_ok=True)
     tmp = path.with_suffix(path.suffix + ".tmp")
     torch.save(payload, tmp)
-    tmp.replace(path)
+    for attempt in range(REPLACE_RETRIES):
+        try:
+            tmp.replace(path)
+            return path
+        except PermissionError:
+            if attempt == REPLACE_RETRIES - 1:
+                raise
+            time.sleep(min(0.5 * 2**attempt, 5.0))
     return path
 
 
