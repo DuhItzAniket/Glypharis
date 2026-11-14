@@ -13,13 +13,18 @@ Confidence of a line (registered in docs/PHASE_STATUS.md, Phase 10): softmax ove
 logits divided by the temperature ``T``; the geometric mean of the top-class probability over the
 frames whose top class is not blank, or, for a line read as empty, the mean blank probability.
 Decoding is greedy CTC and does not depend on ``T``.
+
+``strict_fp32`` (off by default) runs the network in IEEE fp32 with autocast off: on CUDA, cuDNN
+convolutions otherwise use TF32. The frozen model is evaluated that way in Phase 14
+(`glypharis.pipeline.frozen`), as the detector always is.
 """
 
 from __future__ import annotations
 
+import contextlib
 import dataclasses
 import math
-from collections.abc import Sequence
+from collections.abc import Iterator, Sequence
 from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Any
@@ -32,6 +37,7 @@ from glypharis.config.loader import from_dict, load_config
 from glypharis.config.schema import ModelConfig
 from glypharis.data.rec_dataset import PAD_MULTIPLE, resized_width
 from glypharis.data.text import Charset
+from glypharis.models.det.runtime import strict_fp32 as ieee_fp32
 from glypharis.models.rec.base import LineRecognizer
 from glypharis.models.rec.crnn import build_recognizer
 from glypharis.training.checkpoint import load_checkpoint
@@ -86,6 +92,7 @@ class TextRecognizer:
         device: str | torch.device = "cpu",
         temperature: float = 1.0,
         arch: dict[str, Any] | None = None,
+        strict_fp32: bool = False,
     ) -> None:
         self.model = model.to(device).eval()
         self.arch = arch or {}  # model_name and model config, for a release file
@@ -94,6 +101,7 @@ class TextRecognizer:
         self.max_width = max_width
         self.device = torch.device(device)
         self.temperature = temperature
+        self.strict_fp32 = strict_fp32  # IEEE fp32, autocast off (module docstring)
 
     @classmethod
     def from_run(
@@ -160,6 +168,22 @@ class TextRecognizer:
             out.append(cur)
         return out
 
+    @contextlib.contextmanager
+    def _numerics(self) -> Iterator[None]:
+        if not self.strict_fp32:
+            yield
+            return
+        # The BiLSTM runs on cuDNN's RNN kernels, whose precision is set apart from convolutions.
+        # cudnn.rnn is a module whose precision attribute is added at run time.
+        rnn: Any = torch.backends.cudnn.rnn
+        saved = rnn.fp32_precision
+        rnn.fp32_precision = "ieee"
+        try:
+            with ieee_fp32(), torch.autocast(device_type=self.device.type, enabled=False):
+                yield
+        finally:
+            rnn.fp32_precision = saved
+
     @torch.inference_mode()
     def logits(self, crops: Sequence[Image.Image]) -> list[torch.Tensor]:
         """Per-line ``(T, classes)`` logits on the CPU, in input order."""
@@ -174,7 +198,8 @@ class TextRecognizer:
                 batch[j, 0, :, : x.shape[1]] = x
                 batch[j, 0, :, x.shape[1] :] = x[:, -1].median()
             w = torch.tensor([widths[i] for i in idx])
-            logits = self.model(batch.to(self.device), w.to(self.device))
+            with self._numerics():
+                logits = self.model(batch.to(self.device), w.to(self.device))
             lengths = self.model.frames(w).clamp(max=logits.shape[0])
             for j, i in enumerate(idx):
                 out[i] = logits[: int(lengths[j]), j].float().cpu()
