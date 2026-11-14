@@ -1,0 +1,43 @@
+{
+ "funsd_test": {
+  "pages": "processed/funsd/pages_test.jsonl.gz",
+  "pages_sha256": "cb92216a8a0897696c56627ccee2f7b098a03c81e3320dd1e8d4b8af2d232ab9",
+  "page_count": 50,
+  "line_count": 2647,
+  "rec_lines": 2590,
+  "line_grouping": "entity words grouped by vertical overlap >= 0.5 of the smaller height"
+ },
+ "iiit5k_test": {
+  "pack": "processed/iiit5k/words_test",
+  "count": 3000,
+  "bin_sha256": "d70318becd73324cf3a9fdade341bcf7d065bd452ac74db34d6a107973ca6ba2",
+  "source": "testdata.mat",
+  "source_sha256": "4136ab14e502a9ede65f25cf5639d0d027a10c7d5baddabafb953ec09d77bf45"
+ },
+ "omnidocbench_en": {
+  "pages": "processed/omnidocbench/pages_test.jsonl.gz",
+  "pages_sha256": "e8ea8d882900f4de4e1aab87fd5269cb460cc8524bfd1733a2d4086ab8cd3694",
+  "page_count": 755,
+  "block_count": 11369,
+  "ignored_regions": 3222,
+  "source_sha256": "a45cd84b04ad8b793e775089640e6b681209abea33ead54c1828ddca35fae496",
+  "unit": "layout block (text categories), not line",
+  "text_categories": [
+   "code_txt",
+   "equation_caption",
+   "equation_explanation",
+   "figure_caption",
+   "figure_footnote",
+   "footer",
+   "header",
+   "list_group",
+   "page_footnote",
+   "page_number",
+   "reference",
+   "table_caption",
+   "table_footnote",
+   "text_block",
+   "title"
+  ]
+ }
+}

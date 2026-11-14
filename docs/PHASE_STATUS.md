@@ -21,7 +21,7 @@ Phases run in the order set by [ADR-0008](decisions/ADR-0008-usable-engine-first
 | 11 | Robustness training | **COMPLETE** | `phase-11` |
 | 12 | Synthetic data study | **COMPLETE** | `phase-12` |
 | 13 | Ablation study | **COMPLETE** | `phase-13` |
-| 14 | External evaluation | not started | — |
+| 14 | External evaluation | **IN PROGRESS** (plan registered) | — |
 | 15 | Error analysis | not started | — |
 | 16 | Efficiency optimisation | not started | — |
 | 17 | Model export | **COMPLETE** | `phase-17` |
