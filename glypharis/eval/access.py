@@ -49,7 +49,13 @@ def open_test_access(
         )
     if not reason.strip():
         raise HeldOutAccessError("a reason is required for every test access")
+    # A pipe or line break would split the row and corrupt the log table.
+    for name, value in (("benchmark", benchmark), ("checkpoint", checkpoint), ("reason", reason)):
+        if "|" in value or "\n" in value or "\r" in value:
+            raise HeldOutAccessError(f"the {name} of a test access cannot hold '|' or a line break")
     path = Path(log_path)
+    if not path.is_file():
+        raise HeldOutAccessError(f"test-access log not found: {path.as_posix()}")
     text = path.read_text(encoding="utf-8")
     row = (
         f"| {datetime.now(UTC).date().isoformat()} | {benchmark} {split} | {experiment_id} | "
