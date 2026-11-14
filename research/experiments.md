@@ -88,6 +88,7 @@ Rows link to a full entry below. Numbers are copied from generated reports only,
 | [GW-REC-036](#gw-rec-036) | 2026-10-30 | 13 | Phase 13 final, option B, seed 7: GW-REC-024 with L5's rotation (trained only for option B) | planned | — | `reports/training/GW-REC-036/` |
 | [GW-DET-007](#gw-det-007) | 2026-10-30 | 13 | GW-DET-001 with labels for smaller text (min_text_size 3) and training rotation up to 30° (Phase 9's deferred fixes) | planned | — | `reports/training/GW-DET-007/` |
 | [GW-REC-037](#gw-rec-037) | 2026-10-30 | 13 | Phase 13 ablation ladder (L0 to L5) and the final recognizer at the full budget | planned | — | `reports/ablation/` |
+| [GW-E2E-005](#gw-e2e-005) | 2026-11-14 | 13 | Line-confidence calibration of the frozen recognizer GW-REC-034, as GW-E2E-003 | planned | — | `reports/calibration/GW-E2E-005/` |
 
 ### GW-BASE-001 — Tesseract 5 (LSTM, eng): recognition and end to end
 
@@ -1645,6 +1646,23 @@ Rows link to a full entry below. Numbers are copied from generated reports only,
 - **Interpretation:** —
 - **Limitations:** stated with the plan.
 - **Next experiment:** Phase 14
+
+### GW-E2E-005 — Line-confidence calibration of the frozen recognizer
+
+- **Date allocated / run:** 2026-11-14 / —
+- **Phase:** 13
+- **Git commit:** recorded in the result file   **Config:** `runs/GW-REC-034/config.resolved.yaml`   **Seed(s):** none (no training)
+- **Dataset version(s):** HierText validation pages and lines as in GW-E2E-003
+- **Hardware:** RTX 4050 Laptop 6 GB
+- **Research question:** the temperature the frozen configuration ships with. GW-E2E-003's T = 2.35 was fitted for GW-REC-024, and a retrained recognizer needs its own.
+- **Hypothesis (written before the run):** none of its own; GW-E2E-003's method and adoption rule unchanged (fit on validation half A, adopt if the ECE difference on half B has a CI below zero). H8 was settled by GW-E2E-003; this run is reported as a check of it on a second model.
+- **Method:** `python scripts/rec_calibrate.py --rec-run runs/GW-REC-034 --experiment-id GW-E2E-005 --out reports/calibration/GW-E2E-005`
+- **Variables:** independent: temperature; controlled: model, lines, confidence definition
+- **Control:** T = 1
+- **Result:** —
+- **Interpretation:** —
+- **Limitations:** as GW-E2E-003.
+- **Next experiment:** the frozen configuration (`configs/final/glypharis_v1.yaml`)
 
 ---
 
