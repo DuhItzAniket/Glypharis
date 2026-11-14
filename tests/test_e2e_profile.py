@@ -323,14 +323,19 @@ def test_the_earlier_command_line_still_works(layout, monkeypatch):
 def test_a_command_line_run_sets_the_variables_before_torch_loads(tmp_path):
     """Run as a script, --threads reaches the environment before torch is imported: torch then
     starts with that many intra-op threads without being told. The run stops at once because its
-    output exists, before any model, page or git command is touched."""
-    out = tmp_path / e2e_profile.frozen_out_path(3)
+    output exists, before any model, page or git command is touched.
+
+    One thread: torch never starts with more threads than cores, so on a machine with at least
+    two cores one thread can only come from the variables."""
+    if (os.cpu_count() or 1) < 2:
+        pytest.skip("one core: one thread is torch's default anyway")
+    out = tmp_path / e2e_profile.frozen_out_path(1)
     out.parent.mkdir(parents=True)
     out.write_text("{}\n", encoding="utf-8")
     script = REPO / "scripts/e2e_profile.py"
     code = (
         "import os, runpy, sys\n"
-        f"sys.argv = [{str(script)!r}, '--frozen', '--threads', '3']\n"
+        f"sys.argv = [{str(script)!r}, '--frozen', '--threads', '1']\n"
         "try:\n"
         f"    runpy.run_path({str(script)!r}, run_name='__main__')\n"
         "except SystemExit as exc:\n"
@@ -346,5 +351,5 @@ def test_a_command_line_run_sets_the_variables_before_torch_loads(tmp_path):
                           capture_output=True, text=True, timeout=300)  # fmt: skip
     assert proc.returncode == 0, proc.stderr
     assert "exists: move it aside" in proc.stdout
-    assert "env: ['3', '3', '3']" in proc.stdout
-    assert "threads: 3" in proc.stdout
+    assert "env: ['1', '1', '1']" in proc.stdout
+    assert "threads: 1" in proc.stdout

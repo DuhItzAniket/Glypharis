@@ -280,13 +280,42 @@ def test_filtered_ground_truth_keeps_only_the_given_pages(tmp_path):
         oo.filtered_ground_truth(src, {"a", "missing"}, tmp_path / "gt2.json")
 
 
+# The pinned config's dataset block (data/raw is git-ignored, so CI has no evaluator code).
+PINNED_DATASET = {
+    "dataset_name": "end2end_dataset",
+    "ground_truth": {"data_path": "./demo_data/omnidocbench_demo/OmniDocBench_demo.json"},
+    "prediction": {"data_path": "./demo_data/end2end"},
+    "match_method": "quick_match",
+    "match_workers": 13,
+    "quick_match_truncated_timeout_sec": 300,
+    "match_timeout_sec": 420,
+    "timeout_fallback_max_chunk_span": 10,
+    "timeout_fallback_order_penalty": 0.1,
+}
+
+
 def fake_evaluator(root: Path) -> Path:
-    """A folder laid out like the pinned evaluator, holding its real pinned config."""
+    """A folder laid out like the pinned evaluator, holding its pinned config: the real file
+    where the evaluator is downloaded, otherwise a copy of its dataset block."""
     code = root / oo.OMNIDOCBENCH_DIR
     (code / "configs").mkdir(parents=True)
     (code / "result").mkdir()
-    shutil.copy(oh.ROOT / oo.OMNIDOCBENCH_DIR / oo.PIPELINE_CONFIG, code / oo.PIPELINE_CONFIG)
+    real = oh.ROOT / oo.OMNIDOCBENCH_DIR / oo.PIPELINE_CONFIG
+    if real.is_file():
+        shutil.copy(real, code / oo.PIPELINE_CONFIG)
+    else:
+        cfg = {"end2end_eval": {"metrics": {"text_block": {"metric": ["Edit_dist"]}},
+                                "dataset": PINNED_DATASET}}  # fmt: skip
+        (code / oo.PIPELINE_CONFIG).write_text(yaml.safe_dump(cfg), encoding="utf-8")
     return code
+
+
+def test_the_stand_in_config_matches_the_pinned_one():
+    real = oh.ROOT / oo.OMNIDOCBENCH_DIR / oo.PIPELINE_CONFIG
+    if not real.is_file():
+        pytest.skip("the OmniDocBench evaluator is not downloaded here")
+    pinned = yaml.safe_load(real.read_text(encoding="utf-8"))
+    assert pinned["end2end_eval"]["dataset"] == PINNED_DATASET
 
 
 def test_write_config_switches_off_formulas_and_tables(tmp_path):
