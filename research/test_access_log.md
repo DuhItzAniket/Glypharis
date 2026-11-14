@@ -77,3 +77,14 @@ Any other access must be justified in the "Reason" column and discussed in the p
 | 2026-10-24 | hiertext test | GW-BASE-006 | ppocr6_small (rec), scoring | 5 | Phase 5 baseline scoring |
 | 2026-10-24 | gdc test | GW-BASE-007 | ppocr6_medium (e2e), scoring | 5 | Phase 5 baseline scoring |
 | 2026-10-24 | gdc test | GW-BASE-007 | ppocr6_medium (rec), scoring | 5 | Phase 5 baseline scoring |
+| 2026-11-14 | iiit5k test | GW-BASE-001 | tesseract (rec) | 14 | Phase 14 baseline test pass (GW-BASE-001) |
+| 2026-11-14 | hiertext test | GW-REC-039 | glypharis (rec) | 14 | Phase 14 GLYPHARIS test pass (GW-REC-039) |
+| 2026-11-14 | iiit5k test | GW-BASE-002 | ppocr_mobile (rec) | 14 | Phase 14 baseline test pass (GW-BASE-002) |
+| 2026-11-14 | iiit5k test | GW-BASE-005 | ppocr6_tiny (rec) | 14 | Phase 14 baseline test pass (GW-BASE-005) |
+| 2026-11-14 | iiit5k test | GW-BASE-006 | ppocr6_small (rec) | 14 | Phase 14 baseline test pass (GW-BASE-006) |
+| 2026-11-14 | gdc test | GW-REC-039 | glypharis (rec) | 14 | Phase 14 GLYPHARIS test pass (GW-REC-039) |
+| 2026-11-14 | iiit5k test | GW-BASE-007 | ppocr6_medium (rec) | 14 | Phase 14 baseline test pass (GW-BASE-007) |
+| 2026-11-14 | gdc_scan test | GW-REC-039 | glypharis (rec) | 14 | Phase 14 GLYPHARIS test pass (GW-REC-039) |
+| 2026-11-14 | funsd test | GW-REC-039 | glypharis (rec) | 14 | Phase 14 GLYPHARIS test pass (GW-REC-039) |
+| 2026-11-14 | iiit5k test | GW-REC-039 | glypharis (rec) | 14 | Phase 14 GLYPHARIS test pass (GW-REC-039) |
+| 2026-11-14 | gdc test | GW-E2E-008 | glypharis (oracle) | 14 | Phase 14 GLYPHARIS test pass (GW-E2E-008) |
