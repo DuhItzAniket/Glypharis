@@ -413,6 +413,17 @@ with a concrete target set from the Phase 5 baseline measurements.
 - **Tasks:** release notes, version bump, tagged GitHub release with the model artifact (or download script
   if the artifact is too large for a release asset), with licence terms that respect the training data
   (see DATASETS.md §Licensing implications).
+- **Publishing** (added 2026-10-31 at the owner's request):
+  - a `LICENSE` for the code and a `CITATION.cff`. The owner leans towards Apache-2.0; the choice is
+    settled before release, after the owner has taken advice on any patent filing, because Apache-2.0
+    grants users a licence to the contributors' patents on the released code.
+  - the package on PyPI as `glypharis`, uploaded by a GitHub Actions release workflow through PyPI
+    Trusted Publishing (no tokens stored in the repository). Model weights are not in the package; they
+    are fetched on first use from the release asset.
+  - each GitHub release archived on Zenodo through its GitHub integration, for a citable DOI. Code
+    and documentation only: no datasets and nothing from the evaluation-only sets.
+  - the owner creates the PyPI and Zenodo accounts and chooses the creator name shown on Zenodo,
+    which is permanent.
 - **Effort:** 1 S.
 
 ---

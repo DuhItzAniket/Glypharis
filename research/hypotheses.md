@@ -84,6 +84,10 @@ CI of the difference excludes zero, on validation unless stated otherwise.
   steps, with CPU latency within 1.5× of CRNN.
 - **Test:** Phase 7 (GW-REC-*).
 - **Status:** open
+- **Evidence so far (exploratory):** Phase 13's row L4 (the SVTR-style model with its recipe,
+  three seeds) lowers validation CER by 0.26 [0.19, 0.32] points against the CRNN at height 48
+  (GW-REC-037), but it changes weight decay, learning rate and micro-batching together with the
+  encoder, so it does not isolate the encoder. The latency half stays with Phase 16.
 
 ### H7 — INT8 quantisation is nearly free (RQ7)
 

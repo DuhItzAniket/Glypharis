@@ -51,6 +51,31 @@ failed and was re-run as GW-REC-021 (`research/failures.md`).
 
 Generator factors at 100K against +100K (three seeds): 6 font families −0.09 [−0.21, +0.03] on the document slice (no clear effect); no capture effects +0.31 [+0.27, +0.35] GLYPH-C mCE points (capture helps).
 
+**Phase 13 (the ablation ladder, short budget).** Each row adds one change to the row it builds on, three seeds per row (1337, 2024, 7), 8 epochs; CRNN up to L3, the SVTR-style model from L4. Metric: HierText validation CER (the selection metric) and the document slice, paired over pages; GLYPH-C mCE, paired over its 6,000 source lines; rows pool their seeds, 1,000 resamples; Phase 7's rule (CI on one side of zero, every seed beyond every parent seed). Rule for keeping a row in `docs/PHASE_STATUS.md`, Phase 13. Source: `reports/ablation/phase13_ladder.md` (GW-REC-037).
+
+| Row | Builds on | Runs | Change | Val CER | Δ val (95% CI) | Document slice, Δ | GLYPH-C mCE, Δ | Kept |
+|---|---|---|---|---|---|---|---|---|
+| L0 | — | GW-REC-015, GW-DATA-001, GW-DATA-002 | CRNN, height 32, no augmentation | 8.66% | — | 11.46% | 10.28% | start |
+| L1 | L0 | GW-REC-003, GW-REC-004, GW-REC-005 | + augmentation (full preset) | 8.31% | −0.36 [−0.40, −0.31] | 11.06%, −0.40 [−0.54, −0.26] | 8.46%, −1.83 [−1.91, −1.75] | yes |
+| L2 | L1 | GW-DATA-010, GW-DATA-011, GW-DATA-012 | + 25,000 GlyphSynth lines | 8.29% | −0.02 [−0.05, +0.01] | 11.09%, +0.04 [−0.03, +0.11] | 7.19%, −1.27 [−1.32, −1.21] | no (no clear effect on validation) |
+| L3 | L1 | GW-REC-006, GW-REC-025, GW-REC-026 | + input height 48 | 7.83% | −0.48 [−0.54, −0.42] | 10.66%, −0.39 [−0.54, −0.25] | 6.83%, −1.63 [−1.68, −1.58] | yes |
+| L4 | L3 | GW-REC-022, GW-REC-027, GW-REC-028 | full model: + SVTR-style encoder, weight decay 1e-2 (and its learning rate and micro-batching) | 7.57% | −0.26 [−0.32, −0.19] | 10.36%, −0.31 [−0.53, −0.11] | 6.29%, −0.54 [−0.59, −0.49] | yes |
+| L5 | L4 | GW-REC-029, GW-REC-030, GW-REC-031 | + rotation up to ±4° on half the lines (was ±2° on 30%) | 7.45% | −0.12 [−0.16, −0.08] | 10.27%, −0.09 [−0.17, −0.01] | 4.80%, −1.49 [−1.53, −1.45] | yes |
+
+Every verdict above is "helps" except L2's two "no clear effect" on validation and the document slice. From L0 to L5: −1.21 points of validation CER and −5.48 points of mCE at the short budget.
+
+**Phase 13 (the final recognizer, full budget).** Option B (L4 with L5's rotation, chosen by the ladder), 30 epochs, three seeds, against the CRNN baseline GW-REC-001 at the same budget (one seed), paired over pages. Source: `reports/ablation/phase13_final.md` (GW-REC-037).
+
+| Runs | Val CER per seed | Mean | Δ vs GW-REC-001 (7.53%) | Document slice, Δ | GLYPH-C mCE per seed |
+|---|---|---|---|---|---|
+| GW-REC-034, GW-REC-035, GW-REC-036 | 6.30, 6.28, 6.30% | 6.29% | −1.24 [−1.40, −1.11] | 9.15%, −1.08 [−1.41, −0.78] | 3.54, 3.53, 3.53% |
+
+**Phase 13 (detector).** GW-DET-007 (labels down to 3 px, rotation up to 30°) against GW-DET-001, both at Phase 9's settings on all 1,715 validation pages; paired page bootstrap. Adopted only if the F1@0.5 difference has a CI above zero. Source: `reports/error_cases/detector/GW-DET-007/pair.json`.
+
+| Ablation | Control ID | Variant ID | Variable changed | F1@0.5 (val) | Δ vs control (95% CI) | Seeds | Verdict |
+|---|---|---|---|---|---|---|---|
+| Small-text labels and wide rotation | GW-DET-001 (0.7779) | GW-DET-007 | `min_text_size` 6 → 3, `rotate_max_deg` 10 → 30 | 0.7668 | −0.0111 [−0.0146, −0.0075] | 1 | worse; not adopted |
+
 **Phase 8 (detector, full budget).** One change at a time against GW-DET-001 (MobileNetV3-Large,
 ImageNet initialisation, 24 epochs, seed 1337), each arm at the operating point stored in its
 `best.pt`; paired page bootstrap over all 1,715 HierText validation pages (1,000 resamples),

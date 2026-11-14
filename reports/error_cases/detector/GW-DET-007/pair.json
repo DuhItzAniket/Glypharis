@@ -1,0 +1,37 @@
+{
+ "label_a": "GW-DET-007",
+ "label_b": "GW-DET-001",
+ "arm_a": {
+  "file": "runs/p13_det007_pages.jsonl",
+  "setting": null,
+  "op": "inverse09"
+ },
+ "arm_b": {
+  "file": "runs/p13_det001_pages.jsonl",
+  "setting": null,
+  "op": "inverse09"
+ },
+ "pages": 1715,
+ "a": {
+  "tp": 52196,
+  "fp": 9444,
+  "fn": 22304,
+  "precision": 0.8467878001297858,
+  "recall": 0.7006174496644295,
+  "f1_50": 0.7667988835022771
+ },
+ "b": {
+  "tp": 53322,
+  "fp": 9269,
+  "fn": 21178,
+  "precision": 0.851911616686105,
+  "recall": 0.715731543624161,
+  "f1_50": 0.7779066459505001
+ },
+ "diff": {
+  "value": -0.01110776244822298,
+  "low": -0.014584475121182147,
+  "high": -0.007475983495930255
+ },
+ "adopt": false
+}

@@ -8,12 +8,15 @@ Reads the queue logs, where each job has a START line and a DONE or FAIL line wi
 ``runs/chain_2026-10-26.log`` (the Phase 8 GPU sanity sequence), ``runs/chain_det.log`` (the Phase
 8 detector runs), ``runs/phase11_queue.log`` (Phase 11: training, the dry run and the GLYPH-C
 scoring, which counts under GW-DATA-009), ``runs/phase12_queue.log`` (Phase 12: the same, scoring
-under GW-DATA-022; building the GlyphSynth packs is CPU work and is left out) and
+under GW-DATA-022; building the GlyphSynth packs is CPU work and is left out),
+``runs/phase_progress.log`` (Phase 13, its ``P13`` lines only: training, GLYPH-C scoring under
+GW-REC-037 and the detector evaluations under GW-DET-007) and
 ``data/processed/baselines/chain.log`` (Phase 5 baselines). CPU steps logged in a GPU chain
 (latency profiles, comparisons) are left out of the GPU hours. A START is paired with the next end
 line for the same experiment and kind (training, resume, sanity, resume check, baseline run), so
-overlapping jobs still pair correctly. Wall-clock time is what the job occupied the device; the
-training time in each run summary (``<runs>/<id>/summary.json``) is listed beside it. ``--runs``
+overlapping jobs still pair correctly. A ``STOPPED before`` line written when a running step was
+stopped by hand ends that step as ``stopped``. Wall-clock time is what the job occupied the device;
+the training time in each run summary (``<runs>/<id>/summary.json``) is listed beside it. ``--runs``
 takes several directories, since the detector runs live in their own worktree. Jobs run by hand
 outside a queue (the Phase 6 sanity sequence, the GPU resume check, crash probes, tests) are not in
 these logs; the ledger says so instead of guessing them.
@@ -32,7 +35,11 @@ from dataclasses import asdict, dataclass
 from pathlib import Path
 from typing import Any
 
-LINE = re.compile(r"^(\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}) (START|DONE|FAIL)\s+(.*)$")
+LINE = re.compile(
+    r"^(\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}) (START|DONE|FAIL|STOPPED before)\s+(.*)$"
+)
+# Logs shared with other work: only the lines with this prefix are jobs.
+ONLY = {"phase_progress.log": "P13 "}
 EXIT = re.compile(r"\(exit (\d+)\)")
 
 
@@ -52,11 +59,11 @@ def phase_of(experiment: str) -> str:
     if experiment.startswith("GW-BASE"):
         return "05"
     if experiment.startswith("GW-DET"):
-        return "08"
+        return "13" if int(experiment.rsplit("-", 1)[1]) >= 7 else "08"
     if experiment.startswith("GW-DATA"):
         return "11" if int(experiment.rsplit("-", 1)[1]) <= 9 else "12"
     n = int(experiment.rsplit("-", 1)[1]) if experiment.startswith("GW-REC") else -1
-    return "06" if n in (1, 2) else "07" if n >= 3 else "?"
+    return "06" if n in (1, 2) else "13" if n >= 25 else "07" if n >= 3 else "?"
 
 
 CPU_STEPS = (
@@ -69,6 +76,10 @@ CPU_STEPS = (
     "P12 report",
     "P12 compare",
     "P12 GlyphSynth pack",
+    "P13 report",
+    "P13 ladder",
+    "P13 final report",
+    "P13 det pair",
 )
 
 
@@ -86,7 +97,11 @@ def classify(text: str, device: str) -> tuple[str, str, str] | None:
         return None
     score = re.search(r"(?:GLYPH-C|GlyphSynth val) score (GW-\w+-\d{3})", text)
     if score:  # scoring a study's runs is that study's comparison work
-        return ("GW-DATA-022" if text.startswith("P12") else "GW-DATA-009"), "score", score.group(1)
+        study = {"P12": "GW-DATA-022", "P13": "GW-REC-037"}.get(text[:3], "GW-DATA-009")
+        return study, "score", score.group(1)
+    det_eval = re.match(r"P13 det eval (GW-DET-\d{3})", text)
+    if det_eval:  # both detectors are scored for GW-DET-007's adoption test
+        return "GW-DET-007", "score", det_eval.group(1)
     exp = re.search(r"gw-(rec|det|data)-(\d{3})", text, re.IGNORECASE)
     experiment = f"GW-{exp.group(1).upper()}-{exp.group(2)}" if exp else "?"
     if "resume_check" in text:
@@ -99,11 +114,14 @@ def classify(text: str, device: str) -> tuple[str, str, str] | None:
 def parse(log: Path, device: str) -> list[Job]:
     open_jobs: dict[tuple[str, str], tuple[str, str]] = {}
     jobs: list[Job] = []
+    prefix = ONLY.get(log.name, "")
     for raw in log.read_text(encoding="utf-8", errors="replace").splitlines():
         m = LINE.match(raw)
-        if not m:
+        if not m or not m.group(3).startswith(prefix):
             continue
         stamp, what, text = m.groups()
+        if what == "STOPPED before":
+            text = re.sub(r"\s*\(.*\)$", "", text)  # drop the reason
         found = classify(text, device)
         if found is None:
             continue
@@ -122,12 +140,14 @@ def parse(log: Path, device: str) -> list[Job]:
             open_jobs[(experiment, key_kind)] = (stamp, kind)
             continue
         if (experiment, key_kind) not in open_jobs:
-            continue  # an end line without its start (log started mid-job)
+            continue  # an end line without its start (log started mid-job, or a step not begun)
         start, start_kind = open_jobs.pop((experiment, key_kind))
         code = EXIT.search(text)
         outcome = (
-            "done" if what == "DONE" else f"failed (exit {code.group(1)})" if code else "failed"
-        )
+            "done" if what == "DONE"
+            else "stopped" if what == "STOPPED before"
+            else f"failed (exit {code.group(1)})" if code else "failed"
+        )  # fmt: skip
         jobs.append(Job(device, experiment, start_kind, detail, start, stamp,
                         hours_between(start, stamp), outcome))  # fmt: skip
     for (experiment, _), (start, kind) in open_jobs.items():
@@ -166,14 +186,15 @@ def summaries(runs: list[Path]) -> list[Path]:
 
 
 def failed(job: Job) -> bool:
-    return job.outcome.startswith("failed") or job.outcome == "interrupted"
+    return job.outcome.startswith("failed") or job.outcome in ("interrupted", "stopped")
 
 
 def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(description=__doc__.splitlines()[0])
     gpu_logs = [Path("runs/gpu_queue.log"), Path("runs/phase07_queue.log"),
                 Path("runs/chain_2026-10-26.log"), Path("runs/chain_det.log"),
-                Path("runs/phase11_queue.log"), Path("runs/phase12_queue.log")]  # fmt: skip
+                Path("runs/phase11_queue.log"), Path("runs/phase12_queue.log"),
+                Path("runs/phase_progress.log")]  # fmt: skip
     parser.add_argument("--gpu-logs", nargs="*", type=Path, default=gpu_logs)
     parser.add_argument("--cpu-logs", nargs="*", type=Path,
                         default=[Path("data/processed/baselines/chain.log")])  # fmt: skip

@@ -1,0 +1,5 @@
+# GW-REC-032: Phase 13 final model, option A (no wider rotation), seed 2024: GW-REC-024 (the v0.1
+# recognizer, 30 epochs) with the seed changed. Trained only if the ladder does not keep row L5.
+inherits: gw-rec-024.yaml
+experiment_id: GW-REC-032
+seed: 2024

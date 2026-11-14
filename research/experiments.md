@@ -74,6 +74,21 @@ Rows link to a full entry below. Numbers are copied from generated reports only,
 | [GW-DATA-020](#gw-data-020) | 2026-10-29 | 12 | Phase 12 arm +100K, 6 fonts: HierText + 100,000 (6 font families) GlyphSynth lines at the control's step budget, seed 1337 | done | val CER 8.40% [8.24, 8.56]; document slice 11.13% (arm +100K, 6 fonts: no clear effect) | `reports/training/GW-DATA-020/` |
 | [GW-DATA-021](#gw-data-021) | 2026-10-29 | 12 | Phase 12 arm +100K, no capture: HierText + 100,000 (no capture effects) GlyphSynth lines at the control's step budget, seed 1337 | done | val CER 8.38% [8.22, 8.54]; document slice 11.09% (arm +100K, no capture: no clear effect) | `reports/training/GW-DATA-021/` |
 | [GW-DATA-022](#gw-data-022) | 2026-10-29 | 12 | Phase 12 comparison: the synthetic arms against HierText only on the document slice (H2′a), and the font and capture factors (H2′b) | done | document slice vs HierText only: +25K +0.04 [−0.03, +0.11], +100K +0.16 [+0.06, +0.26], +250K +0.39 [+0.25, +0.52]; H2′a and H2′b not supported | `reports/synthetic/` |
+| [GW-REC-025](#gw-rec-025) | 2026-10-30 | 13 | Phase 13 L3 (+ input height 48), seed 2024: GW-REC-006 with the seed changed | done | val CER 7.82% [7.67, 7.98]; GLYPH-C mCE 6.78% | `reports/training/GW-REC-025/` |
+| [GW-REC-026](#gw-rec-026) | 2026-10-30 | 13 | Phase 13 L3 (+ input height 48), seed 7: GW-REC-006 with the seed changed | done | val CER 7.83% [7.68, 7.99]; GLYPH-C mCE 6.84% | `reports/training/GW-REC-026/` |
+| [GW-REC-027](#gw-rec-027) | 2026-10-30 | 13 | Phase 13 L4 (full model), seed 2024: GW-REC-022 with the seed changed | done | val CER 7.59% [7.44, 7.74]; GLYPH-C mCE 6.25% | `reports/training/GW-REC-027/` |
+| [GW-REC-028](#gw-rec-028) | 2026-10-30 | 13 | Phase 13 L4 (full model), seed 7: GW-REC-022 with the seed changed | done | val CER 7.56% [7.41, 7.72]; GLYPH-C mCE 6.33% | `reports/training/GW-REC-028/` |
+| [GW-REC-029](#gw-rec-029) | 2026-10-30 | 13 | Phase 13 L5 (+ wider rotation), seed 1337: GW-REC-022 with rotation up to ±4° on half the lines | done | val CER 7.48% [7.34, 7.64]; GLYPH-C mCE 4.84% | `reports/training/GW-REC-029/` |
+| [GW-REC-030](#gw-rec-030) | 2026-10-30 | 13 | Phase 13 L5 (+ wider rotation), seed 2024: GW-REC-022 with rotation up to ±4° on half the lines | done | val CER 7.43% [7.28, 7.58]; GLYPH-C mCE 4.79% | `reports/training/GW-REC-030/` |
+| [GW-REC-031](#gw-rec-031) | 2026-10-30 | 13 | Phase 13 L5 (+ wider rotation), seed 7: GW-REC-022 with rotation up to ±4° on half the lines | done | val CER 7.44% [7.30, 7.60]; GLYPH-C mCE 4.78% | `reports/training/GW-REC-031/` |
+| [GW-REC-032](#gw-rec-032) | 2026-10-30 | 13 | Phase 13 final, option A, seed 2024: GW-REC-024 with the seed changed (trained only for option A) | not run | option B was chosen (GW-REC-037) | `reports/training/GW-REC-032/` |
+| [GW-REC-033](#gw-rec-033) | 2026-10-30 | 13 | Phase 13 final, option A, seed 7: GW-REC-024 with the seed changed (trained only for option A) | not run | option B was chosen (GW-REC-037) | `reports/training/GW-REC-033/` |
+| [GW-REC-034](#gw-rec-034) | 2026-10-30 | 13 | Phase 13 final, option B, seed 1337: GW-REC-024 with L5's rotation (trained only for option B) | done | val CER 6.30% [6.17, 6.44]; GLYPH-C mCE 3.54% | `reports/training/GW-REC-034/` |
+| [GW-REC-035](#gw-rec-035) | 2026-10-30 | 13 | Phase 13 final, option B, seed 2024: GW-REC-024 with L5's rotation (trained only for option B) | done | val CER 6.28% [6.15, 6.42]; GLYPH-C mCE 3.53% | `reports/training/GW-REC-035/` |
+| [GW-REC-036](#gw-rec-036) | 2026-10-30 | 13 | Phase 13 final, option B, seed 7: GW-REC-024 with L5's rotation (trained only for option B) | done | val CER 6.30% [6.17, 6.44]; GLYPH-C mCE 3.53% | `reports/training/GW-REC-036/` |
+| [GW-DET-007](#gw-det-007) | 2026-10-30 | 13 | GW-DET-001 with labels for smaller text (min_text_size 3) and training rotation up to 30° (Phase 9's deferred fixes) | done | F1@0.5 0.7668 vs 0.7779 (−0.0111 [−0.0146, −0.0075]): not adopted | `reports/training/GW-DET-007/` |
+| [GW-REC-037](#gw-rec-037) | 2026-10-30 | 13 | Phase 13 ablation ladder (L0 to L5) and the final recognizer at the full budget | done | ladder L0 to L5 8.66 to 7.45%, L2 not kept; option B; final 6.29% vs 7.53% (−1.24 [−1.40, −1.11]) | `reports/ablation/` |
+| [GW-E2E-005](#gw-e2e-005) | 2026-11-14 | 13 | Line-confidence calibration of the frozen recognizer GW-REC-034, as GW-E2E-003 | done | ECE half B 0.214 → 0.089 at T = 2.35 (−0.125 [−0.130, −0.122]): adopted | `reports/calibration/GW-E2E-005/` |
 
 ### GW-BASE-001 — Tesseract 5 (LSTM, eng): recognition and end to end
 
@@ -1367,6 +1382,287 @@ Rows link to a full entry below. Numbers are copied from generated reports only,
 - **Interpretation:** at a fixed step budget, GlyphSynth lines do not help HierText's dense pages, and the more of them, the worse (CER rises roughly in proportion to the lines added). They help a great deal on GlyphSynth's own validation lines (held-out fonts), so the model learns them; the rendered lines are simply not close enough to photographed text to stand in for real lines. Each synthetic line in the pool displaces a HierText line from an epoch, and that trade does not pay. Font variety made no measurable difference at 100K; the capture effects (rotation, blur, noise, lighting) do make the model more robust to corrupted lines, at no clean cost.
 - **Limitations:** stated with the plan (equal steps displace real lines; the document slice is a proxy; one seed per factor arm). Also: the arms did not take exactly equal steps (see GW-DATA-010 to 021: up to 2.7% more for 250K, which favours the synthetic arms, so the losses are if anything understated).
 - **Next experiment:** GDC (Phase 14, phone photos of printed documents) is the real document test of whether GlyphSynth helps; for the final model, Phase 13 should not add GlyphSynth beyond 25K lines on the strength of this phase.
+
+### GW-REC-025 — Phase 13 L3 (+ input height 48), seed 2024
+
+- **Date allocated / run:** 2026-10-30 / 2026-10-30
+- **Phase:** 13
+- **Git commit:** recorded in the run summary   **Config:** `configs/rec/gw-rec-025.yaml`   **Seed(s):** 2024
+- **Dataset version(s):** as GW-REC-001; GLYPH-C v1 for robustness
+- **Hardware:** RTX 4050 Laptop 6 GB, bf16
+- **Research question:** the Phase 13 ablation table and final configuration
+- **Hypothesis (written before the run):** none of its own; the ladder rules in `docs/PHASE_STATUS.md`, Phase 13
+- **Method:** `python train.py --config configs/rec/gw-rec-025.yaml`; GW-REC-006 with the seed changed; 8 epochs (short budget). Compared by GW-REC-037.
+- **Variables:** independent: the seed; controlled: everything else
+- **Control:** the row's parent (GW-REC-037)
+- **Result:** val CER 7.82% [7.67, 7.98] (95% bootstrap CI over 73,888 lines), WER 22.25%; document slice 10.73%; GLYPH-C clean CER 2.80%, mCE 6.78% (`reports/robustness/GW-REC-025.json`). 8 epochs, 45,343 optimizer steps; best epoch 7, the last. The row as a whole: GW-REC-037.
+- **Training diagnostics:** No flags raised. (`reports/training/GW-REC-025/report.md`)
+- **Interpretation:** one seed of row L3 (7.83, 7.82, 7.83% over its three seeds); the seeds agree to within 0.05 points, so the row, not this run, carries the verdict.
+- **Limitations:** stated with the plan.
+- **Next experiment:** GW-REC-037
+- **Training time:** 2.02 GPU-hours (RTX 4050 Laptop, bf16)
+
+### GW-REC-026 — Phase 13 L3 (+ input height 48), seed 7
+
+- **Date allocated / run:** 2026-10-30 / 2026-10-31
+- **Phase:** 13
+- **Git commit:** recorded in the run summary   **Config:** `configs/rec/gw-rec-026.yaml`   **Seed(s):** 7
+- **Dataset version(s):** as GW-REC-001; GLYPH-C v1 for robustness
+- **Hardware:** RTX 4050 Laptop 6 GB, bf16
+- **Research question:** the Phase 13 ablation table and final configuration
+- **Hypothesis (written before the run):** none of its own; the ladder rules in `docs/PHASE_STATUS.md`, Phase 13
+- **Method:** `python train.py --config configs/rec/gw-rec-026.yaml`; GW-REC-006 with the seed changed; 8 epochs (short budget). Compared by GW-REC-037.
+- **Variables:** independent: the seed; controlled: everything else
+- **Control:** the row's parent (GW-REC-037)
+- **Result:** val CER 7.83% [7.68, 7.99] (95% bootstrap CI over 73,888 lines), WER 22.20%; document slice 10.62%; GLYPH-C clean CER 2.81%, mCE 6.84% (`reports/robustness/GW-REC-026.json`). 8 epochs, 45,346 optimizer steps; best epoch 7, the last. The row as a whole: GW-REC-037.
+- **Training diagnostics:** No flags raised. (`reports/training/GW-REC-026/report.md`)
+- **Interpretation:** one seed of row L3 (7.83, 7.82, 7.83% over its three seeds); the seeds agree to within 0.05 points, so the row, not this run, carries the verdict.
+- **Limitations:** stated with the plan.
+- **Next experiment:** GW-REC-037
+- **Training time:** 2.10 GPU-hours (RTX 4050 Laptop, bf16)
+
+### GW-REC-027 — Phase 13 L4 (full model), seed 2024
+
+- **Date allocated / run:** 2026-10-30 / 2026-10-31
+- **Phase:** 13
+- **Git commit:** recorded in the run summary   **Config:** `configs/rec/gw-rec-027.yaml`   **Seed(s):** 2024
+- **Dataset version(s):** as GW-REC-001; GLYPH-C v1 for robustness
+- **Hardware:** RTX 4050 Laptop 6 GB, bf16
+- **Research question:** the Phase 13 ablation table and final configuration
+- **Hypothesis (written before the run):** none of its own; the ladder rules in `docs/PHASE_STATUS.md`, Phase 13
+- **Method:** `python train.py --config configs/rec/gw-rec-027.yaml`; GW-REC-022 with the seed changed; 8 epochs (short budget). Compared by GW-REC-037.
+- **Variables:** independent: the seed; controlled: everything else
+- **Control:** the row's parent (GW-REC-037)
+- **Result:** val CER 7.59% [7.44, 7.74] (95% bootstrap CI over 73,888 lines), WER 22.13%; document slice 10.32%; GLYPH-C clean CER 2.51%, mCE 6.25% (`reports/robustness/GW-REC-027.json`). 8 epochs, 45,297 optimizer steps; best epoch 7, the last. The row as a whole: GW-REC-037.
+- **Training diagnostics:** No flags raised. (`reports/training/GW-REC-027/report.md`)
+- **Interpretation:** one seed of row L4 (7.56, 7.59, 7.56%); the seeds agree to within 0.05 points, so the row, not this run, carries the verdict.
+- **Limitations:** stated with the plan.
+- **Next experiment:** GW-REC-037
+- **Training time:** 5.34 GPU-hours (RTX 4050 Laptop, bf16)
+
+### GW-REC-028 — Phase 13 L4 (full model), seed 7
+
+- **Date allocated / run:** 2026-10-30 / 2026-11-01
+- **Phase:** 13
+- **Git commit:** recorded in the run summary   **Config:** `configs/rec/gw-rec-028.yaml`   **Seed(s):** 7
+- **Dataset version(s):** as GW-REC-001; GLYPH-C v1 for robustness
+- **Hardware:** RTX 4050 Laptop 6 GB, bf16
+- **Research question:** the Phase 13 ablation table and final configuration
+- **Hypothesis (written before the run):** none of its own; the ladder rules in `docs/PHASE_STATUS.md`, Phase 13
+- **Method:** `python train.py --config configs/rec/gw-rec-028.yaml`; GW-REC-022 with the seed changed; 8 epochs (short budget). Compared by GW-REC-037.
+- **Variables:** independent: the seed; controlled: everything else
+- **Control:** the row's parent (GW-REC-037)
+- **Result:** val CER 7.56% [7.41, 7.72] (95% bootstrap CI over 73,888 lines), WER 22.04%; document slice 10.39%; GLYPH-C clean CER 2.62%, mCE 6.33% (`reports/robustness/GW-REC-028.json`). 8 epochs, 45,298 optimizer steps; best epoch 7, the last. The row as a whole: GW-REC-037.
+- **Training diagnostics:** No flags raised. Stopped by hand 2 times at the owner's request and resumed from `last.pt` each time (report, Notes). (`reports/training/GW-REC-028/report.md`)
+- **Interpretation:** one seed of row L4 (7.56, 7.59, 7.56%); the seeds agree to within 0.05 points, so the row, not this run, carries the verdict.
+- **Limitations:** stated with the plan.
+- **Next experiment:** GW-REC-037
+- **Training time:** 5.37 GPU-hours (RTX 4050 Laptop, bf16)
+
+### GW-REC-029 — Phase 13 L5 (+ wider rotation), seed 1337
+
+- **Date allocated / run:** 2026-10-30 / 2026-11-02
+- **Phase:** 13
+- **Git commit:** recorded in the run summary   **Config:** `configs/rec/gw-rec-029.yaml`   **Seed(s):** 1337
+- **Dataset version(s):** as GW-REC-001; GLYPH-C v1 for robustness
+- **Hardware:** RTX 4050 Laptop 6 GB, bf16
+- **Research question:** the Phase 13 ablation table and final configuration
+- **Hypothesis (written before the run):** none of its own; the ladder rules in `docs/PHASE_STATUS.md`, Phase 13
+- **Method:** `python train.py --config configs/rec/gw-rec-029.yaml`; GW-REC-022 with rotation up to ±4° on half the lines; 8 epochs (short budget). Compared by GW-REC-037.
+- **Variables:** independent: the seed and the change of its row; controlled: everything else
+- **Control:** the row's parent (GW-REC-037)
+- **Result:** val CER 7.48% [7.34, 7.64] (95% bootstrap CI over 73,888 lines), WER 22.05%; document slice 10.31%; GLYPH-C clean CER 2.44%, mCE 4.84% (`reports/robustness/GW-REC-029.json`). 8 epochs, 45,295 optimizer steps; best epoch 7, the last. The row as a whole: GW-REC-037.
+- **Training diagnostics:** No flags raised. (`reports/training/GW-REC-029/report.md`)
+- **Interpretation:** one seed of row L5 (7.48, 7.43, 7.44%); the seeds agree to within 0.05 points, so the row, not this run, carries the verdict.
+- **Limitations:** stated with the plan.
+- **Next experiment:** GW-REC-037
+- **Training time:** 5.05 GPU-hours (RTX 4050 Laptop, bf16)
+
+### GW-REC-030 — Phase 13 L5 (+ wider rotation), seed 2024
+
+- **Date allocated / run:** 2026-10-30 / 2026-11-03
+- **Phase:** 13
+- **Git commit:** recorded in the run summary   **Config:** `configs/rec/gw-rec-030.yaml`   **Seed(s):** 2024
+- **Dataset version(s):** as GW-REC-001; GLYPH-C v1 for robustness
+- **Hardware:** RTX 4050 Laptop 6 GB, bf16
+- **Research question:** the Phase 13 ablation table and final configuration
+- **Hypothesis (written before the run):** none of its own; the ladder rules in `docs/PHASE_STATUS.md`, Phase 13
+- **Method:** `python train.py --config configs/rec/gw-rec-030.yaml`; GW-REC-022 with rotation up to ±4° on half the lines; 8 epochs (short budget). Compared by GW-REC-037.
+- **Variables:** independent: the seed and the change of its row; controlled: everything else
+- **Control:** the row's parent (GW-REC-037)
+- **Result:** val CER 7.43% [7.28, 7.58] (95% bootstrap CI over 73,888 lines), WER 21.99%; document slice 10.24%; GLYPH-C clean CER 2.40%, mCE 4.79% (`reports/robustness/GW-REC-030.json`). 8 epochs, 45,297 optimizer steps; best epoch 7, the last. The row as a whole: GW-REC-037.
+- **Training diagnostics:** No flags raised. Stopped by hand once at the owner's request and resumed from `last.pt` each time (report, Notes). (`reports/training/GW-REC-030/report.md`)
+- **Interpretation:** one seed of row L5 (7.48, 7.43, 7.44%); the seeds agree to within 0.05 points, so the row, not this run, carries the verdict.
+- **Limitations:** stated with the plan.
+- **Next experiment:** GW-REC-037
+- **Training time:** 5.87 GPU-hours (RTX 4050 Laptop, bf16)
+
+### GW-REC-031 — Phase 13 L5 (+ wider rotation), seed 7
+
+- **Date allocated / run:** 2026-10-30 / 2026-11-03
+- **Phase:** 13
+- **Git commit:** recorded in the run summary   **Config:** `configs/rec/gw-rec-031.yaml`   **Seed(s):** 7
+- **Dataset version(s):** as GW-REC-001; GLYPH-C v1 for robustness
+- **Hardware:** RTX 4050 Laptop 6 GB, bf16
+- **Research question:** the Phase 13 ablation table and final configuration
+- **Hypothesis (written before the run):** none of its own; the ladder rules in `docs/PHASE_STATUS.md`, Phase 13
+- **Method:** `python train.py --config configs/rec/gw-rec-031.yaml`; GW-REC-022 with rotation up to ±4° on half the lines; 8 epochs (short budget). Compared by GW-REC-037.
+- **Variables:** independent: the seed and the change of its row; controlled: everything else
+- **Control:** the row's parent (GW-REC-037)
+- **Result:** val CER 7.44% [7.30, 7.60] (95% bootstrap CI over 73,888 lines), WER 22.03%; document slice 10.26%; GLYPH-C clean CER 2.39%, mCE 4.78% (`reports/robustness/GW-REC-031.json`). 8 epochs, 45,298 optimizer steps; best epoch 7, the last. The row as a whole: GW-REC-037.
+- **Training diagnostics:** No flags raised. Stopped by hand 2 times at the owner's request and resumed from `last.pt` each time (report, Notes). (`reports/training/GW-REC-031/report.md`)
+- **Interpretation:** one seed of row L5 (7.48, 7.43, 7.44%); the seeds agree to within 0.05 points, so the row, not this run, carries the verdict.
+- **Limitations:** stated with the plan.
+- **Next experiment:** GW-REC-037
+- **Training time:** 5.34 GPU-hours (RTX 4050 Laptop, bf16)
+
+### GW-REC-032 — Phase 13 final, option A, seed 2024
+
+- **Date allocated / run:** 2026-10-30 / —
+- **Phase:** 13
+- **Git commit:** recorded in the run summary   **Config:** `configs/rec/gw-rec-032.yaml`   **Seed(s):** 2024
+- **Dataset version(s):** as GW-REC-001; GLYPH-C v1 for robustness
+- **Hardware:** RTX 4050 Laptop 6 GB, bf16
+- **Research question:** the Phase 13 ablation table and final configuration
+- **Hypothesis (written before the run):** none of its own; the ladder rules in `docs/PHASE_STATUS.md`, Phase 13
+- **Method:** `python train.py --config configs/rec/gw-rec-032.yaml`; GW-REC-024 with the seed changed (trained only for option A); 30 epochs (full budget). Compared by GW-REC-037.
+- **Variables:** independent: the seed; controlled: everything else
+- **Control:** the row's parent (GW-REC-037)
+- **Result:** not trained: the ladder kept row L5, so the final runs are option B (GW-REC-034 to 036), as the plan fixed in advance.
+- **Training diagnostics:** —
+- **Interpretation:** —
+- **Limitations:** stated with the plan.
+- **Next experiment:** GW-REC-037
+- **Training time:** —
+
+### GW-REC-033 — Phase 13 final, option A, seed 7
+
+- **Date allocated / run:** 2026-10-30 / —
+- **Phase:** 13
+- **Git commit:** recorded in the run summary   **Config:** `configs/rec/gw-rec-033.yaml`   **Seed(s):** 7
+- **Dataset version(s):** as GW-REC-001; GLYPH-C v1 for robustness
+- **Hardware:** RTX 4050 Laptop 6 GB, bf16
+- **Research question:** the Phase 13 ablation table and final configuration
+- **Hypothesis (written before the run):** none of its own; the ladder rules in `docs/PHASE_STATUS.md`, Phase 13
+- **Method:** `python train.py --config configs/rec/gw-rec-033.yaml`; GW-REC-024 with the seed changed (trained only for option A); 30 epochs (full budget). Compared by GW-REC-037.
+- **Variables:** independent: the seed; controlled: everything else
+- **Control:** the row's parent (GW-REC-037)
+- **Result:** not trained: the ladder kept row L5, so the final runs are option B (GW-REC-034 to 036), as the plan fixed in advance.
+- **Training diagnostics:** —
+- **Interpretation:** —
+- **Limitations:** stated with the plan.
+- **Next experiment:** GW-REC-037
+- **Training time:** —
+
+### GW-REC-034 — Phase 13 final, option B, seed 1337
+
+- **Date allocated / run:** 2026-10-30 / 2026-11-10
+- **Phase:** 13
+- **Git commit:** recorded in the run summary   **Config:** `configs/rec/gw-rec-034.yaml`   **Seed(s):** 1337
+- **Dataset version(s):** as GW-REC-001; GLYPH-C v1 for robustness
+- **Hardware:** RTX 4050 Laptop 6 GB, bf16
+- **Research question:** the Phase 13 ablation table and final configuration
+- **Hypothesis (written before the run):** none of its own; the ladder rules in `docs/PHASE_STATUS.md`, Phase 13
+- **Method:** `python train.py --config configs/rec/gw-rec-034.yaml`; GW-REC-024 with L5's rotation (trained only for option B); 30 epochs (full budget). Compared by GW-REC-037.
+- **Variables:** independent: the seed and the change of its row; controlled: everything else
+- **Control:** the row's parent (GW-REC-037)
+- **Result:** val CER 6.30% [6.17, 6.44] (95% bootstrap CI over 73,888 lines), WER 19.37%; document slice 9.13%; GLYPH-C clean CER 1.93%, mCE 3.54% (`reports/robustness/GW-REC-034.json`). 30 epochs, 169,860 optimizer steps; best epoch 29 (the last). The three seeds against the baseline: GW-REC-037. This is the shipped checkpoint, fixed with the plan (`configs/final/glypharis_v1.yaml`).
+- **Training diagnostics:** No flags raised. Stopped by hand three times at the owner's request and resumed from `last.pt`; one crash in epoch 25 (CUDA out of memory in the backward pass, most likely because another program took GPU memory; `research/failures.md`), resumed from step 142,000. (`reports/training/GW-REC-034/report.md`)
+- **Interpretation:** one seed of the final recognizer (option B); the three seeds read 6.28 to 6.30%, so the spread at the full budget is about 0.02 points, smaller than any difference the ladder acted on.
+- **Limitations:** stated with the plan.
+- **Next experiment:** GW-REC-037
+- **Training time:** 20.11 GPU-hours (RTX 4050 Laptop, bf16)
+
+### GW-REC-035 — Phase 13 final, option B, seed 2024
+
+- **Date allocated / run:** 2026-10-30 / 2026-11-12
+- **Phase:** 13
+- **Git commit:** recorded in the run summary   **Config:** `configs/rec/gw-rec-035.yaml`   **Seed(s):** 2024
+- **Dataset version(s):** as GW-REC-001; GLYPH-C v1 for robustness
+- **Hardware:** RTX 4050 Laptop 6 GB, bf16
+- **Research question:** the Phase 13 ablation table and final configuration
+- **Hypothesis (written before the run):** none of its own; the ladder rules in `docs/PHASE_STATUS.md`, Phase 13
+- **Method:** `python train.py --config configs/rec/gw-rec-035.yaml`; GW-REC-024 with L5's rotation (trained only for option B); 30 epochs (full budget). Compared by GW-REC-037.
+- **Variables:** independent: the seed and the change of its row; controlled: everything else
+- **Control:** the row's parent (GW-REC-037)
+- **Result:** val CER 6.28% [6.15, 6.42] (95% bootstrap CI over 73,888 lines), WER 19.26%; document slice 9.12%; GLYPH-C clean CER 1.91%, mCE 3.53% (`reports/robustness/GW-REC-035.json`). 30 epochs, 169,860 optimizer steps; best epoch 28; the final epoch reads the same to two decimals. The three seeds against the baseline: GW-REC-037.
+- **Training diagnostics:** No flags raised. Stopped by hand twice at the owner's request and resumed from `last.pt`. (`reports/training/GW-REC-035/report.md`)
+- **Interpretation:** one seed of the final recognizer (option B); the three seeds read 6.28 to 6.30%, so the spread at the full budget is about 0.02 points, smaller than any difference the ladder acted on.
+- **Limitations:** stated with the plan.
+- **Next experiment:** GW-REC-037
+- **Training time:** 19.09 GPU-hours (RTX 4050 Laptop, bf16)
+
+### GW-REC-036 — Phase 13 final, option B, seed 7
+
+- **Date allocated / run:** 2026-10-30 / 2026-11-14
+- **Phase:** 13
+- **Git commit:** recorded in the run summary   **Config:** `configs/rec/gw-rec-036.yaml`   **Seed(s):** 7
+- **Dataset version(s):** as GW-REC-001; GLYPH-C v1 for robustness
+- **Hardware:** RTX 4050 Laptop 6 GB, bf16
+- **Research question:** the Phase 13 ablation table and final configuration
+- **Hypothesis (written before the run):** none of its own; the ladder rules in `docs/PHASE_STATUS.md`, Phase 13
+- **Method:** `python train.py --config configs/rec/gw-rec-036.yaml`; GW-REC-024 with L5's rotation (trained only for option B); 30 epochs (full budget). Compared by GW-REC-037.
+- **Variables:** independent: the seed and the change of its row; controlled: everything else
+- **Control:** the row's parent (GW-REC-037)
+- **Result:** val CER 6.30% [6.17, 6.44] (95% bootstrap CI over 73,888 lines), WER 19.24%; document slice 9.21%; GLYPH-C clean CER 1.90%, mCE 3.53% (`reports/robustness/GW-REC-036.json`). 30 epochs, 169,860 optimizer steps; best epoch 29 (the last). The three seeds against the baseline: GW-REC-037.
+- **Training diagnostics:** No flags raised. Stopped by hand once at the owner's request and resumed from `last.pt`. (`reports/training/GW-REC-036/report.md`)
+- **Interpretation:** one seed of the final recognizer (option B); the three seeds read 6.28 to 6.30%, so the spread at the full budget is about 0.02 points, smaller than any difference the ladder acted on.
+- **Limitations:** stated with the plan.
+- **Next experiment:** GW-REC-037
+- **Training time:** 19.37 GPU-hours (RTX 4050 Laptop, bf16)
+
+### GW-DET-007 — Phase 13 detector: smaller text and wider rotation
+
+- **Date allocated / run:** 2026-10-30 / 2026-11-04
+- **Phase:** 13
+- **Git commit:** recorded in the run summary   **Config:** `configs/det/gw-det-007.yaml`   **Seed(s):** 1337
+- **Dataset version(s):** as GW-DET-001
+- **Hardware:** RTX 4050 Laptop 6 GB
+- **Research question:** do labels for smaller text and wider training rotation fix the misses Phase 9 found (lines under 8 px, rotated lines)?
+- **Hypothesis (written before the run):** expectation, not a claim: higher recall on small and rotated lines, and higher F1@0.5 overall.
+- **Method:** `python train.py --config configs/det/gw-det-007.yaml`; GW-DET-001 and GW-DET-007 scored on all validation pages at Phase 9's adopted settings (`scripts/det_eval.py`), paired with `scripts/det_pair.py`. Adopted if the F1@0.5 difference has a CI above zero (`docs/PHASE_STATUS.md`, Phase 13).
+- **Variables:** independent: `labels.min_text_size` 6 → 3, `data.rotate_max_deg` 10 → 30; controlled: everything else
+- **Control:** GW-DET-001
+- **Result:** all 1,715 validation pages (74,500 care lines) at Phase 9's settings (long side 1536, GW-DET-004's post-processing, operating point `inverse09`; `reports/error_cases/detector/GW-DET-007/`): F1@0.5 0.7668 [0.7518, 0.7810], precision 0.8468, recall 0.7006 (TP 52,196, FP 9,444, FN 22,304), against GW-DET-001 0.7779 [0.7621, 0.7919], 0.8519, 0.7157 (53,322, 9,269, 21,178). Paired difference in F1@0.5 **−0.0111 [−0.0146, −0.0075]**: **not adopted**; GW-DET-001 stays. 24 epochs, 98,544 optimizer steps, best epoch 19 on the 400-page subset; 3,187,209 parameters at inference, as GW-DET-001.
+- **Training diagnostics:** one `POSSIBLE OVERFITTING` flag at epoch 9 on the 400-page subset (`reports/training/GW-DET-007/report.md`), which later epochs recovered from; no other flags.
+- **Interpretation:** the expectation fails: with labels for text down to 3 px and rotation up to 30°, the detector finds fewer lines, not more (recall −1.5 points), and is no more precise. Small and rotated lines were not scored as slices here, so whether those groups gained at the cost of the rest is not known; Phase 15's error analysis can look. Most of the page error is detection (GW-E2E-002, Phase 10), and these two label and augmentation changes do not reduce it.
+- **Limitations:** one seed each; the post-processing was tuned on GW-DET-001, which favours it slightly (both stated in advance).
+- **Next experiment:** the frozen configuration
+- **Training time:** 7.51 GPU-hours (RTX 4050 Laptop)
+
+### GW-REC-037 — Phase 13: ablation ladder and final recognizer
+
+- **Date allocated / run:** 2026-10-30 / 2026-11-14
+- **Phase:** 13
+- **Git commit:** recorded in the result files   **Config:** the runs' resolved configs   **Seed(s):** 1337, 2024, 7 per row
+- **Dataset version(s):** HierText validation pack; GLYPH-C v1
+- **Hardware:** RTX 4050 Laptop 6 GB
+- **Research question:** what does each step from the baseline to the full model contribute, and which configuration is final?
+- **Hypothesis (written before the run):** none; the ladder rules in `docs/PHASE_STATUS.md`, Phase 13 (H6 is touched by L4, exploratory)
+- **Method:** `scripts/ablation_ladder.py ladder`, `decide` and `final`; GLYPH-C via `scripts/glyph_c_eval.py score`.
+- **Variables:** independent: the ladder's changes; controlled: data, budget, seeds
+- **Control:** each row's parent; GW-REC-001 for the final model
+- **Result:** `reports/ablation/phase13_ladder.md` and `phase13_final.md`. Ladder (8 epochs, three seeds per row, each row against its parent): L0 baseline 8.66%; L1 + augmentation 8.31% (−0.36 [−0.40, −0.31], helps; kept); L2 + 25K GlyphSynth 8.29% (−0.02 [−0.05, +0.01], no clear effect; not kept, though GLYPH-C mCE −1.27 [−1.32, −1.21]); L3 + height 48 on L1 7.83% (−0.48 [−0.54, −0.42], helps; kept); L4 full model 7.57% (−0.26 [−0.32, −0.19], helps; kept); L5 + wider rotation 7.45% (−0.12 [−0.16, −0.08] on validation, helps, and GLYPH-C mCE 4.80% against 6.29%, −1.49 [−1.53, −1.45]; kept). Every kept row also helps on the document slice and on GLYPH-C mCE. Final option: **B**. Final recognizer (30 epochs, GW-REC-034 to 036): val CER 6.30, 6.28, 6.30% (mean 6.29%) against GW-REC-001's 7.53%, **−1.24 [−1.40, −1.11]** points; document slice 9.15% against 10.23%, −1.08 [−1.41, −0.78]; GLYPH-C mCE 3.54, 3.53, 3.53%.
+- **Interpretation:** from the plain CRNN to the final model, validation CER falls from 8.66 to 7.45% at the short budget, and every step that was kept helps on all three measures. The largest single steps on validation are the input height (−0.48) and augmentation (−0.36); the wider rotation adds little on clean validation lines (−0.12) but cuts the corruption error by almost a quarter, as Phase 11's finding F15 pointed to. GlyphSynth lines leave validation unchanged but make the model more robust, as in Phase 12. At the full budget the final model gains 1.24 points over the CRNN baseline, and its three seeds agree to 0.02 points.
+- **Limitations:** stated with the plan (short-budget ladder; L4 bundles the encoder with its training recipe; earlier seeds come from earlier phases). The baseline at the full budget is one seed, so the final comparison's CI covers page sampling, not the baseline's seed noise; the short-budget seed spread (about 0.05 points) is small next to −1.24.
+- **Next experiment:** Phase 14
+
+### GW-E2E-005 — Line-confidence calibration of the frozen recognizer
+
+- **Date allocated / run:** 2026-11-14 / 2026-11-14
+- **Phase:** 13
+- **Git commit:** recorded in the result file   **Config:** `runs/GW-REC-034/config.resolved.yaml`   **Seed(s):** none (no training)
+- **Dataset version(s):** HierText validation pages and lines as in GW-E2E-003
+- **Hardware:** RTX 4050 Laptop 6 GB
+- **Research question:** the temperature the frozen configuration ships with. GW-E2E-003's T = 2.35 was fitted for GW-REC-024, and a retrained recognizer needs its own.
+- **Hypothesis (written before the run):** none of its own; GW-E2E-003's method and adoption rule unchanged (fit on validation half A, adopt if the ECE difference on half B has a CI below zero). H8 was settled by GW-E2E-003; this run is reported as a check of it on a second model.
+- **Method:** `python scripts/rec_calibrate.py --rec-run runs/GW-REC-034 --experiment-id GW-E2E-005 --out reports/calibration/GW-E2E-005`
+- **Variables:** independent: temperature; controlled: model, lines, confidence definition
+- **Control:** T = 1
+- **Result:** 73,888 validation lines (half A 35,976, half B 37,912; accuracy on half B 0.724). Fitted T = 2.35, the same grid value as GW-E2E-003 (binary NLL on half A 0.410 against 0.772 at T = 1). ECE on half B: 0.2140 at T = 1, 0.0886 at T = 2.35, difference **−0.125 [−0.130, −0.122]** (`reports/calibration/GW-E2E-005/calibration.md`, reliability diagram there): adopted.
+- **Interpretation:** the final recognizer is over-confident in the same way and by about as much as GW-REC-024 (raw ECE 0.21 against 0.22), and the same temperature fixes most of it (59% lower), so H8's validation result holds on a second model. The frozen configuration carries T = 2.35 from this run.
+- **Limitations:** as GW-E2E-003.
+- **Next experiment:** the frozen configuration (`configs/final/glypharis_v1.yaml`)
 
 ---
 
