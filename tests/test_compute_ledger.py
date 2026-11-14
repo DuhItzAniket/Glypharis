@@ -120,3 +120,38 @@ def test_phase11_chain_lines(tmp_path):
     ]
     assert res["experiments"]["GW-DATA-003"]["phase"] == "11"
     assert res["experiments"]["GW-DATA-009"]["phase"] == "11"
+
+
+def test_phase13_progress_log_keeps_only_its_lines_and_hand_stops(tmp_path):
+    gpu = tmp_path / "phase_progress.log"
+    gpu.write_text(
+        "2026-10-28 00:27:06 START P10 confidence calibration (temperature scaling, ECE)\n"
+        "2026-10-30 15:34:06 START P13 GLYPH-C score GW-REC-006\n"
+        "2026-10-30 15:44:00 DONE  P13 GLYPH-C score GW-REC-006 :: mCE 0.0687\n"
+        "2026-10-31 10:00:00 START P13 train GW-REC-028\n"
+        "2026-10-31 13:00:00 STOPPED before P13 train GW-REC-028 (owner asked to pause)\n"
+        "2026-10-31 14:00:00 STOPPED before P13 train GW-REC-029\n"
+        "2026-10-31 15:00:00 START P13 train GW-REC-028\n"
+        "2026-10-31 17:00:00 DONE  P13 train GW-REC-028 :: done\n"
+        "2026-10-31 17:00:00 START P13 report GW-REC-028\n"
+        "2026-10-31 17:00:10 DONE  P13 report GW-REC-028 :: report\n"
+        "2026-11-04 05:13:53 START P13 det eval GW-DET-001 (Phase 9 settings, all pages)\n"
+        "2026-11-04 05:19:19 DONE  P13 det eval GW-DET-001 (Phase 9 settings, all pages) :: }\n",
+        encoding="utf-8",
+    )
+    out = tmp_path / "out"
+    assert compute_ledger.main(["--gpu-logs", str(gpu), "--cpu-logs", "--runs", str(tmp_path),
+                                "--out", str(out)]) == 0  # fmt: skip
+    res = json.loads((out / "ledger.json").read_text(encoding="utf-8"))
+    kinds = [(j["experiment"], j["kind"], j["outcome"], j["hours"]) for j in res["jobs"]]
+    assert kinds[0][:3] == ("GW-REC-037", "score", "done")
+    assert abs(kinds[0][3] - 594 / 3600) < 1e-9
+    assert kinds[1:3] == [
+        ("GW-REC-028", "train", "stopped", 3.0),
+        ("GW-REC-028", "train", "done", 2.0),
+    ]
+    assert kinds[3][:3] == ("GW-DET-007", "score", "done")
+    assert len(kinds) == 4  # the P10 line, the step never begun and the report are not jobs
+    assert res["experiments"]["GW-REC-028"]["failed_jobs"] == 1
+    assert res["experiments"]["GW-REC-028"]["phase"] == "13"
+    assert res["experiments"]["GW-DET-007"]["phase"] == "13"

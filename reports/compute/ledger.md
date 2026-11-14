@@ -16,7 +16,8 @@ by hand has no end line; its duration is unknown and adds nothing to the hours.
 | 08 | 16.2 | 0.8 | 0.0 | 0.0 |
 | 11 | 9.5 | 1.3 | 0.0 | 0.0 |
 | 12 | 17.1 | 0.3 | 0.0 | 0.0 |
-| all | 109.5 | 24.2 | 45.9 | 1.9 |
+| 13 | 107.6 | 51.3 | 0.0 | 0.0 |
+| all | 217.2 | 75.5 | 45.9 | 1.9 |
 
 ## By experiment
 
@@ -54,6 +55,7 @@ by hand has no end line; its duration is unknown and adds nothing to the hours.
 | GW-DET-001 | 08 | GPU | 3 | 1 | 5.74 | 4.86 |
 | GW-DET-002 | 08 | GPU | 2 | 1 | 5.42 | 4.72 |
 | GW-DET-003 | 08 | GPU | 2 | 1 | 5.02 | 4.33 |
+| GW-DET-007 | 13 | GPU | 3 | 0 | 8.18 | 7.51 |
 | GW-REC-001 | 06 | GPU | 3 | 2 | 5.62 | 4.71 |
 | GW-REC-002 | 06 | GPU | 2 | 1 | 5.92 | 5.32 |
 | GW-REC-003 | 07 | GPU | 1 | 0 | 1.53 | 1.34 |
@@ -77,6 +79,17 @@ by hand has no end line; its duration is unknown and adds nothing to the hours.
 | GW-REC-021 | 07 | GPU | 1 | 0 | 0.81 | 0.74 |
 | GW-REC-022 | 07 | GPU | 1 | 0 | 4.90 | 4.65 |
 | GW-REC-024 | 07 | GPU | 2 | 1 | 20.37 | 19.31 |
+| GW-REC-025 | 13 | GPU | 1 | 0 | 2.23 | 2.02 |
+| GW-REC-026 | 13 | GPU | 1 | 0 | 2.30 | 2.10 |
+| GW-REC-027 | 13 | GPU | 1 | 0 | 5.67 | 5.34 |
+| GW-REC-028 | 13 | GPU | 3 | 2 | 5.78 | 5.37 |
+| GW-REC-029 | 13 | GPU | 1 | 0 | 5.39 | 5.05 |
+| GW-REC-030 | 13 | GPU | 2 | 1 | 6.34 | 5.87 |
+| GW-REC-031 | 13 | GPU | 3 | 2 | 5.76 | 5.34 |
+| GW-REC-034 | 13 | GPU | 5 | 4 | 21.58 | 20.11 |
+| GW-REC-035 | 13 | GPU | 3 | 2 | 20.38 | 19.09 |
+| GW-REC-036 | 13 | GPU | 2 | 1 | 20.63 | 19.37 |
+| GW-REC-037 | 13 | GPU | 16 | 1 | 3.41 |  |
 
 ## Not in these logs
 

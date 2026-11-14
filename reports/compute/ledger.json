@@ -2069,6 +2069,416 @@
    "end": "2026-10-30 14:42:27",
    "hours": 0.09444444444444444,
    "outcome": "done"
+  },
+  {
+   "device": "gpu",
+   "experiment": "GW-REC-037",
+   "kind": "score",
+   "detail": "GW-REC-006",
+   "start": "2026-10-30 15:34:06",
+   "end": "2026-10-30 15:44:00",
+   "hours": 0.165,
+   "outcome": "done"
+  },
+  {
+   "device": "gpu",
+   "experiment": "GW-REC-037",
+   "kind": "score",
+   "detail": "GW-REC-022",
+   "start": "2026-10-30 15:44:00",
+   "end": "2026-10-30 20:30:11",
+   "hours": null,
+   "outcome": "interrupted"
+  },
+  {
+   "device": "gpu",
+   "experiment": "GW-REC-037",
+   "kind": "score",
+   "detail": "GW-REC-022",
+   "start": "2026-10-30 20:30:11",
+   "end": "2026-10-30 20:49:04",
+   "hours": 0.31472222222222224,
+   "outcome": "done"
+  },
+  {
+   "device": "gpu",
+   "experiment": "GW-REC-037",
+   "kind": "score",
+   "detail": "GW-DATA-010",
+   "start": "2026-10-30 20:49:04",
+   "end": "2026-10-30 20:55:07",
+   "hours": 0.10083333333333333,
+   "outcome": "done"
+  },
+  {
+   "device": "gpu",
+   "experiment": "GW-REC-037",
+   "kind": "score",
+   "detail": "GW-DATA-011",
+   "start": "2026-10-30 20:55:07",
+   "end": "2026-10-30 21:00:55",
+   "hours": 0.09666666666666666,
+   "outcome": "done"
+  },
+  {
+   "device": "gpu",
+   "experiment": "GW-REC-037",
+   "kind": "score",
+   "detail": "GW-DATA-012",
+   "start": "2026-10-30 21:00:55",
+   "end": "2026-10-30 21:06:37",
+   "hours": 0.095,
+   "outcome": "done"
+  },
+  {
+   "device": "gpu",
+   "experiment": "GW-REC-025",
+   "kind": "train",
+   "detail": "",
+   "start": "2026-10-30 21:06:37",
+   "end": "2026-10-30 23:20:33",
+   "hours": 2.232222222222222,
+   "outcome": "done"
+  },
+  {
+   "device": "gpu",
+   "experiment": "GW-REC-037",
+   "kind": "score",
+   "detail": "GW-REC-025",
+   "start": "2026-10-30 23:20:52",
+   "end": "2026-10-30 23:31:09",
+   "hours": 0.1713888888888889,
+   "outcome": "done"
+  },
+  {
+   "device": "gpu",
+   "experiment": "GW-REC-026",
+   "kind": "train",
+   "detail": "",
+   "start": "2026-10-30 23:31:09",
+   "end": "2026-10-31 01:49:23",
+   "hours": 2.303888888888889,
+   "outcome": "done"
+  },
+  {
+   "device": "gpu",
+   "experiment": "GW-REC-037",
+   "kind": "score",
+   "detail": "GW-REC-026",
+   "start": "2026-10-31 01:49:38",
+   "end": "2026-10-31 01:59:13",
+   "hours": 0.1597222222222222,
+   "outcome": "done"
+  },
+  {
+   "device": "gpu",
+   "experiment": "GW-REC-027",
+   "kind": "train",
+   "detail": "",
+   "start": "2026-10-31 01:59:13",
+   "end": "2026-10-31 07:39:33",
+   "hours": 5.6722222222222225,
+   "outcome": "done"
+  },
+  {
+   "device": "gpu",
+   "experiment": "GW-REC-037",
+   "kind": "score",
+   "detail": "GW-REC-027",
+   "start": "2026-10-31 07:39:48",
+   "end": "2026-10-31 07:57:34",
+   "hours": 0.2961111111111111,
+   "outcome": "done"
+  },
+  {
+   "device": "gpu",
+   "experiment": "GW-REC-028",
+   "kind": "train",
+   "detail": "",
+   "start": "2026-10-31 09:48:57",
+   "end": "2026-10-31 13:09:36",
+   "hours": 3.3441666666666667,
+   "outcome": "stopped"
+  },
+  {
+   "device": "gpu",
+   "experiment": "GW-REC-028",
+   "kind": "train",
+   "detail": "",
+   "start": "2026-10-31 14:45:29",
+   "end": "2026-10-31 14:46:33",
+   "hours": 0.017777777777777778,
+   "outcome": "stopped"
+  },
+  {
+   "device": "gpu",
+   "experiment": "GW-REC-028",
+   "kind": "train",
+   "detail": "",
+   "start": "2026-11-01 14:56:32",
+   "end": "2026-11-01 17:21:46",
+   "hours": 2.4205555555555556,
+   "outcome": "done"
+  },
+  {
+   "device": "gpu",
+   "experiment": "GW-REC-037",
+   "kind": "score",
+   "detail": "GW-REC-028",
+   "start": "2026-11-01 17:22:02",
+   "end": "2026-11-01 17:39:02",
+   "hours": 0.2833333333333333,
+   "outcome": "done"
+  },
+  {
+   "device": "gpu",
+   "experiment": "GW-REC-029",
+   "kind": "train",
+   "detail": "",
+   "start": "2026-11-02 02:14:38",
+   "end": "2026-11-02 07:37:56",
+   "hours": 5.388333333333334,
+   "outcome": "done"
+  },
+  {
+   "device": "gpu",
+   "experiment": "GW-REC-037",
+   "kind": "score",
+   "detail": "GW-REC-029",
+   "start": "2026-11-02 07:38:11",
+   "end": "2026-11-02 07:54:47",
+   "hours": 0.27666666666666667,
+   "outcome": "done"
+  },
+  {
+   "device": "gpu",
+   "experiment": "GW-REC-030",
+   "kind": "train",
+   "detail": "",
+   "start": "2026-11-02 07:54:47",
+   "end": "2026-11-02 08:35:45",
+   "hours": 0.6827777777777778,
+   "outcome": "stopped"
+  },
+  {
+   "device": "gpu",
+   "experiment": "GW-REC-030",
+   "kind": "train",
+   "detail": "",
+   "start": "2026-11-03 00:49:57",
+   "end": "2026-11-03 06:29:20",
+   "hours": 5.6563888888888885,
+   "outcome": "done"
+  },
+  {
+   "device": "gpu",
+   "experiment": "GW-REC-037",
+   "kind": "score",
+   "detail": "GW-REC-030",
+   "start": "2026-11-03 06:29:36",
+   "end": "2026-11-03 06:47:05",
+   "hours": 0.29138888888888886,
+   "outcome": "done"
+  },
+  {
+   "device": "gpu",
+   "experiment": "GW-REC-031",
+   "kind": "train",
+   "detail": "",
+   "start": "2026-11-03 06:47:05",
+   "end": "2026-11-03 10:56:47",
+   "hours": 4.161666666666667,
+   "outcome": "stopped"
+  },
+  {
+   "device": "gpu",
+   "experiment": "GW-REC-031",
+   "kind": "train",
+   "detail": "",
+   "start": "2026-11-03 15:12:39",
+   "end": "2026-11-03 16:07:13",
+   "hours": 0.9094444444444445,
+   "outcome": "stopped"
+  },
+  {
+   "device": "gpu",
+   "experiment": "GW-REC-031",
+   "kind": "train",
+   "detail": "",
+   "start": "2026-11-03 16:34:24",
+   "end": "2026-11-03 17:15:47",
+   "hours": 0.6897222222222222,
+   "outcome": "done"
+  },
+  {
+   "device": "gpu",
+   "experiment": "GW-REC-037",
+   "kind": "score",
+   "detail": "GW-REC-031",
+   "start": "2026-11-03 17:16:03",
+   "end": "2026-11-03 17:32:54",
+   "hours": 0.2808333333333333,
+   "outcome": "done"
+  },
+  {
+   "device": "gpu",
+   "experiment": "GW-DET-007",
+   "kind": "train",
+   "detail": "",
+   "start": "2026-11-03 21:08:33",
+   "end": "2026-11-04 05:08:27",
+   "hours": 7.998333333333333,
+   "outcome": "done"
+  },
+  {
+   "device": "gpu",
+   "experiment": "GW-DET-007",
+   "kind": "score",
+   "detail": "GW-DET-001",
+   "start": "2026-11-04 05:08:27",
+   "end": "2026-11-04 05:13:53",
+   "hours": 0.09055555555555556,
+   "outcome": "done"
+  },
+  {
+   "device": "gpu",
+   "experiment": "GW-DET-007",
+   "kind": "score",
+   "detail": "GW-DET-007",
+   "start": "2026-11-04 05:13:53",
+   "end": "2026-11-04 05:19:19",
+   "hours": 0.09055555555555556,
+   "outcome": "done"
+  },
+  {
+   "device": "gpu",
+   "experiment": "GW-REC-034",
+   "kind": "train",
+   "detail": "",
+   "start": "2026-11-04 16:58:09",
+   "end": "2026-11-04 19:47:27",
+   "hours": 2.8216666666666668,
+   "outcome": "stopped"
+  },
+  {
+   "device": "gpu",
+   "experiment": "GW-REC-034",
+   "kind": "train",
+   "detail": "",
+   "start": "2026-11-07 17:52:30",
+   "end": "2026-11-07 18:49:23",
+   "hours": 0.9480555555555555,
+   "outcome": "stopped"
+  },
+  {
+   "device": "gpu",
+   "experiment": "GW-REC-034",
+   "kind": "train",
+   "detail": "",
+   "start": "2026-11-07 18:53:51",
+   "end": "2026-11-07 19:19:46",
+   "hours": 0.43194444444444446,
+   "outcome": "stopped"
+  },
+  {
+   "device": "gpu",
+   "experiment": "GW-REC-034",
+   "kind": "train",
+   "detail": "",
+   "start": "2026-11-09 10:20:55",
+   "end": "2026-11-10 00:12:45",
+   "hours": 13.863888888888889,
+   "outcome": "failed"
+  },
+  {
+   "device": "gpu",
+   "experiment": "GW-REC-034",
+   "kind": "train",
+   "detail": "",
+   "start": "2026-11-10 00:38:08",
+   "end": "2026-11-10 04:08:57",
+   "hours": 3.513611111111111,
+   "outcome": "done"
+  },
+  {
+   "device": "gpu",
+   "experiment": "GW-REC-037",
+   "kind": "score",
+   "detail": "GW-REC-034",
+   "start": "2026-11-10 04:09:18",
+   "end": "2026-11-10 04:26:23",
+   "hours": 0.2847222222222222,
+   "outcome": "done"
+  },
+  {
+   "device": "gpu",
+   "experiment": "GW-REC-035",
+   "kind": "train",
+   "detail": "",
+   "start": "2026-11-11 01:16:21",
+   "end": "2026-11-11 09:44:43",
+   "hours": 8.472777777777777,
+   "outcome": "stopped"
+  },
+  {
+   "device": "gpu",
+   "experiment": "GW-REC-035",
+   "kind": "train",
+   "detail": "",
+   "start": "2026-11-12 00:55:06",
+   "end": "2026-11-12 10:01:22",
+   "hours": 9.104444444444445,
+   "outcome": "stopped"
+  },
+  {
+   "device": "gpu",
+   "experiment": "GW-REC-035",
+   "kind": "train",
+   "detail": "",
+   "start": "2026-11-12 10:38:26",
+   "end": "2026-11-12 13:26:18",
+   "hours": 2.7977777777777777,
+   "outcome": "done"
+  },
+  {
+   "device": "gpu",
+   "experiment": "GW-REC-037",
+   "kind": "score",
+   "detail": "GW-REC-035",
+   "start": "2026-11-12 13:26:37",
+   "end": "2026-11-12 13:44:21",
+   "hours": 0.29555555555555557,
+   "outcome": "done"
+  },
+  {
+   "device": "gpu",
+   "experiment": "GW-REC-036",
+   "kind": "train",
+   "detail": "",
+   "start": "2026-11-13 00:19:29",
+   "end": "2026-11-13 06:53:14",
+   "hours": 6.5625,
+   "outcome": "stopped"
+  },
+  {
+   "device": "gpu",
+   "experiment": "GW-REC-036",
+   "kind": "train",
+   "detail": "",
+   "start": "2026-11-14 04:59:24",
+   "end": "2026-11-14 19:03:23",
+   "hours": 14.06638888888889,
+   "outcome": "done"
+  },
+  {
+   "device": "gpu",
+   "experiment": "GW-REC-037",
+   "kind": "score",
+   "detail": "GW-REC-036",
+   "start": "2026-11-14 19:03:43",
+   "end": "2026-11-14 19:21:19",
+   "hours": 0.29333333333333333,
+   "outcome": "done"
   }
  ],
  "experiments": {
@@ -2511,11 +2921,107 @@
    "failed_jobs": 0,
    "wall_h": 1.4583333333333333,
    "train_h": 1.2933357695555283
+  },
+  "GW-REC-037": {
+   "device": "gpu",
+   "phase": "13",
+   "jobs": 16,
+   "failed_jobs": 1,
+   "wall_h": 3.405277777777778,
+   "train_h": null
+  },
+  "GW-REC-025": {
+   "device": "gpu",
+   "phase": "13",
+   "jobs": 1,
+   "failed_jobs": 0,
+   "wall_h": 2.232222222222222,
+   "train_h": 2.0248199503888706
+  },
+  "GW-REC-026": {
+   "device": "gpu",
+   "phase": "13",
+   "jobs": 1,
+   "failed_jobs": 0,
+   "wall_h": 2.303888888888889,
+   "train_h": 2.0958852967777863
+  },
+  "GW-REC-027": {
+   "device": "gpu",
+   "phase": "13",
+   "jobs": 1,
+   "failed_jobs": 0,
+   "wall_h": 5.6722222222222225,
+   "train_h": 5.3424359838055455
+  },
+  "GW-REC-028": {
+   "device": "gpu",
+   "phase": "13",
+   "jobs": 3,
+   "failed_jobs": 2,
+   "wall_h": 5.782500000000001,
+   "train_h": 5.369325093999988
+  },
+  "GW-REC-029": {
+   "device": "gpu",
+   "phase": "13",
+   "jobs": 1,
+   "failed_jobs": 0,
+   "wall_h": 5.388333333333334,
+   "train_h": 5.046621237777775
+  },
+  "GW-REC-030": {
+   "device": "gpu",
+   "phase": "13",
+   "jobs": 2,
+   "failed_jobs": 1,
+   "wall_h": 6.339166666666666,
+   "train_h": 5.870522727666667
+  },
+  "GW-REC-031": {
+   "device": "gpu",
+   "phase": "13",
+   "jobs": 3,
+   "failed_jobs": 2,
+   "wall_h": 5.760833333333334,
+   "train_h": 5.342904634833331
+  },
+  "GW-DET-007": {
+   "device": "gpu",
+   "phase": "13",
+   "jobs": 3,
+   "failed_jobs": 0,
+   "wall_h": 8.179444444444444,
+   "train_h": 7.506402448388879
+  },
+  "GW-REC-034": {
+   "device": "gpu",
+   "phase": "13",
+   "jobs": 5,
+   "failed_jobs": 4,
+   "wall_h": 21.579166666666666,
+   "train_h": 20.11230453658333
+  },
+  "GW-REC-035": {
+   "device": "gpu",
+   "phase": "13",
+   "jobs": 3,
+   "failed_jobs": 2,
+   "wall_h": 20.375,
+   "train_h": 19.08894797777778
+  },
+  "GW-REC-036": {
+   "device": "gpu",
+   "phase": "13",
+   "jobs": 2,
+   "failed_jobs": 1,
+   "wall_h": 20.628888888888888,
+   "train_h": 19.37324229919443
   }
  },
  "totals": {
-  "gpu_h": 109.51694444444445,
-  "gpu_failed_h": 24.201666666666668,
+  "gpu_h": 217.1638888888889,
+  "gpu_failed_h": 75.52277777777778,
   "cpu_h": 45.94888888888887,
   "cpu_failed_h": 1.932222222222222
  }
