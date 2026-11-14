@@ -1,0 +1,21 @@
+{
+ "note": "Phase 14 per-sample outputs (git-ignored under data/processed/phase14/): SHA-256 and line counts only, checked before Phases 15 and 22 read them",
+ "outputs": [
+  {
+   "file": "data/processed/phase14/GW-E2E-006/hiertext_val.jsonl",
+   "sha256": "c8520576f44f8b2ee436f9103556556b2f5e6685379b95bee3ef2403eb73eb4b",
+   "lines": 1715,
+   "experiment": "GW-E2E-006",
+   "meta": "data/processed/phase14/GW-E2E-006/hiertext_val.meta.json",
+   "meta_sha256": "666de2bdd4ff788e40b54d064651519fb67d47d12ea9ce410ce1ba680c2b23bb"
+  },
+  {
+   "file": "data/processed/phase14/GW-REC-038/hiertext_val.jsonl",
+   "sha256": "2482d6a4b703753bd55b457216e4f155bb3edd446ea0f32ac2ab5e91ea8b6a50",
+   "lines": 74500,
+   "experiment": "GW-REC-038",
+   "meta": "data/processed/phase14/GW-REC-038/hiertext_val.meta.json",
+   "meta_sha256": "ac6b724028c9bada606402177e1ca85bbf716e572f7b3ea2135bef29fdaf974c"
+  }
+ ]
+}
