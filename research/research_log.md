@@ -258,3 +258,22 @@ the bottom. Experiments get their full record in `experiments.md`; this log is t
 - Of the generator's factors, the camera-style capture effects matter for robustness; font variety
   made no difference that three seeds against one could see.
 - The real document test is still to come: GDC's phone photos of printed pages, in Phase 14.
+
+### 2026-11-14 — Phase 13: what each step is worth
+
+- The ablation ladder, three seeds per row, takes the recognizer from the plain CRNN at 8.66%
+  validation CER to 7.45% at the short budget. Every step that stayed in helped on all three
+  measures: validation, the document slice and the corruption suite. The biggest single gains
+  came from a taller input (48 px) and from augmentation.
+- Rotating training lines a little more, up to 4° on half of them, did almost nothing for clean
+  lines but cut the corruption error by about a quarter. That is the weakness Phase 11 pointed at,
+  and the cure was simple.
+- 25K GlyphSynth lines again left validation unchanged, so they stay out of the final recipe,
+  although they did make the model more robust.
+- The final model at the full budget: 6.29% over three seeds that agree to 0.02 points, 1.24
+  points better than the CRNN baseline. The seed-1337 run ships, as fixed before training.
+- The detector retraining Phase 9 kept deferring (smaller-text labels, wider rotation) came out
+  slightly worse and was not adopted. Detection is still most of the page error; label and
+  augmentation tweaks are not what will fix it.
+- About 108 GPU-hours on the laptop, over two weeks with pauses; one crash, probably another
+  program taking GPU memory, cost a resume and nothing else.

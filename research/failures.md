@@ -66,3 +66,37 @@ disappointing experiment here, including bugs that invalidated a run.
   the half-renamed temporary file was deleted.
 - **Lesson / implication for the paper:** none for the results (the resumed run follows the same
   schedule); long unattended runs on Windows need retries around file renames.
+
+### 2026-11-07 — environment — a stray `uv run` half-replaced the project environment mid-run
+
+- **What we tried:** nothing on purpose: GW-REC-034 was training in the shared `.venv`.
+- **What happened:** a `uv run` command for another project was started by mistake in this
+  checkout. uv began syncing `.venv` to its own resolution: it removed fontTools and half of
+  Pillow, then stopped on a Pillow extension file the training process had open, and left an
+  untracked `uv.lock`. Training itself was not affected (both packages were already loaded), but
+  the report and scoring steps after it would have failed.
+- **Root cause:** uv treats any folder with a `pyproject.toml` as its project and syncs the
+  environment it finds there; this project's environment is managed with pip from
+  `requirements/lock.txt`.
+- **What we changed:** the run was paused at an epoch end, the two packages were reinstalled at
+  their locked versions (binary wheels only, no dependency changes), `pip freeze` was compared with
+  the lock (identical apart from the separately installed torch), `pip check` and the full test
+  suite passed, and the run resumed from `last.pt`. `uv.lock` is not committed.
+- **Lesson / implication for the paper:** none for the results; the run's checkpoints and
+  schedule are unchanged.
+
+### 2026-11-10 — GW-REC-034 — CUDA out of memory in the 26th epoch
+
+- **What we tried:** the final recognizer, 30 epochs.
+- **What happened:** at 00:12 the run failed in the backward pass with CUDA out of memory, in
+  epoch 25 (counting from 0). The run had used about 2.5 GB of the 6 GB card until then, and
+  nothing in its batches changes between epochs (the sampler is seeded and fixed).
+- **Root cause:** most likely another program on the laptop took GPU memory while the run was
+  going; that cannot be checked after the fact.
+- **What we changed:** nothing in the code. The run resumed from its last checkpoint (step
+  142,000) and finished with no further trouble; the steps after that checkpoint were repeated
+  (`reports/training/GW-REC-034/report.md`, Notes). The remaining runs were kept clear of other
+  GPU work.
+- **Lesson / implication for the paper:** none for the results (a resumed run follows the same
+  schedule; Phase 6's resume check); on a shared laptop GPU, long runs need the card to
+  themselves.
