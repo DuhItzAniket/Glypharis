@@ -20,7 +20,7 @@ Phases run in the order set by [ADR-0008](decisions/ADR-0008-usable-engine-first
 | 10 | Full OCR pipeline | **COMPLETE** | `phase-10` |
 | 11 | Robustness training | **COMPLETE** | `phase-11` |
 | 12 | Synthetic data study | **COMPLETE** | `phase-12` |
-| 13 | Ablation study | **IN PROGRESS** (gate: push, CI, merge) | — |
+| 13 | Ablation study | **COMPLETE** | `phase-13` |
 | 14 | External evaluation | not started | — |
 | 15 | Error analysis | not started | — |
 | 16 | Efficiency optimisation | not started | — |
@@ -1449,7 +1449,7 @@ ledger's Phase 12 lines.
 
 ## Phase 13 — Ablation study
 
-**Status:** write-up done (2026-11-14). Gate open: push, pull request, CI and merge. Opened
+**Status:** COMPLETE (2026-11-14). Opened
 2026-10-30 on `phase/13-ablation`, branched from `main` after Phase 12. The owner chose to run all of it on the laptop GPU (2026-10-30), knowing the cost below (about
 75 to 90 GPU-hours, two weeks with pauses), and a short-budget ladder with a full-budget final
 model. Validation data only.
@@ -1572,7 +1572,7 @@ choose), the validator's check of freeze records, and the ledger's Phase 13 line
 | Ablation table generated (baseline → augmentation → synthetic data → preprocessing → full model; one change per row; 3 seeds) | pass | `reports/ablation/phase13_ladder.md`, `research/ablations.md` |
 | Final configuration chosen on validation | pass: option B, GW-REC-034 with GW-DET-001 | `reports/ablation/phase13_final.md`, `reports/error_cases/detector/GW-DET-007/pair.json` |
 | Final configuration frozen with a full reproducibility record | pass | `configs/final/glypharis_v1.yaml` |
-| CI green | pending (after the push) | — |
+| CI green | pass | runs 43603968022 (branch), 43603989084 (pull request), 43606228642 (`main`) |
 
 **Known issues**
 - The ladder runs at the short budget; only the final configuration was trained at full length,
@@ -1582,4 +1582,7 @@ choose), the validator's check of freeze records, and the ledger's Phase 13 line
 - Whether GW-DET-007 found more small or rotated lines at the cost of others was not measured;
   Phase 15's error analysis can look.
 
-**Git:** branch `phase/13-ablation`; push and merge pending.
+**Git:** branch `phase/13-ablation`, merged through pull request #18. Merge commit `8659b69`, tag
+`phase-13` (merge re-created with the noreply identity; same tree and parents).
+
+**CI status:** green on the branch, the pull request and `main` (run 43606228642).
