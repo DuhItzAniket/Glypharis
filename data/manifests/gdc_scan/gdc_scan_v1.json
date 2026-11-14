@@ -1,0 +1,42 @@
+{
+ "gdc_scan_version": "1.0",
+ "frozen_utc": "2026-11-14T18:00:27+00:00",
+ "frozen": true,
+ "pages": 28,
+ "lines": 779,
+ "pages_sha256": "fc7d0cc79de34359e3c85ec6ea5e174011988a5629e9d32932e1ac9c2afbc1b8",
+ "sources_sha256": {
+  "original": "f693a0742dcbfc155ce8bc4114d01717bf6c8b16027b4a139c12118f13f8db83",
+  "scan": "f32cd3cae2adc5ec7527a54b4f277e4bef8bfd350687edf541a5fc4c546d9bfc"
+ },
+ "captures": {
+  "raw/gdc_scan/captures/page_01.jpg": "7e7ed326fae4f6e7ccfdee141a34f03480df1d8256b1134ddd4187347f8a0be5",
+  "raw/gdc_scan/captures/page_02.jpg": "7bafe2e4e600888c3914196754359949a445573c619ce8c2430007b10c2a5623",
+  "raw/gdc_scan/captures/page_03.jpg": "722e33aab78ff933b79f7b2fcb20b6f1434aa07ec88b5b93caf976be1cd8cb5c",
+  "raw/gdc_scan/captures/page_04.jpg": "7235e1a071f9dedf5d4f91ca4db9d4dd3c4ccd2ec0e30548c469b2b4ddda5ec6",
+  "raw/gdc_scan/captures/page_05.jpg": "e8d07d1a424833a02cfe59386fe0bab2bee0058c9004c197f9aa297168f9ac89",
+  "raw/gdc_scan/captures/page_06.jpg": "aeba55eaf0de422c070f5865a2627ca1b377558835e0d9876103c01e56c4f0ce",
+  "raw/gdc_scan/captures/page_07.jpg": "9336a3502d79c3decfea5e9fdcf630f8832047b59a7ee3d88823b134db1d3d3f",
+  "raw/gdc_scan/captures/page_08.jpg": "36e083a2d10e69a655681ea9442f4e6b2a3fcfdc9cbc68e93cf85fb2bc2c8c47",
+  "raw/gdc_scan/captures/page_09.jpg": "464d4c794372318ba067ab73349da286e8998f4b225098defbb05943b76e09e9",
+  "raw/gdc_scan/captures/page_10.jpg": "dd184351f637b7fd68eb2928beb87327be688e39a474191f6ed9aae0ccde5dec",
+  "raw/gdc_scan/captures/page_11.jpg": "4d6856ed58080b6c2678620b676c6385be9c5d83f6a49ba0e1fffc2854260764",
+  "raw/gdc_scan/captures/page_12.jpg": "ed53650dde8f4b68b500512d391483ecd115b6e11d70f89671c9c246155108e3",
+  "raw/gdc_scan/captures/page_13.jpg": "66d7ee35f0805b2d9c826699ffaf65a5fa407ca85ac72c97d4688806bebb900a",
+  "raw/gdc_scan/captures/page_14.jpg": "aa020932566fba04dc0cce488bb8a59b32f12579f69c3c7e049af54e8fc9a1bc",
+  "raw/gdc_scan/captures/page_15.jpg": "78056c6b8d494f32094860434652c242c06b7cff1ea0b144087083407a4485a0",
+  "raw/gdc_scan/captures/page_16.jpg": "904bb27b26500fabe02b0664ed2f596e1a342ceb7c6ac942a6c0e7319b0105ec",
+  "raw/gdc_scan/captures/page_17.jpg": "545d360047877de70602acba3b2ea13c1398c08f5503d63f61d754edeff9f996",
+  "raw/gdc_scan/captures/page_18.jpg": "93ef12644a5cfe7a67b47fe3802505b44d1bae027b83248341050b27625f0102",
+  "raw/gdc_scan/captures/page_19.jpg": "6a54d996e898a4e845c49a2ac84d10361e88f289dae97e3e84be6cccbb14797e",
+  "raw/gdc_scan/captures/page_20.jpg": "a5f5f8c5955b980520599746e14dbd30b1d8ed66e4d0ee32ab5b3bd1bffcb47b",
+  "raw/gdc_scan/captures/page_21.jpg": "6b423a534329f2bf4939ef9eec66be66ecf3b94bf7a6bb8b9ae5da82a32c6e0a",
+  "raw/gdc_scan/captures/page_22.jpg": "21c8074ac8ba01f630a3b539f04b47d7f404afb10eaf2dc1d8ecd8918fdbfcb0",
+  "raw/gdc_scan/captures/page_23.jpg": "c4fdf4751a48ea5cd6e36d44adc68cf8c0b910d09e1fa9f11a0fba15cf5700d0",
+  "raw/gdc_scan/captures/page_24.jpg": "1cb84114ca66671f862f173e9aee7c5bd2712d7b3b5eca0d76859b9d2183f43a",
+  "raw/gdc_scan/captures/page_25.jpg": "62387f14794a7d511c954f0aeaacd64cb583e814ef57597994ddd89fabdc13f7",
+  "raw/gdc_scan/captures/page_26.jpg": "c65bb7e8dec75069b67514a3ab8f178d2dc57b0f00b6626264aa34af96e600ce",
+  "raw/gdc_scan/captures/page_27.jpg": "4694d41067d0ea6d1e7cdc74c475c3c68d3bdd1cebbd6156369daa3ba401eba2",
+  "raw/gdc_scan/captures/page_28.jpg": "983581782f787584665a3f1fdbb148649ba6c00e883e32809aef7422d6b5c46e"
+ }
+}

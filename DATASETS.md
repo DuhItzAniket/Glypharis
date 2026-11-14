@@ -23,7 +23,7 @@ Research-only or unlicensed datasets are used **only for evaluation**.
 | GlyphSynth (ours) | train / val | inherits font and text licences (open fonts; public-domain / Apache-2.0 text) | yes | v1 built (Phase 4) |
 | Google Fonts (100 families) | GlyphSynth input | SIL OFL 1.1 (96), Apache 2.0 (2), Ubuntu Font Licence (2) | yes | downloaded (Phase 4) |
 | PG-19 (450 books) | GlyphSynth input | Apache 2.0 packaging; texts public domain in the US | yes | downloaded (Phase 4) |
-| GDC (ours) | internal test | openly licensed source PDFs; our annotations | evaluation only | **v1 frozen** 2026-10-21 (106 pages); GDC-scan pending |
+| GDC (ours) | internal test | openly licensed source PDFs; our annotations | evaluation only | **v1 frozen** 2026-10-21 (106 pages); **GDC-scan v1 frozen** 2026-11-14 (28 pages) |
 | IIIT5K | external test | none stated (citation requested) | evaluation only | Phase 14 |
 | FUNSD | external test | custom licence: non-commercial research and education only | evaluation only | Phase 14 |
 | OmniDocBench | external test | data "for research purposes only and not for commercial use"; code Apache-2.0 | evaluation only | Phase 14 |
@@ -131,8 +131,22 @@ version, samples, annotation format, intended task, preprocessing, split usage.
   flow; all overlays were checked by eye. 8,606 lines; each carries an alignment score, and 200 lines
   scoring below 0.3 are excluded from box-based metrics. Capture images and the page file are hashed in
   the freeze record; they stay out of git.
-- **GDC-scan (planned):** a separate small set of the owner's real scans, transcribed (drafts checked by
-  the owner) and frozen on its own.
+- **GDC-scan v1 (frozen 2026-11-14, `scripts/gdc_scan_build.py`,
+  `data/manifests/gdc_scan/gdc_scan_v1.json`):** one real document of the owner's own (a 28-page printed report with tables, figures and screenshots), printed, bound and photographed
+  page by page with a phone scanner app that did not crop: the page lies on a dark mat, the earlier pages
+  curl at the binding, and page 1 is inside a plastic sleeve. The plan was to transcribe the owner's
+  scans by hand; because the born-digital source of this document exists, ground truth comes from its
+  text layer instead, as for GDC v1, and no transcription is needed. With no corner markers, each photo
+  is matched to its page by SIFT features and a RANSAC homography, then refined with GDC v1's optical
+  flow. Word writes the footer first, so the page number is moved to the end of the page text. Ignore
+  regions: the source's raster images (screenshots, letterhead) and everything outside the padded
+  content box (binding, background, the print shop's sheet numbers). 779 lines, 87 of them with
+  characters outside the charset (en dash, subscript 2, approximately-equal, micro, square-root and
+  minus signs); 3 lines (page numbers on three pages) score below 0.3 and are excluded from box-based
+  metrics. Refined page/photo agreement: median NCC 0.826, minimum 0.695 (a page that is almost all
+  screenshots). Every overlay was checked by eye. The document is personal: its sources, photos and page file stay local and are
+  identified by hashes only; reports from it carry numbers, never text or images. It is one document,
+  one printer and one font family, so results are a case study, not a benchmark.
 
 ### IIIT5K
 
