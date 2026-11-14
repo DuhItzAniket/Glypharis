@@ -17,9 +17,27 @@ CI of the difference excludes zero, on validation unless stated otherwise.
   PaddleOCR PP-OCRv5 mobile while running at lower or equal CPU latency.
 - **Test:** Phase 10 (validation), confirmed once in Phase 14 (GDC clean slice, external sets).
 - **Success criterion:** stated ratio met on the GDC clean slice in Phase 14.
-- **Status:** open. Phase 10 evidence (HierText validation, not clean documents): page CER 0.48 of
+- **Status:** superseded (2026-11-15) by H1′, its operational form for Phase 14; the statement
+  stays as written. Phase 10 evidence (HierText validation, not clean documents): page CER 0.48 of
   PP-OCRv5 mobile's on the Phase 5 pages, at 2.0 s per page in PyTorch against its 3.4 s
   (GW-E2E-001, GW-EFF-002).
+
+### H1′ — H1 made testable for Phase 14 (RQ1, RQ4)
+
+Written 2026-11-15, before the frozen model read any test set (`docs/PHASE_STATUS.md`, Phase 14,
+item 5, has the full rule). Each half is **met** if its CI lies on the claimed side, **not met** if
+on the other side, otherwise **not shown**; H1′ holds only if both halves are met.
+
+- **CER half:** on GDC's clean slice (the `scan_app` and `photo_flat` captures, 53 pages), the CI of
+  bag-of-lines page CER(GLYPHARIS) − 2 × CER(PP-OCRv5 mobile, GW-BASE-002), paired page bootstrap,
+  strict track, lies below 0. Not shown if the normalised track or a source-document cluster
+  bootstrap gives a different verdict.
+- **Latency half:** on the Phase 5 validation profile pages (100 timed), the frozen pipeline in
+  PyTorch on the CPU and a fresh GW-BASE-002 profile, one sitting, 10 threads each: the CI of the
+  mean per-page latency difference lies below 0 (GW-EFF-005). The ONNX v1 build, when it exists, is
+  judged by the same rule as a separate verdict.
+- **Test:** Phase 14 (GW-E2E-007, GW-EFF-005, verdict in GW-E2E-009).
+- **Status:** open
 
 ### H2 — Synthetic data helps, and its domain matters (RQ2)
 
@@ -48,6 +66,8 @@ CI of the difference excludes zero, on validation unless stated otherwise.
   +0.39 [+0.25, +0.52] points). H2′b: 6 font families against 85, −0.09 [−0.21, +0.03] (no clear
   difference); capture effects lower GLYPH-C mCE by 0.31 points without a clean
   cost, so only that half holds. GDC (Phase 14) remains the document-domain test.
+  Note (2026-11-15): the frozen model has no GlyphSynth (Phase 13 did not keep it), so H2′ cannot
+  be tested on it in Phase 14.
 
 ### H3 — Document degradation augmentation improves robustness (RQ3)
 
@@ -76,6 +96,23 @@ CI of the difference excludes zero, on validation unless stated otherwise.
   than on scene-style validation; adding GlyphSynth narrows that gap. (Wording updated 2026-10-10 before
   any experiment: the control was "HierText + SynthText", which ADR-0009 removed.)
 - **Test:** Phase 12 / 14.
+- **Status:** superseded (2026-11-15) by H5′; the statement stays as written.
+
+### H5′ — H5 made testable for Phase 14 (RQ6)
+
+Written 2026-11-15, before the frozen model read any test set.
+
+- **Statement:** the frozen recognizer's strict CER on GDC's ground-truth crops (GW-REC-039) is at
+  least 1.5 times its CER on the HierText validation evaluation crops under the same code and
+  precision (GW-REC-038).
+- **Rule:** the CI of CER_GDC − 1.5 × CER_val (independent bootstraps over lines) lies above 0:
+  **met**; below 0: **not met**; otherwise **not shown**. Not shown, too, if a source-document
+  cluster bootstrap on the GDC side gives a different verdict.
+- **Not testable here:** H5's second half (GlyphSynth narrows the gap), since the frozen model has no
+  GlyphSynth; Phase 12's validation evidence stands for it.
+- **Known when written:** every Phase 5 baseline reads GDC's crops with a lower CER than HierText
+  validation's (`reports/baselines/recognition.md`).
+- **Test:** Phase 14 (verdict in GW-E2E-009).
 - **Status:** open
 
 ### H6 — SVTR-style encoder beats CRNN at matched budget (RQ7)
@@ -101,8 +138,23 @@ CI of the difference excludes zero, on validation unless stated otherwise.
 - **Statement:** Raw line confidence has ECE above 0.05 on validation; temperature scaling fitted on
   validation reduces ECE by at least half, and the reduction transfers to GDC.
 - **Test:** Phase 10 (validation), Phase 14 (transfer).
-- **Status:** supported on validation (2026-10-28): ECE 0.217 at T = 1, 0.089 at T = 2.35, a 59%
+- **Status:** superseded for the transfer by H8′ (2026-11-15). Validation part: supported on validation (2026-10-28): ECE 0.217 at T = 1, 0.089 at T = 2.35, a 59%
   reduction (GW-E2E-003). The transfer to GDC is Phase 14's test.
+
+### H8′ — the calibration transfer, made testable for Phase 14 (RQ8)
+
+Written 2026-11-15, before the frozen model read any test set.
+
+- **Lines:** GDC's ground-truth crops through the frozen recognizer (GW-REC-039), vertical lines
+  excluded as in every GDC metric, out-of-charset lines kept; GW-E2E-005's method (15 equal-mass
+  bins, exact match on the strict track).
+- **Transfers:** the CI of ECE(T = 2.35) − ECE(T = 1) lies below 0.
+- **Transfers by half:** the CI of ECE(T = 2.35) − 0.5 × ECE(T = 1) lies below 0.
+- **Rule:** line bootstrap as GW-E2E-005, with a page-cluster bootstrap that must give the same
+  verdict, otherwise not shown. H8 counts as supported on GDC only if both are met. T stays 2.35
+  whatever the result; dropping it would be a new model version.
+- **Test:** Phase 14 (verdict in GW-E2E-009).
+- **Status:** open
 
 ### H9 — An ImageNet backbone helps the detector at equal steps (RQ1, ADR-0007)
 

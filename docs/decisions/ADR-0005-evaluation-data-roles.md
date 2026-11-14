@@ -1,7 +1,8 @@
 # ADR-0005: Fixed roles for every dataset: train / val / test / external
 
 - **Status:** Accepted (2026-10-09, Phase 0). SynthText row superseded by
-  [ADR-0009](ADR-0009-no-synthtext.md); HierText test labels became public, so the fallback is unused.
+  [ADR-0009](ADR-0009-no-synthtext.md); HierText test labels became public, so the fallback is unused. GDC-scan's role is set by
+  [ADR-0013](ADR-0013-gdc-scan-role.md) (internal test, case study).
 
 ## Context
 The brief requires strict separation of train, validation, test and external test data (§40) and
@@ -18,6 +19,7 @@ are a common source of inflated results.
 | SynthText | train only |
 | GlyphSynth train / val | train / validation |
 | GDC | internal test, frozen |
+| GDC-scan | internal test, frozen, case study ([ADR-0013](ADR-0013-gdc-scan-role.md)) |
 | IIIT5K test, FUNSD, OmniDocBench, SROIE | external test |
 | DocVQA | reference only, never CER ground truth (machine-generated OCR labels) |
 

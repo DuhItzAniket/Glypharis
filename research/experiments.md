@@ -7,13 +7,13 @@ Rows link to a full entry below. Numbers are copied from generated reports only,
 
 | ID | Date allocated | Phase | Question / hypothesis | Status | Key result | Report |
 |---|---|---|---|---|---|---|
-| [GW-BASE-001](#gw-base-001) | 2026-10-21 | 05 | Tesseract 5 (LSTM, eng): recognition and end to end | done | lines 24.35% CER (HierText val); 0.43 s per page | `reports/baselines/` |
-| [GW-BASE-002](#gw-base-002) | 2026-10-21 | 05 | PaddleOCR PP-OCRv5 mobile (det + English rec): recognition and end to end | done | lines 9.27% CER (HierText val); 3.4 s per page | `reports/baselines/` |
-| [GW-BASE-003](#gw-base-003) | 2026-10-21 | 05 | PaddleOCR PP-OCRv5 server (det + rec): recognition and end to end | done | lines 14.65% CER (HierText val); 80.9 s per page; GDC pages not runnable | `reports/baselines/` |
-| [GW-BASE-004](#gw-base-004) | 2026-10-21 | 05 | TrOCR-small-printed: recognition only | done | lines 62.58% strict / 19.14% normalised CER (HierText val); 133 ms per line | `reports/baselines/` |
-| [GW-BASE-005](#gw-base-005) | 2026-10-21 | 05 | PaddleOCR PP-OCRv6 tiny (det + rec): recognition and end to end | done | lines 11.10% CER (HierText val); 21.6 ms per line, 1.7 s per page | `reports/baselines/` |
-| [GW-BASE-006](#gw-base-006) | 2026-10-21 | 05 | PaddleOCR PP-OCRv6 small (det + rec): recognition and end to end | done | lines 7.53% CER (HierText val); 46 ms per line, 3.7 s per page | `reports/baselines/` |
-| [GW-BASE-007](#gw-base-007) | 2026-10-21 | 05 | PaddleOCR PP-OCRv6 medium (PaddleOCR 3.7's English default): reduced scope | done | lines 7.54% CER (HierText val); 553 ms per line, 32.5 s per page | `reports/baselines/` |
+| [GW-BASE-001](#gw-base-001) | 2026-10-21 | 05 | Tesseract 5 (LSTM, eng): recognition and end to end | running (Phase 14 amendment) | lines 24.35% CER (HierText val); 0.43 s per page | `reports/baselines/` |
+| [GW-BASE-002](#gw-base-002) | 2026-10-21 | 05 | PaddleOCR PP-OCRv5 mobile (det + English rec): recognition and end to end | running (Phase 14 amendment) | lines 9.27% CER (HierText val); 3.4 s per page | `reports/baselines/` |
+| [GW-BASE-003](#gw-base-003) | 2026-10-21 | 05 | PaddleOCR PP-OCRv5 server (det + rec): recognition and end to end | running (Phase 14 amendment) | lines 14.65% CER (HierText val); 80.9 s per page; GDC pages not runnable | `reports/baselines/` |
+| [GW-BASE-004](#gw-base-004) | 2026-10-21 | 05 | TrOCR-small-printed: recognition only | running (Phase 14 amendment) | lines 62.58% strict / 19.14% normalised CER (HierText val); 133 ms per line | `reports/baselines/` |
+| [GW-BASE-005](#gw-base-005) | 2026-10-21 | 05 | PaddleOCR PP-OCRv6 tiny (det + rec): recognition and end to end | running (Phase 14 amendment) | lines 11.10% CER (HierText val); 21.6 ms per line, 1.7 s per page | `reports/baselines/` |
+| [GW-BASE-006](#gw-base-006) | 2026-10-21 | 05 | PaddleOCR PP-OCRv6 small (det + rec): recognition and end to end | running (Phase 14 amendment) | lines 7.53% CER (HierText val); 46 ms per line, 3.7 s per page | `reports/baselines/` |
+| [GW-BASE-007](#gw-base-007) | 2026-10-21 | 05 | PaddleOCR PP-OCRv6 medium (PaddleOCR 3.7's English default): reduced scope | running (Phase 14 amendment) | lines 7.54% CER (HierText val); 553 ms per line, 32.5 s per page | `reports/baselines/` |
 | [GW-REC-001](#gw-rec-001) | 2026-10-22 | 06 | CRNN baseline on HierText lines | done | val CER 7.53% [7.38, 7.69] | `reports/training/GW-REC-001/` |
 | [GW-REC-002](#gw-rec-002) | 2026-10-22 | 06 | GW-REC-001 plus 35,000 GlyphSynth lines (exploratory look at H2′a) | done | val CER 7.49% [7.34, 7.64]; −0.05 points [−0.09, −0.01] vs GW-REC-001 (one seed, not budget-matched) | `reports/training/GW-REC-002/` |
 | [GW-REC-003](#gw-rec-003) | 2026-10-23 | 07 | Phase 7 control: GW-REC-001 on the 8-epoch short budget, seed 1337 (noise floor) | done | val CER 8.32% [8.16, 8.47] (control) | `reports/training/GW-REC-003/` |
@@ -89,6 +89,13 @@ Rows link to a full entry below. Numbers are copied from generated reports only,
 | [GW-DET-007](#gw-det-007) | 2026-10-30 | 13 | GW-DET-001 with labels for smaller text (min_text_size 3) and training rotation up to 30° (Phase 9's deferred fixes) | done | F1@0.5 0.7668 vs 0.7779 (−0.0111 [−0.0146, −0.0075]): not adopted | `reports/training/GW-DET-007/` |
 | [GW-REC-037](#gw-rec-037) | 2026-10-30 | 13 | Phase 13 ablation ladder (L0 to L5) and the final recognizer at the full budget | done | ladder L0 to L5 8.66 to 7.45%, L2 not kept; option B; final 6.29% vs 7.53% (−1.24 [−1.40, −1.11]) | `reports/ablation/` |
 | [GW-E2E-005](#gw-e2e-005) | 2026-11-14 | 13 | Line-confidence calibration of the frozen recognizer GW-REC-034, as GW-E2E-003 | done | ECE half B 0.214 → 0.089 at T = 2.35 (−0.125 [−0.130, −0.122]): adopted | `reports/calibration/GW-E2E-005/` |
+| [GW-E2E-006](#gw-e2e-006) | 2026-11-15 | 14 | The frozen v1 pipeline on HierText validation: Phase 14's reference | planned | — | `reports/external/GW-E2E-006/` |
+| [GW-REC-038](#gw-rec-038) | 2026-11-15 | 14 | The frozen recognizer on the HierText validation evaluation crops (H5′'s reference) | planned | — | `reports/external/GW-REC-038/` |
+| [GW-EFF-005](#gw-eff-005) | 2026-11-15 | 14 | v1 CPU page latency against PP-OCRv5 mobile in one sitting (H1′ latency) | planned | — | `reports/external/GW-EFF-005/` |
+| [GW-REC-039](#gw-rec-039) | 2026-11-15 | 14 | The frozen recognizer on the test crop packs (H5′, H8′) | planned | — | `reports/external/` |
+| [GW-E2E-007](#gw-e2e-007) | 2026-11-15 | 14 | The frozen pipeline end to end on the test pages (H1′ CER) | planned | — | `reports/external/` |
+| [GW-E2E-008](#gw-e2e-008) | 2026-11-15 | 14 | Oracle run on GDC and GDC-scan, for H4 in Phase 15 | planned | — | `reports/external/` |
+| [GW-E2E-009](#gw-e2e-009) | 2026-11-15 | 14 | Phase 14 scoring, comparisons and hypothesis verdicts | planned | — | `reports/external/` |
 
 ### GW-BASE-001 — Tesseract 5 (LSTM, eng): recognition and end to end
 
@@ -109,6 +116,7 @@ Rows link to a full entry below. Numbers are copied from generated reports only,
 - **Limitations:** Called through its command line: about 96 ms of every call is process start and model load (`efficiency.md`), so its line times overstate the engine's own cost. Its peak memory adds two peaks that need not coincide, so it is an upper bound.
 - **Next experiment:** reference point for GLYPHARIS-Rec (Phases 6–7) and the full pipeline (Phase 10).
 - **Training time:** not applicable
+- **Amendment (2026-11-15, Phase 14, before the runs):** the same system, runner, settings and scorer run on the Phase 14 sets as fixed in `docs/PHASE_STATUS.md` (Phase 14, item 4): IIIT5K, FUNSD and GDC-scan recognition; FUNSD and GDC-scan end to end; OmniDocBench end to end on all 755 English pages. Predictions and profiles go to `data/processed/baselines_phase14/GW-BASE-001/`; the Phase 5 files are re-scored once in GW-E2E-009, never re-run or rewritten.
 
 ### GW-BASE-002 — PaddleOCR PP-OCRv5 mobile (det + English rec): recognition and end to end
 
@@ -129,6 +137,7 @@ Rows link to a full entry below. Numbers are copied from generated reports only,
 - **Limitations:** Detector run without oneDNN (speed only; outputs checked identical). Lines come back in detection order, which costs it on GDC's order-aware metrics.
 - **Next experiment:** reference point for GLYPHARIS-Rec (Phases 6–7) and the full pipeline (Phase 10).
 - **Training time:** not applicable
+- **Amendment (2026-11-15, Phase 14, before the runs):** the same system, runner, settings and scorer run on the Phase 14 sets as fixed in `docs/PHASE_STATUS.md` (Phase 14, item 4): IIIT5K, FUNSD and GDC-scan recognition; FUNSD and GDC-scan end to end; OmniDocBench end to end on all 755 English pages; and a fresh validation profile for H1′ in one sitting with GW-EFF-005. Predictions and profiles go to `data/processed/baselines_phase14/GW-BASE-002/`; the Phase 5 files are re-scored once in GW-E2E-009, never re-run or rewritten.
 
 ### GW-BASE-003 — PaddleOCR PP-OCRv5 server (det + rec): recognition and end to end
 
@@ -149,6 +158,7 @@ Rows link to a full entry below. Numbers are copied from generated reports only,
 - **Limitations:** the end-to-end run on the GDC test pages could not be run on the laptop: two attempts died on the first page (out of memory next to a GPU job; an access violation alone). See `research/failures.md`, 2026-10-24. Page speed was measured on HierText validation although its page accuracy was not (too slow to run in full). On the largest pages it needed more memory than the laptop had free and part of it was paged to disk, so some page times include paging; the 9,790 MiB peak is the working set, below what the process reserved.
 - **Next experiment:** reference point for GLYPHARIS-Rec (Phases 6–7) and the full pipeline (Phase 10).
 - **Training time:** not applicable
+- **Amendment (2026-11-15, Phase 14, before the runs):** the same system, runner, settings and scorer run on the Phase 14 sets as fixed in `docs/PHASE_STATUS.md` (Phase 14, item 4): IIIT5K, FUNSD and GDC-scan recognition; FUNSD end to end; OmniDocBench end to end on the fixed 100-page subset (`data/manifests/processed/omnidocbench_subset100.json`). Not run: GDC-scan end to end (it died on GDC's photos of the same size, `research/failures.md`). Predictions and profiles go to `data/processed/baselines_phase14/GW-BASE-003/`; the Phase 5 files are re-scored once in GW-E2E-009, never re-run or rewritten.
 
 ### GW-BASE-004 — TrOCR-small-printed: recognition only
 
@@ -169,6 +179,7 @@ Rows link to a full entry below. Numbers are copied from generated reports only,
 - **Limitations:** Recognition only (no detector).
 - **Next experiment:** reference point for GLYPHARIS-Rec (Phases 6–7) and the full pipeline (Phase 10).
 - **Training time:** not applicable
+- **Amendment (2026-11-15, Phase 14, before the runs):** the same system, runner, settings and scorer run on the Phase 14 sets as fixed in `docs/PHASE_STATUS.md` (Phase 14, item 4): IIIT5K, FUNSD and GDC-scan recognition (no detector). Predictions and profiles go to `data/processed/baselines_phase14/GW-BASE-004/`; the Phase 5 files are re-scored once in GW-E2E-009, never re-run or rewritten.
 
 ### GW-BASE-005 — PaddleOCR PP-OCRv6 tiny (det + rec): recognition and end to end
 
@@ -189,6 +200,7 @@ Rows link to a full entry below. Numbers are copied from generated reports only,
 - **Limitations:** Multilingual recognizer (Chinese, English, Latin scripts) scored on English data.
 - **Next experiment:** reference point for GLYPHARIS-Rec (Phases 6–7) and the full pipeline (Phase 10).
 - **Training time:** not applicable
+- **Amendment (2026-11-15, Phase 14, before the runs):** the same system, runner, settings and scorer run on the Phase 14 sets as fixed in `docs/PHASE_STATUS.md` (Phase 14, item 4): IIIT5K, FUNSD and GDC-scan recognition; FUNSD and GDC-scan end to end; OmniDocBench end to end on all 755 English pages. Predictions and profiles go to `data/processed/baselines_phase14/GW-BASE-005/`; the Phase 5 files are re-scored once in GW-E2E-009, never re-run or rewritten.
 
 ### GW-BASE-006 — PaddleOCR PP-OCRv6 small (det + rec): recognition and end to end
 
@@ -209,6 +221,7 @@ Rows link to a full entry below. Numbers are copied from generated reports only,
 - **Limitations:** Multilingual recognizer, as GW-BASE-005.
 - **Next experiment:** reference point for GLYPHARIS-Rec (Phases 6–7) and the full pipeline (Phase 10).
 - **Training time:** not applicable
+- **Amendment (2026-11-15, Phase 14, before the runs):** the same system, runner, settings and scorer run on the Phase 14 sets as fixed in `docs/PHASE_STATUS.md` (Phase 14, item 4): IIIT5K, FUNSD and GDC-scan recognition; FUNSD and GDC-scan end to end; OmniDocBench end to end on all 755 English pages. Predictions and profiles go to `data/processed/baselines_phase14/GW-BASE-006/`; the Phase 5 files are re-scored once in GW-E2E-009, never re-run or rewritten.
 
 ### GW-BASE-007 — PaddleOCR PP-OCRv6 medium (PaddleOCR 3.7's English default): reduced scope
 
@@ -229,6 +242,7 @@ Rows link to a full entry below. Numbers are copied from generated reports only,
 - **Limitations:** Reduced scope: no HierText pages, HierText test or GlyphSynth.
 - **Next experiment:** reference point for GLYPHARIS-Rec (Phases 6–7) and the full pipeline (Phase 10).
 - **Training time:** not applicable
+- **Amendment (2026-11-15, Phase 14, before the runs):** the same system, runner, settings and scorer run on the Phase 14 sets as fixed in `docs/PHASE_STATUS.md` (Phase 14, item 4): IIIT5K, FUNSD and GDC-scan recognition; FUNSD and GDC-scan end to end; OmniDocBench end to end on all 755 English pages. Predictions and profiles go to `data/processed/baselines_phase14/GW-BASE-007/`; the Phase 5 files are re-scored once in GW-E2E-009, never re-run or rewritten.
 
 ### GW-REC-001 — CRNN baseline on HierText lines
 
@@ -1663,6 +1677,125 @@ Rows link to a full entry below. Numbers are copied from generated reports only,
 - **Interpretation:** the final recognizer is over-confident in the same way and by about as much as GW-REC-024 (raw ECE 0.21 against 0.22), and the same temperature fixes most of it (59% lower), so H8's validation result holds on a second model. The frozen configuration carries T = 2.35 from this run.
 - **Limitations:** as GW-E2E-003.
 - **Next experiment:** the frozen configuration (`configs/final/glypharis_v1.yaml`)
+
+### GW-E2E-006 — The frozen pipeline on HierText validation (Phase 14 reference)
+
+- **Date allocated / run:** 2026-11-15 / —
+- **Phase:** 14
+- **Git commit:** the `phase14-eval` tag   **Config:** `configs/final/glypharis_v1.yaml`   **Seed(s):** none (no training)
+- **Dataset version(s):** HierText validation pages (Phase 4, `data/manifests/processed/hiertext.json`)
+- **Hardware:** RTX 4050 Laptop 6 GB, recognizer in strict fp32 (TF32 off), detector in strict fp32, cuDNN deterministic
+- **Research question:** the frozen v1 pipeline's end-to-end numbers on validation, which do not exist yet (GW-E2E-001 used GW-REC-024), and its GPU time per page for the Phase 14 estimate.
+- **Hypothesis (written before the run):** none; a reference measurement.
+- **Method:** the frozen-config builder; all 1,715 validation pages; scored with the §3 page metrics, both tracks; confidences at T = 1 and 2.35.
+- **Variables:** none (reference)
+- **Control:** GW-E2E-001 (v0.1 pipeline, same pages)
+- **Result:** —
+- **Interpretation:** —
+- **Limitations:** validation pages only; not a test result.
+- **Next experiment:** GW-E2E-007
+
+### GW-REC-038 — The frozen recognizer on the HierText validation evaluation crops
+
+- **Date allocated / run:** 2026-11-15 / —
+- **Phase:** 14
+- **Git commit:** the `phase14-eval` tag   **Config:** `configs/final/glypharis_v1.yaml`   **Seed(s):** none
+- **Dataset version(s):** `processed/hiertext/lines_validation_eval` (74,500 crops, `data/manifests/processed/eval_crops.json`)
+- **Hardware:** RTX 4050 Laptop 6 GB, strict fp32 as GW-E2E-006
+- **Research question:** H5′'s reference: the frozen recognizer's CER on validation crops under exactly the code, precision and crop selection the test crops get (the logged 6.30% was computed with bf16 autocast on the 73,888-line training pack, which drops out-of-charset and long lines).
+- **Hypothesis (written before the run):** feeds [H5′](hypotheses.md); no verdict of its own.
+- **Method:** the guarded runner's recognition path on a validation pack (no test access); per-line edit counts saved; strict and normalised tracks; ECE at T = 2.35 under strict fp32, as description only.
+- **Variables:** none (reference)
+- **Control:** GW-REC-034's training-time validation (6.30%)
+- **Result:** —
+- **Interpretation:** —
+- **Limitations:** validation only.
+- **Next experiment:** GW-REC-039
+
+### GW-EFF-005 — v1 CPU page latency against PP-OCRv5 mobile, one sitting
+
+- **Date allocated / run:** 2026-11-15 / —
+- **Phase:** 14
+- **Git commit:** the `phase14-eval` tag   **Config:** `configs/final/glypharis_v1.yaml`   **Seed(s):** none
+- **Dataset version(s):** the Phase 5 validation profile pages (`e2e_samples` order for `hiertext_val`: 10 warm-up, 100 timed)
+- **Hardware:** laptop CPU (i7-14650HX), mains power, Balanced power plan, power mode recorded, no other user program running
+- **Research question:** H1′'s latency half.
+- **Hypothesis (written before the run):** [H1′](hypotheses.md), latency half.
+- **Method:** a fresh GW-BASE-002 profile first, then the frozen pipeline in PyTorch on the CPU, both at 10 threads, batch 1, the same pages in the same order; pairs by position after checking that the input sizes match; `mean_ci` of the per-page differences (pages). GLYPHARIS also at 16 threads, as information. The sitting is void only if a recorded condition fails or the input sizes differ.
+- **Variables:** independent: system; controlled: pages, order, threads, power plan
+- **Control:** GW-BASE-002 (fresh profile in the same sitting)
+- **Result:** —
+- **Interpretation:** —
+- **Limitations:** HierText validation pages (no document validation set exists); PyTorch build only (the ONNX v1 build does not exist yet).
+- **Next experiment:** the H1′ verdict in GW-E2E-009
+
+### GW-REC-039 — The frozen recognizer on the test crop packs
+
+- **Date allocated / run:** 2026-11-15 / —
+- **Phase:** 14
+- **Git commit:** the `phase14-eval` tag   **Config:** `configs/final/glypharis_v1.yaml`   **Seed(s):** none
+- **Dataset version(s):** crop packs in `data/manifests/processed/eval_crops.json` (HierText test 67,574; GDC 8,372; GDC-scan and FUNSD, cut in Phase 14) and `data/manifests/processed/benchmarks.json` (IIIT5K 3,000)
+- **Hardware:** RTX 4050 Laptop 6 GB, strict fp32
+- **Research question:** recognition on ground-truth crops across the test sets (RQ4, RQ6, RQ8).
+- **Hypothesis (written before the run):** [H5′](hypotheses.md), [H8′](hypotheses.md).
+- **Method:** the guarded test runner (phase 14, split `test`, predictions only; confidences at T = 1 and 2.35; the Phase 15 per-line attributes). Scored once in GW-E2E-009.
+- **Variables:** none (one frozen model)
+- **Control:** the Phase 5 baselines on the same crops
+- **Result:** —
+- **Interpretation:** —
+- **Limitations:** one frozen model (single seed by design; Phase 14 plan).
+- **Next experiment:** GW-E2E-009
+
+### GW-E2E-007 — The frozen pipeline end to end on the test pages
+
+- **Date allocated / run:** 2026-11-15 / —
+- **Phase:** 14
+- **Git commit:** the `phase14-eval` tag   **Config:** `configs/final/glypharis_v1.yaml`   **Seed(s):** none
+- **Dataset version(s):** HierText test pages (Phase 4), GDC v1.1, GDC-scan v1, FUNSD and OmniDocBench English (`data/manifests/processed/benchmarks.json`)
+- **Hardware:** RTX 4050 Laptop 6 GB, strict fp32
+- **Research question:** end-to-end page quality across the test sets (RQ1, RQ4, RQ6).
+- **Hypothesis (written before the run):** [H1′](hypotheses.md), CER half.
+- **Method:** the guarded test runner, pipeline mode; predictions only, scored once in GW-E2E-009.
+- **Variables:** none (one frozen model)
+- **Control:** the Phase 5 baselines on the same pages
+- **Result:** —
+- **Interpretation:** —
+- **Limitations:** one frozen model; `quad` boxes only.
+- **Next experiment:** GW-E2E-009
+
+### GW-E2E-008 — Oracle run: ground-truth lines through the frozen recognizer
+
+- **Date allocated / run:** 2026-11-15 / —
+- **Phase:** 14
+- **Git commit:** the `phase14-eval` tag   **Config:** `configs/final/glypharis_v1.yaml`   **Seed(s):** none
+- **Dataset version(s):** GDC v1.1, GDC-scan v1
+- **Hardware:** RTX 4050 Laptop 6 GB, strict fp32
+- **Research question:** the split of page error between detection and recognition on documents, saved for Phase 15 (H4).
+- **Hypothesis (written before the run):** [H4](hypotheses.md), tested in Phase 15.
+- **Method:** the guarded test runner, oracle mode (`read_quads` on the box lines); predictions only.
+- **Variables:** detector boxes against ground-truth boxes
+- **Control:** GW-E2E-007 on the same pages
+- **Result:** —
+- **Interpretation:** —
+- **Limitations:** as GW-E2E-002.
+- **Next experiment:** Phase 15
+
+### GW-E2E-009 — Phase 14 scoring, comparisons and hypothesis verdicts
+
+- **Date allocated / run:** 2026-11-15 / —
+- **Phase:** 14
+- **Git commit:** recorded in the report   **Config:** —   **Seed(s):** bootstrap seed 20261010, 1,000 resamples
+- **Dataset version(s):** every set above; Phase 5 baseline files (hashed before any Phase 14 run)
+- **Hardware:** laptop CPU; the official evaluators in `.venv-hiertext` and `.venv-omnidocbench`
+- **Research question:** RQ1, RQ4, RQ6, RQ8 on held-out and external data.
+- **Hypothesis (written before the run):** [H1′](hypotheses.md), [H5′](hypotheses.md), [H8′](hypotheses.md): five confirmatory tests, everything else descriptive (Phase 14 plan, item 5).
+- **Method:** one scoring pass over every complete prediction file, GLYPHARIS and baselines, logged per file (`<system> (<task>), scoring`, phase 14). First the Phase 5 reproduction check; then the §3 metrics on both tracks with the charset ceiling, the official HierText line-level score and OmniDocBench components, paired comparisons, the verdicts, and the Phase 15 hand-off.
+- **Variables:** system
+- **Control:** GW-BASE-002 for H1′; GW-REC-038 for H5′; T = 1 for H8′
+- **Result:** —
+- **Interpretation:** —
+- **Limitations:** stated with the plan (`docs/PHASE_STATUS.md`, Phase 14).
+- **Next experiment:** Phase 15
 
 ---
 

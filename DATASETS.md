@@ -146,7 +146,8 @@ version, samples, annotation format, intended task, preprocessing, split usage.
   metrics. Refined page/photo agreement: median NCC 0.826, minimum 0.695 (a page that is almost all
   screenshots). Every overlay was checked by eye. The document is personal: its sources, photos and page file stay local and are
   identified by hashes only; reports from it carry numbers, never text or images. It is one document,
-  one printer and one font family, so results are a case study, not a benchmark.
+  one printer and one font family, so results are a case study, not a benchmark (ADR-0013). The owner
+  confirmed on 2026-11-14 that the printed document is this PDF, with no edits after printing.
 
 ### IIIT5K
 

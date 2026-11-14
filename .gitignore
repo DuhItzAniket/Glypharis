@@ -56,6 +56,13 @@ wandb/
 # --- Reports: generated figures are kept only when curated ---
 reports/**/tmp/
 reports/**/*.npz
+# Per-sample files (predictions, references) never go into reports/ or research/ (Phase 14).
+reports/**/*.jsonl
+reports/**/*.jsonl.gz
+reports/**/*.log
+research/**/*.jsonl
+research/**/*.jsonl.gz
+research/**/*.log
 
 # --- Local-only working notes (owner's brief, agent handoff) ---
 Plan.md

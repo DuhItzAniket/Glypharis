@@ -290,7 +290,7 @@ GDC-capture.
 | Capture all 106 sheets per `data/manifests/gdc/capture_checklist.md` into `data/raw/gdc/captures/` | owner | done (2026-10-21) |
 | Run `scripts/gdc_align.py`, check overlays, request retakes | maintainer | done: 106/106 aligned, no retakes; all overlays checked |
 | Freeze (`scripts/gdc_align.py --freeze`) | maintainer | **done: GDC v1 frozen 2026-10-21** (`data/manifests/gdc/gdc_v1.json`) |
-| Real-scan slice | owner + maintainer | moved to a separate set, **GDC-scan v1**, built and frozen on its own when the owner's scans arrive |
+| Real-scan slice | owner + maintainer | moved to a separate set: **done, GDC-scan v1 frozen 2026-11-14** (`data/manifests/gdc_scan/gdc_scan_v1.json`; 28 pages, 779 lines; ground truth from the born-digital source's text layer instead of hand transcription) |
 
 Alignment (`data/manifests/gdc/alignment.json`): marker homography refined by smooth optical flow,
 because the curved captures were off by up to a line height with the homography alone. Refined
@@ -1586,3 +1586,320 @@ choose), the validator's check of freeze records, and the ledger's Phase 13 line
 `phase-13` (merge re-created with the noreply identity; same tree and parents).
 
 **CI status:** green on the branch, the pull request and `main` (run 43606228642).
+
+---
+
+## Phase 14 — External evaluation
+
+**Status:** IN PROGRESS. Opened 2026-11-14 on `phase/14-external-eval`, branched from `main` after
+Phase 13 (merge `8659b69`). GDC-scan v1 was frozen on the branch before this plan (`5f5a3b5`); the
+owner confirmed on 2026-11-14 that the printed document is the same PDF, with no edits after
+printing. The external benchmarks prepared early on `phase/14-data` (`f354ba9`, 2026-10-29) are
+merged into this branch (`3377c40`). The owner approved the plan and the download of both official
+evaluators on 2026-11-15 (`data/manifests/evaluators.json`). Test data: one evaluation per frozen
+model per set, every access logged in `research/test_access_log.md`.
+
+**Objective:** one-shot evaluation of the frozen model (`configs/final/glypharis_v1.yaml`) on the
+held-out and external benchmarks, against the Phase 5 baselines (RQ1, RQ4, RQ6, RQ8).
+
+**Data prepared** (conversion only, done early on `phase/14-data`; nothing scored, so the
+test-access log was untouched; `data/manifests/processed/benchmarks.json`)
+
+| Benchmark | What is ready | Size |
+|---|---|---|
+| IIIT5K (test) | line pack of the published word crops and labels (upper case) | 3,000 words |
+| FUNSD (test) | page file; entity words grouped into lines | 50 forms, 2,647 lines |
+| OmniDocBench (English, pinned commit) | page file of text blocks in reading order, plus "don't care" regions | 755 pages, 11,369 blocks |
+| HierText (test) | prepared in Phase 4; evaluation crop pack in Phase 5 | 1,634 pages |
+| GDC v1.1 | frozen 2026-10-21 (106 phone captures) | 8,606 lines |
+| GDC-scan v1 | frozen 2026-11-14 (28 phone photos of one document) | 779 lines |
+
+**Plan** (registered 2026-11-15, before the frozen model or any GLYPHARIS model read a test or
+external set. Already known when it was written: the baselines' Phase 5 numbers on HierText test
+and GDC (`reports/baselines/`); the v0.1 pipeline's validation latency in PyTorch (GW-EFF-002) and
+ONNX (GW-EFF-004); and that every baseline reads GDC's crops with a lower CER than HierText
+validation's. No GLYPHARIS number exists on any test set.)
+
+1. **What is evaluated.** The frozen configuration, built from the freeze record by code, not by
+   hand: the recognizer GW-REC-034 (height 48, maximum width 1536, T = 2.35 from GW-E2E-005) and the
+   detector GW-DET-001 at Phase 9's settings (long side 1536, GW-DET-004's post-processing,
+   operating point `inverse09`, `quad` boxes), in PyTorch on the RTX 4050.
+   - **Builder.** Reads `configs/final/glypharis_v1.yaml`, verifies both checkpoint SHA-256 values,
+     checks that the character list stored in the GW-REC-034 checkpoint equals
+     `data/manifests/charset.json` (SHA-256 `bbdfab42…`, recorded with this plan), and refuses to
+     run on any difference. Both checkpoints are copied into this worktree at the recorded paths.
+   - **Numerics.** The recognizer runs in strict fp32 (TF32 off, as the detector already does),
+     with cuDNN benchmark off and deterministic algorithms on. T = 2.35 was fitted with TF32
+     convolutions; GW-REC-038 reports validation ECE at T = 2.35 under the strict setting, as
+     description only (its crop pack is not GW-E2E-005's half B). T stays 2.35 whatever any test
+     result shows.
+   - **Pinned code.** Once the code is complete and the preprocessing checks pass, the commit is
+     tagged `phase14-eval` and recorded here, before any of the validation runs below. The pinned
+     code is the tree of `glypharis/`, `scripts/`, `configs/` and `requirements/`. Every GLYPHARIS
+     run in this phase, validation and test, records its commit and refuses to run unless those
+     trees equal the tag's and nothing outside the tracked records (the access log, the outputs
+     manifest, reports) is changed. A validation run made at another commit is run again at the
+     tag; a pipeline change after the tag is not allowed.
+   - `poly` boxes are not evaluated. The v0.1 bundle (GW-REC-024) is not the frozen model and is not
+     used.
+
+2. **Experiments** (full entries in `research/experiments.md` with this plan).
+
+   | ID | What | Data | Test access |
+   |---|---|---|---|
+   | GW-E2E-006 | v1 pipeline, validation reference | HierText validation, all 1,715 pages | no |
+   | GW-REC-038 | frozen recognizer on validation crops: H5′'s reference and the fp32 ECE check | HierText validation evaluation pack (74,500 crops, Phase 5) | no |
+   | GW-EFF-005 | v1 CPU latency for H1′, back to back with a fresh GW-BASE-002 profile | Phase 5 validation profile pages (10 warm-up, 100 timed) | no |
+   | GW-REC-039 | frozen recognizer on ground-truth crops; confidences at T = 1 and 2.35 | HierText test, GDC, GDC-scan, FUNSD, IIIT5K | yes |
+   | GW-E2E-007 | frozen pipeline end to end; confidences at T = 1 and 2.35 | HierText test, GDC, GDC-scan, FUNSD, OmniDocBench (English) | yes |
+   | GW-E2E-008 | oracle: ground-truth lines through the pipeline's recognizer (H4, Phase 15) | GDC, GDC-scan | yes |
+   | GW-E2E-009 | the single scoring pass, comparisons, hypothesis verdicts | all prediction files above and the baselines' | via the scoring rows |
+   | GW-BASE-001 to 007 | the baselines on the new sets (dated amendments to their entries) | IIIT5K, FUNSD, OmniDocBench, GDC-scan | yes |
+
+3. **The sets and how each is scored.**
+
+   | Set | Record | Unit | Metrics | Reading order | CI unit |
+   |---|---|---|---|---|---|
+   | HierText test | pages: `data/manifests/processed/hiertext.json` (Phase 4); crops: `eval_crops.json` (Phase 5) | line | recognition; detection; bag-of-lines, E2E F1; HierText's official line-level score | none | lines; pages |
+   | GDC v1.1 | `data/manifests/gdc/gdc_v1.json`; crops `eval_crops.json` | line | recognition; detection; order-aware and bag-of-lines; E2E F1; vertical lines apart; per capture condition | PDF text layer | lines; pages |
+   | GDC-scan v1 | `data/manifests/gdc_scan/gdc_scan_v1.json`; new crop pack | line | as GDC, without conditions | PDF text layer, footer last | lines; pages |
+   | FUNSD | `data/manifests/funsd.json`, `data/manifests/processed/benchmarks.json`; new crop pack | our entity lines | recognition; detection; bag-of-lines, E2E F1 | none | lines; pages |
+   | OmniDocBench, English | `data/manifests/omnidocbench.json` (data commit `aa1ee96d`) | layout block | order-aware page CER/WER; the official text-block and reading-order edit distances | published order, unordered blocks last | pages |
+   | IIIT5K | `data/manifests/iiit5k.json` | word | word accuracy and CER, lexicon-free | n/a | words |
+
+   - **Both normalisation tracks** everywhere, with the charset ceiling beside every metric.
+   - **New crop packs** (GDC-scan, FUNSD) use `build_eval_crops.py`'s Phase 5 settings: lines
+     selected by `is_rec_line` (legible, not handwritten, not vertical, trusted box; out-of-charset
+     and too-long lines kept). FUNSD's page file marks 57 of its 2,647 lines out of charset, which is
+     why its record says 2,590 recognition lines; its pack must hold 2,647. GDC-scan's must hold 779
+     minus its vertical lines minus the 3 lines with untrusted boxes. Both counts are asserted.
+   - **IIIT5K:** the labels are upper case, so the headline is the customary case-insensitive
+     alphanumeric track (both sides lower-cased, then every character outside `0-9a-z` removed). The
+     strict and normalised tracks are reported too, the strict one marked as charging case against
+     upper-case labels. The 50-word and 1,000-word lexicons are not used. Images are scored as
+     published (no margin added).
+   - **OmniDocBench:** its blocks are paragraphs, so detection, bag-of-lines and E2E line F1 are
+     n/a. The project's order-aware page CER/WER is reported, labelled "not the official protocol";
+     beside it, the official evaluation's `text_block` and `reading_order` edit distances from the
+     pinned code (`quick_match`, formula and table metrics switched off; its Overall score needs
+     tables and formulas and is not computable). Differences between the two, stated now: the
+     project's reference keeps headers, footers, page numbers and footnotes; blocks without a
+     numeric order are put last; inline formulas stay as LaTeX source in the reference, and the
+     charset ceiling cannot see that; the project matches nothing (one page string), the official
+     code matches blocks. Rotated and handwritten blocks count as text.
+   - **FUNSD:** lines are our grouping of FUNSD's entity words, not FUNSD's own unit; a question and
+     its answer on one printed row are two reference lines. Handwritten fill-ins count as text. No
+     reading order, so the order-aware metric is n/a.
+   - **HierText's official score:** the official evaluator at commit `70b6620b` in its line-level,
+     end-to-end mode (`--eval_lines --e2e`), for GLYPHARIS and every baseline with HierText test
+     pages. That mode builds each line's mask from its words and compares line texts
+     (`eval.py:85-118`, `:146-175`, `:205-224`, `:315-318`), so each predicted line is given to it as
+     a line holding one word with the line's polygon and text. Its word-level score needs word
+     output, which no system here produces, and is not reported.
+   - **GDC-scan:** one document, so a case study; its CIs are conditional on that document. 87 of
+     its 779 lines contain characters outside the charset; results are also given without those
+     lines, as information only. Every tracked file carries numbers only, never its text or images.
+
+4. **Baselines.**
+   - **HierText test and GDC: reused, not run again.** The baselines are fixed third-party models
+     already evaluated once on these sets in Phase 5. The baseline lock, runner, scorer and metric
+     code are unchanged since `phase-05` (the main lock gained export packages only). Phase 14
+     re-scores their files once, logged as Phase 14. Before any other number is computed, the
+     re-scored totals (predictions and the efficiency block) must equal
+     `git show phase-05:reports/baselines/results.json` exactly, and every stored reference must
+     equal the current pack's label; if not, scoring stops, and reading files to find out why counts
+     as a logged access. The Phase 5 files are hashed before any Phase 14 run and never written.
+   - **New sets:** same runner and settings, no tuning; before any new-set run, every field of the
+     runner's settings must equal those recorded in each system's Phase 5 run metadata (the
+     `*.meta.json` and profile files only, never the test predictions). Phase 14 predictions and
+     profiles go to `data/processed/baselines_phase14/<ID>/`. Coverage, fixed now:
+
+     | System | IIIT5K | GDC-scan rec | GDC-scan e2e | FUNSD rec | FUNSD e2e | OmniDocBench e2e |
+     |---|---|---|---|---|---|---|
+     | GW-BASE-001 Tesseract | yes | yes | yes | yes | yes | all 755 |
+     | GW-BASE-002 PP-OCRv5 mobile | yes | yes | yes | yes | yes | all 755 |
+     | GW-BASE-003 PP-OCRv5 server | yes | yes | no: died on GDC's 3072 × 4080 photos in Phase 5 | yes | yes | the 100-page subset |
+     | GW-BASE-004 TrOCR-small | yes | yes | no detector | yes | no detector | no detector |
+     | GW-BASE-005 PP-OCRv6 tiny | yes | yes | yes | yes | yes | all 755 |
+     | GW-BASE-006 PP-OCRv6 small | yes | yes | yes | yes | yes | all 755 |
+     | GW-BASE-007 PP-OCRv6 medium | yes | yes | yes | yes | yes | all 755 |
+
+     The OmniDocBench subset is `random.Random(20261115).sample(sorted(image names), 100)` over the
+     755 English pages in `data/manifests/omnidocbench.json`; the sorted list is committed with the
+     plan. Every system is also reported on it, so PP-OCRv5 server is compared on equal pages. If a
+     system dies on a set, as PP-OCRv5 server did on GDC, it is recorded as not runnable there, with
+     no substitute.
+
+5. **Hypotheses judged here.** New dated versions in `research/hypotheses.md`; H1, H5 and H8 are
+   marked superseded and stay as written. H2′ gets a note: it cannot be tested on the frozen model,
+   which has no GlyphSynth. The confirmatory tests are exactly five (H1′ CER, H1′ latency, H5′, H8′
+   transfer, H8′ by half); every other interval is descriptive and carries no verdict wording.
+   Each verdict is **met** if its CI lies on the claimed side, **not met** if on the other side,
+   otherwise **not shown**.
+   - **H1′ (RQ1, RQ4).**
+     - *CER half.* The GDC clean slice is the `scan_app` and `photo_flat` captures (53 pages; the two
+       conditions with no deliberate degradation), joined to pages by `Page.image` =
+       `alignment.json` `file`, with the condition counts asserted (37, 16, 16, 11, 11, 8, 7).
+       Bag-of-lines page CER, strict track: `paired_ratio_diff_ci(bag_errors_G, 2 × bag_errors_P,
+       bag_ref_chars, "pages")`, 1,000 resamples, default seed, all 53 pages; met if the CI lies
+       below 0. Judged also on the normalised track and with a source-document cluster bootstrap
+       (21 documents); if any of the three verdicts differs, the result is not shown. A page missing
+       from either file blocks the comparison until the pass is completed; empty output counts as all
+       deletions. The order-aware CER, every capture condition and the external page sets are
+       reported with the same ratio, as information.
+     - *Latency half.* GW-EFF-005 (frozen pipeline, PyTorch CPU, the v1 default backend under
+       ADR-0011) and a fresh GW-BASE-002 profile in one sitting: the baseline first, then
+       GLYPHARIS, on mains power, the Balanced power plan, the power mode recorded, no other user
+       program running. Both at 10 threads (PaddleOCR's default, as in Phase 5; asserted from each
+       file's settings), batch 1, the same 10 warm-up and 100 timed validation pages in the same
+       order; pairing by position, after asserting that the input sizes match page by page.
+       `mean_ci` of the per-page differences, unit pages; met if the CI lies below 0. A sitting is
+       void only if a recorded condition above fails or the input sizes differ; the first sitting
+       that is not void is the one of record, and a void one goes to `research/failures.md`. Both
+       profile files are hashed and both `times_ms` arrays go into the report. Disclosed beside the
+       result: the baseline runs PaddleOCR's two orientation models, as it did for its accuracy
+       numbers. The Phase 5 profile is shown as a consistency check, and GLYPHARIS at 16 threads as
+       information. This half largely re-confirms a known validation result (GW-EFF-002). The ONNX
+       build of v1 does not exist yet; when Phases 16 and 17 build it, it is judged by the same rule
+       and reported as a separate verdict.
+     - H1′ holds only if both halves are met.
+   - **H5′ (RQ6).** "Markedly higher": the frozen recognizer's strict CER on GDC's crops
+     (GW-REC-039) is at least 1.5 times its CER on the HierText validation evaluation pack under the
+     same code and precision (GW-REC-038). Test: CI of CER_GDC − 1.5 × CER_val (independent
+     bootstraps, lines, new `unpaired_ratio_diff_ci`); met if above 0. A cluster bootstrap on the
+     GDC side (source documents) must give the same verdict, otherwise not shown. FUNSD, GDC-scan and IIIT5K, and HierText
+     test, are reported for information. The GlyphSynth half cannot be tested on the frozen model;
+     Phase 12's validation evidence stands for it.
+   - **H8′ (RQ8).** On GDC's crops (GW-REC-039; vertical lines excluded as in every GDC metric,
+     out-of-charset lines kept), GW-E2E-005's method (15 equal-mass bins, exact match on the strict
+     track):
+     - *transfers:* the CI of ECE(T = 2.35) − ECE(T = 1) lies below 0;
+     - *transfers by half:* the CI of ECE(T = 2.35) − 0.5 × ECE(T = 1) lies below 0.
+     Line bootstrap as GW-E2E-005, with a page-cluster bootstrap that must give the same verdict,
+     otherwise not shown. H8 counts as
+     supported on GDC only if both are met. Reliability diagrams for every set. GDC pipeline lines,
+     GDC-scan, HierText test and FUNSD are information; IIIT5K on the alphanumeric track.
+   - H4 is tested in Phase 15 from GW-E2E-008.
+
+6. **Rules fixed in advance.**
+   - **One evaluation** per system, set and task: one prediction pass and one scoring pass. A
+     resume after a crash belongs to the same evaluation and is logged as a resume.
+   - **Order.**
+     1. This plan, the code and its tests are committed and pushed, and CI is green. Before the
+        push, the diff is searched for the identifying strings on GDC-scan's page 1 (name, ID,
+        course code, institution, title), taken from what is already known, not by opening its
+        files.
+     2. Preprocessing: the new crop packs are cut (counts asserted); every prepared file is checked
+        against its recorded hash; page line ids are checked for uniqueness; GDC-scan's photos are
+        checked for a rotation tag and their size against the alignment record; GDC's
+        `alignment.json` capture hashes are checked against `gdc_v1.json`. Any failure is fixed and
+        the check repeated here, before the tag; nothing in this step looks at a model output.
+     3. The `phase14-eval` tag is set.
+     4. GW-E2E-006, GW-REC-038 and the GW-EFF-005 sitting, on validation, at the tag. The GPU
+        estimate is updated from GW-E2E-006.
+     5. Every prediction pass, GLYPHARIS and baselines, from this worktree on this branch. The
+        Phase 15 per-line attributes are computed inside these logged passes. The access log is
+        committed after each batch.
+     6. One scoring pass, with the scorer commit recorded in the report. No score is computed or
+        printed before every prediction file is complete: the test runners write predictions only.
+   - **Not an access:** the preprocessing in step 2 (as in Phase 5).
+   - **Log rows.** Prediction rows carry the producing ID; scoring rows follow Phase 5: one row per
+     scored file under the producing ID, checkpoint column `<system> (<task>), scoring`, phase 14,
+     reason `Phase 14 scoring (GW-E2E-009)`. The runners take the split from the set's records,
+     resolve the log from the repository root, write repo-relative paths only, and refuse to start
+     outside `phase/14-external-eval`.
+   - **Void runs.** A run is void only on a mismatch found mechanically, before the scoring pass,
+     between its provenance (commit, hashes, settings) and this plan. A mismatch found after scoring
+     is reported beside the original result, never in its place.
+   - **Scorer fixes** after scoring: only through a protocol change row written first; every system
+     and set is re-scored, and both versions are reported.
+   - **No change after scoring:** no metric, slice, threshold or setting changes once a score has
+     been seen. Any change to the model or its settings after this point is a new model version,
+     evaluated again and disclosed.
+   - **Single seed.** The frozen model is one model by design (the seed-1337 run, fixed before
+     training); running the other seeds on test would break the one-evaluation rule. Its
+     comparisons with the baselines are between fixed systems. The CIs leave out training variance;
+     the final recipe's seed spread is 0.02 points of validation CER, recognizer only (GW-REC-037);
+     the detector has one seed.
+   - **Outputs.** Per-sample files (predictions, per-line confidences, the oracle run, matched pairs,
+     the Phase 15 hand-off, logs) go under `data/processed/phase14/<ID>/`, git-ignored and in the
+     shared data folder, so removing a worktree cannot delete them. Their SHA-256 and line counts
+     are committed in `data/manifests/processed/phase14_outputs.json`, and Phases 15 and 22 check
+     them before reading. Any backup is the owner's own and private, because the files hold
+     GDC-scan text. Only aggregates go under `reports/external/`. GDC-scan contributes numbers only
+     to every tracked file and commit message.
+   - **Phase 15 reads only what Phase 14 saves** and runs no model on test data: per-line
+     predictions with references; per-line attributes computed now (crop height, blur as variance
+     of the Laplacian, contrast as grey-level standard deviation, box rotation, detector match and
+     IoU, capture condition); the oracle run; matched pairs; and, for examples, GDC line crops of
+     every line with an error plus 200 correct lines drawn with seed 20261115. Nothing from
+     GDC-scan beyond numbers.
+   - **Phase 22 tolerance, fixed now.** Re-scoring the saved files gives identical numbers. A re-run
+     of the frozen model from the prepared files (each matching its recorded hash) with the same
+     flags gives every aggregate metric within 0.05 percentage points (near-tie flips on the GPU
+     allowed within that bound). An fp32 ONNX bundle within Phase 17's tolerance on validation is the
+     same model in another runtime; an INT8 bundle is a new model version and is evaluated in Phase
+     22 if it ships.
+
+7. **Code needed before any access** (each with tests):
+   - merge `f354ba9` (conflicts in `DATASETS.md` and `docs/PHASE_STATUS.md`; its line calling
+     GDC-scan "transcribed" is corrected);
+   - the frozen-config builder (hash and charset checks, strict fp32 recognizer, pinned code);
+   - the profiler: built from the freeze record, a `--threads` option (torch intra- and inter-op and
+     the OpenMP variable) recorded and asserted in its output; the baseline profile's thread count
+     asserted at 10 from its settings;
+   - a guarded GLYPHARIS test runner (recognition, pipeline, oracle via `read_quads`) that writes
+     predictions in the baselines' schema plus confidences and computes no metric;
+   - the baseline runner and scorer: required `--phase`, no default reason, set filters, the new
+     sets (reading order on for GDC-scan and OmniDocBench, off for FUNSD; the vertical-line view
+     for GDC-scan), a separate output directory, refusal to write under `reports/baselines` or to
+     score unselected files when the phase is not 5;
+   - crop-pack entries for GDC-scan and FUNSD;
+   - the alphanumeric track and word accuracy; `unpaired_ratio_diff_ci` and a cluster bootstrap in
+     `stats.py`; an ECE scorer for test crops; the GDC condition join;
+   - wrappers for the official HierText and OmniDocBench evaluators in their own environments;
+   - the Phase 15 hand-off writer; the Phase 14 report, which writes no GDC-scan text (a test plants a
+     marker string and checks it never reaches a tracked output);
+   - `.gitignore` rules for `*.jsonl`, `*.jsonl.gz` and `*.log` under `reports/` and `research/`.
+
+8. **Records updated with this plan:** experiment entries (GW-E2E-006 to 009, GW-REC-038 and 039,
+   GW-EFF-005; dated Phase 14 amendments to GW-BASE-001 to 007, their rows back to running);
+   H1′, H5′, H8′ and the H2′ note; EXPERIMENT_PROTOCOL change rows (order-aware metric on
+   OmniDocBench and GDC-scan; OmniDocBench at page level with the official components; HierText's
+   official score at line level only, replacing the earlier word-level plan; the IIIT5K tracks; the
+   single-seed exception; the access unit, void and re-scoring rules; Phase 15's data; the
+   sub-0.3-alignment wording; the real access guard instead of `--test-access`; the split table);
+   ADR-0013 giving GDC-scan its role (internal test, case study); the IMPLEMENTATION_PLAN Phase 14
+   task list and its old-scans line; the risk register (R-17, R-18, R-22); the GDC-scan source added
+   to the training exclusions by hash only; the owner's same-PDF confirmation in its dataset card;
+   `data/sources.yaml` entries for both official evaluators; a research-log entry.
+
+9. **Not run (documented with the reason):**
+   - HierText's word-level official score (no system outputs words).
+   - OmniDocBench's Overall score (needs tables and formulas).
+   - SROIE: skipped by the owner on 2026-10-29 (needs an ICDAR account; licence not public).
+   - PP-OCRv5 server end to end on GDC-scan (failed on photos of this size in Phase 5) and on all but
+     100 OmniDocBench pages (cost: about 81 s per page in Phase 5, `reports/baselines/efficiency.md`).
+
+**Cost on the laptop** (estimates from `reports/baselines/efficiency.md`, not records). Baselines:
+OmniDocBench pages for the four full systems about 2 CPU-hours, PP-OCRv6 medium on all 755 about 7,
+PP-OCRv5 server on 100 about 2; the slow recognizers on the roughly 6,400 IIIT5K, FUNSD and
+GDC-scan crops about 5; the rest under 2: about 18 CPU-hours in total. GLYPHARIS: about 1 GPU-hour
+(Phase 10 measured 449 ms per validation page with the v0.1 recognizer, GW-E2E-001; re-estimated
+from GW-E2E-006 before any test run). Validation runs and profiles about 2 hours. Two new
+environments for the official evaluators.
+
+**Known limitations, stated in advance**
+- GDC-scan is one document and FUNSD 50 forms; their CIs are wide and say nothing about other
+  documents.
+- Only components of OmniDocBench's official protocol are run, and HierText's only at line level.
+- OmniDocBench and FUNSD count rotated and handwritten text that GLYPHARIS does not try to read.
+- H1′'s latency half is measured on HierText validation pages (GLYPHARIS detected 40.9 lines per
+  page there, GW-EFF-002) because no document validation set exists; GDC pages hold about 81
+  ground-truth lines. How either
+  system's page time grows with line count is not measured, so the verdict may not carry over to
+  dense pages. The PyTorch default was set after the v0.1 ONNX latency was known (GW-EFF-004).
+- The H5′ threshold was set knowing the baselines' direction (lower CER on GDC than on HierText
+  validation for every baseline).
+- Training-time validation ran with bf16 autocast, so GW-REC-034's logged 6.30% is not the H5′
+  reference; GW-REC-038 is.

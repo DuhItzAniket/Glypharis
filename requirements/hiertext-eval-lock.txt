@@ -1,0 +1,38 @@
+# HierText official evaluator (google-research-datasets/hiertext @ 70b6620b2b112597d8219e11eee9773a1403827c)
+# Python 3.11.9, python -m venv .venv-hiertext; opencv-python-headless replaces the pinned
+# opencv-python==4.1.2.30, which has no wheel for Python 3.11.
+absl-py==2.5.1
+apache-beam==2.77.0
+beartype==0.22.9
+certifi==2026.10.23
+cffi==2.1.1
+charset-normalizer==3.5.2
+cryptography==50.0.2
+dnspython==2.9.2
+fastavro==1.13.1
+fasteners==0.20
+grpcio==1.85.1
+httplib2==0.32.1
+idna==3.20
+jsonpickle==4.1.4
+numpy==2.4.6
+objsize==0.7.1
+opencv-python-headless==5.0.0.93
+packaging==26.3
+pillow==12.3.0
+proto-plus==1.29.0
+protobuf==6.33.6
+pyarrow==25.0.1
+pycparser==3.12
+pymongo==4.20.0
+pyparsing==3.3.3
+python-dateutil==2.9.0.post0
+pytz==2026.6
+PyYAML==6.0.3
+requests==2.34.2
+shapely==2.2.0
+six==1.17.0
+sortedcontainers==2.4.0
+typing_extensions==4.16.0
+urllib3==2.8.0
+zstandard==0.25.0

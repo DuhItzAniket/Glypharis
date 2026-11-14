@@ -34,7 +34,8 @@ Dataset roles are fixed by [ADR-0005](decisions/ADR-0005-evaluation-data-roles.m
    test images are never removed for duplication. Removals are listed in
    `data/manifests/exclusions/<dataset>.json`.
 5. **GDC sources are excluded from all training corpora,** including the text corpus used by GlyphSynth.
-   The exclusion list lives in `data/manifests/exclusions/` and is checked by a test.
+   The exclusion list lives in `data/manifests/exclusions/` and is checked by a test. GDC-scan's source
+   document is listed there by hash only (it is personal).
 6. **GlyphSynth validation** uses held-out fonts *and* held-out source texts, so it measures
    generalisation to unseen typography and content rather than memorisation.
 
@@ -52,7 +53,11 @@ Copied from the generated manifests named in the last column (Phase 4).
 | GlyphSynth v1 | train | — | 100,000 | `data/manifests/processed/glyphsynth.json` |
 | GlyphSynth v1 | val (held-out fonts and texts) | — | 10,000 | same |
 | GLYPH-C v1 | validation-derived | 6,000 samples | 216,000 crops (clean + 7 corruptions x 5 levels) | `data/manifests/processed/glyph_c.json` |
-| GDC v1 | test | 106 sheets | 8,606 ground-truth lines | `data/manifests/gdc/pack.json` (capture pending, ADR-0010) |
+| GDC v1.1 | test | 106 sheets | 8,606 ground-truth lines | `data/manifests/gdc/gdc_v1.json` (frozen 2026-10-21) |
+| GDC-scan v1 | test (case study) | 28 pages | 779 ground-truth lines | `data/manifests/gdc_scan/gdc_scan_v1.json` (frozen 2026-11-14; ADR-0013) |
+| IIIT5K | test | 3,000 word images | 3,000 words | `data/manifests/processed/benchmarks.json` |
+| FUNSD | test | 50 forms | 2,647 lines (2,590 in charset) | same |
+| OmniDocBench (English) | test | 755 pages | 11,369 text blocks | same |
 
 HierText image counts are after the Phase 3 exclusion list (v1).
 
@@ -93,7 +98,7 @@ Empty references are excluded from CER denominators and counted separately.
 | F1 @ IoU 0.7 | Stricter localisation. |
 | Mean matched IoU | Over true positives. |
 | Merge / split counts | One GT ↔ many predictions and vice versa (Phase 9). |
-| Dataset-native metric | Where a benchmark defines its own (e.g. HierText's PQ-style metric), it is reported in addition, with the official code, from Phase 14 (§11). |
+| Dataset-native metric | Where a benchmark defines its own, it is reported in addition, with the official code, from Phase 14: HierText's PQ-style score at line level (its word level needs word output, which no system here produces), OmniDocBench's text-block and reading-order edit distances (§11, 2026-11-15). |
 
 "Don't care" regions (illegible text) are excluded from both sides where the dataset marks them.
 GDC pages also carry *ignore regions*: raster images inside the source PDFs, whose printed text has
@@ -101,8 +106,9 @@ no text layer and therefore no ground truth, and (from GDC v1.1) the sheet outsi
 area, where the corner markers and the printed sheet label sit. Ground-truth lines that count are
 always scored; an ignore region only excuses predictions inside it that match no ground-truth line.
 GDC lines whose alignment score is below 0.3 keep their text in the order-aware reference but
-their box is not trusted, so for detection, bag-of-lines and E2E F1 they are don't care. These
-exclusions apply to every metric, the order-aware page text included. GDC lines flagged `vertical`
+their box is not trusted, so for detection, bag-of-lines and E2E F1 they are don't care. Don't-care
+lines and ignore regions apply to every metric, the order-aware page text included; an untrusted box
+affects only the box-based metrics. GDC-scan follows the same rules. GDC lines flagged `vertical`
 (rotated text such as margin stamps and axis titles) are reported separately and excluded from the
 main line metrics: recall and the CER of those lines only, since precision would charge every
 spurious prediction on the page to them.
@@ -111,7 +117,7 @@ spurious prediction on the page to them.
 
 | Metric | Definition |
 |---|---|
-| **Page CER / WER, order-aware** | Lines joined in predicted reading order with `\n`, compared with the reference page text. Reported only where the ground truth has a reading order: GDC (PDF text-layer order). HierText's annotation order is not a reading order, so the metric is n/a there. |
+| **Page CER / WER, order-aware** | Lines joined in predicted reading order with `\n`, compared with the reference page text. Reported only where the ground truth has a reading order: GDC and GDC-scan (PDF text-layer order; GDC-scan's footer moved to the end), and OmniDocBench (published block order, blocks without one last). HierText's annotation order is not a reading order and FUNSD has none, so the metric is n/a there. |
 | **Page CER, order-agnostic** | Bag-of-lines: predicted lines matched to GT lines by box IoU, CER over matched pairs, unmatched lines count as full deletions / insertions. Measures recognition and detection without reading order. |
 | E2E line F1 | A GT line counts as found if a prediction overlaps it at IoU ≥ 0.5 *and* its line CER ≤ 0.1 (threshold fixed here, not tuned). |
 | **Oracle analysis** | GT boxes → recognizer, compared with detector boxes → recognizer, to split error between the two stages. |
@@ -223,9 +229,9 @@ GPU-hours. Numbers in docs are copied from these reports together with the exper
 
 ## 9. Leakage and test-access rules
 
-- No test-split file is opened by training code; the data loader refuses split names starting with
-  `test` unless the evaluation entry point is called with `--test-access <experiment-id>`, which appends
-  a row to `research/test_access_log.md` automatically.
+- No test-split file is opened by training code; the training page index refuses test and GDC pages.
+  Every evaluation entry point that reads a test split calls `glypharis.eval.access.open_test_access`,
+  which appends a row to `research/test_access_log.md` before any data is returned.
 - Test evaluations happen only in Phases 5, 14 and 22. Each frozen model is evaluated **once** per test
   set. A model changed after seeing test results is a new model version and is disclosed as such.
 - Looking at individual test errors is allowed only in Phase 15 (error analysis), after the model is
@@ -261,3 +267,8 @@ choice; no per-benchmark tuning.
 | 2026-10-25 | §7: detector selection is the maximum over the pre-registered operating points of validation F1@0.5 on the per-epoch subset; the operating point stored in `best.pt` is the one reported on full validation, with no second selection; F1@0.3 is diagnostic only; the label ceiling is reported next to detector F1 | The right unclip distance depends on how much thicker the trained probability region is than the label kernel, which is not known before training, so two operating points (`dbnet15`, `inverse10`) are pre-registered and scored from the same forward pass. Choosing between them again on the full validation set would be a second selection | Detector selection and reporting, H9 and H10; written before any GW-DET run |
 | 2026-10-25 | §3: CLEval-style detection metrics are not computed in Phase 8 (descoped; IMPLEMENTATION_PLAN §8), signed off by the owner at the Phase 8 gate (2026-10-27) | §3 never defined a CLEval metric, so none was pre-registered. That gap is not a reason on its own: CLEval's detection mode would be feasible, since it needs only the ground-truth transcriptions, which HierText has. CLEval asks whether granularity errors (merges, splits, partial lines), which one-to-one IoU matching scores all or nothing, hide real detection quality. Phase 9 answers that from the merge and split counts (§3), and defining a new metric after the detector exists would add a metric chosen after the fact. If the owner declines the descope, CLEval's detection mode is defined in §3 and computed on the CPU from the saved boxes of the three GW-DET runs, without retraining, and labelled as defined after the runs | Detection reporting in Phase 8 |
 | 2026-10-25 | §3 for the detector: in Phase 8, GLYPHARIS-Det is scored with the §3 line metrics only; HierText's native PQ-style metric comes from Phase 14 with the official code, as for every system (row of 2026-10-22) | The Phase 8 task in the implementation plan names HierText-style metrics; the 2026-10-22 change had already moved the native metric to Phase 14 | HierText detection reporting in Phase 8; no number changes |
+| 2026-11-15 | §1, §3, §9 and this log for Phase 14: split table completed (GDC v1.1, GDC-scan, IIIT5K, FUNSD, OmniDocBench); order-aware metrics extended to GDC-scan and OmniDocBench; the sub-0.3 alignment sentence reworded (meaning unchanged); the access-guard description replaced by the mechanism the code has | GDC-scan and the external sets are evaluated in Phase 14; the old wording described a `--test-access` flag that was never built | Wording and set coverage; no reported number changes |
+| 2026-11-15 | OmniDocBench is scored at page level only (its units are paragraph blocks, so detection, bag-of-lines and E2E line F1 are n/a), with the project's order-aware page CER/WER labelled "not the official protocol" and, beside it, the official `text_block` and `reading_order` edit distances (pinned code, formula and table metrics off; Overall not computable). HierText's native score is computed at line level with the official code; its word-level score is not reported. Both signed off by the owner (2026-11-15) | IMPLEMENTATION_PLAN asks for OmniDocBench's official protocol where compatible; the rows of 2026-10-22 and 2026-10-25 promised HierText's native metric from Phase 14. Neither GLYPHARIS nor any baseline outputs words, tables or formulas | Phase 14 reporting for OmniDocBench and HierText test |
+| 2026-11-15 | IIIT5K: headline word accuracy and CER on the customary case-insensitive alphanumeric track (both sides lower-cased, characters outside `0-9a-z` removed); strict and normalised tracks reported beside it, the strict one marked as charging case against upper-case labels; lexicon-free only | The published labels are upper case | IIIT5K reporting |
+| 2026-11-15 | §4 exception for Phase 14: the frozen system is one model (the seed fixed before training) compared with fixed baselines; the other seeds are not run on test data, which would break the one-evaluation rule. The CIs leave out training variance, and the recipe's validation seed spread is quoted beside them | §4's three-seed rule is written for recipe comparisons; §9 evaluates each frozen model once | GLYPHARIS-against-baseline comparisons in Phase 14 |
+| 2026-11-15 | §9 for Phase 14: one evaluation is one prediction pass and one scoring pass per system, set and task; resumes are logged as such; cutting crop packs and checking hashes are preprocessing, not access; a run is void only on a provenance mismatch found mechanically before scoring; a scorer fix after scoring re-scores every system and set and both versions are reported; Phase 15 reads only the files Phase 14 saves (`docs/PHASE_STATUS.md`, Phase 14, item 6) and runs no model on test data | The Phase 5 practice was never written down, and Phase 15 is not an access phase | Phase 14 and 15 test-data handling |

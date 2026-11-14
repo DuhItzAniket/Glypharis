@@ -277,3 +277,19 @@ the bottom. Experiments get their full record in `experiments.md`; this log is t
   augmentation tweaks are not what will fix it.
 - About 108 GPU-hours on the laptop, over two weeks with pauses; one crash, probably another
   program taking GPU memory, cost a resume and nothing else.
+
+### 2026-11-15 — Phase 14 opens: the plan for the one real test
+
+- The owner gave one of their own documents for a second document test set: a 28-page printed
+  report, photographed page by page. Its Word source exists, so its text is exact without any
+  transcription. GDC-scan v1 was frozen on 2026-11-14, before any model saw it. It is personal, so
+  only numbers from it ever leave the laptop.
+- The Phase 14 plan is registered before the frozen model reads any test set: six sets, the same
+  seven baselines, one prediction pass and one scoring pass each, and nobody looks at a score until
+  every prediction file is written.
+- Three claims get a yes, no or "not shown" rule fixed now: GLYPHARIS within twice PP-OCRv5
+  mobile's page error on GDC's clean photos and faster on the CPU; a markedly higher error on
+  documents than on scene text; and the confidence fix carrying over to documents.
+- HierText's and OmniDocBench's official scorers are used where they fit line output: HierText at
+  line level, OmniDocBench's text and reading-order parts.
+

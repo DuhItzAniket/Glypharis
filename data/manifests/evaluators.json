@@ -1,0 +1,22 @@
+{
+ "hiertext": {
+  "repository": "https://github.com/google-research-datasets/hiertext",
+  "commit": "70b6620b2b112597d8219e11eee9773a1403827c",
+  "files": "eval.py and evaluator/ (fetched file by file), local at data/raw/evaluators/hiertext-70b6620b",
+  "licence": "CC BY-SA 4.0 (repository)",
+  "environment": ".venv-hiertext",
+  "lock": "requirements/hiertext-eval-lock.txt",
+  "use": "line-level end-to-end score on HierText test (--eval_lines --e2e)"
+ },
+ "omnidocbench": {
+  "repository": "https://github.com/opendatalab/OmniDocBench",
+  "commit": "7ddb8df411ad9bd2fff139acafe0ed16aa1694fe",
+  "archive_sha256": "c4b01d60479e5e16ae19fcf5fb6fb6ea5e92e5690309e981e8e24baa2c2c6cce",
+  "files": "GitHub tarball of the commit, local at data/raw/evaluators/omnidocbench-7ddb8df",
+  "licence": "Apache-2.0 (code)",
+  "environment": ".venv-omnidocbench (PYTHONUTF8=1)",
+  "lock": "requirements/omnidocbench-eval-lock.txt",
+  "use": "end2end text_block and reading_order edit distances, quick_match; formula and table metrics off"
+ },
+ "downloaded": "2026-11-15, approved by the owner"
+}
