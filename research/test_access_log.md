@@ -88,3 +88,10 @@ Any other access must be justified in the "Reason" column and discussed in the p
 | 2026-11-14 | funsd test | GW-REC-039 | glypharis (rec) | 14 | Phase 14 GLYPHARIS test pass (GW-REC-039) |
 | 2026-11-14 | iiit5k test | GW-REC-039 | glypharis (rec) | 14 | Phase 14 GLYPHARIS test pass (GW-REC-039) |
 | 2026-11-14 | gdc test | GW-E2E-008 | glypharis (oracle) | 14 | Phase 14 GLYPHARIS test pass (GW-E2E-008) |
+| 2026-11-14 | gdc_scan test | GW-E2E-008 | glypharis (oracle) | 14 | Phase 14 GLYPHARIS test pass (GW-E2E-008) |
+| 2026-11-14 | gdc_scan test | GW-E2E-007 | glypharis (e2e) | 14 | Phase 14 GLYPHARIS test pass (GW-E2E-007) |
+| 2026-11-14 | funsd test | GW-E2E-007 | glypharis (e2e) | 14 | Phase 14 GLYPHARIS test pass (GW-E2E-007) |
+| 2026-11-14 | gdc test | GW-E2E-007 | glypharis (e2e) | 14 | Phase 14 GLYPHARIS test pass (GW-E2E-007) |
+| 2026-11-14 | omnidocbench test | GW-E2E-007 | glypharis (e2e) | 14 | Phase 14 GLYPHARIS test pass (GW-E2E-007) |
+| 2026-11-14 | iiit5k test | GW-BASE-003 | ppocr_server (rec) | 14 | Phase 14 baseline test pass (GW-BASE-003) |
+| 2026-11-14 | hiertext test | GW-E2E-007 | glypharis (e2e) | 14 | Phase 14 GLYPHARIS test pass (GW-E2E-007) |
