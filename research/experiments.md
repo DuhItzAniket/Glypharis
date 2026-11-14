@@ -1721,7 +1721,7 @@ Rows link to a full entry below. Numbers are copied from generated reports only,
 - **Hardware:** laptop CPU (i7-14650HX), mains power, Balanced power plan, power mode recorded, no other user program running
 - **Research question:** H1′'s latency half.
 - **Hypothesis (written before the run):** [H1′](hypotheses.md), latency half.
-- **Method:** a fresh GW-BASE-002 profile first, then the frozen pipeline in PyTorch on the CPU, both at 10 threads, batch 1, the same pages in the same order; pairs by position after checking that the input sizes match; `mean_ci` of the per-page differences (pages). GLYPHARIS also at 16 threads, as information. The sitting is void only if a recorded condition fails or the input sizes differ.
+- **Method:** a fresh GW-BASE-002 profile first, then the frozen pipeline in PyTorch on the CPU, both at 10 threads, batch 1, the same pages in the same order; pairs by position after checking that the input sizes match; `mean_ci` of the per-page differences (pages). GLYPHARIS also at 16 threads, as information. The sitting is void only if a recorded condition fails or the input sizes differ; as amended before the tag (`docs/PHASE_STATUS.md`, Phase 14 item 10), both profiles are timed and GLYPHARIS must start after the baseline ends and within 2 hours, and the 16-thread run cannot void the sitting.
 - **Variables:** independent: system; controlled: pages, order, threads, power plan
 - **Control:** GW-BASE-002 (fresh profile in the same sitting)
 - **Result:** —

@@ -1881,6 +1881,50 @@ validation's. No GLYPHARIS number exists on any test set.)
    - PP-OCRv5 server end to end on GDC-scan (failed on photos of this size in Phase 5) and on all but
      100 OmniDocBench pages (cost: about 81 s per page in Phase 5, `reports/baselines/efficiency.md`).
 
+10. **Amendment (2026-11-15, from two reviews of the Phase 14 code; written before the tag and
+    before any Phase 14 run, with nothing predicted or scored).** Where it differs, it replaces
+    the text above.
+    - **Records after the tag.** Besides the access log, the outputs manifest and `reports/`,
+      `research/failures.md` may change after the tag (a void sitting is recorded there). Every
+      other path is pinned, renames included: a file moved out of a pinned path counts as changed.
+      The tag commit and the GPU re-estimate from GW-E2E-006 are written to
+      `reports/external/run_record.md`, not to this file; this section is brought up to date after
+      the scoring pass.
+    - **Order, step 2,** in this order: cut the GDC-scan and FUNSD packs (the cutter itself asserts
+      FUNSD's 2,647 and GDC-scan's count, with the untrusted lines equal to `alignment.json`'s 3,
+      and records each pack's label-file hash); `scripts/phase14_prepare.py record-index-hashes`
+      (adds the label-file hash to the packs prepared earlier); `scripts/phase14_score.py
+      hash-phase5`; commit those records; then `scripts/phase14_prepare.py check` must pass. It
+      checks every input against its recorded hash and count (GDC's page count now from
+      `gdc_v1.json`), page and line id uniqueness, every page image's header size against its
+      record (JPEG, PNG and WebP only, orientation from the EXIF block only), GDC-scan's photos
+      (no rotation tag, size and hash as `alignment.json` records), GDC's capture hashes, the
+      batch each planned baseline run must use against Phase 5's run metadata, and that the
+      records under `data/manifests` are committed. Both record commands refuse once the tag
+      exists.
+    - **Runners.** Every run, GLYPHARIS and baseline, refuses before logging an access when an input
+      has no recorded hash or differs from it, and a GLYPHARIS page run also when an image's size
+      differs from its record. Every GLYPHARIS pass runs on device `cuda`, validation included; its
+      recognition batch is recorded. A baseline run uses the inference batch its Phase 5 runs used.
+      Tesseract's temporary crops stay under the git-ignored `data/cache/`.
+    - **Latency sitting.** Both 10-thread profiles record when they started and ended. The sitting
+      is also void if GW-EFF-005 starts before the baseline profile ends, more than 2 hours after
+      it ends, or if either time is missing. The 16-thread profile is information and cannot make
+      the sitting void.
+    - **The scoring pass** checks before its first row everything that needs no score: completeness,
+      the Phase 5 and Phase 14 hashes, provenance (one tag, the frozen files, one device and
+      software stack), the latency sitting, every input against its record and against each
+      GLYPHARIS run's record of it, the official evaluators' environments and ground-truth hashes,
+      and a conversion of every prediction file into the evaluators' formats. A refusal writes
+      nothing. If the pass stops after rows are logged, it is finished with `score --resume`, the
+      same evaluation, and every row of the resumed pass is logged with "(resumed)"; a finished
+      pass refuses any further run.
+    - **GDC-scan without its out-of-charset lines** (item 3) covers recognition and the page metrics
+      (bag-of-lines CER, E2E F1, with those reference lines treated as don't-care), information
+      only.
+    - **Phase 5 is closed** once its files are hashed: the Phase 5 scoring command and Phase 5
+      baseline runs refuse, and Phase 14 files are scored only by `phase14_score.py score`.
+
 **Cost on the laptop** (estimates from `reports/baselines/efficiency.md`, not records). Baselines:
 OmniDocBench pages for the four full systems about 2 CPU-hours, PP-OCRv6 medium on all 755 about 7,
 PP-OCRv5 server on 100 about 2; the slow recognizers on the roughly 6,400 IIIT5K, FUNSD and
