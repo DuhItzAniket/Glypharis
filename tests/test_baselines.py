@@ -1,6 +1,12 @@
 from __future__ import annotations
 
+import hashlib
 import json
+import os
+import subprocess
+import sys
+from datetime import UTC, datetime, timedelta
+from pathlib import Path
 
 import evaluate_baselines
 import numpy as np
@@ -154,8 +160,9 @@ class FakeSystem:
 
 
 def _run(data, *extra, system="tesseract", experiment="GW-BASE-001"):
-    return run_baselines.main(["--system", system, "--experiment", experiment, "--data-root",
-                               str(data), "--batch", "1", *extra])  # fmt: skip
+    return run_baselines.main(["--phase", "5", "--reason", "Phase 5 baseline", "--system", system,
+                               "--experiment", experiment, "--data-root", str(data), "--batch",
+                               "1", *extra])  # fmt: skip
 
 
 # ---------------------------------------------------------------------------- runner main
@@ -223,6 +230,74 @@ def test_profile_times_after_warmup_on_validation_only(root, monkeypatch):
     assert prof["peak_mem_mib"] >= prof["process_peak_mib"] > 0 and prof["model_mib"] == 1.0
 
 
+def test_profile_records_when_its_sitting_ran(root, monkeypatch):
+    """``started_utc`` just before the first warm-up sample, ``ended_utc`` after the last timed
+    one (UTC, with the offset), so the scorer can check that the baseline ran first."""
+    data, _ = root
+    events: list[str] = []
+
+    class Clock:
+        @staticmethod
+        def now(tz=None):
+            events.append("now")
+            return datetime.now(tz)
+
+    class Logged(FakeSystem):
+        def recognize(self, images):
+            events.append("sample")
+            return super().recognize(images)
+
+    monkeypatch.setattr(run_baselines, "make_system", lambda n, t: Logged())
+    monkeypatch.setattr(run_baselines, "datetime", Clock)
+    monkeypatch.setattr(run_baselines, "WARMUP", 1)
+    monkeypatch.setattr(run_baselines, "PROFILE_SAMPLES", 2)
+    before = datetime.now(UTC).replace(microsecond=0)
+    assert _run(data, "--task", "rec", "--eval-set", "hiertext_val", "--profile") == 0
+    assert events == ["now", "sample", "sample", "sample", "now"]
+    path = data / "processed/baselines/GW-BASE-001/profile_tesseract_rec_hiertext_val.json"
+    prof = json.loads(path.read_text(encoding="utf-8"))
+    start, end = (datetime.fromisoformat(prof[k]) for k in ("started_utc", "ended_utc"))
+    assert start.utcoffset() == end.utcoffset() == timedelta(0)
+    assert before <= start <= end <= datetime.now(UTC)
+
+
+def test_tesseract_files_go_through_the_data_roots_cache_only(tmp_path, monkeypatch):
+    data = tmp_path / "data"
+    folder = data / run_baselines.TESSERACT_TMP
+    dead = subprocess.run([sys.executable, "-c", "import os; print(os.getpid())"],
+                          capture_output=True, text=True, check=True).stdout.strip()  # fmt: skip
+    (folder / f"{dead}-killed").mkdir(parents=True)  # left by a run that was killed
+    (folder / f"{dead}-killed/00000.png").write_bytes(b"crop")
+    (folder / "stray.txt").write_text("text", encoding="utf-8")
+    live = folder / f"{os.getpid()}-running"  # a run still going keeps its folder
+    live.mkdir()
+    assert run_baselines.tesseract_tmp(data) == folder
+    assert [p.name for p in folder.iterdir()] == [live.name]
+
+    tess = object.__new__(run_baselines.Tesseract)  # no executable needed
+    tess.child_peak = 0
+    blank = Image.new("L", (8, 8), 255)
+    with pytest.raises(RuntimeError, match="not set"):  # never the system temp folder
+        tess.recognize([blank])
+    used: list[Path] = []
+
+    def fake_run(args):
+        work = Path(args[1]).parent
+        used.append(work)
+        assert work.parent == folder and work.name.startswith(f"{os.getpid()}-")
+        if args[0].endswith("list.txt"):
+            assert sorted(p.name for p in work.iterdir()) == ["00000.png", "00001.png", "list.txt"]
+            (work / "out.txt").write_text("a\fb\f", encoding="utf-8")
+        else:
+            (work / "out.tsv").write_text(TSV, encoding="utf-8")
+
+    monkeypatch.setattr(tess, "_run", fake_run)
+    assert run_baselines.ready(tess, data) is tess and tess.tmp_root == folder
+    assert tess.recognize([blank, blank]) == ["a", "b"]
+    assert [ln["text"] for ln in tess.page(blank)] == ["Hello world", "Next"]
+    assert len(used) == 2 and not any(w.exists() for w in used)  # removed after each call
+
+
 # ------------------------------------------------------------------------------- scoring
 
 
@@ -264,7 +339,7 @@ def test_scorer_writes_every_table_and_logs_test_scoring(root):
         json.dumps(prof), encoding="utf-8"
     )
     out = data.parent / "reports"
-    args = ["--data-root", str(data), "--out", str(out), "--access-log", str(log)]
+    args = ["--phase", "5", "--data-root", str(data), "--out", str(out), "--access-log", str(log)]
     assert evaluate_baselines.main(args) == 0
 
     results = json.loads((out / "results.json").read_text(encoding="utf-8"))
@@ -294,12 +369,88 @@ def test_scorer_writes_every_table_and_logs_test_scoring(root):
     assert "planned, no predictions yet" in summary and "TrOCR has no detector" in summary
 
 
+# SHA-256 of each file of the Phase 5 report `_phase5_report` writes, as rendered before the
+# Phase 14 branches left the report writer (Phase 14 item 6): the Phase 5 report is unchanged.
+PHASE5_REPORT = {
+    "README.md": "28200febc02206059fbac37f661305ce16978d3b47397da53d3cb55df4b8bb77",
+    "detection.md": "2fc8b9a537115efbaa99c6a9256bf221d45a2e385dfa1786b1f81a54c14441db",
+    "efficiency.md": "63accf6594554fc873bb1f68f4533568b2dc27636bc5d89c6489ee4c5e7293ec",
+    "end_to_end.md": "cf05f1896f6f7949d34a96056183a5526a0fd69afcc05fd14068b9d9da896df7",
+    "recognition.md": "03ef25e231e02d2876b92a6e8150d1d2393488172161bbb7c98b8c9f098174c7",
+    "results.json": "d02dd5c90016cb531b5aa17827a00ed40465efbc01a5d272517acba80c37e505",
+}
+
+
+def _phase5_report(data, log, out):
+    """A Phase 5 folder with every kind of file the report shows: complete, partial (cut-off last
+    record), without metadata, without predictions, first-runner metadata (no ``expected``), and
+    two profiles."""
+    written = [
+        _write_run(data, "tesseract", "GW-BASE-001", "rec", "gdc_test",
+                   [{"key": "gdc_test/l0", "ref": "alpha", "pred": "alpha"},
+                    {"key": "gdc_test/l1", "ref": "beta", "pred": "bota"},
+                    {"key": "gdc_test/l2", "ref": "naïve", "pred": "naive"}]),
+        _write_run(data, "tesseract", "GW-BASE-001", "e2e", "gdc_test",
+                   [_page_record("gdc_test")]),
+        _write_run(data, "tesseract", "GW-BASE-001", "e2e", "hiertext_val",
+                   [_page_record("hiertext_val")]),
+        _write_run(data, "ppocr_mobile", "GW-BASE-002", "rec", "hiertext_test",
+                   [{"key": "hiertext_test/l0", "ref": "alpha", "pred": "alpa"}]),
+    ]  # fmt: skip
+    for path in written:  # the current runner records the expected count
+        meta_path = path.with_suffix(".meta.json")
+        meta = json.loads(meta_path.read_text(encoding="utf-8"))
+        meta_path.write_text(json.dumps({**meta, "expected": 3 if "rec" in path.name else 1}),
+                             encoding="utf-8")  # fmt: skip
+    with written[3].open("ab") as fh:
+        fh.write(b'{"key": "hiertext_test/l1", "ref": "be')
+    _write_run(data, "trocr", "GW-BASE-004", "rec", "hiertext_val",
+               [{"key": "hiertext_val/l0", "ref": "alpha", "pred": "Alpha"},
+                {"key": "hiertext_val/l1", "ref": "beta", "pred": "beta"}])  # fmt: skip
+    no_meta = run_baselines.output_path(data, "GW-BASE-002", "ppocr_mobile", "rec", "gdc_test")
+    no_meta.write_text('{"key": "gdc_test/l0", "ref": "alpha", "pred": "alpha"}\n', "utf-8")
+    _write_run(data, "ppocr_server", "GW-BASE-003", "e2e", "gdc_test", [])
+    for system, exp, task, extra in (
+        ("tesseract", "GW-BASE-001", "rec", {"invocation_overhead_ms": 120.0}),
+        ("ppocr_mobile", "GW-BASE-002", "e2e", {}),
+    ):  # fmt: skip
+        prof = {"system": system, "task": task, "eval_set": "hiertext_val", "experiment": exp,
+                "settings": {"OMP_THREAD_LIMIT": None, "cpu_threads": 10}, "batch": 1,
+                "warmup": 10, "times_ms": [10.0 + i % 7 for i in range(100)],
+                "input_sizes": [[40, 16]] * 100, "peak_mem_mib": 80.0, "child_peak_mib": 50.0,
+                "cpu_busy_percent_after": 4.0, "model_mib": 12.5,
+                "conditions": {"on_ac_power": True, "power_plan": "Balanced", "cpu": "test cpu",
+                               "cpu_busy_percent_before": 3.0}, **extra}  # fmt: skip
+        (data / f"processed/baselines/{exp}/profile_{system}_{task}_hiertext_val.json").write_text(
+            json.dumps(prof), encoding="utf-8"
+        )
+    args = ["--phase", "5", "--data-root", str(data), "--out", str(out), "--access-log", str(log)]
+    assert evaluate_baselines.main(args) == 0
+
+
+def test_the_phase5_report_renders_as_before(root):
+    data, log = root
+    out = data.parent / "reports"
+    _phase5_report(data, log, out)
+    got = {f.name: hashlib.sha256(f.read_bytes()).hexdigest() for f in sorted(out.iterdir())}
+    assert got == PHASE5_REPORT
+
+
 def test_scorer_rejects_predictions_for_another_sample(root):
     data, log = root
     _write_run(data, "tesseract", "GW-BASE-001", "rec", "gdc_test",
                [{"key": "gdc_test/l0", "ref": "alpha", "pred": "alpha"},
                 {"key": "gdc_test/l0", "ref": "alpha", "pred": "alpha"}])  # fmt: skip
-    args = ["--data-root", str(data), "--out", str(data.parent / "r"), "--access-log", str(log)]
+    args = [
+        "--phase",
+        "5",
+        "--data-root",
+        str(data),
+        "--out",
+        str(data.parent / "r"),
+        "--access-log",
+        str(log),
+    ]
     with pytest.raises(SystemExit, match="1 keys repeated"):
         evaluate_baselines.main(args)
 
@@ -316,7 +467,16 @@ def test_scorer_tolerates_a_cut_off_last_record_and_lists_files_without_metadata
     # a run that died before its first page: metadata, no predictions
     _write_run(data, "ppocr_server", "GW-BASE-003", "e2e", "gdc_test", [])
     report = data.parent / "rep"
-    args = ["--data-root", str(data), "--out", str(report), "--access-log", str(log)]
+    args = [
+        "--phase",
+        "5",
+        "--data-root",
+        str(data),
+        "--out",
+        str(report),
+        "--access-log",
+        str(log),
+    ]
     assert evaluate_baselines.main(args) == 0
     summary = (report / "README.md").read_text(encoding="utf-8")
     assert "| GW-BASE-001 | Tesseract 5 | rec | gdc_test | 1 of 3 |" in summary

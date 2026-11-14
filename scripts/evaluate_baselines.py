@@ -1,4 +1,4 @@
-"""Score baseline predictions and write the Phase 5 baseline report.
+"""Score baseline predictions: the Phase 5 report, and the per-file scoring Phase 14 reuses.
 
 Runs in the main environment. Reads every prediction file written by `scripts/run_baselines.py`
 under data/processed/baselines/<experiment>/ and scores it with `glypharis.eval`, the same code that
@@ -6,7 +6,7 @@ will score GLYPHARIS. Writes separate tables (EXPERIMENT_PROTOCOL §10): recogni
 only and end to end, on both normalisation tracks, GDC's vertical lines on their own (§3), and an
 efficiency table from the profiling runs; plus results.json with every number and its experiment ID.
 
-    python scripts/evaluate_baselines.py
+    python scripts/evaluate_baselines.py --phase 5
 
 Scoring a test set is an evaluation, so it goes through the test-access guard and is logged.
 Prediction files are checked against the evaluation set they claim: a key outside it, or a key
@@ -15,6 +15,17 @@ recognition and pages for detection and end to end. The charset ceiling is the s
 characters outside the GLYPHARIS charset (§2): errors GLYPHARIS cannot avoid, shown next to every
 baseline so the comparison later is like for like. Order-aware page metrics are reported only where
 the ground truth has a reading order (GDC); HierText's annotation order is not one.
+
+The command line, `score_folder` and the report writer (`render`) are Phase 5's pass only, and the
+command line is closed once the Phase 5 files are hashed for Phase 14 (`PHASE5_HASHES`). Phase 14
+files are scored once, by `scripts/phase14_score.py score` (GW-E2E-009), which calls the per-file
+steps here and writes its own report: `evaluate_file` re-scores a Phase 5 file (a partial file is
+scored as it stands, as in Phase 5), and `score_file` scores a Phase 14 file, which must hold
+exactly the keys of a complete run. The per-file scoring covers the Phase 14 sets too: IIIT5K's
+case-insensitive alphanumeric track (`alnum`, the headline there) beside the two project tracks,
+GDC-scan's vertical lines on their own as for GDC, and OmniDocBench, whose reference unit is a
+layout block, so only the order-aware page metrics are scored and detection, bag-of-lines and E2E
+F1 are n/a.
 """
 
 from __future__ import annotations
@@ -27,7 +38,14 @@ from pathlib import Path
 from typing import Any
 
 import numpy as np
-from run_baselines import ACCESS_LOG, EVAL_SETS, EXPERIMENTS, SYSTEM_NAMES, expected_keys
+from run_baselines import (
+    EVAL_SETS,
+    EXPERIMENTS,
+    PHASES,
+    SYSTEM_NAMES,
+    expected_keys,
+    log_path,
+)
 
 from glypharis.data.pages import Page, read_pages
 from glypharis.data.text import Charset
@@ -39,10 +57,22 @@ from glypharis.eval.page_metrics import (
     is_text_line,
     vertical_view,
 )
+from glypharis.eval.sets import PHASE5_HASHES, PHASE5_SETS, SUBSET_NAME, subset_pages
 from glypharis.eval.stats import Interval, ratio_ci
-from glypharis.eval.text_metrics import RecAccumulator, Track, outside_charset, track_charset
+from glypharis.eval.text_metrics import (
+    RecAccumulator,
+    RecTrack,
+    Track,
+    outside_charset,
+    track_charset,
+    word_accuracy,
+)
 
 TRACKS: tuple[Track, ...] = ("strict", "normalised")
+ALNUM: RecTrack = "alnum"  # IIIT5K's customary track; recognition only
+ALNUM_BENCHMARKS = ("iiit5k",)
+PHASE5_REASON = "Phase 5 baseline scoring"
+PHASE5_REPORTS = Path("reports/baselines")
 THREAD_KEYS = ("cpu_threads", "torch_threads", "OMP_THREAD_LIMIT")
 
 _REC_SETS = ("hiertext_val", "glyphsynth_val", "hiertext_test", "gdc_test")
@@ -58,6 +88,7 @@ LEGACY_NOTE = (
 _FULL = ("tesseract", "ppocr_mobile", "ppocr6_tiny", "ppocr6_small")
 _REDUCED = ("ppocr_server", "ppocr6_medium")
 # (system, task, eval set) -> None when planned, or the reason it is not run.
+# fmt: off
 PLAN: dict[tuple[str, str, str], str | None] = {
     **{(s, "rec", e): None for s in (*_FULL, "trocr") for e in _REC_SETS},
     **{(s, "e2e", e): None for s in _FULL for e in _PAGE_SETS},
@@ -71,18 +102,29 @@ PLAN: dict[tuple[str, str, str], str | None] = {
         "lack of memory (research/failures.md, 2026-10-24)"
     ),
 }
+# fmt: on
 
 
 class Context:
-    """What every file needs: data root, charset, page cache, access log."""
+    """What every file needs: data root, charset, page cache, access log, and the phase and
+    reason every scoring row of a test file carries."""
 
-    def __init__(self, data: Path, access_log: Path) -> None:
+    def __init__(
+        self, data: Path, access_log: Path, phase: int = 5, reason: str = PHASE5_REASON
+    ) -> None:
+        if phase != 5 and reason == PHASE5_REASON:
+            raise ValueError(f"Phase {phase} scoring needs its own reason")
         self.data = data
         self.access_log = access_log
+        self.phase = phase
+        self.reason = reason
         chars = Charset.load(data / "manifests" / "charset.json").characters
-        self.allowed = {t: track_charset(chars, t) for t in TRACKS}
+        rec_tracks: tuple[RecTrack, ...] = (*TRACKS, ALNUM)
+        self.allowed: dict[RecTrack, frozenset[str]] = {
+            t: track_charset(chars, t) for t in rec_tracks
+        }
         self._pages: dict[str, dict[str, Page]] = {}
-        self._keys: dict[tuple[str, str], list[str]] = {}
+        self._keys: dict[tuple[str, str, bool], list[str]] = {}
 
     def pages(self, eval_set: str) -> dict[str, Page]:
         if eval_set not in self._pages:
@@ -90,10 +132,10 @@ class Context:
             self._pages[eval_set] = {p.doc_id: p for p in read_pages(path)}
         return self._pages[eval_set]
 
-    def keys(self, eval_set: str, task: str) -> list[str]:
-        if (eval_set, task) not in self._keys:
-            self._keys[eval_set, task] = expected_keys(self.data, eval_set, task)
-        return self._keys[eval_set, task]
+    def keys(self, eval_set: str, task: str, subset: bool = False) -> list[str]:
+        if (eval_set, task, subset) not in self._keys:
+            self._keys[eval_set, task, subset] = expected_keys(self.data, eval_set, task, subset)
+        return self._keys[eval_set, task, subset]
 
 
 def read_records(path: Path) -> list[dict[str, Any]]:
@@ -129,13 +171,13 @@ def ci(num: np.ndarray, den: np.ndarray, unit: str) -> dict[str, Any] | None:
     return ci_dict(ratio_ci(num, den, unit)) if float(np.sum(den)) > 0 else None
 
 
-def ceiling(texts: list[str], allowed: frozenset[str], track: Track) -> float:
+def ceiling(texts: list[str], allowed: frozenset[str], track: RecTrack) -> float:
     outside, total = outside_charset(texts, allowed, track)
     return outside / total if total else 0.0
 
 
 def score_rec(
-    records: list[dict[str, Any]], track: Track, allowed: frozenset[str]
+    records: list[dict[str, Any]], track: RecTrack, allowed: frozenset[str], unit: str = "lines"
 ) -> dict[str, Any]:
     acc = RecAccumulator(track)
     for r in records:
@@ -145,15 +187,20 @@ def score_rec(
     chars = np.array([x.ref_chars for x in acc.scores], dtype=np.float64)
     werrs = np.array([x.word_errors for x in acc.scores], dtype=np.float64)
     words = np.array([x.ref_words for x in acc.scores], dtype=np.float64)
-    return {
+    out = {
         "samples": s.samples,
         "empty_references": s.empty_references,
-        "cer": ci(errs, chars, "lines"),
-        "wer": ci(werrs, words, "lines"),
+        "cer": ci(errs, chars, unit),
+        "wer": ci(werrs, words, unit),
         "ned": s.ned,
         "sequence_accuracy": s.sequence_accuracy,
         "charset_ceiling": ceiling([r["ref"] for r in records], allowed, track),
     }
+    if track == ALNUM:  # the IIIT5K headline: word accuracy with its CI
+        correct, ones = word_accuracy([r["ref"] for r in records],
+                                      [r["pred"] for r in records], track)  # fmt: skip
+        out["word_accuracy"] = ci(correct, ones, unit)
+    return out
 
 
 def _preds(record: dict[str, Any]) -> list[PredLine]:
@@ -177,6 +224,22 @@ def score_det(results: list[PageResult]) -> dict[str, Any]:
     out["mean_matched_iou"] = sum(r.matched_iou_sum for r in results) / tp05 if tp05 else 0.0
     out["gt_lines"] = int(sum(r.det[0.5][0] + r.det[0.5][2] for r in results))
     return out
+
+
+def score_blocks(results: list[PageResult]) -> dict[str, Any]:
+    """Block-level sets (OmniDocBench): only the order-aware page text means anything when a
+    reference unit is a paragraph, so the line measures are n/a."""
+    return {
+        "pages": len(results),
+        "order_aware_reported": True,
+        "block_level": True,
+        "page_cer_bag_of_lines": None,
+        "e2e_f1": None,
+        "page_cer_order_aware": ci(_arr(results, lambda r: r.aware_errors),
+                                   _arr(results, lambda r: r.aware_ref_chars), "pages"),
+        "page_wer_order_aware": ci(_arr(results, lambda r: r.aware_word_errors),
+                                   _arr(results, lambda r: r.aware_ref_words), "pages"),
+    }  # fmt: skip
 
 
 def score_e2e(results: list[PageResult], reading_order: bool) -> dict[str, Any]:
@@ -211,23 +274,38 @@ def score_vertical(results: list[PageResult]) -> dict[str, Any]:
             "cer": ci(errors, _arr(results, lambda r: r.bag_ref_chars), "pages")}  # fmt: skip
 
 
-def _no_meta_entry(path: Path) -> dict[str, Any] | None:
-    """Coverage entry for predictions whose run never wrote metadata (killed before it could)."""
+def name_parts(path: Path) -> tuple[str, str, str, bool] | None:
+    """(system, task, eval set, subset) from a prediction file's name, without opening it."""
     for task in ("rec", "e2e"):
         system, sep, eval_set = path.stem.partition(f"_{task}_")
+        subset = eval_set.endswith(f"_{SUBSET_NAME}")
+        if subset:
+            eval_set = eval_set.removesuffix(f"_{SUBSET_NAME}")
         if sep and system in SYSTEM_NAMES and eval_set in EVAL_SETS:
-            return {
-                "experiment": path.parent.name,
-                "system": system,
-                "task": task,
-                "eval_set": eval_set,
-                "samples": len(read_records(path)),
-                "no_meta": True,
-            }
+            return system, task, eval_set, subset
     return None
 
 
+def _no_meta_entry(path: Path) -> dict[str, Any] | None:
+    """Coverage entry for predictions whose run never wrote metadata (killed before it could)."""
+    parts = name_parts(path)
+    if parts is None:
+        return None
+    system, task, eval_set, _ = parts
+    return {
+        "experiment": path.parent.name,
+        "system": system,
+        "task": task,
+        "eval_set": eval_set,
+        "samples": len(read_records(path)),
+        "no_meta": True,
+    }
+
+
 def evaluate_file(path: Path, ctx: Context) -> dict[str, Any] | None:
+    """The Phase 5 per-file step (the CLI's, and Phase 14's reproduction of Phase 5): like
+    `score_file`, but a file without metadata or without predictions is reported and skipped
+    instead of stopping the run, and a partial file is scored as it stands (its count shows it)."""
     meta_path = path.with_suffix(".meta.json")
     if not meta_path.exists():
         print(
@@ -236,16 +314,74 @@ def evaluate_file(path: Path, ctx: Context) -> dict[str, Any] | None:
         )
         return _no_meta_entry(path)
     meta = json.loads(meta_path.read_text(encoding="utf-8"))
-    task, eval_set, system = meta["task"], meta["eval_set"], meta["system"]
-    spec = EVAL_SETS[eval_set]
     records = read_records(path)
     if not records:  # a run that died before its first sample: nothing to score
         print(f"not scored {path.parent.name}/{path.name}: no predictions")
         return None
-    expected = ctx.keys(eval_set, task)
-    check_keys(records, expected, f"{path.parent.name}/{path.name}")
+    return _score(path, ctx, meta, records, subset=False, complete=False)
+
+
+def score_file(
+    path: Path,
+    ctx: Context,
+    *,
+    meta: dict[str, Any] | None = None,
+    subset: bool = False,
+) -> dict[str, Any]:
+    """Score one prediction file and log the scoring of a test file (one row, under its
+    producing ID, with the context's phase and reason).
+
+    ``meta`` describes the file: ``system``, ``task``, ``eval_set`` and ``experiment``, plus
+    ``subset`` (`SUBSET_NAME` when the run covered the OmniDocBench subset only) and optionally
+    ``version`` and ``settings``; by default it is read from the file's .meta.json. The records
+    must be exactly the keys a complete run writes (``ctx.keys``, `run_baselines.expected_keys` by
+    default; on the subset pages with ``subset=True``): a stray or repeated key stops scoring
+    (SystemExit), and so does a missing one (ValueError, naming counts only), before the scoring
+    is logged; the plan scores no file before it is complete. ``subset=True`` scores a whole-set
+    OmniDocBench file on the subset pages only, so every system can be compared on the pages
+    PP-OCRv5 server ran.
+    """
+    name = f"{path.parent.name}/{path.name}"
+    if meta is None:
+        meta_path = path.with_suffix(".meta.json")
+        if not meta_path.exists():
+            raise ValueError(f"{name}: no run metadata, so the file cannot be scored")
+        meta = json.loads(meta_path.read_text(encoding="utf-8"))
+    records = read_records(path)
+    if not records:
+        raise ValueError(f"{name}: no predictions")
+    return _score(path, ctx, meta, records, subset, complete=True)
+
+
+def _score(
+    path: Path,
+    ctx: Context,
+    meta: dict[str, Any],
+    records: list[dict[str, Any]],
+    subset: bool,
+    *,
+    complete: bool,
+) -> dict[str, Any]:
+    """Score ``records``; with ``complete`` they must cover every expected key (checked before
+    the scoring is logged)."""
+    name = f"{path.parent.name}/{path.name}"
+    task, eval_set, system = meta["task"], meta["eval_set"], meta["system"]
+    spec = EVAL_SETS[eval_set]
+    file_subset = meta.get("subset") == SUBSET_NAME
+    expected = ctx.keys(eval_set, task, file_subset)
+    check_keys(records, expected, name)
+    if subset and not file_subset:
+        if (task, eval_set) != ("e2e", "omnidocbench_test"):
+            raise ValueError("the subset is defined for omnidocbench_test end to end only")
+        keep = set(subset_pages(ctx.data))
+        records = [r for r in records if r["key"] in keep]
+        expected = [k for k in expected if k in keep]
+    if complete and {r["key"] for r in records} != set(expected):
+        have = len({r["key"] for r in records} & set(expected))
+        raise ValueError(f"{name}: {have} of {len(expected)} expected keys; an incomplete file is "
+                         "not scored")  # fmt: skip
     open_test_access(spec["benchmark"], spec["split"], meta["experiment"],
-                     f"{system} ({task}), scoring", 5, "Phase 5 baseline scoring",
+                     f"{system} ({task}), scoring", ctx.phase, ctx.reason,
                      ctx.access_log)  # fmt: skip
     entry: dict[str, Any] = {
         "experiment": meta["experiment"],
@@ -260,8 +396,14 @@ def evaluate_file(path: Path, ctx: Context) -> dict[str, Any] | None:
         "runs": len(meta.get("runs", [])),
         "legacy_meta": "expected" not in meta,
     }
+    if subset or file_subset:
+        entry["subset"] = SUBSET_NAME
     if task == "rec":
-        entry["tracks"] = {t: score_rec(records, t, ctx.allowed[t]) for t in TRACKS}
+        unit = "words" if spec["benchmark"] in ALNUM_BENCHMARKS else "lines"
+        rec_tracks: tuple[RecTrack, ...] = TRACKS
+        if spec["benchmark"] in ALNUM_BENCHMARKS:
+            rec_tracks = (ALNUM, *TRACKS)
+        entry["tracks"] = {t: score_rec(records, t, ctx.allowed[t], unit) for t in rec_tracks}
         return entry
     pages = ctx.pages(eval_set)
     scored = [pages[r["key"]] for r in records]
@@ -271,11 +413,15 @@ def evaluate_file(path: Path, ctx: Context) -> dict[str, Any] | None:
     entry["tracks"] = {}
     for t in TRACKS:
         results = [evaluate_page(pages[r["key"]], _preds(r), track=t) for r in records]
-        if t == "strict":  # boxes do not depend on the text track
-            entry["detection"] = score_det(results)
-        entry["tracks"][t] = score_e2e(results, spec["reading_order"])
+        if spec["block_level"]:
+            entry["detection"] = None  # a block is not a line: detection is n/a
+            entry["tracks"][t] = score_blocks(results)
+        else:
+            if t == "strict":  # boxes do not depend on the text track
+                entry["detection"] = score_det(results)
+            entry["tracks"][t] = score_e2e(results, spec["reading_order"])
         entry["tracks"][t]["charset_ceiling"] = ceiling(ref_texts, ctx.allowed[t], t)
-    if eval_set == "gdc_test":
+    if spec["vertical_view"]:
         entry["vertical"] = {}
         vrefs = [
             ln.text
@@ -348,6 +494,7 @@ def _table(header: list[str], rows: list[list[str]]) -> list[str]:
 
 
 def render(entries: list[dict[str, Any]], profiles: list[dict[str, Any]]) -> dict[str, str]:
+    """The Phase 5 report's files (Phase 14 writes its own, `scripts/phase14_score.py`)."""
     order = {s: i for i, s in enumerate(EVAL_SETS)}
     entries = sorted(entries, key=lambda e: (order[e["eval_set"]], e["experiment"]))
     scored = [e for e in entries if not e.get("no_meta")]
@@ -493,7 +640,7 @@ def render_efficiency(profiles: list[dict[str, Any]]) -> str:
 
 
 def render_summary(entries: list[dict[str, Any]], profiles: list[dict[str, Any]]) -> str:
-    """Systems, versions and settings as run, and the coverage of the planned run matrix."""
+    """Systems, versions and settings as run, and the coverage of Phase 5's planned run matrix."""
     lines = [
         "# Baselines (Phase 5)",
         "",
@@ -544,20 +691,23 @@ def render_summary(entries: list[dict[str, Any]], profiles: list[dict[str, Any]]
     return "\n".join(lines)
 
 
-def main(argv: list[str] | None = None) -> int:
-    parser = argparse.ArgumentParser(description=__doc__.splitlines()[0])
-    parser.add_argument("--data-root", default="data")
-    parser.add_argument("--out", default="reports/baselines")
-    parser.add_argument("--access-log", default=str(ACCESS_LOG))
-    args = parser.parse_args(argv)
+def _under(path: Path, folder: Path) -> bool:
+    return path.resolve().is_relative_to(folder.resolve())
 
-    data = Path(args.data_root)
-    root = data / "processed" / "baselines"
-    files = sorted(root.glob("*/*.jsonl"))
+
+def score_folder(data: Path, root: Path, out: Path, access: Path) -> int:
+    """Phase 5's pass: score every Phase 5 prediction file under ``root`` (`evaluate_file`, logged
+    with `PHASE5_REASON`) and write the Phase 5 report to ``out``.
+
+    Only files of the Phase 5 sets are opened; the set is read from the file name first. Phase 14
+    files are never scored here (`scripts/phase14_score.py score`)."""
+    sets = set(PHASE5_SETS)
+    files = [f for f in sorted(root.glob("*/*.jsonl"))
+             if (parts := name_parts(f)) is not None and parts[2] in sets]  # fmt: skip
     if not files:
         print("no baseline predictions found")
         return 1
-    ctx = Context(data, Path(args.access_log))
+    ctx = Context(data, access)
     entries = []
     for f in files:
         entry = evaluate_file(f, ctx)
@@ -565,7 +715,7 @@ def main(argv: list[str] | None = None) -> int:
             entries.append(entry)
             print(f"scored {f.parent.name}/{f.name}")
     profiles = [read_profile(p) for p in sorted(root.glob("*/profile_*.json"))]
-    out = Path(args.out)
+    profiles = [p for p in profiles if p["eval_set"] in sets]
     out.mkdir(parents=True, exist_ok=True)
     for name, text in render(entries, profiles).items():
         (out / name).write_text(text, encoding="utf-8", newline="\n")
@@ -573,6 +723,30 @@ def main(argv: list[str] | None = None) -> int:
     (out / "results.json").write_text(json.dumps(results, indent=1) + "\n", encoding="utf-8",
                                       newline="\n")  # fmt: skip
     return 0
+
+
+def main(argv: list[str] | None = None) -> int:
+    """The Phase 5 scoring pass. Phase 14 test files are scored once, by
+    `scripts/phase14_score.py score` (GW-E2E-009), never from here."""
+    parser = argparse.ArgumentParser(description=__doc__.splitlines()[0])
+    parser.add_argument("--phase", type=int, required=True, choices=PHASES)
+    parser.add_argument("--data-root", default="data")
+    parser.add_argument("--out", default=None,
+                        help=f"report folder (Phase 5: {PHASE5_REPORTS.as_posix()})")  # fmt: skip
+    parser.add_argument("--access-log", default=None,
+                        help="default: the repository's research/test_access_log.md")  # fmt: skip
+    args = parser.parse_args(argv)
+
+    data = Path(args.data_root)
+    if args.phase != 5:
+        raise SystemExit(f"Phase {args.phase} files are scored once, by "
+                         "`scripts/phase14_score.py score` (GW-E2E-009)")  # fmt: skip
+    if (data / PHASE5_HASHES).exists():
+        raise SystemExit(f"data/{PHASE5_HASHES.as_posix()} exists: Phase 5 scoring is closed, "
+                         "and Phase 14 re-scores its files once, in GW-E2E-009")  # fmt: skip
+    out = Path(args.out) if args.out else PHASE5_REPORTS
+    access = Path(args.access_log) if args.access_log else log_path()
+    return score_folder(data, data / "processed" / "baselines", out, access)
 
 
 if __name__ == "__main__":
