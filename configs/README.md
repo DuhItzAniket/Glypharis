@@ -26,6 +26,7 @@ Note: PyYAML reads `1e-3` (no decimal point) as text. Write floats as `1.0e-3`.
 | `det/gw-det-003.yaml` | 8 | GW-DET-001 with a MobileNetV3-Small backbone (GW-DET-003, H10) |
 | `pipeline.yaml` | 10 | Detector + recognizer + reading order + confidence |
 | `experiments/GW-*.yaml` | 6+ | One small override file per registered experiment |
+| `final/glypharis_v1.yaml` | 13 | The frozen final configuration: a record written by `scripts/freeze_final.py`, not a training config; `validate_configs.py` checks the configs it names and its checkpoint hashes |
 
 Experiment files only contain the keys that differ from their parent, and declare the parent with
 `inherits:`. The resolved, fully-expanded config is saved next to every checkpoint.
