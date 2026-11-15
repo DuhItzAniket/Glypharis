@@ -121,3 +121,8 @@ Any other access must be justified in the "Reason" column and discussed in the p
 | 2026-11-15 | funsd test | GW-BASE-006 | ppocr6_small (e2e) | 14 | Phase 14 baseline test pass (GW-BASE-006) |
 | 2026-11-15 | funsd test | GW-BASE-007 | ppocr6_medium (e2e) | 14 | Phase 14 baseline test pass (GW-BASE-007) |
 | 2026-11-15 | funsd test | GW-BASE-003 | ppocr_server (e2e) | 14 | Phase 14 baseline test pass (GW-BASE-003) |
+| 2026-11-15 | omnidocbench test | GW-BASE-001 | tesseract (e2e) | 14 | Phase 14 baseline test pass (GW-BASE-001) |
+| 2026-11-15 | omnidocbench test | GW-BASE-002 | ppocr_mobile (e2e) | 14 | Phase 14 baseline test pass (GW-BASE-002) |
+| 2026-11-15 | omnidocbench test | GW-BASE-005 | ppocr6_tiny (e2e) | 14 | Phase 14 baseline test pass (GW-BASE-005) |
+| 2026-11-15 | omnidocbench test | GW-BASE-006 | ppocr6_small (e2e) | 14 | Phase 14 baseline test pass (GW-BASE-006) |
+| 2026-11-15 | omnidocbench test | GW-BASE-007 | ppocr6_medium (e2e) | 14 | Phase 14 baseline test pass (GW-BASE-007) |

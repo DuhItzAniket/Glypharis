@@ -31,3 +31,12 @@ At the validation rates above: GW-REC-039's 82,369 test crops (67,574 + 8,372 + 
 more for GDC's and GDC-scan's 3072 × 4080 photos; GW-E2E-008's 134 oracle pages a few minutes.
 About half a GPU-hour in total, below the plan's estimate of about 1 GPU-hour (which used the
 v0.1 recognizer's 449 ms per page, GW-E2E-001). An estimate, not a record.
+
+## Interruptions during the baseline test passes (step 5)
+
+- GW-BASE-007 PP-OCRv6 medium, OmniDocBench pages: a mains power cut left the laptop on battery,
+  and Windows put it to sleep at 2026-11-15 20:48Z (Kernel-Power event 42, sleep reason: battery).
+  It woke at 22:46Z once power was back. The run's process was suspended, not stopped: it carried
+  on from page 263 of 755 without a restart, so there is no resume and no extra access-log row.
+  That page's `time_ms` (7,288,872 ms) includes the two hours asleep; `time_ms` in the prediction
+  records is diagnostic only, and no reported speed comes from it (speed is GW-EFF-005).
