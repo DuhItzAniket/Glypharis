@@ -40,3 +40,16 @@ v0.1 recognizer's 449 ms per page, GW-E2E-001). An estimate, not a record.
   on from page 263 of 755 without a restart, so there is no resume and no extra access-log row.
   That page's `time_ms` (7,288,872 ms) includes the two hours asleep; `time_ms` in the prediction
   records is diagnostic only, and no reported speed comes from it (speed is GW-EFF-005).
+- GW-BASE-007 PP-OCRv6 medium, OmniDocBench pages: died at 2026-11-16 04:41:33Z with an access
+  violation (exit 139) after 513 of 755 pages, while starting page 514 (5723 x 8614, resized to
+  the 4,000-pixel side limit). One second earlier Windows logged that the system was out of
+  virtual memory (System event 26, "Virtual Memory Minimum Too Low"). The predictions written so
+  far are intact.
+- GW-BASE-003 PP-OCRv5 server, OmniDocBench subset: started by the chain at 04:41:33Z and died
+  the same way at 04:42:30Z while loading its models, before any page; its access-log row is the
+  one dated 2026-11-16.
+- Cause: the commit limit (15.7 GB RAM plus a 16 GB page file Windows grows on demand, 31.4 GB)
+  was used up. PP-OCRv6 medium needs about 9 to 10 GB on large pages (peak 9,766 MiB on the
+  GDC-scan pages, 8,693 MiB on GDC in Phase 5); the rest of the laptop held about 24 GB at the
+  time (other applications, and a 4.2 GB kernel non-paged pool). Neither run is resumed until the
+  owner has freed memory; a resume continues the same evaluation and is logged as one.
