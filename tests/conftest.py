@@ -24,8 +24,9 @@ def pytest_collection_modifyitems(config: pytest.Config, items: list[pytest.Item
 
 @pytest.fixture(autouse=True)
 def _restore_torch_numerics():
-    """`glypharis.pipeline.frozen.strict_inference` sets process-wide flags; put them back after
-    each test so one test's deterministic mode does not leak into the next."""
+    """`glypharis.pipeline.frozen.strict_inference` sets process-wide flags, and the profiling and
+    export scripts switch autograd off in `main`; put them back after each test so one test's
+    settings do not leak into the next."""
     import os
 
     saved = (
@@ -38,7 +39,11 @@ def _restore_torch_numerics():
         torch.get_float32_matmul_precision(),
         os.environ.get("CUBLAS_WORKSPACE_CONFIG"),
     )
+    grad = torch.is_grad_enabled()
+    intra = torch.get_num_threads()
     yield
+    torch.set_grad_enabled(grad)
+    torch.set_num_threads(intra)
     (bench, det, algos, warn_only, mm_tf32, cudnn_tf32, prec, cublas) = saved
     torch.backends.cudnn.benchmark = bench
     torch.backends.cudnn.deterministic = det
