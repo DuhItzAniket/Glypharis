@@ -37,7 +37,11 @@ on the other side, otherwise **not shown**; H1′ holds only if both halves are 
   mean per-page latency difference lies below 0 (GW-EFF-005). The ONNX v1 build, when it exists, is
   judged by the same rule as a separate verdict.
 - **Test:** Phase 14 (GW-E2E-007, GW-EFF-005, verdict in GW-E2E-009).
-- **Status:** open
+- **Status:** holds (2026-11-17, GW-E2E-009): both halves met.
+  - CER half: −34.98 [−47.44, −24.08] points on the 53 clean-slice pages; normalised
+    −34.73 [−47.17, −23.83]; source documents −34.98 [−50.22, −20.73]; all three met.
+  - Latency half: −508.1 [−737.7, −256.5] ms per page (2,446.7 against 2,954.8 ms, 10 threads,
+    one sitting); met. The ONNX v1 build is judged separately when it exists.
 
 ### H2 — Synthetic data helps, and its domain matters (RQ2)
 
@@ -113,7 +117,10 @@ Written 2026-11-15, before the frozen model read any test set.
 - **Known when written:** every Phase 5 baseline reads GDC's crops with a lower CER than HierText
   validation's (`reports/baselines/recognition.md`).
 - **Test:** Phase 14 (verdict in GW-E2E-009).
-- **Status:** open
+- **Status:** not met (2026-11-17, GW-E2E-009): strict CER 4.17% on GDC's crops against 6.51% on
+  the validation crops; CER_GDC − 1.5 × CER_val = −5.59 [−6.07, −5.01] points (lines) and
+  −5.59 [−7.88, −2.52] (source documents). For this recognizer, GDC's printed documents are
+  easier to read than HierText's scene-style lines, not harder.
 
 ### H6 — SVTR-style encoder beats CRNN at matched budget (RQ7)
 
@@ -139,7 +146,7 @@ Written 2026-11-15, before the frozen model read any test set.
   validation reduces ECE by at least half, and the reduction transfers to GDC.
 - **Test:** Phase 10 (validation), Phase 14 (transfer).
 - **Status:** superseded for the transfer by H8′ (2026-11-15). Validation part: supported on validation (2026-10-28): ECE 0.217 at T = 1, 0.089 at T = 2.35, a 59%
-  reduction (GW-E2E-003). The transfer to GDC is Phase 14's test.
+  reduction (GW-E2E-003). The transfer to GDC: see H8′ (Phase 14).
 
 ### H8′ — the calibration transfer, made testable for Phase 14 (RQ8)
 
@@ -154,7 +161,11 @@ Written 2026-11-15, before the frozen model read any test set.
   verdict, otherwise not shown. H8 counts as supported on GDC only if both are met. T stays 2.35
   whatever the result; dropping it would be a new model version.
 - **Test:** Phase 14 (verdict in GW-E2E-009).
-- **Status:** open
+- **Status:** H8 not supported on GDC (2026-11-17, GW-E2E-009). GDC crops, ECE 0.234 at T = 1 and
+  0.109 at T = 2.35.
+  - Transfers: −0.125 [−0.132, −0.119] (lines), [−0.142, −0.101] (pages); met.
+  - By half: −0.0081 [−0.0142, −0.0021] (lines, met), [−0.0168, +0.0044] (pages); the bootstraps
+    disagree, so not shown.
 
 ### H9 — An ImageNet backbone helps the detector at equal steps (RQ1, ADR-0007)
 

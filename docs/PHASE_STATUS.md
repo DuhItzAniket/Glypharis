@@ -21,7 +21,7 @@ Phases run in the order set by [ADR-0008](decisions/ADR-0008-usable-engine-first
 | 11 | Robustness training | **COMPLETE** | `phase-11` |
 | 12 | Synthetic data study | **COMPLETE** | `phase-12` |
 | 13 | Ablation study | **COMPLETE** | `phase-13` |
-| 14 | External evaluation | **IN PROGRESS** (plan registered) | — |
+| 14 | External evaluation | **IN PROGRESS** (gate: push, CI, merge) | — |
 | 15 | Error analysis | not started | — |
 | 16 | Efficiency optimisation | not started | — |
 | 17 | Model export | **COMPLETE** | `phase-17` |
@@ -1591,7 +1591,8 @@ choose), the validator's check of freeze records, and the ledger's Phase 13 line
 
 ## Phase 14 — External evaluation
 
-**Status:** IN PROGRESS. Opened 2026-11-14 on `phase/14-external-eval`, branched from `main` after
+**Status:** write-up done (2026-11-17). Gate open: push, pull request, CI and merge. Opened
+2026-11-14 on `phase/14-external-eval`, branched from `main` after
 Phase 13 (merge `8659b69`). GDC-scan v1 was frozen on the branch before this plan (`5f5a3b5`); the
 owner confirmed on 2026-11-14 that the printed document is the same PDF, with no edits after
 printing. The external benchmarks prepared early on `phase/14-data` (`f354ba9`, 2026-10-29) are
@@ -1729,6 +1730,12 @@ validation's. No GLYPHARIS number exists on any test set.)
      plan. Every system is also reported on it, so PP-OCRv5 server is compared on equal pages. If a
      system dies on a set, as PP-OCRv5 server did on GDC, it is recorded as not runnable there, with
      no substitute.
+
+     **Outcome (2026-11-17):** PP-OCRv5 server died on the subset as well. Its detector fails on
+     any input above about 8 million pixels, and 5 of the 100 pages are that large
+     (`research/failures.md`, 2026-11-17). Under the rule above it is recorded as not runnable on
+     OmniDocBench, with no substitute (the owner's decision, 2026-11-17); the subset view
+     compares GLYPHARIS and the other five baselines on the same 100 pages.
 
 5. **Hypotheses judged here.** New dated versions in `research/hypotheses.md`; H1, H5 and H8 are
    marked superseded and stay as written. H2′ gets a note: it cannot be tested on the frozen model,
@@ -1947,3 +1954,147 @@ environments for the official evaluators.
   validation for every baseline).
 - Training-time validation ran with bf16 autocast, so GW-REC-034's logged 6.30% is not the H5′
   reference; GW-REC-038 is.
+
+**Results (2026-11-17)** (GW-E2E-009, `reports/external/`; one scoring pass, finished as a logged
+resume; strict track unless stated; 95% bootstrap CI, 1,000 resamples, seed 20261010)
+
+*Phase 5 reproduction.* The 37 Phase 5 entries and 13 profiles re-scored in this pass equal
+`phase-05:reports/baselines/results.json` exactly, and all 516,474 stored references equal the
+current pack labels.
+
+*The five confirmatory tests* (plan item 5)
+
+| Test | Rule (CI must lie…) | Result | Verdict |
+|---|---|---|---|
+| H1′, CER half | CER(GLYPHARIS) − 2 × CER(PP-OCRv5 mobile) below 0; GDC clean slice, bag of lines, 53 pages | −34.98 [−47.44, −24.08] points; normalised −34.73 [−47.17, −23.83]; 21 source documents −34.98 [−50.22, −20.73] | **met** (all three agree) |
+| H1′, latency half | GLYPHARIS − PP-OCRv5 mobile per page below 0; CPU, 10 threads, 100 validation pages, one sitting (GW-EFF-005 against a fresh GW-BASE-002 profile) | −508.1 [−737.7, −256.5] ms; means 2,446.7 and 2,954.8 ms | **met** |
+| H5′ | CER_GDC − 1.5 × CER_val above 0 | 4.17% on GDC's crops against 6.51% on validation's: −5.59 [−6.07, −5.01] points (lines), −5.59 [−7.88, −2.52] (documents) | **not met** |
+| H8′, transfers | ECE(T = 2.35) − ECE(T = 1) below 0; GDC crops | −0.125 [−0.132, −0.119] (lines), [−0.142, −0.101] (pages) | **met** |
+| H8′, by half | ECE(T = 2.35) − 0.5 × ECE(T = 1) below 0 | −0.0081 [−0.0142, −0.0021] (lines, met); [−0.0168, +0.0044] (pages, not shown) | **not shown** |
+
+- **H1′ holds**: both halves are met. Disclosed with the latency half: the baseline runs PaddleOCR's
+  two orientation models, as it does for its accuracy numbers. The Phase 5 profile of the same
+  baseline read 3,408.2 ms per page; GLYPHARIS at 16 threads 2,107.1 ms (information).
+- **H5′ is not met**: on ground-truth crops the frozen recognizer reads GDC's documents with a
+  lower CER than HierText validation, as every Phase 5 baseline already did.
+- **H8 is not supported on GDC**: the temperature lowers GDC's ECE (0.234 to 0.109), but the page
+  bootstrap cannot show that it halves it.
+
+*Validation references* (no test access). GW-E2E-006, all 1,715 validation pages: bag-of-lines
+page CER 27.57% [25.11, 30.36], E2E F1 58.24% [56.64, 59.91], detection F1@0.5 77.79%
+[76.21, 79.19] (GW-DET-001's Phase 13 value, 0.7779). GW-REC-038, 74,500 validation crops: 6.51%
+[6.36, 6.65] strict (6.23% normalised), against the 6.30% logged in training with bf16 autocast on
+the training pack; ECE 0.228 at T = 1 and 0.090 at T = 2.35.
+
+*Descriptive comparisons* (no verdicts; GLYPHARIS crops GW-REC-039 and pages GW-E2E-007 minus the
+baseline in percentage points, paired over the same lines or pages,
+`reports/external/comparisons.md`)
+
+| Set | Unit | GLYPHARIS | Strongest baseline on that row | Difference |
+|---|---|---|---|---|
+| HierText test, crops | CER, 67,574 lines | 6.03% [5.89, 6.18] | PP-OCRv6 small 7.06% | −1.03 [−1.14, −0.92] |
+| GDC, crops | CER, 8,372 lines | 4.17% [3.72, 4.67] | PP-OCRv6 medium 3.20% | +0.97 [+0.76, +1.20] |
+| GDC-scan, crops | CER, 776 lines | 1.02% [0.85, 1.20] | PP-OCRv6 small 0.37% | +0.65 [+0.51, +0.78] |
+| FUNSD, crops | CER, 2,647 lines | 7.03% [5.71, 8.66] | PP-OCRv6 small 9.30% | −2.27 [−3.43, −1.27] |
+| IIIT5K | word accuracy, alphanumeric, 3,000 words | 91.47% [90.43, 92.47] | PP-OCRv6 medium 97.13% | −5.67 [−6.53, −4.77] |
+| HierText test, pages | bag-of-lines CER, 1,634 pages | 25.16% [23.44, 26.79] | PP-OCRv6 small 42.93% | −17.77 [−19.51, −16.01] |
+| GDC, pages | bag-of-lines CER, 106 pages | 22.35% [15.87, 30.11] | PP-OCRv6 medium 20.96% | +1.39 [−2.71, +6.88] |
+| GDC, pages | order-aware CER | 25.37% [20.00, 30.80] | Tesseract 31.90%; PaddleOCR 42.86 to 44.74% | −6.53 [−13.51, +0.08] against Tesseract |
+| GDC-scan, pages | bag-of-lines CER, 28 pages | 4.60% [2.10, 8.21] | PP-OCRv6 medium 4.94% | −0.34 [−1.40, +0.29] |
+| GDC-scan, pages | order-aware CER | 11.34% [7.10, 16.70] | PP-OCRv6 medium 15.32% | −3.98 [−14.50, +4.40] |
+| FUNSD, pages | bag-of-lines CER, 50 pages | 32.05% [24.28, 39.85] | PP-OCRv6 medium 27.82% | +4.23 [−0.52, +8.76] |
+| OmniDocBench, pages | order-aware CER, 755 pages | 27.28% [23.95, 30.57] | Tesseract 15.70% | +11.58 [+8.37, +14.88] |
+
+- **Official evaluators** (`reports/external/official.md`). HierText test, line level, end to end:
+  E2E F-score 0.5038 for GLYPHARIS against 0.3735 for PP-OCRv6 small, the best baseline there
+  (detection F-score 0.7837 against 0.5555). OmniDocBench, all 755 pages: text-block edit distance
+  (page average) 0.1007 (Tesseract 0.0966, the PaddleOCR systems 0.4039 to 0.4217) and reading-order edit distance
+  0.2443 (Tesseract 0.2352, PaddleOCR 0.4374 to 0.4490); lower is better.
+- **HierText** carries over from validation: page CER 25.16% on test against 27.57% on validation,
+  crops 6.03% against 6.51%. GLYPHARIS is ahead of every baseline run there on crops, pages and
+  the official score.
+- **Documents.** On GDC's crops PP-OCRv6 small and medium and PP-OCRv5 mobile read better than
+  GLYPHARIS, and on GDC-scan's PP-OCRv6 small and medium do; PP-OCRv6 tiny is level on both (paired
+  CIs across 0). On FUNSD's crops GLYPHARIS reads best. End to end on GDC, its bag-of-lines page CER
+  is level with the three PP-OCRv6 systems (paired differences −1.83 to +1.39 points, every CI
+  across 0), and its order-aware CER is 17.5 to 19.4 points lower than each of the four PaddleOCR
+  systems run there, which return lines sorted top to bottom (see OmniDocBench below). On GDC-scan
+  it is level with PP-OCRv6 medium and below tiny and small. On FUNSD forms its bag-of-lines page
+  CER is level with every PaddleOCR system's (every paired CI across 0), but its detection F1@0.5,
+  79.07% [75.56, 82.16], is below all of theirs (81.81 to 85.03%): with the better crops, it finds
+  the lines less well.
+- **GDC rotated pages** (7 pages, information): end to end GLYPHARIS reads them at 80.53%
+  bag-of-lines CER, against 1.70% for PP-OCRv6 small, which runs a document-orientation classifier.
+  With ground-truth boxes (GW-E2E-008) GLYPHARIS's recognizer reads them at 0.83%. GLYPHARIS has no
+  page-orientation step.
+- **OmniDocBench.** The four PaddleOCR systems, with recognizers of very different strength, all
+  read about 60% order-aware CER (60.29 to 60.62%) and 0.40 to 0.42 text-block edit distance. That fits
+  their line order: PaddleOCR sorts boxes by top edge, then left edge, so the columns of a
+  multi-column page interleave. This explanation is read from PaddleOCR's code and was not
+  measured. Tesseract, which analyses the page layout, reads all 755 OmniDocBench pages best on
+  every measure. On the 100-page subset GLYPHARIS's page-average text-block edit distance is
+  slightly lower (0.1063 against 0.1108) and its reading order level (0.2523 against 0.2525).
+- **Calibration** (`reports/external/calibration.md`): T = 2.35 lowers ECE on HierText test (0.223
+  to 0.092), FUNSD (0.338 to 0.123), GDC-scan (0.202 to 0.125) and GDC's pipeline lines (0.415 to
+  0.249). On IIIT5K, where ECE at T = 1 is 0.055, it rises to 0.112 (+0.057 [+0.043, +0.072]).
+- **Oracle** (GW-E2E-008, for H4 in Phase 15): with ground-truth boxes the recognizer reads GDC at
+  4.17% bag-of-lines page CER and GDC-scan at 1.01%, against 22.35% and 4.60% end to end.
+- **Not run**, as planned or by the registered rule (results.json `not_run`): TrOCR end to end
+  (no detector); PP-OCRv5 server end to end on GDC-scan (Phase 5 failure) and on OmniDocBench (not
+  runnable, above). PP-OCRv5 server has no GDC page result either: its Phase 5 file holds no
+  predictions (`run_record.md`). Not computable: HierText's word-level score and OmniDocBench's Overall.
+
+**Run notes** (detail in `reports/external/run_record.md`)
+- The tag `phase14-eval` is commit `6795186`. Every GLYPHARIS run had its pinned code trees equal
+  to the tag's: the validation runs at the tag commit itself, the test runs at later run-record
+  commits, which record `git_dirty` for uncommitted run records.
+- GW-BASE-007 on OmniDocBench was suspended for two hours when a power cut put the laptop to sleep,
+  then died out of virtual memory on 2026-11-16 after 513 pages; after the owner restarted the
+  laptop it resumed from those 513 pages, logged as a resume, and finished all 755.
+- PP-OCRv5 server died twice on the OmniDocBench subset; the second death, with memory to spare,
+  led to the size diagnosis on validation images and the not-runnable record above.
+- The scoring pass stopped in HierText's official evaluator at Apache Beam's five-minute job
+  deadline, after its scoring rows were logged and before any score was written or read. The
+  evaluator is now started through `scripts/hiertext_eval_launch.py`, which lifts only that
+  deadline (identical score files on the first 300 validation pages, and the full validation
+  split finishes in 543 s), and the pass was finished with `score
+  --resume`, every row logged "(resumed)". Both scoring-side changes are in the protocol change
+  log (2026-11-17).
+- results.json records the scorer commit `087252e` as dirty because the scorer reads the git state
+  after writing its own access-log rows and outputs manifest.
+
+**Compute:** GLYPHARIS 1.17 GPU-hours of run time (validation 0.31, test 0.86), against about half
+a GPU-hour re-estimated from GW-E2E-006. The baselines' completed run segments took 21.8 hours
+on the CPU from their run metadata; on top of that, GW-BASE-007's first OmniDocBench segment ran
+about 15.7 hours before it died after 513 pages (about 2 of them asleep), and PP-OCRv5 server's
+second subset run about 5.3 hours before its death. The estimate was about 18 CPU-hours. The scoring pass took 4 hours 16 minutes after the resume.
+Inference only, so none of it is in the training compute ledger.
+
+**Tests:** the CPU suite passes in a clone without tags (890 passed, 4 skipped, at `a392238`); new tests cover the not-runnable entry and the evaluator launcher, and
+the evaluator tests pass against the real HierText and OmniDocBench evaluators on the laptop. In a checkout that carries the `phase14-eval` tag, the scorer's tests fail
+at their fixture, because `hash-phase5` refuses once the tag exists (known issue below); CI's
+checkout has no tags.
+
+**Exit criteria** (IMPLEMENTATION_PLAN Phase 14)
+
+| Criterion | Result | Evidence |
+|---|---|---|
+| Benchmark tables with CIs: IIIT5K, FUNSD, OmniDocBench (official components where compatible), HierText test, GDC, GDC-scan; identical runs for the baselines | pass; SROIE skipped by the owner; PP-OCRv5 server not runnable on OmniDocBench | `reports/external/` |
+| Incompatibilities explained (granularity, normalisation, charset) | pass | plan item 3; the notes in each report; the charset ceiling beside every metric |
+| Each benchmark evaluated once per frozen model, logged | pass; resumes are logged as resumes | `research/test_access_log.md`, `reports/external/run_record.md` |
+| No tuning after seeing results | pass: no model, setting, metric or slice changed; the two scoring-side code changes came before any score was read | protocol change log, 2026-11-17 |
+| CI green | pending (after the push) | — |
+
+**Known issues**
+- GDC-scan is one document and FUNSD 50 forms; their intervals say nothing about other documents.
+- `calibration.md` prints the H8′ difference on lines only; the by-half and page-bootstrap
+  intervals are in results.json (`calibration.sets.gdc_test`) and in the table above. A scorer fix
+  after scoring would mean a protocol change and a full re-score, so the report stays as generated.
+- The scorer's tests need a checkout without the `phase14-eval` tag (see Tests).
+- The PaddleOCR line-order explanation on OmniDocBench is not measured.
+- GLYPHARIS has no page-orientation step, which costs it the rotated GDC pages; that is for a later
+  model version, not this one.
+- H1′'s latency half was measured on HierText validation pages; the ONNX build of v1 is judged by
+  the same rule when Phases 16 and 17 build it. H4 is tested in Phase 15 from the saved files.
+
+**Git:** branch `phase/14-external-eval`; push and merge pending.
