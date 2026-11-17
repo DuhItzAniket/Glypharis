@@ -96,9 +96,9 @@ Rows link to a full entry below. Numbers are copied from generated reports only,
 | [GW-E2E-007](#gw-e2e-007) | 2026-11-15 | 14 | The frozen pipeline end to end on the test pages (H1′ CER) | done | bag-of-lines page CER 25.16% HierText test, 22.35% GDC | `reports/external/` |
 | [GW-E2E-008](#gw-e2e-008) | 2026-11-15 | 14 | Oracle run on GDC and GDC-scan, for H4 in Phase 15 | done | GDC bag-of-lines page CER 4.17% from ground-truth boxes | `reports/external/` |
 | [GW-E2E-009](#gw-e2e-009) | 2026-11-15 | 14 | Phase 14 scoring, comparisons and hypothesis verdicts | done | H1′ holds; H5′ not met; H8′ transfers met, by half not shown | `reports/external/` |
-| [GW-REC-040](#gw-rec-040) | 2026-11-17 | 15 | Recognition errors of the frozen recognizer on the Phase 14 hand-off (RQ5) | planned | — | `reports/error_cases/phase15/`, `reports/confusion_analysis/GW-REC-040/` |
-| [GW-E2E-010](#gw-e2e-010) | 2026-11-17 | 15 | Pipeline errors: page error budget, detection, reading order, the oracle share (RQ5, H4) | planned | — | `reports/error_cases/phase15/` |
-| [GW-REC-041](#gw-rec-041) | 2026-11-17 | 15 | The frozen recognizer on GlyphSynth validation, sliced by font and capture labels | planned | — | `reports/error_cases/phase15/` |
+| [GW-REC-040](#gw-rec-040) | 2026-11-17 | 15 | Recognition errors of the frozen recognizer on the Phase 14 hand-off (RQ5) | done | GDC: deletions 3.19 of 4.17% CER, full stops 44.176% deleted, the 20 worst lines dot leaders; HierText test: rotation ≥ 5° 34.92% of errors | `reports/error_cases/phase15/`, `reports/confusion_analysis/GW-REC-040/` |
+| [GW-E2E-010](#gw-e2e-010) | 2026-11-17 | 15 | Pipeline errors: page error budget, detection, reading order, the oracle share (RQ5, H4) | done | missed lines 49.45% of HierText test and 45.32% of GDC page error; GDC oracle share 18.66% (clean 32.70%); H4 not supported on GDC (post hoc) | `reports/error_cases/phase15/` |
+| [GW-REC-041](#gw-rec-041) | 2026-11-17 | 15 | The frozen recognizer on GlyphSynth validation, sliced by font and capture labels | done | CER 0.71% [0.63, 0.79]; ink spread 1.41% against 0.58% without | `reports/error_cases/phase15/` |
 
 ### GW-BASE-001 — Tesseract 5 (LSTM, eng): recognition and end to end
 
@@ -1810,9 +1810,9 @@ Rows link to a full entry below. Numbers are copied from generated reports only,
 
 ### GW-REC-040 — Recognition errors of the frozen recognizer (Phase 15)
 
-- **Date allocated / run:** 2026-11-17 / —
+- **Date allocated / run:** 2026-11-17 / 2026-11-17
 - **Phase:** 15
-- **Git commit:** recorded in the report   **Config:** `configs/final/glypharis_v1.yaml` (no model run)   **Seed(s):** bootstrap 20261010; example draws 20261115
+- **Git commit:** `ba44a84` (reports `6cb1b9c`)   **Config:** `configs/final/glypharis_v1.yaml` (no model run)   **Seed(s):** bootstrap 20261010; example draws 20261115
 - **Dataset version(s):** the Phase 14 hand-off (`data/manifests/processed/phase14_outputs.json`), the Phase 5 baseline rec files (`phase5_baseline_files.json`), GW-REC-038's validation predictions
 - **Hardware:** laptop CPU
 - **Research question:** RQ5: which recognition failure modes dominate, on documents and scene text?
@@ -1820,16 +1820,16 @@ Rows link to a full entry below. Numbers are copied from generated reports only,
 - **Method:** edit operations on the normalised (ref, pred) pairs; character and word confusions; slices with validation-derived bins; one primary category per wrong line; annotation-noise count; baselines' operation rates; seeded example draws.
 - **Variables:** none (one frozen model)
 - **Control:** the Phase 5 baselines on the same crops; GW-REC-038 on validation
-- **Result:** —
-- **Interpretation:** —
+- **Result:** strict CER with page CIs (IIIT5K alphanumeric, line CI) and substitution, insertion and deletion rates: HierText test 6.03% [5.60, 6.48] (3.27, 0.89, 1.88), validation 6.51% [5.98, 7.12] (3.41, 0.97, 2.12), GDC 4.17% [2.48, 6.22] (0.86, 0.12, 3.19), FUNSD 7.03% [5.59, 8.61] (2.12, 1.45, 3.46), GDC-scan 1.02% [0.79, 1.30] (numbers only), IIIT5K 2.37% [2.06, 2.70]. Largest primary categories, share of character errors: HierText test rotation ≥ 5° 34.92%, height in the lowest quartile 21.30% (validation 37.69%, 18.31%); GDC digit 49.21%, contrast in the lowest quartile 20.41%, out of charset 13.62%; FUNSD digit 43.21%, punctuation 31.32%. GDC deletions: 4,941 spaces (10.165% of reference spaces) and 4,153 full stops (44.176% of reference full stops); the 20 worst GDC lines are all table-of-contents dot leaders (`census_income`, `hilbert_geometry`); document groups book 15.98% to paper 1.02%. HierText test: the lowest confidence quartile holds 78.51% of the errors; 15 likely label fragments, 0.30% of the errors. Error share of lines of 70 characters or more: validation 3.59%, HierText test 4.74%, GDC 61.80% (`reports/error_cases/phase15/recognition.md`, `examples.md`, `reports/confusion_analysis/GW-REC-040/`).
+- **Interpretation:** the two domains fail differently. Scene text fails on geometry (rotation and small lines), which fits the rotation weakness F15 found on GLYPH-C. GDC's documents lose characters rather than misread them: merged words and dropped full stops, with table-of-contents dot leaders as the worst lines. On the same lines PP-OCRv5 mobile and the three PP-OCRv6 systems (GW-BASE-002, 005 to 007) read more of the punctuation as itself (86.90 to 89.95% against 73.02%; point values); PP-OCRv5 server (GW-BASE-003) reads 67.62%. ADR-0002's revisit trigger is not met: long lines do not dominate validation error. Nothing flows back into v1. Findings F30 and F31.
 - **Limitations:** stated with the plan (no labels for touching, broken, noise or fonts on test; GDC-scan numbers only).
 - **Next experiment:** Phase 16
 
 ### GW-E2E-010 — Pipeline errors of the frozen pipeline (Phase 15)
 
-- **Date allocated / run:** 2026-11-17 / —
+- **Date allocated / run:** 2026-11-17 / 2026-11-17
 - **Phase:** 15
-- **Git commit:** recorded in the report   **Config:** `configs/final/glypharis_v1.yaml` (no model run)   **Seed(s):** bootstrap 20261010
+- **Git commit:** `ba44a84` (reports `6cb1b9c`)   **Config:** `configs/final/glypharis_v1.yaml` (no model run)   **Seed(s):** bootstrap 20261010
 - **Dataset version(s):** the Phase 14 hand-off; the baselines' OmniDocBench end-to-end files (line order only)
 - **Hardware:** laptop CPU
 - **Research question:** RQ5: does page error come from the detector or the recognizer, and where?
@@ -1837,16 +1837,16 @@ Rows link to a full entry below. Numbers are copied from generated reports only,
 - **Method:** the page error budget (missed lines, matched-line errors, spurious predictions), unmatched lines by best overlap, matched-line CER by IoU and against the oracle, recall slices, reading-order excess and inversion rate, the oracle share per GDC slice with page and document-cluster CIs.
 - **Variables:** none (one frozen model)
 - **Control:** GW-E2E-008 (oracle) on GDC and GDC-scan
-- **Result:** —
-- **Interpretation:** —
+- **Result:** page error budget (missed lines, matched lines, spurious predictions; shares of bag-of-lines errors, page CI): HierText test 49.45% [47.47, 51.56], 25.79% [23.51, 28.00], 24.77% [23.24, 26.38]; GDC 45.32% [36.14, 52.80], 27.55% [15.80, 42.07], 27.13% [20.89, 33.57]; GDC-scan 34.36%, 32.28%, 33.36%; FUNSD 40.22%, 19.39%, 40.39%; GDC `rotated` pages 78.16% [45.80, 97.26] on matched lines (document CI). Oracle share on GDC: 18.66% [11.55, 28.73] (documents [11.51, 26.45]); clean slice 32.70% [16.64, 51.91]; other five conditions 10.29% [5.24, 18.03]; `scan_app` 45.14% [25.40, 58.41]; `rotated` 1.03%; GDC-scan 22.08% [12.65, 47.58]. Recall at IoU 0.5 on HierText test 57.92% for lines under 9.35 px and 49.53% for |θ| ≥ 15°; on GDC 0 of 113 lines under 9.35 px. Matched-line CER 29.24% at IoU [0.5, 0.7) and 3.63% at 0.85 or more (HierText test); GDC pipeline minus oracle on matched lines +2.048 [0.753, 3.817] errors per line. GDC reading order: 14.56% [9.93, 20.36] of consecutive matched lines reversed. OmniDocBench: 76.66 to 77.74% of the PaddleOCR systems' consecutive output lines have a top edge that does not rise (`reports/error_cases/phase15/pipeline.md`, `oracle_share.md`). The OmniDocBench bag-of-lines CERs in `pipeline.md` (about 180%) are not meaningful: its reference is blocks, not lines.
+- **Interpretation:** on HierText test, GDC and FUNSD, 40.22 to 49.45% of the page error is ground-truth lines no prediction matched at IoU 0.5 (on GDC mostly lines a box barely touched or poorly localised), and errors on matched lines are 19.39 to 27.55%, on documents as on scene text (F10 on validation). H4 is not supported on GDC (post hoc): the oracle share's point estimate is under half in every slice, the clean one included. The OmniDocBench measure does not decide F26's proposed cause: PaddleOCR's own sort (`SortQuadBoxes`, read from the installed code) lets a following line sit up to 10 px higher, so the measure would not be 1 under it either and cannot tell that sort apart from other orders. F26's cause stays unmeasured. Findings F27 to F29 and F33.
 - **Limitations:** no merge or split labels and no detector candidates on test; the oracle share is not a pure detector share.
 - **Next experiment:** Phase 16
 
 ### GW-REC-041 — The frozen recognizer on GlyphSynth validation lines
 
-- **Date allocated / run:** 2026-11-17 / —
+- **Date allocated / run:** 2026-11-17 / 2026-11-17
 - **Phase:** 15
-- **Git commit:** recorded in the run metadata   **Config:** `configs/final/glypharis_v1.yaml`   **Seed(s):** none (no training); bootstrap 20261010
+- **Git commit:** `ba44a84` (as recorded in the run metadata, `data/processed/phase15/GW-REC-041/glyphsynth_val.meta.json`; reports `6cb1b9c`)   **Config:** `configs/final/glypharis_v1.yaml`   **Seed(s):** none (no training); bootstrap 20261010
 - **Dataset version(s):** GlyphSynth v1 validation (`data/processed/glyphsynth/lines_val.*`, with its render log)
 - **Hardware:** RTX 4050 Laptop 6 GB, strict fp32 as in Phase 14
 - **Research question:** the failure modes the real sets have no labels for: unusual fonts, touching and broken characters, background noise, neighbour fragments.
@@ -1854,8 +1854,8 @@ Rows link to a full entry below. Numbers are copied from generated reports only,
 - **Method:** the frozen recognizer from the freeze record reads every validation line; CER by font family and category, held-out fonts, italic, inverted, neighbours and each capture step, line bootstrap.
 - **Variables:** independent: the generator's labels
 - **Control:** the same model's clean-line CER on GlyphSynth validation
-- **Result:** —
-- **Interpretation:** —
+- **Result:** 10,000 lines read in 79.3 s on the GPU (`wall_seconds` in the run metadata, `glyphsynth_val.meta.json`); the pack's hash checked against its metadata and the GlyphSynth manifest before the run, and the output's hash and count against the run metadata before the analysis. Strict CER 0.71% [0.63, 0.79] (normalised 0.51%). Ink spread (touching) 1.41% [1.17, 1.72] on 1,543 lines with 31.11% of the errors, 0.58% [0.50, 0.67] without; underline 1.37% [1.05, 1.76]; binarisation 1.18% [0.81, 1.67]; inverted 1.06% [0.62, 1.72]; italic 0.86% [0.67, 1.12]; broken group 0.76% [0.63, 0.90]; background-noise group 0.76% [0.65, 0.89]; neighbour fragments 0.66% [0.56, 0.78]; font families 0.38% (`worksans`) to 1.48% [1.09, 1.93] (`cormorantgaramond`); serif 0.83%, sans 0.60%, mono 0.62%. The held-out-font slice was dropped by the amendment (every validation line uses a validation font) (`reports/error_cases/phase15/glyphsynth.md`).
+- **Interpretation:** on rendered lines every labelled slice reads at 1.48% CER or less; the 1,543 ink-spread lines carry 31.11% of the errors. Synthetic lines say little about photographed text (F16), so these slices describe the recognizer, not the test sets. Finding F32.
 - **Limitations:** synthetic lines; validation only.
 - **Next experiment:** Phase 16
 

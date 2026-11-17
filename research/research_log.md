@@ -331,3 +331,28 @@ the bottom. Experiments get their full record in `experiments.md`; this log is t
   even on clean pages the recognizer from ground-truth boxes makes well under half the pipeline's
   errors. It is closed post hoc rather than dressed up as a test.
 - Bin edges come from validation, examples from seeded draws, and GDC-scan stays numbers only.
+
+### 2026-11-17 — Phase 15: where the errors are
+
+- The analysis ran once on the hashed Phase 14 files (code `ba44a84`, reports `6cb1b9c`). Every
+  checked input matched its recorded hash, every CER matched Phase 14's, and the hand-off's pair
+  sums agreed with the page files on all 2,573 pages. No model touched a test set; the one model run
+  was on GlyphSynth validation lines.
+- Most page error still comes from outside the recognizer. Ground-truth lines that no prediction
+  matched at IoU 0.5 are about half of the page error on HierText test and GDC (49.45% and 45.32%,
+  GW-E2E-010), and misread matched lines about a quarter. The detector finds 57.92% of HierText
+  test's lines under 9.35 px high (recall at IoU 0.5).
+- H4 is closed as not supported on GDC, post hoc. Even on clean pages, from ground-truth boxes the
+  recognizer makes about a third as many errors as the whole pipeline (32.70%, GW-E2E-010).
+- The recognizer fails differently by domain (GW-REC-040). On scene text it is rotation and small
+  lines. On documents it drops characters rather than misreading them: merged words and full stops,
+  and the worst lines are all table-of-contents dot leaders. Typographic quotes come out as ASCII.
+- ADR-0002's worry did not come true: long lines carry little of the validation error.
+- F26's explanation for PaddleOCR's reading order on OmniDocBench was not decided by its registered
+  measure (GW-E2E-010): 76.66 to 77.74% of the four PaddleOCR systems' consecutive output lines have
+  a top edge that does not rise, but PaddleOCR's own sort, read from its code, lets a following line
+  sit up to 10 px higher, so the measure cannot tell that sort apart from other orders. F26 is
+  revised (F33); its cause is still open.
+- On rendered GlyphSynth lines every labelled slice (fonts, touching or broken characters,
+  background noise) stays at 1.48% CER or less (GW-REC-041), which says more about the recognizer
+  than about photographed pages.
