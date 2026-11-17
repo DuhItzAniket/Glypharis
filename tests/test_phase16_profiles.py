@@ -393,7 +393,7 @@ def test_stages_that_do_not_sum_to_the_page_time_are_refused(pages, monkeypatch)
 
     monkeypatch.setattr(e2e_profile, "staged_predict", padded)
     out = pages.root / "x.json"
-    with pytest.raises(SystemExit, match="more than 1% apart"):
+    with pytest.raises(SystemExit, match="more than 1% and 5 ms apart"):
         e2e_profile.main(_v1(n=pages.threads, out=out))
     assert not out.exists()
 

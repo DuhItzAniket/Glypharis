@@ -365,7 +365,8 @@ STAGES = (
     "rec_decode",  # greedy CTC text and confidence per line
     "reading_order",  # `reading_order` and the result lines
 )
-STAGE_TOLERANCE = 0.01  # the stages sum to the page time within 1%
+STAGE_TOLERANCE = 0.01  # the stages sum to the page time within 1% ...
+STAGE_SLACK_MS = 5.0  # ... or 5 ms: on CUDA each stage boundary adds a synchronisation
 
 
 class _Laps:
@@ -507,10 +508,13 @@ def time_pages_staged(
         res, ms = staged_predict(ocr, img, laps=laps)
         wall = (time.perf_counter() - f1) * 1000  # a clock the stages do not read
         t = laps.total_ms
-        gap = abs(sum(ms.values()) - wall) / wall if wall > 0 else 0.0
-        if gap > STAGE_TOLERANCE:
-            raise SystemExit(f"page {page.doc_id}: the stages sum to {sum(ms.values()):.3f} ms, "
-                             f"the call took {wall:.3f} ms (more than 1% apart)")  # fmt: skip
+        diff = abs(sum(ms.values()) - wall)
+        gap = diff / wall if wall > 0 else 0.0
+        if diff > max(STAGE_TOLERANCE * wall, STAGE_SLACK_MS):
+            raise SystemExit(
+                f"page {page.doc_id}: the stages sum to {sum(ms.values()):.3f} ms, "
+                f"the call took {wall:.3f} ms (more than 1% and 5 ms apart)"
+            )
         worst = max(worst, gap)
         times.append(round(t, 3))
         walls.append(round(wall, 3))
