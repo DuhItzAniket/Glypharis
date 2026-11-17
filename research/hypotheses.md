@@ -93,6 +93,10 @@ on the other side, otherwise **not shown**; H1′ holds only if both halves are 
 - **Status:** open; not supported by Phase 10's exploratory reading on HierText validation:
   recognition's share of page error is 0.20 to 0.29 on every blur quartile, the sharpest included
   (GW-E2E-002). HierText pages are mostly scene photographs; Phase 15 tests H4 on GDC.
+  Note (2026-11-17, Phase 15 plan): no operational rule was registered before GW-E2E-008 was
+  scored, and the published per-condition page CERs (GW-E2E-007, GW-E2E-008, scored in
+  GW-E2E-009) already put the oracle below half the pipeline in every GDC condition, the
+  clean slice included. No new version is written; H4 is closed post hoc from GW-E2E-010.
 
 ### H5 — Domain gap is large (RQ6)
 

@@ -96,6 +96,9 @@ Rows link to a full entry below. Numbers are copied from generated reports only,
 | [GW-E2E-007](#gw-e2e-007) | 2026-11-15 | 14 | The frozen pipeline end to end on the test pages (H1′ CER) | done | bag-of-lines page CER 25.16% HierText test, 22.35% GDC | `reports/external/` |
 | [GW-E2E-008](#gw-e2e-008) | 2026-11-15 | 14 | Oracle run on GDC and GDC-scan, for H4 in Phase 15 | done | GDC bag-of-lines page CER 4.17% from ground-truth boxes | `reports/external/` |
 | [GW-E2E-009](#gw-e2e-009) | 2026-11-15 | 14 | Phase 14 scoring, comparisons and hypothesis verdicts | done | H1′ holds; H5′ not met; H8′ transfers met, by half not shown | `reports/external/` |
+| [GW-REC-040](#gw-rec-040) | 2026-11-17 | 15 | Recognition errors of the frozen recognizer on the Phase 14 hand-off (RQ5) | planned | — | `reports/error_cases/phase15/`, `reports/confusion_analysis/GW-REC-040/` |
+| [GW-E2E-010](#gw-e2e-010) | 2026-11-17 | 15 | Pipeline errors: page error budget, detection, reading order, the oracle share (RQ5, H4) | planned | — | `reports/error_cases/phase15/` |
+| [GW-REC-041](#gw-rec-041) | 2026-11-17 | 15 | The frozen recognizer on GlyphSynth validation, sliced by font and capture labels | planned | — | `reports/error_cases/phase15/` |
 
 ### GW-BASE-001 — Tesseract 5 (LSTM, eng): recognition and end to end
 
@@ -1803,6 +1806,58 @@ Rows link to a full entry below. Numbers are copied from generated reports only,
 - **Interpretation:** see `docs/PHASE_STATUS.md`, Phase 14 results, and findings F21 to F26. The pass stopped once in HierText's official evaluator and was finished with `score --resume`, logged as a resume (`reports/external/run_record.md`).
 - **Limitations:** stated with the plan (`docs/PHASE_STATUS.md`, Phase 14).
 - **Next experiment:** Phase 15
+
+
+### GW-REC-040 — Recognition errors of the frozen recognizer (Phase 15)
+
+- **Date allocated / run:** 2026-11-17 / —
+- **Phase:** 15
+- **Git commit:** recorded in the report   **Config:** `configs/final/glypharis_v1.yaml` (no model run)   **Seed(s):** bootstrap 20261010; example draws 20261115
+- **Dataset version(s):** the Phase 14 hand-off (`data/manifests/processed/phase14_outputs.json`), the Phase 5 baseline rec files (`phase5_baseline_files.json`), GW-REC-038's validation predictions
+- **Hardware:** laptop CPU
+- **Research question:** RQ5: which recognition failure modes dominate, on documents and scene text?
+- **Hypothesis (written before the run):** none; a categorised description (`docs/PHASE_STATUS.md`, Phase 15 plan, items 3 and 4).
+- **Method:** edit operations on the normalised (ref, pred) pairs; character and word confusions; slices with validation-derived bins; one primary category per wrong line; annotation-noise count; baselines' operation rates; seeded example draws.
+- **Variables:** none (one frozen model)
+- **Control:** the Phase 5 baselines on the same crops; GW-REC-038 on validation
+- **Result:** —
+- **Interpretation:** —
+- **Limitations:** stated with the plan (no labels for touching, broken, noise or fonts on test; GDC-scan numbers only).
+- **Next experiment:** Phase 16
+
+### GW-E2E-010 — Pipeline errors of the frozen pipeline (Phase 15)
+
+- **Date allocated / run:** 2026-11-17 / —
+- **Phase:** 15
+- **Git commit:** recorded in the report   **Config:** `configs/final/glypharis_v1.yaml` (no model run)   **Seed(s):** bootstrap 20261010
+- **Dataset version(s):** the Phase 14 hand-off; the baselines' OmniDocBench end-to-end files (line order only)
+- **Hardware:** laptop CPU
+- **Research question:** RQ5: does page error come from the detector or the recognizer, and where?
+- **Hypothesis (written before the run):** H4 has no registered operational rule and the published per-condition numbers decide it; it is closed post hoc from this experiment (Phase 15 plan, item 5).
+- **Method:** the page error budget (missed lines, matched-line errors, spurious predictions), unmatched lines by best overlap, matched-line CER by IoU and against the oracle, recall slices, reading-order excess and inversion rate, the oracle share per GDC slice with page and document-cluster CIs.
+- **Variables:** none (one frozen model)
+- **Control:** GW-E2E-008 (oracle) on GDC and GDC-scan
+- **Result:** —
+- **Interpretation:** —
+- **Limitations:** no merge or split labels and no detector candidates on test; the oracle share is not a pure detector share.
+- **Next experiment:** Phase 16
+
+### GW-REC-041 — The frozen recognizer on GlyphSynth validation lines
+
+- **Date allocated / run:** 2026-11-17 / —
+- **Phase:** 15
+- **Git commit:** recorded in the run metadata   **Config:** `configs/final/glypharis_v1.yaml`   **Seed(s):** none (no training); bootstrap 20261010
+- **Dataset version(s):** GlyphSynth v1 validation (`data/processed/glyphsynth/lines_val.*`, with its render log)
+- **Hardware:** RTX 4050 Laptop 6 GB, strict fp32 as in Phase 14
+- **Research question:** the failure modes the real sets have no labels for: unusual fonts, touching and broken characters, background noise, neighbour fragments.
+- **Hypothesis (written before the run):** none; description.
+- **Method:** the frozen recognizer from the freeze record reads every validation line; CER by font family and category, held-out fonts, italic, inverted, neighbours and each capture step, line bootstrap.
+- **Variables:** independent: the generator's labels
+- **Control:** the same model's clean-line CER on GlyphSynth validation
+- **Result:** —
+- **Interpretation:** —
+- **Limitations:** synthetic lines; validation only.
+- **Next experiment:** Phase 16
 
 ---
 

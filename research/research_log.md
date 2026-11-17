@@ -318,3 +318,16 @@ the bottom. Experiments get their full record in `experiments.md`; this log is t
   recorded in the run record or `research/failures.md`; the detector failure and the Beam deadline
   were diagnosed on validation data only. PP-OCRv6 medium and the scoring pass were resumed under
   the registered rules, and PP-OCRv5 server was recorded as not runnable on OmniDocBench.
+
+### 2026-11-17 — Phase 15 opens: what goes wrong, and where
+
+- The plan is registered before any per-line Phase 14 file is read. Phase 15 runs no model on test
+  data: it reads the hashed hand-off Phase 14 saved, and checks every file before opening it.
+- Three experiments: the recognizer's errors (confusions, words, slices, one category per wrong
+  line), the pipeline's (where a page's errors come from, missed lines, box quality, reading
+  order), and one validation run on GlyphSynth's labelled lines for the failure modes the real
+  sets have no labels for (fonts, touching or broken characters, background noise).
+- H4 never got an operational rule, and the published per-condition numbers already decide it:
+  even on clean pages the recognizer from ground-truth boxes makes well under half the pipeline's
+  errors. It is closed post hoc rather than dressed up as a test.
+- Bin edges come from validation, examples from seeded draws, and GDC-scan stays numbers only.
