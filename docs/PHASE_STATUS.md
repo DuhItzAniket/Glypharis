@@ -2299,6 +2299,34 @@ hand-off stores no character alignments, no merge or split labels, and no text f
    `research/paper/error_analysis.md`'s outline, with Phase 9's validation categories moved in;
    RISK_REGISTER R-22 (curved lines) after the run; a research-log entry.
 
+11. **Amendment (2026-11-17, from three reviews of the Phase 15 code; written before any Phase 15
+    code read a per-line test file).** Where it differs, it replaces the text above.
+    - **OmniDocBench** gets the reading-order rows only: its reference unit is a layout block, so the
+      page budget, unmatched lines, cropping error and detection rows are n/a there, as in Phase 14.
+    - **Intervals** are computed and printed on the primary track (strict; IIIT5K alphanumeric);
+      the other tracks show values only. The report counts the intervals it prints, as it prints
+      them.
+    - **Validation** (GW-REC-038) resamples pages, the page taken from the line id
+      (`<image>/p<i>/l<j>`).
+    - **Line length** is binned on the strict-normalised reference length on every track.
+    - **The one-character-away share** is over substituted word pairs (an inserted or deleted word
+      has no partner).
+    - **Example types** are the most frequent edit operations of any kind (substitution, insertion,
+      deletion), ranked by count, then by operation and characters; type k is the k-th in that
+      ranking, counted from 1, and seeds its own draw.
+    - **Inside a GDC document group** (conditions within `paper`, groups within `scan_app`): counts
+      and CER only, no CI. Every share column is a share of the whole set's character errors.
+    - **GDC quotes:** lines from the two CC BY-SA 3.0 textbooks (`hefferon_linalg`, `mit_mcs`) are
+      listed by id and numbers only, never quoted; every other quoted line carries its document key,
+      source URL and licence (arXiv CC BY 4.0, whose abstract page names title and authors; US
+      federal and Gutenberg works public domain). HierText-derived files (Markdown, JSON, PNG) carry
+      `HIERTEXT_ATTRIBUTION` and the share-alike note.
+    - **GlyphSynth's held-out-font slice** is dropped: every validation line is rendered with a
+      validation font, so the slice has one value.
+    - **GDC-scan gets no category table** (most rules read text).
+    - **Writes:** the scripts refuse any output folder under `data/processed/phase14/`, the baseline
+      folders or `data/manifests/processed/`, and the gallery folder must be git-ignored.
+
 **Exit criteria** (IMPLEMENTATION_PLAN Phase 15): `reports/error_cases/phase15/`,
 `reports/confusion_analysis/GW-REC-040/` and `research/paper/error_analysis.md` drafted from
 generated numbers: character and word errors, slices and categories, the detector against
