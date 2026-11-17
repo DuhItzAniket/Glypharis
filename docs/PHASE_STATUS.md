@@ -21,8 +21,8 @@ Phases run in the order set by [ADR-0008](decisions/ADR-0008-usable-engine-first
 | 11 | Robustness training | **COMPLETE** | `phase-11` |
 | 12 | Synthetic data study | **COMPLETE** | `phase-12` |
 | 13 | Ablation study | **COMPLETE** | `phase-13` |
-| 14 | External evaluation | **IN PROGRESS** (gate: push, CI, merge) | — |
-| 15 | Error analysis | not started | — |
+| 14 | External evaluation | **COMPLETE** | `phase-14` |
+| 15 | Error analysis | **IN PROGRESS** (gate: push, CI, merge) | — |
 | 16 | Efficiency optimisation | not started | — |
 | 17 | Model export | **COMPLETE** | `phase-17` |
 | 18 | Inference package | **COMPLETE** | `phase-18` |
@@ -1591,7 +1591,7 @@ choose), the validator's check of freeze records, and the ledger's Phase 13 line
 
 ## Phase 14 — External evaluation
 
-**Status:** write-up done (2026-11-17). Gate open: push, pull request, CI and merge. Opened
+**Status:** COMPLETE (2026-11-17). Opened
 2026-11-14 on `phase/14-external-eval`, branched from `main` after
 Phase 13 (merge `8659b69`). GDC-scan v1 was frozen on the branch before this plan (`5f5a3b5`); the
 owner confirmed on 2026-11-14 that the printed document is the same PDF, with no edits after
@@ -2083,7 +2083,7 @@ checkout has no tags.
 | Incompatibilities explained (granularity, normalisation, charset) | pass | plan item 3; the notes in each report; the charset ceiling beside every metric |
 | Each benchmark evaluated once per frozen model, logged | pass; resumes are logged as resumes | `research/test_access_log.md`, `reports/external/run_record.md` |
 | No tuning after seeing results | pass: no model, setting, metric or slice changed; the two scoring-side code changes came before any score was read | protocol change log, 2026-11-17 |
-| CI green | pending (after the push) | — |
+| CI green | pass | runs 44039110860 (branch), 44039180576 (pull request), 44042627595 (`main`) |
 
 **Known issues**
 - GDC-scan is one document and FUNSD 50 forms; their intervals say nothing about other documents.
@@ -2097,4 +2097,448 @@ checkout has no tags.
 - H1′'s latency half was measured on HierText validation pages; the ONNX build of v1 is judged by
   the same rule when Phases 16 and 17 build it. H4 is tested in Phase 15 from the saved files.
 
-**Git:** branch `phase/14-external-eval`; push and merge pending.
+**Git:** branch `phase/14-external-eval`, merged through pull request #19. Merge commit `eb15025`, tag
+`phase-14` (merge re-created with the noreply identity; same tree and parents).
+
+**CI status:** green on the branch, the pull request and `main` (run 44042627595).
+
+---
+
+## Phase 15 — Error analysis
+
+**Status:** write-up done (2026-11-17). Gate open: push, pull request, CI and merge. Opened
+2026-11-17 on `phase/15-error-analysis`, branched from `main` after Phase 14 (merge `eb15025`). No
+model runs on test data in this phase.
+
+**Objective:** which failure modes dominate the frozen v1 pipeline, and whether they come from the
+detector or the recognizer (RQ5): a categorised error report from the files Phase 14 saved, and the
+paper's error-analysis section.
+
+**Plan** (registered 2026-11-17, before any Phase 15 code reads a per-line file. Already known when
+it was written: every aggregate in `reports/external/` and its results.json, among them the
+per-condition GDC page CERs of the pipeline, GW-E2E-007, and of the oracle, GW-E2E-008, scored in
+GW-E2E-009 (`reports/external/end_to_end.md`, "GDC per capture condition"), which put the oracle's
+page CER below half the pipeline's in every condition; the rotated-page failure (F24); and that the
+hand-off stores no character alignments, no merge or split labels, and no text for GDC-scan.)
+
+1. **Inputs, and only these.** Each file is checked before it is read: Phase 14 files against
+   `data/manifests/processed/phase14_outputs.json` (`file_entry` and `check_outputs` from
+   `scripts/phase14_score.py`, a non-empty result refusing), the Phase 5 files with the read-only
+   `verify_phase5`, and each example crop against the SHA-256 in `gdc_crops/index.jsonl`. Any
+   mismatch stops the run before a row is read.
+   - the hand-off, `data/processed/phase14/handoff/`: `rec_lines_<set>`, `e2e_pairs_<set>`,
+     `pages_<set>`, `gdc_crops/index.jsonl` and its crops;
+   - the Phase 5 baseline recognition files on GDC (GW-BASE-001 to 007) and HierText test
+     (GW-BASE-001, 002, 004, 005, 006), keyed like the crop packs;
+   - the baselines' OmniDocBench end-to-end files (GW-BASE-002, 005, 006, 007), for the line order
+     of their output only (item 5): polygons, never compared with any reference;
+   - validation: GW-REC-038's `hiertext_val.jsonl` (74,500 crops), and GW-REC-041 below.
+   Never read: test images or page files, any GDC-scan text, and the GLYPHARIS prediction files
+   (`data/processed/phase14/GW-*/`; what Phase 15 needs from them is in the hand-off). No model,
+   detector or scorer pass touches a test set. Reads are recorded in the Phase 15 results.json
+   (file, verified SHA-256, lines, time), not in the test access log: Phase 15 evaluates nothing
+   (protocol change log, 2026-11-15 and 2026-11-17).
+
+2. **Experiments** (new IDs; Phase 9 filed its analysis under the analysed run's ID instead).
+
+   | ID | What | Data |
+   |---|---|---|
+   | GW-REC-040 | recognition errors of the frozen recognizer: edit operations, confusions, word errors, slices, categories, examples | `rec_lines_*` (HierText test, GDC, FUNSD, IIIT5K; GDC-scan numbers only); the Phase 5 baseline rec files; GW-REC-038 (validation) |
+   | GW-E2E-010 | pipeline errors: the page error budget, unmatched lines, cropping error, detection slices, reading order, the oracle share (H4) | `pages_*`, `e2e_pairs_*`, `rec_lines_*`; GDC and GDC-scan with the oracle, HierText test, FUNSD and OmniDocBench without |
+   | GW-REC-041 | the frozen recognizer on GlyphSynth validation lines, which carry font, italic, inverted, neighbour and capture-step labels: the "unusual font", "touching", "broken" and "background noise" slices the real sets have no labels for | GlyphSynth v1 validation (synthetic; validation only) |
+
+3. **Shared rules for every table.**
+   - Strict track first, normalised beside it, the charset ceiling beside every CER; IIIT5K on its
+     alphanumeric track. Lines whose normalised reference is empty are left out (as Phase 14).
+   - Every slice row carries lines, pages, reference characters, character errors, the CER and the
+     slice's **share of the set's character errors** (what "dominates" means here).
+   - **CIs:** 95% percentile bootstrap, 1,000 resamples, seed 20261010, from `stats.py` unchanged.
+     On page sets the cited CI resamples pages (`ratio_ci` over per-page sums; pages with no line in
+     the slice stay in as 0/0), with the line bootstrap beside it; GDC condition rows resample source
+     documents; IIIT5K and GlyphSynth resample lines. A cell with fewer than 30 lines or 5 pages shows
+     its counts only. Document groups get per-document CERs and no CI (2 to 9 documents each).
+   - **Bin edges come from validation and are fixed before any test row is read**: quartiles of
+     GW-REC-038's values (`np.quantile`, duplicate edges merged) for line height in page pixels,
+     crop blur, crop contrast, line length in characters and line confidence at T = 2.35. The same
+     edges apply to every set; the report prints them with the counts. Box rotation uses
+     `rotation_deg` (the top-edge angle), folded to |θ|: < 2°, 2–5°, 5–15°, ≥ 15°, shown with and
+     without GDC's `rotated` pages. Matched IoU: [0.5, 0.7), [0.7, 0.85), ≥ 0.85.
+   - All intervals are descriptive. The report states how many it prints, applies no correction,
+     and makes no "worse than" claim from two marginal intervals: a contrast the text states is a
+     paired difference over the same page resample (`paired_ratios_diff_ci`). Slices are marginal
+     and confounded (blur on a resized crop goes with line height; condition with document); the
+     text says so.
+
+4. **Recognition errors (GW-REC-040).**
+   - **Consistency first:** each set's CER from the hand-off equals results.json's GW-REC-039 value,
+     and GDC's per-condition crop CER its `gdc_conditions` row; otherwise the run stops.
+   - **Edit operations:** Levenshtein edit operations (`rapidfuzz.distance.Levenshtein.editops`, the
+     CER's own distance) on the normalised pair; substitutions, insertions and deletions per set,
+     their sum asserted equal to each line's char_errors. The alignment is one of several optimal
+     ones, so a confusion inside a run of repeated characters is arbitrary; the report says so.
+   - **Character confusions:** the 30 most frequent substitutions (ref → pred), insertions and
+     deletions per set, each with its count, its rate per occurrence of the reference character,
+     and whether it disappears on the normalised track; a class matrix (lower, upper, digit,
+     punctuation, space, other, out of charset) as a PNG for GDC and HierText test; space errors
+     (merged and split words) on their own.
+   - **Word errors:** whitespace tokens aligned the same way; the 30 most frequent wrong
+     (ref word → pred word) pairs, and the share of word errors one character away.
+   - **Slices:** line height, blur, contrast, line length, confidence, rotation (bins above);
+     content: digit, punctuation, all upper case, a word of 10 or more letters, out of charset,
+     each against its complement; on GDC, capture condition, document group (from
+     `data/manifests/gdc/selection.yaml`, the stand-in for fonts), and the condition × group counts
+     with CER by group inside `scan_app` and by condition inside `paper` (the only group in every
+     condition). Which slices exist per set: IIIT5K has no height, rotation or detection fields;
+     GDC-scan gets the numeric slices only.
+   - **Categories** (RQ5's "which failure modes"): every wrong line gets one primary category by a
+     fixed precedence, and the shares of wrong lines and of character errors sum to 100%:
+     out of charset → rotation ≥ 5° → line height in the lowest quartile → blur in the lowest
+     quartile → contrast in the lowest quartile → digit → punctuation → long word → other.
+   - **Annotation noise (HierText):** a line counts as a likely label fragment when its normalised
+     reference has at most 2 characters and the prediction is at least 3 × ref + 3 characters long
+     (Phase 6 left this count open). Counted on GW-REC-038 and on HierText test, with their share of
+     insertions and of character errors; the HierText confusion tables are shown with and without
+     those lines.
+   - **Baselines beside GLYPHARIS** (GDC, and HierText test for its five systems): substitution,
+     insertion and deletion rates and class-matrix rates per reference character, every system
+     scored with the GLYPHARIS charset classes; numbers only, no "own" or "shared" label.
+   - **Validation counterpart:** the same tables on GW-REC-038 where its fields allow (no detection
+     fields, no condition); ADR-0002's revisit trigger answered there: the share of character errors
+     by line-length bucket (`baseline_diagnostics.py` BUCKETS), test beside it.
+   - **Examples and difficult cases:**
+     - the 20 most frequent GDC confusion types, up to 3 crops each, drawn with
+       `np.random.default_rng([20261115, k])` over the sorted keys of the lines holding type k;
+     - 40 error crops drawn with seed 20261115 from the sorted error keys, and 20 of the hand-off's
+       200 correct crops (a draw from its draw), seed 20261115;
+     - per set, the 20 worst lines (char_errors descending, key ascending) and the 10 worst pages
+       (bag errors descending, key ascending).
+     Galleries go to `data/processed/phase15/galleries/` (git-ignored; GDC capture images stay out
+     of git). The committed report lists the drawn GDC lines with reference, prediction and source
+     (title, licence, URL from `data/manifests/gdc_sources.json`; CC BY and CC BY-SA sources
+     attributed). HierText tables carry `HIERTEXT_ATTRIBUTION` and its share-alike note. FUNSD and
+     IIIT5K: character and class tables and counts only, no word pairs or line text. GDC-scan:
+     numbers only.
+
+5. **Pipeline errors (GW-E2E-010).**
+   - **Consistency first:** each page's bag errors and reference characters from `pages_` match the
+     e2e_pairs sums used below; the set totals equal results.json.
+   - **Page error budget** (bag of lines, both tracks, per set and per GDC condition):
+     (a) characters of ground-truth lines no prediction matched, (b) errors on matched lines, and
+     (c) characters of spurious predictions, computed as `bag_errors − (a) − (b)`; asserted (c) ≥ 0
+     on every page and (c) = 0 on every page whose `spurious` list is empty. Shares with page CIs.
+   - **Unmatched lines** by `best_iou`: 0, (0, 0.3), [0.3, 0.5) ("poorly localised"), and ≥ 0.5
+     ("its best box went to another line"); the four sum to (a) per page (asserted). Merges and
+     splits cannot be told apart from IoU alone; GW-DET-001's validation categories (Phase 9:
+     merged 20.0% and split 3.5% of misses) are cited for them.
+   - **Cropping error:** matched-line CER by matched IoU bin. On GDC, after asserting per line that
+     the pack label equals the page line's text, the matched line's end-to-end errors minus the
+     oracle's errors on the same line, signed and never clipped, with the counts of lines where it
+     is negative, zero and positive.
+   - **Detection slices:** recall at IoU 0.5 by line height and rotation (pack lines, per page set),
+     and by GDC condition (document clusters); matched-IoU distribution and the share of matches at
+     0.7 or more per set (FUNSD's localisation, F22).
+   - **Reading order:** per page, order-aware minus bag-of-lines errors for the pipeline, the oracle
+     and each baseline on GDC, GDC-scan and OmniDocBench (descriptive; not an exact decomposition);
+     on GDC, the share of consecutive matched ground-truth lines (in reference order) whose
+     predictions come out in the opposite order. For F26: on OmniDocBench, the share of consecutive
+     output lines of each PaddleOCR system whose top edge does not go up, which a top-to-bottom sort
+     makes 1 by construction (polygons only, no reference).
+   - **H4, the oracle share** on GDC, strict bag of lines: oracle errors / pipeline errors over a set
+     of pages (the reference characters are the same for both, asserted per page). Per condition,
+     for H1′'s clean slice (`scan_app` + `photo_flat`, 53 pages, 21 documents), for the other five
+     conditions (53 pages, 18 documents) and those without `rotated` (46 pages, 18 documents); page
+     and document-cluster CIs, the number of clusters printed, and the number of pages that make up
+     80% of the pipeline's errors in each slice. Wording: "from ground-truth boxes the recognizer
+     makes X% as many errors as the whole pipeline"; 1 − share is "errors the oracle does not
+     reproduce" (missed and poorly boxed lines, spurious predictions, and crop shape), not a pure
+     detector share.
+     **H4 has no registered operational rule, and the published per-condition numbers already
+     decide it** (oracle CER below half the pipeline's everywhere, clean slice included). So no new
+     version of H4 is written: H4 is closed as "not supported on GDC (post hoc)", with these
+     numbers as its record. GDC-scan: the same numbers, information only (ADR-0013).
+
+6. **GW-REC-041** (validation only, a model run). The frozen recognizer, built from the freeze
+   record in strict fp32 as in Phase 14, reads GlyphSynth v1 validation's lines; slices by font
+   family and category (serif, sans, mono, from `data/manifests/glyphsynth_fonts.json`), held-out
+   fonts, italic, inverted, neighbour fragments (a cropping stand-in), and capture steps (ink spread
+   for touching characters, binarisation and low resolution for broken ones, paper texture, noise and
+   salt-and-pepper for background noise). Line bootstrap. The paper also cites the frozen
+   recognizer's GLYPH-C results (`reports/robustness/GW-REC-034.json`) for blur, noise, contrast,
+   JPEG, perspective and in-box rotation. Both are synthetic or derived from validation, and say so.
+
+7. **Descoped, with the reason:**
+   - GW-DET-007's small and rotated lines (Phase 13): it needs a detector pass, and GW-DET-007 was
+     not adopted, so the answer cannot change v1.
+   - A v1 detector-against-recognizer split on HierText: GW-E2E-002's oracle cut and precision
+     differ from the frozen pipeline's, so a new validation oracle would not pair cleanly with
+     GW-E2E-006. GDC's GW-E2E-008 is v1's oracle; F10 stays the HierText reference.
+   - Touching or broken characters, background noise and fonts on the real test sets: no labels
+     exist; GW-REC-041 and GLYPH-C stand in.
+
+8. **Rules fixed in advance.**
+   - Every number in a tracked file comes from the Phase 15 scripts' output, with its experiment ID:
+     `reports/error_cases/phase15/` (results.json, Markdown, PNG plots) and
+     `reports/confusion_analysis/GW-REC-040/` (character and word tables).
+   - **GDC-scan:** numbers only. The text, word, confusion and example builders refuse a
+     numbers-only set (a test asserts the refusal), and a test plants a marker in every made-up
+     GDC-scan input and checks no output contains it.
+   - **Nothing flows back** into v1 (EXPERIMENT_PROTOCOL §9); a later model that uses these findings
+     is a new version, evaluated again and disclosed.
+   - **Phase 22:** nothing is written under `data/processed/phase14/` or the baseline folders,
+     `phase14_outputs.json` is untouched, and `glypharis/eval/stats.py` stays byte-identical (the
+     pinned scorer imports it). Per-line joins and galleries go to `data/processed/phase15/`.
+   - **No cherry-picking:** examples come only from the draws above.
+
+9. **Code needed** (tests on made-up data): `glypharis/eval/errors.py` (edit operations, confusion
+   and class tables, word alignment, slice binning, the error budget, the order-inversion rate,
+   numbers-only refusal); `scripts/phase15_errors.py` (input checks and the read record, every table
+   above, plots, the paper tables); a GW-REC-041 runner on validation; the GDC-scan tests.
+
+10. **Records updated with this plan:** experiment entries GW-REC-040, GW-E2E-010 and GW-REC-041;
+   H4's status note (closed post hoc once GW-E2E-010 runs); a protocol change row (inputs and how
+   reads are recorded; the bounded per-line text; H4 post hoc; validation-derived bin edges);
+   `research/paper/error_analysis.md`'s outline, with Phase 9's validation categories moved in;
+   RISK_REGISTER R-22 (curved lines) after the run; a research-log entry.
+
+11. **Amendment (2026-11-17, from three reviews of the Phase 15 code; written before any Phase 15
+    code read a per-line test file).** Where it differs, it replaces the text above.
+    - **OmniDocBench** gets the reading-order rows only: its reference unit is a layout block, so the
+      page budget, unmatched lines, cropping error and detection rows are n/a there, as in Phase 14.
+    - **Intervals** are computed and printed on the primary track (strict; IIIT5K alphanumeric);
+      the other tracks show values only. The report counts the intervals it prints, as it prints
+      them.
+    - **Validation** (GW-REC-038) resamples pages, the page taken from the line id
+      (`<image>/p<i>/l<j>`).
+    - **Line length** is binned on the strict-normalised reference length on every track.
+    - **The one-character-away share** is over substituted word pairs (an inserted or deleted word
+      has no partner).
+    - **Example types** are the most frequent edit operations of any kind (substitution, insertion,
+      deletion), ranked by count, then by operation and characters; type k is the k-th in that
+      ranking, counted from 1, and seeds its own draw.
+    - **Inside a GDC document group** (conditions within `paper`, groups within `scan_app`): counts
+      and CER only, no CI. Every share column is a share of the whole set's character errors.
+    - **GDC quotes:** lines from the two CC BY-SA 3.0 textbooks (`hefferon_linalg`, `mit_mcs`) are
+      listed by id and numbers only, never quoted; every other quoted line carries its document key,
+      source URL and licence (arXiv CC BY 4.0, whose abstract page names title and authors; US
+      federal and Gutenberg works public domain). HierText-derived files (Markdown, JSON, PNG) carry
+      `HIERTEXT_ATTRIBUTION` and the share-alike note.
+    - **GlyphSynth's held-out-font slice** is dropped: every validation line is rendered with a
+      validation font, so the slice has one value.
+    - **GDC-scan gets no category table** (most rules read text).
+    - **Writes:** the scripts refuse any output folder under `data/processed/phase14/`, the baseline
+      folders or `data/manifests/processed/`, and the gallery folder must be git-ignored.
+
+**Exit criteria** (IMPLEMENTATION_PLAN Phase 15): `reports/error_cases/phase15/`,
+`reports/confusion_analysis/GW-REC-040/` and `research/paper/error_analysis.md` drafted from
+generated numbers: character and word errors, slices and categories, the detector against
+recognizer proportion, representative examples; findings rows for RQ5; CI green.
+
+**Known limitations, stated in advance**
+- No merge, split or candidate-level detector analysis on test.
+- GDC is 106 pages from 21 documents and GDC-scan one document; FUNSD 50 forms; the document
+  cluster intervals with 18 to 21 clusters cover less than nominal.
+- The blur attribute is measured on 64-px crops, so it mixes source resolution with optical blur.
+- GlyphSynth and GLYPH-C are synthetic or derived from validation.
+- H4 is read post hoc.
+
+**Results (2026-11-17)** (GW-REC-040, GW-E2E-010, GW-REC-041; `reports/error_cases/phase15/` and
+`reports/confusion_analysis/GW-REC-040/`; strict track unless stated; 95% percentile bootstrap,
+1,000 resamples, seed 20261010. Every interval is descriptive: no correction, and no slice is
+called worse than another from two marginal intervals.)
+
+*Where page error comes from* (GW-E2E-010, `pipeline.md`): the frozen pipeline's bag-of-lines
+errors (GW-E2E-007) split into characters of ground-truth lines no prediction matched, errors on
+matched lines, and characters of spurious predictions. Shares of the set's errors, page CI.
+
+| Set | Pages | Bag errors | Missed lines % | Matched lines % | Spurious % |
+|---|---|---|---|---|---|
+| HierText test | 1,634 | 203,171 | 49.45 [47.47, 51.56] | 25.79 [23.51, 28.00] | 24.77 [23.24, 26.38] |
+| GDC | 106 | 71,886 | 45.32 [36.14, 52.80] | 27.55 [15.80, 42.07] | 27.13 [20.89, 33.57] |
+| GDC-scan | 28 | 1,490 | 34.36 [14.87, 42.85] | 32.28 [16.36, 71.27] | 33.36 [14.01, 40.79] |
+| FUNSD | 50 | 16,074 | 40.22 [36.27, 42.88] | 19.39 [14.64, 27.08] | 40.39 [36.32, 43.00] |
+
+- GDC with source documents as the bootstrap unit: missed 45.32 [33.27, 53.44], matched 27.55
+  [14.61, 45.81], spurious 27.13 [19.61, 32.97]. OmniDocBench has no budget: its reference unit is
+  a layout block (amendment, item 11).
+- Per GDC condition (document CI) the missed share runs from 40.83% (`low_light`) to 54.95%
+  (`curved`, `photo_angled`), except on `rotated` pages, where matched lines carry 78.16%
+  [45.80, 97.26] of the errors: the recognizer gets sideways crops (F24).
+- Missed lines by best IoU: on HierText test 10,996 lines (45,721 characters) got no box at all;
+  on GDC most missed characters are in lines a box barely touched (17,721 characters, 521 lines)
+  or poorly localised (12,240, 284 lines), and only 2,508 in the 525 lines with no box.
+- Box quality on matched lines: matched-line CER is 29.24% at IoU [0.5, 0.7) and 3.63% at 0.85 or
+  more on HierText test, 29.36% and 4.31% on GDC. On the same 7,041 matched GDC lines the pipeline
+  makes 2.048 [0.753, 3.817] more errors per line than the oracle (1,160 lines more, 5,567 equal,
+  314 fewer).
+- Recall at IoU 0.5 on HierText test: 57.92% [54.64, 61.17] for lines under 9.35 px high, 49.53%
+  [45.80, 53.19] for |θ| ≥ 15°. On GDC none of the 113 lines under 9.35 px is found, and 36.94%
+  [10.52, 45.00] of those from 9.35 to 13.52 px. FUNSD's matches are loose: 47.11% [42.48, 51.39]
+  at IoU 0.7 or more (HierText test 85.90%, GDC 91.14%).
+- Phase 9's validation categories for GW-DET-001 stand in for merges and splits, which IoU alone
+  cannot separate: merged 20.0% and split 3.5% of its missed lines.
+
+*The oracle share (H4)* (GW-E2E-010, `oracle_share.md`): oracle errors (GW-E2E-008, ground-truth
+boxes) over pipeline errors (GW-E2E-007), strict bag of lines. "From ground-truth boxes the
+recognizer makes X% as many errors as the whole pipeline."
+
+| GDC slice | Pages | Documents | Share % [page CI] | Share % [document CI] | Pages for 80% |
+|---|---|---|---|---|---|
+| all pages | 106 | 21 | 18.66 [11.55, 28.73] | 18.66 [11.51, 26.45] | 27 |
+| clean (`scan_app` + `photo_flat`) | 53 | 21 | 32.70 [16.64, 51.91] | 32.70 [24.43, 44.01] | 11 |
+| the other five | 53 | 18 | 10.29 [5.24, 18.03] | 10.29 [5.24, 17.73] | 16 |
+| the other five without `rotated` | 46 | 18 | 14.86 [8.46, 23.93] | 14.86 [8.22, 26.43] | 14 |
+| `scan_app` | 37 | 19 | 45.14 [25.40, 58.41] | 45.14 [24.95, 58.56] | 10 |
+| `photo_flat` | 16 | 13 | 14.75 [5.80, 43.65] | 14.75 [5.53, 43.95] | 3 |
+| `photo_angled` | 16 | 10 | 12.81 [9.84, 22.51] | 12.81 [11.29, 19.44] | 4 |
+| `distant` | 11 | 10 | 22.09 [8.24, 46.34] | 22.09 [8.57, 50.93] | 5 |
+| `low_light` | 11 | 8 | 16.39 [8.99, 40.69] | 16.39 [7.59, 45.03] | 4 |
+| `curved` | 8 | 8 | 12.47 [0.71, 35.21] | 12.47 [0.71, 35.21] | 5 |
+| `rotated` | 7 | 6 | 1.03 [0.34, 2.93] | 1.03 [0.36, 2.94] | 4 |
+| GDC-scan, all pages (information) | 28 | - | 22.08 [12.65, 47.58] | - | 7 |
+
+- **H4: not supported on GDC (post hoc).** The share's point estimate is below half in every
+  slice; the clean slice's page interval reaches 51.91% and `scan_app`'s 58.41%. 1 − share is the
+  errors the oracle does not reproduce (missed and poorly boxed lines, spurious predictions, crop
+  shape), not a pure detector share.
+
+*Recognition* (GW-REC-040, `recognition.md`; ground-truth crops through the frozen recognizer,
+GW-REC-039 on test, GW-REC-038 on validation; page CI, IIIT5K line CI)
+
+| Set | Lines | CER % [CI] | Sub % | Ins % | Del % | Merged words | Split words | WER % |
+|---|---|---|---|---|---|---|---|---|
+| HierText test | 67,574 | 6.03 [5.60, 6.48] | 3.27 | 0.89 | 1.88 | 2,512 | 1,110 | 19.26 |
+| HierText validation | 74,500 | 6.51 [5.98, 7.12] | 3.41 | 0.97 | 2.12 | 2,860 | 1,319 | 19.78 |
+| GDC | 8,372 | 4.17 [2.48, 6.22] | 0.86 | 0.12 | 3.19 | 4,941 | 115 | 14.56 |
+| GDC-scan (numbers only) | 776 | 1.02 [0.79, 1.30] | n/a | n/a | n/a | n/a | n/a | n/a |
+| FUNSD | 2,647 | 7.03 [5.59, 8.61] | 2.12 | 1.45 | 3.46 | 640 | 83 | 25.88 |
+| IIIT5K (alphanumeric) | 3,000 | 2.37 [2.06, 2.70] | 1.39 | 0.21 | 0.77 | 0 | 0 | 8.53 |
+
+The page CIs are wider than Phase 14's line CIs for the same CERs (GDC 4.17% [3.72, 4.67] by
+lines). The top primary categories, as shares of the set's character errors (one category per
+wrong line, by the fixed precedence of plan item 4, so "digit" is any wrong line with a digit that
+meets no earlier rule):
+
+| Set | First | Second | Third |
+|---|---|---|---|
+| HierText test | rotation ≥ 5°, 34.92 | height, lowest quartile, 21.30 | other, 9.75 |
+| HierText validation | rotation ≥ 5°, 37.69 | height, lowest quartile, 18.31 | other, 11.59 |
+| GDC | digit, 49.21 | contrast, lowest quartile, 20.41 | out of charset, 13.62 |
+| FUNSD | digit, 43.21 | punctuation, 31.32 | long word, 11.46 |
+| IIIT5K | other, 87.85 | long word, 7.73 | contrast, lowest quartile, 2.76 |
+
+- **GDC:** deletions are 3.19 of the 4.17% CER. Spaces are deleted 4,941 times (10.165% of
+  reference spaces: merged words) and full stops 4,153 times (44.176% of reference full stops), on
+  583 and 391 lines. All of the 20 worst GDC lines are table-of-contents lines whose leader dots
+  are dropped, from `census_income` and `hilbert_geometry`; lines of 70 characters or more carry
+  61.80% of GDC's errors (CER 6.37%). Typographic quotes and dashes become ASCII (’ to ' 198 times,
+  “ and ” to " 111 and 109 times, — and – to - 66 and 46 times); those pairs are gone on the
+  normalised track (CER 3.94%).
+- **GDC document groups** (no CI): book 15.98% (37.46% of the errors), report 7.56%, textbook 5.05%,
+  form 2.96%, paper 1.02%. By condition (document CI) `scan_app` holds 53.40% of the errors at 6.55%
+  [2.42, 11.30]; inside the paper group (paper and book are both in every condition; the report
+  breaks out paper), the condition CERs run from 0.26 to 1.42%. Conditions go with documents (the
+  condition × group table), so no per-condition contrast is drawn.
+- **Beside the baselines on GDC** (same lines, no CI): PP-OCRv5 mobile and the three PP-OCRv6
+  systems read 86.90 to 89.95% of reference punctuation as itself, GLYPHARIS 73.02%; spaces 87.11
+  to 88.54% against 89.61%; deletion rates 2.29 to 2.55% against 3.19%.
+- **HierText test:** CER 4.46% for |θ| < 2° and 10.82% for |θ| ≥ 15°; 11.01% for lines under
+  9.35 px (30.24% of the errors). The lowest confidence quartile (below 0.626682) holds 78.51% of
+  the errors at 24.01% CER, the top quartile 0.89% at 0.39%. Out-of-charset lines: 282, with 2.65%
+  of the errors. Likely label fragments: 15 lines, 145 errors (0.30%) and 139 insertions (1.94% of
+  insertions); without them CER 6.02%. On GDC the two lowest confidence quartiles hold 22.79% and
+  53.64% of the errors.
+- **FUNSD:** deletions are 3.46 of the 7.03%; 9.56% of reference digits and 10.52% of reference
+  spaces are deleted; the 170 lines of 21.485 px or more read at 27.74% [17.30, 38.51] and carry
+  37.62% of the errors.
+- **ADR-0002's trigger** (error share by reference length): on validation, lines of 0 to 29
+  characters carry 81.51% of the errors and lines of 70 or more 3.59% (HierText test 80.24% and
+  4.74%). Long lines do not dominate. The 20 worst GDC lines are dot leaders, but no per-line
+  attribute labels leaders, so their share of GDC's 70+ bucket (61.80%) is not measured.
+
+*GlyphSynth validation* (GW-REC-041, `glyphsynth.md`; synthetic, line CI)
+
+| Slice | Lines | CER % [CI] | Share of errors % |
+|---|---|---|---|
+| all | 10,000 | 0.71 [0.63, 0.79] | 100.00 |
+| touching (ink spread) | 1,543 | 1.41 [1.17, 1.72] | 31.11 |
+| no ink spread | 8,457 | 0.58 [0.50, 0.67] | 68.89 |
+| underline | 283 | 1.37 [1.05, 1.76] | 5.16 |
+| binarised | 307 | 1.18 [0.81, 1.67] | 4.92 |
+| inverted | 318 | 1.06 [0.62, 1.72] | 5.02 |
+| italic | 1,203 | 0.86 [0.67, 1.12] | 14.59 |
+| broken (binarisation, low resolution) | 2,226 | 0.76 [0.63, 0.90] | 23.02 |
+| background noise (texture, noise, salt and pepper) | 6,012 | 0.76 [0.65, 0.89] | 64.32 |
+| neighbour fragments | 3,517 | 0.66 [0.56, 0.78] | 32.69 |
+
+- Font families run from 0.38% (`worksans`) to 1.48% [1.09, 1.93] (`cormorantgaramond`); serif
+  0.83%, sans 0.60%, mono 0.62%. GLYPH-C (`reports/robustness/GW-REC-034.json`, CERs as the
+  fractions it stores): clean 0.0193; in-box rotation 0.0238 at level 1 to 0.2357 at level 5; every
+  other corruption 0.0572 or less (low resolution, level 5); mCE 3.54%
+  (`reports/ablation/phase13_final.md`).
+
+*Reading order* (GW-E2E-010): on GDC 1,010 of 6,935 consecutive matched ground-truth lines come out
+reversed, 14.56% [9.93, 20.36]. Order-aware minus bag-of-lines errors per page on GDC: GLYPHARIS
++125.509 [−76.729, 333.847], the four PaddleOCR systems +573.019 to +721.915. The OmniDocBench
+bag-of-lines CERs in the same table (about 179 to 181%) are not meaningful: its reference is blocks,
+not lines (Phase 14 marks bag of lines n/a there). For F26: 76.66 to 77.74% of the four PaddleOCR
+systems' consecutive output lines on OmniDocBench have a top edge that does not rise. PaddleOCR's
+own sort, read from its installed code (`SortQuadBoxes` in
+`paddlex/inference/pipelines/components/common/sort_boxes.py`, used by the OCR pipeline), orders
+boxes by the top-left corner's y and then swaps neighbours whose y differs by less than 10 px so
+that they run left to right, so a following line can sit up to 10 px higher and the measure would
+not be 1 under that sort. It cannot tell the sort apart from other orders, so it neither supports
+nor refutes F26's cause, which stays unmeasured (F26 revised, F33).
+
+**Run notes**
+- Code `ba44a84`, reports `6cb1b9c`; results.json records commit `ba44a848f9eb`, not dirty. Phase
+  15 evaluates nothing, so its reads are recorded in results.json (`inputs`), not in the test
+  access log.
+- Every input was checked before a row was read: 34 of the 38 files in the README's table against
+  their manifests or metadata (the other 4 hashed as committed), the Phase 5 files with
+  `verify_phase5` (93 files), the 2,488 GDC crops against `gdc_crops/index.jsonl`, and the 120
+  drawn crops again before they were copied into the gallery.
+- GW-REC-041 read 10,000 GlyphSynth validation lines in 79.3 s on the GPU (strict fp32; wall time
+  from its run metadata, `data/processed/phase15/GW-REC-041/glyphsynth_val.meta.json`). The pack's
+  hash was checked against its metadata and the GlyphSynth manifest before the run, and the
+  output's hash and count against the run's `.meta.json` before the analysis read it.
+- 583 intervals printed; 49 CERs from the hand-off equal results.json's, and the hand-off's pair
+  sums agree with the page files on all 2,573 pages (the five page sets, OmniDocBench included).
+
+**Tests:** the CPU suite passes in a clone without tags (1,011 passed, 4 skipped, at `6cb1b9c`);
+new tests cover the error module, the analysis script (including the GDC-scan marker, the write
+guards, the hash and consistency refusals and atomic output) and the GlyphSynth runner.
+
+**Exit criteria** (IMPLEMENTATION_PLAN Phase 15)
+
+| Criterion | Result | Evidence |
+|---|---|---|
+| Character confusion matrix; most common character and word errors | pass | class matrices (PNG for GDC and HierText test) in `recognition.md`; `reports/confusion_analysis/GW-REC-040/` |
+| Slices: blur, rotation, small font, low contrast, punctuation, numbers, long words, cropping error | pass, on the real sets | `recognition.md`, `pipeline.md` |
+| Slices: touching or broken characters, unusual fonts, background noise | pass, on GlyphSynth validation and GLYPH-C only: the test sets have no labels for them (plan item 7) | `glyphsynth.md`, `reports/robustness/GW-REC-034.json` |
+| Detector against recognizer proportion (oracle analysis) | pass: the page budget on every page set but OmniDocBench (layout blocks; reading order only), the oracle share on GDC and GDC-scan; H4 not supported on GDC (post hoc) | `pipeline.md`, `oracle_share.md`, `research/hypotheses.md` |
+| Representative examples | pass: seeded draws only | `examples.md` (crops in the git-ignored gallery) |
+| `reports/error_cases/` and `research/paper/error_analysis.md` drafted from generated numbers | pass | `reports/error_cases/phase15/`, `research/paper/error_analysis.md` |
+| Findings rows for RQ5 | pass | `research/findings.md` F27 to F32; F26 revised by F33 |
+| CI green | pending (after the push) | — |
+
+**Known issues**
+- GDC is 106 pages from 21 documents, GDC-scan one document and FUNSD 50 forms. The
+  document-cluster intervals with 6 to 21 clusters (the per-condition ones fewest) cover less than
+  nominal, and GDC's conditions go with its documents, so per-condition numbers are not contrasts.
+- Merges and splits cannot be told apart from IoU on test; Phase 9's validation categories stand
+  in for them.
+- The oracle share is not a pure detector share.
+- `pipeline.md`'s reading-order table prints bag-of-lines CERs for OmniDocBench (about 179 to
+  181%). They are not meaningful, because the reference unit is a layout block; only the
+  order-aware columns and the F26 table are read. The report stays as generated.
+- The 20 worst GDC lines are dot leaders from `census_income` and `hilbert_geometry`, and the
+  seeded draws show leaders in other documents too; no per-line attribute labels them, so their
+  share of the 70+ bucket and of the full-stop deletions is not measured.
+- The registered F26 measure did not account for PaddleOCR's 10 px row tolerance: the plan expected
+  a top-to-bottom sort to make it 1 by construction, but PaddleOCR's sort lets a following line sit
+  up to 10 px higher. So the measure does not decide F26's cause, and what causes PaddleOCR's order
+  error on OmniDocBench is still open.
+- The blur attribute mixes source resolution with optical blur; GlyphSynth and GLYPH-C are
+  synthetic or derived from validation; H4 is read post hoc.
+
+**Git:** branch `phase/15-error-analysis`; push and merge pending.

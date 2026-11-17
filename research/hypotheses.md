@@ -90,9 +90,24 @@ on the other side, otherwise **not shown**; H1′ holds only if both halves are 
   clean slices, while detection (missed / merged / split lines) accounts for the majority on photographed
   and heavily degraded slices.
 - **Test:** Phase 10 (validation), Phase 15 (frozen model).
-- **Status:** open; not supported by Phase 10's exploratory reading on HierText validation:
+- **Status:** not supported on GDC (2026-11-17, post hoc, GW-E2E-010). From ground-truth boxes
+  (GW-E2E-008) the recognizer makes 18.66% [11.55, 28.73] as many errors as the whole pipeline
+  (GW-E2E-007) on all 106 GDC pages (source documents [11.51, 26.45]); 32.70% [16.64, 51.91] on
+  the clean slice (`scan_app` + `photo_flat`), 45.14% [25.40, 58.41] on `scan_app` alone, 10.29%
+  [5.24, 18.03] on the other five conditions and 1.03% [0.34, 2.93] on `rotated` (page CIs,
+  strict bag of lines; `reports/error_cases/phase15/oracle_share.md`). The point estimate is
+  below half in every slice, so on these numbers the recognizer does not account for the majority
+  of page error on clean pages (the clean slice's page interval reaches 51.91% and `scan_app`'s
+  58.41%); the rest is not all the detector's (it holds spurious predictions and crop shape too).
+  GDC-scan, one document, information: 22.08% [12.65, 47.58]. No rule was registered, so this is
+  a reading of the numbers, not a test.
+  Before Phase 15: open; not supported by Phase 10's exploratory reading on HierText validation:
   recognition's share of page error is 0.20 to 0.29 on every blur quartile, the sharpest included
   (GW-E2E-002). HierText pages are mostly scene photographs; Phase 15 tests H4 on GDC.
+  Note (2026-11-17, Phase 15 plan): no operational rule was registered before GW-E2E-008 was
+  scored, and the published per-condition page CERs (GW-E2E-007, GW-E2E-008, scored in
+  GW-E2E-009) already put the oracle below half the pipeline in every GDC condition, the
+  clean slice included. No new version is written; H4 is closed post hoc from GW-E2E-010.
 
 ### H5 — Domain gap is large (RQ6)
 
