@@ -142,6 +142,30 @@ def test_run_hiertext_refuses_before_running(tmp_path, monkeypatch):
         oh.run_hiertext(gt, pred, tmp_path / "out")
 
 
+def test_run_hiertext_starts_the_launcher(tmp_path, monkeypatch):
+    seen: dict[str, Any] = {}
+
+    class Stop(Exception):
+        pass
+
+    def fake_run(cmd, cwd):
+        seen["cmd"], seen["cwd"] = list(cmd), cwd
+        raise Stop
+
+    monkeypatch.setattr(oh, "venv_python", lambda name, root=None: Path("python"))
+    monkeypatch.setattr(oh, "run_evaluator", fake_run)
+    gt = tmp_path / "gt.json"
+    gt.write_text(json.dumps(hiertext_gt()), encoding="utf-8")
+    pred = tmp_path / "pred.json"
+    oh.write_predictions(oh.to_hiertext_predictions([], image_ids=["img1"]), pred)
+    with pytest.raises(Stop):
+        oh.run_hiertext(gt, pred, tmp_path / "out")
+    assert seen["cmd"][1] == str(oh.HIERTEXT_ENTRY)
+    assert oh.HIERTEXT_ENTRY.is_file()
+    assert seen["cwd"] == oh.ROOT / oh.HIERTEXT_DIR
+    assert seen["cmd"][-len(oh.HIERTEXT_FLAGS) :] == list(oh.HIERTEXT_FLAGS)
+
+
 def test_venv_python_honours_the_override(tmp_path, monkeypatch):
     monkeypatch.setenv(oh.VENV_ROOT_ENV, str(tmp_path))
     with pytest.raises(FileNotFoundError):
