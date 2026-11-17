@@ -23,7 +23,7 @@ Phases run in the order set by [ADR-0008](decisions/ADR-0008-usable-engine-first
 | 13 | Ablation study | **COMPLETE** | `phase-13` |
 | 14 | External evaluation | **COMPLETE** | `phase-14` |
 | 15 | Error analysis | **COMPLETE** | `phase-15` |
-| 16 | Efficiency optimisation | not started | — |
+| 16 | Efficiency optimisation | **IN PROGRESS** (plan registered) | — |
 | 17 | Model export | **COMPLETE** | `phase-17` |
 | 18 | Inference package | **COMPLETE** | `phase-18` |
 | 19 | Optional HTTP API | **COMPLETE** | `phase-19` |
@@ -2545,3 +2545,148 @@ guards, the hash and consistency refusals and atomic output) and the GlyphSynth 
 `phase-15` (merge re-created with the noreply identity; same tree and parents).
 
 **CI status:** green on the branch, the pull request and `main` (run 44068353082).
+
+---
+
+## Phase 16 — Efficiency optimisation
+
+**Status:** IN PROGRESS. Opened 2026-11-17 on `phase/16-efficiency`, branched from `main` after
+Phase 15 (merge `ed372db`). Validation data only.
+
+**Objective:** the frozen v1 system's cost on this laptop (parameters, size, CPU and GPU latency,
+throughput, memory, page time, preprocessing) in PyTorch and in ONNX Runtime, and the accuracy and
+latency of variants that would be new versions (INT8, other input sizes, other model sizes, a fused
+attention): an efficiency table and an accuracy/latency Pareto plot (RQ7), with H7, H6's latency
+half and H1′'s ONNX latency judged by rules fixed here.
+
+**Plan** (registered 2026-11-17, before any Phase 16 measurement. Already known: GW-EFF-001 to
+005; F9, F12, F13 (the TorchScript-exported SVTR recognizer about 4.5 times slower than PyTorch on
+the CPU; ONNX Runtime's arena growing with input shapes; the exported detector's "twice as fast"
+came from an arena-on side test, and arena-off it ran at about PyTorch's speed, GW-EFF-004's entry);
+H1′'s PyTorch latency verdict (GW-EFF-005); GW-DET-005's detector F1 by input size on validation
+half A; the Phase 7 line timings, PyTorch at 16 threads: SVTR 13.5 ms against CRNN 10.7 ms at
+height 32 (`reports/training/phase07/cpu_latency.md`). The code under `glypharis/pipeline`,
+`glypharis/models`, `glypharis/export`, `glypharis/data` and `configs` is unchanged since
+`phase14-eval`.)
+
+1. **v1 and its variants.**
+   - **v1 is the evaluated build.** The frozen weights, every recorded setting of
+     `configs/final/glypharis_v1.yaml`, and the model, pipeline and export code as it is at
+     `phase14-eval`. The Phase 16 scripts assert that those code paths still equal the tag's before
+     they build v1; no Phase 16 change touches them.
+   - **The same model in another runtime:** only the plain fp32 ONNX export of v1 (TorchScript
+     exporter, as in Phase 17), and only if it passes Phase 17's registered tolerances against
+     **reference outputs written once from the PyTorch v1 build on the CPU** (detector probability
+     maps on the 110 profile pages, recognizer logits on the 5,000 seeded validation lines, page
+     predictions on the 400 Phase 5 pages; their SHA-256 committed): map max abs difference ≤ 1e-4;
+     logits ≤ 1e-3; text identical except near ties (top-2 gap < 1e-3) on at most 0.1% of lines;
+     page CER within 0.05 points (Phase 14 item 6). This is the bundle the Phase 17 re-run cites.
+   - **Variants** (new versions; opt-in code paths outside the v1 modules; measured on validation
+     as Pareto points; none replaces v1; one that ships is evaluated in Phase 22, as Phase 14 item
+     6 fixes for INT8): dynamic INT8; detector long side 1024, 1280, 1792, 2048; the ONNX detector
+     with the PyTorch recognizer; a fused attention export; the smaller detector GW-DET-003 and the
+     recognizers GW-REC-003, 006, 020, 022 (other recipes and budgets, not a clean size ladder).
+     Choosing a default backend or shipping a variant is the owner's decision (ADR-0011); Phase 16
+     changes no default.
+
+2. **Experiments** (validation only).
+
+   | ID | What |
+   |---|---|
+   | GW-EFF-006 | the reference outputs from PyTorch v1 on the CPU; the v1 fp32 ONNX bundle built from the freeze record; Phase 17's four checks against the references |
+   | GW-EFF-007 | the cost table of v1 (PyTorch and fp32 ONNX): parameters; file size per format; CPU line latency (batch 1) and page latency (one page at a time, lines batched as the pipeline does), mean and p95, peak RAM, at 10 threads; the same at the default threads for fp32 ONNX only; GPU (PyTorch only; ONNX Runtime here is CPU-only) line latency at batch 1 and line throughput at batch 32, page latency, peak VRAM; page time split into decode, detector preprocessing, detector network, post-processing, cropping, recognizer batch build, recognizer network, decoding and reading order, summing to the page time; page time against lines per page (least-squares slope in ms per line, page-bootstrap CI) |
+   | GW-EFF-008 | dynamic INT8 of the v1 fp32 ONNX recognizer (H7′) |
+   | GW-EFF-009 | Pareto points (item 1's variants): page CER and E2E F1 on the 400 Phase 5 pages on the CPU, page latency and peak RAM on the 110 profile pages, fp32 ONNX at 10 threads unless the variant says otherwise; recognizer variants by line CER on the 5,000 lines and line latency |
+   | GW-EFF-010 | H1′'s ONNX latency: a fresh GW-BASE-002 profile and the GW-EFF-006 bundle (by its hash) in one sitting, by Phase 14's rule |
+   | GW-EFF-011 | H6′'s latency: CRNN GW-REC-003 against SVTR GW-REC-020 (H6's matched-budget pair, height 32), fp32 ONNX, per line |
+
+3. **Measurement rules.**
+   - Mains power, Balanced plan, the power mode recorded, no other user program; `run_conditions`
+     and the GPU's clocks and temperature (nvidia-smi) at the start and end of every profile, CPU
+     runs included.
+   - 10 warm-up and 100 timed items (protocol §3): lines from `rec_samples` (hiertext_val), pages
+     from the Phase 5 profile pages (the first 110 of the 400-page sample). Accuracy samples: the
+     5,000 lines seeded 20261028 from `processed/hiertext/lines_validation` (the export check's) and
+     the 400 Phase 5 pages; accuracy for CPU builds is measured on the CPU.
+   - Threads: torch intra and inter 10 with the OpenMP and MKL variables set before the import; each
+     ONNX Runtime session intra-op 10, sequential execution (inter-op unused), spinning at the
+     default; each session's options and the torch pools written into the profile and asserted.
+   - One process per run. When k arms are compared, they run in the order 1 … k, then k … 1, in
+     one sitting; each item's time is the mean of its two runs, and both runs' times are kept.
+     GW-EFF-010 follows Phase 14's order instead (baseline, then GLYPHARIS, within 2 hours).
+   - A sitting is void only if a recorded condition fails (mains, plan, threads, input sizes, a
+     missing time); a void sitting goes to `research/failures.md` and is repeated, and the first
+     sitting that is not void is the one of record.
+   - p95 from 100 items is reported as a point value, no CI.
+   - **Confirmatory tests, exactly four:** H7′ latency, H7′ accuracy, H6′, H1′ ONNX. Every other
+     interval is descriptive and carries no verdict word; the report counts its intervals.
+   - **Single model:** the comparisons are between fixed builds of one frozen model; the seed rule
+     of protocol §4 does not apply (Phase 14's exception, extended by a change row).
+
+4. **H7′** (new dated version; H7 superseded and kept).
+   - Arms: the GW-EFF-006 fp32 ONNX recognizer and its dynamic INT8 version, made with ONNX
+     Runtime's `quant_pre_process` (defaults) then `quantize_dynamic(op_types_to_quantize=
+     ["MatMul"], per_channel=False, reduce_range=False, weight_type=QInt8,
+     extra_options={"MatMulConstBOnly": True})`. Known in advance: the attention products have no
+     constant input, so they stay fp32. No other configuration is tested.
+   - *Latency:* `rec_samples`, 10 warm-up and 100 timed lines, batch 1, 10 threads, one sitting in
+     the order fp32, INT8, INT8, fp32: met if the CI of mean(t_INT8 − 0.75 × t_fp32) per line lies
+     below 0.
+   - *Accuracy:* the 5,000 lines, strict track, greedy decoding:
+     `paired_ratio_diff_ci(errors_INT8 − 0.005 × ref_chars, errors_fp32, ref_chars, "lines")`;
+     met if the CI lies below 0.
+   - Met, not met or not shown per half; H7′ holds only if both are met.
+
+5. **H6′, latency half** (new dated version; H6 superseded, its CER half stays exploratory (Phase
+   13), so H6 as a whole can at most be "inconclusive"): GW-REC-020 and GW-REC-003, each exported
+   to fp32 ONNX and each passing the logit and text checks against its own PyTorch outputs on the
+   5,000 lines first; `rec_samples` 100 timed lines, batch 1, 10 threads, one sitting in the order
+   CRNN, SVTR, SVTR, CRNN: met if the CI of mean(t_SVTR − 1.5 × t_CRNN) lies below 0. PyTorch at 10
+   threads is information (Phase 7's table re-confirmed).
+
+6. **H1′ ONNX:** Phase 14's rule (items 5 and 10) with the GW-EFF-006 bundle, named by its SHA-256
+   before the sitting; no build is selected by timing. The verdict applies to that hash only; if the
+   Phase 17 re-run ships another, it says the verdict does not carry over.
+   - The fresh profile is a dated Phase 16 amendment to GW-BASE-002: `scripts/run_baselines.py`
+     gains `--phase 16` for validation profiles only (branch-guarded; output
+     `data/processed/baselines_phase16/GW-BASE-002/`; every settings field asserted equal to the
+     Phase 14 profile's), run in `.venv-baselines`.
+   - The sitting checks and the verdict live in a new Phase 16 script that imports Phase 14's
+     helpers; `scripts/phase14_score.py` is not edited (Phase 22 re-scores with it).
+
+7. **Code needed** (each with tests on made-up data or tiny models): an export path from the
+   freeze record with the recorded provenance (`scripts/export_check.py --frozen`), the reference
+   writer and the check against it; an ONNX profile path for the frozen build with `--threads`,
+   `--experiment` and start and end times (`scripts/e2e_profile.py`); `--threads` and an ONNX
+   backend for `scripts/rec_profile.py`; GPU timing with CUDA synchronisation and peak VRAM; the
+   stage split; the variant builder (overrides one named setting, asserts the rest, labels the
+   output "new version"); INT8 (a smoke test on a tiny SVTR); a tiny-SVTR ONNX export test at widths
+   other than the trace width; the fused attention export (a test that it equals the reference
+   attention with the padding mask); `--phase 16` in the baseline runner; the Phase 16 scorer
+   (efficiency table, Pareto plot, the four verdicts) writing `reports/efficiency/phase16/` and
+   `reports/benchmark_results/efficiency_comparison.md` (v1 and the Phase 5 baselines side by side,
+   labelled "different sittings, no difference stated").
+
+8. **Order of work and cost** (CPU hours are estimates from GW-EFF-001 to 005 and the export
+   checks, not records): tooling; GW-EFF-006 (about 1.5 h); GW-EFF-007 (about 2 h, GPU minutes);
+   GW-EFF-008 (about 1 h); GW-EFF-010 (about 0.5 h); GW-EFF-009 (about 6 to 8 h: 8 page variants
+   × 400 pages); GW-EFF-011 (about 1 h). About 12 to 14 CPU-hours. The cut line, if time runs out:
+   GW-EFF-009's recognizer and detector-size points beyond 1024 and 2048, then GW-EFF-011.
+
+9. **Records:** experiment entries GW-EFF-006 to 011 and the GW-BASE-002 amendment; H7′ and H6′;
+   change rows (the reference-based same-model check; Phase 16's baseline profile; the single-model
+   exception; GPU conditions on every profile); ADR-0011's five targets reported for v1's builds,
+   with an options table for the owner (not tightened; the owner's call); F13 and the
+   `glypharis/export/onnx.py` docstring corrected from arena-off numbers; the compute ledger; the
+   risk register if ADR-0011 is still missed.
+
+**Exit criteria** (IMPLEMENTATION_PLAN Phase 16): the efficiency table and the accuracy/latency
+Pareto plot, measured on this laptop with documented conditions; INT8 measured with its accuracy
+loss; the four verdicts; CI green.
+
+**Known limitations, stated in advance**
+- One laptop; latency on HierText validation pages (about 41 lines per page), not documents.
+- Variants are new versions, measured on validation only; the recognizer and detector size points
+  differ in recipe and budget, not only in size.
+- Thermal drift within a sitting is limited by the mirrored order, not removed.
+- Height sweeps need retraining and are not run; the width cap is left at 1536 (a scope choice).

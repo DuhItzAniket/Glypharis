@@ -356,3 +356,15 @@ the bottom. Experiments get their full record in `experiments.md`; this log is t
 - On rendered GlyphSynth lines every labelled slice (fonts, touching or broken characters,
   background noise) stays at 1.48% CER or less (GW-REC-041), which says more about the recognizer
   than about photographed pages.
+
+### 2026-11-17 — Phase 16 opens: what v1 costs, and what a faster version would cost in accuracy
+
+- The plan is registered before any timing. v1 stays the build that was evaluated on test; the
+  only thing that counts as the same model is its plain fp32 ONNX export, checked against outputs
+  saved from the PyTorch build, not against the changed code.
+- Everything faster (INT8, smaller inputs, a fused attention, a mixed backend) is a variant: a new
+  version, measured on validation as a point on the accuracy and latency plot. Which one ships, if
+  any, is the owner's call.
+- Four claims get rules: INT8 cuts recognizer latency by a quarter for at most half a point of CER;
+  the SVTR-style recognizer is within 1.5 times the CRNN's CPU latency; and the ONNX build of v1
+  beats PP-OCRv5 mobile per page, by Phase 14's own rule.
