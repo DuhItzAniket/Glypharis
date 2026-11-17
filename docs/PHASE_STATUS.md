@@ -21,7 +21,7 @@ Phases run in the order set by [ADR-0008](decisions/ADR-0008-usable-engine-first
 | 11 | Robustness training | **COMPLETE** | `phase-11` |
 | 12 | Synthetic data study | **COMPLETE** | `phase-12` |
 | 13 | Ablation study | **COMPLETE** | `phase-13` |
-| 14 | External evaluation | **IN PROGRESS** (gate: push, CI, merge) | — |
+| 14 | External evaluation | **COMPLETE** | `phase-14` |
 | 15 | Error analysis | not started | — |
 | 16 | Efficiency optimisation | not started | — |
 | 17 | Model export | **COMPLETE** | `phase-17` |
@@ -1591,7 +1591,7 @@ choose), the validator's check of freeze records, and the ledger's Phase 13 line
 
 ## Phase 14 — External evaluation
 
-**Status:** write-up done (2026-11-17). Gate open: push, pull request, CI and merge. Opened
+**Status:** COMPLETE (2026-11-17). Opened
 2026-11-14 on `phase/14-external-eval`, branched from `main` after
 Phase 13 (merge `8659b69`). GDC-scan v1 was frozen on the branch before this plan (`5f5a3b5`); the
 owner confirmed on 2026-11-14 that the printed document is the same PDF, with no edits after
@@ -2083,7 +2083,7 @@ checkout has no tags.
 | Incompatibilities explained (granularity, normalisation, charset) | pass | plan item 3; the notes in each report; the charset ceiling beside every metric |
 | Each benchmark evaluated once per frozen model, logged | pass; resumes are logged as resumes | `research/test_access_log.md`, `reports/external/run_record.md` |
 | No tuning after seeing results | pass: no model, setting, metric or slice changed; the two scoring-side code changes came before any score was read | protocol change log, 2026-11-17 |
-| CI green | pending (after the push) | — |
+| CI green | pass | runs 44039110860 (branch), 44039180576 (pull request), 44042627595 (`main`) |
 
 **Known issues**
 - GDC-scan is one document and FUNSD 50 forms; their intervals say nothing about other documents.
@@ -2097,4 +2097,7 @@ checkout has no tags.
 - H1′'s latency half was measured on HierText validation pages; the ONNX build of v1 is judged by
   the same rule when Phases 16 and 17 build it. H4 is tested in Phase 15 from the saved files.
 
-**Git:** branch `phase/14-external-eval`; push and merge pending.
+**Git:** branch `phase/14-external-eval`, merged through pull request #19. Merge commit `eb15025`, tag
+`phase-14` (merge re-created with the noreply identity; same tree and parents).
+
+**CI status:** green on the branch, the pull request and `main` (run 44042627595).
