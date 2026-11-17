@@ -53,3 +53,29 @@ v0.1 recognizer's 449 ms per page, GW-E2E-001). An estimate, not a record.
   GDC-scan pages, 8,693 MiB on GDC in Phase 5); the rest of the laptop held about 24 GB at the
   time (other applications, and a 4.2 GB kernel non-paged pool). Neither run is resumed until the
   owner has freed memory; a resume continues the same evaluation and is logged as one.
+- After the owner restarted the laptop (commit limit 36.7 GB, about 10 GB in use), GW-BASE-007
+  resumed at 2026-11-16 12:39:34Z from its 513 pages, logged as a resume ("resumed: 513 of 755
+  samples already predicted"). It finished at 20:17:51Z with all 755 pages (242 new; peak
+  10,350 MiB). Page 514, the one it died on, took 294.8 s this time.
+- GW-BASE-003 PP-OCRv5 server, OmniDocBench subset: started again at 20:17:51Z (access-log row
+  dated 2026-11-16). It died at 2026-11-17 01:36:34Z with an access violation (exit 139) after 62
+  of 100 pages, while starting page 63 (5723 x 8614, resized to the 4,000-pixel side limit). This
+  time memory was not short: the last memory sample, two seconds earlier, had 36.7 GB committed
+  of a 62.3 GB limit, and Windows logged no low-memory or resource-exhaustion event.
+- Diagnosis, on validation images only (no test data), with the runner's own pipeline
+  construction (`make_system("ppocr_server", "e2e")`):
+  - a 5723 x 8614 page tiled from the 12 densest HierText validation pages died the same way,
+    inside the text detector (PaddleX `paddle_static` runner), about 2.5 minutes after the model
+    load, with the process's private memory never above 4 GiB;
+  - mostly white W x 4000 pages with one validation page in a corner (the detector sees them
+    unchanged): W = 1984 passed (678 s, peak working set 10.1 GiB); W = 2080, 2144, 2240 and 2656
+    each died within 80 to 109 s.
+  So the detector dies once its input reaches a size between 7.94 and 8.32 million pixels,
+  whatever the page holds and however much memory is free. 5 of the subset's 100 pages (61 of the
+  755) reach the detector at 8.32 million pixels or more; the largest page it had finished was
+  1984 x 4000 at the detector.
+- Recorded as not runnable on OmniDocBench, with no substitute, under the registered rule
+  (PHASE_STATUS, Phase 14 item 4), at the owner's decision on 2026-11-17: one `NOT_RUNNABLE`
+  entry in `scripts/phase14_score.py`; the runner's plan is unchanged. Its partial file (62
+  records, SHA-256 `538baba2b3453920fb432b74f753be2f68125401e45109b0806690699be06348`) stays on
+  disk, unscored. The OmniDocBench subset view compares the other systems on the same 100 pages.

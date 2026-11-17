@@ -191,8 +191,18 @@ GLYPHARIS_RUNS: dict[str, tuple[str, tuple[str, ...]]] = {
     "GW-E2E-006": ("e2e", ("hiertext_val",)),
 }
 GLYPHARIS_VERSION = "GLYPHARIS v1 (configs/final/glypharis_v1.yaml)"
-# The baselines' Phase 14 coverage, as registered with the runner.
-BASELINE_PLAN: dict[tuple[str, str, str], str | None] = dict(PHASE14_PLAN)
+# Planned runs that could not finish. The registered rule (docs/PHASE_STATUS.md, Phase 14 item 4)
+# records a system that dies on a set as not runnable there, with no substitute. Its partial file
+# stays on disk, unscored.
+NOT_RUNNABLE: dict[tuple[str, str, str], str] = {
+    ("ppocr_server", "e2e", "omnidocbench_test"): (
+        "not runnable: the detector dies with an access violation on any page whose detector "
+        "input is above about 8 megapixels, and 5 of the subset's 100 pages are; it died on the "
+        "first of them after 62 pages (research/failures.md, 2026-11-17)"
+    ),
+}
+# The baselines' Phase 14 coverage: as registered with the runner, less the runs above.
+BASELINE_PLAN: dict[tuple[str, str, str], str | None] = {**PHASE14_PLAN, **NOT_RUNNABLE}
 
 
 # ------------------------------------------------------------------------------- the jobs
@@ -2843,6 +2853,12 @@ def run_score(opts: Options) -> int:
         },
         "reproduction": repro,
         "predictions": entries,
+        # Every planned baseline cell that was not scored, with its reason.
+        "not_run": {
+            f"{s} {t} {e}": why
+            for (s, t, e), why in sorted(BASELINE_PLAN.items())
+            if why not in (None, SUBSET_NAME)
+        },
         "subset": subset,
         "gdc_conditions": cond_tables,
         "gdc_scan_in_charset": in_charset,

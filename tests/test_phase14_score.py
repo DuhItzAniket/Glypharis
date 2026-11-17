@@ -630,6 +630,7 @@ def test_scoring_pass_end_to_end(layout, capsys):
     assert ("GW-BASE-002", "rec", "hiertext_val") not in keys  # their validation ones are not
     sub = {(e["experiment"], e["samples"]) for e in res["subset"]}
     assert sub == {("GW-E2E-007", 2), ("GW-BASE-002", 2), ("GW-BASE-003", 2)}
+    assert res["not_run"] == {"trocr e2e funsd_test": "not applicable: TrOCR has no detector"}
     odb = next(
         e
         for e in res["predictions"]
@@ -776,6 +777,16 @@ def test_changed_phase5_file_is_refused_before_any_score(layout):
     # The record itself is never rewritten.
     with pytest.raises(SystemExit, match="never rewritten"):
         ps.main(["hash-phase5", "--data-root", str(data)])
+
+
+def test_not_runnable_runs_are_left_out_of_scoring(tmp_path):
+    # The registered plan, less the runs that died: those are not scored and nothing replaces them.
+    assert ("ppocr_server", "e2e", "omnidocbench_test") in ps.NOT_RUNNABLE
+    cells = {(j.system, j.task, j.eval_set) for j in ps.baseline_jobs(tmp_path)}
+    assert not cells & set(ps.NOT_RUNNABLE)
+    for cell, planned in run_baselines.PHASE14_PLAN.items():
+        assert ps.BASELINE_PLAN[cell] == ps.NOT_RUNNABLE.get(cell, planned)
+    assert set(ps.BASELINE_PLAN) == set(run_baselines.PHASE14_PLAN)
 
 
 def test_incomplete_prediction_file_is_refused_before_any_score(layout):
