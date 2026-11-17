@@ -100,3 +100,52 @@ disappointing experiment here, including bugs that invalidated a run.
 - **Lesson / implication for the paper:** none for the results (a resumed run follows the same
   schedule; Phase 6's resume check); on a shared laptop GPU, long runs need the card to
   themselves.
+
+### 2026-11-17 — GW-BASE-003 — PP-OCRv5 server's detector dies above about 8 megapixels
+
+- **What we tried:** the PP-OCRv5 server end-to-end pass on the 100-page OmniDocBench subset in
+  Phase 14, started again after the first start died with the machine out of memory
+  (`reports/external/run_record.md`, step 5).
+- **What happened:** it died with an access violation (exit 139) after 62 pages, starting a
+  5723 x 8614 newspaper page. Memory was not short this time (36.7 of 62.3 GB committed, no
+  low-memory event).
+- **Root cause:** a fault inside the server-size text detector (PaddleX's `paddle_static` runner,
+  CPU) for any input of about 8 million pixels or more. Repeated on validation images only: a
+  page of the same size built from HierText validation pages died the same way with under 4 GiB
+  in use; on mostly white W x 4000 pages, W = 1984 (7.94 M) passed and W = 2080 (8.32 M) and
+  every larger width died within two minutes. Why the detector faults there is not known; it
+  does not depend on memory or page content. The Phase 5 GDC failure (2026-10-24) fits the same
+  limit: those 3072 x 4080 photos reach the detector at 3008 x 4000 (12.0 M), and the second
+  attempt there, run alone, ended with the same access violation. Its first attempt did hit the
+  commit limit, so memory may have played a part then too.
+- **What we changed:** nothing in the runner or the configuration (a smaller detector input would
+  be a different, non-registered configuration). PP-OCRv5 server is recorded as not runnable on
+  OmniDocBench, with no substitute, under the registered rule (PHASE_STATUS, Phase 14 item 4):
+  one `NOT_RUNNABLE` entry in `scripts/phase14_score.py`. Its 62 pages are kept, unscored.
+- **Lesson / implication for the paper:** the server pipeline at its default settings cannot read
+  large pages on a CPU (61 of OmniDocBench's 755 English pages, 5 of the subset); this is a
+  limit of that configuration, reported as a missing cell with its reason, not scored on the
+  pages it did finish (those exclude exactly the large pages).
+
+### 2026-11-17 — GW-E2E-009 — HierText's official evaluator stops after five minutes
+
+- **What we tried:** the Phase 14 scoring pass. It scored all 51 prediction files and passed the
+  Phase 5 reproduction check, then started HierText's official evaluator on the first system with
+  HierText test pages (Tesseract, 1,634 pages).
+- **What happened:** the evaluator exited with an error five minutes after it started. Its output
+  ends in gRPC stream errors (DEADLINE_EXCEEDED, then connection resets). The pass stopped there,
+  as designed, and stays "started". Repeated on HierText validation pages (Tesseract's Phase 5
+  validation predictions): the same error at five minutes, after 1,103 of 1,715 pages.
+- **Root cause:** Apache Beam 2.77's DirectRunner hands the evaluator's pipeline to its Prism
+  runner. Prism's job-state and message streams carry a gRPC deadline of `--job_server_timeout`,
+  300 s by default, so any run longer than five minutes is cut off. `eval.py` builds its own
+  pipeline options and takes no extra flags. The evaluator's tests only use a few pages, which
+  finish well inside the deadline, so the limit never showed before.
+- **What we changed:** `scripts/hiertext_eval_launch.py` starts the pinned `eval.py` unchanged,
+  with `--job_server_timeout` added to its pipeline options, and `scripts/official_hiertext.py`
+  starts the evaluator through it. Checked on validation pages only: on the first 300, a direct
+  start and the launcher wrote identical score files; through the launcher, the full validation
+  split finished in 543 s. The pass is finished with `score --resume`, as the same evaluation.
+- **Lesson / implication for the paper:** none for the numbers (the evaluator's code, flags and
+  output are unchanged). An evaluator's own environment can change how it runs; a run on a
+  full-size validation split before the test pass would have shown this.

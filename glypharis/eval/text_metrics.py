@@ -3,19 +3,42 @@
 Predictions and references are normalised with `glypharis.data.text.normalize_eval` for the
 chosen track before scoring. Totals are micro-averaged over the evaluation set; per-sample values
 are kept so `glypharis.eval.stats` can bootstrap confidence intervals over samples.
+
+Besides the two project tracks there is the ``"alnum"`` track used for IIIT5K (Phase 14): both
+sides case-folded, then every character outside ``0-9a-z`` removed, the customary lexicon-free
+word-recognition protocol. It exists for recognition scoring only (`RecTrack`); page metrics and
+`normalize_eval` keep the two project tracks (`Track`).
 """
 
 from __future__ import annotations
 
-from collections.abc import Iterable
+import re
+from collections.abc import Iterable, Sequence
 from dataclasses import dataclass, field
 from typing import Literal
 
+import numpy as np
 from rapidfuzz.distance import Levenshtein
 
 from glypharis.data.text import normalize_eval
 
 Track = Literal["strict", "normalised"]
+# Recognition tracks: the project's two plus the IIIT5K alphanumeric one.
+RecTrack = Literal["strict", "normalised", "alnum"]
+
+_NOT_ALNUM = re.compile(r"[^0-9a-z]")
+
+
+def alnum(s: str) -> str:
+    """Case-folded ``s`` with every character outside ``0-9a-z`` removed (spaces too)."""
+    return _NOT_ALNUM.sub("", s.casefold())
+
+
+def normalise(text: str, track: RecTrack) -> str:
+    """``text`` as scored on ``track``."""
+    if track == "alnum":
+        return alnum(text)
+    return normalize_eval(text, track)
 
 
 def char_distance(pred: str, ref: str) -> int:
@@ -36,8 +59,8 @@ class SampleScore:
     exact: bool
 
 
-def score_pair(pred: str, ref: str, track: Track = "strict") -> SampleScore:
-    p, r = normalize_eval(pred, track), normalize_eval(ref, track)
+def score_pair(pred: str, ref: str, track: RecTrack = "strict") -> SampleScore:
+    p, r = normalise(pred, track), normalise(ref, track)
     d = char_distance(p, r)
     longest = max(len(p), len(r))
     return SampleScore(
@@ -64,12 +87,12 @@ class RecSummary:
 class RecAccumulator:
     """Collects per-sample scores; empty references are counted but left out of CER/WER."""
 
-    track: Track = "strict"
+    track: RecTrack = "strict"
     scores: list[SampleScore] = field(default_factory=list)
     empty_refs: int = 0
 
     def add(self, pred: str, ref: str) -> SampleScore | None:
-        if not normalize_eval(ref, self.track):
+        if not normalise(ref, self.track):
             self.empty_refs += 1
             return None
         s = score_pair(pred, ref, self.track)
@@ -98,12 +121,35 @@ def summarise_scores(scores: list[SampleScore], empty_refs: int = 0) -> RecSumma
     )
 
 
-def track_charset(characters: Iterable[str], track: Track) -> frozenset[str]:
+def word_accuracy(
+    refs: Sequence[str], preds: Sequence[str], track: RecTrack
+) -> tuple[np.ndarray, np.ndarray]:
+    """Per-sample exact match on ``track``, as numerators and denominators for `ratio_ci`.
+
+    The two arrays are aligned with the inputs. A sample whose reference is empty on the track gets
+    denominator 0 (and numerator 0), so it drops out of the ratio exactly as `RecAccumulator`
+    leaves it out of sequence accuracy, while the arrays stay index-aligned for pairing.
+    """
+    if len(refs) != len(preds):
+        raise ValueError(f"{len(refs)} references but {len(preds)} predictions")
+    correct = np.zeros(len(refs), dtype=np.float64)
+    ones = np.zeros(len(refs), dtype=np.float64)
+    for i, (ref, pred) in enumerate(zip(refs, preds, strict=True)):
+        r = normalise(ref, track)
+        if r:
+            ones[i] = 1.0
+            correct[i] = float(normalise(pred, track) == r)
+    return correct, ones
+
+
+def track_charset(characters: Iterable[str], track: RecTrack) -> frozenset[str]:
     """A charset's characters as they look after normalisation on ``track`` (space included)."""
-    return frozenset({" ", *"".join(normalize_eval(c, track) for c in characters)})
+    return frozenset({" ", *"".join(normalise(c, track) for c in characters)})
 
 
-def outside_charset(texts: Iterable[str], allowed: frozenset[str], track: Track) -> tuple[int, int]:
+def outside_charset(
+    texts: Iterable[str], allowed: frozenset[str], track: RecTrack
+) -> tuple[int, int]:
     """Characters of the normalised ``texts`` outside ``allowed``, and the total character count.
 
     Their share is the charset ceiling (EXPERIMENT_PROTOCOL §2): errors a model limited to that
@@ -111,7 +157,7 @@ def outside_charset(texts: Iterable[str], allowed: frozenset[str], track: Track)
     """
     outside = total = 0
     for t in texts:
-        n = normalize_eval(t, track)
+        n = normalise(t, track)
         total += len(n)
         outside += sum(ch not in allowed for ch in n)
     return outside, total

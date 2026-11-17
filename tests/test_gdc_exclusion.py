@@ -27,3 +27,14 @@ def test_gdc_sources_are_not_training_datasets(repo_root):
     sources = yaml.safe_load((repo_root / "data" / "sources.yaml").read_text(encoding="utf-8"))
     assert "train" not in sources["gdc_sources"]["role"].replace("training", "")
     assert "never training" in sources["gdc_sources"]["role"]
+
+
+def test_gdc_scan_source_is_excluded_by_hash_only(repo_root):
+    excl = repo_root / "data" / "manifests" / "exclusions" / "gdc_scan.json"
+    frozen = repo_root / "data" / "manifests" / "gdc_scan" / "gdc_scan_v1.json"
+    if not excl.exists() or not frozen.exists():
+        pytest.skip("manifests not present")
+    listed = json.loads(excl.read_text(encoding="utf-8"))["documents"]
+    sources = json.loads(frozen.read_text(encoding="utf-8"))["sources_sha256"]
+    assert {d["sha256"] for d in listed} == set(sources.values())
+    assert all(set(d) == {"sha256", "kind"} for d in listed)  # no file names or URLs

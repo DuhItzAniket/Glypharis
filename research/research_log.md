@@ -277,3 +277,44 @@ the bottom. Experiments get their full record in `experiments.md`; this log is t
   augmentation tweaks are not what will fix it.
 - About 108 GPU-hours on the laptop, over two weeks with pauses; one crash, probably another
   program taking GPU memory, cost a resume and nothing else.
+
+### 2026-11-15 — Phase 14 opens: the plan for the one real test
+
+- The owner gave one of their own documents for a second document test set: a 28-page printed
+  report, photographed page by page. Its Word source exists, so its text is exact without any
+  transcription. GDC-scan v1 was frozen on 2026-11-14, before any model saw it. It is personal, so
+  only numbers from it ever leave the laptop.
+- The Phase 14 plan is registered before the frozen model reads any test set: six sets, the same
+  seven baselines, one prediction pass and one scoring pass each, and nobody looks at a score until
+  every prediction file is written.
+- Three claims get a yes, no or "not shown" rule fixed now: GLYPHARIS within twice PP-OCRv5
+  mobile's page error on GDC's clean photos and faster on the CPU; a markedly higher error on
+  documents than on scene text; and the confidence fix carrying over to documents.
+- HierText's and OmniDocBench's official scorers are used where they fit line output: HierText at
+  line level, OmniDocBench's text and reading-order parts.
+
+
+### 2026-11-17 — Phase 14: the frozen model on held-out data
+
+- Every planned prediction pass ran, except PP-OCRv5 server on OmniDocBench, which is recorded
+  as not runnable. One scoring pass, resumed once, scored every complete prediction file. The
+  Phase 5 baselines re-scored to exactly their Phase 5 numbers first, so the scorer had not
+  drifted.
+- H1′ holds. On GDC's clean photos GLYPHARIS's page error is well inside twice PP-OCRv5 mobile's,
+  on both tracks and with documents as the bootstrap unit. On 100 HierText validation pages it is
+  about half a second faster per page on the CPU (−508 ms at 10 threads).
+- H5′ is not met: the recognizer reads GDC's printed documents better than HierText's scene text,
+  not worse. As H5′ noted when it was written, every Phase 5 baseline did the same.
+- The temperature carries over to GDC, but whether it halves the calibration error (ECE) there
+  depends on the bootstrap, so H8 is not supported on GDC. On IIIT5K's single words it makes calibration worse.
+- HierText test is in line with validation, slightly better, and GLYPHARIS leads every baseline
+  run there, by HierText's official evaluator too. On documents the picture is mixed: PP-OCRv6
+  small and medium read the crops better, but
+  GLYPHARIS keeps the reading order and matches them on bag-of-lines page error.
+- Two weaknesses stand out. Sideways photos fail, because there is no page-orientation step. Forms
+  lose lines to the detector, although their crops are read best.
+- The laptop was the hard part: a power cut, two out-of-memory deaths, PP-OCRv5 server's detector
+  dying on large pages, and Apache Beam ending HierText's evaluator after five minutes. Each is
+  recorded in the run record or `research/failures.md`; the detector failure and the Beam deadline
+  were diagnosed on validation data only. PP-OCRv6 medium and the scoring pass were resumed under
+  the registered rules, and PP-OCRv5 server was recorded as not runnable on OmniDocBench.

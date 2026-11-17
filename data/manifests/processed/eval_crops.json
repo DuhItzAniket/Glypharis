@@ -1,10 +1,41 @@
 {
+ "funsd_test": {
+  "pages": "processed/funsd/pages_test.jsonl.gz",
+  "pages_sha256": "cb92216a8a0897696c56627ccee2f7b098a03c81e3320dd1e8d4b8af2d232ab9",
+  "pack": "processed/funsd/lines_test",
+  "count": 2647,
+  "bin_sha256": "ae54068095456335c3ae8cad3252efbe328d1a3d1c18a45e6f98d7d2e17089a3",
+  "index_sha256": "d0ecf36bda77deba67a36dc243316dec91f07d71d5d316a17b581bb1d454704a",
+  "crop_settings": {
+   "height": 64,
+   "margin": 0.15,
+   "max_aspect": "not applied (evaluation keeps long lines)",
+   "jpeg_quality": 95
+  },
+  "expected_count": 2647
+ },
+ "gdc_scan_test": {
+  "pages": "processed/gdc_scan/pages_test.jsonl.gz",
+  "pages_sha256": "fc7d0cc79de34359e3c85ec6ea5e174011988a5629e9d32932e1ac9c2afbc1b8",
+  "pack": "processed/gdc_scan/lines_test",
+  "count": 776,
+  "bin_sha256": "56bf25afc410ecd17446e43f105f2c5b166f130357f28acb61ded5fcf8f7001c",
+  "index_sha256": "9bd67947333a07ecd5e29374b419abca65718a8bc12238bffd35f8c10add5d61",
+  "crop_settings": {
+   "height": 64,
+   "margin": 0.15,
+   "max_aspect": "not applied (evaluation keeps long lines)",
+   "jpeg_quality": 95
+  },
+  "expected_count": 776
+ },
  "gdc_test": {
   "pages": "processed/gdc/pages_test.jsonl.gz",
   "pages_sha256": "c4227f1ae6d0aa856c3e64a2bcf55325840343df48dc6810b104e62a6f092af5",
   "pack": "processed/gdc/lines_test",
   "count": 8372,
   "bin_sha256": "d6dda6660361a66ba9b95f50fd707fbfb1136e3461192110eb2ab93859936325",
+  "index_sha256": "483d9250ecde2cde105b253ee057fc223f9ec26ea56857a29a476b1f294d2231",
   "crop_settings": {
    "height": 64,
    "margin": 0.15,
@@ -18,6 +49,7 @@
   "pack": "processed/hiertext/lines_test",
   "count": 67574,
   "bin_sha256": "e854af994ac21bafd2d507c99777bacfe0cdbea84135260d5a52772962ad7f37",
+  "index_sha256": "13c99d2597738adc7827b5f0fb1e6f4960d504d53b42127a051d8fec340869dd",
   "crop_settings": {
    "height": 64,
    "margin": 0.15,
@@ -31,6 +63,7 @@
   "pack": "processed/hiertext/lines_validation_eval",
   "count": 74500,
   "bin_sha256": "b89bb2b0cd166c925b4e347a5970a057c092db9b341dd56d8ba1a0522d21f593",
+  "index_sha256": "6e83f91c67527198e4d6802bbeac78ccedf89013ff8d1af2e4ee7357a81d3a7c",
   "crop_settings": {
    "height": 64,
    "margin": 0.15,

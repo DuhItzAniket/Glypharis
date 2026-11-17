@@ -69,7 +69,7 @@ and must not drift. Only commercially usable sources train delivered models; Syn
 | **Train (real)** | HierText train (lines) | Real photographed text with line/paragraph hierarchy |
 | **Train (synthetic, document)** | **GlyphSynth**: our renderer for document-style text lines and pages (open-licence fonts + public-domain / permissive text + document degradations) | Added by [ADR-0003](decisions/ADR-0003-document-domain-synthetic-data.md). Exact labels and unlimited volume, matched to the target domain |
 | **Validation** | HierText validation (lines), GlyphSynth-val (held-out fonts *and* texts) | Model selection, early stopping, and HPO only use these |
-| **Internal test** | HierText test (ground truth public since 2024-12), GDC | Phases 5 / 14 / 22 only |
+| **Internal test** | HierText test (ground truth public since 2024-12), GDC, GDC-scan (case study, ADR-0013) | Phases 5 / 14 / 22 only |
 | **External test** | IIIT5K (words), FUNSD (forms), OmniDocBench (documents), SROIE (receipts, low priority) | Never used for training or tuning |
 | **Reference only** | DocVQA | Its OCR text is machine-generated, so it is not used as CER ground truth (see DATASETS.md) |
 
@@ -78,7 +78,8 @@ It is a small (target 100–150 pages), manually curated, **frozen** test set th
 environment: clean scans, old scans, low-resolution, photographed, rotated, skewed, multi-column, pages with
 figures and captions, number- and punctuation-heavy pages, and low-contrast pages. Ground truth is built
 mainly by *print-and-capture*: born-digital, openly licensed PDFs give exact text, the pages are printed,
-then scanned and photographed. A small manually transcribed subset is added for real old scans. Source
+then scanned and photographed. The owner's own documents form a separate set, GDC-scan (ADR-0013), whose
+ground truth also comes from the source's text layer where the source exists. Source
 documents for GDC go on an exclusion list so they never appear in any training corpus. Built in Phase 4,
 frozen before Phase 5.
 
@@ -340,7 +341,7 @@ with a concrete target set from the Phase 5 baseline measurements.
 - **Objective:** one-shot evaluation of the frozen model on held-out and external benchmarks (RQ1, RQ4,
   RQ6, RQ8).
 - **Tasks:** IIIT5K (recognizer, words), FUNSD (E2E on forms), OmniDocBench (text blocks, page-level,
-  using its official protocol where compatible), HierText test (if available), GDC, SROIE (optional);
+  using its official protocol where compatible), HierText test (if available), GDC, GDC-scan (case study, ADR-0013), SROIE (optional; skipped by the owner);
   identical runs for the baselines. Each benchmark is evaluated **once** per frozen model. Results are logged
   in the test access log.
 - **Exit criteria:** benchmark tables with CIs and incompatibilities explained (granularity, normalisation,
@@ -443,6 +444,7 @@ with a concrete target set from the Phase 5 baseline measurements.
 | Phases 17, 18, 20 run right after Phase 10 for a v0.1, then again for the final model | The consumer needs a usable engine before the studies finish | ADR-0008 |
 | CPU-first inference; English printed text only | Deployment target undecided; owner decision on scope | ADR-0008 |
 | SynthText dropped; synthetic data only from GlyphSynth; RQ2 reframed; delivered models train only on commercially usable data | SynthText licence is non-commercial, 12-month, links withdrawn | ADR-0009 |
+| GDC-scan built from one owner document's text layer instead of a hand-transcribed set of old scans | The born-digital source of the owner's document exists, so its text is exact; old scans remain a gap in GDC | ADR-0013 |
 | CLEval-style detection metrics descoped from Phase 8 | The Phase 8 task names "CLEval-style metrics per protocol", but EXPERIMENT_PROTOCOL §3 never defined one, so none was pre-registered. What CLEval measures, whether merges, splits and partial lines hide real detection quality, is answered in Phase 9 from merge and split counts, and a metric defined after the detector exists would be chosen after the fact. Signed off by the owner at the Phase 8 gate (2026-10-27) | EXPERIMENT_PROTOCOL §11 (2026-10-25) |
 
 ## 9. Traceability (brief section → where it is handled)

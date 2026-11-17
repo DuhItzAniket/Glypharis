@@ -22,6 +22,36 @@ def pytest_collection_modifyitems(config: pytest.Config, items: list[pytest.Item
             item.add_marker(skip_gpu)
 
 
+@pytest.fixture(autouse=True)
+def _restore_torch_numerics():
+    """`glypharis.pipeline.frozen.strict_inference` sets process-wide flags; put them back after
+    each test so one test's deterministic mode does not leak into the next."""
+    import os
+
+    saved = (
+        torch.backends.cudnn.benchmark,
+        torch.backends.cudnn.deterministic,
+        torch.are_deterministic_algorithms_enabled(),
+        torch.is_deterministic_algorithms_warn_only_enabled(),
+        torch.backends.cuda.matmul.allow_tf32,
+        torch.backends.cudnn.allow_tf32,
+        torch.get_float32_matmul_precision(),
+        os.environ.get("CUBLAS_WORKSPACE_CONFIG"),
+    )
+    yield
+    (bench, det, algos, warn_only, mm_tf32, cudnn_tf32, prec, cublas) = saved
+    torch.backends.cudnn.benchmark = bench
+    torch.backends.cudnn.deterministic = det
+    torch.use_deterministic_algorithms(algos, warn_only=warn_only)
+    torch.backends.cuda.matmul.allow_tf32 = mm_tf32
+    torch.backends.cudnn.allow_tf32 = cudnn_tf32
+    torch.set_float32_matmul_precision(prec)
+    if cublas is None:
+        os.environ.pop("CUBLAS_WORKSPACE_CONFIG", None)
+    else:
+        os.environ["CUBLAS_WORKSPACE_CONFIG"] = cublas
+
+
 @pytest.fixture
 def repo_root() -> Path:
     return REPO_ROOT

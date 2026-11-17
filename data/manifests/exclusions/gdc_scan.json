@@ -1,0 +1,14 @@
+{
+ "version": 1,
+ "purpose": "GDC-scan source document: never used in any training corpus (EXPERIMENT_PROTOCOL §1 rule 5). The document is personal, so it is listed by hash only (ADR-0013).",
+ "documents": [
+  {
+   "sha256": "f693a0742dcbfc155ce8bc4114d01717bf6c8b16027b4a139c12118f13f8db83",
+   "kind": "born-digital source"
+  },
+  {
+   "sha256": "f32cd3cae2adc5ec7527a54b4f277e4bef8bfd350687edf541a5fc4c546d9bfc",
+   "kind": "phone scanner app PDF"
+  }
+ ]
+}
