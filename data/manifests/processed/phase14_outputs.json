@@ -302,6 +302,86 @@
    "experiment": "GW-REC-039",
    "meta": "data/processed/phase14/GW-REC-039/iiit5k_test.meta.json",
    "meta_sha256": "d6cb35fd54f9a0d0316a3ff3f8e1ce4a55cbeab2248fed94bf45538dc8f89a13"
+  },
+  {
+   "file": "data/processed/phase14/handoff/e2e_pairs_funsd_test.jsonl",
+   "sha256": "54138a8d27eb48e1e55f07b265e17f300fefc2056b5656d9411ee3de22397f9c",
+   "lines": 50
+  },
+  {
+   "file": "data/processed/phase14/handoff/e2e_pairs_gdc_scan_test.jsonl",
+   "sha256": "1f9a5896af23024c513cb99a0339089eb24004516fc45cc7a32428adfa82030d",
+   "lines": 28
+  },
+  {
+   "file": "data/processed/phase14/handoff/e2e_pairs_gdc_test.jsonl",
+   "sha256": "2076028a96cb6d93a278e228468adc226de17286b56a5e9529ef0b26609fa3a6",
+   "lines": 106
+  },
+  {
+   "file": "data/processed/phase14/handoff/e2e_pairs_hiertext_test.jsonl",
+   "sha256": "9811857b25e8290d7ebb76bd8adc78ad647d575ac47b5a1e39206aac9e46923f",
+   "lines": 1634
+  },
+  {
+   "file": "data/processed/phase14/handoff/e2e_pairs_omnidocbench_test.jsonl",
+   "sha256": "cfae193d60113072b0b3e5aa057db7b8dea59f322e7fd5cafbb14b1053821c4e",
+   "lines": 755
+  },
+  {
+   "file": "data/processed/phase14/handoff/gdc_crops/index.jsonl",
+   "sha256": "de9ae0a56725bb64bd5af602b49e889da77618bf1312bdc999abed623c05d404",
+   "lines": 2488
+  },
+  {
+   "file": "data/processed/phase14/handoff/pages_funsd_test.jsonl",
+   "sha256": "45e5fad5baa9c0e77fc243b2e22d5d305be268eef2ab4e12f1d1d51240d09e48",
+   "lines": 50
+  },
+  {
+   "file": "data/processed/phase14/handoff/pages_gdc_scan_test.jsonl",
+   "sha256": "d8ec7b63916dbc8c170b891515b99c335a48e3291f2c68e321c07290eb74ddf1",
+   "lines": 28
+  },
+  {
+   "file": "data/processed/phase14/handoff/pages_gdc_test.jsonl",
+   "sha256": "daf285af9fc5e4ab202ac00cf02f4daec5ff6f5e25359d0fe7d13a4069f4d4c0",
+   "lines": 106
+  },
+  {
+   "file": "data/processed/phase14/handoff/pages_hiertext_test.jsonl",
+   "sha256": "ddc6164c507ffa3b61ec18bbd04ae5e82906aa93ad3ed476b8072d6c058133ae",
+   "lines": 1634
+  },
+  {
+   "file": "data/processed/phase14/handoff/pages_omnidocbench_test.jsonl",
+   "sha256": "a7873207a4eb416cae1803427f2b10ffd12d869f4dc88d01909f9364111e7bb5",
+   "lines": 755
+  },
+  {
+   "file": "data/processed/phase14/handoff/rec_lines_funsd_test.jsonl",
+   "sha256": "db9c1bc6bc7c1dabfbd6adac69c812d2946726b9dbed5bfd8043c901f8b3a21c",
+   "lines": 2647
+  },
+  {
+   "file": "data/processed/phase14/handoff/rec_lines_gdc_scan_test.jsonl",
+   "sha256": "17241bea819035dece719e7d072e4e1a479de250b2109b90c8471cd81b6bec28",
+   "lines": 776
+  },
+  {
+   "file": "data/processed/phase14/handoff/rec_lines_gdc_test.jsonl",
+   "sha256": "aa6a7fb09aaa35e93b40e4b461d99a3754fa1106df63dfb568d4fd99ee009884",
+   "lines": 8372
+  },
+  {
+   "file": "data/processed/phase14/handoff/rec_lines_hiertext_test.jsonl",
+   "sha256": "d4c690a19bde0f283eb48c891de03d954b204916a58409610f66890c8f9d7ce5",
+   "lines": 67574
+  },
+  {
+   "file": "data/processed/phase14/handoff/rec_lines_iiit5k_test.jsonl",
+   "sha256": "95b7decf55b0c68598cd9b682971c6ce2b3e569550e6e9ac7ced91e7f3bb8e8a",
+   "lines": 3000
   }
  ]
 }

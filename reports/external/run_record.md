@@ -94,3 +94,13 @@ v0.1 recognizer's 449 ms per page, GW-E2E-001). An estimate, not a record.
   made at the tag): `scripts/phase14_score.py` (the `NOT_RUNNABLE` entry and the `not_run` block),
   `scripts/official_hiertext.py` and the new `scripts/hiertext_eval_launch.py`. results.json records
   the scorer commit and the tree comparison.
+- `score --resume` started at 02:52:43Z from commit 087252e and ended at 07:08:48Z with exit 0;
+  `pass.json` is "done". It re-ran the whole scoring as the same evaluation, so its 70 access-log
+  rows carry "(resumed)". Both official evaluators finished on every converted system: HierText on
+  5 systems, OmniDocBench on 6 (all pages and the 100-page subset).
+- The scorer reads the git state after it has written its own access-log rows and outputs manifest,
+  so results.json says `dirty: True`; those two run records were the only uncommitted changes.
+- One prediction file was not scored because it holds no predictions:
+  `GW-BASE-003/ppocr_server_e2e_gdc_test.jsonl`, the Phase 5 run that died on GDC's photos
+  (`research/failures.md`, 2026-10-24). It is a Phase 5 file; the matching Phase 14 cell
+  (PP-OCRv5 server end to end on GDC-scan) is listed under `not_run` in results.json.
