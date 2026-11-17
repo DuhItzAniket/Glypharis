@@ -1,0 +1,40 @@
+{
+ "experiment": "GW-REC-040",
+ "data": "GW-REC-039",
+ "set": "iiit5k_test",
+ "tracks": {
+  "alnum": {
+   "totals": {
+    "ref_words": 3000,
+    "errors": 256,
+    "wer": 0.08533333333333333,
+    "sub": 252,
+    "ins": 0,
+    "del": 4,
+    "one_char_share": 0.7261904761904762
+   }
+  },
+  "strict": {
+   "totals": {
+    "ref_words": 3000,
+    "errors": 1610,
+    "wer": 0.5366666666666666,
+    "sub": 1577,
+    "ins": 33,
+    "del": 0,
+    "one_char_share": 0.14901712111604312
+   }
+  },
+  "normalised": {
+   "totals": {
+    "ref_words": 3000,
+    "errors": 593,
+    "wer": 0.19766666666666666,
+    "sub": 560,
+    "ins": 33,
+    "del": 0,
+    "one_char_share": 0.7142857142857143
+   }
+  }
+ }
+}

@@ -1,0 +1,333 @@
+{
+ "experiment": "GW-REC-040",
+ "data": "GW-REC-039",
+ "set": "gdc_test",
+ "tracks": {
+  "strict": {
+   "totals": {
+    "ref_words": 56979,
+    "errors": 8298,
+    "wer": 0.14563260148475754,
+    "sub": 3086,
+    "ins": 183,
+    "del": 5029,
+    "one_char_share": 0.6399870382372003
+   },
+   "top": [
+    {
+     "ref": "‘if",
+     "pred": "'if",
+     "count": 15
+    },
+    {
+     "ref": "2023.",
+     "pred": "2023",
+     "count": 13
+    },
+    {
+     "ref": "§",
+     "pred": "8",
+     "count": 13
+    },
+    {
+     "ref": "α",
+     "pred": "a",
+     "count": 13
+    },
+    {
+     "ref": "don’t",
+     "pred": "don't",
+     "count": 12
+    },
+    {
+     "ref": "−",
+     "pred": "-",
+     "count": 12
+    },
+    {
+     "ref": "×",
+     "pred": "x",
+     "count": 10
+    },
+    {
+     "ref": "‘P",
+     "pred": "'P",
+     "count": 9
+    },
+    {
+     "ref": "∗",
+     "pred": "*",
+     "count": 9
+    },
+    {
+     "ref": "Q’",
+     "pred": "Q'",
+     "count": 8
+    },
+    {
+     "ref": "model’s",
+     "pred": "model's",
+     "count": 8
+    },
+    {
+     "ref": ".",
+     "pred": "•",
+     "count": 7
+    },
+    {
+     "ref": "I’ve",
+     "pred": "I've",
+     "count": 7
+    },
+    {
+     "ref": "LLM.int8()",
+     "pred": "()",
+     "count": 7
+    },
+    {
+     "ref": "x",
+     "pred": "æ",
+     "count": 7
+    },
+    {
+     "ref": "1e-4",
+     "pred": "le-4",
+     "count": 6
+    },
+    {
+     "ref": "If",
+     "pred": "I",
+     "count": 6
+    },
+    {
+     "ref": "Pascal’s",
+     "pred": "Pascal's",
+     "count": 6
+    },
+    {
+     "ref": "line",
+     "pred": "lie",
+     "count": 6
+    },
+    {
+     "ref": ",",
+     "pred": ";",
+     "count": 5
+    },
+    {
+     "ref": ".",
+     "pred": "B",
+     "count": 5
+    },
+    {
+     "ref": "<S",
+     "pred": "<s",
+     "count": 5
+    },
+    {
+     "ref": "When",
+     "pred": "en",
+     "count": 5
+    },
+    {
+     "ref": "det(",
+     "pred": "(",
+     "count": 5
+    },
+    {
+     "ref": "–",
+     "pred": "-",
+     "count": 5
+    },
+    {
+     "ref": "—",
+     "pred": "-",
+     "count": 5
+    },
+    {
+     "ref": ".",
+     "pred": "-",
+     "count": 4
+    },
+    {
+     "ref": ".",
+     "pred": "...",
+     "count": 4
+    },
+    {
+     "ref": ".",
+     "pred": "S",
+     "count": 4
+    },
+    {
+     "ref": "D",
+     "pred": "=",
+     "count": 4
+    }
+   ]
+  },
+  "normalised": {
+   "totals": {
+    "ref_words": 56981,
+    "errors": 7720,
+    "wer": 0.13548375774380933,
+    "sub": 2508,
+    "ins": 182,
+    "del": 5030,
+    "one_char_share": 0.5976874003189793
+   },
+   "top": [
+    {
+     "ref": "2023.",
+     "pred": "2023",
+     "count": 13
+    },
+    {
+     "ref": "§",
+     "pred": "8",
+     "count": 13
+    },
+    {
+     "ref": "α",
+     "pred": "a",
+     "count": 13
+    },
+    {
+     "ref": "×",
+     "pred": "x",
+     "count": 10
+    },
+    {
+     "ref": "if",
+     "pred": "i",
+     "count": 9
+    },
+    {
+     "ref": "∗",
+     "pred": "*",
+     "count": 9
+    },
+    {
+     "ref": ".",
+     "pred": "•",
+     "count": 7
+    },
+    {
+     "ref": "llm.int8()",
+     "pred": "()",
+     "count": 7
+    },
+    {
+     "ref": "x",
+     "pred": "æ",
+     "count": 7
+    },
+    {
+     "ref": "1e-4",
+     "pred": "le-4",
+     "count": 6
+    },
+    {
+     "ref": "line",
+     "pred": "lie",
+     "count": 6
+    },
+    {
+     "ref": "scientifi",
+     "pred": "scientific",
+     "count": 6
+    },
+    {
+     "ref": "when",
+     "pred": "en",
+     "count": 6
+    },
+    {
+     "ref": ",",
+     "pred": ";",
+     "count": 5
+    },
+    {
+     "ref": ".",
+     "pred": "b",
+     "count": 5
+    },
+    {
+     "ref": "det(",
+     "pred": "(",
+     "count": 5
+    },
+    {
+     "ref": ".",
+     "pred": "-",
+     "count": 4
+    },
+    {
+     "ref": ".",
+     "pred": "...",
+     "count": 4
+    },
+    {
+     "ref": ".",
+     "pred": "s",
+     "count": 4
+    },
+    {
+     "ref": "d",
+     "pred": "=",
+     "count": 4
+    },
+    {
+     "ref": "et",
+     "pred": "ct",
+     "count": 4
+    },
+    {
+     "ref": "ext.",
+     "pred": "ext,",
+     "count": 4
+    },
+    {
+     "ref": "ling",
+     "pred": "filing",
+     "count": 4
+    },
+    {
+     "ref": "oasst1",
+     "pred": "oassti",
+     "count": 4
+    },
+    {
+     "ref": "opt2.7b",
+     "pred": "opt27b",
+     "count": 4
+    },
+    {
+     "ref": "smoothquant-o3",
+     "pred": "smoothquant-q3",
+     "count": 4
+    },
+    {
+     "ref": "β",
+     "pred": "b",
+     "count": 4
+    },
+    {
+     "ref": "+",
+     "pred": "++",
+     "count": 3
+    },
+    {
+     "ref": ",",
+     "pred": ".2",
+     "count": 3
+    },
+    {
+     "ref": ".",
+     "pred": "5",
+     "count": 3
+    }
+   ]
+  }
+ }
+}

@@ -1,0 +1,3453 @@
+{
+ "licence": {
+  "attribution": "HierText annotations CC BY-SA 4.0, images CC BY 2.0",
+  "note": "tables derived from HierText are shared alike (share-alike, CC BY-SA 4.0)"
+ },
+ "experiment": "GW-REC-040",
+ "data": "GW-REC-039",
+ "set": "hiertext_test",
+ "tracks": {
+  "strict": {
+   "characters": {
+    "totals": {
+     "lines": 67574,
+     "ref_chars": 807602,
+     "errors": 48726,
+     "cer": 0.06033417450674961,
+     "sub": 26424,
+     "ins": 7150,
+     "del": 15152,
+     "sub_rate": 0.03271908687695176,
+     "ins_rate": 0.00885337084355908,
+     "del_rate": 0.018761716786238766,
+     "space_inserted": 1110,
+     "space_deleted": 2512,
+     "space_substituted": 1154
+    },
+    "top": {
+     "sub": [
+      {
+       "ref": "l",
+       "pred": "i",
+       "count": 222,
+       "rate": 0.01081239041496201,
+       "gone_normalised": false
+      },
+      {
+       "ref": ",",
+       "pred": ".",
+       "count": 215,
+       "rate": 0.04837983798379838,
+       "gone_normalised": false
+      },
+      {
+       "ref": "a",
+       "pred": "e",
+       "count": 215,
+       "rate": 0.005816155386030406,
+       "gone_normalised": false
+      },
+      {
+       "ref": "o",
+       "pred": "e",
+       "count": 205,
+       "rate": 0.006017553644289195,
+       "gone_normalised": false
+      },
+      {
+       "ref": "i",
+       "pred": "l",
+       "count": 200,
+       "rate": 0.006197514796566577,
+       "gone_normalised": false
+      },
+      {
+       "ref": "o",
+       "pred": "a",
+       "count": 181,
+       "rate": 0.005313059559104118,
+       "gone_normalised": false
+      },
+      {
+       "ref": "m",
+       "pred": "n",
+       "count": 178,
+       "rate": 0.015244946899623158,
+       "gone_normalised": false
+      },
+      {
+       "ref": "e",
+       "pred": "o",
+       "count": 174,
+       "rate": 0.003313023610053313,
+       "gone_normalised": false
+      },
+      {
+       "ref": "a",
+       "pred": "o",
+       "count": 171,
+       "rate": 0.004625872423307905,
+       "gone_normalised": false
+      },
+      {
+       "ref": "c",
+       "pred": "e",
+       "count": 153,
+       "rate": 0.010640517421239308,
+       "gone_normalised": false
+      },
+      {
+       "ref": "e",
+       "pred": "a",
+       "count": 152,
+       "rate": 0.002894135567402894,
+       "gone_normalised": false
+      },
+      {
+       "ref": "S",
+       "pred": "s",
+       "count": 139,
+       "rate": 0.008131032465633226,
+       "gone_normalised": true
+      },
+      {
+       "ref": "o",
+       "pred": "O",
+       "count": 133,
+       "rate": 0.0039040713887339654,
+       "gone_normalised": true
+      },
+      {
+       "ref": "s",
+       "pred": "S",
+       "count": 129,
+       "rate": 0.004830917874396135,
+       "gone_normalised": true
+      },
+      {
+       "ref": ".",
+       "pred": ",",
+       "count": 128,
+       "rate": 0.01353637901861252,
+       "gone_normalised": false
+      },
+      {
+       "ref": "0",
+       "pred": "O",
+       "count": 119,
+       "rate": 0.012856525496974936,
+       "gone_normalised": false
+      },
+      {
+       "ref": "O",
+       "pred": "D",
+       "count": 117,
+       "rate": 0.008101371001246365,
+       "gone_normalised": false
+      },
+      {
+       "ref": "G",
+       "pred": "C",
+       "count": 116,
+       "rate": 0.021194957061940436,
+       "gone_normalised": false
+      },
+      {
+       "ref": "O",
+       "pred": "0",
+       "count": 116,
+       "rate": 0.008032128514056224,
+       "gone_normalised": false
+      },
+      {
+       "ref": "n",
+       "pred": "r",
+       "count": 113,
+       "rate": 0.0037240879280229376,
+       "gone_normalised": false
+      },
+      {
+       "ref": "r",
+       "pred": "n",
+       "count": 110,
+       "rate": 0.003595358718744893,
+       "gone_normalised": false
+      },
+      {
+       "ref": "i",
+       "pred": "I",
+       "count": 109,
+       "rate": 0.0033776455641287844,
+       "gone_normalised": true
+      },
+      {
+       "ref": "D",
+       "pred": "O",
+       "count": 105,
+       "rate": 0.012427506213753107,
+       "gone_normalised": false
+      },
+      {
+       "ref": "O",
+       "pred": "o",
+       "count": 104,
+       "rate": 0.007201218667774546,
+       "gone_normalised": true
+      },
+      {
+       "ref": "M",
+       "pred": "N",
+       "count": 101,
+       "rate": 0.011864207682368143,
+       "gone_normalised": false
+      },
+      {
+       "ref": "l",
+       "pred": "t",
+       "count": 101,
+       "rate": 0.004919150594194429,
+       "gone_normalised": false
+      },
+      {
+       "ref": "t",
+       "pred": "l",
+       "count": 101,
+       "rate": 0.00309768440423248,
+       "gone_normalised": false
+      },
+      {
+       "ref": "e",
+       "pred": "c",
+       "count": 99,
+       "rate": 0.001884996191926885,
+       "gone_normalised": false
+      },
+      {
+       "ref": "n",
+       "pred": "m",
+       "count": 94,
+       "rate": 0.0030979138516297002,
+       "gone_normalised": false
+      },
+      {
+       "ref": "C",
+       "pred": "G",
+       "count": 92,
+       "rate": 0.0076095947063689,
+       "gone_normalised": false
+      }
+     ],
+     "ins": [
+      {
+       "ref": "",
+       "pred": " ",
+       "count": 1110,
+       "rate": null,
+       "gone_normalised": false
+      },
+      {
+       "ref": "",
+       "pred": ".",
+       "count": 399,
+       "rate": null,
+       "gone_normalised": false
+      },
+      {
+       "ref": "",
+       "pred": "i",
+       "count": 308,
+       "rate": null,
+       "gone_normalised": false
+      },
+      {
+       "ref": "",
+       "pred": "I",
+       "count": 285,
+       "rate": null,
+       "gone_normalised": false
+      },
+      {
+       "ref": "",
+       "pred": "e",
+       "count": 272,
+       "rate": null,
+       "gone_normalised": false
+      },
+      {
+       "ref": "",
+       "pred": "a",
+       "count": 263,
+       "rate": null,
+       "gone_normalised": false
+      },
+      {
+       "ref": "",
+       "pred": "t",
+       "count": 214,
+       "rate": null,
+       "gone_normalised": false
+      },
+      {
+       "ref": "",
+       "pred": "l",
+       "count": 213,
+       "rate": null,
+       "gone_normalised": false
+      },
+      {
+       "ref": "",
+       "pred": "r",
+       "count": 201,
+       "rate": null,
+       "gone_normalised": false
+      },
+      {
+       "ref": "",
+       "pred": "o",
+       "count": 190,
+       "rate": null,
+       "gone_normalised": false
+      },
+      {
+       "ref": "",
+       "pred": "n",
+       "count": 179,
+       "rate": null,
+       "gone_normalised": false
+      },
+      {
+       "ref": "",
+       "pred": "E",
+       "count": 149,
+       "rate": null,
+       "gone_normalised": false
+      },
+      {
+       "ref": "",
+       "pred": "s",
+       "count": 147,
+       "rate": null,
+       "gone_normalised": false
+      },
+      {
+       "ref": "",
+       "pred": "A",
+       "count": 142,
+       "rate": null,
+       "gone_normalised": false
+      },
+      {
+       "ref": "",
+       "pred": "-",
+       "count": 123,
+       "rate": null,
+       "gone_normalised": false
+      },
+      {
+       "ref": "",
+       "pred": ",",
+       "count": 122,
+       "rate": null,
+       "gone_normalised": false
+      },
+      {
+       "ref": "",
+       "pred": "R",
+       "count": 121,
+       "rate": null,
+       "gone_normalised": false
+      },
+      {
+       "ref": "",
+       "pred": "T",
+       "count": 119,
+       "rate": null,
+       "gone_normalised": false
+      },
+      {
+       "ref": "",
+       "pred": "L",
+       "count": 116,
+       "rate": null,
+       "gone_normalised": false
+      },
+      {
+       "ref": "",
+       "pred": "1",
+       "count": 112,
+       "rate": null,
+       "gone_normalised": false
+      },
+      {
+       "ref": "",
+       "pred": "N",
+       "count": 110,
+       "rate": null,
+       "gone_normalised": false
+      },
+      {
+       "ref": "",
+       "pred": "S",
+       "count": 110,
+       "rate": null,
+       "gone_normalised": false
+      },
+      {
+       "ref": "",
+       "pred": "C",
+       "count": 108,
+       "rate": null,
+       "gone_normalised": false
+      },
+      {
+       "ref": "",
+       "pred": "O",
+       "count": 103,
+       "rate": null,
+       "gone_normalised": false
+      },
+      {
+       "ref": "",
+       "pred": "0",
+       "count": 87,
+       "rate": null,
+       "gone_normalised": false
+      },
+      {
+       "ref": "",
+       "pred": "c",
+       "count": 86,
+       "rate": null,
+       "gone_normalised": false
+      },
+      {
+       "ref": "",
+       "pred": "u",
+       "count": 77,
+       "rate": null,
+       "gone_normalised": false
+      },
+      {
+       "ref": "",
+       "pred": "D",
+       "count": 70,
+       "rate": null,
+       "gone_normalised": false
+      },
+      {
+       "ref": "",
+       "pred": "m",
+       "count": 69,
+       "rate": null,
+       "gone_normalised": false
+      },
+      {
+       "ref": "",
+       "pred": "2",
+       "count": 64,
+       "rate": null,
+       "gone_normalised": false
+      }
+     ],
+     "del": [
+      {
+       "ref": " ",
+       "pred": "",
+       "count": 2512,
+       "rate": 0.031907326491210246,
+       "gone_normalised": false
+      },
+      {
+       "ref": "I",
+       "pred": "",
+       "count": 675,
+       "rate": 0.04938542581211589,
+       "gone_normalised": false
+      },
+      {
+       "ref": "i",
+       "pred": "",
+       "count": 640,
+       "rate": 0.019832047349013046,
+       "gone_normalised": false
+      },
+      {
+       "ref": ".",
+       "pred": "",
+       "count": 602,
+       "rate": 0.06366328257191202,
+       "gone_normalised": false
+      },
+      {
+       "ref": "l",
+       "pred": "",
+       "count": 433,
+       "rate": 0.021089031755308785,
+       "gone_normalised": false
+      },
+      {
+       "ref": "e",
+       "pred": "",
+       "count": 431,
+       "rate": 0.008206397562833206,
+       "gone_normalised": false
+      },
+      {
+       "ref": "r",
+       "pred": "",
+       "count": 402,
+       "rate": 0.013139401863049517,
+       "gone_normalised": false
+      },
+      {
+       "ref": "T",
+       "pred": "",
+       "count": 380,
+       "rate": 0.024321556579621095,
+       "gone_normalised": false
+      },
+      {
+       "ref": "E",
+       "pred": "",
+       "count": 379,
+       "rate": 0.017976568799506713,
+       "gone_normalised": false
+      },
+      {
+       "ref": "t",
+       "pred": "",
+       "count": 368,
+       "rate": 0.011286612482748044,
+       "gone_normalised": false
+      },
+      {
+       "ref": "A",
+       "pred": "",
+       "count": 366,
+       "rate": 0.018361511062057894,
+       "gone_normalised": false
+      },
+      {
+       "ref": "a",
+       "pred": "",
+       "count": 344,
+       "rate": 0.00930584861764865,
+       "gone_normalised": false
+      },
+      {
+       "ref": "o",
+       "pred": "",
+       "count": 329,
+       "rate": 0.009657439751078757,
+       "gone_normalised": false
+      },
+      {
+       "ref": "n",
+       "pred": "",
+       "count": 327,
+       "rate": 0.01077678542003098,
+       "gone_normalised": false
+      },
+      {
+       "ref": "s",
+       "pred": "",
+       "count": 310,
+       "rate": 0.01160918248885893,
+       "gone_normalised": false
+      },
+      {
+       "ref": "N",
+       "pred": "",
+       "count": 300,
+       "rate": 0.022536057692307692,
+       "gone_normalised": false
+      },
+      {
+       "ref": "R",
+       "pred": "",
+       "count": 290,
+       "rate": 0.019749387087986923,
+       "gone_normalised": false
+      },
+      {
+       "ref": "O",
+       "pred": "",
+       "count": 284,
+       "rate": 0.01966486636199972,
+       "gone_normalised": false
+      },
+      {
+       "ref": "L",
+       "pred": "",
+       "count": 281,
+       "rate": 0.02646948003014318,
+       "gone_normalised": false
+      },
+      {
+       "ref": "S",
+       "pred": "",
+       "count": 279,
+       "rate": 0.016320561567709856,
+       "gone_normalised": false
+      },
+      {
+       "ref": "-",
+       "pred": "",
+       "count": 228,
+       "rate": 0.06896551724137931,
+       "gone_normalised": false
+      },
+      {
+       "ref": "C",
+       "pred": "",
+       "count": 206,
+       "rate": 0.01703887510339123,
+       "gone_normalised": false
+      },
+      {
+       "ref": "U",
+       "pred": "",
+       "count": 196,
+       "rate": 0.031756318859364877,
+       "gone_normalised": false
+      },
+      {
+       "ref": "1",
+       "pred": "",
+       "count": 191,
+       "rate": 0.021739130434782608,
+       "gone_normalised": false
+      },
+      {
+       "ref": "M",
+       "pred": "",
+       "count": 188,
+       "rate": 0.022083871725596147,
+       "gone_normalised": false
+      },
+      {
+       "ref": "'",
+       "pred": "",
+       "count": 175,
+       "rate": 0.1149047931713723,
+       "gone_normalised": false
+      },
+      {
+       "ref": "D",
+       "pred": "",
+       "count": 175,
+       "rate": 0.020712510356255178,
+       "gone_normalised": false
+      },
+      {
+       "ref": ",",
+       "pred": "",
+       "count": 154,
+       "rate": 0.034653465346534656,
+       "gone_normalised": false
+      },
+      {
+       "ref": "0",
+       "pred": "",
+       "count": 152,
+       "rate": 0.016421780466724288,
+       "gone_normalised": false
+      },
+      {
+       "ref": "c",
+       "pred": "",
+       "count": 151,
+       "rate": 0.010501425690242715,
+       "gone_normalised": false
+      }
+     ]
+    },
+    "class_matrix": {
+     "rows": [
+      "lower",
+      "upper",
+      "digit",
+      "punct",
+      "space",
+      "other",
+      "oov"
+     ],
+     "columns": [
+      "lower",
+      "upper",
+      "digit",
+      "punct",
+      "space",
+      "other",
+      "oov",
+      "deleted"
+     ],
+     "ref_chars": {
+      "lower": 425391,
+      "upper": 225544,
+      "digit": 46661,
+      "punct": 30525,
+      "space": 78728,
+      "other": 137,
+      "oov": 616
+     },
+     "counts": {
+      "lower": {
+       "lower": 417783,
+       "upper": 2065,
+       "digit": 328,
+       "punct": 177,
+       "space": 126,
+       "other": 3,
+       "oov": 0,
+       "deleted": 4909
+      },
+      "upper": {
+       "lower": 1744,
+       "upper": 217583,
+       "digit": 782,
+       "punct": 227,
+       "space": 108,
+       "other": 17,
+       "oov": 0,
+       "deleted": 5083
+      },
+      "digit": {
+       "lower": 317,
+       "upper": 866,
+       "digit": 44516,
+       "punct": 123,
+       "space": 17,
+       "other": 5,
+       "oov": 0,
+       "deleted": 817
+      },
+      "punct": {
+       "lower": 210,
+       "upper": 345,
+       "digit": 200,
+       "punct": 27848,
+       "space": 191,
+       "other": 2,
+       "oov": 0,
+       "deleted": 1729
+      },
+      "space": {
+       "lower": 208,
+       "upper": 201,
+       "digit": 88,
+       "punct": 214,
+       "space": 75505,
+       "other": 0,
+       "oov": 0,
+       "deleted": 2512
+      },
+      "other": {
+       "lower": 6,
+       "upper": 52,
+       "digit": 31,
+       "punct": 1,
+       "space": 1,
+       "other": 41,
+       "oov": 0,
+       "deleted": 5
+      },
+      "oov": {
+       "lower": 209,
+       "upper": 237,
+       "digit": 31,
+       "punct": 38,
+       "space": 0,
+       "other": 4,
+       "oov": 0,
+       "deleted": 97
+      }
+     },
+     "rates": {
+      "lower": {
+       "lower": 0.9821152774741355,
+       "upper": 0.004854357520492911,
+       "digit": 0.0007710553349741767,
+       "punct": 0.00041608778747082096,
+       "space": 0.00029619808599617764,
+       "other": 7.052335380861373e-06,
+       "oov": 0.0,
+       "deleted": 0.011539971461549493
+      },
+      "upper": {
+       "lower": 0.007732415847905508,
+       "upper": 0.9647031177951974,
+       "digit": 0.003467172702443869,
+       "punct": 0.0010064555031390771,
+       "space": 0.0004788422658106622,
+       "other": 7.537331961834499e-05,
+       "oov": 0.0,
+       "deleted": 0.02253662256588515
+      },
+      "digit": {
+       "lower": 0.006793682089968067,
+       "upper": 0.018559396498146204,
+       "digit": 0.9540301322303423,
+       "punct": 0.002636034375602752,
+       "space": 0.00036432995435159985,
+       "other": 0.00010715586892694113,
+       "oov": 0.0,
+       "deleted": 0.01750926898266218
+      },
+      "punct": {
+       "lower": 0.0068796068796068794,
+       "upper": 0.011302211302211302,
+       "digit": 0.006552006552006552,
+       "punct": 0.9123013923013923,
+       "space": 0.006257166257166257,
+       "other": 6.552006552006552e-05,
+       "oov": 0.0,
+       "deleted": 0.05664209664209664
+      },
+      "space": {
+       "lower": 0.002642007926023778,
+       "upper": 0.0025530941977441315,
+       "digit": 0.001117772584086983,
+       "punct": 0.0027182196931206178,
+       "space": 0.9590615791078142,
+       "other": 0.0,
+       "oov": 0.0,
+       "deleted": 0.031907326491210246
+      },
+      "other": {
+       "lower": 0.043795620437956206,
+       "upper": 0.3795620437956204,
+       "digit": 0.22627737226277372,
+       "punct": 0.0072992700729927005,
+       "space": 0.0072992700729927005,
+       "other": 0.29927007299270075,
+       "oov": 0.0,
+       "deleted": 0.0364963503649635
+      },
+      "oov": {
+       "lower": 0.3392857142857143,
+       "upper": 0.3847402597402597,
+       "digit": 0.05032467532467533,
+       "punct": 0.06168831168831169,
+       "space": 0.0,
+       "other": 0.006493506493506494,
+       "oov": 0.0,
+       "deleted": 0.15746753246753248
+      }
+     },
+     "correct": {
+      "lower": 409832,
+      "upper": 210296,
+      "digit": 43490,
+      "punct": 26867,
+      "space": 75505,
+      "other": 36,
+      "oov": 0
+     },
+     "correct_rates": {
+      "lower": 0.9634242379363926,
+      "upper": 0.932394566027028,
+      "digit": 0.9320417479265339,
+      "punct": 0.8801638001638001,
+      "space": 0.9590615791078142,
+      "other": 0.26277372262773724,
+      "oov": 0.0
+     },
+     "inserted": {
+      "lower": 2606,
+      "upper": 1929,
+      "digit": 552,
+      "punct": 943,
+      "space": 1110,
+      "other": 10,
+      "oov": 0
+     }
+    }
+   },
+   "label_fragments": {
+    "lines": 15,
+    "char_errors": 145,
+    "insertions": 139,
+    "share_of_insertions": 0.01944055944055944,
+    "share_of_errors": 0.002975823995402865,
+    "without": {
+     "totals": {
+      "lines": 67559,
+      "ref_chars": 807580,
+      "errors": 48581,
+      "cer": 0.06015626934792838,
+      "sub": 26418,
+      "ins": 7011,
+      "del": 15152,
+      "sub_rate": 0.032712548601996086,
+      "ins_rate": 0.008681492855197008,
+      "del_rate": 0.018762227890735284,
+      "space_inserted": 1093,
+      "space_deleted": 2512,
+      "space_substituted": 1154
+     },
+     "top": {
+      "sub": [
+       {
+        "ref": "l",
+        "pred": "i",
+        "count": 222,
+        "rate": 0.01081239041496201,
+        "gone_normalised": false
+       },
+       {
+        "ref": ",",
+        "pred": ".",
+        "count": 215,
+        "rate": 0.04837983798379838,
+        "gone_normalised": false
+       },
+       {
+        "ref": "a",
+        "pred": "e",
+        "count": 215,
+        "rate": 0.005816312728256459,
+        "gone_normalised": false
+       },
+       {
+        "ref": "o",
+        "pred": "e",
+        "count": 205,
+        "rate": 0.006017553644289195,
+        "gone_normalised": false
+       },
+       {
+        "ref": "i",
+        "pred": "l",
+        "count": 200,
+        "rate": 0.006197514796566577,
+        "gone_normalised": false
+       },
+       {
+        "ref": "o",
+        "pred": "a",
+        "count": 181,
+        "rate": 0.005313059559104118,
+        "gone_normalised": false
+       },
+       {
+        "ref": "m",
+        "pred": "n",
+        "count": 178,
+        "rate": 0.015246252676659529,
+        "gone_normalised": false
+       },
+       {
+        "ref": "e",
+        "pred": "o",
+        "count": 174,
+        "rate": 0.003313149777219239,
+        "gone_normalised": false
+       },
+       {
+        "ref": "a",
+        "pred": "o",
+        "count": 171,
+        "rate": 0.004625997565264439,
+        "gone_normalised": false
+       },
+       {
+        "ref": "c",
+        "pred": "e",
+        "count": 153,
+        "rate": 0.010640517421239308,
+        "gone_normalised": false
+       },
+       {
+        "ref": "e",
+        "pred": "a",
+        "count": 152,
+        "rate": 0.0028942457823984157,
+        "gone_normalised": false
+       },
+       {
+        "ref": "S",
+        "pred": "s",
+        "count": 139,
+        "rate": 0.008131983853039256,
+        "gone_normalised": true
+       },
+       {
+        "ref": "o",
+        "pred": "O",
+        "count": 133,
+        "rate": 0.0039040713887339654,
+        "gone_normalised": true
+       },
+       {
+        "ref": "s",
+        "pred": "S",
+        "count": 129,
+        "rate": 0.004830917874396135,
+        "gone_normalised": true
+       },
+       {
+        "ref": ".",
+        "pred": ",",
+        "count": 128,
+        "rate": 0.01353637901861252,
+        "gone_normalised": false
+       },
+       {
+        "ref": "0",
+        "pred": "O",
+        "count": 119,
+        "rate": 0.012856525496974936,
+        "gone_normalised": false
+       },
+       {
+        "ref": "O",
+        "pred": "D",
+        "count": 117,
+        "rate": 0.008101931999169032,
+        "gone_normalised": false
+       },
+       {
+        "ref": "G",
+        "pred": "C",
+        "count": 116,
+        "rate": 0.021194957061940436,
+        "gone_normalised": false
+       },
+       {
+        "ref": "O",
+        "pred": "0",
+        "count": 116,
+        "rate": 0.008032684717124853,
+        "gone_normalised": false
+       },
+       {
+        "ref": "n",
+        "pred": "r",
+        "count": 113,
+        "rate": 0.0037242106650847012,
+        "gone_normalised": false
+       },
+       {
+        "ref": "r",
+        "pred": "n",
+        "count": 110,
+        "rate": 0.003595358718744893,
+        "gone_normalised": false
+       },
+       {
+        "ref": "i",
+        "pred": "I",
+        "count": 109,
+        "rate": 0.0033776455641287844,
+        "gone_normalised": true
+       },
+       {
+        "ref": "D",
+        "pred": "O",
+        "count": 105,
+        "rate": 0.012427506213753107,
+        "gone_normalised": false
+       },
+       {
+        "ref": "O",
+        "pred": "o",
+        "count": 104,
+        "rate": 0.0072017173325946955,
+        "gone_normalised": true
+       },
+       {
+        "ref": "M",
+        "pred": "N",
+        "count": 101,
+        "rate": 0.011864207682368143,
+        "gone_normalised": false
+       },
+       {
+        "ref": "l",
+        "pred": "t",
+        "count": 101,
+        "rate": 0.004919150594194429,
+        "gone_normalised": false
+       },
+       {
+        "ref": "t",
+        "pred": "l",
+        "count": 101,
+        "rate": 0.00309768440423248,
+        "gone_normalised": false
+       },
+       {
+        "ref": "e",
+        "pred": "c",
+        "count": 99,
+        "rate": 0.0018850679766937051,
+        "gone_normalised": false
+       },
+       {
+        "ref": "n",
+        "pred": "m",
+        "count": 94,
+        "rate": 0.0030980159514863883,
+        "gone_normalised": false
+       },
+       {
+        "ref": "C",
+        "pred": "G",
+        "count": 92,
+        "rate": 0.0076095947063689,
+        "gone_normalised": false
+       }
+      ],
+      "ins": [
+       {
+        "ref": "",
+        "pred": " ",
+        "count": 1093,
+        "rate": null,
+        "gone_normalised": false
+       },
+       {
+        "ref": "",
+        "pred": ".",
+        "count": 398,
+        "rate": null,
+        "gone_normalised": false
+       },
+       {
+        "ref": "",
+        "pred": "i",
+        "count": 303,
+        "rate": null,
+        "gone_normalised": false
+       },
+       {
+        "ref": "",
+        "pred": "I",
+        "count": 282,
+        "rate": null,
+        "gone_normalised": false
+       },
+       {
+        "ref": "",
+        "pred": "e",
+        "count": 259,
+        "rate": null,
+        "gone_normalised": false
+       },
+       {
+        "ref": "",
+        "pred": "a",
+        "count": 257,
+        "rate": null,
+        "gone_normalised": false
+       },
+       {
+        "ref": "",
+        "pred": "l",
+        "count": 208,
+        "rate": null,
+        "gone_normalised": false
+       },
+       {
+        "ref": "",
+        "pred": "t",
+        "count": 207,
+        "rate": null,
+        "gone_normalised": false
+       },
+       {
+        "ref": "",
+        "pred": "r",
+        "count": 198,
+        "rate": null,
+        "gone_normalised": false
+       },
+       {
+        "ref": "",
+        "pred": "o",
+        "count": 184,
+        "rate": null,
+        "gone_normalised": false
+       },
+       {
+        "ref": "",
+        "pred": "n",
+        "count": 175,
+        "rate": null,
+        "gone_normalised": false
+       },
+       {
+        "ref": "",
+        "pred": "E",
+        "count": 148,
+        "rate": null,
+        "gone_normalised": false
+       },
+       {
+        "ref": "",
+        "pred": "s",
+        "count": 143,
+        "rate": null,
+        "gone_normalised": false
+       },
+       {
+        "ref": "",
+        "pred": "A",
+        "count": 137,
+        "rate": null,
+        "gone_normalised": false
+       },
+       {
+        "ref": "",
+        "pred": ",",
+        "count": 122,
+        "rate": null,
+        "gone_normalised": false
+       },
+       {
+        "ref": "",
+        "pred": "-",
+        "count": 122,
+        "rate": null,
+        "gone_normalised": false
+       },
+       {
+        "ref": "",
+        "pred": "R",
+        "count": 117,
+        "rate": null,
+        "gone_normalised": false
+       },
+       {
+        "ref": "",
+        "pred": "T",
+        "count": 113,
+        "rate": null,
+        "gone_normalised": false
+       },
+       {
+        "ref": "",
+        "pred": "L",
+        "count": 111,
+        "rate": null,
+        "gone_normalised": false
+       },
+       {
+        "ref": "",
+        "pred": "1",
+        "count": 110,
+        "rate": null,
+        "gone_normalised": false
+       },
+       {
+        "ref": "",
+        "pred": "N",
+        "count": 107,
+        "rate": null,
+        "gone_normalised": false
+       },
+       {
+        "ref": "",
+        "pred": "S",
+        "count": 107,
+        "rate": null,
+        "gone_normalised": false
+       },
+       {
+        "ref": "",
+        "pred": "C",
+        "count": 106,
+        "rate": null,
+        "gone_normalised": false
+       },
+       {
+        "ref": "",
+        "pred": "O",
+        "count": 100,
+        "rate": null,
+        "gone_normalised": false
+       },
+       {
+        "ref": "",
+        "pred": "0",
+        "count": 86,
+        "rate": null,
+        "gone_normalised": false
+       },
+       {
+        "ref": "",
+        "pred": "c",
+        "count": 83,
+        "rate": null,
+        "gone_normalised": false
+       },
+       {
+        "ref": "",
+        "pred": "u",
+        "count": 76,
+        "rate": null,
+        "gone_normalised": false
+       },
+       {
+        "ref": "",
+        "pred": "D",
+        "count": 69,
+        "rate": null,
+        "gone_normalised": false
+       },
+       {
+        "ref": "",
+        "pred": "m",
+        "count": 69,
+        "rate": null,
+        "gone_normalised": false
+       },
+       {
+        "ref": "",
+        "pred": "2",
+        "count": 64,
+        "rate": null,
+        "gone_normalised": false
+       }
+      ],
+      "del": [
+       {
+        "ref": " ",
+        "pred": "",
+        "count": 2512,
+        "rate": 0.031907326491210246,
+        "gone_normalised": false
+       },
+       {
+        "ref": "I",
+        "pred": "",
+        "count": 675,
+        "rate": 0.04938542581211589,
+        "gone_normalised": false
+       },
+       {
+        "ref": "i",
+        "pred": "",
+        "count": 640,
+        "rate": 0.019832047349013046,
+        "gone_normalised": false
+       },
+       {
+        "ref": ".",
+        "pred": "",
+        "count": 602,
+        "rate": 0.06366328257191202,
+        "gone_normalised": false
+       },
+       {
+        "ref": "l",
+        "pred": "",
+        "count": 433,
+        "rate": 0.021089031755308785,
+        "gone_normalised": false
+       },
+       {
+        "ref": "e",
+        "pred": "",
+        "count": 431,
+        "rate": 0.008206710080353403,
+        "gone_normalised": false
+       },
+       {
+        "ref": "r",
+        "pred": "",
+        "count": 402,
+        "rate": 0.013139401863049517,
+        "gone_normalised": false
+       },
+       {
+        "ref": "T",
+        "pred": "",
+        "count": 380,
+        "rate": 0.024321556579621095,
+        "gone_normalised": false
+       },
+       {
+        "ref": "E",
+        "pred": "",
+        "count": 379,
+        "rate": 0.01797742149701167,
+        "gone_normalised": false
+       },
+       {
+        "ref": "t",
+        "pred": "",
+        "count": 368,
+        "rate": 0.011286612482748044,
+        "gone_normalised": false
+       },
+       {
+        "ref": "A",
+        "pred": "",
+        "count": 366,
+        "rate": 0.01836427496236829,
+        "gone_normalised": false
+       },
+       {
+        "ref": "a",
+        "pred": "",
+        "count": 344,
+        "rate": 0.009306100365210334,
+        "gone_normalised": false
+       },
+       {
+        "ref": "o",
+        "pred": "",
+        "count": 329,
+        "rate": 0.009657439751078757,
+        "gone_normalised": false
+       },
+       {
+        "ref": "n",
+        "pred": "",
+        "count": 327,
+        "rate": 0.01077714059719201,
+        "gone_normalised": false
+       },
+       {
+        "ref": "s",
+        "pred": "",
+        "count": 310,
+        "rate": 0.01160918248885893,
+        "gone_normalised": false
+       },
+       {
+        "ref": "N",
+        "pred": "",
+        "count": 300,
+        "rate": 0.022536057692307692,
+        "gone_normalised": false
+       },
+       {
+        "ref": "R",
+        "pred": "",
+        "count": 290,
+        "rate": 0.019749387087986923,
+        "gone_normalised": false
+       },
+       {
+        "ref": "O",
+        "pred": "",
+        "count": 284,
+        "rate": 0.019666228100547054,
+        "gone_normalised": false
+       },
+       {
+        "ref": "L",
+        "pred": "",
+        "count": 281,
+        "rate": 0.026474467684190692,
+        "gone_normalised": false
+       },
+       {
+        "ref": "S",
+        "pred": "",
+        "count": 279,
+        "rate": 0.016322471187035628,
+        "gone_normalised": false
+       },
+       {
+        "ref": "-",
+        "pred": "",
+        "count": 228,
+        "rate": 0.06896551724137931,
+        "gone_normalised": false
+       },
+       {
+        "ref": "C",
+        "pred": "",
+        "count": 206,
+        "rate": 0.01703887510339123,
+        "gone_normalised": false
+       },
+       {
+        "ref": "U",
+        "pred": "",
+        "count": 196,
+        "rate": 0.031756318859364877,
+        "gone_normalised": false
+       },
+       {
+        "ref": "1",
+        "pred": "",
+        "count": 191,
+        "rate": 0.021739130434782608,
+        "gone_normalised": false
+       },
+       {
+        "ref": "M",
+        "pred": "",
+        "count": 188,
+        "rate": 0.022083871725596147,
+        "gone_normalised": false
+       },
+       {
+        "ref": "'",
+        "pred": "",
+        "count": 175,
+        "rate": 0.1149047931713723,
+        "gone_normalised": false
+       },
+       {
+        "ref": "D",
+        "pred": "",
+        "count": 175,
+        "rate": 0.020712510356255178,
+        "gone_normalised": false
+       },
+       {
+        "ref": ",",
+        "pred": "",
+        "count": 154,
+        "rate": 0.034653465346534656,
+        "gone_normalised": false
+       },
+       {
+        "ref": "0",
+        "pred": "",
+        "count": 152,
+        "rate": 0.016421780466724288,
+        "gone_normalised": false
+       },
+       {
+        "ref": "c",
+        "pred": "",
+        "count": 151,
+        "rate": 0.010501425690242715,
+        "gone_normalised": false
+       }
+      ]
+     },
+     "class_matrix": {
+      "rows": [
+       "lower",
+       "upper",
+       "digit",
+       "punct",
+       "space",
+       "other",
+       "oov"
+      ],
+      "columns": [
+       "lower",
+       "upper",
+       "digit",
+       "punct",
+       "space",
+       "other",
+       "oov",
+       "deleted"
+      ],
+      "ref_chars": {
+       "lower": 425383,
+       "upper": 225532,
+       "digit": 46660,
+       "punct": 30524,
+       "space": 78728,
+       "other": 137,
+       "oov": 616
+      },
+      "counts": {
+       "lower": {
+        "lower": 417776,
+        "upper": 2065,
+        "digit": 327,
+        "punct": 177,
+        "space": 126,
+        "other": 3,
+        "oov": 0,
+        "deleted": 4909
+       },
+       "upper": {
+        "lower": 1743,
+        "upper": 217572,
+        "digit": 782,
+        "punct": 227,
+        "space": 108,
+        "other": 17,
+        "oov": 0,
+        "deleted": 5083
+       },
+       "digit": {
+        "lower": 317,
+        "upper": 866,
+        "digit": 44515,
+        "punct": 123,
+        "space": 17,
+        "other": 5,
+        "oov": 0,
+        "deleted": 817
+       },
+       "punct": {
+        "lower": 210,
+        "upper": 345,
+        "digit": 199,
+        "punct": 27848,
+        "space": 191,
+        "other": 2,
+        "oov": 0,
+        "deleted": 1729
+       },
+       "space": {
+        "lower": 208,
+        "upper": 201,
+        "digit": 88,
+        "punct": 214,
+        "space": 75505,
+        "other": 0,
+        "oov": 0,
+        "deleted": 2512
+       },
+       "other": {
+        "lower": 6,
+        "upper": 52,
+        "digit": 31,
+        "punct": 1,
+        "space": 1,
+        "other": 41,
+        "oov": 0,
+        "deleted": 5
+       },
+       "oov": {
+        "lower": 209,
+        "upper": 237,
+        "digit": 31,
+        "punct": 38,
+        "space": 0,
+        "other": 4,
+        "oov": 0,
+        "deleted": 97
+       }
+      },
+      "rates": {
+       "lower": {
+        "lower": 0.9821172919463166,
+        "upper": 0.004854448814362586,
+        "digit": 0.0007687190132186759,
+        "punct": 0.00041609561265965023,
+        "space": 0.00029620365646958153,
+        "other": 7.052468011180513e-06,
+        "oov": 0.0,
+        "deleted": 0.011540188488961713
+       },
+       "upper": {
+        "lower": 0.00772839331004026,
+        "upper": 0.9647056736959722,
+        "digit": 0.0034673571821293653,
+        "punct": 0.0010065090541475268,
+        "space": 0.0004788677438234929,
+        "other": 7.537733004629054e-05,
+        "oov": 0.0,
+        "deleted": 0.022537821683840872
+       },
+       "digit": {
+        "lower": 0.006793827689669953,
+        "upper": 0.018559794256322332,
+        "digit": 0.954029147021003,
+        "punct": 0.0026360908701243036,
+        "space": 0.00036433776253750537,
+        "other": 0.00010715816545220746,
+        "oov": 0.0,
+        "deleted": 0.0175096442348907
+       },
+       "punct": {
+        "lower": 0.006879832263137204,
+        "upper": 0.011302581575153977,
+        "digit": 0.006519460096972874,
+        "punct": 0.9123312803040231,
+        "space": 0.006257371248853361,
+        "other": 6.552221202987813e-05,
+        "oov": 0.0,
+        "deleted": 0.056643952299829645
+       },
+       "space": {
+        "lower": 0.002642007926023778,
+        "upper": 0.0025530941977441315,
+        "digit": 0.001117772584086983,
+        "punct": 0.0027182196931206178,
+        "space": 0.9590615791078142,
+        "other": 0.0,
+        "oov": 0.0,
+        "deleted": 0.031907326491210246
+       },
+       "other": {
+        "lower": 0.043795620437956206,
+        "upper": 0.3795620437956204,
+        "digit": 0.22627737226277372,
+        "punct": 0.0072992700729927005,
+        "space": 0.0072992700729927005,
+        "other": 0.29927007299270075,
+        "oov": 0.0,
+        "deleted": 0.0364963503649635
+       },
+       "oov": {
+        "lower": 0.3392857142857143,
+        "upper": 0.3847402597402597,
+        "digit": 0.05032467532467533,
+        "punct": 0.06168831168831169,
+        "space": 0.0,
+        "other": 0.006493506493506494,
+        "oov": 0.0,
+        "deleted": 0.15746753246753248
+       }
+      },
+      "correct": {
+       "lower": 409826,
+       "upper": 210287,
+       "digit": 43489,
+       "punct": 26867,
+       "space": 75505,
+       "other": 36,
+       "oov": 0
+      },
+      "correct_rates": {
+       "lower": 0.9634282517166882,
+       "upper": 0.9324042707908412,
+       "digit": 0.9320402914702101,
+       "punct": 0.8801926353033679,
+       "space": 0.9590615791078142,
+       "other": 0.26277372262773724,
+       "oov": 0.0
+      },
+      "inserted": {
+       "lower": 2534,
+       "upper": 1886,
+       "digit": 547,
+       "punct": 941,
+       "space": 1093,
+       "other": 10,
+       "oov": 0
+      }
+     }
+    }
+   }
+  },
+  "normalised": {
+   "characters": {
+    "totals": {
+     "lines": 67574,
+     "ref_chars": 807835,
+     "errors": 46424,
+     "cer": 0.05746718079805901,
+     "sub": 24021,
+     "ins": 7158,
+     "del": 15245,
+     "sub_rate": 0.029735032525206262,
+     "ins_rate": 0.00886072032036245,
+     "del_rate": 0.018871427952490298,
+     "space_inserted": 1126,
+     "space_deleted": 2550,
+     "space_substituted": 1136
+    },
+    "top": {
+     "sub": [
+      {
+       "ref": "l",
+       "pred": "i",
+       "count": 359,
+       "rate": 0.011525619622447669,
+       "gone_normalised": null
+      },
+      {
+       "ref": "i",
+       "pred": "l",
+       "count": 338,
+       "rate": 0.0073333188691935515,
+       "gone_normalised": null
+      },
+      {
+       "ref": "m",
+       "pred": "n",
+       "count": 279,
+       "rate": 0.013791398912506178,
+       "gone_normalised": null
+      },
+      {
+       "ref": "o",
+       "pred": "e",
+       "count": 261,
+       "rate": 0.005379890340932514,
+       "gone_normalised": null
+      },
+      {
+       "ref": "a",
+       "pred": "e",
+       "count": 250,
+       "rate": 0.004393595894623996,
+       "gone_normalised": null
+      },
+      {
+       "ref": ",",
+       "pred": ".",
+       "count": 215,
+       "rate": 0.04837983798379838,
+       "gone_normalised": null
+      },
+      {
+       "ref": "o",
+       "pred": "a",
+       "count": 215,
+       "rate": 0.004431710434101496,
+       "gone_normalised": null
+      },
+      {
+       "ref": "c",
+       "pred": "e",
+       "count": 214,
+       "rate": 0.008080960652518692,
+       "gone_normalised": null
+      },
+      {
+       "ref": "e",
+       "pred": "o",
+       "count": 211,
+       "rate": 0.00286673097563958,
+       "gone_normalised": null
+      },
+      {
+       "ref": "a",
+       "pred": "o",
+       "count": 202,
+       "rate": 0.0035500254828561887,
+       "gone_normalised": null
+      },
+      {
+       "ref": "n",
+       "pred": "m",
+       "count": 188,
+       "rate": 0.004306198176737368,
+       "gone_normalised": null
+      },
+      {
+       "ref": "e",
+       "pred": "a",
+       "count": 187,
+       "rate": 0.002540657310163988,
+       "gone_normalised": null
+      },
+      {
+       "ref": "0",
+       "pred": "o",
+       "count": 172,
+       "rate": 0.018578526679628428,
+       "gone_normalised": null
+      },
+      {
+       "ref": "n",
+       "pred": "r",
+       "count": 166,
+       "rate": 0.0038022813688212928,
+       "gone_normalised": null
+      },
+      {
+       "ref": "o",
+       "pred": "0",
+       "count": 161,
+       "rate": 0.0033186296739085627,
+       "gone_normalised": null
+      },
+      {
+       "ref": "o",
+       "pred": "d",
+       "count": 161,
+       "rate": 0.0033186296739085627,
+       "gone_normalised": null
+      },
+      {
+       "ref": "r",
+       "pred": "n",
+       "count": 159,
+       "rate": 0.003507843007478986,
+       "gone_normalised": null
+      },
+      {
+       "ref": "c",
+       "pred": "o",
+       "count": 155,
+       "rate": 0.005853032248319613,
+       "gone_normalised": null
+      },
+      {
+       "ref": "i",
+       "pred": "t",
+       "count": 155,
+       "rate": 0.0033629124991863923,
+       "gone_normalised": null
+      },
+      {
+       "ref": "e",
+       "pred": "c",
+       "count": 142,
+       "rate": 0.0019292691873972528,
+       "gone_normalised": null
+      },
+      {
+       "ref": "d",
+       "pred": "o",
+       "count": 138,
+       "rate": 0.00573208722741433,
+       "gone_normalised": null
+      },
+      {
+       "ref": "t",
+       "pred": "i",
+       "count": 136,
+       "rate": 0.0028174266122516626,
+       "gone_normalised": null
+      },
+      {
+       "ref": "s",
+       "pred": "e",
+       "count": 135,
+       "rate": 0.0030795903004311427,
+       "gone_normalised": null
+      },
+      {
+       "ref": "o",
+       "pred": "c",
+       "count": 133,
+       "rate": 0.002741476687141856,
+       "gone_normalised": null
+      },
+      {
+       "ref": "l",
+       "pred": "t",
+       "count": 130,
+       "rate": 0.004173622704507512,
+       "gone_normalised": null
+      },
+      {
+       "ref": ".",
+       "pred": ",",
+       "count": 128,
+       "rate": 0.013532085844169574,
+       "gone_normalised": null
+      },
+      {
+       "ref": "t",
+       "pred": "l",
+       "count": 125,
+       "rate": 0.0025895465186136606,
+       "gone_normalised": null
+      },
+      {
+       "ref": "g",
+       "pred": "c",
+       "count": 123,
+       "rate": 0.008468741393555494,
+       "gone_normalised": null
+      },
+      {
+       "ref": "f",
+       "pred": "t",
+       "count": 114,
+       "rate": 0.008831048105972577,
+       "gone_normalised": null
+      },
+      {
+       "ref": "i",
+       "pred": "e",
+       "count": 112,
+       "rate": 0.0024299754832830703,
+       "gone_normalised": null
+      }
+     ],
+     "ins": [
+      {
+       "ref": "",
+       "pred": " ",
+       "count": 1126,
+       "rate": null,
+       "gone_normalised": null
+      },
+      {
+       "ref": "",
+       "pred": "i",
+       "count": 585,
+       "rate": null,
+       "gone_normalised": null
+      },
+      {
+       "ref": "",
+       "pred": "e",
+       "count": 422,
+       "rate": null,
+       "gone_normalised": null
+      },
+      {
+       "ref": "",
+       "pred": "a",
+       "count": 404,
+       "rate": null,
+       "gone_normalised": null
+      },
+      {
+       "ref": "",
+       "pred": ".",
+       "count": 401,
+       "rate": null,
+       "gone_normalised": null
+      },
+      {
+       "ref": "",
+       "pred": "t",
+       "count": 339,
+       "rate": null,
+       "gone_normalised": null
+      },
+      {
+       "ref": "",
+       "pred": "l",
+       "count": 333,
+       "rate": null,
+       "gone_normalised": null
+      },
+      {
+       "ref": "",
+       "pred": "r",
+       "count": 329,
+       "rate": null,
+       "gone_normalised": null
+      },
+      {
+       "ref": "",
+       "pred": "o",
+       "count": 291,
+       "rate": null,
+       "gone_normalised": null
+      },
+      {
+       "ref": "",
+       "pred": "n",
+       "count": 287,
+       "rate": null,
+       "gone_normalised": null
+      },
+      {
+       "ref": "",
+       "pred": "s",
+       "count": 254,
+       "rate": null,
+       "gone_normalised": null
+      },
+      {
+       "ref": "",
+       "pred": "c",
+       "count": 190,
+       "rate": null,
+       "gone_normalised": null
+      },
+      {
+       "ref": "",
+       "pred": "m",
+       "count": 139,
+       "rate": null,
+       "gone_normalised": null
+      },
+      {
+       "ref": "",
+       "pred": "u",
+       "count": 132,
+       "rate": null,
+       "gone_normalised": null
+      },
+      {
+       "ref": "",
+       "pred": "-",
+       "count": 123,
+       "rate": null,
+       "gone_normalised": null
+      },
+      {
+       "ref": "",
+       "pred": ",",
+       "count": 122,
+       "rate": null,
+       "gone_normalised": null
+      },
+      {
+       "ref": "",
+       "pred": "d",
+       "count": 119,
+       "rate": null,
+       "gone_normalised": null
+      },
+      {
+       "ref": "",
+       "pred": "h",
+       "count": 108,
+       "rate": null,
+       "gone_normalised": null
+      },
+      {
+       "ref": "",
+       "pred": "1",
+       "count": 106,
+       "rate": null,
+       "gone_normalised": null
+      },
+      {
+       "ref": "",
+       "pred": "b",
+       "count": 91,
+       "rate": null,
+       "gone_normalised": null
+      },
+      {
+       "ref": "",
+       "pred": "0",
+       "count": 88,
+       "rate": null,
+       "gone_normalised": null
+      },
+      {
+       "ref": "",
+       "pred": "p",
+       "count": 76,
+       "rate": null,
+       "gone_normalised": null
+      },
+      {
+       "ref": "",
+       "pred": "f",
+       "count": 73,
+       "rate": null,
+       "gone_normalised": null
+      },
+      {
+       "ref": "",
+       "pred": "g",
+       "count": 67,
+       "rate": null,
+       "gone_normalised": null
+      },
+      {
+       "ref": "",
+       "pred": "2",
+       "count": 65,
+       "rate": null,
+       "gone_normalised": null
+      },
+      {
+       "ref": "",
+       "pred": "v",
+       "count": 60,
+       "rate": null,
+       "gone_normalised": null
+      },
+      {
+       "ref": "",
+       "pred": "w",
+       "count": 60,
+       "rate": null,
+       "gone_normalised": null
+      },
+      {
+       "ref": "",
+       "pred": "'",
+       "count": 57,
+       "rate": null,
+       "gone_normalised": null
+      },
+      {
+       "ref": "",
+       "pred": "9",
+       "count": 48,
+       "rate": null,
+       "gone_normalised": null
+      },
+      {
+       "ref": "",
+       "pred": "k",
+       "count": 47,
+       "rate": null,
+       "gone_normalised": null
+      }
+     ],
+     "del": [
+      {
+       "ref": " ",
+       "pred": "",
+       "count": 2550,
+       "rate": 0.03238671001828897,
+       "gone_normalised": null
+      },
+      {
+       "ref": "i",
+       "pred": "",
+       "count": 1341,
+       "rate": 0.029094617170380335,
+       "gone_normalised": null
+      },
+      {
+       "ref": "e",
+       "pred": "",
+       "count": 797,
+       "rate": 0.010828362974335285,
+       "gone_normalised": null
+      },
+      {
+       "ref": "t",
+       "pred": "",
+       "count": 751,
+       "rate": 0.015557995483830871,
+       "gone_normalised": null
+      },
+      {
+       "ref": "r",
+       "pred": "",
+       "count": 720,
+       "rate": 0.015884572109338805,
+       "gone_normalised": null
+      },
+      {
+       "ref": "a",
+       "pred": "",
+       "count": 718,
+       "rate": 0.012618407409360117,
+       "gone_normalised": null
+      },
+      {
+       "ref": "l",
+       "pred": "",
+       "count": 718,
+       "rate": 0.023051239244895338,
+       "gone_normalised": null
+      },
+      {
+       "ref": "n",
+       "pred": "",
+       "count": 628,
+       "rate": 0.014384534335058867,
+       "gone_normalised": null
+      },
+      {
+       "ref": ".",
+       "pred": "",
+       "count": 606,
+       "rate": 0.06406596891849033,
+       "gone_normalised": null
+      },
+      {
+       "ref": "o",
+       "pred": "",
+       "count": 598,
+       "rate": 0.012326338788803232,
+       "gone_normalised": null
+      },
+      {
+       "ref": "s",
+       "pred": "",
+       "count": 572,
+       "rate": 0.013048338161826767,
+       "gone_normalised": null
+      },
+      {
+       "ref": "c",
+       "pred": "",
+       "count": 361,
+       "rate": 0.01363190091382826,
+       "gone_normalised": null
+      },
+      {
+       "ref": "u",
+       "pred": "",
+       "count": 346,
+       "rate": 0.01686817472698908,
+       "gone_normalised": null
+      },
+      {
+       "ref": "d",
+       "pred": "",
+       "count": 316,
+       "rate": 0.01312564901349948,
+       "gone_normalised": null
+      },
+      {
+       "ref": "m",
+       "pred": "",
+       "count": 299,
+       "rate": 0.014780029658922392,
+       "gone_normalised": null
+      },
+      {
+       "ref": "h",
+       "pred": "",
+       "count": 266,
+       "rate": 0.013176144244105409,
+       "gone_normalised": null
+      },
+      {
+       "ref": "-",
+       "pred": "",
+       "count": 234,
+       "rate": 0.07060953530476766,
+       "gone_normalised": null
+      },
+      {
+       "ref": "g",
+       "pred": "",
+       "count": 220,
+       "rate": 0.015147342329936657,
+       "gone_normalised": null
+      },
+      {
+       "ref": "y",
+       "pred": "",
+       "count": 212,
+       "rate": 0.02068696330991413,
+       "gone_normalised": null
+      },
+      {
+       "ref": "f",
+       "pred": "",
+       "count": 201,
+       "rate": 0.015570532186846387,
+       "gone_normalised": null
+      },
+      {
+       "ref": "1",
+       "pred": "",
+       "count": 192,
+       "rate": 0.021790943139257744,
+       "gone_normalised": null
+      },
+      {
+       "ref": "'",
+       "pred": "",
+       "count": 178,
+       "rate": 0.11588541666666667,
+       "gone_normalised": null
+      },
+      {
+       "ref": "b",
+       "pred": "",
+       "count": 172,
+       "rate": 0.013882163034705408,
+       "gone_normalised": null
+      },
+      {
+       "ref": "p",
+       "pred": "",
+       "count": 171,
+       "rate": 0.010071264503209847,
+       "gone_normalised": null
+      },
+      {
+       "ref": ",",
+       "pred": "",
+       "count": 154,
+       "rate": 0.034653465346534656,
+       "gone_normalised": null
+      },
+      {
+       "ref": "0",
+       "pred": "",
+       "count": 152,
+       "rate": 0.016418232879671635,
+       "gone_normalised": null
+      },
+      {
+       "ref": "v",
+       "pred": "",
+       "count": 149,
+       "rate": 0.018388251264963594,
+       "gone_normalised": null
+      },
+      {
+       "ref": "w",
+       "pred": "",
+       "count": 130,
+       "rate": 0.013342912860515243,
+       "gone_normalised": null
+      },
+      {
+       "ref": "k",
+       "pred": "",
+       "count": 126,
+       "rate": 0.016550637068172863,
+       "gone_normalised": null
+      },
+      {
+       "ref": "2",
+       "pred": "",
+       "count": 103,
+       "rate": 0.015658254788689572,
+       "gone_normalised": null
+      }
+     ]
+    },
+    "class_matrix": {
+     "rows": [
+      "lower",
+      "upper",
+      "digit",
+      "punct",
+      "space",
+      "other",
+      "oov"
+     ],
+     "columns": [
+      "lower",
+      "upper",
+      "digit",
+      "punct",
+      "space",
+      "other",
+      "oov",
+      "deleted"
+     ],
+     "ref_chars": {
+      "lower": 651348,
+      "upper": 0,
+      "digit": 46745,
+      "punct": 30433,
+      "space": 78736,
+      "other": 18,
+      "oov": 555
+     },
+     "counts": {
+      "lower": {
+       "lower": 639541,
+       "upper": 0,
+       "digit": 1120,
+       "punct": 413,
+       "space": 235,
+       "other": 0,
+       "oov": 0,
+       "deleted": 10039
+      },
+      "upper": {
+       "lower": 0,
+       "upper": 0,
+       "digit": 0,
+       "punct": 0,
+       "space": 0,
+       "other": 0,
+       "oov": 0,
+       "deleted": 0
+      },
+      "digit": {
+       "lower": 1184,
+       "upper": 0,
+       "digit": 44583,
+       "punct": 126,
+       "space": 18,
+       "other": 0,
+       "oov": 0,
+       "deleted": 834
+      },
+      "punct": {
+       "lower": 540,
+       "upper": 0,
+       "digit": 201,
+       "punct": 27791,
+       "space": 188,
+       "other": 0,
+       "oov": 0,
+       "deleted": 1713
+      },
+      "space": {
+       "lower": 390,
+       "upper": 0,
+       "digit": 88,
+       "punct": 217,
+       "space": 75491,
+       "other": 0,
+       "oov": 0,
+       "deleted": 2550
+      },
+      "other": {
+       "lower": 0,
+       "upper": 0,
+       "digit": 0,
+       "punct": 0,
+       "space": 0,
+       "other": 0,
+       "oov": 0,
+       "deleted": 18
+      },
+      "oov": {
+       "lower": 416,
+       "upper": 0,
+       "digit": 21,
+       "punct": 27,
+       "space": 0,
+       "other": 0,
+       "oov": 0,
+       "deleted": 91
+      }
+     },
+     "rates": {
+      "lower": {
+       "lower": 0.9818729772717503,
+       "upper": 0.0,
+       "digit": 0.0017195109219649096,
+       "punct": 0.0006340696524745604,
+       "space": 0.0003607902380908516,
+       "other": 0.0,
+       "oov": 0.0,
+       "deleted": 0.0154126519157194
+      },
+      "upper": {
+       "lower": 0.0,
+       "upper": 0.0,
+       "digit": 0.0,
+       "punct": 0.0,
+       "space": 0.0,
+       "other": 0.0,
+       "oov": 0.0,
+       "deleted": 0.0
+      },
+      "digit": {
+       "lower": 0.02532891218312119,
+       "upper": 0.0,
+       "digit": 0.9537490640710237,
+       "punct": 0.0026954754519199916,
+       "space": 0.0003850679217028559,
+       "other": 0.0,
+       "oov": 0.0,
+       "deleted": 0.017841480372232325
+      },
+      "punct": {
+       "lower": 0.01774389642821937,
+       "upper": 0.0,
+       "digit": 0.0066046725593927645,
+       "punct": 0.9131863437715637,
+       "space": 0.006177504682417113,
+       "other": 0.0,
+       "oov": 0.0,
+       "deleted": 0.05628758255840699
+      },
+      "space": {
+       "lower": 0.004953261532208901,
+       "upper": 0.0,
+       "digit": 0.0011176590123958545,
+       "punct": 0.002756045519203414,
+       "space": 0.9587863239179029,
+       "other": 0.0,
+       "oov": 0.0,
+       "deleted": 0.03238671001828897
+      },
+      "other": {
+       "lower": 0.0,
+       "upper": 0.0,
+       "digit": 0.0,
+       "punct": 0.0,
+       "space": 0.0,
+       "other": 0.0,
+       "oov": 0.0,
+       "deleted": 1.0
+      },
+      "oov": {
+       "lower": 0.7495495495495496,
+       "upper": 0.0,
+       "digit": 0.03783783783783784,
+       "punct": 0.04864864864864865,
+       "space": 0.0,
+       "other": 0.0,
+       "oov": 0.0,
+       "deleted": 0.16396396396396395
+      }
+     },
+     "correct": {
+      "lower": 622652,
+      "upper": 0,
+      "digit": 43551,
+      "punct": 26875,
+      "space": 75491,
+      "other": 0,
+      "oov": 0
+     },
+     "correct_rates": {
+      "lower": 0.9559436737350848,
+      "upper": 0.0,
+      "digit": 0.9316718365600599,
+      "punct": 0.8830874379785102,
+      "space": 0.9587863239179029,
+      "other": 0.0,
+      "oov": 0.0
+     },
+     "inserted": {
+      "lower": 4540,
+      "upper": 0,
+      "digit": 549,
+      "punct": 942,
+      "space": 1126,
+      "other": 1,
+      "oov": 0
+     }
+    }
+   },
+   "label_fragments": {
+    "lines": 15,
+    "char_errors": 144,
+    "insertions": 140,
+    "share_of_insertions": 0.019558535903883765,
+    "share_of_errors": 0.003101843873858349,
+    "without": {
+     "totals": {
+      "lines": 67559,
+      "ref_chars": 807813,
+      "errors": 46280,
+      "cer": 0.05729048678345112,
+      "sub": 24017,
+      "ins": 7018,
+      "del": 15245,
+      "sub_rate": 0.029730890688810404,
+      "ins_rate": 0.008687654197196628,
+      "del_rate": 0.018871941897444088,
+      "space_inserted": 1109,
+      "space_deleted": 2550,
+      "space_substituted": 1136
+     },
+     "top": {
+      "sub": [
+       {
+        "ref": "l",
+        "pred": "i",
+        "count": 359,
+        "rate": 0.01152635972516535,
+        "gone_normalised": null
+       },
+       {
+        "ref": "i",
+        "pred": "l",
+        "count": 338,
+        "rate": 0.0073333188691935515,
+        "gone_normalised": null
+       },
+       {
+        "ref": "m",
+        "pred": "n",
+        "count": 279,
+        "rate": 0.01379208067625686,
+        "gone_normalised": null
+       },
+       {
+        "ref": "o",
+        "pred": "e",
+        "count": 261,
+        "rate": 0.005380001236781893,
+        "gone_normalised": null
+       },
+       {
+        "ref": "a",
+        "pred": "e",
+        "count": 250,
+        "rate": 0.00439390477529571,
+        "gone_normalised": null
+       },
+       {
+        "ref": ",",
+        "pred": ".",
+        "count": 215,
+        "rate": 0.04837983798379838,
+        "gone_normalised": null
+       },
+       {
+        "ref": "o",
+        "pred": "a",
+        "count": 215,
+        "rate": 0.004431801785088533,
+        "gone_normalised": null
+       },
+       {
+        "ref": "c",
+        "pred": "e",
+        "count": 214,
+        "rate": 0.008080960652518692,
+        "gone_normalised": null
+       },
+       {
+        "ref": "e",
+        "pred": "o",
+        "count": 211,
+        "rate": 0.0028668478260869567,
+        "gone_normalised": null
+       },
+       {
+        "ref": "a",
+        "pred": "o",
+        "count": 202,
+        "rate": 0.0035502750584389337,
+        "gone_normalised": null
+       },
+       {
+        "ref": "n",
+        "pred": "m",
+        "count": 188,
+        "rate": 0.004306296813798474,
+        "gone_normalised": null
+       },
+       {
+        "ref": "e",
+        "pred": "a",
+        "count": 187,
+        "rate": 0.0025407608695652176,
+        "gone_normalised": null
+       },
+       {
+        "ref": "0",
+        "pred": "o",
+        "count": 172,
+        "rate": 0.018578526679628428,
+        "gone_normalised": null
+       },
+       {
+        "ref": "n",
+        "pred": "r",
+        "count": 166,
+        "rate": 0.003802368463247589,
+        "gone_normalised": null
+       },
+       {
+        "ref": "o",
+        "pred": "0",
+        "count": 161,
+        "rate": 0.003318698080926762,
+        "gone_normalised": null
+       },
+       {
+        "ref": "o",
+        "pred": "d",
+        "count": 161,
+        "rate": 0.003318698080926762,
+        "gone_normalised": null
+       },
+       {
+        "ref": "r",
+        "pred": "n",
+        "count": 159,
+        "rate": 0.003507843007478986,
+        "gone_normalised": null
+       },
+       {
+        "ref": "c",
+        "pred": "o",
+        "count": 155,
+        "rate": 0.005853032248319613,
+        "gone_normalised": null
+       },
+       {
+        "ref": "i",
+        "pred": "t",
+        "count": 155,
+        "rate": 0.0033629124991863923,
+        "gone_normalised": null
+       },
+       {
+        "ref": "e",
+        "pred": "c",
+        "count": 142,
+        "rate": 0.0019293478260869565,
+        "gone_normalised": null
+       },
+       {
+        "ref": "d",
+        "pred": "o",
+        "count": 138,
+        "rate": 0.005732325330231785,
+        "gone_normalised": null
+       },
+       {
+        "ref": "t",
+        "pred": "i",
+        "count": 136,
+        "rate": 0.0028174266122516626,
+        "gone_normalised": null
+       },
+       {
+        "ref": "s",
+        "pred": "e",
+        "count": 135,
+        "rate": 0.0030797308087144974,
+        "gone_normalised": null
+       },
+       {
+        "ref": "o",
+        "pred": "c",
+        "count": 133,
+        "rate": 0.002741533197287325,
+        "gone_normalised": null
+       },
+       {
+        "ref": "l",
+        "pred": "t",
+        "count": 130,
+        "rate": 0.0041738907082771465,
+        "gone_normalised": null
+       },
+       {
+        "ref": ".",
+        "pred": ",",
+        "count": 128,
+        "rate": 0.013532085844169574,
+        "gone_normalised": null
+       },
+       {
+        "ref": "t",
+        "pred": "l",
+        "count": 125,
+        "rate": 0.0025895465186136606,
+        "gone_normalised": null
+       },
+       {
+        "ref": "g",
+        "pred": "c",
+        "count": 123,
+        "rate": 0.008468741393555494,
+        "gone_normalised": null
+       },
+       {
+        "ref": "f",
+        "pred": "t",
+        "count": 114,
+        "rate": 0.008833100883310088,
+        "gone_normalised": null
+       },
+       {
+        "ref": "i",
+        "pred": "e",
+        "count": 112,
+        "rate": 0.0024299754832830703,
+        "gone_normalised": null
+       }
+      ],
+      "ins": [
+       {
+        "ref": "",
+        "pred": " ",
+        "count": 1109,
+        "rate": null,
+        "gone_normalised": null
+       },
+       {
+        "ref": "",
+        "pred": "i",
+        "count": 577,
+        "rate": null,
+        "gone_normalised": null
+       },
+       {
+        "ref": "",
+        "pred": "e",
+        "count": 408,
+        "rate": null,
+        "gone_normalised": null
+       },
+       {
+        "ref": "",
+        "pred": ".",
+        "count": 400,
+        "rate": null,
+        "gone_normalised": null
+       },
+       {
+        "ref": "",
+        "pred": "a",
+        "count": 394,
+        "rate": null,
+        "gone_normalised": null
+       },
+       {
+        "ref": "",
+        "pred": "t",
+        "count": 326,
+        "rate": null,
+        "gone_normalised": null
+       },
+       {
+        "ref": "",
+        "pred": "l",
+        "count": 323,
+        "rate": null,
+        "gone_normalised": null
+       },
+       {
+        "ref": "",
+        "pred": "r",
+        "count": 322,
+        "rate": null,
+        "gone_normalised": null
+       },
+       {
+        "ref": "",
+        "pred": "o",
+        "count": 281,
+        "rate": null,
+        "gone_normalised": null
+       },
+       {
+        "ref": "",
+        "pred": "n",
+        "count": 280,
+        "rate": null,
+        "gone_normalised": null
+       },
+       {
+        "ref": "",
+        "pred": "s",
+        "count": 245,
+        "rate": null,
+        "gone_normalised": null
+       },
+       {
+        "ref": "",
+        "pred": "c",
+        "count": 185,
+        "rate": null,
+        "gone_normalised": null
+       },
+       {
+        "ref": "",
+        "pred": "m",
+        "count": 139,
+        "rate": null,
+        "gone_normalised": null
+       },
+       {
+        "ref": "",
+        "pred": "u",
+        "count": 130,
+        "rate": null,
+        "gone_normalised": null
+       },
+       {
+        "ref": "",
+        "pred": ",",
+        "count": 122,
+        "rate": null,
+        "gone_normalised": null
+       },
+       {
+        "ref": "",
+        "pred": "-",
+        "count": 122,
+        "rate": null,
+        "gone_normalised": null
+       },
+       {
+        "ref": "",
+        "pred": "d",
+        "count": 116,
+        "rate": null,
+        "gone_normalised": null
+       },
+       {
+        "ref": "",
+        "pred": "h",
+        "count": 105,
+        "rate": null,
+        "gone_normalised": null
+       },
+       {
+        "ref": "",
+        "pred": "1",
+        "count": 104,
+        "rate": null,
+        "gone_normalised": null
+       },
+       {
+        "ref": "",
+        "pred": "b",
+        "count": 89,
+        "rate": null,
+        "gone_normalised": null
+       },
+       {
+        "ref": "",
+        "pred": "0",
+        "count": 87,
+        "rate": null,
+        "gone_normalised": null
+       },
+       {
+        "ref": "",
+        "pred": "p",
+        "count": 73,
+        "rate": null,
+        "gone_normalised": null
+       },
+       {
+        "ref": "",
+        "pred": "f",
+        "count": 72,
+        "rate": null,
+        "gone_normalised": null
+       },
+       {
+        "ref": "",
+        "pred": "2",
+        "count": 65,
+        "rate": null,
+        "gone_normalised": null
+       },
+       {
+        "ref": "",
+        "pred": "g",
+        "count": 64,
+        "rate": null,
+        "gone_normalised": null
+       },
+       {
+        "ref": "",
+        "pred": "w",
+        "count": 60,
+        "rate": null,
+        "gone_normalised": null
+       },
+       {
+        "ref": "",
+        "pred": "v",
+        "count": 59,
+        "rate": null,
+        "gone_normalised": null
+       },
+       {
+        "ref": "",
+        "pred": "'",
+        "count": 57,
+        "rate": null,
+        "gone_normalised": null
+       },
+       {
+        "ref": "",
+        "pred": "9",
+        "count": 47,
+        "rate": null,
+        "gone_normalised": null
+       },
+       {
+        "ref": "",
+        "pred": "3",
+        "count": 46,
+        "rate": null,
+        "gone_normalised": null
+       }
+      ],
+      "del": [
+       {
+        "ref": " ",
+        "pred": "",
+        "count": 2550,
+        "rate": 0.03238671001828897,
+        "gone_normalised": null
+       },
+       {
+        "ref": "i",
+        "pred": "",
+        "count": 1341,
+        "rate": 0.029094617170380335,
+        "gone_normalised": null
+       },
+       {
+        "ref": "e",
+        "pred": "",
+        "count": 797,
+        "rate": 0.010828804347826087,
+        "gone_normalised": null
+       },
+       {
+        "ref": "t",
+        "pred": "",
+        "count": 751,
+        "rate": 0.015557995483830871,
+        "gone_normalised": null
+       },
+       {
+        "ref": "r",
+        "pred": "",
+        "count": 720,
+        "rate": 0.015884572109338805,
+        "gone_normalised": null
+       },
+       {
+        "ref": "a",
+        "pred": "",
+        "count": 718,
+        "rate": 0.012619294514649278,
+        "gone_normalised": null
+       },
+       {
+        "ref": "l",
+        "pred": "",
+        "count": 718,
+        "rate": 0.0230527194503307,
+        "gone_normalised": null
+       },
+       {
+        "ref": "n",
+        "pred": "",
+        "count": 628,
+        "rate": 0.01438486382481618,
+        "gone_normalised": null
+       },
+       {
+        "ref": ".",
+        "pred": "",
+        "count": 606,
+        "rate": 0.06406596891849033,
+        "gone_normalised": null
+       },
+       {
+        "ref": "o",
+        "pred": "",
+        "count": 598,
+        "rate": 0.012326592872013688,
+        "gone_normalised": null
+       },
+       {
+        "ref": "s",
+        "pred": "",
+        "count": 572,
+        "rate": 0.013048933500627352,
+        "gone_normalised": null
+       },
+       {
+        "ref": "c",
+        "pred": "",
+        "count": 361,
+        "rate": 0.01363190091382826,
+        "gone_normalised": null
+       },
+       {
+        "ref": "u",
+        "pred": "",
+        "count": 346,
+        "rate": 0.01686817472698908,
+        "gone_normalised": null
+       },
+       {
+        "ref": "d",
+        "pred": "",
+        "count": 316,
+        "rate": 0.013126194234443798,
+        "gone_normalised": null
+       },
+       {
+        "ref": "m",
+        "pred": "",
+        "count": 299,
+        "rate": 0.014780760294626527,
+        "gone_normalised": null
+       },
+       {
+        "ref": "h",
+        "pred": "",
+        "count": 266,
+        "rate": 0.013176796948531234,
+        "gone_normalised": null
+       },
+       {
+        "ref": "-",
+        "pred": "",
+        "count": 234,
+        "rate": 0.07060953530476766,
+        "gone_normalised": null
+       },
+       {
+        "ref": "g",
+        "pred": "",
+        "count": 220,
+        "rate": 0.015147342329936657,
+        "gone_normalised": null
+       },
+       {
+        "ref": "y",
+        "pred": "",
+        "count": 212,
+        "rate": 0.02068696330991413,
+        "gone_normalised": null
+       },
+       {
+        "ref": "f",
+        "pred": "",
+        "count": 201,
+        "rate": 0.015574151557415155,
+        "gone_normalised": null
+       },
+       {
+        "ref": "1",
+        "pred": "",
+        "count": 192,
+        "rate": 0.021790943139257744,
+        "gone_normalised": null
+       },
+       {
+        "ref": "'",
+        "pred": "",
+        "count": 178,
+        "rate": 0.11588541666666667,
+        "gone_normalised": null
+       },
+       {
+        "ref": "b",
+        "pred": "",
+        "count": 172,
+        "rate": 0.013882163034705408,
+        "gone_normalised": null
+       },
+       {
+        "ref": "p",
+        "pred": "",
+        "count": 171,
+        "rate": 0.010071857698197668,
+        "gone_normalised": null
+       },
+       {
+        "ref": ",",
+        "pred": "",
+        "count": 154,
+        "rate": 0.034653465346534656,
+        "gone_normalised": null
+       },
+       {
+        "ref": "0",
+        "pred": "",
+        "count": 152,
+        "rate": 0.016418232879671635,
+        "gone_normalised": null
+       },
+       {
+        "ref": "v",
+        "pred": "",
+        "count": 149,
+        "rate": 0.018388251264963594,
+        "gone_normalised": null
+       },
+       {
+        "ref": "w",
+        "pred": "",
+        "count": 130,
+        "rate": 0.013342912860515243,
+        "gone_normalised": null
+       },
+       {
+        "ref": "k",
+        "pred": "",
+        "count": 126,
+        "rate": 0.016550637068172863,
+        "gone_normalised": null
+       },
+       {
+        "ref": "2",
+        "pred": "",
+        "count": 103,
+        "rate": 0.015658254788689572,
+        "gone_normalised": null
+       }
+      ]
+     },
+     "class_matrix": {
+      "rows": [
+       "lower",
+       "upper",
+       "digit",
+       "punct",
+       "space",
+       "other",
+       "oov"
+      ],
+      "columns": [
+       "lower",
+       "upper",
+       "digit",
+       "punct",
+       "space",
+       "other",
+       "oov",
+       "deleted"
+      ],
+      "ref_chars": {
+       "lower": 651328,
+       "upper": 0,
+       "digit": 46744,
+       "punct": 30432,
+       "space": 78736,
+       "other": 18,
+       "oov": 555
+      },
+      "counts": {
+       "lower": {
+        "lower": 639522,
+        "upper": 0,
+        "digit": 1119,
+        "punct": 413,
+        "space": 235,
+        "other": 0,
+        "oov": 0,
+        "deleted": 10039
+       },
+       "upper": {
+        "lower": 0,
+        "upper": 0,
+        "digit": 0,
+        "punct": 0,
+        "space": 0,
+        "other": 0,
+        "oov": 0,
+        "deleted": 0
+       },
+       "digit": {
+        "lower": 1184,
+        "upper": 0,
+        "digit": 44582,
+        "punct": 126,
+        "space": 18,
+        "other": 0,
+        "oov": 0,
+        "deleted": 834
+       },
+       "punct": {
+        "lower": 540,
+        "upper": 0,
+        "digit": 200,
+        "punct": 27791,
+        "space": 188,
+        "other": 0,
+        "oov": 0,
+        "deleted": 1713
+       },
+       "space": {
+        "lower": 390,
+        "upper": 0,
+        "digit": 88,
+        "punct": 217,
+        "space": 75491,
+        "other": 0,
+        "oov": 0,
+        "deleted": 2550
+       },
+       "other": {
+        "lower": 0,
+        "upper": 0,
+        "digit": 0,
+        "punct": 0,
+        "space": 0,
+        "other": 0,
+        "oov": 0,
+        "deleted": 18
+       },
+       "oov": {
+        "lower": 416,
+        "upper": 0,
+        "digit": 21,
+        "punct": 27,
+        "space": 0,
+        "other": 0,
+        "oov": 0,
+        "deleted": 91
+       }
+      },
+      "rates": {
+       "lower": {
+        "lower": 0.9818739559791687,
+        "upper": 0.0,
+        "digit": 0.0017180283973666109,
+        "punct": 0.0006340891225311978,
+        "space": 0.0003608013166945072,
+        "other": 0.0,
+        "oov": 0.0,
+        "deleted": 0.015413125184238971
+       },
+       "upper": {
+        "lower": 0.0,
+        "upper": 0.0,
+        "digit": 0.0,
+        "punct": 0.0,
+        "space": 0.0,
+        "other": 0.0,
+        "oov": 0.0,
+        "deleted": 0.0
+       },
+       "digit": {
+        "lower": 0.0253294540475783,
+        "upper": 0.0,
+        "digit": 0.9537480746192024,
+        "punct": 0.0026955331165497178,
+        "space": 0.0003850761595071025,
+        "other": 0.0,
+        "oov": 0.0,
+        "deleted": 0.017841862057162417
+       },
+       "punct": {
+        "lower": 0.01774447949526814,
+        "upper": 0.0,
+        "digit": 0.006572029442691903,
+        "punct": 0.9132163512092534,
+        "space": 0.006177707676130389,
+        "other": 0.0,
+        "oov": 0.0,
+        "deleted": 0.05628943217665615
+       },
+       "space": {
+        "lower": 0.004953261532208901,
+        "upper": 0.0,
+        "digit": 0.0011176590123958545,
+        "punct": 0.002756045519203414,
+        "space": 0.9587863239179029,
+        "other": 0.0,
+        "oov": 0.0,
+        "deleted": 0.03238671001828897
+       },
+       "other": {
+        "lower": 0.0,
+        "upper": 0.0,
+        "digit": 0.0,
+        "punct": 0.0,
+        "space": 0.0,
+        "other": 0.0,
+        "oov": 0.0,
+        "deleted": 1.0
+       },
+       "oov": {
+        "lower": 0.7495495495495496,
+        "upper": 0.0,
+        "digit": 0.03783783783783784,
+        "punct": 0.04864864864864865,
+        "space": 0.0,
+        "other": 0.0,
+        "oov": 0.0,
+        "deleted": 0.16396396396396395
+       }
+      },
+      "correct": {
+       "lower": 622635,
+       "upper": 0,
+       "digit": 43550,
+       "punct": 26875,
+       "space": 75491,
+       "other": 0,
+       "oov": 0
+      },
+      "correct_rates": {
+       "lower": 0.9559469268939766,
+       "upper": 0.0,
+       "digit": 0.931670374807462,
+       "punct": 0.8831164563617245,
+       "space": 0.9587863239179029,
+       "other": 0.0,
+       "oov": 0.0
+      },
+      "inserted": {
+       "lower": 4424,
+       "upper": 0,
+       "digit": 544,
+       "punct": 940,
+       "space": 1109,
+       "other": 1,
+       "oov": 0
+      }
+     }
+    }
+   }
+  }
+ }
+}

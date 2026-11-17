@@ -1,0 +1,337 @@
+{
+ "licence": {
+  "attribution": "HierText annotations CC BY-SA 4.0, images CC BY 2.0",
+  "note": "tables derived from HierText are shared alike (share-alike, CC BY-SA 4.0)"
+ },
+ "experiment": "GW-REC-040",
+ "data": "GW-REC-038",
+ "set": "hiertext_val",
+ "tracks": {
+  "strict": {
+   "totals": {
+    "ref_words": 157720,
+    "errors": 31203,
+    "wer": 0.1978379406543241,
+    "sub": 25998,
+    "ins": 1681,
+    "del": 3524,
+    "one_char_share": 0.5281175475036541
+   },
+   "top": [
+    {
+     "ref": "1",
+     "pred": "I",
+     "count": 37
+    },
+    {
+     "ref": "Ⓒ",
+     "pred": "©",
+     "count": 32
+    },
+    {
+     "ref": "0",
+     "pred": "O",
+     "count": 25
+    },
+    {
+     "ref": "Ⓔ",
+     "pred": "Ⓡ",
+     "count": 24
+    },
+    {
+     "ref": "Ⓐ",
+     "pred": "④",
+     "count": 22
+    },
+    {
+     "ref": "O",
+     "pred": "0",
+     "count": 21
+    },
+    {
+     "ref": "x",
+     "pred": "X",
+     "count": 19
+    },
+    {
+     "ref": "Ⓑ",
+     "pred": "①",
+     "count": 19
+    },
+    {
+     "ref": "Ⓓ",
+     "pred": "Ⓡ",
+     "count": 19
+    },
+    {
+     "ref": "Ⓔ",
+     "pred": "①",
+     "count": 18
+    },
+    {
+     "ref": "○",
+     "pred": "•",
+     "count": 17
+    },
+    {
+     "ref": "tecnalia",
+     "pred": "tecnalla",
+     "count": 14
+    },
+    {
+     "ref": "w",
+     "pred": "W",
+     "count": 14
+    },
+    {
+     "ref": "MOYNE",
+     "pred": "MΟΥNE",
+     "count": 13
+    },
+    {
+     "ref": "ST",
+     "pred": "ST.",
+     "count": 13
+    },
+    {
+     "ref": "c",
+     "pred": "C",
+     "count": 13
+    },
+    {
+     "ref": "IⓉP",
+     "pred": "P",
+     "count": 12
+    },
+    {
+     "ref": "„",
+     "pred": "\"",
+     "count": 12
+    },
+    {
+     "ref": "InmOBI",
+     "pred": "INMOBI",
+     "count": 11
+    },
+    {
+     "ref": "ST.",
+     "pred": "ST",
+     "count": 11
+    },
+    {
+     "ref": "STEV",
+     "pred": "STEVES",
+     "count": 11
+    },
+    {
+     "ref": "wt",
+     "pred": "wt4",
+     "count": 11
+    },
+    {
+     "ref": "Ⅱ",
+     "pred": "II",
+     "count": 11
+    },
+    {
+     "ref": "04:34:33.0'",
+     "pred": "04:34:33.0');",
+     "count": 10
+    },
+    {
+     "ref": "5",
+     "pred": "S",
+     "count": 10
+    },
+    {
+     "ref": "S",
+     "pred": "s",
+     "count": 10
+    },
+    {
+     "ref": "p",
+     "pred": "P",
+     "count": 10
+    },
+    {
+     "ref": "s",
+     "pred": "S",
+     "count": 10
+    },
+    {
+     "ref": "Ⓑ",
+     "pred": "③",
+     "count": 10
+    },
+    {
+     "ref": "Ⓡ",
+     "pred": "®",
+     "count": 10
+    }
+   ]
+  },
+  "normalised": {
+   "totals": {
+    "ref_words": 157732,
+    "errors": 30267,
+    "wer": 0.1918887733624122,
+    "sub": 25050,
+    "ins": 1681,
+    "del": 3536,
+    "one_char_share": 0.5299401197604791
+   },
+   "top": [
+    {
+     "ref": "1",
+     "pred": "i",
+     "count": 39
+    },
+    {
+     "ref": "c",
+     "pred": "©",
+     "count": 36
+    },
+    {
+     "ref": "0",
+     "pred": "o",
+     "count": 28
+    },
+    {
+     "ref": "a",
+     "pred": "4",
+     "count": 25
+    },
+    {
+     "ref": "e",
+     "pred": "r",
+     "count": 24
+    },
+    {
+     "ref": "o",
+     "pred": "0",
+     "count": 24
+    },
+    {
+     "ref": "b",
+     "pred": "1",
+     "count": 21
+    },
+    {
+     "ref": "d",
+     "pred": "r",
+     "count": 21
+    },
+    {
+     "ref": "e",
+     "pred": "1",
+     "count": 19
+    },
+    {
+     "ref": "st.",
+     "pred": "st",
+     "count": 17
+    },
+    {
+     "ref": "○",
+     "pred": "•",
+     "count": 17
+    },
+    {
+     "ref": "tecnalia",
+     "pred": "tecnalla",
+     "count": 14
+    },
+    {
+     "ref": "moyne",
+     "pred": "mουne",
+     "count": 13
+    },
+    {
+     "ref": "st",
+     "pred": "st.",
+     "count": 13
+    },
+    {
+     "ref": "itp",
+     "pred": "p",
+     "count": 12
+    },
+    {
+     "ref": "5",
+     "pred": "s",
+     "count": 11
+    },
+    {
+     "ref": "b",
+     "pred": "3",
+     "count": 11
+    },
+    {
+     "ref": "o",
+     "pred": "c",
+     "count": 11
+    },
+    {
+     "ref": "stev",
+     "pred": "steves",
+     "count": 11
+    },
+    {
+     "ref": "wt",
+     "pred": "wt4",
+     "count": 11
+    },
+    {
+     "ref": "04:34:33.0'",
+     "pred": "04:34:33.0');",
+     "count": 10
+    },
+    {
+     "ref": "c",
+     "pred": "g",
+     "count": 10
+    },
+    {
+     "ref": "r",
+     "pred": "®",
+     "count": 10
+    },
+    {
+     "ref": "10",
+     "pred": "10th",
+     "count": 9
+    },
+    {
+     "ref": "_",
+     "pred": "-",
+     "count": 9
+    },
+    {
+     "ref": "b",
+     "pred": "r",
+     "count": 9
+    },
+    {
+     "ref": "co",
+     "pred": "c",
+     "count": 9
+    },
+    {
+     "ref": "dtt",
+     "pred": "ott",
+     "count": 9
+    },
+    {
+     "ref": "e",
+     "pred": "3",
+     "count": 9
+    },
+    {
+     "ref": "ethrn",
+     "pred": "ethan",
+     "count": 9
+    }
+   ]
+  }
+ }
+}

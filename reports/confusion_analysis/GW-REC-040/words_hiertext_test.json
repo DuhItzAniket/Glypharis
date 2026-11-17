@@ -1,0 +1,337 @@
+{
+ "licence": {
+  "attribution": "HierText annotations CC BY-SA 4.0, images CC BY 2.0",
+  "note": "tables derived from HierText are shared alike (share-alike, CC BY-SA 4.0)"
+ },
+ "experiment": "GW-REC-040",
+ "data": "GW-REC-039",
+ "set": "hiertext_test",
+ "tracks": {
+  "strict": {
+   "totals": {
+    "ref_words": 146302,
+    "errors": 28177,
+    "wer": 0.19259476972290193,
+    "sub": 23614,
+    "ins": 1431,
+    "del": 3132,
+    "one_char_share": 0.5281189125095282
+   },
+   "top": [
+    {
+     "ref": "$",
+     "pred": "S",
+     "count": 31
+    },
+    {
+     "ref": "iD",
+     "pred": "D",
+     "count": 31
+    },
+    {
+     "ref": "15",
+     "pred": "150",
+     "count": 30
+    },
+    {
+     "ref": "iD",
+     "pred": "DD",
+     "count": 24
+    },
+    {
+     "ref": "ΝΑΙ",
+     "pred": "NAI",
+     "count": 22
+    },
+    {
+     "ref": "0",
+     "pred": "O",
+     "count": 17
+    },
+    {
+     "ref": "O",
+     "pred": "0",
+     "count": 16
+    },
+    {
+     "ref": "FANEXPO",
+     "pred": "EXPO",
+     "count": 15
+    },
+    {
+     "ref": "G",
+     "pred": "A",
+     "count": 15
+    },
+    {
+     "ref": "ΕΛΛΑΔΑ",
+     "pred": "EMAMA",
+     "count": 15
+    },
+    {
+     "ref": "1",
+     "pred": "I",
+     "count": 14
+    },
+    {
+     "ref": "Clínica",
+     "pred": "Clinica",
+     "count": 14
+    },
+    {
+     "ref": "ΣΤΟ",
+     "pred": "ΣTO",
+     "count": 14
+    },
+    {
+     "ref": "x",
+     "pred": "X",
+     "count": 13
+    },
+    {
+     "ref": "S",
+     "pred": "5",
+     "count": 12
+    },
+    {
+     "ref": "o",
+     "pred": "O",
+     "count": 12
+    },
+    {
+     "ref": "5",
+     "pred": "S",
+     "count": 11
+    },
+    {
+     "ref": "B",
+     "pred": "8",
+     "count": 11
+    },
+    {
+     "ref": "TM",
+     "pred": "™",
+     "count": 11
+    },
+    {
+     "ref": "in",
+     "pred": "In",
+     "count": 11
+    },
+    {
+     "ref": "ΕΥΡΩ",
+     "pred": "EYPQ",
+     "count": 11
+    },
+    {
+     "ref": "Bb",
+     "pred": "b",
+     "count": 10
+    },
+    {
+     "ref": "COM",
+     "pred": ".COM",
+     "count": 10
+    },
+    {
+     "ref": "and",
+     "pred": "end",
+     "count": 10
+    },
+    {
+     "ref": "free>",
+     "pred": "free)",
+     "count": 10
+    },
+    {
+     "ref": "ΣΤΗΝ",
+     "pred": "STHN",
+     "count": 10
+    },
+    {
+     "ref": "Ahora",
+     "pred": "Anora",
+     "count": 9
+    },
+    {
+     "ref": "CARROT.",
+     "pred": "CARROT",
+     "count": 9
+    },
+    {
+     "ref": "Flores",
+     "pred": "flores",
+     "count": 9
+    },
+    {
+     "ref": "Kl.",
+     "pred": "KI.",
+     "count": 9
+    }
+   ]
+  },
+  "normalised": {
+   "totals": {
+    "ref_words": 146310,
+    "errors": 27265,
+    "wer": 0.1863508987765703,
+    "sub": 22694,
+    "ins": 1431,
+    "del": 3140,
+    "one_char_share": 0.5302723186745395
+   },
+   "top": [
+    {
+     "ref": "id",
+     "pred": "d",
+     "count": 33
+    },
+    {
+     "ref": "$",
+     "pred": "s",
+     "count": 31
+    },
+    {
+     "ref": "15",
+     "pred": "150",
+     "count": 30
+    },
+    {
+     "ref": "id",
+     "pred": "dd",
+     "count": 24
+    },
+    {
+     "ref": "o",
+     "pred": "0",
+     "count": 23
+    },
+    {
+     "ref": "ναι",
+     "pred": "nai",
+     "count": 22
+    },
+    {
+     "ref": "0",
+     "pred": "o",
+     "count": 18
+    },
+    {
+     "ref": "g",
+     "pred": "a",
+     "count": 17
+    },
+    {
+     "ref": "1",
+     "pred": "i",
+     "count": 15
+    },
+    {
+     "ref": "fanexpo",
+     "pred": "expo",
+     "count": 15
+    },
+    {
+     "ref": "ελλαδα",
+     "pred": "emama",
+     "count": 15
+    },
+    {
+     "ref": "clínica",
+     "pred": "clinica",
+     "count": 14
+    },
+    {
+     "ref": "στο",
+     "pred": "σto",
+     "count": 14
+    },
+    {
+     "ref": "s",
+     "pred": "5",
+     "count": 12
+    },
+    {
+     "ref": "5",
+     "pred": "s",
+     "count": 11
+    },
+    {
+     "ref": "b",
+     "pred": "8",
+     "count": 11
+    },
+    {
+     "ref": "bb",
+     "pred": "b",
+     "count": 11
+    },
+    {
+     "ref": "ευρω",
+     "pred": "eypq",
+     "count": 11
+    },
+    {
+     "ref": "and",
+     "pred": "end",
+     "count": 10
+    },
+    {
+     "ref": "c",
+     "pred": "o",
+     "count": 10
+    },
+    {
+     "ref": "com",
+     "pred": ".com",
+     "count": 10
+    },
+    {
+     "ref": "free>",
+     "pred": "free)",
+     "count": 10
+    },
+    {
+     "ref": "στην",
+     "pred": "sthn",
+     "count": 10
+    },
+    {
+     "ref": "_",
+     "pred": "-",
+     "count": 9
+    },
+    {
+     "ref": "ahora",
+     "pred": "anora",
+     "count": 9
+    },
+    {
+     "ref": "carrot.",
+     "pred": "carrot",
+     "count": 9
+    },
+    {
+     "ref": "e",
+     "pred": "e27",
+     "count": 9
+    },
+    {
+     "ref": "i",
+     "pred": "1",
+     "count": 9
+    },
+    {
+     "ref": "kl.",
+     "pred": "ki.",
+     "count": 9
+    },
+    {
+     "ref": "n",
+     "pred": "m",
+     "count": 9
+    }
+   ]
+  }
+ }
+}

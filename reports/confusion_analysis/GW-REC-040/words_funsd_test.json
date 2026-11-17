@@ -1,0 +1,29 @@
+{
+ "experiment": "GW-REC-040",
+ "data": "GW-REC-039",
+ "set": "funsd_test",
+ "tracks": {
+  "strict": {
+   "totals": {
+    "ref_words": 8729,
+    "errors": 2259,
+    "wer": 0.25879253064497654,
+    "sub": 1435,
+    "ins": 84,
+    "del": 740,
+    "one_char_share": 0.4473867595818815
+   }
+  },
+  "normalised": {
+   "totals": {
+    "ref_words": 8729,
+    "errors": 2220,
+    "wer": 0.2543246649100699,
+    "sub": 1396,
+    "ins": 84,
+    "del": 740,
+    "one_char_share": 0.44197707736389685
+   }
+  }
+ }
+}
