@@ -79,3 +79,18 @@ v0.1 recognizer's 449 ms per page, GW-E2E-001). An estimate, not a record.
   entry in `scripts/phase14_score.py`; the runner's plan is unchanged. Its partial file (62
   records, SHA-256 `538baba2b3453920fb432b74f753be2f68125401e45109b0806690699be06348`) stays on
   disk, unscored. The OmniDocBench subset view compares the other systems on the same 100 pages.
+
+## The scoring pass (GW-E2E-009, step 6)
+
+- `phase14_score.py check` passed on 2026-11-17: 51 prediction files complete, the Phase 5 files
+  matching their hashes.
+- `score` started at 02:13:47Z. It scored every prediction file and reproduced Phase 5, then
+  stopped in HierText's official evaluator at Beam's five-minute job deadline
+  (`research/failures.md`, 2026-11-17). The rows it wrote are in the access log, and the pass stays
+  "started".
+- Fix: the evaluator is started through `scripts/hiertext_eval_launch.py`, which lifts only that
+  deadline. On validation pages, a direct start and the launcher gave identical score files.
+- Code differing from `phase14-eval` at the resume, all scoring-side (the prediction runs were
+  made at the tag): `scripts/phase14_score.py` (the `NOT_RUNNABLE` entry and the `not_run` block),
+  `scripts/official_hiertext.py` and the new `scripts/hiertext_eval_launch.py`. results.json records
+  the scorer commit and the tree comparison.

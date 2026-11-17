@@ -7,9 +7,11 @@ environment does not carry. This module only converts and runs; it does not call
 guard, so the caller (GW-E2E-009) logs the scoring rows before it scores test pages.
 
 The mode is `--eval_lines --e2e` with `--mask_stride=1` (full-resolution masks, the setting the
-evaluator's README requires for reported results) and one worker. In that mode the evaluator builds
-each line's mask from the line's words and compares whole-line texts, so every predicted line is
-handed over as a line holding one word that carries the line's polygon and text. The word-level
+evaluator's README requires for reported results) and one worker. `eval.py` is started through
+`scripts/hiertext_eval_launch.py`, which only lifts Apache Beam's five-minute job deadline. In
+that mode the evaluator builds each line's mask from the line's words and compares whole-line
+texts, so every predicted line is handed over as a line holding one word that carries the line's
+polygon and text. The word-level
 block of the evaluator's output is parsed too, but it compares those one-word lines with real
 ground-truth words and is not a score of anything Phase 14 reports.
 
@@ -34,6 +36,10 @@ EVALUATORS = Path("data/manifests/evaluators.json")
 VENV_ROOT_ENV = "GLYPHARIS_EVAL_VENV_ROOT"
 HIERTEXT_DIR = Path("data/raw/evaluators/hiertext-70b6620b")
 HIERTEXT_VENV = ".venv-hiertext"
+# What the evaluator's Python starts: the pinned eval.py through a launcher that lifts Apache
+# Beam's five-minute job deadline (scripts/hiertext_eval_launch.py; research/failures.md,
+# 2026-11-17). The evaluator's code and flags are unchanged.
+HIERTEXT_ENTRY = ROOT / "scripts" / "hiertext_eval_launch.py"
 HIERTEXT_FLAGS = ("--eval_lines", "--e2e", "--mask_stride=1", "--num_workers=1")
 SCORES_NAME = "scores"
 # Environment variables that would let the main environment leak into the evaluator's.
@@ -239,7 +245,7 @@ def run_hiertext(gt_json: Path, pred_json: Path, out_dir: Path) -> dict[str, dic
     try:
         cmd = [
             str(python),
-            "eval.py",
+            str(HIERTEXT_ENTRY),
             f"--gt={gt_path}",
             f"--result={pred_json.resolve()}",
             f"--output={(out_dir / SCORES_NAME).resolve()}",

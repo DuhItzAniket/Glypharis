@@ -126,3 +126,26 @@ disappointing experiment here, including bugs that invalidated a run.
   large pages on a CPU (61 of OmniDocBench's 755 English pages, 5 of the subset); this is a
   limit of that configuration, reported as a missing cell with its reason, not scored on the
   pages it did finish (those exclude exactly the large pages).
+
+### 2026-11-17 — GW-E2E-009 — HierText's official evaluator stops after five minutes
+
+- **What we tried:** the Phase 14 scoring pass. It scored all 51 prediction files and passed the
+  Phase 5 reproduction check, then started HierText's official evaluator on the first system with
+  HierText test pages (Tesseract, 1,634 pages).
+- **What happened:** the evaluator exited with an error five minutes after it started. Its output
+  ends in gRPC stream errors (DEADLINE_EXCEEDED, then connection resets). The pass stopped there,
+  as designed, and stays "started". Repeated on HierText validation pages (Tesseract's Phase 5
+  validation predictions): the same error at five minutes, after 1,103 of 1,715 pages.
+- **Root cause:** Apache Beam 2.77's DirectRunner hands the evaluator's pipeline to its Prism
+  runner. Prism's job-state and message streams carry a gRPC deadline of `--job_server_timeout`,
+  300 s by default, so any run longer than five minutes is cut off. `eval.py` builds its own
+  pipeline options and takes no extra flags. The evaluator's tests only use a few pages, which
+  finish well inside the deadline, so the limit never showed before.
+- **What we changed:** `scripts/hiertext_eval_launch.py` starts the pinned `eval.py` unchanged,
+  with `--job_server_timeout` added to its pipeline options, and `scripts/official_hiertext.py`
+  starts the evaluator through it. Checked on validation pages only: on the first 300, a direct
+  start and the launcher wrote identical score files; through the launcher, the full validation
+  split finished in 543 s. The pass is finished with `score --resume`, as the same evaluation.
+- **Lesson / implication for the paper:** none for the numbers (the evaluator's code, flags and
+  output are unchanged). An evaluator's own environment can change how it runs; a run on a
+  full-size validation split before the test pass would have shown this.
