@@ -22,7 +22,7 @@ Phases run in the order set by [ADR-0008](decisions/ADR-0008-usable-engine-first
 | 12 | Synthetic data study | **COMPLETE** | `phase-12` |
 | 13 | Ablation study | **COMPLETE** | `phase-13` |
 | 14 | External evaluation | **COMPLETE** | `phase-14` |
-| 15 | Error analysis | **IN PROGRESS** (gate: push, CI, merge) | — |
+| 15 | Error analysis | **COMPLETE** | `phase-15` |
 | 16 | Efficiency optimisation | not started | — |
 | 17 | Model export | **COMPLETE** | `phase-17` |
 | 18 | Inference package | **COMPLETE** | `phase-18` |
@@ -2106,7 +2106,7 @@ checkout has no tags.
 
 ## Phase 15 — Error analysis
 
-**Status:** write-up done (2026-11-17). Gate open: push, pull request, CI and merge. Opened
+**Status:** COMPLETE (2026-11-17). Opened
 2026-11-17 on `phase/15-error-analysis`, branched from `main` after Phase 14 (merge `eb15025`). No
 model runs on test data in this phase.
 
@@ -2519,7 +2519,7 @@ guards, the hash and consistency refusals and atomic output) and the GlyphSynth 
 | Representative examples | pass: seeded draws only | `examples.md` (crops in the git-ignored gallery) |
 | `reports/error_cases/` and `research/paper/error_analysis.md` drafted from generated numbers | pass | `reports/error_cases/phase15/`, `research/paper/error_analysis.md` |
 | Findings rows for RQ5 | pass | `research/findings.md` F27 to F32; F26 revised by F33 |
-| CI green | pending (after the push) | — |
+| CI green | pass | runs 44065877523 (branch), 44065813870 (pull request), 44068353082 (`main`) |
 
 **Known issues**
 - GDC is 106 pages from 21 documents, GDC-scan one document and FUNSD 50 forms. The
@@ -2541,4 +2541,7 @@ guards, the hash and consistency refusals and atomic output) and the GlyphSynth 
 - The blur attribute mixes source resolution with optical blur; GlyphSynth and GLYPH-C are
   synthetic or derived from validation; H4 is read post hoc.
 
-**Git:** branch `phase/15-error-analysis`; push and merge pending.
+**Git:** branch `phase/15-error-analysis`, merged through pull request #20. Merge commit `ed372db`, tag
+`phase-15` (merge re-created with the noreply identity; same tree and parents).
+
+**CI status:** green on the branch, the pull request and `main` (run 44068353082).
