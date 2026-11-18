@@ -17,7 +17,7 @@ Format: `ADR-NNNN-short-name.md` with Status, Context, Decision, Consequences, a
 | [0008](ADR-0008-usable-engine-first.md) | Ship a usable engine (v0.1) before the research studies; CPU-first inference | Accepted (point 4 amended by 0009) |
 | [0009](ADR-0009-no-synthtext.md) | Drop SynthText; keep every training source commercially usable | Accepted |
 | [0010](ADR-0010-gdc-capture-track.md) | GDC capture runs as its own track; Phase 4 closes when the print pack is ready | Accepted |
-| [0011](ADR-0011-cpu-latency-target.md) | CPU latency target for GLYPHARIS v0.1 | Accepted |
+| [0011](ADR-0011-cpu-latency-target.md) | CPU latency target for GLYPHARIS v0.1 | Accepted for v1 as a missed target (owner decision 2026-11-18) |
 | [0012](ADR-0012-detector-labels-and-operating-points.md) | Detector labels and unclip operating points | Accepted |
 | [0013](ADR-0013-gdc-scan-role.md) | GDC-scan is an internal test set, reported as a case study | Accepted |
 | [0014](ADR-0014-weights-and-backbone-terms.md) | Terms for the v1 weights; the ImageNet-initialised detector kept as a disclosed exception | Accepted |

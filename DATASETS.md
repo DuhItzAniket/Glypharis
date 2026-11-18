@@ -23,8 +23,9 @@ how the project handled it. It is not legal advice.
 Every source that can influence the weights of a model delivered to a consumer must allow commercial
 use, possibly with attribution or share-alike
 ([ADR-0009](docs/decisions/ADR-0009-no-synthtext.md)). Research-only or unlicensed datasets are used
-only for evaluation. The one open question against this rule is the ImageNet-1K initialisation of the
-detector; see [Licensing implications for v1](#licensing-implications-for-v1).
+only for evaluation. The one disclosed exception to this rule is the ImageNet-1K initialisation of the
+v1 detector ([ADR-0014](docs/decisions/ADR-0014-weights-and-backbone-terms.md)); see
+[Licensing implications for v1](#licensing-implications-for-v1).
 
 ## What trained the delivered models
 
@@ -655,12 +656,14 @@ The repository does not contain:
 - The v1 models were trained only on HierText. HierText's share-alike terms therefore bear on any release
   of the weights. Whether trained weights are adapted material under CC BY-SA is not settled, so the project
   states a handling and not a legal conclusion.
-- Weights: Intended terms under ADR-0014, effective only if released. The position drafted there, pending
-  the owner's confirmation, is CC BY-SA 4.0 with HierText and Open Images attribution.
+- Weights: Intended terms under ADR-0014, effective only if released. The owner decided on 2026-11-18
+  ([ADR-0014](docs/decisions/ADR-0014-weights-and-backbone-terms.md)) that they are CC BY-SA 4.0 with
+  attribution to HierText and Open Images. No weights are distributed; release is Phase 23.
 - Detector initialisation: GW-DET-001 starts from MobileNetV3-Large ImageNet-1K weights, and the ImageNet
-  terms do not clearly allow commercial use, which sits against the rule in ADR-0009. The position drafted
-  in ADR-0014, pending the owner's confirmation, keeps GW-DET-001 as v1's detector as a disclosed exception
-  to that rule. GW-DET-002 is the randomly initialised comparison run. RISK_REGISTER R-05 tracks the point.
+  terms do not clearly allow commercial use, which sits against the rule in ADR-0009. By the same decision
+  GW-DET-001 stays v1's detector as a disclosed exception to that rule, so the v1 weights are not described
+  as cleared for commercial use. GW-DET-002 is the randomly initialised comparison run. RISK_REGISTER R-05
+  stays open for commercial use.
 - Evaluation-only datasets (IIIT5K, FUNSD, OmniDocBench, GDC, GDC-scan) never entered training, augmentation
   or tuning.
 - The all-ONNX fused-attention build exports the same weights, so the same terms would apply to it. A new

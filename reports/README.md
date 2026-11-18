@@ -20,6 +20,13 @@ reports/
 Large binaries such as raw predictions and per-sample dumps stay out of git (see `.gitignore`). Curated
 figures and summary tables are committed so the research record is visible on GitHub.
 
+## Training curves
+
+Each training run's curves are in `reports/training/<run_id>/curves.png`, shown in that run's
+`report.md` under "Curves". Learning-rate range tests are in
+`reports/training/sanity/<run_id>/lr_range.png`. The per-step and per-epoch logs behind the plots stay
+local under `runs/`.
+
 ## Attribution of HierText and Open Images material
 
 Generated files are not edited after the fact, so this notice covers the ones written before they

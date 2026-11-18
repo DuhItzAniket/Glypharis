@@ -516,22 +516,21 @@ counts the wall-clock hours each queued job occupied its device, whether it fini
 that did not finish is not all waste, since a training job that stopped resumed from its last
 checkpoint.
 
-<!-- trace: GW-REC-034 reports/compute/ledger.md -->
-| Phase | Device | Hours, all jobs | Hours, jobs that did not finish |
-|---|---|---|---|
-| Phase 5 | CPU | 45.9 | 1.9 |
-| Phase 6 | GPU | 11.5 | 3.8 |
-| Phase 7 | GPU | 55.3 | 17.9 |
-| Phase 8 | GPU | 16.2 | 0.8 |
-| Phase 11 | GPU | 9.5 | 1.3 |
-| Phase 12 | GPU | 17.1 | 0.3 |
-| Phase 13 | GPU | 107.6 | 51.3 |
-| Phase 16 | CPU | 15.7 | none |
-| Phase 16 | GPU | 0.1 | none |
-| All counted phases | GPU | 217.2 | 75.6 |
-| All counted phases | CPU | 61.7 | 1.9 |
+<!-- trace-table: reports/compute/ledger.md reports/compute/ledger.md Phase 5=L13|Phase 6=L14|Phase 7=L15|Phase 8=L16|Phase 11=L17|Phase 12=L18|Phase 13=L19|Phase 16=L20|All counted phases=L21 -->
+| Phase | GPU-h (all) | GPU-h (jobs that did not finish) | CPU-h (all) | CPU-h (jobs that did not finish) |
+|---|---|---|---|---|
+| Phase 5 | 0.0 | 0.0 | 45.9 | 1.9 |
+| Phase 6 | 11.5 | 3.8 | 0.0 | 0.0 |
+| Phase 7 | 55.3 | 17.9 | 0.0 | 0.0 |
+| Phase 8 | 16.2 | 0.8 | 0.0 | 0.0 |
+| Phase 11 | 9.5 | 1.3 | 0.0 | 0.0 |
+| Phase 12 | 17.1 | 0.3 | 0.0 | 0.0 |
+| Phase 13 | 107.6 | 51.3 | 0.0 | 0.0 |
+| Phase 16 | 0.1 | 0.0 | 15.7 | 0.0 |
+| All counted phases | 217.2 | 75.6 | 61.7 | 1.9 |
 
-Table 12. Compute by phase, in hours. Phases and devices not listed have no hours in the ledger.
+Table 12. Compute by phase, in hours, as the ledger prints it. These totals cover many experiments, so
+they cite the ledger itself and no single ID. Phases not listed have no hours in the ledger.
 
 <!-- trace-table: GW-REC-034 reports/compute/ledger.md GW-REC-034=GW-REC-034 -->
 <!-- trace-table: GW-REC-035 reports/compute/ledger.md GW-REC-035=GW-REC-035 -->
@@ -669,6 +668,9 @@ Phases 17, 18 and 20).
 Final validation (Phase 22) has not been run. Configuration frozen and recorded; reproduction pending
 Phase 22. No weights are distributed; release is Phase 23.
 
-Questions about licences remain open. For the weights, the default position in the plan is CC BY-SA
-4.0 with HierText and Open Images attribution. Intended terms under ADR-0014, effective only if
-released. For the code licence and the project citation: To be settled in Phase 23.
+Intended terms under ADR-0014, effective only if released. The owner decided on 2026-11-18
+([ADR-0014](../../docs/decisions/ADR-0014-weights-and-backbone-terms.md)) that the intended terms for
+the v1 weights are CC BY-SA 4.0 with attribution to HierText and Open Images, and that GW-DET-001 stays
+v1's detector as a disclosed exception to ADR-0009's commercial-use rule. This is the project's chosen
+handling, not a legal conclusion, and the v1 weights are not described as cleared for commercial use.
+For the code licence and the project citation: To be settled in Phase 23.

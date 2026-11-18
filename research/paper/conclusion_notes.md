@@ -68,5 +68,8 @@ within the 0.05-point tolerance.
 laptop figures only; to be evaluated in Phase 22.
 - Page orientation, small text and steep lines are the failures the error analysis points to first.
 - The cause of the PaddleOCR reading-order error on OmniDocBench remains unmeasured (F26, F33).
-- Weights: intended terms under ADR-0014, effective only if released. Code licence and citation: to
-be settled in Phase 23.
+- Weights: intended terms under ADR-0014, effective only if released: CC BY-SA 4.0 with attribution to
+HierText and Open Images, with GW-DET-001's ImageNet initialisation kept as a disclosed exception to
+ADR-0009's commercial-use rule ([ADR-0014](../../docs/decisions/ADR-0014-weights-and-backbone-terms.md),
+owner decision of 2026-11-18; not a legal conclusion). Code licence and citation: to be settled in
+Phase 23.

@@ -70,6 +70,11 @@ REPORT_IDS: Final[dict[str, tuple[str, ...]]] = {
     ),
 }
 
+# Reports that add up many experiments. A total that belongs to none of them, such as a phase's
+# hours, may cite the file itself, but only from a bound row that names no experiment: the rows for
+# single experiments keep their IDs.
+AGGREGATE_REPORTS: Final = frozenset({"reports/compute/ledger.md"})
+
 _ID_RANGE: Final = re.compile(
     r"GW-([A-Z0-9]+)-([0-9]{3})[ \t]*(?:to|–)[ \t]*(?:GW-\1-)?([0-9]{3})(?![0-9])"
 )
@@ -235,11 +240,22 @@ class Repo:
             return f"{experiment} is registered as {entry.status!r}, not done"
         return None
 
-    def stand_in_problem(self, path: str) -> str | None:
-        """Why a path may not stand in for an experiment ID, or None when it may."""
+    def stand_in_problem(self, path: str, lines: Sequence[int] = ()) -> str | None:
+        """Why a path may not stand in for an experiment ID, or None when it may.
+
+        ``lines`` are the source lines a bound row selected, which `AGGREGATE_REPORTS` require.
+        """
         if not self.is_evidence(path):
             return f"{path} cannot stand in for an experiment ID"
         if path.startswith(STAND_IN_ROOTS):
+            return None
+        if path in AGGREGATE_REPORTS:
+            if not lines:
+                return f"{path} stands in for an experiment ID only in rows bound by trace-table"
+            text = self.lines(path)
+            for number in lines:
+                if nt.EXPERIMENT_ID.search(text[number - 1]):
+                    return f"{path}:{number} names an experiment: cite its ID"
             return None
         indexed = self.index.file(path)
         if self.claimed(path) or indexed.ids:
@@ -284,7 +300,7 @@ class Repo:
         if not self.is_evidence(path):
             return f"{path} is not a report, manifest or configuration"
         if experiment == path:
-            return self.stand_in_problem(path)
+            return self.stand_in_problem(path, lines)
         problem = self.id_problem(experiment)
         if problem:
             return problem

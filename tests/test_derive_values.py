@@ -166,6 +166,17 @@ def test_a_path_stands_in_only_where_no_run_is_involved(root: Path) -> None:
     assert "cannot stand in" in str(repo.stand_in_problem("docs/PROTOCOL.md"))
 
 
+def test_an_aggregate_report_stands_in_only_for_rows_naming_no_experiment(root: Path) -> None:
+    ledger = "# Ledger\n\n| Phase | h |\n|---|---|\n| 05 | 1.5 |\n\n| ID | h |\n|---|---|\n"
+    write(root, "reports/compute/ledger.md", ledger + "| GW-REC-001 | 1.5 |\n")
+    repo = dv.Repo(root)
+    path = "reports/compute/ledger.md"
+    assert path in dv.AGGREGATE_REPORTS
+    assert repo.source_problem(path, path, lines=[5]) is None
+    assert "names an experiment" in str(repo.source_problem(path, path, lines=[9]))
+    assert "only in rows bound" in str(repo.source_problem(path, path))
+
+
 def test_hand_written_files_are_not_evidence(root: Path) -> None:
     repo = dv.Repo(root)
     for path in ("research/findings.md", "research/paper/x.md", "reports/paper_trace/trace.md"):

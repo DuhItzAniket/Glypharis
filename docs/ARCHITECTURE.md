@@ -190,12 +190,14 @@ Code is in `glypharis/pipeline/`.
 ```python
 from glypharis import GlypharisOCR
 
-ocr = GlypharisOCR.from_pretrained("glypharis-v1")   # a bundle by name or path; nothing is downloaded
-result = ocr.predict("page.png")   # path, image file bytes, PIL image or numpy array
+# A bundle by name or path; nothing is downloaded.
+ocr = GlypharisOCR.from_pretrained("glypharis-v1")
+# A path, image file bytes, a PIL image or a numpy array.
+result = ocr.predict("page.png")
 results = ocr.predict_batch([...])
 
-print(result.text)   # the lines joined with newlines, in reading order
-result.to_dict()     # JSON-serialisable; result.to_json() gives the string
+print(result.text)  # the lines joined with newlines, in reading order
+result.to_dict()  # JSON-serialisable; result.to_json() gives the string
 ```
 
 Fields of `OCRResult.to_dict` (`glypharis/pipeline/ocr.py`):

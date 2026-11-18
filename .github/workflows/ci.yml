@@ -55,6 +55,15 @@ jobs:
       - name: Validate configs
         run: python scripts/validate_configs.py
 
+      - name: Experiment summary is current
+        run: python scripts/experiment_summary.py --check
+
+      - name: Comparison table is current
+        run: python scripts/experiment_comparison.py --check
+
+      - name: Paper numbers trace to reports
+        run: python scripts/trace_numbers.py --check
+
       - name: Installed command (fresh environment)
         run: |
           glypharis-ocr --help

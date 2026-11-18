@@ -172,6 +172,8 @@ check, no-op rerun, manifest content).
 
 **Results (measured):** HierText 11,639 images (8,281 / 1,724 / 1,634), counts as in DATASETS.md;
 3.72 GiB of archives plus 79 MiB of ground truth. Ground-truth files match GitHub's git blob SHA-1.
+(Correction, 2026-11-18: 3.72 GiB is the total. The archives are 3.64 GiB and the ground truth 79 MiB,
+as `DATASETS.md` now states.)
 
 **Known issues**
 - S3 throughput was 0.3–0.8 MB/s per connection from this machine; the downloader uses one connection.
@@ -682,6 +684,7 @@ pre-declared rule fired; they finished, and the rules were applied as planned.
 **Known issues**
 - The ImageNet weight terms are an owner decision before v0.1 ships a detector (RISK_REGISTER R-05).
   GW-DET-002 measured the fallback: training from scratch costs about 0.02 F1@0.5.
+  (Decided 2026-11-18: ADR-0014 keeps GW-DET-001 as a disclosed exception to ADR-0009's rule.)
 - The recognizer trainer is not on the shared loop yet. Phase 7 has merged, but the move is left out
   of this gate to keep it to the detector. The owner approved it (2026-10-27) for its own commit at
   the start of Phase 10, accepted only if the recognizer tests pass unchanged and an existing GW-REC
@@ -3249,6 +3252,8 @@ a GPU target as a separate decision. PyTorch on the RTX 4050 reads a page in 1,0
 - F35: the plain export's unfused attention is the main reason the exported recognizer is slow:
   one com.microsoft.MultiHeadAttention node per global mixer keeps v1's page CER and F1 and cuts
   the ONNX page time from 9,739.4 to 4,020.8 ms, still slower than PyTorch (GW-EFF-009).
+  (Correction, 2026-11-18: no interval covers that pair. F35 now gives both values, 4,020.8 and
+  2,637.3 ms, and states no difference.)
 - F36: dynamic INT8 of the constant-weight MatMuls (H7′ holds); the attention products stay fp32,
   and on pages INT8 removes about half as much time as fusing the attention (GW-EFF-008,
   GW-EFF-009).

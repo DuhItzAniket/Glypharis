@@ -184,10 +184,12 @@ values is refused (GW-E2E-012).
 
 ## Licence and release position
 
-To be settled in Phase 23: the code licence, the project citation and any public package. Licence
-questions for the weights are with the owner, and ADR-0014 will record the answer. Intended terms
-under ADR-0014, effective only if released. The positions disclosed in the Phase 21 plan, pending
-the owner, are that GW-DET-001, initialised from ImageNet weights, stays v1's detector as a
-disclosed exception to ADR-0009's commercial-use rule, and that the weights would carry CC BY-SA 4.0
-with HierText and Open Images attribution. FUNSD, IIIT5K and OmniDocBench were used for evaluation
-only, under their own terms (`DATASETS.md`).
+To be settled in Phase 23: the code licence, the project citation and any public package. No weights
+are distributed; release is Phase 23. Intended terms under ADR-0014, effective only if released. The
+owner decided on 2026-11-18 ([ADR-0014](../../docs/decisions/ADR-0014-weights-and-backbone-terms.md))
+that GW-DET-001, initialised from ImageNet weights, stays v1's detector as a disclosed exception to
+ADR-0009's commercial-use rule, because the ImageNet terms do not clearly allow commercial use, and
+that the intended terms for the weights are CC BY-SA 4.0 with attribution to HierText and Open Images.
+This is the project's chosen handling, not a legal conclusion, and the v1 weights are not described
+as cleared for commercial use. FUNSD, IIIT5K and OmniDocBench were used for evaluation only, under
+their own terms (`DATASETS.md`).

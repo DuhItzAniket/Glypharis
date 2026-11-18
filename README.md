@@ -135,5 +135,15 @@ builds, and v1 misses the laptop CPU latency targets of
 
 ## Licence
 
-Code licence to be decided. Model weights will be released only on terms compatible with the training
-datasets' licences (see [DATASETS.md](DATASETS.md)).
+Code licence: to be settled in Phase 23.
+
+No weights are distributed; release is Phase 23.
+Intended terms under ADR-0014, effective only if released. They are CC BY-SA 4.0 for the v1 weights,
+with attribution to HierText and Open Images, as the owner decided on 2026-11-18
+([ADR-0014](docs/decisions/ADR-0014-weights-and-backbone-terms.md)).
+
+GW-DET-001 stays v1's detector as a disclosed exception to the commercial-use rule of
+[ADR-0009](docs/decisions/ADR-0009-no-synthtext.md): its backbone was initialised from ImageNet-1K
+weights, and the ImageNet terms do not clearly allow commercial use. The v1 weights are therefore not
+described as cleared for commercial use. This is the project's chosen handling, not a legal
+conclusion. The terms of each dataset are in [DATASETS.md](DATASETS.md).

@@ -807,13 +807,14 @@ Source: [`reports/environment/env_report.md`](reports/environment/env_report.md)
 ## Licence information
 
 Intended terms under ADR-0014, effective only if released. No weights are distributed; release is
-Phase 23. The positions below are the defaults recorded in the Phase 21 plan and await the owner's
-decision.
+Phase 23. The owner decided the positions below on 2026-11-18
+([ADR-0014](docs/decisions/ADR-0014-weights-and-backbone-terms.md)). They are the project's chosen
+handling, not a legal conclusion, and the v1 weights are not described as cleared for commercial use.
 
 | Part | Position |
 |---|---|
-| Weights | Default position: CC BY-SA 4.0 with HierText and Open Images attribution, effective only if released |
-| Detector initialised from ImageNet-1K weights | Default position: GW-DET-001 stays v1's detector as a disclosed exception to ADR-0009's commercial-use rule, because the ImageNet terms do not clearly allow commercial use |
+| Weights | CC BY-SA 4.0 with attribution to HierText and Open Images, as intended terms that take effect only if the weights are released in Phase 23, and subject to the detector exception below |
+| Detector initialised from ImageNet-1K weights | GW-DET-001 stays v1's detector as a disclosed exception to ADR-0009's commercial-use rule: its backbone was initialised from ImageNet-1K weights, and the ImageNet terms do not clearly allow commercial use |
 | Code | To be settled in Phase 23. |
 
 Terms of the data and weights that influenced the model:

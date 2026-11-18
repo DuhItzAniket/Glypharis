@@ -300,11 +300,12 @@ probability map and a threshold map. The threshold head is used only in training
 
 The backbone was initialised from ImageNet weights (`russakovsky2015imagenet`), loaded from a
 registered file whose hash is recorded, under the policy of ADR-0007. It is the only pretrained
-component of v1; the recognizer was trained from scratch. Whether GW-DET-001 stays v1's detector as a
-disclosed exception to ADR-0009's commercial-use rule is an open question for the project owner, and
-the plan's default position is that it stays and the exception is disclosed. The default position for
-the weights is CC BY-SA 4.0 with HierText and Open Images attribution. Intended terms under ADR-0014,
-effective only if released.
+component of v1; the recognizer was trained from scratch. The owner decided on 2026-11-18
+([ADR-0014](../../docs/decisions/ADR-0014-weights-and-backbone-terms.md)) that GW-DET-001 stays v1's
+detector as a disclosed exception to ADR-0009's commercial-use rule, because the ImageNet terms do not
+clearly allow commercial use, and that the intended terms for the v1 weights are CC BY-SA 4.0 with
+attribution to HierText and Open Images. Intended terms under ADR-0014, effective only if released.
+This is the project's chosen handling, not a legal conclusion.
 
 Targets follow DBNet. Each line polygon is shrunk with shrink ratio 0.4 to give the text kernel, and
 a threshold map from 0.3 to 0.7 is drawn around each line. A line whose short side is under a minimum

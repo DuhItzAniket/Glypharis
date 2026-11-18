@@ -463,12 +463,14 @@ Phases 0 to 20 have passed their gates, including the re-runs of 17, 18 and 20 o
 - **Tasks:** release notes, version bump, tagged GitHub release with the model artifact (or download script
   if the artifact is too large for a release asset), with licence terms that respect the training data
   (see DATASETS.md §Licensing implications).
-- **Status of the licence questions:** No weights are distributed; release is Phase 23. ADR-0014 records
-  the terms, and both positions below are defaults awaiting the owner's answer:
+- **Status of the licence questions:** No weights are distributed; release is Phase 23. The owner decided
+  both points on 2026-11-18 ([ADR-0014](decisions/ADR-0014-weights-and-backbone-terms.md)); this is the
+  project's chosen handling, not a legal conclusion, and the v1 weights are not called cleared for
+  commercial use:
   - GW-DET-001, initialised from ImageNet weights, stays v1's detector as a disclosed exception to
     ADR-0009's commercial-use rule;
-  - the weights' terms are CC BY-SA 4.0 with HierText and Open Images attribution, given HierText's
-    share-alike licence. Intended terms under ADR-0014, effective only if released.
+  - the weights' intended terms are CC BY-SA 4.0 with attribution to HierText and Open Images, given
+    HierText's share-alike licence. Intended terms under ADR-0014, effective only if released.
 
   The code licence, PyPI package, Zenodo DOI and `CITATION.cff`: To be settled in Phase 23.
 - **Publishing** (added 2026-10-31 at the owner's request):
@@ -525,7 +527,7 @@ Phases 0 to 20 have passed their gates, including the re-runs of 17, 18 and 20 o
 | `data/DATASET_MANIFEST.yaml` is not regenerated in Phase 21 | The per-dataset manifests under `data/manifests/` hold the current values; `DATASETS.md` maps each required field to the manifest that holds it | PHASE_STATUS, Phase 21 |
 | The Phase 21 number check also covers `MODEL_CARD.md` and `DATASETS.md` | WORKFLOW §6 applies to every document | PHASE_STATUS, Phase 21 |
 | Phase 22 also evaluates the fused-attention build and records the phone-measurement gap | Owner decision of 2026-11-18. A new version, not v1; validation and laptop figures only; to be evaluated in Phase 22 | ADR-0011, Phase 22 above |
-| v1's detector is initialised from ImageNet weights although ADR-0009 asks that sources allow commercial use | Default position, awaiting the owner: a disclosed exception. Intended terms under ADR-0014, effective only if released | Phase 23 above, `DATASETS.md`, ADR-0007, ADR-0009 |
+| v1's detector is initialised from ImageNet weights although ADR-0009 asks that sources allow commercial use | Owner decision of 2026-11-18: a disclosed exception, not a legal conclusion. Intended terms under ADR-0014, effective only if released | [ADR-0014](decisions/ADR-0014-weights-and-backbone-terms.md), Phase 23 above, `DATASETS.md`, ADR-0007, ADR-0009 |
 
 ## 9. Traceability (brief section → where it is handled)
 
