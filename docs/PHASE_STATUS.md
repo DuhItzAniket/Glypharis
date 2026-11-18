@@ -4115,8 +4115,9 @@ pages differ too, "identical" is recorded as failed with that cause, and the eva
 
 **11. Test re-run on the GPU, GW-REC-043, GW-E2E-016, GW-E2E-017 (sitting S3).** Twelve runs in Phase
 14's order: rec on `hiertext_test`, `gdc_test`, `gdc_scan_test`, `funsd_test`, `iiit5k_test`; oracle on
-`gdc_test`, `gdc_scan_test`; e2e on `hiertext_test`, `gdc_test`, `gdc_scan_test`, `funsd_test`,
-`omnidocbench_test`. Same device, batch 256, same tag. Commit the log after the batch.
+`gdc_test`, `gdc_scan_test`; e2e on `gdc_scan_test`, `funsd_test`, `gdc_test`, `omnidocbench_test`,
+`hiertext_test`, the order Phase 14's run records show (corrected 2026-11-19, see the amendment after
+item 13). Same device, batch 256, same tag. Commit the log after the batch.
 
 The test re-run is done once per set. A resume only finishes a crashed run. A failed tolerance is not
 answered by running again; any further attempt needs a new registered ID, written before it starts, and
@@ -4465,3 +4466,25 @@ stays open. It covers one validation line and says nothing about speed or memory
 **Progress: items 4 and 5 passed (GW-E2E-013).** The walkthrough from a fresh clone passed, and its three
 findings were fixed at `8a4b3a3` and re-checked in the clean clone (`docs/FINAL_VALIDATION.md`, section 1).
 
+**Amendment to items 6 to 13 (2026-11-19, before `phase22-repro` was tagged and before any reproduction
+result existed).** The review of the reproduction tools settled these points:
+
+- *Order of the page runs.* Item 11 first listed them in the wrong order. Phase 14's recorded start times
+  give `gdc_scan_test`, `funsd_test`, `gdc_test`, `omnidocbench_test`, `hiertext_test`, and the wrapper
+  enforces that.
+- *Metric inventory.* `reports/final_validation/metric_inventory.json` lists 1,381 point values, 413
+  counts, 22 flags and 16 verdicts from `reports/external/results.json`. As owner decision 5 says, every
+  point value is judged, including small slices, calibration bins and H1' latency. Bin failures are
+  counted separately in the verdict, so that one line crossing a bin edge can be seen for what it is, but
+  they still fail the check.
+- *Same flags.* The rehearsal and the verdict also fail if the run's identity differs from Phase 14's:
+  model hashes, settings, batch, inputs, tag, or the torch, CUDA and cuDNN versions. The GPU driver is
+  recorded but cannot be compared, because Phase 14 did not record it.
+- *Pass A.* `phase22_v1_compare.py pass-a` makes the exact comparison of item 10. Strings that are paths
+  are skipped; every other value must match, and OmniDocBench's fallback pages are compared row by row.
+- *A crash.* A set whose records are all written but which never reached the manifest may be closed with
+  no model load, image read or log row. A finished set can never run again.
+- *Pass identity.* Each root belongs to one pass. Pass A refuses re-run files, Pass B requires all 14
+  re-run files, and a stopped pass resumes only as itself.
+- *After the tag,* only the run records listed in `RUN_RECORDS` may change until Pass B has finished, so
+  this section is not edited again before then.
