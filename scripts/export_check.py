@@ -17,6 +17,22 @@ loading both backends from the bundle itself:
    each backend, scored by `evaluate_page`.
 
 The export counts as successful only if every check passes. Validation data only.
+
+    python scripts/export_check.py --frozen --out runs/release/glypharis-v1 \
+        [--version glypharis_v1] [--report reports/efficiency/phase16/v1_bundle.json]
+
+``--frozen`` (Phase 16, GW-EFF-006) builds the v1 bundle from the freeze record instead: the
+pipeline from `load_frozen("cpu")` (every setting the record's, hashes checked), the detector
+release from the record's checkpoint, and the manifest's ``sources`` from the record and the
+build's provenance. The v1 code paths must equal the ``phase14-eval`` tag's
+(`glypharis.efficiency.v1.assert_v1_code`). Once written, the manifest's detector spec, the
+recognizer's height, maximum width and temperature, and the source checkpoint hashes are compared
+with the record (`bundle_problems`); a bundle that differs gets its manifest renamed to
+``manifest.rejected.json``, so nothing loads it, and the run fails. An existing bundle or
+``--report`` is never overwritten: the report names the bundle by its manifest SHA-256 and the
+time it was written (``created_utc``), which the Phase 16 scorer requires to come before H1′'s
+sitting. The equivalence checks against the PyTorch reference outputs are
+`scripts/phase16_reference.py check`.
 """
 
 from __future__ import annotations
@@ -25,11 +41,13 @@ import argparse
 import dataclasses
 import json
 import sys
+from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any
 
 import numpy as np
 import torch
+import yaml
 from e2e_eval import score
 from run_baselines import e2e_samples
 
@@ -37,12 +55,18 @@ from glypharis.config.cli import add_config_args, overrides_from_args
 from glypharis.config.loader import load_config
 from glypharis.data.det_dataset import PageIndex, read_gt_pages
 from glypharis.data.det_geometry import decode_page
+from glypharis.data.download import sha256_file
 from glypharis.data.linepack import LinePackReader
+from glypharis.data.pages import Page
+from glypharis.data.text import Charset
+from glypharis.efficiency.files import write_json_atomic
+from glypharis.efficiency.v1 import V1CodeError, assert_v1_code
 from glypharis.eval.det_matching import baseline_doc_ids
 from glypharis.eval.page_metrics import PredLine
-from glypharis.export.bundle import load_bundle, write_bundle
+from glypharis.export.bundle import load_bundle, read_manifest, write_bundle
 from glypharis.models.det.detector import TextLineDetector
 from glypharis.models.det.preprocess import prepare_page
+from glypharis.pipeline.frozen import FREEZE_RECORD, load_frozen
 from glypharis.pipeline.recognizer import TextRecognizer
 
 LINES = 5000
@@ -53,6 +77,7 @@ NEAR_TIE = 1e-3
 NEAR_TIE_SHARE = 0.001
 CER_TOL = 0.0005  # 0.05 points of page CER
 PROFILE_PAGES = 110
+FROZEN_FLAG = "--frozen"
 
 
 def det_check(torch_ocr: Any, onnx_ocr: Any, root: Path) -> dict[str, Any]:
@@ -126,6 +151,9 @@ def e2e_check(torch_ocr: Any, onnx_ocr: Any, root: Path, pages_file: Path) -> di
 
 
 def main(argv: list[str] | None = None) -> int:
+    argv = sys.argv[1:] if argv is None else list(argv)
+    if FROZEN_FLAG in argv:
+        return main_frozen(argv)
     parser = argparse.ArgumentParser(description=__doc__.splitlines()[0])
     add_config_args(parser)
     parser.add_argument("--det-checkpoint", required=True)
@@ -211,6 +239,173 @@ def main(argv: list[str] | None = None) -> int:
     (args.out / "equivalence.md").write_text("\n".join(md), encoding="utf-8", newline="\n")
     print("\n".join(md[6:]))
     return 0 if res["export_successful"] else 1
+
+
+# ------------------------------------------------------------- Phase 16: v1 from the freeze record
+# The item lists below are the ones det_check, rec_check and e2e_check read, written out so that
+# scripts/phase16_reference.py reads exactly the same items (tests keep them equal).
+
+
+def profile_pages(root: Path) -> list[Page]:
+    """`det_check`'s pages: the first `PROFILE_PAGES` of the Phase 5 HierText validation sample."""
+    samples = e2e_samples(root, "hiertext_val")
+    return [page for _, page in zip(range(PROFILE_PAGES), samples, strict=False)]
+
+
+def line_indices(n: int) -> np.ndarray:
+    """`rec_check`'s lines of a pack of ``n``: `LINES` indices drawn with `SEED`, sorted."""
+    return np.sort(np.random.default_rng(SEED).choice(n, min(LINES, n), replace=False))
+
+
+def phase5_page_ids(root: Path, pages_file: Path) -> list[str]:
+    """`e2e_check`'s pages: the 400 Phase 5 validation pages, in pages-file order."""
+    return baseline_doc_ids(PageIndex.build(pages_file, "validation", root).doc_ids())
+
+
+def detector_input(page: Page, root: Path, long_side: int) -> np.ndarray:
+    """The padded network input `det_check` gives both backends for ``page``."""
+    rgb = decode_page(root / page.image, (page.width, page.height))
+    image, _ = prepare_page(rgb, long_side)
+    return image
+
+
+def text_difference(
+    ref: torch.Tensor, other: torch.Tensor, charset: Charset
+) -> dict[str, Any] | None:
+    """None when the greedy texts of two ``(T, classes)`` logits agree; otherwise where they part,
+    as `rec_check` judges it: the first frame whose top class differs and the reference's top-2 gap
+    there, a near tie when the gap is below `NEAR_TIE`. Logits of different shapes are never a
+    near tie."""
+    ta = charset.ctc_greedy_decode(ref.argmax(-1).tolist())
+    tb = charset.ctc_greedy_decode(other.argmax(-1).tolist())
+    if ref.shape != other.shape:
+        return {"frame": None, "gap": None, "near_tie": False, "torch": ta, "onnx": tb,
+                "shapes": [list(ref.shape), list(other.shape)]}  # fmt: skip
+    if ta == tb:
+        return None
+    frame = int(torch.nonzero(ref.argmax(-1) != other.argmax(-1))[0])
+    top2 = ref[frame].topk(2).values
+    gap = float(top2[0] - top2[1])
+    return {"frame": frame, "gap": gap, "near_tie": gap < NEAR_TIE, "torch": ta, "onnx": tb}
+
+
+def bundle_problems(manifest: dict[str, Any], record: dict[str, Any]) -> list[str]:
+    """How a bundle manifest differs from the freeze record: the detector's resolution,
+    post-processing, operating point and label version, the recognizer's input height, maximum
+    width and temperature, and the source checkpoints' SHA-256 (empty when it is v1's)."""
+    det, rec = record["detector"], record["recognizer"]
+    spec = (manifest.get("detector") or {}).get("spec") or {}
+    mrec = manifest.get("recognizer") or {}
+    sources = manifest.get("sources") or {}
+    pairs = {
+        "detector resolution": (spec.get("infer"), det["infer"]),
+        "detector post-processing": (spec.get("post"), det["post"]),
+        "detector operating point": (spec.get("operating_point"), det["operating_point"]),
+        "detector label version": (spec.get("label_version"), det["label_version"]),
+        "recognizer height": (mrec.get("height"), int(rec["input"]["height"])),
+        "recognizer maximum width": (mrec.get("max_width"), int(rec["input"]["max_width"])),
+        "recognizer temperature": (mrec.get("temperature"), float(rec["temperature"])),
+        "detector checkpoint SHA-256": (
+            (sources.get("detector") or {}).get("checkpoint_sha256"),
+            det["checkpoint_sha256"],
+        ),
+        "recognizer checkpoint SHA-256": (
+            (sources.get("recognizer") or {}).get("checkpoint_sha256"),
+            rec["checkpoint_sha256"],
+        ),
+    }
+    return [f"{k}: {got!r} in the bundle, {want!r} in the record"
+            for k, (got, want) in pairs.items() if got != want]  # fmt: skip
+
+
+def frozen_sources(
+    record: dict[str, Any], provenance: dict[str, Any], v1_code: dict[str, Any]
+) -> dict[str, Any]:
+    """The manifest's ``sources`` for the v1 bundle, from the record and the build's provenance."""
+    det, rec = record["detector"], record["recognizer"]
+    return {
+        "exported_by": "scripts/export_check.py --frozen (GW-EFF-006)",
+        "record": provenance["record"],
+        "record_sha256": provenance["record_sha256"],
+        "name": record.get("name"),
+        "detector": {
+            "experiment": det["experiment"],
+            "config": det.get("config"),
+            "checkpoint": det["checkpoint"],
+            "checkpoint_sha256": det["checkpoint_sha256"],
+            "settings": det.get("settings_from"),
+        },
+        "recognizer": {
+            "experiment": rec["experiment"],
+            "config": rec.get("config"),
+            "checkpoint": rec["checkpoint"],
+            "checkpoint_sha256": rec["checkpoint_sha256"],
+            "charset": rec["charset"],
+            "charset_sha256": provenance["charset_sha256"],
+            "temperature": rec["temperature"],
+            "temperature_from": rec.get("temperature_from"),
+        },
+        "build": {k: provenance.get(k) for k in ("torch", "numerics", "git_commit", "git_dirty")},
+        "v1_code": v1_code,
+    }
+
+
+def main_frozen(argv: list[str]) -> int:
+    """GW-EFF-006: the v1 bundle from the freeze record (the module docstring)."""
+    parser = argparse.ArgumentParser(description="Build the v1 bundle from the freeze record")
+    parser.add_argument(FROZEN_FLAG, action="store_true", help="build from the freeze record")
+    parser.add_argument("--out", type=Path, required=True, help="the bundle directory")
+    parser.add_argument("--version", default=None, help="manifest version (the record's name)")
+    parser.add_argument("--report", type=Path, default=None,
+                        help="also write the bundle's hashes and checks here (json)")  # fmt: skip
+    parser.add_argument("--root", type=Path, default=Path("."), help="the repository root")
+    args = parser.parse_args(argv)
+    root, out = args.root, args.out
+    if (out / "manifest.json").exists() or (out / "manifest.rejected.json").exists():
+        raise SystemExit(f"{out.as_posix()} already holds a bundle: move it aside first")
+    if args.report is not None and args.report.exists():
+        # The report is what names the GW-EFF-006 bundle; it is written once.
+        raise SystemExit(f"{args.report.as_posix()} exists: move it aside first")
+    try:
+        v1_code = assert_v1_code(root)
+    except V1CodeError as exc:
+        raise SystemExit(f"{exc}; the v1 bundle is built from the tag's code") from exc
+    torch.set_grad_enabled(False)
+    frozen = load_frozen("cpu", root=root)
+    record = yaml.safe_load((root / FREEZE_RECORD).read_text(encoding="utf-8"))
+    version = args.version or str(record.get("name"))
+    sources = frozen_sources(record, frozen.provenance, v1_code)
+    det_checkpoint = root / frozen.provenance["detector_checkpoint"]
+    write_bundle(det_checkpoint, frozen.ocr.detector.spec, frozen.recognizer, out, version,
+                 sources)  # fmt: skip
+    manifest = read_manifest(out)
+    problems = bundle_problems(manifest, record)
+    release = torch.load(out / "detector.pt", map_location="cpu", weights_only=True)
+    if release.get("source_sha256") != record["detector"]["checkpoint_sha256"]:
+        problems.append(f"detector.pt was written from SHA-256 {release.get('source_sha256')}, "
+                        f"the record says {record['detector']['checkpoint_sha256']}")  # fmt: skip
+    if problems:
+        (out / "manifest.json").rename(out / "manifest.rejected.json")
+        raise SystemExit("the bundle differs from the freeze record (manifest renamed to "
+                         "manifest.rejected.json): " + "; ".join(problems))  # fmt: skip
+    summary = {
+        "experiment": "GW-EFF-006",
+        "bundle": out.as_posix(),
+        "version": version,
+        "manifest_sha256": sha256_file(out / "manifest.json"),
+        "files": manifest["files"],
+        "record": frozen.provenance["record"],
+        "record_sha256": frozen.provenance["record_sha256"],
+        "equals_record": True,
+        "v1_code": v1_code,
+        "created_utc": datetime.now(UTC).isoformat(timespec="seconds"),
+    }
+    if args.report is not None:
+        if args.report.exists():
+            raise SystemExit(f"{args.report.as_posix()} exists: move it aside first")
+        write_json_atomic(args.report, summary, ensure_ascii=True)
+    print(json.dumps(summary, indent=1))
+    return 0
 
 
 if __name__ == "__main__":

@@ -1,0 +1,243 @@
+{
+ "generated_by": "scripts/phase16_score.py",
+ "rows": [
+  {
+   "system": "Tesseract 5",
+   "experiment": "GW-BASE-001",
+   "task": "e2e",
+   "mean_ms": 430.81966,
+   "p95_ms": 807.0937499999999,
+   "peak_mem_mib": 281.3,
+   "model_mib": 3.92,
+   "threads": {
+    "OMP_THREAD_LIMIT": null
+   },
+   "sitting": "Phase 5"
+  },
+  {
+   "system": "Tesseract 5",
+   "experiment": "GW-BASE-001",
+   "task": "rec",
+   "mean_ms": 141.83562,
+   "p95_ms": 303.7116,
+   "peak_mem_mib": 113.2,
+   "model_mib": 3.92,
+   "threads": {
+    "OMP_THREAD_LIMIT": null
+   },
+   "sitting": "Phase 5"
+  },
+  {
+   "system": "PP-OCRv5 mobile",
+   "experiment": "GW-BASE-002",
+   "task": "e2e",
+   "mean_ms": 3408.1694,
+   "p95_ms": 5802.799499999999,
+   "peak_mem_mib": 1959.6,
+   "model_mib": 25.41,
+   "threads": {
+    "cpu_threads": 10
+   },
+   "sitting": "Phase 5"
+  },
+  {
+   "system": "PP-OCRv5 mobile",
+   "experiment": "GW-BASE-002",
+   "task": "rec",
+   "mean_ms": 61.361050000000006,
+   "p95_ms": 184.25359999999998,
+   "peak_mem_mib": 923.9,
+   "model_mib": 7.63,
+   "threads": {
+    "cpu_threads": 10
+   },
+   "sitting": "Phase 5"
+  },
+  {
+   "system": "PP-OCRv5 server",
+   "experiment": "GW-BASE-003",
+   "task": "e2e",
+   "mean_ms": 80861.6077,
+   "p95_ms": 148634.41919999992,
+   "peak_mem_mib": 9789.8,
+   "model_mib": 178.59,
+   "threads": {
+    "cpu_threads": 10
+   },
+   "sitting": "Phase 5"
+  },
+  {
+   "system": "PP-OCRv5 server",
+   "experiment": "GW-BASE-003",
+   "task": "rec",
+   "mean_ms": 2266.70768,
+   "p95_ms": 3199.7073999999993,
+   "peak_mem_mib": 1914.5,
+   "model_mib": 81.27,
+   "threads": {
+    "cpu_threads": 10
+   },
+   "sitting": "Phase 5"
+  },
+  {
+   "system": "TrOCR-small-printed",
+   "experiment": "GW-BASE-004",
+   "task": "rec",
+   "mean_ms": 133.3261,
+   "p95_ms": 183.6366,
+   "peak_mem_mib": 701.2,
+   "model_mib": 235.75,
+   "threads": {
+    "torch_threads": 16
+   },
+   "sitting": "Phase 5"
+  },
+  {
+   "system": "PP-OCRv6 tiny",
+   "experiment": "GW-BASE-005",
+   "task": "e2e",
+   "mean_ms": 1726.5517799999998,
+   "p95_ms": 2729.03275,
+   "peak_mem_mib": 1836.0,
+   "model_mib": 19.31,
+   "threads": {
+    "cpu_threads": 10
+   },
+   "sitting": "Phase 5"
+  },
+  {
+   "system": "PP-OCRv6 tiny",
+   "experiment": "GW-BASE-005",
+   "task": "rec",
+   "mean_ms": 21.615850000000005,
+   "p95_ms": 66.44815,
+   "peak_mem_mib": 819.2,
+   "model_mib": 4.37,
+   "threads": {
+    "cpu_threads": 10
+   },
+   "sitting": "Phase 5"
+  },
+  {
+   "system": "PP-OCRv6 small",
+   "experiment": "GW-BASE-006",
+   "task": "e2e",
+   "mean_ms": 3714.158929999999,
+   "p95_ms": 6308.3308499999985,
+   "peak_mem_mib": 2051.0,
+   "model_mib": 43.1,
+   "threads": {
+    "cpu_threads": 10
+   },
+   "sitting": "Phase 5"
+  },
+  {
+   "system": "PP-OCRv6 small",
+   "experiment": "GW-BASE-006",
+   "task": "rec",
+   "mean_ms": 46.0436,
+   "p95_ms": 114.43995,
+   "peak_mem_mib": 999.6,
+   "model_mib": 20.44,
+   "threads": {
+    "cpu_threads": 10
+   },
+   "sitting": "Phase 5"
+  },
+  {
+   "system": "PP-OCRv6 medium",
+   "experiment": "GW-BASE-007",
+   "task": "e2e",
+   "mean_ms": 32528.510420000002,
+   "p95_ms": 56305.36269999999,
+   "peak_mem_mib": 3015.5,
+   "model_mib": 145.74,
+   "threads": {
+    "cpu_threads": 10
+   },
+   "sitting": "Phase 5"
+  },
+  {
+   "system": "PP-OCRv6 medium",
+   "experiment": "GW-BASE-007",
+   "task": "rec",
+   "mean_ms": 552.47463,
+   "p95_ms": 971.6551499999999,
+   "peak_mem_mib": 1574.8,
+   "model_mib": 73.28,
+   "threads": {
+    "cpu_threads": 10
+   },
+   "sitting": "Phase 5"
+  },
+  {
+   "system": "GLYPHARIS v1 PyTorch, CPU, 10 threads",
+   "experiment": "GW-EFF-007",
+   "task": "rec",
+   "mean_ms": 33.900740000000006,
+   "p95_ms": 77.59629999999999,
+   "peak_mem_mib": 825.7,
+   "model_mib": 30.30641269683838,
+   "threads": 10,
+   "sitting": "Phase 16"
+  },
+  {
+   "system": "GLYPHARIS v1 PyTorch, CPU, 10 threads",
+   "experiment": "GW-EFF-007",
+   "task": "e2e",
+   "mean_ms": 2565.73596,
+   "p95_ms": 5127.1114,
+   "peak_mem_mib": 1641.8,
+   "model_mib": 42.74978256225586,
+   "threads": 10,
+   "sitting": "Phase 16"
+  },
+  {
+   "system": "GLYPHARIS v1 fp32 ONNX, CPU, 10 threads",
+   "experiment": "GW-EFF-007",
+   "task": "rec",
+   "mean_ms": 92.24976999999998,
+   "p95_ms": 304.3911999999999,
+   "peak_mem_mib": 1028.0,
+   "model_mib": 30.40256118774414,
+   "threads": 10,
+   "sitting": "Phase 16"
+  },
+  {
+   "system": "GLYPHARIS v1 fp32 ONNX, CPU, 10 threads",
+   "experiment": "GW-EFF-007",
+   "task": "e2e",
+   "mean_ms": 8573.685689999998,
+   "p95_ms": 19011.4924,
+   "peak_mem_mib": 6529.6,
+   "model_mib": 42.557369232177734,
+   "threads": 10,
+   "sitting": "Phase 16"
+  },
+  {
+   "system": "GLYPHARIS v1 fp32 ONNX, CPU, default threads",
+   "experiment": "GW-EFF-007",
+   "task": "rec",
+   "mean_ms": 104.7287,
+   "p95_ms": 392.0882999999999,
+   "peak_mem_mib": 1043.6,
+   "model_mib": 30.40256118774414,
+   "threads": "default",
+   "sitting": "Phase 16"
+  },
+  {
+   "system": "GLYPHARIS v1 fp32 ONNX, CPU, default threads",
+   "experiment": "GW-EFF-007",
+   "task": "e2e",
+   "mean_ms": 9924.86739,
+   "p95_ms": 22071.741899999997,
+   "peak_mem_mib": 6541.5,
+   "model_mib": 42.557369232177734,
+   "threads": "default",
+   "sitting": "Phase 16"
+  }
+ ],
+ "label": "different sittings, no difference stated",
+ "eval_set": "hiertext_val",
+ "phase5_results": "reports/baselines/results.json"
+}

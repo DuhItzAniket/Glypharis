@@ -58,6 +58,22 @@ from Phase 5, not run again). It differs from Phase 5 in what it refuses and whe
 - OmniDocBench end to end with `--subset` reads only the 100 pages of
   data/manifests/processed/omnidocbench_subset100.json, and its file name says so.
 
+Phase 16 (`--phase 16`, docs/PHASE_STATUS.md, Phase 16 item 6) is a dated amendment to GW-BASE-002:
+one fresh validation profile for H1′'s ONNX latency sitting (GW-EFF-010), nothing else.
+
+    python scripts/run_baselines.py --phase 16 --system ppocr_mobile --task e2e \
+        --eval-set hiertext_val --experiment GW-BASE-002 --reason "GW-EFF-010 sitting" --profile
+
+- it starts only on branch `PHASE16_BRANCH`, with ``--profile``, and only for `PHASE16_PROFILE`
+  (PP-OCRv5 mobile end to end on the HierText validation profile pages);
+- the profile goes to data/processed/baselines_phase16/GW-BASE-002/; the Phase 5 and Phase 14
+  folders are only read;
+- every field of the system's `settings()` must equal the ``settings`` block of the Phase 14
+  profile of the same system, task and set (`check_phase14_profile_settings`; no other field of
+  that file is used), and PaddleOCR's 10 CPU threads are asserted as in Phase 14;
+- the profile also records the machine conditions and the GPU's state (nvidia-smi) at its end, and
+  the GPU's state at its start, as every Phase 16 profile does (Phase 16 item 3).
+
 The access log is the repository's research/test_access_log.md, found from the repository root.
 """
 
@@ -111,10 +127,14 @@ PROFILE_SETS = {"rec": ("hiertext_val", "glyphsynth_val"), "e2e": ("hiertext_val
 THREAD_ENV = ("OMP_NUM_THREADS", "OMP_THREAD_LIMIT", "MKL_NUM_THREADS")
 
 # The evaluation sets live in glypharis.eval.sets; EVAL_SETS stays importable from here.
-PHASES = (5, 14)
+PHASES = (5, 14, 16)
 PHASE5_ROOT = "baselines"  # under data/processed
 PHASE14_ROOT = "baselines_phase14"  # under data/processed; Phase 5's files are only read
 PROFILE_THREADS = 10  # PaddleOCR's default CPU threads, asserted for Phase 14 profiles (H1′)
+PHASE16_ROOT = "baselines_phase16"  # under data/processed; Phase 5's and 14's files are only read
+PHASE16_BRANCH = "phase/16-efficiency"
+# The one run Phase 16 makes: GW-BASE-002's page profile for H1′'s ONNX sitting (GW-EFF-010).
+PHASE16_PROFILE = ("ppocr_mobile", "e2e", "hiertext_val")
 # Every input of a Phase 14 run must have a recorded hash, and every pack a recorded index hash
 # (fail closed, `glypharis.eval.inputs.check_inputs`); the tests' tiny sets have none.
 REQUIRE_RECORDED = True
@@ -813,11 +833,11 @@ def check_phase5_batch(
     return {"result": "equal", "inference_batch": batch, "references": refs}
 
 
-def check_profile_threads(system: str, settings: dict[str, Any]) -> None:
+def check_profile_threads(system: str, settings: dict[str, Any], phase: int = 14) -> None:
     """H1′'s latency half compares at PaddleOCR's default 10 threads; refuse anything else."""
     if system in PPOCR.MODELS and settings.get("cpu_threads") != PROFILE_THREADS:
         raise SystemExit(f"{system}: profile at {settings.get('cpu_threads')} CPU threads; "
-                         f"Phase 14 profiles run at {PROFILE_THREADS}")  # fmt: skip
+                         f"Phase {phase} profiles run at {PROFILE_THREADS}")  # fmt: skip
 
 
 def check_phase14_request(args: argparse.Namespace) -> None:
@@ -845,6 +865,69 @@ def check_phase14_request(args: argparse.Namespace) -> None:
         raise SystemExit(f"{args.system} {args.task} on {args.eval_set}: {planned}")
 
 
+# -------------------------------------------------------------------------- Phase 16 checks
+
+
+def check_phase16_request(args: argparse.Namespace) -> None:
+    """The Phase 16 refusals that need no data: branch, profile only, the one registered run."""
+    try:
+        require_branch(PHASE16_BRANCH)
+    except RuntimeError as exc:
+        raise SystemExit(str(exc)) from exc
+    if not args.profile:
+        raise SystemExit("Phase 16 makes validation profiles only (--profile); its baseline "
+                         "predictions are Phase 5's and Phase 14's")  # fmt: skip
+    if (args.system, args.task, args.eval_set) != PHASE16_PROFILE:
+        system, task, eval_set = PHASE16_PROFILE
+        raise SystemExit(f"Phase 16 profiles {system} ({EXPERIMENTS[system]}) {task} on "
+                         f"{eval_set} only (GW-EFF-010), not {args.system} {args.task} on "
+                         f"{args.eval_set}")  # fmt: skip
+
+
+def phase14_profile_path(data: Path, system: str, task: str, eval_set: str) -> Path:
+    """The Phase 14 profile whose settings a Phase 16 profile must repeat."""
+    path = output_path(data, EXPERIMENTS[system], system, task, eval_set, 14)
+    return path.with_name(f"profile_{path.stem}.json")
+
+
+def check_phase14_profile_settings(
+    data: Path, system: str, task: str, eval_set: str, current: dict[str, Any]
+) -> dict[str, Any]:
+    """Refuse unless every field of ``current`` equals the ``settings`` block of the Phase 14
+    profile of the same system, task and set, field by field and in both directions.
+
+    Only that block and the file's ``system``, ``task`` and ``eval_set`` are read. No wording alias
+    applies: the Phase 14 profile already uses the current wording."""
+    path = phase14_profile_path(data, system, task, eval_set)
+    rel = path.relative_to(data).as_posix()
+    if not path.is_file():
+        raise SystemExit(f"{system} ({task}): no Phase 14 profile at {rel}; the Phase 16 profile "
+                         "repeats its settings and cannot check them")  # fmt: skip
+    meta = json.loads(path.read_text(encoding="utf-8"))
+    who = tuple(meta.get(k) for k in ("system", "task", "eval_set"))
+    if who != (system, task, eval_set):
+        raise SystemExit(f"{rel} is a profile of {who}, not of {(system, task, eval_set)}")
+    recorded = meta.get("settings")
+    if not isinstance(recorded, dict):
+        raise SystemExit(f"{rel} records no settings")
+    cur = json.loads(json.dumps(current))  # tuples and lists compare as recorded
+    diff = sorted(k for k in set(cur) | set(recorded)
+                  if cur.get(k, _MISSING) != recorded.get(k, _MISSING))  # fmt: skip
+    if diff:
+        raise SystemExit(f"{system} ({task}): settings differ from Phase 14's {rel} in "
+                         f"{', '.join(diff)}; Phase 16 repeats the Phase 14 profile")  # fmt: skip
+    return {"result": "equal", "reference": rel, "reference_sha256": sha256_file(path),
+            "fields": sorted(recorded)}  # fmt: skip
+
+
+def phase16_gpu_state() -> dict[str, Any] | None:
+    """nvidia-smi's clocks, temperature and memory (`glypharis.efficiency.conditions.gpu_state`),
+    imported here so Phase 5 and 14 runs never load the Phase 16 package."""
+    from glypharis.efficiency.conditions import gpu_state
+
+    return gpu_state()
+
+
 # -------------------------------------------------------------------------------------- runs
 
 
@@ -858,8 +941,9 @@ def output_path(
     subset: bool = False,
 ) -> Path:
     """Where a run's predictions go: Phase 5 under processed/baselines, Phase 14 under
-    processed/baselines_phase14; a subset run says so in its name."""
-    root = PHASE14_ROOT if phase == 14 else PHASE5_ROOT
+    processed/baselines_phase14 (Phase 16's one profile under processed/baselines_phase16); a
+    subset run says so in its name."""
+    root = {14: PHASE14_ROOT, 16: PHASE16_ROOT}.get(phase, PHASE5_ROOT)
     name = f"{system}_{task}_{eval_set}" + (f"_{SUBSET_NAME}" if subset else "")
     return data / "processed" / root / experiment / f"{name}.jsonl"
 
@@ -1046,14 +1130,27 @@ def run_profile(args: argparse.Namespace, data: Path) -> int:
         # and a Phase 5 profile is part of the files Phase 14 hashed.
         raise SystemExit(f"{path.relative_to(data).as_posix()} exists: move it aside first")
     conditions = run_conditions()  # before the model loads, so the CPU check sees an idle machine
+    phase16_start: dict[str, Any] = {}
+    if args.phase == 16 and PHASE16_ROOT not in path.relative_to(data).parts[:2]:
+        raise SystemExit(f"{path.as_posix()}: a Phase 16 profile goes under {PHASE16_ROOT} only")
+    if args.phase == 16:
+        phase16_start = {"utc": datetime.now(UTC).isoformat(timespec="seconds"),
+                         "gpu": phase16_gpu_state()}  # fmt: skip
     git = git_state()
     system = ready(make_system(args.system, args.task), data)
-    phase14: dict[str, Any] = {}
+    phase14: dict[str, Any] = {}  # the phase's own fields (Phase 14 or 16)
     if args.phase == 14:
         settings = system.settings()
         check_profile_threads(args.system, settings)
         phase14 = {"phase": 14, "phase5_settings_check": check_phase5_settings(
             data, args.system, args.task, settings)}  # fmt: skip
+    elif args.phase == 16:
+        settings = system.settings()
+        check_profile_threads(args.system, settings, phase=16)
+        phase14 = {"phase": 16,
+                   "amends": f"{args.experiment} (Phase 16 amendment for GW-EFF-010)",
+                   "phase14_settings_check": check_phase14_profile_settings(
+                       data, args.system, args.task, args.eval_set, settings)}  # fmt: skip
     samples: Iterator[Any] = (
         (img for _, _, img in rec_samples(data, args.eval_set))
         if args.task == "rec"
@@ -1073,6 +1170,12 @@ def run_profile(args: argparse.Namespace, data: Path) -> int:
     if len(times) < WARMUP + PROFILE_SAMPLES:
         raise SystemExit(f"{args.eval_set} gave {len(times)} samples; profiling needs "
                          f"{WARMUP} warm-up + {PROFILE_SAMPLES} timed")  # fmt: skip
+    if args.phase == 16:  # the end of the sitting, as every Phase 16 profile records it
+        end_utc = datetime.now(UTC).isoformat(timespec="seconds")
+        phase14.update(conditions_end=run_conditions(),
+                       conditions_utc={"start": phase16_start["utc"], "end": end_utc},
+                       gpu_state={"start": phase16_start["gpu"],
+                                  "end": phase16_gpu_state()})  # fmt: skip
     own_peak = peak_working_set(proc)
     child_peak = getattr(system, "child_peak", 0)
     profile = {
@@ -1106,7 +1209,8 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--eval-set", required=True, choices=sorted(EVAL_SETS))
     parser.add_argument("--experiment", required=True)
     parser.add_argument("--phase", type=int, required=True, choices=PHASES,
-                        help="5 (Phase 5 sets) or 14 (the new sets, Phase 14 rules)")  # fmt: skip
+                        help="5 (Phase 5 sets), 14 (the new sets, Phase 14 rules) or 16 "
+                             "(GW-BASE-002's validation profile for GW-EFF-010)")  # fmt: skip
     parser.add_argument("--reason", required=True, help="goes into the test-access log")
     parser.add_argument("--subset", action="store_true",
                         help="OmniDocBench end to end on the 100-page subset only")  # fmt: skip
@@ -1138,6 +1242,8 @@ def main(argv: list[str] | None = None) -> int:
     if args.phase == 14:
         check_phase14_request(args)
         require_phase5_hashes(data)
+    elif args.phase == 16:
+        check_phase16_request(args)  # writes under its own folder only, so Phase 5 stays closed
     elif (data / PHASE5_HASHES).exists():
         raise SystemExit(f"data/{PHASE5_HASHES.as_posix()} exists: the Phase 5 files are closed "
                          "and hashed for Phase 14; a Phase 5 run would change them")  # fmt: skip

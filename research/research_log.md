@@ -356,3 +356,60 @@ the bottom. Experiments get their full record in `experiments.md`; this log is t
 - On rendered GlyphSynth lines every labelled slice (fonts, touching or broken characters,
   background noise) stays at 1.48% CER or less (GW-REC-041), which says more about the recognizer
   than about photographed pages.
+
+### 2026-11-17 — Phase 16 opens: what v1 costs, and what a faster version would cost in accuracy
+
+- The plan is registered before any timing. v1 stays the build that was evaluated on test; the
+  only thing that counts as the same model is its plain fp32 ONNX export, checked against outputs
+  saved from the PyTorch build, not against the changed code.
+- Everything faster (INT8, smaller inputs, a fused attention, a mixed backend) is a variant: a new
+  version, measured on validation as a point on the accuracy and latency plot. Which one ships, if
+  any, is the owner's call.
+- Four claims get rules: INT8 cuts recognizer latency by a quarter for at most half a point of CER;
+  the SVTR-style recognizer is within 1.5 times the CRNN's CPU latency; and the ONNX build of v1
+  beats PP-OCRv5 mobile per page, by Phase 14's own rule.
+
+### 2026-11-18 — Phase 16 results: the export is the same model, and slower
+
+- Every planned run finished in one detached chain of 94 steps (2026-11-17T13:44:59Z to
+  2026-11-18T05:36:52Z), the compared arms of GW-EFF-008, 009 and 011 in mirrored order (GW-EFF-010
+  in Phase 14's order, GW-EFF-007's rows one run each), on mains power with the Balanced plan; no
+  sitting was void and the cut line was not needed. Validation data only; no test set was read.
+- One step stopped on its own guard. On a short page of the GPU profile the stages summed to
+  75.922 ms against 78.329 ms for the call, outside the 1% check, because on CUDA every stage
+  boundary adds a synchronisation. The check now allows the larger of 1% and 5 ms (`a8e8bb6`) and
+  the step was rerun from the start; no reported number depends on it. After scoring, 19 variant
+  reports turned out to record the training checkpoint's local path; they now record
+  `checkpoints/<ID>/best.pt` (`1253dfe`), and re-scoring changed only those input hashes and the
+  scorer commit.
+- v1's plain fp32 ONNX export is the same model: it passes all four of Phase 17's checks against
+  outputs saved from the PyTorch build, with no text differences (GW-EFF-006). It is also about 3.3
+  times slower per page on the CPU (8,574 against 2,566 ms at 10 threads) and needs about four
+  times the RAM (6,529.6 against 1,641.8 MiB, GW-EFF-007).
+- The detector is not the problem: its network takes 297.5 ms per page exported and 296.4 ms in
+  PyTorch. The recognizer network takes 8,167.7 of the 8,573.7 ms (GW-EFF-007). F13's "exported
+  detector twice as fast" came from an arena-on side test; F13 is marked revised and F34 gives the
+  arena-off numbers. The same claim in `glypharis/export/onnx.py`'s docstring waits until the
+  frozen v1 code may change again, after the Phase 17 re-run.
+- Most of the gap is the attention. The plain exporter writes each global mixer as separate
+  MatMul, Softmax and mask nodes. Exported with one fused MultiHeadAttention node per mixer, the
+  same weights keep v1's page CER and F1 and line text, and the ONNX page time falls from 9,739.4
+  to 4,020.8 ms, most of the way to PyTorch's 2,637.3 ms in the same sittings (GW-EFF-009, F35).
+- H7′ holds. Dynamic INT8 of the recognizer's constant-weight MatMuls takes a line from 95.78 to
+  61.84 ms, with strict line CER 6.208% against 6.221% and the file down from 30.40 to 9.82 MiB
+  (GW-EFF-008). The attention products stay fp32; on pages INT8 saves less than fusing:
+  −2,848.5 against −5,718.6 ms (GW-EFF-009, descriptive; F36).
+- Detector input size moves accuracy more than time. A long side of 1024 adds 7.29 points of page
+  CER and saves 1,248.1 ms of 9,739.4; 2048 adds 660.6 ms for a CER change whose interval crosses
+  zero (GW-EFF-009, F37). The recognizer sets the page time.
+- H6′ is not met: in fp32 ONNX the SVTR-style GW-REC-020 takes 32.01 ms per line against the
+  CRNN's 10.16 ms, about 3.2 times; in PyTorch the two are closer, 15.70 against 13.00 ms
+  (GW-EFF-011, F39). The unfused attention is the likely reason, not measured for GW-REC-020.
+- H1′ ONNX is not met: the v1 fp32 ONNX bundle takes 9,623.6 ms per page against 3,086.0 ms for a
+  fresh PP-OCRv5 mobile profile in the same sitting (GW-EFF-010, F40). H1′ itself still holds
+  from Phase 14 on the PyTorch build; this verdict is for bundle `875357a6…` only.
+- No CPU build of v1 meets ADR-0011's latency targets; the PyTorch build is within the RAM target
+  only. The lowest mean page time at v1's accuracy is a new version's, the ONNX detector with the
+  PyTorch recognizer, at 2,579.1 ms per page, still over both page time targets but within the RAM
+  target (GW-EFF-009, F38). Which backend is the default, and whether any variant ships, is the
+  owner's call; Phase 16 changes no default.

@@ -7,3 +7,6 @@ Experimental setup as it will be written in the paper. The authoritative registr
 - Training details per model: _pending_
 - Baselines and how they were run: _Phase 5_
 - Ablation design: research/ablations.md
+- Efficiency measurement: Phase 16 (`efficiency.md`, conventions paragraph; docs/EXPERIMENT_PROTOCOL
+  §3; `scripts/e2e_profile.py`, `scripts/rec_profile.py`, `scripts/phase16_variants.py`,
+  `scripts/phase16_score.py`)

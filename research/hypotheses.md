@@ -41,7 +41,12 @@ on the other side, otherwise **not shown**; H1′ holds only if both halves are 
   - CER half: −34.98 [−47.44, −24.08] points on the 53 clean-slice pages; normalised
     −34.73 [−47.17, −23.83]; source documents −34.98 [−50.22, −20.73]; all three met.
   - Latency half: −508.1 [−737.7, −256.5] ms per page (2,446.7 against 2,954.8 ms, 10 threads,
-    one sitting); met. The ONNX v1 build is judged separately when it exists.
+    one sitting); met. The ONNX v1 build is judged separately (next item).
+  - ONNX build, separate verdict: not met (2026-11-18, GW-EFF-010) for the v1 fp32 ONNX bundle
+    with manifest SHA-256 `875357a6346e8b1f989005fa96c557b00bf687461043368dc5e3dc532839f037`:
+    +6,537.6 [+5,383.7, +7,806.3] ms per page (9,623.6 against 3,086.0 ms, 10 threads, one
+    sitting). It applies to that bundle hash only and does not change H1′, which holds on the
+    PyTorch build.
 
 ### H2 — Synthetic data helps, and its domain matters (RQ2)
 
@@ -142,18 +147,62 @@ Written 2026-11-15, before the frozen model read any test set.
 - **Statement:** GLYPHARIS-Rec-M (SVTR-style) reaches lower validation CER than CRNN at equal training
   steps, with CPU latency within 1.5× of CRNN.
 - **Test:** Phase 7 (GW-REC-*).
-- **Status:** open
+- **Status:** superseded for the latency half by H6′ (2026-11-17); the CER half stays
+  exploratory, so H6 as a whole can at most be inconclusive. The statement stays as written.
+  H6′, which supersedes H6's latency half, is not met (2026-11-18, GW-EFF-011); with its CER half
+  exploratory, H6 as a whole stays at most inconclusive, as registered.
 - **Evidence so far (exploratory):** Phase 13's row L4 (the SVTR-style model with its recipe,
   three seeds) lowers validation CER by 0.26 [0.19, 0.32] points against the CRNN at height 48
   (GW-REC-037), but it changes weight decay, learning rate and micro-batching together with the
   encoder, so it does not isolate the encoder. The latency half stays with Phase 16.
+
+### H6′ — H6's latency half, made testable for Phase 16 (RQ7)
+
+Written 2026-11-17, before any Phase 16 measurement. Known when written: Phase 7's PyTorch line
+timings at 16 threads, SVTR 13.5 ms against CRNN 10.7 ms at height 32.
+
+- **Statement:** the SVTR-style recognizer GW-REC-020 runs within 1.5 times the CPU latency of
+  the CRNN GW-REC-003 (H6's matched-budget pair), in fp32 ONNX.
+- **Rule:** both exported and each passing the logit and text checks against its own PyTorch
+  outputs on the 5,000 seeded validation lines; `rec_samples`, 10 warm-up and 100 timed lines,
+  batch 1, 10 threads, one sitting in the order CRNN, SVTR, SVTR, CRNN; met if the CI of
+  mean(t_SVTR − 1.5 × t_CRNN) per line lies below 0, not met if above, otherwise not shown.
+  PyTorch at 10 threads is information.
+- **Test:** Phase 16 (GW-EFF-011).
+- **Status:** not met (2026-11-18, GW-EFF-011): t_SVTR − 1.5 × t_CRNN = +16.78 [+12.02, +22.04] ms
+  per line (32.01 against 10.16 ms, fp32 ONNX, 10 threads, one sitting); both exports passed their
+  checks. PyTorch at 10 threads, information: 15.70 against 13.00 ms.
 
 ### H7 — INT8 quantisation is nearly free (RQ7)
 
 - **Statement:** Dynamic INT8 quantisation of the ONNX recognizer reduces CPU latency by ≥ 25% with an
   absolute validation CER increase ≤ 0.005.
 - **Test:** Phase 16 (GW-EFF-*), possibly earlier during v0.1 export (Phase 17).
-- **Status:** open
+- **Status:** superseded (2026-11-17) by H7′; the statement stays as written.
+
+### H7′ — H7 made testable for Phase 16 (RQ7)
+
+Written 2026-11-17, before any Phase 16 measurement.
+
+- **Arms:** the v1 fp32 ONNX recognizer (GW-EFF-006) and its dynamic INT8 version: ONNX
+  Runtime's `quant_pre_process` (defaults), then `quantize_dynamic(op_types_to_quantize=["MatMul"],
+  per_channel=False, reduce_range=False, weight_type=QInt8, extra_options={"MatMulConstBOnly":
+  True})`. Known in advance: the attention products have no constant input and stay fp32.
+- **Latency half:** `rec_samples`, 10 warm-up and 100 timed lines, batch 1, 10 threads, one
+  sitting in the order fp32, INT8, INT8, fp32: met if the CI of mean(t_INT8 − 0.75 × t_fp32)
+  per line lies below 0.
+- **Accuracy half:** the 5,000 seeded validation lines, strict track, greedy decoding:
+  `paired_ratio_diff_ci(errors_INT8 − 0.005 × ref_chars, errors_fp32, ref_chars, "lines")`;
+  met if the CI lies below 0.
+- **Rule:** met, not met or not shown per half; H7′ holds only if both are met.
+- **Test:** Phase 16 (GW-EFF-008).
+- **Status:** holds (2026-11-18, GW-EFF-008): both halves met.
+  - Latency half: t_INT8 − 0.75 × t_fp32 = −10.00 [−12.79, −7.37] ms per line (61.84 against
+    95.78 ms, two runs averaged, one sitting); met.
+  - Accuracy half: −0.512 [−0.541, −0.484] points (strict line CER 6.208% INT8 against 6.221%
+    fp32 on the 5,000 lines); met.
+  - The INT8 recognizer is a new version, not v1, measured on validation only; it does not
+    replace v1.
 
 ### H8 — Raw CTC confidence is over-confident; temperature scaling fixes most of it (RQ8)
 

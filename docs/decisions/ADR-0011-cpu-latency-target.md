@@ -1,6 +1,6 @@
 # ADR-0011: CPU latency target for GLYPHARIS v0.1
 
-- **Status:** Accepted; revisit triggered at Phase 17 (owner decision pending, see below) (2026-10-25, Phase 5; approved by the owner)
+- **Status:** Accepted; revisit triggered at Phase 17, still open after the Phase 16 measurement (2026-11-18; owner decision pending, see below) (2026-10-25, Phase 5; approved by the owner)
 
 ## Context
 ADR-0008 makes CPU latency the primary efficiency number and leaves the target to be set from
@@ -53,6 +53,62 @@ PyTorch as its default backend. The options as they stand:
    attention for the export, padding and batching, INT8, the ONNX detector);
 2. trade accuracy for speed now, under new registered runs (a smaller input, a lighter recognizer);
 3. restate the target for the PyTorch build (the ONNX Runtime premise did not hold).
+
+**Note (2026-11-18, Phase 16):** the "twice as fast" detector figure above came from an arena-on
+side test; with the arena off, as the backends run, the exported detector runs at about PyTorch's
+speed and the exported recognizer takes about 2.7 times as long per line, not 4.5 (GW-EFF-007; F13
+revised, F34).
+
+## Phase 16 measurement (2026-11-18): still missed, options for the owner
+The frozen v1 measured again on this laptop, HierText validation only, with every profile on mains
+power, the Balanced plan and power mode "best performance" at its start and end
+(`reports/efficiency/phase16/`). No CPU build of v1 meets the line or page targets; only the PyTorch
+build's peak RAM on pages is within (GW-EFF-007, ms and MiB):
+
+| Build | Line mean (≤ 25) | Line p95 (≤ 70) | Page mean (≤ 1,500) | Page p95 (≤ 2,700) | Peak RAM on pages (< 1,836) |
+|---|---|---|---|---|---|
+| v1 PyTorch, CPU, 10 threads | 33.9: over | 77.6: over | 2,565.7: over | 5,127.1: over | 1,641.8: within |
+| v1 fp32 ONNX, CPU, 10 threads | 92.2: over | 304.4: over | 8,573.7: over | 19,011.5: over | 6,529.6: over |
+| v1 fp32 ONNX, CPU, default threads | 104.7: over | 392.1: over | 9,924.9: over | 22,071.7: over | 6,541.5: over |
+
+The exported detector is not twice as fast (F34, which corrects F13): with the arena off its network
+takes 297.5 ms per page against 296.4 ms in PyTorch, while the exported recognizer's network takes
+8,167.7 of the ONNX build's 8,573.7 ms per page against 2,148.2 ms in PyTorch, and a line takes
+92.25 against 33.90 ms, about 2.7 times as long (GW-EFF-007). Against PP-OCRv5 mobile in one
+sitting the ONNX bundle is slower per page, 9,623.6 against 3,086.0 ms (H1′ ONNX not met,
+GW-EFF-010).
+
+The new versions that come closest, measured on validation as Pareto points (GW-EFF-009, its own
+sittings, so v1's values differ a little from GW-EFF-007's; none is v1 and none replaces it):
+
+| Point | Version | Page mean ms | Page p95 ms | Peak RAM MiB | Page targets within | Page CER % |
+|---|---|---|---|---|---|---|
+| v1-torch | v1 | 2,637 | 5,328 | 1,665.0 | 1 of 3 | 24.32 |
+| v1-onnx | v1 | 9,739 | 22,474 | 6,525.5 | 0 of 3 | 24.32 |
+| onnx-det-torch-rec | variant (new version, not v1) | 2,579 | 5,187 | 1,550.0 | 1 of 3 | 24.32 |
+| fused-attention | variant (new version, not v1) | 4,021 | 8,267 | 2,393.0 | 0 of 3 | 24.32 |
+| int8-recognizer | variant (new version, not v1) | 6,891 | 16,072 | 6,896.5 | 0 of 3 | 24.32 |
+
+The ONNX detector with the PyTorch recognizer has the lowest mean page time among the points at v1's
+accuracy (about 58 ms below v1-torch's 2,637.3 ms in the same sittings; no interval for that
+difference is reported), and the fused attention export the lowest mean page time of the all-ONNX
+ones (F35); both are still over both page time targets, and only the first is within the RAM target.
+The detector input size and the smaller detector GW-DET-003 move page accuracy but change the ONNX
+page time by at most about 13%; the recognizer sets the page time (F37). PyTorch on the RTX 4050
+reads a page in 1,049 ms mean, 3,288 ms p95 (GW-EFF-007), but this ADR is a CPU target and the GPU
+is outside it.
+
+The options for the owner, restated:
+1. keep v1 with PyTorch as its default backend and accept about 2.6 s per page on this CPU
+   (2,565.7 ms mean, GW-EFF-007), as now;
+2. adopt a variant as a new version (onnx-det-torch-rec is the closest at v1's accuracy); one that
+   ships is evaluated in Phase 22, as Phase 14 item 6 fixes for INT8, and does not become v1;
+3. restate the target for the PyTorch build (the ONNX Runtime premise of the Decision did not hold
+   for this recognizer, F34);
+4. set a GPU target as a separate decision.
+
+Phase 16 does not tighten the targets and changes no default; which option to take is the owner's
+decision. The Phase 17 re-run measures v1 against this ADR again.
 
 ## Revisit if
 - The exported v0.1 misses the target by a wide margin and the trade-off needs an owner decision.

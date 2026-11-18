@@ -1,0 +1,1843 @@
+{
+ "kind": "phase16-variant-profile",
+ "system": "glypharis",
+ "task": "e2e",
+ "experiment": "GW-EFF-009",
+ "variant": "int8-recognizer",
+ "version": "variant (new version, not v1)",
+ "setting": "recognizer.runtime",
+ "changed": {
+  "recognizer.runtime": {
+   "from": "onnxruntime fp32",
+   "to": "onnxruntime int8 (dynamic, MatMul weights; glypharis.efficiency.quant.RECIPE)"
+  }
+ },
+ "eval_set": "hiertext_val",
+ "device": "cpu",
+ "threads": {
+  "requested": 10,
+  "intra_op": 10,
+  "inter_op": 10,
+  "env": {
+   "OMP_NUM_THREADS": "10",
+   "OMP_THREAD_LIMIT": "10",
+   "MKL_NUM_THREADS": "10"
+  },
+  "env_before_torch_import": true,
+  "preloaded": []
+ },
+ "session_options": {
+  "detector": {
+   "onnxruntime": "1.31.1",
+   "providers": [
+    "CPUExecutionProvider"
+   ],
+   "intra_op_num_threads": 10,
+   "inter_op_num_threads": 0,
+   "execution_mode": "ORT_SEQUENTIAL",
+   "graph_optimization_level": "ORT_ENABLE_ALL",
+   "enable_cpu_mem_arena": false,
+   "enable_mem_pattern": false,
+   "allow_spinning": "default"
+  },
+  "recognizer": {
+   "onnxruntime": "1.31.1",
+   "providers": [
+    "CPUExecutionProvider"
+   ],
+   "intra_op_num_threads": 10,
+   "inter_op_num_threads": 0,
+   "execution_mode": "ORT_SEQUENTIAL",
+   "graph_optimization_level": "ORT_ENABLE_ALL",
+   "enable_cpu_mem_arena": false,
+   "enable_mem_pattern": false,
+   "allow_spinning": "default"
+  }
+ },
+ "v1_code": {
+  "tag": "phase14-eval",
+  "tag_commit": "6795186be166d6b60238c701753aad32e44d0e98",
+  "head": "a8e8bb6d70a9aaccd9f867fabcae09021b8782f0",
+  "paths": [
+   "glypharis/pipeline",
+   "glypharis/models",
+   "glypharis/export",
+   "glypharis/data",
+   "configs"
+  ],
+  "v1_code": "equal"
+ },
+ "build": {
+  "variant": "int8-recognizer",
+  "version": "variant (new version, not v1)",
+  "setting": "recognizer.runtime",
+  "about": "dynamic INT8 of the v1 fp32 ONNX recognizer (H7′)",
+  "changed": {
+   "recognizer.runtime": {
+    "from": "onnxruntime fp32",
+    "to": "onnxruntime int8 (dynamic, MatMul weights; glypharis.efficiency.quant.RECIPE)"
+   }
+  },
+  "settings": {
+   "detector.model": {
+    "experiment": "GW-DET-001",
+    "weights_sha256": "cb0633e92f990e9085b2aa5aeaee68d37276e1dde9762b2e1071c6887d98e627",
+    "arch": {
+     "backbone": "mobilenet_v3_large",
+     "init": "imagenet",
+     "weights": "raw/imagenet_backbones/mobilenet_v3_large-8738ca79.pth",
+     "weights_sha256": "8738ca797c879b547d18bbd15da5736ff2557b2036a9af72225393ca61759a04",
+     "inner_channels": 96,
+     "channels_last": true
+    },
+    "labels": {
+     "shrink_ratio": 0.4,
+     "thresh_min": 0.3,
+     "thresh_max": 0.7,
+     "min_text_size": 6.0
+    },
+    "label_version": 1
+   },
+   "detector.runtime": "onnxruntime fp32",
+   "detector.infer": {
+    "long_side": 1536
+   },
+   "detector.post": {
+    "bin_thresh": 0.3,
+    "box_thresh": 0.5,
+    "min_component_area": 1,
+    "min_box_side": 3.0,
+    "max_candidates": 5000,
+    "box_type": "quad",
+    "operating_points": [
+     {
+      "name": "inverse09",
+      "unclip_mode": "inverse",
+      "unclip_ratio": 0.9
+     }
+    ]
+   },
+   "detector.operating_point": "inverse09",
+   "recognizer.model": {
+    "experiment": "GW-REC-034",
+    "weights_sha256": "902ff77dd84dc2706e6c329684c09cf3f710e04d817078b655c9baf2f803ee2b",
+    "arch": {
+     "model_name": "svtr",
+     "model": {
+      "cnn_channels": [
+       64,
+       128,
+       256,
+       256,
+       512,
+       512
+      ],
+      "lstm_hidden": 256,
+      "lstm_layers": 2,
+      "dropout": 0.1,
+      "frame_stride": 4,
+      "svtr": {
+       "dims": [
+        96,
+        192,
+        256
+       ],
+       "local_blocks": [
+        3,
+        3,
+        0
+       ],
+       "global_blocks": [
+        0,
+        3,
+        6
+       ],
+       "heads": [
+        3,
+        6,
+        8
+       ],
+       "mlp_ratio": 4.0,
+       "local_kernel": [
+        3,
+        7
+       ]
+      }
+     }
+    },
+    "height": 48,
+    "max_width": 1536,
+    "stride": 4,
+    "classes": 275
+   },
+   "recognizer.runtime": "onnxruntime int8 (dynamic, MatMul weights; glypharis.efficiency.quant.RECIPE)",
+   "recognizer.charset": "bd3625fe8d104696bfe1c00000d35794c6d6c90ae82ad3dc4edfcab9e7e81550",
+   "recognizer.temperature": 2.35,
+   "crop": {
+    "height": 64,
+    "margin": 0.15,
+    "max_aspect": 64.0,
+    "jpeg_quality": 95
+   },
+   "reading_order": true,
+   "max_pixels": 64000000
+  },
+  "v1_settings": {
+   "detector.model": {
+    "experiment": "GW-DET-001",
+    "weights_sha256": "cb0633e92f990e9085b2aa5aeaee68d37276e1dde9762b2e1071c6887d98e627",
+    "arch": {
+     "backbone": "mobilenet_v3_large",
+     "init": "imagenet",
+     "weights": "raw/imagenet_backbones/mobilenet_v3_large-8738ca79.pth",
+     "weights_sha256": "8738ca797c879b547d18bbd15da5736ff2557b2036a9af72225393ca61759a04",
+     "inner_channels": 96,
+     "channels_last": true
+    },
+    "labels": {
+     "shrink_ratio": 0.4,
+     "thresh_min": 0.3,
+     "thresh_max": 0.7,
+     "min_text_size": 6.0
+    },
+    "label_version": 1
+   },
+   "detector.runtime": "torch fp32",
+   "detector.infer": {
+    "long_side": 1536
+   },
+   "detector.post": {
+    "bin_thresh": 0.3,
+    "box_thresh": 0.5,
+    "min_component_area": 1,
+    "min_box_side": 3.0,
+    "max_candidates": 5000,
+    "box_type": "quad",
+    "operating_points": [
+     {
+      "name": "inverse09",
+      "unclip_mode": "inverse",
+      "unclip_ratio": 0.9
+     }
+    ]
+   },
+   "detector.operating_point": "inverse09",
+   "recognizer.model": {
+    "experiment": "GW-REC-034",
+    "weights_sha256": "902ff77dd84dc2706e6c329684c09cf3f710e04d817078b655c9baf2f803ee2b",
+    "arch": {
+     "model_name": "svtr",
+     "model": {
+      "cnn_channels": [
+       64,
+       128,
+       256,
+       256,
+       512,
+       512
+      ],
+      "lstm_hidden": 256,
+      "lstm_layers": 2,
+      "dropout": 0.1,
+      "frame_stride": 4,
+      "svtr": {
+       "dims": [
+        96,
+        192,
+        256
+       ],
+       "local_blocks": [
+        3,
+        3,
+        0
+       ],
+       "global_blocks": [
+        0,
+        3,
+        6
+       ],
+       "heads": [
+        3,
+        6,
+        8
+       ],
+       "mlp_ratio": 4.0,
+       "local_kernel": [
+        3,
+        7
+       ]
+      }
+     }
+    },
+    "height": 48,
+    "max_width": 1536,
+    "stride": 4,
+    "classes": 275
+   },
+   "recognizer.runtime": "torch fp32 (strict)",
+   "recognizer.charset": "bd3625fe8d104696bfe1c00000d35794c6d6c90ae82ad3dc4edfcab9e7e81550",
+   "recognizer.temperature": 2.35,
+   "crop": {
+    "height": 64,
+    "margin": 0.15,
+    "max_aspect": 64.0,
+    "jpeg_quality": 95
+   },
+   "reading_order": true,
+   "max_pixels": 64000000
+  },
+  "variant_json": {
+   "variant": "int8-recognizer",
+   "version": "variant (new version, not v1)",
+   "setting": "recognizer.runtime",
+   "about": "dynamic INT8 of the v1 fp32 ONNX recognizer (H7′)",
+   "record_sha256": "0aa61f9ef4843aaf6c1db0d0f3378b0c5f519fe375b1bf70f3b858509dfb4f32",
+   "bundle": {
+    "path": "runs/release/glypharis-v1",
+    "manifest_sha256": "875357a6346e8b1f989005fa96c557b00bf687461043368dc5e3dc532839f037",
+    "version": "glypharis_v1",
+    "files": {
+     "detector.pt": "caafdce9402de07a775102558eeffa6f48d4f54cd370ac63c09ab0be2a929c99",
+     "detector.onnx": "378c1feda480c1bb1dde838dd4a5f4579a904710a7f7b222d978c583b5bddcb7",
+     "recognizer.pt": "785409f75f1d31e4933a42ddcae8c9ecb84960d975083f3f81ebc47d6070f9ca",
+     "recognizer.onnx": "930329b4bf635a935975823d2004b47371d9123b2504cfe590d52f44db84f438"
+    }
+   },
+   "checkpoint": null,
+   "files": {
+    "recognizer.int8.onnx": {
+     "sha256": "e7a4ee3b8d1f381716b2024c6ab7ef3ed152999d12b352be52df5c3c696a3490",
+     "bytes": 10292313
+    }
+   },
+   "created_utc": "2026-11-17T16:20:38+00:00",
+   "quantization": {
+    "recipe": {
+     "pre_process": "onnxruntime.quantization.quant_pre_process, default arguments",
+     "quantize": "onnxruntime.quantization.quantize_dynamic",
+     "op_types_to_quantize": [
+      "MatMul"
+     ],
+     "per_channel": false,
+     "reduce_range": false,
+     "weight_type": "QInt8",
+     "extra_options": {
+      "MatMulConstBOnly": true
+     }
+    },
+    "onnxruntime": "1.31.1",
+    "onnx": "1.23.2",
+    "input": {
+     "path": "runs/release/glypharis-v1/recognizer.onnx",
+     "sha256": "930329b4bf635a935975823d2004b47371d9123b2504cfe590d52f44db84f438",
+     "bytes": 31879396
+    },
+    "preprocessed_sha256": "70ef91d6152a05a3ddcf08ef92651ef720f61e35d30d317e2ab6b8378ddaa374",
+    "output": {
+     "path": "data/processed/phase16/variants/int8-recognizer/recognizer.int8.onnx",
+     "sha256": "e7a4ee3b8d1f381716b2024c6ab7ef3ed152999d12b352be52df5c3c696a3490",
+     "bytes": 10292313
+    },
+    "nodes_fp32": {
+     "MatMul": 67,
+     "MatMulInteger": 0,
+     "DynamicQuantizeLinear": 0,
+     "Gemm": 0,
+     "Conv": 10
+    },
+    "nodes_int8": {
+     "MatMul": 18,
+     "MatMulInteger": 49,
+     "DynamicQuantizeLinear": 49,
+     "Gemm": 0,
+     "Conv": 10
+    }
+   }
+  },
+  "variant_json_sha256": "5d269ffadff3952b1963e47df1e12df425daa76bcaf9a9426ef28f7223584eca",
+  "provenance": {
+   "record": "configs/final/glypharis_v1.yaml",
+   "record_sha256": "0aa61f9ef4843aaf6c1db0d0f3378b0c5f519fe375b1bf70f3b858509dfb4f32",
+   "name": "glypharis_v1",
+   "recognizer_experiment": "GW-REC-034",
+   "detector_experiment": "GW-DET-001",
+   "recognizer_checkpoint": "checkpoints/GW-REC-034/best.pt",
+   "recognizer_checkpoint_sha256": "c7e745403d01bc23c66e570e3e9596755c7d8fe913daad5dc34f8392c8681a4d",
+   "charset": "data/manifests/charset.json",
+   "charset_sha256": "bbdfab42f62b6a08df9ceffc1119eb304c1f9ad741285035737ac958803e803c",
+   "detector_checkpoint": "checkpoints/GW-DET-001/best.pt",
+   "detector_checkpoint_sha256": "016b2b69d257d9165afd9aa4a7ef5ce36cdf3ad5d2c5926aa6b1b60c43705cd5",
+   "device": "cpu",
+   "device_name": "cpu",
+   "torch": "2.14.1+cu126",
+   "cuda": "12.6",
+   "cudnn": 91002,
+   "numerics": {
+    "cudnn_benchmark": false,
+    "cudnn_deterministic": true,
+    "deterministic_algorithms": true,
+    "cuda_matmul_allow_tf32": false,
+    "cudnn_allow_tf32": false,
+    "float32_matmul_precision": "highest",
+    "recognizer_strict_fp32": true,
+    "cublas_workspace_config": null
+   },
+   "git_commit": "a8e8bb6d70a9aaccd9f867fabcae09021b8782f0",
+   "git_dirty": false
+  }
+ },
+ "git_commit": "a8e8bb6d70a9aaccd9f867fabcae09021b8782f0",
+ "git_dirty": false,
+ "set": "pages",
+ "run": 2,
+ "smoke": false,
+ "settings": {
+  "cpu_threads": 10,
+  "intra_op_threads": 10,
+  "inter_op_threads": 10,
+  "device": "cpu",
+  "runtime": {
+   "detector": "onnxruntime fp32",
+   "recognizer": "onnxruntime int8 (dynamic, MatMul weights; glypharis.efficiency.quant.RECIPE)"
+  },
+  "detector_long_side": 1536,
+  "timing": "GlypharisOCR.predict of the RGB page array, one page at a time"
+ },
+ "threads_before": {
+  "intra_op": 10,
+  "inter_op": 10,
+  "env": {
+   "OMP_NUM_THREADS": "10",
+   "OMP_THREAD_LIMIT": "10",
+   "MKL_NUM_THREADS": "10"
+  }
+ },
+ "threads_after": {
+  "intra_op": 10,
+  "inter_op": 10,
+  "env": {
+   "OMP_NUM_THREADS": "10",
+   "OMP_THREAD_LIMIT": "10",
+   "MKL_NUM_THREADS": "10"
+  }
+ },
+ "batch": 1,
+ "warmup": 10,
+ "started_utc": "2026-11-18T03:39:42+00:00",
+ "ended_utc": "2026-11-18T03:52:05+00:00",
+ "warmup_times_ms": [
+  2337.181,
+  13637.478,
+  1585.345,
+  6218.214,
+  5918.507,
+  3577.991,
+  5567.727,
+  3627.802,
+  6485.094,
+  3778.688
+ ],
+ "times_ms": [
+  5089.978,
+  6085.577,
+  13798.914,
+  8165.707,
+  4159.461,
+  4595.219,
+  11762.406,
+  4103.63,
+  13460.138,
+  4313.449,
+  8022.475,
+  8193.895,
+  4919.15,
+  14453.259,
+  10300.345,
+  11375.782,
+  2783.396,
+  9797.664,
+  11020.87,
+  1873.182,
+  3915.987,
+  4158.946,
+  6549.07,
+  4947.956,
+  10916.025,
+  12983.164,
+  4123.527,
+  10669.942,
+  7657.361,
+  5145.527,
+  4362.629,
+  16043.456,
+  3435.089,
+  3990.654,
+  3960.568,
+  2127.475,
+  11642.656,
+  3836.107,
+  10924.732,
+  2993.601,
+  10003.312,
+  2260.861,
+  2580.625,
+  22147.413,
+  5486.516,
+  310.126,
+  11426.965,
+  4258.937,
+  3326.922,
+  4077.041,
+  10813.855,
+  3332.169,
+  6453.556,
+  27283.209,
+  16303.781,
+  18745.825,
+  1840.294,
+  1927.716,
+  4050.327,
+  2685.593,
+  4676.025,
+  5345.685,
+  5770.696,
+  12237.216,
+  4497.403,
+  2853.665,
+  1664.906,
+  4482.169,
+  3503.121,
+  3843.261,
+  8077.967,
+  11189.738,
+  8911.707,
+  4757.919,
+  8564.357,
+  3602.458,
+  8049.194,
+  5311.626,
+  10923.587,
+  15965.44,
+  2692.685,
+  3830.248,
+  1917.131,
+  8356.846,
+  2732.729,
+  4191.195,
+  8058.05,
+  3421.817,
+  5382.037,
+  4953.91,
+  11812.443,
+  1650.448,
+  2787.353,
+  5034.051,
+  1897.807,
+  5775.775,
+  4451.242,
+  15676.197,
+  2137.546,
+  4880.508
+ ],
+ "parts_ms": [
+  {
+   "load": 0.014,
+   "detect": 372.032,
+   "recognise": 4710.718,
+   "order": 2.217,
+   "total": 5084.981
+  },
+  {
+   "load": 0.025,
+   "detect": 380.164,
+   "recognise": 5697.57,
+   "order": 0.807,
+   "total": 6078.567
+  },
+  {
+   "load": 0.021,
+   "detect": 327.61,
+   "recognise": 13462.435,
+   "order": 2.474,
+   "total": 13792.54
+  },
+  {
+   "load": 0.016,
+   "detect": 388.455,
+   "recognise": 7767.881,
+   "order": 4.336,
+   "total": 8160.687
+  },
+  {
+   "load": 0.014,
+   "detect": 377.516,
+   "recognise": 3774.139,
+   "order": 2.761,
+   "total": 4154.43
+  },
+  {
+   "load": 0.012,
+   "detect": 329.731,
+   "recognise": 4258.781,
+   "order": 2.598,
+   "total": 4591.122
+  },
+  {
+   "load": 0.014,
+   "detect": 292.783,
+   "recognise": 11465.097,
+   "order": 1.415,
+   "total": 11759.308
+  },
+  {
+   "load": 0.013,
+   "detect": 322.779,
+   "recognise": 3775.105,
+   "order": 1.751,
+   "total": 4099.648
+  },
+  {
+   "load": 0.016,
+   "detect": 407.285,
+   "recognise": 13040.334,
+   "order": 7.525,
+   "total": 13455.16
+  },
+  {
+   "load": 0.014,
+   "detect": 377.137,
+   "recognise": 3930.087,
+   "order": 1.229,
+   "total": 4308.468
+  },
+  {
+   "load": 0.009,
+   "detect": 308.428,
+   "recognise": 7710.949,
+   "order": 1.76,
+   "total": 8021.146
+  },
+  {
+   "load": 0.018,
+   "detect": 407.029,
+   "recognise": 7774.465,
+   "order": 5.742,
+   "total": 8187.255
+  },
+  {
+   "load": 0.011,
+   "detect": 329.413,
+   "recognise": 4586.192,
+   "order": 1.769,
+   "total": 4917.385
+  },
+  {
+   "load": 0.015,
+   "detect": 378.339,
+   "recognise": 14067.498,
+   "order": 1.647,
+   "total": 14447.498
+  },
+  {
+   "load": 0.013,
+   "detect": 340.383,
+   "recognise": 9956.759,
+   "order": 0.938,
+   "total": 10298.093
+  },
+  {
+   "load": 0.033,
+   "detect": 408.062,
+   "recognise": 10959.755,
+   "order": 1.216,
+   "total": 11369.065
+  },
+  {
+   "load": 0.021,
+   "detect": 372.564,
+   "recognise": 2407.577,
+   "order": 1.42,
+   "total": 2781.582
+  },
+  {
+   "load": 0.01,
+   "detect": 334.771,
+   "recognise": 9457.54,
+   "order": 3.52,
+   "total": 9795.841
+  },
+  {
+   "load": 0.019,
+   "detect": 535.507,
+   "recognise": 10467.965,
+   "order": 10.299,
+   "total": 11013.79
+  },
+  {
+   "load": 0.015,
+   "detect": 354.556,
+   "recognise": 1511.237,
+   "order": 1.961,
+   "total": 1867.769
+  },
+  {
+   "load": 0.018,
+   "detect": 326.17,
+   "recognise": 3581.288,
+   "order": 2.655,
+   "total": 3910.131
+  },
+  {
+   "load": 0.016,
+   "detect": 395.478,
+   "recognise": 3757.359,
+   "order": 0.944,
+   "total": 4153.797
+  },
+  {
+   "load": 0.012,
+   "detect": 361.53,
+   "recognise": 6182.721,
+   "order": 4.425,
+   "total": 6548.688
+  },
+  {
+   "load": 0.023,
+   "detect": 540.231,
+   "recognise": 4403.128,
+   "order": 3.786,
+   "total": 4947.168
+  },
+  {
+   "load": 0.012,
+   "detect": 388.094,
+   "recognise": 10522.661,
+   "order": 1.943,
+   "total": 10912.71
+  },
+  {
+   "load": 0.012,
+   "detect": 391.527,
+   "recognise": 12587.554,
+   "order": 1.932,
+   "total": 12981.025
+  },
+  {
+   "load": 0.014,
+   "detect": 365.677,
+   "recognise": 3751.218,
+   "order": 1.768,
+   "total": 4118.676
+  },
+  {
+   "load": 0.012,
+   "detect": 424.543,
+   "recognise": 10242.845,
+   "order": 1.032,
+   "total": 10668.432
+  },
+  {
+   "load": 0.021,
+   "detect": 357.678,
+   "recognise": 7290.815,
+   "order": 2.72,
+   "total": 7651.234
+  },
+  {
+   "load": 0.014,
+   "detect": 356.072,
+   "recognise": 4784.217,
+   "order": 2.233,
+   "total": 5142.536
+  },
+  {
+   "load": 0.016,
+   "detect": 313.179,
+   "recognise": 4042.955,
+   "order": 1.816,
+   "total": 4357.965
+  },
+  {
+   "load": 0.014,
+   "detect": 350.743,
+   "recognise": 15686.508,
+   "order": 1.961,
+   "total": 16039.226
+  },
+  {
+   "load": 0.014,
+   "detect": 382.403,
+   "recognise": 3046.974,
+   "order": 0.85,
+   "total": 3430.239
+  },
+  {
+   "load": 0.012,
+   "detect": 373.282,
+   "recognise": 3611.568,
+   "order": 1.163,
+   "total": 3986.026
+  },
+  {
+   "load": 0.015,
+   "detect": 368.082,
+   "recognise": 3585.101,
+   "order": 2.32,
+   "total": 3955.518
+  },
+  {
+   "load": 0.016,
+   "detect": 451.446,
+   "recognise": 1666.148,
+   "order": 2.793,
+   "total": 2120.403
+  },
+  {
+   "load": 0.013,
+   "detect": 395.251,
+   "recognise": 11243.196,
+   "order": 2.374,
+   "total": 11640.834
+  },
+  {
+   "load": 0.015,
+   "detect": 363.416,
+   "recognise": 3466.6,
+   "order": 1.304,
+   "total": 3831.335
+  },
+  {
+   "load": 0.019,
+   "detect": 379.126,
+   "recognise": 10533.381,
+   "order": 5.011,
+   "total": 10917.536
+  },
+  {
+   "load": 0.025,
+   "detect": 359.838,
+   "recognise": 2620.557,
+   "order": 8.252,
+   "total": 2988.673
+  },
+  {
+   "load": 0.013,
+   "detect": 318.762,
+   "recognise": 9678.1,
+   "order": 2.128,
+   "total": 9999.003
+  },
+  {
+   "load": 0.017,
+   "detect": 327.517,
+   "recognise": 1926.233,
+   "order": 1.607,
+   "total": 2255.373
+  },
+  {
+   "load": 0.01,
+   "detect": 383.83,
+   "recognise": 2193.444,
+   "order": 1.136,
+   "total": 2578.42
+  },
+  {
+   "load": 0.011,
+   "detect": 345.187,
+   "recognise": 21793.556,
+   "order": 4.607,
+   "total": 22143.362
+  },
+  {
+   "load": 0.015,
+   "detect": 378.779,
+   "recognise": 5101.2,
+   "order": 0.974,
+   "total": 5480.969
+  },
+  {
+   "load": 0.014,
+   "detect": 299.411,
+   "recognise": 6.46,
+   "order": 0.006,
+   "total": 305.892
+  },
+  {
+   "load": 0.015,
+   "detect": 316.678,
+   "recognise": 11103.377,
+   "order": 2.243,
+   "total": 11422.313
+  },
+  {
+   "load": 0.018,
+   "detect": 482.807,
+   "recognise": 3772.425,
+   "order": 2.101,
+   "total": 4257.351
+  },
+  {
+   "load": 0.013,
+   "detect": 349.491,
+   "recognise": 2969.986,
+   "order": 1.163,
+   "total": 3320.653
+  },
+  {
+   "load": 0.016,
+   "detect": 356.617,
+   "recognise": 3713.318,
+   "order": 1.993,
+   "total": 4071.944
+  },
+  {
+   "load": 0.009,
+   "detect": 422.146,
+   "recognise": 10388.101,
+   "order": 3.3,
+   "total": 10813.556
+  },
+  {
+   "load": 0.014,
+   "detect": 364.267,
+   "recognise": 2960.381,
+   "order": 0.944,
+   "total": 3325.606
+  },
+  {
+   "load": 0.012,
+   "detect": 416.597,
+   "recognise": 6030.885,
+   "order": 0.862,
+   "total": 6448.356
+  },
+  {
+   "load": 0.026,
+   "detect": 380.497,
+   "recognise": 26890.682,
+   "order": 4.407,
+   "total": 27275.611
+  },
+  {
+   "load": 0.025,
+   "detect": 385.874,
+   "recognise": 15908.695,
+   "order": 2.225,
+   "total": 16296.818
+  },
+  {
+   "load": 0.015,
+   "detect": 363.155,
+   "recognise": 18376.588,
+   "order": 1.13,
+   "total": 18740.887
+  },
+  {
+   "load": 0.012,
+   "detect": 483.005,
+   "recognise": 1354.954,
+   "order": 1.234,
+   "total": 1839.205
+  },
+  {
+   "load": 0.025,
+   "detect": 328.964,
+   "recognise": 1591.324,
+   "order": 1.125,
+   "total": 1921.439
+  },
+  {
+   "load": 0.021,
+   "detect": 353.536,
+   "recognise": 3687.855,
+   "order": 1.604,
+   "total": 4043.016
+  },
+  {
+   "load": 0.015,
+   "detect": 354.72,
+   "recognise": 2324.601,
+   "order": 1.099,
+   "total": 2680.433
+  },
+  {
+   "load": 0.013,
+   "detect": 335.705,
+   "recognise": 4335.764,
+   "order": 1.304,
+   "total": 4672.787
+  },
+  {
+   "load": 0.017,
+   "detect": 418.788,
+   "recognise": 4921.396,
+   "order": 0.856,
+   "total": 5341.057
+  },
+  {
+   "load": 0.013,
+   "detect": 354.069,
+   "recognise": 5408.62,
+   "order": 2.349,
+   "total": 5765.051
+  },
+  {
+   "load": 0.015,
+   "detect": 396.915,
+   "recognise": 11833.151,
+   "order": 1.979,
+   "total": 12232.06
+  },
+  {
+   "load": 0.011,
+   "detect": 349.823,
+   "recognise": 4144.897,
+   "order": 0.849,
+   "total": 4495.58
+  },
+  {
+   "load": 0.013,
+   "detect": 295.284,
+   "recognise": 2554.075,
+   "order": 2.431,
+   "total": 2851.802
+  },
+  {
+   "load": 0.013,
+   "detect": 340.366,
+   "recognise": 1318.908,
+   "order": 1.64,
+   "total": 1660.927
+  },
+  {
+   "load": 0.014,
+   "detect": 451.418,
+   "recognise": 4022.112,
+   "order": 2.268,
+   "total": 4475.811
+  },
+  {
+   "load": 0.014,
+   "detect": 356.193,
+   "recognise": 3140.826,
+   "order": 1.041,
+   "total": 3498.074
+  },
+  {
+   "load": 0.009,
+   "detect": 452.372,
+   "recognise": 3385.052,
+   "order": 4.754,
+   "total": 3842.188
+  },
+  {
+   "load": 0.015,
+   "detect": 366.584,
+   "recognise": 7705.201,
+   "order": 0.987,
+   "total": 8072.786
+  },
+  {
+   "load": 0.011,
+   "detect": 235.085,
+   "recognise": 10949.512,
+   "order": 2.434,
+   "total": 11187.042
+  },
+  {
+   "load": 0.022,
+   "detect": 402.024,
+   "recognise": 8493.199,
+   "order": 9.857,
+   "total": 8905.102
+  },
+  {
+   "load": 0.013,
+   "detect": 350.94,
+   "recognise": 4402.357,
+   "order": 1.8,
+   "total": 4755.111
+  },
+  {
+   "load": 0.014,
+   "detect": 434.645,
+   "recognise": 8119.129,
+   "order": 5.483,
+   "total": 8559.271
+  },
+  {
+   "load": 0.014,
+   "detect": 375.471,
+   "recognise": 3216.977,
+   "order": 4.387,
+   "total": 3596.848
+  },
+  {
+   "load": 0.017,
+   "detect": 383.813,
+   "recognise": 7655.025,
+   "order": 4.334,
+   "total": 8043.19
+  },
+  {
+   "load": 0.014,
+   "detect": 374.124,
+   "recognise": 4931.142,
+   "order": 1.744,
+   "total": 5307.024
+  },
+  {
+   "load": 0.016,
+   "detect": 353.242,
+   "recognise": 10565.534,
+   "order": 3.148,
+   "total": 10921.94
+  },
+  {
+   "load": 0.01,
+   "detect": 441.646,
+   "recognise": 15520.646,
+   "order": 2.266,
+   "total": 15964.568
+  },
+  {
+   "load": 0.015,
+   "detect": 479.355,
+   "recognise": 2203.535,
+   "order": 2.221,
+   "total": 2685.126
+  },
+  {
+   "load": 0.021,
+   "detect": 302.312,
+   "recognise": 3520.948,
+   "order": 1.789,
+   "total": 3825.07
+  },
+  {
+   "load": 0.013,
+   "detect": 346.194,
+   "recognise": 1565.372,
+   "order": 0.987,
+   "total": 1912.567
+  },
+  {
+   "load": 0.021,
+   "detect": 488.638,
+   "recognise": 7861.943,
+   "order": 4.515,
+   "total": 8355.117
+  },
+  {
+   "load": 0.016,
+   "detect": 377.176,
+   "recognise": 2348.694,
+   "order": 1.99,
+   "total": 2727.876
+  },
+  {
+   "load": 0.026,
+   "detect": 390.731,
+   "recognise": 3791.625,
+   "order": 0.94,
+   "total": 4183.322
+  },
+  {
+   "load": 0.013,
+   "detect": 299.458,
+   "recognise": 7756.016,
+   "order": 0.835,
+   "total": 8056.322
+  },
+  {
+   "load": 0.021,
+   "detect": 323.476,
+   "recognise": 3092.658,
+   "order": 0.988,
+   "total": 3417.144
+  },
+  {
+   "load": 0.013,
+   "detect": 349.652,
+   "recognise": 5025.851,
+   "order": 1.681,
+   "total": 5377.197
+  },
+  {
+   "load": 0.014,
+   "detect": 380.861,
+   "recognise": 4561.372,
+   "order": 8.831,
+   "total": 4951.078
+  },
+  {
+   "load": 0.012,
+   "detect": 334.376,
+   "recognise": 11474.124,
+   "order": 1.713,
+   "total": 11810.224
+  },
+  {
+   "load": 0.014,
+   "detect": 336.041,
+   "recognise": 1308.079,
+   "order": 0.927,
+   "total": 1645.061
+  },
+  {
+   "load": 0.014,
+   "detect": 309.334,
+   "recognise": 2470.316,
+   "order": 3.527,
+   "total": 2783.192
+  },
+  {
+   "load": 0.012,
+   "detect": 396.641,
+   "recognise": 4634.502,
+   "order": 0.894,
+   "total": 5032.048
+  },
+  {
+   "load": 0.012,
+   "detect": 347.09,
+   "recognise": 1544.321,
+   "order": 1.721,
+   "total": 1893.145
+  },
+  {
+   "load": 0.013,
+   "detect": 384.723,
+   "recognise": 5385.53,
+   "order": 1.039,
+   "total": 5771.305
+  },
+  {
+   "load": 0.013,
+   "detect": 366.367,
+   "recognise": 4078.364,
+   "order": 1.783,
+   "total": 4446.527
+  },
+  {
+   "load": 0.023,
+   "detect": 416.07,
+   "recognise": 15252.063,
+   "order": 4.273,
+   "total": 15672.429
+  },
+  {
+   "load": 0.012,
+   "detect": 251.555,
+   "recognise": 1882.546,
+   "order": 1.701,
+   "total": 2135.814
+  },
+  {
+   "load": 0.013,
+   "detect": 319.703,
+   "recognise": 4554.229,
+   "order": 2.487,
+   "total": 4876.43
+  }
+ ],
+ "lines": [
+  51,
+  17,
+  35,
+  65,
+  68,
+  42,
+  36,
+  48,
+  114,
+  31,
+  26,
+  77,
+  20,
+  39,
+  21,
+  21,
+  34,
+  50,
+  164,
+  20,
+  38,
+  24,
+  63,
+  53,
+  29,
+  38,
+  23,
+  25,
+  35,
+  33,
+  25,
+  31,
+  20,
+  39,
+  29,
+  37,
+  43,
+  30,
+  30,
+  88,
+  31,
+  41,
+  37,
+  60,
+  19,
+  0,
+  33,
+  31,
+  24,
+  51,
+  46,
+  20,
+  27,
+  90,
+  47,
+  23,
+  15,
+  27,
+  24,
+  30,
+  29,
+  29,
+  34,
+  50,
+  25,
+  43,
+  40,
+  30,
+  32,
+  76,
+  25,
+  36,
+  135,
+  23,
+  77,
+  59,
+  55,
+  37,
+  49,
+  67,
+  28,
+  40,
+  24,
+  58,
+  25,
+  29,
+  21,
+  34,
+  21,
+  132,
+  23,
+  19,
+  54,
+  25,
+  20,
+  32,
+  24,
+  62,
+  40,
+  35
+ ],
+ "input_sizes": [
+  [
+   1200,
+   1600
+  ],
+  [
+   1195,
+   1600
+  ],
+  [
+   1600,
+   1062
+  ],
+  [
+   1600,
+   1163
+  ],
+  [
+   1600,
+   1200
+  ],
+  [
+   1600,
+   1066
+  ],
+  [
+   1280,
+   774
+  ],
+  [
+   1600,
+   1066
+  ],
+  [
+   1600,
+   1200
+  ],
+  [
+   1479,
+   1013
+  ],
+  [
+   700,
+   395
+  ],
+  [
+   1600,
+   1200
+  ],
+  [
+   640,
+   960
+  ],
+  [
+   1600,
+   1200
+  ],
+  [
+   768,
+   1024
+  ],
+  [
+   1200,
+   1600
+  ],
+  [
+   800,
+   600
+  ],
+  [
+   700,
+   1009
+  ],
+  [
+   1600,
+   1600
+  ],
+  [
+   1600,
+   1200
+  ],
+  [
+   1066,
+   1600
+  ],
+  [
+   1600,
+   1200
+  ],
+  [
+   600,
+   424
+  ],
+  [
+   515,
+   486
+  ],
+  [
+   1013,
+   1261
+  ],
+  [
+   1024,
+   768
+  ],
+  [
+   979,
+   1484
+  ],
+  [
+   637,
+   800
+  ],
+  [
+   1062,
+   1600
+  ],
+  [
+   1190,
+   837
+  ],
+  [
+   1600,
+   1066
+  ],
+  [
+   1068,
+   1475
+  ],
+  [
+   1236,
+   1600
+  ],
+  [
+   1600,
+   1200
+  ],
+  [
+   1600,
+   1200
+  ],
+  [
+   1600,
+   1600
+  ],
+  [
+   789,
+   661
+  ],
+  [
+   1600,
+   1066
+  ],
+  [
+   1600,
+   1252
+  ],
+  [
+   813,
+   1600
+  ],
+  [
+   1100,
+   1600
+  ],
+  [
+   1600,
+   1102
+  ],
+  [
+   1000,
+   800
+  ],
+  [
+   1600,
+   1066
+  ],
+  [
+   1262,
+   1600
+  ],
+  [
+   988,
+   1600
+  ],
+  [
+   1047,
+   1600
+  ],
+  [
+   642,
+   645
+  ],
+  [
+   1600,
+   1074
+  ],
+  [
+   1600,
+   1071
+  ],
+  [
+   480,
+   360
+  ],
+  [
+   1600,
+   1071
+  ],
+  [
+   1600,
+   1197
+  ],
+  [
+   1200,
+   1600
+  ],
+  [
+   1600,
+   1200
+  ],
+  [
+   1600,
+   1200
+  ],
+  [
+   612,
+   612
+  ],
+  [
+   1600,
+   989
+  ],
+  [
+   1600,
+   1200
+  ],
+  [
+   1600,
+   1200
+  ],
+  [
+   1280,
+   960
+  ],
+  [
+   1600,
+   1200
+  ],
+  [
+   1599,
+   904
+  ],
+  [
+   1235,
+   1600
+  ],
+  [
+   968,
+   704
+  ],
+  [
+   612,
+   1024
+  ],
+  [
+   1600,
+   1062
+  ],
+  [
+   1600,
+   1600
+  ],
+  [
+   1600,
+   1200
+  ],
+  [
+   612,
+   612
+  ],
+  [
+   1216,
+   1600
+  ],
+  [
+   1600,
+   669
+  ],
+  [
+   1600,
+   1200
+  ],
+  [
+   1200,
+   870
+  ],
+  [
+   1235,
+   1500
+  ],
+  [
+   1600,
+   1200
+  ],
+  [
+   1600,
+   1195
+  ],
+  [
+   1150,
+   1600
+  ],
+  [
+   800,
+   600
+  ],
+  [
+   640,
+   480
+  ],
+  [
+   1600,
+   1600
+  ],
+  [
+   1600,
+   847
+  ],
+  [
+   1600,
+   1200
+  ],
+  [
+   612,
+   612
+  ],
+  [
+   1600,
+   1062
+  ],
+  [
+   1600,
+   1195
+  ],
+  [
+   651,
+   1029
+  ],
+  [
+   1600,
+   1066
+  ],
+  [
+   1600,
+   1066
+  ],
+  [
+   827,
+   1181
+  ],
+  [
+   1024,
+   675
+  ],
+  [
+   1600,
+   1200
+  ],
+  [
+   1600,
+   901
+  ],
+  [
+   710,
+   1024
+  ],
+  [
+   1200,
+   1600
+  ],
+  [
+   1200,
+   1600
+  ],
+  [
+   1200,
+   1600
+  ],
+  [
+   1211,
+   986
+  ],
+  [
+   1215,
+   455
+  ],
+  [
+   1600,
+   1063
+  ]
+ ],
+ "mean_ms": 6878.421699999999,
+ "p95_ms": 15969.3408,
+ "peak_mem_mib": 6892.4,
+ "peak_mem": {
+  "loaded": [
+   "the bundle on ONNX Runtime (load_bundle_onnx)",
+   "recognizer.int8.onnx"
+  ],
+  "numerics": null,
+  "scope": "the deployed build (bundle and variant files, no training checkpoint), read right after the timed items"
+ },
+ "conditions": {
+  "cpu": "Intel(R) Core(TM) i7-14650HX",
+  "physical_cores": 16,
+  "logical_cpus": 24,
+  "on_ac_power": true,
+  "battery_percent": 100,
+  "power_plan": "Power Scheme GUID: 381b4222-f694-41f0-9685-ff5bb260df2e  (Balanced)",
+  "power_mode": "best performance",
+  "cpu_busy_percent_before": 3.0,
+  "thread_env": {
+   "OMP_NUM_THREADS": "10",
+   "OMP_THREAD_LIMIT": "10",
+   "MKL_NUM_THREADS": "10"
+  },
+  "python": "3.11.9",
+  "os": "Windows-10-10.0.26300-SP0"
+ },
+ "conditions_end": {
+  "cpu": "Intel(R) Core(TM) i7-14650HX",
+  "physical_cores": 16,
+  "logical_cpus": 24,
+  "on_ac_power": true,
+  "battery_percent": 100,
+  "power_plan": "Power Scheme GUID: 381b4222-f694-41f0-9685-ff5bb260df2e  (Balanced)",
+  "power_mode": "best performance",
+  "cpu_busy_percent_before": 15.4,
+  "thread_env": {
+   "OMP_NUM_THREADS": "10",
+   "OMP_THREAD_LIMIT": "10",
+   "MKL_NUM_THREADS": "10"
+  },
+  "python": "3.11.9",
+  "os": "Windows-10-10.0.26300-SP0"
+ },
+ "conditions_utc": {
+  "start": "2026-11-18T03:39:39+00:00",
+  "end": "2026-11-18T03:52:05+00:00"
+ },
+ "gpu_state": {
+  "start": {
+   "utc": "2026-11-18T03:39:41+00:00",
+   "gpus": [
+    {
+     "index": 0,
+     "name": "NVIDIA GeForce RTX 4050 Laptop GPU",
+     "driver": "616.56",
+     "pstate": "P8",
+     "clock_sm_mhz": 210,
+     "clock_mem_mhz": 405,
+     "clock_max_sm_mhz": 3105,
+     "clock_max_mem_mhz": 8001,
+     "temperature_c": 43,
+     "memory_used_mib": 299,
+     "memory_total_mib": 6141,
+     "utilization_percent": 0,
+     "power_draw_w": 1.64,
+     "throttle_reasons": "0x0000000000000001"
+    }
+   ]
+  },
+  "end": {
+   "utc": "2026-11-18T03:52:07+00:00",
+   "gpus": [
+    {
+     "index": 0,
+     "name": "NVIDIA GeForce RTX 4050 Laptop GPU",
+     "driver": "616.56",
+     "pstate": "P8",
+     "clock_sm_mhz": 210,
+     "clock_mem_mhz": 405,
+     "clock_max_sm_mhz": 3105,
+     "clock_max_mem_mhz": 8001,
+     "temperature_c": 43,
+     "memory_used_mib": 299,
+     "memory_total_mib": 6141,
+     "utilization_percent": 0,
+     "power_draw_w": 1.64,
+     "throttle_reasons": "0x0000000000000001"
+    }
+   ]
+  }
+ },
+ "cpu_busy_percent_after": 8.0,
+ "mean_lines": 40.85
+}
