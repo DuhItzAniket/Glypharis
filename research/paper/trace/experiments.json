@@ -1,0 +1,347 @@
+{
+  "document": "research/paper/experiments.md",
+  "constants": [
+    {
+      "value": "95%",
+      "context": "95% bootstrap interval|95% interval",
+      "source": "docs/EXPERIMENT_PROTOCOL.md#4-statistics"
+    },
+    {
+      "value": "10",
+      "context": "first 10 as warm-up",
+      "source": "docs/EXPERIMENT_PROTOCOL.md#efficiency"
+    },
+    {
+      "value": "100",
+      "context": "100 timed",
+      "source": "docs/EXPERIMENT_PROTOCOL.md#efficiency"
+    },
+    {
+      "value": "10",
+      "context": "at 10 threads",
+      "source": "reports/efficiency/phase16/cost_table.md",
+      "id": "GW-EFF-007"
+    },
+    {
+      "value": "2",
+      "context": "minus 2 x PP-OCRv5",
+      "source": "research/hypotheses.md#h1--h1-made-testable-for-phase-14-rq1-rq4"
+    },
+    {
+      "value": "53",
+      "context": "53 clean GDC pages",
+      "source": "research/hypotheses.md#h1--h1-made-testable-for-phase-14-rq1-rq4"
+    },
+    {
+      "value": "1.5",
+      "context": "validation crops|GDC crops minus",
+      "source": "research/hypotheses.md#h5--h5-made-testable-for-phase-14-rq6"
+    },
+    {
+      "value": "1.5",
+      "context": "SVTR minus 1\\.5",
+      "source": "research/hypotheses.md#h6--h6s-latency-half-made-testable-for-phase-16-rq7"
+    },
+    {
+      "value": "0.75",
+      "context": "INT8 minus 0\\.75",
+      "source": "research/hypotheses.md#h7--h7-made-testable-for-phase-16-rq7"
+    },
+    {
+      "value": "0.005",
+      "context": "allowance of 0\\.005",
+      "source": "reports/efficiency/phase16/verdicts.md#h7-accuracy-met",
+      "id": "GW-EFF-008"
+    },
+    {
+      "value": "2.35",
+      "context": "T = 2\\.35",
+      "source": "configs/final/glypharis_v1.yaml#recognizer/temperature"
+    },
+    {
+      "value": "0.05",
+      "context": "limit of\\s+0\\.05|0\\.05-point",
+      "source": "research/experiments.md#gw-e2e-011"
+    },
+    {
+      "value": "25",
+      "context": "Target of ADR-0011",
+      "source": "docs/decisions/ADR-0011-cpu-latency-target.md#decision"
+    },
+    {
+      "value": "70",
+      "context": "Target of ADR-0011",
+      "source": "docs/decisions/ADR-0011-cpu-latency-target.md#decision"
+    },
+    {
+      "value": "1.5 s",
+      "context": "Target of ADR-0011",
+      "source": "docs/decisions/ADR-0011-cpu-latency-target.md#decision"
+    },
+    {
+      "value": "2.7 s",
+      "context": "Target of ADR-0011",
+      "source": "docs/decisions/ADR-0011-cpu-latency-target.md#decision"
+    },
+    {
+      "value": "1,836",
+      "context": "Target of ADR-0011",
+      "source": "docs/decisions/ADR-0011-cpu-latency-target.md#decision"
+    }
+  ],
+  "derived": [
+    {"name": "gpu_memory", "formula": "x", "note": "GPU memory in the environment report", "inputs": {"x": {"id": "reports/environment/env_report.md", "source": "reports/environment/env_report.md#system", "row": "VRAM", "header": "Value", "value": "6140"}}},
+    {"name": "lines_per_step", "formula": "x", "note": "lines per optimizer step of the CRNN control", "inputs": {"x": {"id": "configs/rec/gw-rec-001.yaml", "source": "configs/rec/gw-rec-001.yaml", "row": "train/batch_size"}}},
+    {"name": "det_f1_training", "formula": "x", "note": "GW-DET-001 best.pt, all validation pages, stored operating point, F1 at IoU 0.5, by page", "inputs": {"x": {"id": "GW-DET-001", "source": "reports/training/GW-DET-001/report.md", "row": "L31", "header": "F1@0.5"}}},
+    {"name": "det_f1_phase9", "formula": "x", "note": "GW-DET-001 at the Phase 9 settings, F1 at IoU 0.5, by page", "inputs": {"x": {"id": "GW-DET-001", "source": "reports/error_cases/detector/phase09_adopted/eval_full.json", "row": "headline/f1_50"}}},
+    {"name": "train_val_cer", "formula": "x", "note": "GW-REC-034, training-time validation CER", "inputs": {"x": {"id": "GW-REC-034", "source": "reports/training/GW-REC-034/report.md#best-and-final-epoch", "row": "best (selected)", "header": "Val CER %"}}},
+    {"name": "train_val_cer_low", "formula": "x", "note": "lower bound printed with the selected checkpoint's validation CER", "inputs": {"x": {"id": "GW-REC-034", "source": "reports/training/GW-REC-034/report.md#best-and-final-epoch", "value": "6.17"}}},
+    {"name": "train_val_cer_high", "formula": "x", "note": "upper bound printed with the selected checkpoint's validation CER", "inputs": {"x": {"id": "GW-REC-034", "source": "reports/training/GW-REC-034/report.md#best-and-final-epoch", "value": "6.44"}}},
+    {"name": "eval_pack_cer", "formula": "x", "note": "GW-REC-038, line CER on the evaluation pack, by line", "inputs": {"x": {"id": "GW-REC-038", "source": "reports/external/recognition.md#track-strict", "row": ["GW-REC-038", "hiertext_val"], "header": "CER %"}}},
+    {"name": "eval_pack_cer_point", "formula": "x", "note": "the point estimate of eval_pack_cer", "inputs": {"x": {"id": "GW-REC-038", "source": "reports/external/recognition.md#track-strict", "row": ["GW-REC-038", "hiertext_val"], "header": "CER %", "value": "6.51"}}},
+    {"name": "eval_pack_crops", "formula": "x", "note": "crops of the validation evaluation pack", "inputs": {"x": {"id": "GW-REC-038", "source": "reports/external/recognition.md#track-strict", "row": ["GW-REC-038", "hiertext_val"], "header": "Lines"}}},
+    {"name": "efficiency_line_cer", "formula": "x", "note": "PyTorch v1, line CER on the 5,000 seeded lines, by line", "inputs": {"x": {"id": "GW-EFF-009", "source": "reports/efficiency/phase16/pareto.md", "row": "L26", "header": "CER %"}}},
+    {"name": "phase5_page_cer", "formula": "x", "note": "PyTorch v1, bag-of-lines page CER on the 400 Phase 5 pages, by page", "inputs": {"x": {"id": "GW-EFF-009", "source": "reports/efficiency/phase16/pareto.md", "row": "L11", "header": "CER %"}}},
+    {"name": "val_pages_all", "formula": "x", "note": "all HierText validation pages left after the exclusion list", "inputs": {"x": {"id": "GW-E2E-006", "source": "reports/external/end_to_end.md#detection", "row": ["GW-E2E-006", "hiertext_val"], "header": "Pages"}}},
+    {"name": "base_test_crops", "formula": "x", "note": "HierText test crops read by the baselines", "inputs": {"x": {"id": "GW-BASE-001", "source": "reports/baselines/README.md#coverage", "row": ["GW-BASE-001", "rec", "hiertext_test"], "header": "Samples"}}},
+    {"name": "base_test_pages", "formula": "x", "note": "HierText test pages read by the baselines", "inputs": {"x": {"id": "GW-BASE-001", "source": "reports/baselines/README.md#coverage", "row": ["GW-BASE-001", "e2e", "hiertext_test"], "header": "Samples"}}},
+    {"name": "base_gdc_crops", "formula": "x", "note": "GDC crops read by the baselines", "inputs": {"x": {"id": "GW-BASE-001", "source": "reports/baselines/README.md#coverage", "row": ["GW-BASE-001", "rec", "gdc_test"], "header": "Samples"}}},
+    {"name": "base_gdc_pages", "formula": "x", "note": "GDC pages read by the baselines", "inputs": {"x": {"id": "GW-BASE-001", "source": "reports/baselines/README.md#coverage", "row": ["GW-BASE-001", "e2e", "gdc_test"], "header": "Samples"}}},
+    {"name": "control_cer_low", "formula": "x", "note": "lowest validation CER of the three control seeds", "inputs": {"x": {"id": "GW-REC-004", "source": "reports/training/phase07/ablation_table.md#control-and-seed-spread", "row": "GW-REC-004", "header": "Val CER %"}}},
+    {"name": "control_cer_high", "formula": "x", "note": "highest validation CER of the three control seeds", "inputs": {"x": {"id": "GW-REC-003", "source": "reports/training/phase07/ablation_table.md#control-and-seed-spread", "row": "GW-REC-003", "header": "Val CER %"}}},
+    {"name": "synth_arm_50k", "formula": "x", "note": "the arm with 50K added lines", "inputs": {"x": {"id": "GW-DATA-022", "source": "reports/synthetic/phase12_comparison.md", "row": "L13", "header": "Arm"}}},
+    {"name": "doc_slice_pages", "formula": "x", "note": "pages of the document slice", "inputs": {"x": {"id": "GW-DATA-022", "source": "reports/synthetic/phase12_comparison.md", "value": "104"}}},
+    {"name": "final_vs_baseline", "formula": "x", "note": "final recipe minus GW-REC-001, validation CER, paired over pages", "inputs": {"x": {"id": "GW-REC-037", "source": "reports/ablation/phase13_final.md", "row": "GW-REC-034, GW-REC-035, GW-REC-036", "header": "Δ vs baseline"}}},
+    {"name": "det_002_diff", "formula": "x", "note": "GW-DET-001 minus GW-DET-002, stored operating points", "inputs": {"x": {"id": "GW-DET-002", "source": "reports/training/GW-DET-001_vs_GW-DET-002.md", "row": "stored", "header": "Difference [95% CI]"}}},
+    {"name": "det_003_diff", "formula": "x", "note": "GW-DET-001 minus GW-DET-003, stored operating points", "inputs": {"x": {"id": "GW-DET-003", "source": "reports/training/GW-DET-001_vs_GW-DET-003.md", "row": "stored", "header": "Difference [95% CI]"}}},
+    {"name": "det_004_diff", "formula": "x", "note": "chosen post-processing minus the setting of record, half B", "inputs": {"x": {"id": "GW-DET-004", "source": "reports/error_cases/detector/GW-DET-004/pair_B.json", "row": "diff"}}},
+    {"name": "det_005_diff", "formula": "x", "note": "long side 1536 minus 1280, half B", "inputs": {"x": {"id": "GW-DET-005", "source": "reports/error_cases/detector/GW-DET-005/pair_B.json", "row": "diff"}}},
+    {"name": "det_007_diff", "formula": "x", "note": "GW-DET-007 minus GW-DET-001", "inputs": {"x": {"id": "GW-DET-007", "source": "reports/error_cases/detector/GW-DET-007/pair.json", "row": "diff"}}},
+    {"name": "h1_cer", "formula": "x * 100", "note": "H1' CER half, strict, by page, in points", "inputs": {"x": {"id": "GW-E2E-009", "source": "reports/external/results.json", "row": "hypotheses/H1′ CER/tests/strict_pages/value"}}},
+    {"name": "h1_cer_low", "formula": "x * 100", "note": "its lower bound", "inputs": {"x": {"id": "GW-E2E-009", "source": "reports/external/results.json", "row": "hypotheses/H1′ CER/tests/strict_pages/low"}}},
+    {"name": "h1_cer_high", "formula": "x * 100", "note": "its upper bound", "inputs": {"x": {"id": "GW-E2E-009", "source": "reports/external/results.json", "row": "hypotheses/H1′ CER/tests/strict_pages/high"}}},
+    {"name": "h1_latency", "formula": "x", "note": "H1' latency half, ms per page", "inputs": {"x": {"id": "GW-E2E-009", "source": "reports/external/results.json", "row": "hypotheses/H1′ latency/test"}}},
+    {"name": "h1_onnx", "formula": "x", "note": "H1' on the ONNX build, ms per page", "inputs": {"x": {"id": "GW-EFF-010", "source": "reports/efficiency/phase16/results.json", "row": "verdicts/H1′ ONNX/test"}}},
+    {"name": "h5", "formula": "x * 100", "note": "H5', by line, in points", "inputs": {"x": {"id": "GW-E2E-009", "source": "reports/external/results.json", "row": "hypotheses/H5′/tests/lines/value"}}},
+    {"name": "h5_low", "formula": "x * 100", "note": "its lower bound", "inputs": {"x": {"id": "GW-E2E-009", "source": "reports/external/results.json", "row": "hypotheses/H5′/tests/lines/low"}}},
+    {"name": "h5_high", "formula": "x * 100", "note": "its upper bound", "inputs": {"x": {"id": "GW-E2E-009", "source": "reports/external/results.json", "row": "hypotheses/H5′/tests/lines/high"}}},
+    {"name": "h6", "formula": "x", "note": "H6', ms per line", "inputs": {"x": {"id": "GW-EFF-011", "source": "reports/efficiency/phase16/results.json", "row": "verdicts/H6′/test"}}},
+    {"name": "h7_latency", "formula": "x", "note": "H7' latency half, ms per line", "inputs": {"x": {"id": "GW-EFF-008", "source": "reports/efficiency/phase16/results.json", "row": "verdicts/H7′ latency/test"}}},
+    {"name": "h7_accuracy", "formula": "x * 100", "note": "H7' accuracy half, in points", "inputs": {"x": {"id": "GW-EFF-008", "source": "reports/efficiency/phase16/results.json", "row": "verdicts/H7′ accuracy/test/value"}}},
+    {"name": "h7_accuracy_low", "formula": "x * 100", "note": "its lower bound", "inputs": {"x": {"id": "GW-EFF-008", "source": "reports/efficiency/phase16/results.json", "row": "verdicts/H7′ accuracy/test/low"}}},
+    {"name": "h7_accuracy_high", "formula": "x * 100", "note": "its upper bound", "inputs": {"x": {"id": "GW-EFF-008", "source": "reports/efficiency/phase16/results.json", "row": "verdicts/H7′ accuracy/test/high"}}},
+    {"name": "h8_transfers", "formula": "x", "note": "ECE at T = 2.35 minus ECE at T = 1, GDC crops, by line", "inputs": {"x": {"id": "GW-E2E-009", "source": "reports/external/calibration.md", "row": ["GW-REC-039", "gdc_test"], "header": "ECE(2.35) - ECE(1) [CI]"}}},
+    {"name": "bundle_reference_cer", "formula": "x * 100", "note": "the first v0.1 bundle check: page CER of the Phase 10 pipeline", "inputs": {"x": {"id": "GW-E2E-004", "source": "reports/package/attempt1_record_post/GW-E2E-004.json", "row": "page_cer_phase10"}}},
+    {"name": "bundle_check_pages", "formula": "x", "note": "pages of the first v0.1 bundle check", "inputs": {"x": {"id": "GW-E2E-004", "source": "reports/package/attempt1_record_post/GW-E2E-004.json", "row": "pages"}}},
+    {"name": "resume_epoch", "formula": "x", "note": "the epoch the out-of-memory stop resumed in", "inputs": {"x": {"id": "GW-REC-034", "source": "reports/training/GW-REC-034/report.md#notes", "value": "25"}}},
+    {"name": "resume_step", "formula": "x", "note": "the step the out-of-memory stop resumed from", "inputs": {"x": {"id": "GW-REC-034", "source": "reports/training/GW-REC-034/report.md#notes", "value": "142,000"}}},
+    {"name": "bundle_map_difference", "formula": "x", "note": "largest absolute difference of the detector maps", "inputs": {"x": {"id": "GW-EFF-012", "source": "reports/export/GW-EFF-012/torch_bundle_check.json", "row": "tolerances/map_max_abs/measured"}}},
+    {"name": "bundle_logit_difference", "formula": "x", "note": "largest absolute difference of the recognizer logits", "inputs": {"x": {"id": "GW-EFF-012", "source": "reports/export/GW-EFF-012/torch_bundle_check.json", "row": "tolerances/logits_max_abs/measured"}}},
+    {"name": "bundle_profile_pages", "formula": "x", "note": "profile pages of the bundle check", "inputs": {"x": {"id": "GW-EFF-012", "source": "reports/export/GW-EFF-012/torch_bundle_check.json", "row": "detector/pages"}}},
+    {"name": "bundle_identical_lines", "formula": "x", "note": "lines with identical text in the bundle check", "inputs": {"x": {"id": "GW-EFF-012", "source": "reports/export/GW-EFF-012/torch_bundle_check.json", "row": "recognizer/identical_text"}}},
+    {
+      "name": "base2_page_phase5",
+      "formula": "x",
+      "note": "PP-OCRv5 mobile, mean ms per page, Phase 5 profile",
+      "inputs": {
+        "x": {
+          "id": "GW-BASE-002",
+          "source": "reports/baselines/efficiency.md",
+          "row": [
+            "GW-BASE-002",
+            "e2e",
+            "hiertext_val"
+          ],
+          "header": "ms mean"
+        }
+      }
+    },
+    {
+      "name": "base2_page_phase14",
+      "formula": "x",
+      "note": "PP-OCRv5 mobile, mean ms per page, Phase 14 sitting",
+      "inputs": {
+        "x": {
+          "id": "GW-E2E-009",
+          "source": "reports/external/README.md#confirmatory-tests-phase-14-plan-item-5",
+          "value": "2954.8"
+        }
+      }
+    },
+    {
+      "name": "base2_page_phase16",
+      "formula": "x",
+      "note": "PP-OCRv5 mobile, mean ms per page, Phase 16 sitting of GW-EFF-010",
+      "inputs": {
+        "x": {
+          "id": "GW-EFF-010",
+          "source": "reports/efficiency/phase16/verdicts.md#h1-onnx-not-met",
+          "value": "3,086.0"
+        }
+      }
+    },
+    {
+      "name": "v1_page_phase14",
+      "formula": "x",
+      "note": "GLYPHARIS v1 PyTorch, mean ms per page, Phase 14 sitting",
+      "inputs": {
+        "x": {
+          "id": "GW-E2E-009",
+          "source": "reports/external/README.md#confirmatory-tests-phase-14-plan-item-5",
+          "value": "2446.7"
+        }
+      }
+    },
+    {
+      "name": "v1_page_phase16",
+      "formula": "x",
+      "note": "GLYPHARIS v1 PyTorch, CPU, mean ms per page, GW-EFF-007",
+      "inputs": {
+        "x": {
+          "id": "GW-EFF-007",
+          "source": "reports/efficiency/phase16/cost_table.md#page-time-by-stage-mean-ms-per-page",
+          "row": "PyTorch, CPU, 10 threads",
+          "header": "Page mean"
+        }
+      }
+    },
+    {
+      "name": "hardening_inputs",
+      "formula": "a + b + c + d + e + f + g + h + i + j + k + l + m + n",
+      "note": "inputs per backend, summed over the kinds of case; the PyTorch backend's counts, the ONNX backend's are equal",
+      "inputs": {
+        "a": {
+          "id": "GW-E2E-012",
+          "source": "reports/hardening/GW-E2E-012.json#inputs/torch/kinds/bad_files/inputs",
+          "value": "6"
+        },
+        "b": {
+          "id": "GW-E2E-012",
+          "source": "reports/hardening/GW-E2E-012.json#inputs/torch/kinds/bad_files_bytes/inputs",
+          "value": "4"
+        },
+        "c": {
+          "id": "GW-E2E-012",
+          "source": "reports/hardening/GW-E2E-012.json#inputs/torch/kinds/fuzz_lite~1damaged_png/inputs",
+          "value": "40"
+        },
+        "d": {
+          "id": "GW-E2E-012",
+          "source": "reports/hardening/GW-E2E-012.json#inputs/torch/kinds/fuzz_lite~1random_array/inputs",
+          "value": "40"
+        },
+        "e": {
+          "id": "GW-E2E-012",
+          "source": "reports/hardening/GW-E2E-012.json#inputs/torch/kinds/fuzz_lite~1random_bytes/inputs",
+          "value": "40"
+        },
+        "f": {
+          "id": "GW-E2E-012",
+          "source": "reports/hardening/GW-E2E-012.json#inputs/torch/kinds/fuzz_lite_bytes~1damaged_png/inputs",
+          "value": "40"
+        },
+        "g": {
+          "id": "GW-E2E-012",
+          "source": "reports/hardening/GW-E2E-012.json#inputs/torch/kinds/fuzz_lite_bytes~1random_array/inputs",
+          "value": "13"
+        },
+        "h": {
+          "id": "GW-E2E-012",
+          "source": "reports/hardening/GW-E2E-012.json#inputs/torch/kinds/fuzz_lite_bytes~1random_bytes/inputs",
+          "value": "40"
+        },
+        "i": {
+          "id": "GW-E2E-012",
+          "source": "reports/hardening/GW-E2E-012.json#inputs/torch/kinds/good_page/inputs",
+          "value": "4"
+        },
+        "j": {
+          "id": "GW-E2E-012",
+          "source": "reports/hardening/GW-E2E-012.json#inputs/torch/kinds/over_pixel_limit/inputs",
+          "value": "6"
+        },
+        "k": {
+          "id": "GW-E2E-012",
+          "source": "reports/hardening/GW-E2E-012.json#inputs/torch/kinds/unusual_pages/inputs",
+          "value": "12"
+        },
+        "l": {
+          "id": "GW-E2E-012",
+          "source": "reports/hardening/GW-E2E-012.json#inputs/torch/kinds/unusual_pages_bytes/inputs",
+          "value": "10"
+        },
+        "m": {
+          "id": "GW-E2E-012",
+          "source": "reports/hardening/GW-E2E-012.json#inputs/torch/kinds/wrong_inputs/inputs",
+          "value": "10"
+        },
+        "n": {
+          "id": "GW-E2E-012",
+          "source": "reports/hardening/GW-E2E-012.json#inputs/torch/kinds/wrong_inputs_bytes/inputs",
+          "value": "4"
+        }
+      }
+    },
+    {
+      "name": "hardening_results",
+      "formula": "a + b + c + d + e + f",
+      "note": "results per backend: the kinds of case that returned any; the others returned none",
+      "inputs": {
+        "a": {
+          "id": "GW-E2E-012",
+          "source": "reports/hardening/GW-E2E-012.json#inputs/torch/kinds/fuzz_lite~1random_array/results",
+          "value": "6"
+        },
+        "b": {
+          "id": "GW-E2E-012",
+          "source": "reports/hardening/GW-E2E-012.json#inputs/torch/kinds/fuzz_lite_bytes~1random_array/results",
+          "value": "13"
+        },
+        "c": {
+          "id": "GW-E2E-012",
+          "source": "reports/hardening/GW-E2E-012.json#inputs/torch/kinds/good_page/results",
+          "value": "4"
+        },
+        "d": {
+          "id": "GW-E2E-012",
+          "source": "reports/hardening/GW-E2E-012.json#inputs/torch/kinds/unusual_pages/results",
+          "value": "11"
+        },
+        "e": {
+          "id": "GW-E2E-012",
+          "source": "reports/hardening/GW-E2E-012.json#inputs/torch/kinds/unusual_pages_bytes/results",
+          "value": "10"
+        },
+        "f": {
+          "id": "GW-E2E-012",
+          "source": "reports/hardening/GW-E2E-012.json#inputs/torch/kinds/wrong_inputs_bytes/results",
+          "value": "3"
+        }
+      }
+    },
+    {
+      "name": "efficiency_lines",
+      "formula": "x",
+      "note": "the seeded validation lines of the export check and of Phase 16",
+      "inputs": {
+        "x": {
+          "id": "GW-EFF-012",
+          "source": "reports/export/GW-EFF-012/torch_bundle_check.json#recognizer/lines",
+          "value": "5000"
+        }
+      }
+    },
+    {
+      "name": "baseline_pages",
+      "formula": "x",
+      "note": "the Phase 5 validation pages the baselines were run on",
+      "inputs": {
+        "x": {
+          "id": "GW-E2E-011",
+          "source": "reports/package/GW-E2E-011.json#pages",
+          "value": "400"
+        }
+      }
+    }
+  ]
+}

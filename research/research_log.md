@@ -446,3 +446,36 @@ the bottom. Experiments get their full record in `experiments.md`; this log is t
 - `v1-code` is that commit. A syntax-tree comparison against `phase14-eval` shows nothing else
   changed, so the Phase 14 results still describe this code.
 
+### 2026-11-18 — Phase 21: the research package
+
+- The recorded evidence is now a package a reader can check: `MODEL_CARD.md`, a corrected
+  `DATASETS.md`, the generated `EXPERIMENTS.md` and comparison table, the paper notes in
+  `research/paper/`, and a bibliography checked against publisher and arXiv pages. Nothing was
+  trained, evaluated or re-scored, and no test data was read.
+- `scripts/trace_numbers.py` ties every number in the paper notes, the card and `DATASETS.md` to a
+  report line and an experiment ID. `reports/paper_trace/trace.md` holds the outcome: 5,128 numbers
+  in 12 documents, none unresolved (the introduction and the related work print none).
+- The check is itself tested. Changing a digit got past it in at most 1.8% of cases in any document
+  (`methodology.md`), and swapping a value for one from another row of the same source in at most
+  1.0% (`efficiency.md`). The target for each is 5%.
+- The second audit exists because review showed the first was not enough. The first version of the
+  checker accepted a correct interval from the wrong row, ignored a missing minus sign, credited
+  baseline numbers to GLYPHARIS runs, and skipped numbers after the word "figures". Headline numbers
+  are now pinned to their own rows, signs must agree, and a number is credited to the run its row
+  names.
+- Review also corrected what the documents claimed. F22 called GDC's bag-of-lines result level with
+  every PaddleOCR system, but PP-OCRv5 mobile's interval excludes zero, and F22 no longer gives a
+  likely cause for those systems' order error (F26, F33). F35 said the fused export stays slower than
+  PyTorch, with no interval for that pair. The model card judged H4 from all pages when it is about
+  clean pages, and now gives both with its post hoc status. GDC's order-aware comparison now names
+  Tesseract 5, against which no difference can be stated. Statements that loose boxes raise the
+  recognizer's error are gone, because those bins are confounded.
+- ADR-0014 records the owner's two decisions: GW-DET-001, initialised from ImageNet weights, stays
+  v1's detector as a disclosed exception to ADR-0009's commercial-use rule, and the intended terms
+  for the v1 weights are CC BY-SA 4.0 with HierText and Open Images attribution, effective only if
+  they are released. Neither is a legal conclusion.
+- Still owed. Phase 22 has not run: the clean-machine walkthrough, the check that v1's results
+  reproduce within the 0.05-point tolerance, the fused-attention evaluation, and the phone
+  measurement, which stays an open gap if no phone is available. Phase 23 has not run: no weights are
+  distributed, and the code licence, PyPI, the Zenodo DOI and `CITATION.cff` are to be settled there.
+

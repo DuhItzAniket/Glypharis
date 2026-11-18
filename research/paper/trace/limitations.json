@@ -1,0 +1,1065 @@
+{
+  "document": "research/paper/limitations.md",
+  "constants": [
+    {
+      "value": "0.05",
+      "context": "tolerance",
+      "source": "docs/PHASE_STATUS.md#phase-18--inference-package-v1-re-run"
+    },
+    {
+      "value": "0.5",
+      "context": "IoU",
+      "source": "docs/EXPERIMENT_PROTOCOL.md#3-metrics"
+    },
+    {
+      "value": "10",
+      "context": "threads",
+      "id": "GW-EFF-007",
+      "source": "reports/efficiency/phase16/cost_table.md"
+    },
+    {
+      "value": "25",
+      "context": "target of",
+      "source": "docs/decisions/ADR-0011-cpu-latency-target.md"
+    },
+    {
+      "value": "1.5 s",
+      "context": "against",
+      "source": "docs/decisions/ADR-0011-cpu-latency-target.md"
+    },
+    {
+      "value": "1,836",
+      "context": "against",
+      "source": "docs/decisions/ADR-0011-cpu-latency-target.md"
+    },
+    {
+      "value": "64",
+      "context": "pixel limit",
+      "source": "docs/PHASE_STATUS.md#phase-20--production-engineering-v1-re-run"
+    },
+    {
+      "value": "2.35",
+      "context": "T =",
+      "id": "GW-E2E-009",
+      "source": "reports/external/calibration.md"
+    }
+  ],
+  "derived": [
+    {
+      "name": "pkg_pages",
+      "formula": "x",
+      "inputs": {
+        "x": {
+          "id": "GW-E2E-011",
+          "source": "reports/package/GW-E2E-011.json",
+          "row": "pages"
+        }
+      }
+    },
+    {
+      "name": "pkg_lines",
+      "formula": "x",
+      "inputs": {
+        "x": {
+          "id": "GW-E2E-011",
+          "source": "reports/package/GW-E2E-011.json",
+          "row": "lines"
+        }
+      }
+    },
+    {
+      "name": "gdc_pages",
+      "formula": "x",
+      "inputs": {
+        "x": {
+          "id": "GW-E2E-007",
+          "source": "reports/external/end_to_end.md#track-strict",
+          "row": [
+            "GW-E2E-007",
+            "gdc_test"
+          ],
+          "header": "Pages"
+        }
+      }
+    },
+    {
+      "name": "gdc_documents",
+      "formula": "x",
+      "inputs": {
+        "x": {
+          "id": "GW-E2E-010",
+          "source": "reports/error_cases/phase15/oracle_share.md#gdc_test",
+          "row": "all pages",
+          "header": "Documents"
+        }
+      }
+    },
+    {
+      "name": "funsd_pages",
+      "formula": "x",
+      "inputs": {
+        "x": {
+          "id": "GW-E2E-007",
+          "source": "reports/external/end_to_end.md#detection",
+          "row": [
+            "GW-E2E-007",
+            "funsd_test"
+          ],
+          "header": "Pages"
+        }
+      }
+    },
+    {
+      "name": "gdc_scan_pages",
+      "formula": "x",
+      "inputs": {
+        "x": {
+          "id": "GW-E2E-007",
+          "source": "reports/external/end_to_end.md#detection",
+          "row": [
+            "GW-E2E-007",
+            "gdc_scan_test"
+          ],
+          "header": "Pages"
+        }
+      }
+    },
+    {
+      "name": "ht_pages",
+      "formula": "x",
+      "inputs": {
+        "x": {
+          "id": "GW-E2E-007",
+          "source": "reports/external/end_to_end.md#track-strict",
+          "row": [
+            "GW-E2E-007",
+            "hiertext_test"
+          ],
+          "header": "Pages"
+        }
+      }
+    },
+    {
+      "name": "odb_pages",
+      "formula": "x",
+      "inputs": {
+        "x": {
+          "id": "GW-E2E-007",
+          "source": "reports/external/end_to_end.md#track-strict",
+          "row": [
+            "GW-E2E-007",
+            "omnidocbench_test"
+          ],
+          "header": "Pages"
+        }
+      }
+    },
+    {
+      "name": "iiit_words",
+      "formula": "x",
+      "inputs": {
+        "x": {
+          "id": "GW-REC-039",
+          "source": "reports/external/recognition.md#iiit5k",
+          "row": [
+            "GW-REC-039"
+          ],
+          "header": "Words"
+        }
+      }
+    },
+    {
+      "name": "gdc_rotated_pages",
+      "formula": "x",
+      "inputs": {
+        "x": {
+          "id": "GW-E2E-007",
+          "source": "reports/external/end_to_end.md#gdc-per-capture",
+          "row": [
+            "GW-E2E-007",
+            "e2e",
+            "rotated"
+          ],
+          "header": "Units"
+        }
+      }
+    },
+    {
+      "name": "gdc_curved_pages",
+      "formula": "x",
+      "inputs": {
+        "x": {
+          "id": "GW-E2E-007",
+          "source": "reports/external/end_to_end.md#gdc-per-capture",
+          "row": [
+            "GW-E2E-007",
+            "e2e",
+            "curved"
+          ],
+          "header": "Units"
+        }
+      }
+    },
+    {
+      "name": "gdc_curved_cer",
+      "formula": "x",
+      "inputs": {
+        "x": {
+          "id": "GW-E2E-007",
+          "source": "reports/external/end_to_end.md#gdc-per-capture",
+          "row": [
+            "GW-E2E-007",
+            "e2e",
+            "curved"
+          ],
+          "header": "CER % strict (crops or bag of lines)"
+        }
+      }
+    },
+    {
+      "name": "rot_glyph",
+      "formula": "x",
+      "inputs": {
+        "x": {
+          "id": "GW-E2E-007",
+          "source": "reports/external/end_to_end.md#gdc-per-capture",
+          "row": [
+            "GW-E2E-007",
+            "e2e",
+            "rotated"
+          ],
+          "header": "CER % strict (crops or bag of lines)"
+        }
+      }
+    },
+    {
+      "name": "rot_oracle",
+      "formula": "x",
+      "inputs": {
+        "x": {
+          "id": "GW-E2E-008",
+          "source": "reports/external/end_to_end.md#gdc-per-capture",
+          "row": [
+            "GW-E2E-008",
+            "oracle",
+            "rotated"
+          ],
+          "header": "CER % strict (crops or bag of lines)"
+        }
+      }
+    },
+    {
+      "name": "rot_small",
+      "formula": "x",
+      "inputs": {
+        "x": {
+          "id": "GW-BASE-006",
+          "source": "reports/external/end_to_end.md#gdc-per-capture",
+          "row": [
+            "GW-BASE-006",
+            "e2e",
+            "rotated"
+          ],
+          "header": "CER % strict (crops or bag of lines)"
+        }
+      }
+    },
+    {
+      "name": "gdc_vertical_lines",
+      "formula": "x",
+      "inputs": {
+        "x": {
+          "id": "GW-E2E-007",
+          "source": "reports/external/end_to_end.md#vertical-lines",
+          "row": [
+            "GW-E2E-007",
+            "gdc_test"
+          ],
+          "header": "Lines"
+        }
+      }
+    },
+    {
+      "name": "vert_recall",
+      "formula": "x",
+      "inputs": {
+        "x": {
+          "id": "GW-E2E-007",
+          "source": "reports/external/end_to_end.md#vertical-lines",
+          "row": [
+            "GW-E2E-007",
+            "gdc_test"
+          ],
+          "header": "Recall @0.5 %"
+        }
+      }
+    },
+    {
+      "name": "recall_small",
+      "formula": "x",
+      "inputs": {
+        "x": {
+          "id": "GW-E2E-010",
+          "source": "reports/error_cases/phase15/pipeline.md#hiertext_test",
+          "row": "L61",
+          "header": "Recall % [cited CI]"
+        }
+      }
+    },
+    {
+      "name": "small_height",
+      "formula": "x",
+      "inputs": {
+        "x": {
+          "id": "GW-E2E-010",
+          "source": "reports/error_cases/phase15/pipeline.md#hiertext_test",
+          "row": "L61",
+          "header": "Bin",
+          "value": "9.35"
+        }
+      }
+    },
+    {
+      "name": "recall_steep",
+      "formula": "x",
+      "inputs": {
+        "x": {
+          "id": "GW-E2E-010",
+          "source": "reports/error_cases/phase15/pipeline.md#hiertext_test",
+          "row": "L73",
+          "header": "Recall % [cited CI]"
+        }
+      }
+    },
+    {
+      "name": "rotation_bin",
+      "formula": "x",
+      "inputs": {
+        "x": {
+          "id": "GW-E2E-010",
+          "source": "reports/error_cases/phase15/pipeline.md#hiertext_test",
+          "row": "L73",
+          "header": "Bin",
+          "value": "15"
+        }
+      }
+    },
+    {
+      "name": "iou_low",
+      "formula": "x",
+      "inputs": {
+        "x": {
+          "id": "GW-E2E-010",
+          "source": "reports/error_cases/phase15/pipeline.md#hiertext_test",
+          "row": "L47",
+          "header": "CER % [cited CI]"
+        }
+      }
+    },
+    {
+      "name": "iou_high",
+      "formula": "x",
+      "inputs": {
+        "x": {
+          "id": "GW-E2E-010",
+          "source": "reports/error_cases/phase15/pipeline.md#hiertext_test",
+          "row": "L49",
+          "header": "CER % [cited CI]"
+        }
+      }
+    },
+    {
+      "name": "gdc_small_lines",
+      "formula": "x",
+      "inputs": {
+        "x": {
+          "id": "GW-E2E-010",
+          "source": "reports/error_cases/phase15/pipeline.md#gdc_test",
+          "row": "L155",
+          "header": "Lines"
+        }
+      }
+    },
+    {
+      "name": "small_height_gdc",
+      "formula": "x",
+      "inputs": {
+        "x": {
+          "id": "GW-E2E-010",
+          "source": "reports/error_cases/phase15/pipeline.md#gdc_test",
+          "row": "L155",
+          "header": "Bin",
+          "value": "9.35"
+        }
+      }
+    },
+    {
+      "name": "seed_cer_a",
+      "formula": "x",
+      "inputs": {
+        "x": {
+          "id": "GW-REC-037",
+          "source": "reports/ablation/phase13_final.md",
+          "row": "GW-REC-034, GW-REC-035, GW-REC-036",
+          "header": "Val CER % (per seed)",
+          "value": "6.30"
+        }
+      }
+    },
+    {
+      "name": "seed_cer_b",
+      "formula": "x",
+      "inputs": {
+        "x": {
+          "id": "GW-REC-037",
+          "source": "reports/ablation/phase13_final.md",
+          "row": "GW-REC-034, GW-REC-035, GW-REC-036",
+          "header": "Val CER % (per seed)",
+          "value": "6.28"
+        }
+      }
+    },
+    {
+      "name": "rec034_lines",
+      "formula": "x",
+      "inputs": {
+        "x": {
+          "id": "GW-REC-034",
+          "source": "reports/training/GW-REC-034/report.md",
+          "value": "73,888"
+        }
+      }
+    },
+    {
+      "name": "crop_glyph",
+      "formula": "x",
+      "inputs": {
+        "x": {
+          "id": "GW-REC-039",
+          "source": "reports/external/recognition.md#track-strict",
+          "row": [
+            "GW-REC-039",
+            "gdc_test"
+          ],
+          "header": "CER %"
+        }
+      }
+    },
+    {
+      "name": "crop_medium",
+      "formula": "x",
+      "inputs": {
+        "x": {
+          "id": "GW-BASE-007",
+          "source": "reports/external/recognition.md#track-strict",
+          "row": [
+            "GW-BASE-007",
+            "gdc_test"
+          ],
+          "header": "CER %"
+        }
+      }
+    },
+    {
+      "name": "d_crop_medium",
+      "formula": "x",
+      "inputs": {
+        "x": {
+          "id": "GW-E2E-009",
+          "source": "reports/external/comparisons.md",
+          "row": [
+            "GW-REC-039",
+            "GW-BASE-007",
+            "gdc_test",
+            "strict"
+          ],
+          "header": "CER (crops or bag of lines) pp"
+        }
+      }
+    },
+    {
+      "name": "d_crop_small",
+      "formula": "x",
+      "inputs": {
+        "x": {
+          "id": "GW-E2E-009",
+          "source": "reports/external/comparisons.md",
+          "row": [
+            "GW-REC-039",
+            "GW-BASE-006",
+            "gdc_test",
+            "strict"
+          ],
+          "header": "CER (crops or bag of lines) pp"
+        }
+      }
+    },
+    {
+      "name": "d_crop_mobile",
+      "formula": "x",
+      "inputs": {
+        "x": {
+          "id": "GW-E2E-009",
+          "source": "reports/external/comparisons.md",
+          "row": [
+            "GW-REC-039",
+            "GW-BASE-002",
+            "gdc_test",
+            "strict"
+          ],
+          "header": "CER (crops or bag of lines) pp"
+        }
+      }
+    },
+    {
+      "name": "iiit_glyph",
+      "formula": "x",
+      "inputs": {
+        "x": {
+          "id": "GW-REC-039",
+          "source": "reports/external/recognition.md#iiit5k",
+          "row": [
+            "GW-REC-039"
+          ],
+          "header": "Word acc %"
+        }
+      }
+    },
+    {
+      "name": "iiit_medium",
+      "formula": "x",
+      "inputs": {
+        "x": {
+          "id": "GW-BASE-007",
+          "source": "reports/external/recognition.md#iiit5k",
+          "row": [
+            "GW-BASE-007"
+          ],
+          "header": "Word acc %"
+        }
+      }
+    },
+    {
+      "name": "d_iiit_medium",
+      "formula": "x",
+      "inputs": {
+        "x": {
+          "id": "GW-E2E-009",
+          "source": "reports/external/comparisons.md",
+          "row": [
+            "GW-REC-039",
+            "GW-BASE-007",
+            "iiit5k_test",
+            "alnum"
+          ],
+          "header": "Order-aware CER / word acc pp"
+        }
+      }
+    },
+    {
+      "name": "odb_glyph",
+      "formula": "x",
+      "inputs": {
+        "x": {
+          "id": "GW-E2E-007",
+          "source": "reports/external/end_to_end.md#track-strict",
+          "row": [
+            "GW-E2E-007",
+            "omnidocbench_test"
+          ],
+          "header": "Page CER % (order-aware)"
+        }
+      }
+    },
+    {
+      "name": "odb_tess",
+      "formula": "x",
+      "inputs": {
+        "x": {
+          "id": "GW-BASE-001",
+          "source": "reports/external/end_to_end.md#track-strict",
+          "row": [
+            "GW-BASE-001",
+            "omnidocbench_test"
+          ],
+          "header": "Page CER % (order-aware)"
+        }
+      }
+    },
+    {
+      "name": "d_odb_tess",
+      "formula": "x",
+      "inputs": {
+        "x": {
+          "id": "GW-E2E-009",
+          "source": "reports/external/comparisons.md",
+          "row": [
+            "GW-E2E-007",
+            "GW-BASE-001",
+            "omnidocbench_test",
+            "strict"
+          ],
+          "header": "Order-aware CER / word acc pp"
+        }
+      }
+    },
+    {
+      "name": "off_glyph_whole",
+      "formula": "x",
+      "inputs": {
+        "x": {
+          "id": "GW-E2E-007",
+          "source": "reports/external/official.md#omnidocbench",
+          "row": [
+            "GW-E2E-007",
+            "all"
+          ],
+          "header": "text_block whole"
+        }
+      }
+    },
+    {
+      "name": "off_tess_whole",
+      "formula": "x",
+      "inputs": {
+        "x": {
+          "id": "GW-BASE-001",
+          "source": "reports/external/official.md#omnidocbench",
+          "row": [
+            "GW-BASE-001",
+            "all"
+          ],
+          "header": "text_block whole"
+        }
+      }
+    },
+    {
+      "name": "off_glyph_page",
+      "formula": "x",
+      "inputs": {
+        "x": {
+          "id": "GW-E2E-007",
+          "source": "reports/external/official.md#omnidocbench",
+          "row": [
+            "GW-E2E-007",
+            "all"
+          ],
+          "header": "text_block page avg"
+        }
+      }
+    },
+    {
+      "name": "off_tess_page",
+      "formula": "x",
+      "inputs": {
+        "x": {
+          "id": "GW-BASE-001",
+          "source": "reports/external/official.md#omnidocbench",
+          "row": [
+            "GW-BASE-001",
+            "all"
+          ],
+          "header": "text_block page avg"
+        }
+      }
+    },
+    {
+      "name": "funsd_glyph",
+      "formula": "x",
+      "inputs": {
+        "x": {
+          "id": "GW-E2E-007",
+          "source": "reports/external/end_to_end.md#detection",
+          "row": [
+            "GW-E2E-007",
+            "funsd_test"
+          ],
+          "header": "F1 @0.5"
+        }
+      }
+    },
+    {
+      "name": "funsd_mobile",
+      "formula": "x",
+      "inputs": {
+        "x": {
+          "id": "GW-BASE-002",
+          "source": "reports/external/end_to_end.md#detection",
+          "row": [
+            "GW-BASE-002",
+            "funsd_test"
+          ],
+          "header": "F1 @0.5",
+          "value": "81.81"
+        }
+      }
+    },
+    {
+      "name": "funsd_server",
+      "formula": "x",
+      "inputs": {
+        "x": {
+          "id": "GW-BASE-003",
+          "source": "reports/external/end_to_end.md#detection",
+          "row": [
+            "GW-BASE-003",
+            "funsd_test"
+          ],
+          "header": "F1 @0.5",
+          "value": "85.03"
+        }
+      }
+    },
+    {
+      "name": "base_val_lines",
+      "formula": "x",
+      "inputs": {
+        "x": {
+          "id": "GW-BASE-002",
+          "source": "reports/baselines/recognition.md#track-strict",
+          "row": [
+            "GW-BASE-002",
+            "hiertext_val"
+          ],
+          "header": "Lines"
+        }
+      }
+    },
+    {
+      "name": "base_val_pages",
+      "formula": "x",
+      "inputs": {
+        "x": {
+          "id": "GW-BASE-002",
+          "source": "reports/baselines/end_to_end.md#track-strict",
+          "row": [
+            "GW-BASE-002",
+            "hiertext_val"
+          ],
+          "header": "Pages"
+        }
+      }
+    },
+    {
+      "name": "val_crops",
+      "formula": "x",
+      "inputs": {
+        "x": {
+          "id": "GW-REC-038",
+          "source": "reports/external/recognition.md#track-strict",
+          "row": [
+            "GW-REC-038",
+            "hiertext_val"
+          ],
+          "header": "Lines"
+        }
+      }
+    },
+    {
+      "name": "val_pages",
+      "formula": "x",
+      "inputs": {
+        "x": {
+          "id": "GW-E2E-006",
+          "source": "reports/external/end_to_end.md#track-strict",
+          "row": [
+            "GW-E2E-006",
+            "hiertext_val"
+          ],
+          "header": "Pages"
+        }
+      }
+    },
+    {
+      "name": "trocr_strict",
+      "formula": "x",
+      "inputs": {
+        "x": {
+          "id": "GW-BASE-004",
+          "source": "reports/external/recognition.md#track-strict",
+          "row": [
+            "GW-BASE-004",
+            "gdc_test"
+          ],
+          "header": "CER %"
+        }
+      }
+    },
+    {
+      "name": "trocr_norm",
+      "formula": "x",
+      "inputs": {
+        "x": {
+          "id": "GW-BASE-004",
+          "source": "reports/external/recognition.md#track-normalised",
+          "row": [
+            "GW-BASE-004",
+            "gdc_test"
+          ],
+          "header": "CER %"
+        }
+      }
+    },
+    {
+      "name": "odb_small",
+      "formula": "x",
+      "inputs": {
+        "x": {
+          "id": "GW-BASE-006",
+          "source": "reports/external/end_to_end.md#track-strict",
+          "row": [
+            "GW-BASE-006",
+            "omnidocbench_test"
+          ],
+          "header": "Page CER % (order-aware)"
+        }
+      }
+    },
+    {
+      "name": "odb_tiny",
+      "formula": "x",
+      "inputs": {
+        "x": {
+          "id": "GW-BASE-005",
+          "source": "reports/external/end_to_end.md#track-strict",
+          "row": [
+            "GW-BASE-005",
+            "omnidocbench_test"
+          ],
+          "header": "Page CER % (order-aware)"
+        }
+      }
+    },
+    {
+      "name": "adr_line",
+      "formula": "x",
+      "inputs": {
+        "x": {
+          "id": "GW-EFF-007",
+          "source": "reports/efficiency/phase16/README.md#adr-0011s",
+          "row": "v1 PyTorch, CPU, 10 threads",
+          "header": "line mean (≤ 25)"
+        }
+      }
+    },
+    {
+      "name": "adr_page",
+      "formula": "x",
+      "inputs": {
+        "x": {
+          "id": "GW-EFF-007",
+          "source": "reports/efficiency/phase16/README.md#adr-0011s",
+          "row": "v1 PyTorch, CPU, 10 threads",
+          "header": "page mean (≤ 1,500)"
+        }
+      }
+    },
+    {
+      "name": "adr_ram",
+      "formula": "x",
+      "inputs": {
+        "x": {
+          "id": "GW-EFF-007",
+          "source": "reports/efficiency/phase16/README.md#adr-0011s",
+          "row": "v1 PyTorch, CPU, 10 threads",
+          "header": "peak RAM on pages (< 1,836)"
+        }
+      }
+    },
+    {
+      "name": "h1_onnx",
+      "formula": "x",
+      "inputs": {
+        "x": {
+          "id": "GW-EFF-010",
+          "source": "reports/efficiency/phase16/results.json",
+          "row": "verdicts/H1′ ONNX/test"
+        }
+      }
+    },
+    {
+      "name": "lines_per_page",
+      "formula": "x",
+      "inputs": {
+        "x": {
+          "id": "GW-EFF-007",
+          "source": "reports/efficiency/phase16/cost_table.md#pages",
+          "row": "PyTorch, CPU, 10 threads",
+          "header": "Lines per page"
+        }
+      }
+    },
+    {
+      "name": "mobile_p5",
+      "formula": "x",
+      "inputs": {
+        "x": {
+          "id": "GW-BASE-002",
+          "source": "reports/benchmark_results/efficiency_comparison.md#pages",
+          "row": "GW-BASE-002",
+          "header": "Mean ms"
+        }
+      }
+    },
+    {
+      "name": "mobile_p14",
+      "formula": "x",
+      "inputs": {
+        "x": {
+          "id": "GW-E2E-009",
+          "source": "reports/external/results.json",
+          "row": "hypotheses/H1′ latency/mean_ms/GW-BASE-002"
+        }
+      }
+    },
+    {
+      "name": "mobile_p16",
+      "formula": "x",
+      "inputs": {
+        "x": {
+          "id": "GW-EFF-010",
+          "source": "reports/efficiency/phase16/verdicts.md#h1-onnx",
+          "value": "3,086.0"
+        }
+      }
+    },
+    {
+      "name": "torch_p14",
+      "formula": "x",
+      "inputs": {
+        "x": {
+          "id": "GW-E2E-009",
+          "source": "reports/external/results.json",
+          "row": "hypotheses/H1′ latency/mean_ms/GW-EFF-005"
+        }
+      }
+    },
+    {
+      "name": "torch_p16",
+      "formula": "x",
+      "inputs": {
+        "x": {
+          "id": "GW-EFF-007",
+          "source": "reports/benchmark_results/efficiency_comparison.md#pages",
+          "row": "GLYPHARIS v1 PyTorch, CPU, 10 threads",
+          "header": "Mean ms"
+        }
+      }
+    },
+    {
+      "name": "fused_ms",
+      "formula": "x",
+      "inputs": {
+        "x": {
+          "id": "GW-EFF-009",
+          "source": "reports/efficiency/phase16/pareto.md#pages",
+          "row": "fused-attention",
+          "header": "Mean ms"
+        }
+      }
+    },
+    {
+      "name": "fused_ram",
+      "formula": "x",
+      "inputs": {
+        "x": {
+          "id": "GW-EFF-009",
+          "source": "reports/efficiency/phase16/pareto.md#pages",
+          "row": "fused-attention",
+          "header": "Peak RAM MiB"
+        }
+      }
+    },
+    {
+      "name": "ece_iiit",
+      "formula": "x",
+      "inputs": {
+        "x": {
+          "id": "GW-REC-039",
+          "source": "reports/external/calibration.md",
+          "row": [
+            "GW-REC-039",
+            "iiit5k_test"
+          ],
+          "header": "ECE(2.35) - ECE(1) [CI]"
+        }
+      }
+    },
+    {
+      "name": "ece_pipe",
+      "formula": "x",
+      "inputs": {
+        "x": {
+          "id": "GW-E2E-007",
+          "source": "reports/external/calibration.md",
+          "row": [
+            "GW-E2E-007",
+            "gdc_test (pipeline lines)"
+          ],
+          "header": "ECE T=2.35"
+        }
+      }
+    },
+    {
+      "name": "synth_250",
+      "formula": "x",
+      "inputs": {
+        "x": {
+          "id": "GW-DATA-022",
+          "source": "reports/synthetic/phase12_comparison.md",
+          "row": "L15",
+          "header": "Δ vs HierText only"
+        }
+      }
+    },
+    {
+      "name": "doc_slice_pages",
+      "formula": "x",
+      "inputs": {
+        "x": {
+          "id": "GW-DATA-022",
+          "source": "reports/synthetic/phase12_comparison.md",
+          "value": "104"
+        }
+      }
+    },
+    {
+      "name": "h3_delta",
+      "formula": "x",
+      "inputs": {
+        "x": {
+          "id": "GW-DATA-009",
+          "source": "reports/robustness/phase11_comparison.md",
+          "row": "L14",
+          "header": "Δ mCE vs A [95% CI]"
+        }
+      }
+    },
+    {
+      "name": "mce_a",
+      "formula": "x",
+      "inputs": {
+        "x": {
+          "id": "GW-REC-037",
+          "source": "reports/ablation/phase13_final.md",
+          "row": "GW-REC-034, GW-REC-035, GW-REC-036",
+          "header": "GLYPH-C mCE % (per seed)",
+          "value": "3.54"
+        }
+      }
+    },
+    {
+      "name": "mce_b",
+      "formula": "x",
+      "inputs": {
+        "x": {
+          "id": "GW-REC-037",
+          "source": "reports/ablation/phase13_final.md",
+          "row": "GW-REC-034, GW-REC-035, GW-REC-036",
+          "header": "GLYPH-C mCE % (per seed)",
+          "value": "3.53"
+        }
+      }
+    }
+  ]
+}

@@ -28,6 +28,12 @@ synthetic training data with licences we control.
    document data) and through the HierText-only control.
 4. **v0.1 data** is HierText + GlyphSynth.
 
+*Note, 2026-11-18 (the decision is unchanged).* Point 2's "CC BY-SA 4.0 annotations" is narrower than
+the publisher's statement: HierText's README, checked on 2026-11-18, releases the HierText dataset under
+CC BY-SA 4.0 and gives no separate licence for annotations or images. HierText is released under
+CC BY-SA 4.0; its images come from Open Images, which lists them as CC BY 2.0. The v1 detector's
+ImageNet-1K initialisation is a disclosed exception to point 2 (ADR-0014).
+
 ## Consequences
 - 41 GB less to download; RISK_REGISTER R-03 shrinks and R-04 is closed.
 - The brief's SynthText subset study (25K / 50K / 100K / 250K) is replaced by the same sizes of

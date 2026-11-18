@@ -20,6 +20,17 @@ if TYPE_CHECKING:
     from glypharis.data.rec_dataset import RecLineDataset
 
 WORST = 20
+HIERTEXT_NOTICE = (
+    "The lines and crops in this section come from HierText validation (Long et al., CVPR 2022), "
+    "released under CC BY-SA 4.0, and are shared here under the same licence. The images come from "
+    "Open Images, which lists them as CC BY 2.0 and does not warrant the licence of each image. "
+    "See `DATASETS.md`."
+)
+
+
+def _quotes_hiertext(summary: dict[str, Any]) -> bool:
+    """Whether the run validated on HierText, so that the worst lines quote it."""
+    return any("hiertext" in pack and "validation" in pack for pack in summary["data"])
 
 
 def _read_jsonl(path: Path) -> list[dict[str, Any]]:
@@ -187,6 +198,8 @@ def write_report(run_dir: Path, report_dir: Path, images: dict[str, Any] | None 
     else:
         lines.append("No flags raised.")
     lines += ["", "## Curves", "", "![curves](curves.png)", "", "## Worst validation lines", ""]
+    if _quotes_hiertext(summary):
+        lines += [HIERTEXT_NOTICE, ""]
     lines += ["| Key | Reference | Prediction | CER |", "|---|---|---|---|"]
     for w in worst:
         ref = w["label"].replace("|", "\\|")

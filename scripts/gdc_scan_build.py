@@ -1,10 +1,10 @@
-"""Build (and optionally freeze) GDC-scan: the owner's own printed document, photographed.
+"""Build (and optionally freeze) GDC-scan: one private printed document, photographed.
 
 Usage:
     python scripts/gdc_scan_build.py [--data-root data] [--freeze]
 
 Inputs, in ``data/raw/gdc_scan/source/`` (local only, never committed):
-    original.pdf   the born-digital document (Word export) that was printed
+    original.pdf   the born-digital document that was printed
     scan.pdf       the phone scanner app's PDF: one photo per printed page, same order
 
 GDC-scan has no corner markers, so each photo is matched to its page differently from GDC v1:
@@ -16,11 +16,10 @@ GDC-scan has no corner markers, so each photo is matched to its page differently
 
 Ground truth is the PDF text layer (`glypharis.data.gdc.extract_lines`), never an OCR engine. Two
 rules adapt it to this document:
-- Word writes the footer first; a line that starts below every other line (the page number) is
-  moved to the end, so the page text follows the printed reading order.
-- Ignore regions are the PDF's raster images (screenshots, the letterhead) plus everything outside
-  the page's content box, padded by ``CONTENT_PAD`` inches: the print shop's sheet numbers, the
-  binding, the table under the page.
+- a line that starts below every other line is moved to the end, so the page text follows the
+  printed reading order;
+- ignore regions are the PDF's raster images plus everything outside the page's content box,
+  padded by ``CONTENT_PAD`` inches.
 
 Re-running over an existing pages file must reproduce every ground-truth line exactly; otherwise
 nothing is written.
@@ -32,8 +31,8 @@ Writes:
 With --freeze (only when every page aligns without problems):
     data/manifests/gdc_scan/gdc_scan_v1.json        hashes of sources, captures and pages
 
-The committed manifests hold hashes and counts only: the document is the owner's own and names
-them, so no text, file name of the source or image leaves the machine.
+The committed manifests hold hashes and counts only: the document is private, so no text, file
+name of the source or image leaves the machine.
 """
 
 from __future__ import annotations
@@ -82,7 +81,7 @@ def _sha256(path: Path) -> str:
 
 
 def reading_order(lines: list[PdfLine]) -> list[PdfLine]:
-    """Move lines that start below every other line (Word's footer, written first) to the end."""
+    """Move lines that start below every other line to the end."""
     footer = [ln for ln in lines if all(ln.box[1] > o.box[3] for o in lines if o is not ln)]
     return [ln for ln in lines if ln not in footer] + footer
 

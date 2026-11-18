@@ -5,14 +5,15 @@ degraded, or image-only document pages and returns it as structured output: line
 and timing.
 
 GLYPHARIS is built as a research project. Every model is trained and evaluated on a single laptop GPU
-(RTX 4050, 6 GB), every experiment is registered before it runs, and every reported number traces back to
-a generated report.
+(see [Hardware](#hardware)), every experiment is registered before it runs, and every reported number
+traces back to a generated report.
 
-> **Status: v1 evaluated, v1.0 not released yet.** The research phases (11 to 16) are done, and the
-> export, package and hardening phases were re-run on the final model. The research package, final
-> validation and the v1.0 release (Phases 21 to 23) are next; `v0.1` is the earlier usable engine
-> ([ADR-0008](docs/decisions/ADR-0008-usable-engine-first.md)).
-> See [docs/PHASE_STATUS.md](docs/PHASE_STATUS.md) for what is done and every number behind it.
+> **Status: v1 evaluated and packaged, not released.** Phases 0 to 20 are complete, including the export,
+> package and hardening re-runs on the final model. The research package (Phase 21) is in progress.
+> Final validation (Phase 22) has not been run. No weights are distributed; release is Phase 23.
+> `v0.1` is the earlier usable engine ([ADR-0008](docs/decisions/ADR-0008-usable-engine-first.md)).
+> See [docs/PHASE_STATUS.md](docs/PHASE_STATUS.md) for what is done and every number behind it, and
+> [MODEL_CARD.md](MODEL_CARD.md) for what v1 is, how it measured and where it fails.
 
 ## Using it
 
@@ -78,44 +79,71 @@ image ─▶ preprocessing ─▶ GLYPHARIS-Det (line detector) ─▶ crop + re
 
 | Document | What's in it |
 |---|---|
-| [Implementation plan](docs/IMPLEMENTATION_PLAN.md) | 24 phases with tasks, deliverables and exit criteria |
-| [Roadmap](docs/ROADMAP.md) | Milestones, versions, dependency graph, success criteria |
-| [Architecture](docs/ARCHITECTURE.md) | System design and public interface |
-| [Experiment protocol](docs/EXPERIMENT_PROTOCOL.md) | Metrics, splits, statistics, diagnostics, leakage rules |
+| [Model card](MODEL_CARD.md) | What v1 is, its intended use, results and limitations |
 | [Datasets](DATASETS.md) | Provenance, licences and roles of every dataset |
+| [Experiments](EXPERIMENTS.md) | Generated summary of every registered experiment |
+| [Comparison table](reports/benchmark_results/comparison_table.md) | Generated table of accuracy, latency and size by model and dataset |
+| [Paper notes](research/paper/) | Methodology, experiments, results, error analysis, efficiency, limitations |
+| [Phase status](docs/PHASE_STATUS.md) | Live record of every phase, with its gate and evidence |
+| [Implementation plan](docs/IMPLEMENTATION_PLAN.md) | 24 phases with tasks, deliverables, exit criteria and deviations |
+| [Roadmap](docs/ROADMAP.md) | Milestones, versions, dependency graph, success criteria |
+| [Architecture](docs/ARCHITECTURE.md) | The system as built, and its public interface |
+| [Experiment protocol](docs/EXPERIMENT_PROTOCOL.md) | Metrics, splits, statistics, diagnostics, leakage rules |
 | [Approach survey](research/approach_survey.md) | Alternatives considered and why this design was chosen |
 | [Risk register](docs/RISK_REGISTER.md) | Known risks and mitigations |
 | [Decisions](docs/decisions/) | Architecture decision records |
 | [Workflow](docs/WORKFLOW.md) | Branching, commits, phase gate, experiment IDs |
-| [Environment](docs/ENVIRONMENT.md) | Development machine, as measured |
-| [Research log](research/) | Hypotheses, experiment registry, ablations, failures, findings, paper notes |
+| [Environment](docs/ENVIRONMENT.md) | Development machine and where its generated record lives |
+| [Reports](reports/README.md) | What each generated report folder holds |
+| [Research log](research/) | Hypotheses, experiment registry, ablations, failures, findings |
 
 ## Repository layout
 
 ```
-glypharis/      package (from Phase 1)
-configs/        all hyperparameters (YAML)
-scripts/        dataset download, audit, baselines, env report
+glypharis/      the package: models, pipeline, training, evaluation, export
+configs/        all hyperparameters (YAML); configs/final/ holds the v1 freeze record
+scripts/        data preparation, evaluation, reports and checks
 tests/          pytest suite
 data/           manifests are committed; raw/processed data is not
 reports/        generated analysis, curves and benchmark tables
 research/       research log and paper notes
 docs/           plans, protocol, decisions
+requirements/   lock files, one per environment
 ```
 
-## Hardware target
+## Hardware
+
+Development and training machine, from the generated
+[environment report](reports/environment/env_report.md) (the CPU name is in the `conditions` field of
+`reports/efficiency/phase16/profiles/pages_torch_cpu_10t.json`):
 
 | | |
 |---|---|
-| GPU | NVIDIA RTX 4050 Laptop, 6 GB (≈ 4.5–5 GB usable) |
-| CPU | Intel Core i7-14650HX |
-| RAM | 16 GB |
+| GPU | NVIDIA GeForce RTX 4050 Laptop GPU, 6,140 MiB |
+| CPU | Intel Core i7-14650HX, 16 physical cores, 24 logical |
+| RAM | 15.71 GiB |
 | OS | Windows 11; CI on Linux (CPU) |
 
 Training supports CUDA with automatic CPU fallback, mixed precision (bf16/fp16), gradient accumulation,
-checkpoint resume, and VRAM monitoring. These arrive in Phases 1 and 6.
+checkpoint resume and VRAM monitoring.
+
+Phones are the target hardware; no phone has been measured. The laptop's figures only rank candidate
+builds, and v1 misses the laptop CPU latency targets of
+[ADR-0011](docs/decisions/ADR-0011-cpu-latency-target.md) (GW-EFF-007,
+`reports/efficiency/phase16/README.md`). The phone candidate is the all-ONNX build with fused attention
+(GW-EFF-009). A new version, not v1; validation and laptop figures only; to be evaluated in Phase 22.
 
 ## Licence
 
-Code licence to be decided. Model weights will be released only on terms compatible with the training
-datasets' licences (see [DATASETS.md](DATASETS.md)).
+Code licence: to be settled in Phase 23.
+
+No weights are distributed; release is Phase 23.
+Intended terms under ADR-0014, effective only if released. They are CC BY-SA 4.0 for the v1 weights,
+with attribution to HierText and Open Images, as the owner decided on 2026-11-18
+([ADR-0014](docs/decisions/ADR-0014-weights-and-backbone-terms.md)).
+
+GW-DET-001 stays v1's detector as a disclosed exception to the commercial-use rule of
+[ADR-0009](docs/decisions/ADR-0009-no-synthtext.md): its backbone was initialised from ImageNet-1K
+weights, and the ImageNet terms do not clearly allow commercial use. The v1 weights are therefore not
+described as cleared for commercial use. This is the project's chosen handling, not a legal
+conclusion. The terms of each dataset are in [DATASETS.md](DATASETS.md).

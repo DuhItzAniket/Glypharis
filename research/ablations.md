@@ -25,8 +25,9 @@ Results are filled in only from generated reports.
 **Phase 7 (short budget).** One change at a time against GW-REC-003 (8 epochs, seed 1337), paired
 line by line; Δ in percentage points with a 95% bootstrap CI over the 73,888 validation lines. The
 decision rule (`docs/PHASE_STATUS.md`, Phase 07) also requires the arm's CER to lie outside all
-three control seeds (8.30 to 8.32%). 15 comparisons, no multiplicity correction. Source:
-`reports/training/phase07/ablation_table.md`. GW-REC-019 (stride 8 without CTC-aware batching)
+three control seeds (8.30 to 8.32%). The generated table makes 16 comparisons, with no multiplicity
+correction: the arms above and GW-REC-022, which changes several variables at once and so has no row
+here. Source: `reports/training/phase07/ablation_table.md`. GW-REC-019 (stride 8 without CTC-aware batching)
 failed and was re-run as GW-REC-021 (`research/failures.md`).
 
 **Phase 11 (robustness, CRNN short budget).** Augmentation families against no augmentation (arm A), three seeds per arm (1337, 2024, 7), scored on the frozen GLYPH-C v1 suite. Metric: mean corruption error (mCE), the unweighted mean of the micro CER over 7 corruptions × 5 levels. Δ pools each arm's three seeds, paired over the 6,000 GLYPH-C source lines (1,000 resamples). Decision rule (`docs/PHASE_STATUS.md`, Phase 11): CI on one side of zero and all three seeds beyond all three of A's. Source: `reports/robustness/phase11_comparison.md`.

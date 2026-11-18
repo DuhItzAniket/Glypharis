@@ -1,19 +1,37 @@
 # Development Environment
 
-Hardware and global software recorded during Phase 0 on **2026-10-09**; project environment set up in
-Phase 1 on **2026-10-10**. Every value below was measured on the machine, not copied from a spec sheet.
-The generated record is [`reports/environment/env_report.md`](../reports/environment/env_report.md):
-re-run `python scripts/env_report.py` and update this file whenever drivers, CUDA, or the Python stack
-change.
+The generated record of the project environment is
+[`reports/environment/env_report.md`](../reports/environment/env_report.md), written by
+`scripts/env_report.py`. Where this page and that report differ, the report is the record. New measured
+values go into generated reports, not into this page.
 
-## Hardware
+| What | Where it is recorded |
+|---|---|
+| OS, CPU cores, RAM, Python, PyTorch, CUDA, GPU, driver, key package versions, AMP, CTC and determinism checks | `reports/environment/env_report.md`, `reports/environment/env_report.json` (Phase 1) |
+| Pinned packages of the project environment | `requirements/lock.txt`; torch and torchvision pins in `requirements/README.md` |
+| Pinned packages of the baseline and official-evaluator environments | `requirements/baselines-lock.txt`, `requirements/hiertext-eval-lock.txt`, `requirements/omnidocbench-eval-lock.txt` |
+| Device, precision and library versions of each training run | `reports/training/<ID>/report.md`; for v1, `configs/final/glypharis_v1.yaml` |
+| Conditions of each latency profile (CPU, power plan and mode, thread settings, GPU state) | the `conditions`, `conditions_end` and `gpu_state` fields of `reports/efficiency/phase16/profiles/*.json` |
+| Environment on CI | the `env-report-ci` artifact of each run (`.github/workflows/ci.yml`) |
+
+The committed report was generated once, at the start of the project (commit `a658c41`), and Phase 21 does
+not regenerate it. To refresh it, run `python scripts/env_report.py`.
+
+This is the development and training machine. It is not the target hardware. Phones are the target
+hardware; no phone has been measured ([ADR-0011](decisions/ADR-0011-cpu-latency-target.md), owner decision
+of 2026-11-18).
+
+## Hardware, as recorded in Phase 0
+
+Recorded on 2026-10-09 by hand, with the commands shown. These values are kept as the Phase 0 record and
+have not been measured again here.
 
 | Component | Value | How measured |
 |---|---|---|
 | GPU | NVIDIA GeForce RTX 4050 Laptop GPU | `nvidia-smi`, `torch.cuda.get_device_properties` |
 | GPU architecture | Ada Lovelace, compute capability 8.9, 20 SMs | `torch.cuda.get_device_properties` |
 | VRAM total | 6.0 GiB (6141 MiB) | `nvidia-smi` |
-| VRAM free at idle | **~4.96 GiB** (desktop/WDDM + other apps hold ~1 GiB) | `torch.cuda.mem_get_info()` |
+| VRAM free at idle | ~4.96 GiB (desktop/WDDM + other apps hold ~1 GiB) | `torch.cuda.mem_get_info()` |
 | bf16 support | Yes | `torch.cuda.is_bf16_supported()` |
 | fp16 matmul throughput | ~13.3 TFLOPS (4096² matmul, 50 iters, quick probe) | ad-hoc benchmark |
 | GPU driver | 566.24 (WDDM), supports CUDA runtime ≤ 12.7 | `nvidia-smi` |
@@ -24,19 +42,17 @@ change.
 
 ### Implications for training design
 
-- **Plan for ~4.5 GiB of usable VRAM, not 6 GiB.** The Windows desktop compositor runs on the
-  dGPU's WDDM driver and other apps (e.g. browsers, chat clients) take a share. Batch sizes and
-  resolutions in configs must be validated against measured peak memory, not the nominal 6 GB.
-- **bf16 autocast is available** (Ada). It avoids most fp16 overflow issues and does not need a
-  `GradScaler`. CTC loss should still be computed in fp32 (to be verified in Phase 1 — see
-  `docs/EXPERIMENT_PROTOCOL.md`).
-- **16 GB RAM is the tightest resource for data preparation**, not for training. Large single-file
-  annotations (e.g. SynthText's `gt.mat`) must be converted in a streaming way, and datasets of
-  millions of small crops should be packed (LMDB or tar shards) rather than stored as loose files on NTFS.
-- **Laptop thermals.** Long runs on a laptop GPU can throttle. Phase 1 adds GPU temperature and clock
-  logging so that throughput differences between runs can be attributed correctly.
+- Plan for ~4.5 GiB of usable VRAM, not 6 GiB. The Windows desktop compositor runs on the dGPU's WDDM
+  driver and other apps (browsers, chat clients) take a share. Batch sizes and resolutions in configs are
+  validated against measured peak memory, not the nominal 6 GB.
+- bf16 autocast is available (Ada). It avoids most fp16 overflow issues and does not need a `GradScaler`.
+  CTC loss is computed in fp32; the check is in the environment report.
+- 16 GB RAM is the tightest resource for data preparation, not for training. Datasets of millions of small
+  crops are packed rather than stored as loose files on NTFS.
+- Long runs on a laptop GPU can throttle. Runs log GPU temperature and clocks, so throughput differences
+  between runs can be attributed.
 
-## Software (as found — the global interpreter, not the project environment)
+## Software found in Phase 0 (the global interpreter, not the project environment)
 
 | Item | Value |
 |---|---|
@@ -47,24 +63,19 @@ change.
 | PyTorch | 2.5.1+cu121 (CUDA runtime 12.1, cuDNN 9.1.0) |
 | torchvision | 0.20.1+cu121 |
 | Git | 2.55.0.windows.3, credential helper: Git Credential Manager |
-| GitHub CLI (`gh`) | **not installed** |
-| CUDA toolkit (`nvcc`) | not installed (not needed — PyTorch wheels ship their own runtime) |
-| Tesseract | **not installed** (needed for the Phase 5 baseline) |
+| GitHub CLI (`gh`) | not installed at the time |
+| CUDA toolkit (`nvcc`) | not installed (not needed: PyTorch wheels ship their own runtime) |
+| Tesseract | not installed at the time (installed for Phase 5) |
 | conda | not installed |
 
-The global interpreter has **322 packages** installed, including unrelated ones (torch-geometric,
-facenet-pytorch, pytorch-lightning, transformers 5.x). It is not a reproducible base. Phase 1
-creates an isolated project virtual environment with pinned versions; the global site-packages
-must not leak into it.
+The global interpreter had 322 packages installed, including unrelated ones (torch-geometric,
+facenet-pytorch, pytorch-lightning, transformers 5.x). It is not a reproducible base, and its
+site-packages must not leak into the project environment. It is used only to create the virtual
+environments.
 
-Already-present packages that the project will likely use (versions to be re-pinned in Phase 1):
-numpy 1.26.4, opencv-python 4.11.0.86, pillow 12.3.0, albumentations 2.0.8, mlflow 3.11.1,
-onnx 1.15.0, onnxruntime 1.24.4, pytest 9.0.3, ruff 0.16.8, torchmetrics 1.9.0.
+## Project environment
 
-## Project environment (Phase 1)
-
-The global interpreter is only used to create the virtual environment
-([ADR-0006](decisions/ADR-0006-isolated-environments.md)).
+([ADR-0006](decisions/ADR-0006-isolated-environments.md))
 
 ```
 py -3.11 -m venv .venv
@@ -76,26 +87,26 @@ py -3.11 -m venv .venv
 ```
 
 Checks before committing: `ruff check .`, `ruff format --check .`, `mypy`, `pytest`,
-`python scripts/validate_configs.py`. CI runs the same steps on Linux with the CPU build of the same
-torch version (`.github/workflows/ci.yml`).
+`python scripts/validate_configs.py`. CI runs the same steps on Linux with the CPU build of the same torch
+version (`.github/workflows/ci.yml`). The clean-environment install of the package was checked in the
+Phase 18 re-run (`docs/PHASE_STATUS.md`). The walkthrough from a fresh clone belongs to Phase 22. Final
+validation (Phase 22) has not been run.
 
 ### PyTorch build decision
 
 | Option | Notes |
 |---|---|
-| 2.5.1 + cu121 (global install, Phase 0) | Known to work on this driver; about two years old; older ONNX exporter |
-| **2.14.1 + cu126 (chosen)** | Current release line; driver 566.24 supports CUDA runtimes up to 12.7, so cu126 wheels run without a driver update |
+| 2.5.1 + cu121 (global install, Phase 0) | Known to work on this driver; older ONNX exporter |
+| 2.14.1 + cu126 (chosen) | Driver 566.24 supports CUDA runtimes up to 12.7, so cu126 wheels run without a driver update |
 
-Decision criterion (Phase 0): stable AMP and CTC on this GPU, measured. The measured checks (bf16/fp16
-autocast, CTC in fp32 under autocast, CPU bit-identical determinism, CUDA determinism within tolerance)
-are in the environment report. If a later phase hits a regression in this build, 2.5.1 + cu121 is the
-fallback; switching is a pin change plus a re-run of the report and the test suite.
+Decision criterion (Phase 0): stable AMP and CTC on this GPU, measured. The measured checks (bf16 and fp16
+autocast, CTC in fp32 under autocast, CPU bit-identical determinism, CUDA determinism within tolerance) are
+in the environment report. v1 was trained with this build (`configs/final/glypharis_v1.yaml`).
 
-## Open environment items
+## Environment items
 
-1. ~~Create `.venv` and decide the torch build~~ (done, Phase 1; see above).
-2. ~~Separate environment for baselines (`.venv-baselines`) so PaddlePaddle does not conflict with PyTorch~~
-   (done, Phase 5; pins in `requirements/baselines-lock.txt`, setup in `requirements/README.md`).
-3. Install Tesseract (UB Mannheim Windows build) — requires the user to run the installer (before Phase 5).
-4. Optional: install `gh` to verify GitHub Actions runs from the terminal. Until then CI status is read
-   from the public GitHub API.
+1. Create `.venv` and decide the torch build: done in Phase 1 (above).
+2. Separate environment for baselines (`.venv-baselines`), so PaddlePaddle does not conflict with PyTorch:
+   done in Phase 5 (pins in `requirements/baselines-lock.txt`, setup in `requirements/README.md`).
+3. Install Tesseract (UB Mannheim Windows build): done for Phase 5 (`docs/PHASE_STATUS.md`, Phase 5).
+4. CI status for each phase is recorded with its run IDs in `docs/PHASE_STATUS.md`.

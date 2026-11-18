@@ -1,0 +1,1301 @@
+{
+  "document": "research/paper/error_analysis.md",
+  "constants": [
+    {
+      "value": "95%",
+      "context": "bootstrap",
+      "source": "docs/EXPERIMENT_PROTOCOL.md"
+    },
+    {
+      "value": "1,000",
+      "context": "resamples",
+      "source": "docs/EXPERIMENT_PROTOCOL.md"
+    },
+    {
+      "value": "0.5",
+      "context": "IoU",
+      "id": "GW-E2E-010",
+      "source": "reports/error_cases/phase15/pipeline.md#hiertext_test"
+    },
+    {
+      "value": "15",
+      "context": "rotation\\s+(of\\s+)?15|θ",
+      "id": "GW-REC-040",
+      "source": "reports/error_cases/phase15/README.md"
+    },
+    {
+      "value": "70",
+      "context": "70\\+",
+      "id": "GW-REC-040",
+      "source": "reports/error_cases/phase15/recognition.md#gdc_test"
+    },
+    {
+      "value": "10px",
+      "context": "less than|higher|row tolerance",
+      "source": "research/experiments.md#gw-e2e-010"
+    },
+    {
+      "value": "1",
+      "context": "levels|Corruption",
+      "source": "data/manifests/processed/glyph_c.json#levels"
+    },
+    {
+      "value": "5",
+      "context": "levels|Corruption",
+      "source": "data/manifests/processed/glyph_c.json#levels"
+    },
+    {
+      "value": "64",
+      "context": "crops",
+      "id": "GW-REC-040",
+      "source": "reports/error_cases/phase15/README.md#notes"
+    },
+    {
+      "value": "0.7",
+      "context": "IoU",
+      "id": "GW-E2E-010",
+      "source": "reports/error_cases/phase15/pipeline.md#funsd_test"
+    }
+  ],
+  "derived": [
+    {
+      "name": "trocr_lower_as_upper",
+      "formula": "x * 100",
+      "note": "GW-BASE-004 on GDC, strict: share of lower-case reference characters read as upper case",
+      "inputs": {
+        "x": {
+          "id": "GW-REC-040",
+          "source": "reports/error_cases/phase15/results.json",
+          "row": "baselines/gdc_test/8/class_rates/lower",
+          "header": "upper"
+        }
+      }
+    },
+    {
+      "name": "consistency_pages",
+      "formula": "x",
+      "inputs": {
+        "x": {
+          "id": "GW-E2E-010",
+          "source": "reports/error_cases/phase15/results.json",
+          "row": "consistency/pages_checked"
+        }
+      }
+    },
+    {
+      "name": "budget_ht_errors",
+      "formula": "x",
+      "inputs": {
+        "x": {
+          "id": "GW-E2E-010",
+          "source": "reports/error_cases/phase15/results.json",
+          "row": "pipeline/hiertext_test/budget/strict/bag_errors"
+        }
+      }
+    },
+    {
+      "name": "budget_ht_pages",
+      "formula": "x",
+      "inputs": {
+        "x": {
+          "id": "GW-E2E-010",
+          "source": "reports/error_cases/phase15/results.json",
+          "row": "pipeline/hiertext_test/budget/strict/pages"
+        }
+      }
+    },
+    {
+      "name": "budget_gdc_errors",
+      "formula": "x",
+      "inputs": {
+        "x": {
+          "id": "GW-E2E-010",
+          "source": "reports/error_cases/phase15/results.json",
+          "row": "pipeline/gdc_test/budget/strict/bag_errors"
+        }
+      }
+    },
+    {
+      "name": "budget_gdc_pages",
+      "formula": "x",
+      "inputs": {
+        "x": {
+          "id": "GW-E2E-010",
+          "source": "reports/error_cases/phase15/results.json",
+          "row": "pipeline/gdc_test/budget/strict/pages"
+        }
+      }
+    },
+    {
+      "name": "budget_scan_errors",
+      "formula": "x",
+      "inputs": {
+        "x": {
+          "id": "GW-E2E-010",
+          "source": "reports/error_cases/phase15/results.json",
+          "row": "pipeline/gdc_scan_test/budget/strict/bag_errors"
+        }
+      }
+    },
+    {
+      "name": "budget_scan_pages",
+      "formula": "x",
+      "inputs": {
+        "x": {
+          "id": "GW-E2E-010",
+          "source": "reports/error_cases/phase15/results.json",
+          "row": "pipeline/gdc_scan_test/budget/strict/pages"
+        }
+      }
+    },
+    {
+      "name": "budget_fu_errors",
+      "formula": "x",
+      "inputs": {
+        "x": {
+          "id": "GW-E2E-010",
+          "source": "reports/error_cases/phase15/results.json",
+          "row": "pipeline/funsd_test/budget/strict/bag_errors"
+        }
+      }
+    },
+    {
+      "name": "budget_fu_pages",
+      "formula": "x",
+      "inputs": {
+        "x": {
+          "id": "GW-E2E-010",
+          "source": "reports/error_cases/phase15/results.json",
+          "row": "pipeline/funsd_test/budget/strict/pages"
+        }
+      }
+    },
+    {
+      "name": "rotated_matched",
+      "formula": "x",
+      "inputs": {
+        "x": {
+          "id": "GW-E2E-010",
+          "source": "reports/error_cases/phase15/pipeline.md",
+          "row": "L120",
+          "header": "Matched % [doc CI]"
+        }
+      }
+    },
+    {
+      "name": "oracle_all_errors",
+      "formula": "x",
+      "inputs": {
+        "x": {
+          "id": "GW-E2E-010",
+          "source": "reports/error_cases/phase15/oracle_share.md#gdc_test",
+          "row": "all pages",
+          "header": "Oracle errors"
+        }
+      }
+    },
+    {
+      "name": "oracle_all_pipeline",
+      "formula": "x",
+      "inputs": {
+        "x": {
+          "id": "GW-E2E-010",
+          "source": "reports/error_cases/phase15/oracle_share.md#gdc_test",
+          "row": "all pages",
+          "header": "Pipeline errors"
+        }
+      }
+    },
+    {
+      "name": "oracle_all_share",
+      "formula": "x",
+      "inputs": {
+        "x": {
+          "id": "GW-E2E-010",
+          "source": "reports/error_cases/phase15/oracle_share.md#gdc_test",
+          "row": "all pages",
+          "header": "Share % [page CI]",
+          "value": "18.66"
+        }
+      }
+    },
+    {
+      "name": "oracle_scan_share",
+      "formula": "x",
+      "inputs": {
+        "x": {
+          "id": "GW-E2E-010",
+          "source": "reports/error_cases/phase15/oracle_share.md#gdc_scan_test",
+          "row": "all pages",
+          "header": "Share % [page CI]"
+        }
+      }
+    },
+    {
+      "name": "oracle_clean_high",
+      "formula": "x",
+      "inputs": {
+        "x": {
+          "id": "GW-E2E-010",
+          "source": "reports/error_cases/phase15/oracle_share.md",
+          "row": "L19",
+          "header": "Share % [page CI]",
+          "value": "51.91"
+        }
+      }
+    },
+    {
+      "name": "oracle_scanapp_high",
+      "formula": "x",
+      "inputs": {
+        "x": {
+          "id": "GW-E2E-010",
+          "source": "reports/error_cases/phase15/oracle_share.md",
+          "row": "L18",
+          "header": "Share % [page CI]",
+          "value": "58.41"
+        }
+      }
+    },
+    {
+      "name": "rotated_pages",
+      "formula": "x",
+      "inputs": {
+        "x": {
+          "id": "GW-E2E-010",
+          "source": "reports/error_cases/phase15/oracle_share.md",
+          "row": "L17",
+          "header": "Pages"
+        }
+      }
+    },
+    {
+      "name": "rotated_oracle",
+      "formula": "x",
+      "inputs": {
+        "x": {
+          "id": "GW-E2E-010",
+          "source": "reports/error_cases/phase15/oracle_share.md",
+          "row": "L17",
+          "header": "Share % [page CI]"
+        }
+      }
+    },
+    {
+      "name": "gdc_pages",
+      "formula": "x",
+      "inputs": {
+        "x": {
+          "id": "GW-E2E-010",
+          "source": "reports/error_cases/phase15/oracle_share.md",
+          "row": "L11",
+          "header": "Pages"
+        }
+      }
+    },
+    {
+      "name": "gdc_documents",
+      "formula": "x",
+      "inputs": {
+        "x": {
+          "id": "GW-E2E-010",
+          "source": "reports/error_cases/phase15/oracle_share.md",
+          "row": "L11",
+          "header": "Documents"
+        }
+      }
+    },
+    {
+      "name": "rotated_documents",
+      "formula": "x",
+      "inputs": {
+        "x": {
+          "id": "GW-E2E-010",
+          "source": "reports/error_cases/phase15/oracle_share.md",
+          "row": "L17",
+          "header": "Documents"
+        }
+      }
+    },
+    {
+      "name": "od_lines",
+      "formula": "x",
+      "inputs": {
+        "x": {
+          "id": "GW-E2E-010",
+          "source": "reports/error_cases/phase15/results.json",
+          "row": "pipeline/gdc_test/oracle_difference/lines"
+        }
+      }
+    },
+    {
+      "name": "od_mean",
+      "formula": "x",
+      "inputs": {
+        "x": {
+          "id": "GW-E2E-010",
+          "source": "reports/error_cases/phase15/results.json",
+          "row": "pipeline/gdc_test/oracle_difference/mean"
+        }
+      }
+    },
+    {
+      "name": "od_sum",
+      "formula": "x",
+      "inputs": {
+        "x": {
+          "id": "GW-E2E-010",
+          "source": "reports/error_cases/phase15/results.json",
+          "row": "pipeline/gdc_test/oracle_difference/sum"
+        }
+      }
+    },
+    {
+      "name": "od_more",
+      "formula": "x",
+      "inputs": {
+        "x": {
+          "id": "GW-E2E-010",
+          "source": "reports/error_cases/phase15/results.json",
+          "row": "pipeline/gdc_test/oracle_difference/positive"
+        }
+      }
+    },
+    {
+      "name": "od_equal",
+      "formula": "x",
+      "inputs": {
+        "x": {
+          "id": "GW-E2E-010",
+          "source": "reports/error_cases/phase15/results.json",
+          "row": "pipeline/gdc_test/oracle_difference/zero"
+        }
+      }
+    },
+    {
+      "name": "od_fewer",
+      "formula": "x",
+      "inputs": {
+        "x": {
+          "id": "GW-E2E-010",
+          "source": "reports/error_cases/phase15/results.json",
+          "row": "pipeline/gdc_test/oracle_difference/negative"
+        }
+      }
+    },
+    {
+      "name": "inv_count",
+      "formula": "x",
+      "inputs": {
+        "x": {
+          "id": "GW-E2E-010",
+          "source": "reports/error_cases/phase15/results.json",
+          "row": "pipeline/gdc_test/inversions/inverted"
+        }
+      }
+    },
+    {
+      "name": "inv_total",
+      "formula": "x",
+      "inputs": {
+        "x": {
+          "id": "GW-E2E-010",
+          "source": "reports/error_cases/phase15/results.json",
+          "row": "pipeline/gdc_test/inversions/consecutive"
+        }
+      }
+    },
+    {
+      "name": "inv_share",
+      "formula": "x",
+      "inputs": {
+        "x": {
+          "id": "GW-E2E-010",
+          "source": "reports/error_cases/phase15/results.json",
+          "row": "pipeline/gdc_test/inversions/share"
+        }
+      }
+    },
+    {
+      "name": "rotated_crop_cer",
+      "formula": "x",
+      "inputs": {
+        "x": {
+          "id": "GW-REC-040",
+          "source": "reports/error_cases/phase15/recognition.md",
+          "row": "L340",
+          "header": "CER % [cited CI]"
+        }
+      }
+    },
+    {
+      "name": "scanapp_cer",
+      "formula": "x",
+      "inputs": {
+        "x": {
+          "id": "GW-REC-040",
+          "source": "reports/error_cases/phase15/recognition.md",
+          "row": "L341",
+          "header": "CER % [cited CI]"
+        }
+      }
+    },
+    {
+      "name": "scanapp_share",
+      "formula": "x",
+      "inputs": {
+        "x": {
+          "id": "GW-REC-040",
+          "source": "reports/error_cases/phase15/recognition.md",
+          "row": "L341",
+          "header": "Share of the set's errors %"
+        }
+      }
+    },
+    {
+      "name": "iou_fu",
+      "formula": "x",
+      "inputs": {
+        "x": {
+          "id": "GW-E2E-010",
+          "source": "reports/error_cases/phase15/pipeline.md#funsd_test",
+          "value": "47.11"
+        }
+      }
+    },
+    {
+      "name": "iou_fu_low",
+      "formula": "x",
+      "inputs": {
+        "x": {
+          "id": "GW-E2E-010",
+          "source": "reports/error_cases/phase15/pipeline.md#funsd_test",
+          "value": "42.48"
+        }
+      }
+    },
+    {
+      "name": "iou_fu_high",
+      "formula": "x",
+      "inputs": {
+        "x": {
+          "id": "GW-E2E-010",
+          "source": "reports/error_cases/phase15/pipeline.md#funsd_test",
+          "value": "51.39"
+        }
+      }
+    },
+    {
+      "name": "iou_ht",
+      "formula": "x",
+      "inputs": {
+        "x": {
+          "id": "GW-E2E-010",
+          "source": "reports/error_cases/phase15/pipeline.md#hiertext_test",
+          "value": "85.90"
+        }
+      }
+    },
+    {
+      "name": "iou_ht_low",
+      "formula": "x",
+      "inputs": {
+        "x": {
+          "id": "GW-E2E-010",
+          "source": "reports/error_cases/phase15/pipeline.md#hiertext_test",
+          "value": "85.08"
+        }
+      }
+    },
+    {
+      "name": "iou_ht_high",
+      "formula": "x",
+      "inputs": {
+        "x": {
+          "id": "GW-E2E-010",
+          "source": "reports/error_cases/phase15/pipeline.md#hiertext_test",
+          "value": "86.70"
+        }
+      }
+    },
+    {
+      "name": "iou_gdc",
+      "formula": "x",
+      "inputs": {
+        "x": {
+          "id": "GW-E2E-010",
+          "source": "reports/error_cases/phase15/pipeline.md#gdc_test",
+          "value": "91.14"
+        }
+      }
+    },
+    {
+      "name": "iou_gdc_low",
+      "formula": "x",
+      "inputs": {
+        "x": {
+          "id": "GW-E2E-010",
+          "source": "reports/error_cases/phase15/pipeline.md#gdc_test",
+          "value": "88.27"
+        }
+      }
+    },
+    {
+      "name": "iou_gdc_high",
+      "formula": "x",
+      "inputs": {
+        "x": {
+          "id": "GW-E2E-010",
+          "source": "reports/error_cases/phase15/pipeline.md#gdc_test",
+          "value": "93.44"
+        }
+      }
+    },
+    {
+      "name": "iou_fu_matches",
+      "formula": "x",
+      "inputs": {
+        "x": {
+          "id": "GW-E2E-010",
+          "source": "reports/error_cases/phase15/results.json",
+          "row": "pipeline/funsd_test/iou/matched"
+        }
+      }
+    },
+    {
+      "name": "funsd_matched_share",
+      "formula": "x",
+      "inputs": {
+        "x": {
+          "id": "GW-E2E-010",
+          "source": "reports/error_cases/phase15/pipeline.md",
+          "row": "L265",
+          "header": "Share % [page CI]",
+          "value": "19.39"
+        }
+      }
+    },
+    {
+      "name": "space_del_count",
+      "formula": "x",
+      "inputs": {
+        "x": {
+          "id": "GW-REC-040",
+          "source": "reports/error_cases/phase15/results.json",
+          "row": "examples/types/0/count"
+        }
+      }
+    },
+    {
+      "name": "space_del_lines",
+      "formula": "x",
+      "inputs": {
+        "x": {
+          "id": "GW-REC-040",
+          "source": "reports/error_cases/phase15/results.json",
+          "row": "examples/types/0/lines_holding"
+        }
+      }
+    },
+    {
+      "name": "stop_del_count",
+      "formula": "x",
+      "inputs": {
+        "x": {
+          "id": "GW-REC-040",
+          "source": "reports/error_cases/phase15/results.json",
+          "row": "examples/types/1/count"
+        }
+      }
+    },
+    {
+      "name": "stop_del_lines",
+      "formula": "x",
+      "inputs": {
+        "x": {
+          "id": "GW-REC-040",
+          "source": "reports/error_cases/phase15/results.json",
+          "row": "examples/types/1/lines_holding"
+        }
+      }
+    },
+    {
+      "name": "frag_val_lines",
+      "formula": "x",
+      "inputs": {
+        "x": {
+          "id": "GW-REC-040",
+          "source": "reports/error_cases/phase15/results.json",
+          "row": "validation/tracks/strict/label_fragments/lines"
+        }
+      }
+    },
+    {
+      "name": "frag_val_share",
+      "formula": "x * 100",
+      "note": "the file stores a fraction",
+      "inputs": {
+        "x": {
+          "id": "GW-REC-040",
+          "source": "reports/error_cases/phase15/results.json",
+          "row": "validation/tracks/strict/label_fragments/share_of_errors"
+        }
+      }
+    },
+    {
+      "name": "glyphc_per_source",
+      "formula": "x",
+      "inputs": {
+        "x": {
+          "id": "data/manifests/processed/glyph_c.json",
+          "source": "data/manifests/processed/glyph_c.json",
+          "row": "per_source"
+        }
+      }
+    },
+    {
+      "name": "space_lowest",
+      "formula": "x",
+      "inputs": {
+        "x": {
+          "id": "GW-REC-040",
+          "source": "reports/error_cases/phase15/recognition.md",
+          "row": "L424",
+          "header": "space correct %",
+          "value": "87.11"
+        }
+      }
+    },
+    {
+      "name": "space_highest",
+      "formula": "x",
+      "inputs": {
+        "x": {
+          "id": "GW-REC-040",
+          "source": "reports/error_cases/phase15/recognition.md",
+          "row": "L416",
+          "header": "space correct %",
+          "value": "90.69"
+        }
+      }
+    },
+    {
+      "name": "punct_glypharis",
+      "formula": "x",
+      "inputs": {
+        "x": {
+          "id": "GW-REC-040",
+          "source": "reports/error_cases/phase15/recognition.md",
+          "row": "L414",
+          "header": "punct correct %",
+          "value": "73.02"
+        }
+      }
+    },
+    {
+      "name": "punct_lowest_ppocr",
+      "formula": "x",
+      "inputs": {
+        "x": {
+          "id": "GW-REC-040",
+          "source": "reports/error_cases/phase15/recognition.md",
+          "row": "L426",
+          "header": "punct correct %",
+          "value": "86.90"
+        }
+      }
+    },
+    {
+      "name": "punct_highest_ppocr",
+      "formula": "x",
+      "inputs": {
+        "x": {
+          "id": "GW-REC-040",
+          "source": "reports/error_cases/phase15/recognition.md",
+          "row": "L428",
+          "header": "punct correct %",
+          "value": "89.95"
+        }
+      }
+    },
+    {
+      "name": "punct_tesseract",
+      "formula": "x",
+      "inputs": {
+        "x": {
+          "id": "GW-REC-040",
+          "source": "reports/error_cases/phase15/recognition.md",
+          "row": "L416",
+          "header": "punct correct %",
+          "value": "71.42"
+        }
+      }
+    },
+    {
+      "name": "oov_lowest",
+      "formula": "x",
+      "inputs": {
+        "x": {
+          "id": "GW-REC-040",
+          "source": "reports/error_cases/phase15/recognition.md",
+          "row": "L418",
+          "header": "oov correct %",
+          "value": "26.97"
+        }
+      }
+    },
+    {
+      "name": "oov_highest",
+      "formula": "x",
+      "inputs": {
+        "x": {
+          "id": "GW-REC-040",
+          "source": "reports/error_cases/phase15/recognition.md",
+          "row": "L426",
+          "header": "oov correct %",
+          "value": "43.33"
+        }
+      }
+    },
+    {
+      "name": "cat_ht_out_of_charset",
+      "formula": "x",
+      "inputs": {
+        "x": {
+          "id": "GW-REC-040",
+          "source": "reports/error_cases/phase15/recognition.md",
+          "row": "L136",
+          "header": "Share of errors %"
+        }
+      }
+    },
+    {
+      "name": "cat_ht_rotation_ge_5",
+      "formula": "x",
+      "inputs": {
+        "x": {
+          "id": "GW-REC-040",
+          "source": "reports/error_cases/phase15/recognition.md",
+          "row": "L137",
+          "header": "Share of errors %"
+        }
+      }
+    },
+    {
+      "name": "cat_ht_height_q1",
+      "formula": "x",
+      "inputs": {
+        "x": {
+          "id": "GW-REC-040",
+          "source": "reports/error_cases/phase15/recognition.md",
+          "row": "L138",
+          "header": "Share of errors %"
+        }
+      }
+    },
+    {
+      "name": "cat_ht_blur_q1",
+      "formula": "x",
+      "inputs": {
+        "x": {
+          "id": "GW-REC-040",
+          "source": "reports/error_cases/phase15/recognition.md",
+          "row": "L139",
+          "header": "Share of errors %"
+        }
+      }
+    },
+    {
+      "name": "cat_ht_contrast_q1",
+      "formula": "x",
+      "inputs": {
+        "x": {
+          "id": "GW-REC-040",
+          "source": "reports/error_cases/phase15/recognition.md",
+          "row": "L140",
+          "header": "Share of errors %"
+        }
+      }
+    },
+    {
+      "name": "cat_ht_digit",
+      "formula": "x",
+      "inputs": {
+        "x": {
+          "id": "GW-REC-040",
+          "source": "reports/error_cases/phase15/recognition.md",
+          "row": "L141",
+          "header": "Share of errors %"
+        }
+      }
+    },
+    {
+      "name": "cat_ht_punctuation",
+      "formula": "x",
+      "inputs": {
+        "x": {
+          "id": "GW-REC-040",
+          "source": "reports/error_cases/phase15/recognition.md",
+          "row": "L142",
+          "header": "Share of errors %"
+        }
+      }
+    },
+    {
+      "name": "cat_ht_long_word",
+      "formula": "x",
+      "inputs": {
+        "x": {
+          "id": "GW-REC-040",
+          "source": "reports/error_cases/phase15/recognition.md",
+          "row": "L143",
+          "header": "Share of errors %"
+        }
+      }
+    },
+    {
+      "name": "cat_ht_other",
+      "formula": "x",
+      "inputs": {
+        "x": {
+          "id": "GW-REC-040",
+          "source": "reports/error_cases/phase15/recognition.md",
+          "row": "L144",
+          "header": "Share of errors %"
+        }
+      }
+    },
+    {
+      "name": "cat_val_out_of_charset",
+      "formula": "x",
+      "inputs": {
+        "x": {
+          "id": "GW-REC-040",
+          "source": "reports/error_cases/phase15/recognition.md",
+          "row": "L980",
+          "header": "Share of errors %"
+        }
+      }
+    },
+    {
+      "name": "cat_val_rotation_ge_5",
+      "formula": "x",
+      "inputs": {
+        "x": {
+          "id": "GW-REC-040",
+          "source": "reports/error_cases/phase15/recognition.md",
+          "row": "L981",
+          "header": "Share of errors %"
+        }
+      }
+    },
+    {
+      "name": "cat_val_height_q1",
+      "formula": "x",
+      "inputs": {
+        "x": {
+          "id": "GW-REC-040",
+          "source": "reports/error_cases/phase15/recognition.md",
+          "row": "L982",
+          "header": "Share of errors %"
+        }
+      }
+    },
+    {
+      "name": "cat_val_blur_q1",
+      "formula": "x",
+      "inputs": {
+        "x": {
+          "id": "GW-REC-040",
+          "source": "reports/error_cases/phase15/recognition.md",
+          "row": "L983",
+          "header": "Share of errors %"
+        }
+      }
+    },
+    {
+      "name": "cat_val_contrast_q1",
+      "formula": "x",
+      "inputs": {
+        "x": {
+          "id": "GW-REC-040",
+          "source": "reports/error_cases/phase15/recognition.md",
+          "row": "L984",
+          "header": "Share of errors %"
+        }
+      }
+    },
+    {
+      "name": "cat_val_digit",
+      "formula": "x",
+      "inputs": {
+        "x": {
+          "id": "GW-REC-040",
+          "source": "reports/error_cases/phase15/recognition.md",
+          "row": "L985",
+          "header": "Share of errors %"
+        }
+      }
+    },
+    {
+      "name": "cat_val_punctuation",
+      "formula": "x",
+      "inputs": {
+        "x": {
+          "id": "GW-REC-040",
+          "source": "reports/error_cases/phase15/recognition.md",
+          "row": "L986",
+          "header": "Share of errors %"
+        }
+      }
+    },
+    {
+      "name": "cat_val_long_word",
+      "formula": "x",
+      "inputs": {
+        "x": {
+          "id": "GW-REC-040",
+          "source": "reports/error_cases/phase15/recognition.md",
+          "row": "L987",
+          "header": "Share of errors %"
+        }
+      }
+    },
+    {
+      "name": "cat_val_other",
+      "formula": "x",
+      "inputs": {
+        "x": {
+          "id": "GW-REC-040",
+          "source": "reports/error_cases/phase15/recognition.md",
+          "row": "L988",
+          "header": "Share of errors %"
+        }
+      }
+    },
+    {
+      "name": "cat_gdc_out_of_charset",
+      "formula": "x",
+      "inputs": {
+        "x": {
+          "id": "GW-REC-040",
+          "source": "reports/error_cases/phase15/recognition.md",
+          "row": "L391",
+          "header": "Share of errors %"
+        }
+      }
+    },
+    {
+      "name": "cat_gdc_rotation_ge_5",
+      "formula": "x",
+      "inputs": {
+        "x": {
+          "id": "GW-REC-040",
+          "source": "reports/error_cases/phase15/recognition.md",
+          "row": "L392",
+          "header": "Share of errors %"
+        }
+      }
+    },
+    {
+      "name": "cat_gdc_height_q1",
+      "formula": "x",
+      "inputs": {
+        "x": {
+          "id": "GW-REC-040",
+          "source": "reports/error_cases/phase15/recognition.md",
+          "row": "L393",
+          "header": "Share of errors %"
+        }
+      }
+    },
+    {
+      "name": "cat_gdc_blur_q1",
+      "formula": "x",
+      "inputs": {
+        "x": {
+          "id": "GW-REC-040",
+          "source": "reports/error_cases/phase15/recognition.md",
+          "row": "L394",
+          "header": "Share of errors %"
+        }
+      }
+    },
+    {
+      "name": "cat_gdc_contrast_q1",
+      "formula": "x",
+      "inputs": {
+        "x": {
+          "id": "GW-REC-040",
+          "source": "reports/error_cases/phase15/recognition.md",
+          "row": "L395",
+          "header": "Share of errors %"
+        }
+      }
+    },
+    {
+      "name": "cat_gdc_digit",
+      "formula": "x",
+      "inputs": {
+        "x": {
+          "id": "GW-REC-040",
+          "source": "reports/error_cases/phase15/recognition.md",
+          "row": "L396",
+          "header": "Share of errors %"
+        }
+      }
+    },
+    {
+      "name": "cat_gdc_punctuation",
+      "formula": "x",
+      "inputs": {
+        "x": {
+          "id": "GW-REC-040",
+          "source": "reports/error_cases/phase15/recognition.md",
+          "row": "L397",
+          "header": "Share of errors %"
+        }
+      }
+    },
+    {
+      "name": "cat_gdc_long_word",
+      "formula": "x",
+      "inputs": {
+        "x": {
+          "id": "GW-REC-040",
+          "source": "reports/error_cases/phase15/recognition.md",
+          "row": "L398",
+          "header": "Share of errors %"
+        }
+      }
+    },
+    {
+      "name": "cat_gdc_other",
+      "formula": "x",
+      "inputs": {
+        "x": {
+          "id": "GW-REC-040",
+          "source": "reports/error_cases/phase15/recognition.md",
+          "row": "L399",
+          "header": "Share of errors %"
+        }
+      }
+    },
+    {
+      "name": "cat_fu_out_of_charset",
+      "formula": "x",
+      "inputs": {
+        "x": {
+          "id": "GW-REC-040",
+          "source": "reports/error_cases/phase15/recognition.md",
+          "row": "L664",
+          "header": "Share of errors %"
+        }
+      }
+    },
+    {
+      "name": "cat_fu_rotation_ge_5",
+      "formula": "x",
+      "inputs": {
+        "x": {
+          "id": "GW-REC-040",
+          "source": "reports/error_cases/phase15/recognition.md",
+          "row": "L665",
+          "header": "Share of errors %"
+        }
+      }
+    },
+    {
+      "name": "cat_fu_height_q1",
+      "formula": "x",
+      "inputs": {
+        "x": {
+          "id": "GW-REC-040",
+          "source": "reports/error_cases/phase15/recognition.md",
+          "row": "L666",
+          "header": "Share of errors %"
+        }
+      }
+    },
+    {
+      "name": "cat_fu_blur_q1",
+      "formula": "x",
+      "inputs": {
+        "x": {
+          "id": "GW-REC-040",
+          "source": "reports/error_cases/phase15/recognition.md",
+          "row": "L667",
+          "header": "Share of errors %"
+        }
+      }
+    },
+    {
+      "name": "cat_fu_contrast_q1",
+      "formula": "x",
+      "inputs": {
+        "x": {
+          "id": "GW-REC-040",
+          "source": "reports/error_cases/phase15/recognition.md",
+          "row": "L668",
+          "header": "Share of errors %"
+        }
+      }
+    },
+    {
+      "name": "cat_fu_digit",
+      "formula": "x",
+      "inputs": {
+        "x": {
+          "id": "GW-REC-040",
+          "source": "reports/error_cases/phase15/recognition.md",
+          "row": "L669",
+          "header": "Share of errors %"
+        }
+      }
+    },
+    {
+      "name": "cat_fu_punctuation",
+      "formula": "x",
+      "inputs": {
+        "x": {
+          "id": "GW-REC-040",
+          "source": "reports/error_cases/phase15/recognition.md",
+          "row": "L670",
+          "header": "Share of errors %"
+        }
+      }
+    },
+    {
+      "name": "cat_fu_long_word",
+      "formula": "x",
+      "inputs": {
+        "x": {
+          "id": "GW-REC-040",
+          "source": "reports/error_cases/phase15/recognition.md",
+          "row": "L671",
+          "header": "Share of errors %"
+        }
+      }
+    },
+    {
+      "name": "cat_fu_other",
+      "formula": "x",
+      "inputs": {
+        "x": {
+          "id": "GW-REC-040",
+          "source": "reports/error_cases/phase15/recognition.md",
+          "row": "L672",
+          "header": "Share of errors %"
+        }
+      }
+    },
+    {
+      "name": "cat_iiit_out_of_charset",
+      "formula": "x",
+      "inputs": {
+        "x": {
+          "id": "GW-REC-040",
+          "source": "reports/error_cases/phase15/recognition.md",
+          "row": "L811",
+          "header": "Share of errors %"
+        }
+      }
+    },
+    {
+      "name": "cat_iiit_rotation_ge_5",
+      "formula": "x",
+      "inputs": {
+        "x": {
+          "id": "GW-REC-040",
+          "source": "reports/error_cases/phase15/recognition.md",
+          "row": "L812",
+          "header": "Share of errors %"
+        }
+      }
+    },
+    {
+      "name": "cat_iiit_height_q1",
+      "formula": "x",
+      "inputs": {
+        "x": {
+          "id": "GW-REC-040",
+          "source": "reports/error_cases/phase15/recognition.md",
+          "row": "L813",
+          "header": "Share of errors %"
+        }
+      }
+    },
+    {
+      "name": "cat_iiit_blur_q1",
+      "formula": "x",
+      "inputs": {
+        "x": {
+          "id": "GW-REC-040",
+          "source": "reports/error_cases/phase15/recognition.md",
+          "row": "L814",
+          "header": "Share of errors %"
+        }
+      }
+    },
+    {
+      "name": "cat_iiit_contrast_q1",
+      "formula": "x",
+      "inputs": {
+        "x": {
+          "id": "GW-REC-040",
+          "source": "reports/error_cases/phase15/recognition.md",
+          "row": "L815",
+          "header": "Share of errors %"
+        }
+      }
+    },
+    {
+      "name": "cat_iiit_digit",
+      "formula": "x",
+      "inputs": {
+        "x": {
+          "id": "GW-REC-040",
+          "source": "reports/error_cases/phase15/recognition.md",
+          "row": "L816",
+          "header": "Share of errors %"
+        }
+      }
+    },
+    {
+      "name": "cat_iiit_punctuation",
+      "formula": "x",
+      "inputs": {
+        "x": {
+          "id": "GW-REC-040",
+          "source": "reports/error_cases/phase15/recognition.md",
+          "row": "L817",
+          "header": "Share of errors %"
+        }
+      }
+    },
+    {
+      "name": "cat_iiit_long_word",
+      "formula": "x",
+      "inputs": {
+        "x": {
+          "id": "GW-REC-040",
+          "source": "reports/error_cases/phase15/recognition.md",
+          "row": "L818",
+          "header": "Share of errors %"
+        }
+      }
+    },
+    {
+      "name": "cat_iiit_other",
+      "formula": "x",
+      "inputs": {
+        "x": {
+          "id": "GW-REC-040",
+          "source": "reports/error_cases/phase15/recognition.md",
+          "row": "L819",
+          "header": "Share of errors %"
+        }
+      }
+    }
+  ]
+}

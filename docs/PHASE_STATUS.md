@@ -31,7 +31,7 @@ Phases run in the order set by [ADR-0008](decisions/ADR-0008-usable-engine-first
 | 18 | Inference package | **COMPLETE** | `phase-18` |
 | 19 | Optional HTTP API | **COMPLETE** | `phase-19` |
 | 20 | Production engineering | **COMPLETE** | `phase-20`, `v0.1` |
-| 21 | Research package | not started | — |
+| 21 | Research package | **IN PROGRESS** (gate: push, CI, merge) | — |
 | 22 | Final validation | not started | — |
 | 23 | Release v1.0 | not started | — |
 
@@ -172,6 +172,8 @@ check, no-op rerun, manifest content).
 
 **Results (measured):** HierText 11,639 images (8,281 / 1,724 / 1,634), counts as in DATASETS.md;
 3.72 GiB of archives plus 79 MiB of ground truth. Ground-truth files match GitHub's git blob SHA-1.
+(Correction, 2026-11-18: 3.72 GiB is the total. The archives are 3.64 GiB and the ground truth 79 MiB,
+as `DATASETS.md` now states.)
 
 **Known issues**
 - S3 throughput was 0.3–0.8 MB/s per connection from this machine; the downloader uses one connection.
@@ -523,6 +525,9 @@ against GW-REC-001, with 7,928,835 parameters, and reads a line in 24.4 ms mean,
 CPU (PyTorch), inside ADR-0011's line target with little margin on the mean. One seed; the owner
 decided (2026-10-26) to add the two missing seeds later, on a college A100 if access is granted.
 The A100 slot is still booked (2026-10-27), so the seeds wait; nothing before the paper depends on them.
+**Note (2026-11-18, Phase 21):** these two seeds (GW-REC-032, 033) were not run, because Phase 13 chose
+option B (GW-REC-037). The promise is closed for v1, which has three seeds of its own (GW-REC-034 to
+036); GW-REC-024 stays at one seed.
 
 **Implemented**
 - `glypharis/models/rec/svtr.py` (GLYPHARIS-Rec-M), `glypharis/models/rec/base.py`, the CRNN frame
@@ -679,6 +684,7 @@ pre-declared rule fired; they finished, and the rules were applied as planned.
 **Known issues**
 - The ImageNet weight terms are an owner decision before v0.1 ships a detector (RISK_REGISTER R-05).
   GW-DET-002 measured the fallback: training from scratch costs about 0.02 F1@0.5.
+  (Decided 2026-11-18: ADR-0014 keeps GW-DET-001 as a disclosed exception to ADR-0009's rule.)
 - The recognizer trainer is not on the shared loop yet. Phase 7 has merged, but the move is left out
   of this gate to keep it to the detector. The owner approved it (2026-10-27) for its own commit at
   the start of Phase 10, accepted only if the recognizer tests pass unchanged and an existing GW-REC
@@ -1537,6 +1543,10 @@ the Phase 20 re-run (Phase 17 re-run, owner decisions). That commit is `efb197a`
   the laptop, set `GLYPHARIS_MODELS=runs/release`, which is not searched by default. No bundle ships
   with the repository yet.
 - **Tests:** the CPU suite passes in a clone without tags (1,252 passed, 4 skipped, at `efb197a`).
+- **Git:** branch `phase/20-v1-end-of-freeze`, merged through pull request #26. Merge commit
+  `6caf327` (re-created with the noreply identity; same tree and parents); `v1-code` is in `main`'s
+  history. CI green on the branch (run 44295660367), the pull request (44295705382) and `main`
+  (44298874690).
 
 ---
 
@@ -2169,9 +2179,8 @@ validation's. No GLYPHARIS number exists on any test set.)
      resume after a crash belongs to the same evaluation and is logged as a resume.
    - **Order.**
      1. This plan, the code and its tests are committed and pushed, and CI is green. Before the
-        push, the diff is searched for the identifying strings on GDC-scan's page 1 (name, ID,
-        course code, institution, title), taken from what is already known, not by opening its
-        files.
+        push, the diff is searched for the strings that would identify GDC-scan's author, taken from
+        what is already known, not by opening its files.
      2. Preprocessing: the new crop packs are cut (counts asserted); every prepared file is checked
         against its recorded hash; page line ids are checked for uniqueness; GDC-scan's photos are
         checked for a rotation tag and their size against the alignment record; GDC's
@@ -3243,6 +3252,8 @@ a GPU target as a separate decision. PyTorch on the RTX 4050 reads a page in 1,0
 - F35: the plain export's unfused attention is the main reason the exported recognizer is slow:
   one com.microsoft.MultiHeadAttention node per global mixer keeps v1's page CER and F1 and cuts
   the ONNX page time from 9,739.4 to 4,020.8 ms, still slower than PyTorch (GW-EFF-009).
+  (Correction, 2026-11-18: no interval covers that pair. F35 now gives both values, 4,020.8 and
+  2,637.3 ms, and states no difference.)
 - F36: dynamic INT8 of the constant-weight MatMuls (H7′ holds); the attention products stay fp32,
   and on pages INT8 removes about half as much time as fusing the attention (GW-EFF-008,
   GW-EFF-009).
@@ -3347,3 +3358,406 @@ CI is checked on the PR.
 `phase-16` (merge re-created with the noreply identity; same tree and parents).
 
 **CI status:** green on the branch, the pull request and `main` (run 44253277519).
+
+---
+
+## Phase 21 — Research package
+
+**Status:** results written (2026-11-18). Gate open: push, pull request, CI and the owner's merge.
+The plan was registered before any Phase 21 deliverable. Opened
+2026-11-18 on `phase/21-research-package`, branched from `main` after the end of the v1 code freeze
+(merge `6caf327`). It reads recorded reports only: no training, evaluation or test data, and no
+GPU. Line numbers below are for `034b867`.
+
+**Objective:** turn the recorded evidence into a package a reader can check:
+
+- `MODEL_CARD.md`
+- a corrected `DATASETS.md`
+- a generated `EXPERIMENTS.md`
+- `research/paper/*`
+- a complete, verified `references.bib`
+
+Exit criterion (`docs/IMPLEMENTATION_PLAN.md:398-402`): every number in the paper notes traces to an experiment ID and a report file. This plan applies the same check to `MODEL_CARD.md` and `DATASETS.md`, because `docs/WORKFLOW.md` §6 applies to every doc.
+
+**Fixed rules**
+
+- No training, evaluation, re-scoring or model loading.
+- The tools read only `reports/`, `research/`, `docs/`, `configs/` and `data/manifests/`. They never open `data/processed`, `data/raw`, `runs/` or `checkpoints/`.
+- No change under `glypharis/pipeline`, `glypharis/models`, `glypharis/export`, `glypharis/data` or `configs` (`V1_PATHS`, `glypharis/efficiency/v1.py:21-27`). An untracked file there also fails `assert_v1_code`, so no new tool input goes in `configs/`.
+- No change to `glypharis/eval/` or `scripts/phase14_*.py`: Phase 22 re-scores with them.
+- No existing generated report is edited or regenerated. New generated files only.
+- GDC-scan appears as numbers only (ADR-0013 item 4). Lines from the two CC BY-SA textbooks are never quoted. No personal paths, names or emails.
+- Commits follow `docs/WORKFLOW.md` §2: the owner's identity, no tool or co-author trailers.
+
+**Conventions decided here (no owner input needed)**
+
+| Topic | Decision |
+|---|---|
+| Dataset counts | A tracked manifest or report path stands in for an experiment ID, because acquisition and preparation have no GW IDs. Anything measured by a run keeps its ID. |
+| Default track | Strict, unless stated. |
+| Intervals | Every interval says whether it is by line, page or document. |
+| Derived values | Only through the generated derived-values file (item 9). |
+| Paper depth | Full prose for methodology, experiments, results, limitations and conclusion. Abstract and introduction are complete but short, and the abstract says results predate final validation. |
+| Consumer name | `MODEL_CARD.md` and the paper say "a document-reading application" (plan §2, brief §66). |
+| Code licence and citation | "To be settled in Phase 23" (plan, Phase 23 Publishing). |
+| Compute statement | Limited to `reports/compute/ledger.md`, with uncounted experiments listed by ID. |
+| `data/DATASET_MANIFEST.yaml` | Not regenerated. `DATASETS.md` gets a table mapping each brief §13 field to the manifest that holds it, and the deviation goes in plan §8. |
+
+**Work items**
+
+**A. Decisions and registration**
+
+**1. Register this plan.** Add the Phase 21 section to `docs/PHASE_STATUS.md` and set the status row to in progress, before any deliverable is committed.
+*Check:* the plan commit comes first in `git log main..HEAD`.
+
+**2. ADR-0014, weights and backbone terms.** Record the owner's answers to the questions at the end of this plan. Update:
+- `docs/decisions/README.md`
+- `docs/RISK_REGISTER.md` R-05
+- `README.md:118-121`
+- `DATASETS.md:33,240-243,264-271`
+
+ADR-0009's rule is that sources must allow commercial use, and `DATASETS.md:241` says the ImageNet terms do not clearly allow it. The ADR must state how v1 relates to that rule.
+*Check:* `git grep "before v0.1"` finds no open licence wording.
+
+*Note, 2026-11-18.* The owner's answers are the "Owner decisions" paragraph at the end of this
+section.
+
+*Note, 2026-11-18.* The check still finds the licence note written at download in `data/sources.yaml`,
+`data/manifests/imagenet_backbones.json` and `data/DATASET_MANIFEST.yaml`, and they keep it on
+purpose. They are source records: `data/sources.yaml` is the download registry the manifests come
+from, and the number trace cites `imagenet_backbones.json` by SHA-256, so an edit would change a cited
+hash. `DATASETS.md` (MobileNetV3 card, known issues) and ADR-0014 carry the correct statement, and
+`docs/IMPLEMENTATION_PLAN.md` §8 records the exception. A later data pass may regenerate these files.
+The hit at line 685 of this file is the Phase 8 record, and the one above is this check.
+
+**B. Registry repair (`research/experiments.md`, `research/failures.md`)**
+
+**3. GW-REC-022** (row L38, entry L670-688): set status done, run date 2026-10-25.
+- Key result: val CER 7.56% [7.40, 7.71]; −0.76 [−0.81, −0.71] against GW-REC-003.
+- Training time 4.65 GPU-hours; 45,295 steps; 7,928,835 parameters.
+- Interpretation: the hypothesis of a gain below the sum did not hold (F3).
+- Sources: `reports/training/phase07/ablation_table.md:36`, `reports/training/GW-REC-022/report.md`, `reports/training/compare/GW-REC-022_vs_GW-REC-006.md`, ledger.
+- State that the interval is the ablation table's; the run report prints [7.41, 7.72].
+
+**4. Other registry fixes**
+- Report cell becomes `—` for GW-REC-023, 032, 033 (L39, L84, L85).
+- Add `not run` to the status list (L4).
+- Add GW-REC-023 to `research/failures.md`, as `docs/WORKFLOW.md` §4 requires. `docs/PHASE_STATUS.md:547` already cites it there.
+- Fill run dates at L308, L327, L612 from the ledger.
+- Fill blank fields at L624-628 and L703-707 with `—` or "not applicable".
+- Reword GW-EFF-001's key result (L45): the detector alone meets the page target and the whole pipeline does not.
+- Add second report paths:
+  - 15 Phase 7 rows: `reports/training/phase07/ablation_table.md`
+  - GW-REC-002, 024: their `reports/training/compare/` files
+  - GW-DET-002, 003: `reports/training/GW-DET-001_vs_GW-DET-00N.md`
+  - GW-DET-007: its `pair.json`
+  - GW-EFF-005: `reports/external/results.json`
+  - 18 rows: `reports/robustness/<ID>.json`
+  - GW-DATA-010 to 021: `reports/synthetic/phase12_comparison.json`
+- Add an optional `Superseded by` field for v0.1 rows, confirming each against its entry: E2E-001→006, E2E-003→005, E2E-004→011, EFF-002 and 004→007, EFF-003→006.
+- Put explicit anchors inside headings: `### <a id="gw-rec-022"></a>GW-REC-022 — …`. This keeps line numbers and all 101 `#gw-xxx-nnn` links, with no slug logic.
+
+**5. Close the open seeds promise.** `docs/PHASE_STATUS.md:517,525` says two extra GW-REC-024 seeds would be added "before the paper". They are GW-REC-032 and 033, not run because option B was chosen (GW-REC-037), and v1 has three seeds (GW-REC-034 to 036). Record this as closed for v1. In `limitations.md`, say the v0.1 recognizer stayed at one seed.
+
+*Check for B:* `python scripts/experiment_summary.py --check` passes.
+
+**C. Tooling (standard library, `main(argv)`, LF output, no timestamps)**
+
+**6. `scripts/numtrace.py` and `tests/test_numtrace.py`.** Shared by both checkers, landed first.
+
+*Tokenizer.* Markdown-aware. It skips code spans, link targets, list markers, heading numbers and comments. It handles thousands separators, Unicode minus, explicit plus and exponents. It never treats these as numbers: GW IDs, F/H/RQ/ADR/R numbers, `Phase N`, dates, hashes, file names, seeds, versions, or digits inside names (`fp32`, `INT8`, `p95`, `F1@0.5`, `PP-OCRv5`, `MobileNetV3`, `CC BY 4.0`, `RTX 4050`).
+
+*Report index.* Excludes free-text content:
+- tables with a header cell exactly `Reference` or `Prediction` (`Reference class` tables stay indexed)
+- `words_*.md`
+- `examples.md`, apart from its counts
+
+*Directive syntax, frozen before parallel work starts:*
+
+```
+<!-- trace: GW-REC-040 reports/error_cases/phase15/recognition.md#gdc_test -->
+<!-- trace-table: GW-E2E-007 reports/external/end_to_end.md key=row|key=row,header -->
+<!-- derived: name -->
+```
+
+**7. `scripts/experiment_summary.py`, `tests/test_experiment_summary.py`.** Implement the third reader's design.
+
+*Outputs:* `EXPERIMENTS.md`, `reports/experiment_summary.csv`, `reports/experiment_summary.md`.
+
+*Validation rules R1-R11.* Writes nothing on failure; `--check` compares after LF normalisation. Adjustments to that design:
+- Link with the new anchors, so no GitHub slug code is needed.
+- `research/failures.md` headings can hold several IDs (for example GW-EFF-003 / GW-EFF-004 / GW-E2E-004).
+- R7 stays a loose presence check for registry cells. It does not count as evidence for the paper.
+- Merge the ledger's `GW-EFF-007 (GPU jobs)` and `GW-BASE-002 (Phase 16 amendment)` into their IDs. Show `Phase 16 scoring` as unattributed.
+- List the 28 registered IDs without a ledger row. Update the ledger's "Not in these logs" note only if the logs allow it; otherwise the summary states the gap.
+
+*Tests:* one failing case per rule, determinism, `--check` stale and current, and no file written on failure.
+
+*Note, 2026-11-18.* The third reader's design is recorded in the docstring of
+`scripts/experiment_summary.py` (rules R1-R11).
+
+**8. `scripts/experiment_comparison.py`, `tests/test_experiment_comparison.py`.** Brief §63 asks for a generated table of Model, Dataset, CER, WER, F1, Latency, Params, Model Size and VRAM. No report has it, and no reader scoped it.
+
+*Outputs:* `reports/benchmark_results/comparison_table.md` and `.csv`, built from:
+- `reports/external/results.json`
+- `reports/baselines/results.json`
+- `reports/efficiency/phase16/results.json`
+- `reports/benchmark_results/efficiency_comparison.json`
+
+Missing cells are `n/a`, never imputed. Each row names its accuracy ID and its latency ID. A header note says latency is HierText validation, from different sittings, so no difference may be stated.
+
+**9. `scripts/trace_numbers.py`, `scripts/derive_values.py`, tests.**
+
+*Inputs and outputs*
+- Scope: `research/paper/*.md`, `MODEL_CARD.md`, `DATASETS.md`.
+- Each document has its own `research/paper/trace/<doc>.json` holding its protocol constants and derived formulas, so parallel authors do not share a file.
+- Outputs: `reports/paper_trace/derived.json`, `trace.json`, `trace.md`. Each number gets document line, class, ID, source file, source line and source SHA-256.
+
+*Matching rules*
+- Scope resolves nearest first: directive, block, caption or preceding paragraph, section, file header.
+- The ID must be registered as done and must match the report's `Generated by` header or JSON run field. A small explicit map covers reports without one.
+- Rounding: within half a unit of the printed last digit, inclusive.
+- A printed value may not be more precise than its source.
+- `v [lo, hi]` must match as a triple on one source line.
+- ×100 is allowed only for JSON known to store fractions. Other unit changes need a derived entry.
+- Numbers with fewer than 3 significant digits must match in narrow scope.
+- `DATASETS.md` may use `data/manifests/` and a `published` class for authors' figures.
+
+*Lints*
+- Fail on personal paths and emails.
+- Fail on claims that Phases 22 or 23 happened.
+- Fail on SOTA wording outside quoted literature.
+- List `best` for human review, without failing.
+
+*Mutation audit.* `--mutation-audit --seed 20261118` changes sampled values and writes the escape rate to `trace.md`. Target: at most 5% per document. Above that, add anchors or table bindings.
+
+*Tests:* changed digit, swapped interval, missing ID, undeclared derived value, rounding boundary, free-text exclusion, and a guard that rejects paths outside the allowed roots.
+
+**10. CI.** Add named steps to `.github/workflows/ci.yml` after `Validate configs`:
+- `experiment_summary.py --check`
+- `experiment_comparison.py --check`
+- `trace_numbers.py --check`
+
+**D. Deliverables**
+
+**11. `MODEL_CARD.md`.** Status line: evaluated and packaged; final validation (Phase 22) and release (Phase 23) not done; no weights distributed.
+
+| Brief §53 field | Sources |
+|---|---|
+| Model description, version | `configs/final/glypharis_v1.yaml`, `reports/efficiency/phase16/v1_bundle.json`, `pyproject.toml:7` |
+| Intended / not intended use | ADR-0008, ADR-0011, `reports/charset/charset_report.md`, `reports/external/end_to_end.md` (rotated, vertical), `reports/external/official.md` |
+| Architecture | `configs/rec/gw-rec-020.yaml` chain, `configs/det/gw-det-001.yaml`, `reports/efficiency/phase16/cost_table.md:11-13`; frame stride from `reports/efficiency/phase16/profiles/lines_onnx_cpu_10t.json:7` |
+| Training data, recipe | `data/manifests/processed/hiertext.json`, `reports/training/GW-REC-034/report.md`, `reports/training/GW-DET-001/report.md`, `reports/ablation/phase13_final.md` |
+| Evaluation data | `reports/external/README.md`, `run_record.md`, `research/test_access_log.md` |
+| Metrics | `reports/external/{recognition,end_to_end,official,comparisons,calibration}.md`, `reports/robustness/GW-REC-034.json`, `reports/efficiency/phase16/{cost_table,README,verdicts}.md`, new comparison table |
+| Limitations, failure modes | `reports/error_cases/phase15/{pipeline,recognition,glyphsynth,oracle_share}.md`, GW-EFF-012, GW-E2E-011, GW-E2E-012 |
+| Hardware | `reports/environment/env_report.md`, conditions block of `reports/efficiency/phase16/profiles/pages_torch_cpu_10t.json` |
+| Licence | ADR-0014, `DATASETS.md`, ADR-0007, ADR-0009 |
+| Citation | Method keys now; project citation pending Phase 23 |
+
+Add a short section mapping brief §64's ten fields to their sources, and a separate "Not v1" section for the fused-attention candidate.
+
+Numbers that must not be confused:
+- Validation line CER: 6.30 (GW-REC-034, 73,888 lines), 6.51 (GW-REC-038, 74,500 crops), 6.22 (GW-EFF-009, 5,000 lines). Only 6.51 sits beside test results.
+- Validation page CER: 27.57 (GW-E2E-006, 1,715 pages) against 24.32 (400 pages).
+- GLYPH-C clean CER 1.93 is on a pack half made of GlyphSynth lines, so it is not comparable with HierText CER.
+- IIIT5K headline is the alphanumeric row; the strict row is not.
+- `page_cer_phase10` in `reports/package/GW-E2E-011.json` holds the 400-page package reference (24.32%), despite the key name.
+- Unfavourable comparisons stay in: GDC crops, IIIT5K, OmniDocBench, FUNSD detection, H1′ ONNX, missed ADR-0011 targets.
+
+*Check:* trace passes, and a reviewer ticks all 13 fields.
+
+**12. `DATASETS.md`.**
+
+*Corrections*
+- L65: 3.64 GiB archives plus 79 MiB ground truth (3.72 GiB in total).
+- L23, L266: no delivered model trained on GlyphSynth.
+- L26, L123-133: GDC version 1.1, frozen 2026-10-22; 4 of 106 captures are landscape.
+- L110-115: no transcribed old-scan subset exists.
+- L92, L173-174, L191: remove stale future tense.
+- Update L9 check dates.
+
+*Additions*
+- cards or rows for GLYPH-C v1, the Phase 12 packs, evaluation crop packs and subsets, GDC-scan, baseline weights and official evaluators
+- per-source GDC attribution table
+- usage matrix by dataset, phase and experiment
+- known issues and the §9 and §54 fields for every card
+- redistribution section
+- §13 field map
+
+*Crop counts.* Publish HierText's reconciliation:
+- 73,888 + 590 + 22 = 74,500
+- 67,277 + 282 + 15 = 67,574
+
+For GDC, publish 8,606 lines, 8,372 crops and the rule `is_rec_line` (`glypharis/eval/page_metrics.py:61-70`), with no breakdown. The 200 low-score and 32 vertical lines explain at most 232 of the 234 difference. Do not open the page file to explain the other 2.
+
+*Licence wording*
+- Hefferon: GNU FDL or CC BY-SA 3.0 United States, at the user's choice. No election is needed, because no line is redistributed.
+- Re-confirm the wording for each licence checked, with the date.
+
+**13. Attribution and privacy** (`DATASETS.md`, `reports/README.md`, `glypharis/training/report.py`, `scripts/gdc_scan_build.py`).
+- Add a HierText and Open Images notice to `reports/README.md`, covering the 53 training reports with worst-line tables and the other unattributed crops and previews. The reports themselves are not edited.
+- Make `glypharis/training/report.py` write the notice in future reports, with a test.
+- Cut `DATASETS.md` L134-150 to hashes, method, counts and the case-study limit. Remove the physical description, authoring-software remark, ignore-region contents and out-of-charset character names.
+- Remove matching detail from the docstring in `scripts/gdc_scan_build.py` and the identifier list at `docs/PHASE_STATUS.md:2176-2177`.
+- Repeat the Phase 14 pre-push search of the diff for known identifying strings, kept local and never written to the repository.
+
+*Note, 2026-11-18.* Done: the search ran over every file changed on this branch at `955c7a9`,
+including `reports/paper_trace/`, and found nothing. The search terms are kept local.
+
+**14. `research/paper/references.bib`.**
+- Verify all 29 entries against publisher or arXiv pages.
+- Add DOI or eprint, volume, number and pages where they exist.
+- Fix `liao2022dbnetpp`, `ouyang2025omnidocbench`, `efron1994bootstrap`, and the two arXiv `@article` entries.
+- Remove the "written from memory" header only when finished. Update `research/approach_survey.md:8`.
+- Citation keys are frozen before drafting: `cui2025paddleocr`, `paddleocr_ppocrv6`, `kuznetsova2020openimages`, `russakovsky2015imagenet`, `harley2015rvlcdip`, `lin2017fpn`, `nagy1992xycut`, `levenshtein1966`, `naeini2015ece`, `loshchilov2019adamw`, `smith2019onecycle`, `paszke2019pytorch`, `onnxruntime`, `doctr`, `easyocr`.
+- If no citable PP-OCRv6 paper exists, use `@misc` for the pinned model pages in `data/sources.yaml`.
+
+*Check:* a small test that every backticked key resolves, plus a review log of the source page per entry.
+
+**15. `research/paper/*`.**
+
+| File | Work | Main sources |
+|---|---|---|
+| `methodology.md` | Pipeline, data, metrics, training method, calibration, §64 record; a code path and config per subsection | `configs/final/glypharis_v1.yaml`, `docs/EXPERIMENT_PROTOCOL.md`, GW-REC-034, GW-DET-001, GW-E2E-005 |
+| `experiments.md` | Setup, baselines, ablation design, compute, failures, v1 re-runs; replace L6 | `reports/baselines/README.md`, `research/ablations.md`, ledger, `research/failures.md` |
+| `results.md` | RQ1-RQ8 answer table first, then accuracy, baselines, external sets, official evaluators, calibration, robustness, synthetic data, ablations; add the attribution note | `reports/external/*`, `reports/robustness/phase11_comparison.md`, `reports/synthetic/phase12_comparison.md`, `reports/ablation/*` |
+| `efficiency.md` | Fix L58 (use or explain the mirrored 3.69 ratio), L129, L131 through derived values; L181-182 and L201-202 for the owner decision and unchanged bundle; source L200 | `reports/efficiency/phase16/*`, ADR-0011, GW-EFF-012 |
+| `error_analysis.md` | Trace directives; add GW-BASE-004 or say why it is left out (`recognition.md:422-423`) | `reports/error_cases/phase15/*` |
+| `abstract_notes.md`, `introduction_notes.md` | Remove the scene-text domain study; narrow TrOCR to crops; state the owner decisions | F21, F22, F27, F28, F34, F35, F38, `research/hypotheses.md` |
+| `related_work.md` | Prose; mark SynthText, SROIE, DocVQA as not used; fix L38-39 | `research/approach_survey.md`, verified bibliography |
+| `limitations.md`, `conclusion_notes.md` | F24, F26, F33, no phone measurement, set sizes, single detector seed, post hoc H4 | findings, hypotheses, known issues for Phases 14-16 |
+
+The ablation text must say how brief §45 is met: the ladder is recognizer-only, input height is the preprocessing row (L3), and detector changes are GW-DET-002, 003, 004, 005, 007.
+
+**16. `docs/` and `research/` finalisation** (brief Phase 21 names both).
+- `docs/ARCHITECTURE.md`: replace the Phase 0 draft values with as-built facts and sources.
+- `docs/ROADMAP.md` §4: tick criteria whose phase gates have passed. Leave model card and dataset documentation for this gate. Leave "Reproducible final experiment" open for Phase 22.
+- `docs/IMPLEMENTATION_PLAN.md`: add the fused-attention evaluation to Phase 22 and record new deviations in §8.
+- `docs/ENVIRONMENT.md`: point to `reports/environment/env_report.md`; add no new measured values by hand.
+- `README.md`: link the new documents and keep its status accurate.
+- `reports/README.md`: note where brief §62's training curves live.
+- `research/findings.md`, `research/hypotheses.md`: consistency pass only.
+- `research/research_log.md`: Phase 21 entry.
+
+**Claims only Phases 22 and 23 can support**
+
+| Do not claim | Required wording |
+|---|---|
+| Final, validated, reproduced from a clean machine | "Final validation (Phase 22) has not been run." |
+| Test metrics reproduced through the shipped CPU bundle | "Test results come from the GPU strict-fp32 evaluation; equality with the bundle is shown on validation only. Phase 22 checks reproduction within the 0.05-point tolerance." |
+| Fused-attention accuracy on test sets, or that it is v1 | "A new version, not v1; validation and laptop figures only; to be evaluated in Phase 22." |
+| Phone speed or phone suitability | "Phones are the target hardware; no phone has been measured." |
+| Released, v1.0, available weights | "No weights are distributed; release is Phase 23." |
+| Effective code licence, PyPI, Zenodo DOI, `CITATION.cff` | "To be settled in Phase 23." |
+| Weight licence in force | "Intended terms under ADR-0014, effective only if released." |
+| "Reproducible final experiment" complete | "Configuration frozen and recorded; reproduction pending Phase 22." |
+
+**Order of work**
+
+| Stage | Package | Owns exactly these files | Depends on |
+|---|---|---|---|
+| 0, serial | Integrator | `docs/PHASE_STATUS.md`, `research/research_log.md` | none |
+| 1, parallel | P1 Registry | `research/experiments.md`, `research/failures.md` | Stage 0 |
+| 1, parallel | P2 Number core | `scripts/numtrace.py`, its test, directive spec | Stage 0 |
+| 2, parallel | P3 Summary and comparison | `scripts/experiment_summary.py`, `scripts/experiment_comparison.py`, their tests | P2 |
+| 2, parallel | P4 Trace | `scripts/trace_numbers.py`, `scripts/derive_values.py`, their tests | P2 |
+| 2, parallel | P5 Card | `MODEL_CARD.md`, `research/paper/trace/MODEL_CARD.json` | directive spec |
+| 2, parallel | P6 Data and privacy | `DATASETS.md`, its trace file, `reports/README.md`, `glypharis/training/report.py` and test, `scripts/gdc_scan_build.py` | directive spec |
+| 2, parallel | P7 Methods | `methodology.md`, `experiments.md`, their trace files | directive spec |
+| 2, parallel | P8 Results | `results.md`, its trace file | directive spec |
+| 2, parallel | P9 Existing drafts | `efficiency.md`, `error_analysis.md`, their trace files | directive spec |
+| 2, parallel | P10 Framing and bibliography | `abstract_notes.md`, `introduction_notes.md`, `related_work.md`, `limitations.md`, `conclusion_notes.md`, `references.bib`, `research/approach_survey.md`, their trace files | frozen keys |
+| 2, parallel | P11 Docs | `docs/ARCHITECTURE.md`, `docs/ROADMAP.md`, `docs/IMPLEMENTATION_PLAN.md`, `docs/ENVIRONMENT.md`, `README.md` except its licence section | none |
+| 3, serial | Integrator | ADR-0014, `docs/decisions/README.md`, `docs/RISK_REGISTER.md`, `README.md` licence section, `.github/workflows/ci.yml`, all generated outputs, `docs/PHASE_STATUS.md:2176-2177` | owner answers, all packages |
+| 4, serial | Review and gate | Fixes go back to the file's owner package | Stage 3 |
+
+Licence wording is drafted against the placeholder `ADR-0014` and completed in Stage 3.
+
+**Review plan**
+
+1. **Tool review:** read both checkers against their tests, and inspect the mutation audit.
+2. **Number review:** an independent seeded sample of 50 numbers per long document and 25 per short one, checked by hand against the labelled report cell.
+3. **Claim review:** every sentence with a comparison, cause or status in `MODEL_CARD.md`, `abstract_notes.md`, `results.md` and `limitations.md`, against the Phase 22/23 table.
+4. **Licence and privacy review:** attribution notes, redistribution statement, GDC-scan numbers-only, no textbook lines, no personal data, local diff search.
+5. **Completeness review:** tick every line of the coverage table below.
+6. **Fresh-reader review:** starting only from `MODEL_CARD.md`, reach the source report of ten numbers.
+
+*Note, 2026-11-18.* No separate coverage table was written. The coverage list for review 5 is items
+1-16, the Fixed rules, the Conventions, the Phase 22/23 claims table, the Phase 21 entry in
+`docs/IMPLEMENTATION_PLAN.md`, and brief §§9, 13, 43, 45, 53, 54, 62-65 and Phase 21.
+
+**Gate checks**
+- Ruff, `ruff format --check`, mypy, pytest in a clone without tags, `scripts/validate_configs.py`, all three `--check` commands, `trace_numbers.py` exit 0.
+- `assert_v1_code` passes.
+- `git diff main...HEAD -- research/test_access_log.md configs glypharis/pipeline glypharis/models glypharis/export glypharis/data glypharis/eval scripts/phase14_score.py` is empty.
+- `git diff --name-status main...HEAD -- reports` shows only added generated files and the `reports/README.md` edit.
+- Render `EXPERIMENTS.md` on GitHub and test several anchors.
+- CI green on the branch; the owner merges.
+
+
+
+**Owner decisions (2026-11-18, ADR-0014):** GW-DET-001, initialised from ImageNet weights, stays
+v1's detector as a disclosed exception to ADR-0009's commercial-use rule; the intended terms for the
+v1 weights are CC BY-SA 4.0 with HierText and Open Images attribution, effective only on a Phase 23
+release. Neither is a legal conclusion.
+
+**Exit criteria** (IMPLEMENTATION_PLAN Phase 21): every number in the paper notes traces to an
+experiment ID and a report file.
+
+**Results (2026-11-18)** (recorded evidence only: no model was run, no test data was read, and
+`research/test_access_log.md` has no new row)
+
+- *The package:* `MODEL_CARD.md`, a corrected `DATASETS.md`, the generated `EXPERIMENTS.md` and
+  `reports/experiment_summary.*`, the generated comparison table
+  (`reports/benchmark_results/comparison_table.*`), the paper notes in `research/paper/`, a
+  bibliography of 44 entries with its review log (`research/paper/trace/references_review.md`), and
+  ADR-0014.
+- *The exit criterion:* all 5,128 numbers in the 12 traced documents resolve to an experiment ID and
+  a report or recorded source (`reports/paper_trace/trace.md`, written by
+  `scripts/trace_numbers.py`). Dataset counts trace to tracked manifests, and authors' published
+  figures in `DATASETS.md` are marked as such.
+- *How far the check can be trusted:* two seeded audits (seed 20261118) change numbers and count the
+  changes that still pass. The highest rates are 1.8% for changed digits (`methodology.md`) and 1.0%
+  for values taken from another row of the same source (`efficiency.md`); the target is at most 5%
+  per document. A passing trace shows that a number is in the cited place. It does not show that the
+  sentence interprets it correctly, which is why the claims were reviewed separately.
+- *Reviews:* six independent reviews (tools, a seeded sample of 350 numbers checked by hand against
+  their reports, claims, licences and privacy, completeness, a fresh reader) raised 54 issues. The
+  sample found no wrong value, though several numbers were tied to the wrong row or experiment. All
+  54 are closed. The first checker passed a correct interval taken from the wrong row and an interval
+  with its minus signs removed; it was rebuilt to refuse both. The abstract and conclusion had left
+  out Tesseract 5, the closest baseline for GDC order-aware page CER, where no difference can be
+  stated; they now give it.
+- *Findings revised:* F22 overstated one comparison (PP-OCRv5 mobile's bag-of-lines interval on GDC
+  excludes zero) and F35 claimed a difference no interval supports.
+- *Privacy (item 13):* the search of this phase's changes for the strings that would identify
+  GDC-scan's author found none. The search terms are kept local.
+
+**Exit criteria check** (IMPLEMENTATION_PLAN Phase 21)
+
+| Criterion | Status | Evidence |
+|---|---|---|
+| `MODEL_CARD.md`, `DATASETS.md`, `EXPERIMENTS.md` (generated) finalised | pass | the files; `scripts/experiment_summary.py --check` |
+| `research/paper/*` finalised from recorded evidence | pass | `research/paper/`, `reports/paper_trace/trace.md` |
+| `references.bib` complete | pass, with three fields on secondary records | `research/paper/trace/references_review.md`, `tests/test_references.py` |
+| Every number in the paper notes traces to an experiment ID and a report file | pass | `scripts/trace_numbers.py --check`, in CI |
+| CI green | pending (after the push) | — |
+
+**Tests:** the CPU suite passes in a clone without tags (2,072 passed, 5 skipped, at `955c7a9`), with
+the three generated-file checks and `scripts/validate_configs.py`.
+
+**Compute:** none beyond tests and report parsing; no GPU.
+
+**Known issues**
+- `data/sources.yaml` and the manifests made from it keep two old licence wordings (item 2's note).
+  Older generated reports keep "HierText annotations CC BY-SA 4.0" and Hefferon as plain CC BY-SA
+  3.0; they are not edited, and `DATASETS.md` has the current statements.
+- Some licence pages could not be opened on 2026-11-18; `DATASETS.md` lists them. Attribution for
+  Open Images is at dataset level, not per image.
+- Three bibliography fields rest on secondary records and need a check in a browser.
+- The older, longer description of GDC-scan stays in the public git history. It contains none of the
+  searched identifying strings. Rewriting history is the owner's decision.
+- Nothing here has been validated from a clean machine, and no phone has been measured (Phase 22).
+
+**Git:** branch `phase/21-research-package`; push and merge pending.

@@ -1,9 +1,9 @@
 # Experiment Registry
 
 Every experiment ID is allocated here **before** the run starts (see `docs/WORKFLOW.md` §4).
-Status values: `planned` → `running` → `done` | `failed` | `abandoned`.
+Status values: `planned` → `running` → `done` | `failed` | `abandoned`, and `not run` for a conditional run whose condition was not met.
 
-Rows link to a full entry below. Numbers are copied from generated reports only, never typed by hand.
+Rows link to a full entry below. Numbers are copied from generated reports only, never typed by hand. The Report column names the files or folders a row's key result comes from; `—` means the run never started, so it has no report. An entry whose result was replaced by a v1 re-run names that run in an optional `Superseded by` field, and its own result stays as recorded.
 
 | ID | Date allocated | Phase | Question / hypothesis | Status | Key result | Report |
 |---|---|---|---|---|---|---|
@@ -15,34 +15,34 @@ Rows link to a full entry below. Numbers are copied from generated reports only,
 | [GW-BASE-006](#gw-base-006) | 2026-10-21 | 05 | PaddleOCR PP-OCRv6 small (det + rec): recognition and end to end | done (Phase 14 amendment run) | lines 7.53% CER (HierText val); 46 ms per line, 3.7 s per page | `reports/baselines/` |
 | [GW-BASE-007](#gw-base-007) | 2026-10-21 | 05 | PaddleOCR PP-OCRv6 medium (PaddleOCR 3.7's English default): reduced scope | done (Phase 14 amendment run) | lines 7.54% CER (HierText val); 553 ms per line, 32.5 s per page | `reports/baselines/` |
 | [GW-REC-001](#gw-rec-001) | 2026-10-22 | 06 | CRNN baseline on HierText lines | done | val CER 7.53% [7.38, 7.69] | `reports/training/GW-REC-001/` |
-| [GW-REC-002](#gw-rec-002) | 2026-10-22 | 06 | GW-REC-001 plus 35,000 GlyphSynth lines (exploratory look at H2′a) | done | val CER 7.49% [7.34, 7.64]; −0.05 points [−0.09, −0.01] vs GW-REC-001 (one seed, not budget-matched) | `reports/training/GW-REC-002/` |
+| [GW-REC-002](#gw-rec-002) | 2026-10-22 | 06 | GW-REC-001 plus 35,000 GlyphSynth lines (exploratory look at H2′a) | done | val CER 7.49% [7.34, 7.64]; −0.05 points [−0.09, −0.01] vs GW-REC-001 (one seed, not budget-matched) | `reports/training/GW-REC-002/`, `reports/training/compare/GW-REC-002_vs_GW-REC-001.md` |
 | [GW-REC-003](#gw-rec-003) | 2026-10-23 | 07 | Phase 7 control: GW-REC-001 on the 8-epoch short budget, seed 1337 (noise floor) | done | val CER 8.32% [8.16, 8.47] (control) | `reports/training/GW-REC-003/` |
 | [GW-REC-004](#gw-rec-004) | 2026-10-23 | 07 | Phase 7 control: GW-REC-001 on the 8-epoch short budget, seed 2024 (noise floor) | done | val CER 8.30% [8.15, 8.47] (control) | `reports/training/GW-REC-004/` |
 | [GW-REC-005](#gw-rec-005) | 2026-10-23 | 07 | Phase 7 control: GW-REC-001 on the 8-epoch short budget, seed 7 (noise floor) | done | val CER 8.31% [8.15, 8.47] (control) | `reports/training/GW-REC-005/` |
-| [GW-REC-006](#gw-rec-006) | 2026-10-23 | 07 | Phase 7 ablation: input height 48 (short budget, vs GW-REC-003) | done | val CER 7.83% [7.66, 7.98]; -0.49 [-0.54, -0.44] vs GW-REC-003 (better) | `reports/training/GW-REC-006/` |
-| [GW-REC-007](#gw-rec-007) | 2026-10-23 | 07 | Phase 7 ablation: CNN half as wide (short budget, vs GW-REC-003) | done | val CER 8.83% [8.65, 9.00]; +0.51 [+0.47, +0.56] vs GW-REC-003 (worse) | `reports/training/GW-REC-007/` |
-| [GW-REC-008](#gw-rec-008) | 2026-10-23 | 07 | Phase 7 ablation: BiLSTM hidden 128 (short budget, vs GW-REC-003) | done | val CER 8.78% [8.60, 8.94]; +0.46 [+0.42, +0.51] vs GW-REC-003 (worse) | `reports/training/GW-REC-008/` |
-| [GW-REC-009](#gw-rec-009) | 2026-10-23 | 07 | Phase 7 ablation: one BiLSTM layer (short budget, vs GW-REC-003) | done | val CER 8.78% [8.60, 8.94]; +0.46 [+0.42, +0.51] vs GW-REC-003 (worse) | `reports/training/GW-REC-009/` |
-| [GW-REC-010](#gw-rec-010) | 2026-10-23 | 07 | Phase 7 ablation: Adam (short budget, vs GW-REC-003) | done | val CER 9.17% [8.99, 9.34]; +0.85 [+0.81, +0.90] vs GW-REC-003 (worse) | `reports/training/GW-REC-010/` |
-| [GW-REC-011](#gw-rec-011) | 2026-10-23 | 07 | Phase 7 ablation: cosine schedule (short budget, vs GW-REC-003) | done | val CER 8.44% [8.26, 8.60]; +0.12 [+0.08, +0.17] vs GW-REC-003 (worse) | `reports/training/GW-REC-011/` |
-| [GW-REC-012](#gw-rec-012) | 2026-10-23 | 07 | Phase 7 ablation: learning rate 5e-4 (short budget, vs GW-REC-003) | done | val CER 8.51% [8.34, 8.67]; +0.19 [+0.15, +0.23] vs GW-REC-003 (worse) | `reports/training/GW-REC-012/` |
-| [GW-REC-013](#gw-rec-013) | 2026-10-23 | 07 | Phase 7 ablation: learning rate 2e-3 (short budget, vs GW-REC-003) | done | val CER 8.34% [8.17, 8.50]; +0.02 [-0.02, +0.06] vs GW-REC-003 (no clear difference) | `reports/training/GW-REC-013/` |
-| [GW-REC-014](#gw-rec-014) | 2026-10-23 | 07 | Phase 7 ablation: weight decay 1e-2 (short budget, vs GW-REC-003) | done | val CER 8.28% [8.11, 8.44]; -0.04 [-0.08, -0.00] vs GW-REC-003 (better) | `reports/training/GW-REC-014/` |
-| [GW-REC-015](#gw-rec-015) | 2026-10-23 | 07 | Phase 7 ablation: no augmentation (short budget, vs GW-REC-003) | done | val CER 8.68% [8.50, 8.84]; +0.36 [+0.32, +0.41] vs GW-REC-003 (worse) | `reports/training/GW-REC-015/` |
-| [GW-REC-016](#gw-rec-016) | 2026-10-23 | 07 | Phase 7 ablation: geometric augmentation only (short budget, vs GW-REC-003) | done | val CER 8.34% [8.16, 8.50]; +0.02 [-0.02, +0.06] vs GW-REC-003 (no clear difference) | `reports/training/GW-REC-016/` |
-| [GW-REC-017](#gw-rec-017) | 2026-10-23 | 07 | Phase 7 ablation: photometric augmentation only (short budget, vs GW-REC-003) | done | val CER 8.59% [8.42, 8.75]; +0.28 [+0.23, +0.32] vs GW-REC-003 (worse) | `reports/training/GW-REC-017/` |
-| [GW-REC-018](#gw-rec-018) | 2026-10-23 | 07 | Phase 7 ablation: degradation augmentation only (short budget, vs GW-REC-003) | done | val CER 8.68% [8.50, 8.85]; +0.36 [+0.32, +0.41] vs GW-REC-003 (worse) | `reports/training/GW-REC-018/` |
+| [GW-REC-006](#gw-rec-006) | 2026-10-23 | 07 | Phase 7 ablation: input height 48 (short budget, vs GW-REC-003) | done | val CER 7.83% [7.66, 7.98]; -0.49 [-0.54, -0.44] vs GW-REC-003 (better) | `reports/training/GW-REC-006/`, `reports/training/phase07/ablation_table.md` |
+| [GW-REC-007](#gw-rec-007) | 2026-10-23 | 07 | Phase 7 ablation: CNN half as wide (short budget, vs GW-REC-003) | done | val CER 8.83% [8.65, 9.00]; +0.51 [+0.47, +0.56] vs GW-REC-003 (worse) | `reports/training/GW-REC-007/`, `reports/training/phase07/ablation_table.md` |
+| [GW-REC-008](#gw-rec-008) | 2026-10-23 | 07 | Phase 7 ablation: BiLSTM hidden 128 (short budget, vs GW-REC-003) | done | val CER 8.78% [8.60, 8.94]; +0.46 [+0.42, +0.51] vs GW-REC-003 (worse) | `reports/training/GW-REC-008/`, `reports/training/phase07/ablation_table.md` |
+| [GW-REC-009](#gw-rec-009) | 2026-10-23 | 07 | Phase 7 ablation: one BiLSTM layer (short budget, vs GW-REC-003) | done | val CER 8.78% [8.60, 8.94]; +0.46 [+0.42, +0.51] vs GW-REC-003 (worse) | `reports/training/GW-REC-009/`, `reports/training/phase07/ablation_table.md` |
+| [GW-REC-010](#gw-rec-010) | 2026-10-23 | 07 | Phase 7 ablation: Adam (short budget, vs GW-REC-003) | done | val CER 9.17% [8.99, 9.34]; +0.85 [+0.81, +0.90] vs GW-REC-003 (worse) | `reports/training/GW-REC-010/`, `reports/training/phase07/ablation_table.md` |
+| [GW-REC-011](#gw-rec-011) | 2026-10-23 | 07 | Phase 7 ablation: cosine schedule (short budget, vs GW-REC-003) | done | val CER 8.44% [8.26, 8.60]; +0.12 [+0.08, +0.17] vs GW-REC-003 (worse) | `reports/training/GW-REC-011/`, `reports/training/phase07/ablation_table.md` |
+| [GW-REC-012](#gw-rec-012) | 2026-10-23 | 07 | Phase 7 ablation: learning rate 5e-4 (short budget, vs GW-REC-003) | done | val CER 8.51% [8.34, 8.67]; +0.19 [+0.15, +0.23] vs GW-REC-003 (worse) | `reports/training/GW-REC-012/`, `reports/training/phase07/ablation_table.md` |
+| [GW-REC-013](#gw-rec-013) | 2026-10-23 | 07 | Phase 7 ablation: learning rate 2e-3 (short budget, vs GW-REC-003) | done | val CER 8.34% [8.17, 8.50]; +0.02 [-0.02, +0.06] vs GW-REC-003 (no clear difference) | `reports/training/GW-REC-013/`, `reports/training/phase07/ablation_table.md` |
+| [GW-REC-014](#gw-rec-014) | 2026-10-23 | 07 | Phase 7 ablation: weight decay 1e-2 (short budget, vs GW-REC-003) | done | val CER 8.28% [8.11, 8.44]; -0.04 [-0.08, -0.00] vs GW-REC-003 (better) | `reports/training/GW-REC-014/`, `reports/training/phase07/ablation_table.md` |
+| [GW-REC-015](#gw-rec-015) | 2026-10-23 | 07 | Phase 7 ablation: no augmentation (short budget, vs GW-REC-003) | done | val CER 8.68% [8.50, 8.84]; +0.36 [+0.32, +0.41] vs GW-REC-003 (worse) | `reports/training/GW-REC-015/`, `reports/training/phase07/ablation_table.md` |
+| [GW-REC-016](#gw-rec-016) | 2026-10-23 | 07 | Phase 7 ablation: geometric augmentation only (short budget, vs GW-REC-003) | done | val CER 8.34% [8.16, 8.50]; +0.02 [-0.02, +0.06] vs GW-REC-003 (no clear difference) | `reports/training/GW-REC-016/`, `reports/training/phase07/ablation_table.md` |
+| [GW-REC-017](#gw-rec-017) | 2026-10-23 | 07 | Phase 7 ablation: photometric augmentation only (short budget, vs GW-REC-003) | done | val CER 8.59% [8.42, 8.75]; +0.28 [+0.23, +0.32] vs GW-REC-003 (worse) | `reports/training/GW-REC-017/`, `reports/training/phase07/ablation_table.md` |
+| [GW-REC-018](#gw-rec-018) | 2026-10-23 | 07 | Phase 7 ablation: degradation augmentation only (short budget, vs GW-REC-003) | done | val CER 8.68% [8.50, 8.85]; +0.36 [+0.32, +0.41] vs GW-REC-003 (worse) | `reports/training/GW-REC-018/`, `reports/training/phase07/ablation_table.md` |
 | [GW-REC-019](#gw-rec-019) | 2026-10-23 | 07 | Phase 7 ablation: frame stride 8 (short budget, vs GW-REC-003) | failed | out of GPU memory at step 1,444 (see failures.md); re-run as GW-REC-021 | `reports/training/GW-REC-019/` |
-| [GW-REC-020](#gw-rec-020) | 2026-10-23 | 07 | GLYPHARIS-Rec-M (SVTR-style) vs CRNN at matched budget (H6, exploratory) | done | val CER 8.18% [8.01, 8.35]; -0.13 [-0.18, -0.09] vs GW-REC-003 (better) | `reports/training/GW-REC-020/` |
-| [GW-REC-021](#gw-rec-021) | 2026-10-24 | 07 | Phase 7 ablation: frame stride 8 with CTC-aware batching (re-run of GW-REC-019; short budget, vs GW-REC-003) | done | val CER 10.93% [10.70, 11.16]; +2.61 [+2.48, +2.74] vs GW-REC-003 (worse) | `reports/training/GW-REC-021/` |
-| [GW-REC-022](#gw-rec-022) | 2026-10-25 | 07 | Phase 7 combination: GLYPHARIS-Rec-M (SVTR) at input height 48 with weight decay 1e-2 (short budget, vs GW-REC-003) | planned | — | `reports/training/GW-REC-022/` |
-| [GW-REC-023](#gw-rec-023) | 2026-10-25 | 07 | Phase 7 combination without the encoder change: CRNN at input height 48 with weight decay 1e-2 (short budget, vs GW-REC-003) | abandoned | not run: GW-REC-022 settled the question (see entry) | `reports/training/GW-REC-023/` |
-| [GW-REC-024](#gw-rec-024) | 2026-10-26 | 07 | Phase 7 full-budget confirmation: GW-REC-022's recipe at GW-REC-001's budget (30 epochs, one seed), vs GW-REC-001 | done | val CER 6.46% [6.33, 6.60]; -1.07 [-1.13, -1.01] vs GW-REC-001 | `reports/training/GW-REC-024/` |
+| [GW-REC-020](#gw-rec-020) | 2026-10-23 | 07 | GLYPHARIS-Rec-M (SVTR-style) vs CRNN at matched budget (H6, exploratory) | done | val CER 8.18% [8.01, 8.35]; -0.13 [-0.18, -0.09] vs GW-REC-003 (better) | `reports/training/GW-REC-020/`, `reports/training/phase07/ablation_table.md` |
+| [GW-REC-021](#gw-rec-021) | 2026-10-24 | 07 | Phase 7 ablation: frame stride 8 with CTC-aware batching (re-run of GW-REC-019; short budget, vs GW-REC-003) | done | val CER 10.93% [10.70, 11.16]; +2.61 [+2.48, +2.74] vs GW-REC-003 (worse) | `reports/training/GW-REC-021/`, `reports/training/phase07/ablation_table.md` |
+| [GW-REC-022](#gw-rec-022) | 2026-10-25 | 07 | Phase 7 combination: GLYPHARIS-Rec-M (SVTR) at input height 48 with weight decay 1e-2 (short budget, vs GW-REC-003) | done | val CER 7.56% [7.40, 7.71]; -0.76 [-0.81, -0.71] vs GW-REC-003 (better) | `reports/training/GW-REC-022/`, `reports/training/phase07/ablation_table.md` |
+| [GW-REC-023](#gw-rec-023) | 2026-10-25 | 07 | Phase 7 combination without the encoder change: CRNN at input height 48 with weight decay 1e-2 (short budget, vs GW-REC-003) | abandoned | not run: GW-REC-022 settled the question (see entry) | — |
+| [GW-REC-024](#gw-rec-024) | 2026-10-26 | 07 | Phase 7 full-budget confirmation: GW-REC-022's recipe at GW-REC-001's budget (30 epochs, one seed), vs GW-REC-001 | done | val CER 6.46% [6.33, 6.60]; -1.07 [-1.13, -1.01] vs GW-REC-001 | `reports/training/GW-REC-024/`, `reports/training/compare/GW-REC-024_vs_GW-REC-001.md` |
 | [GW-DET-001](#gw-det-001) | 2026-10-25 | 08 | GLYPHARIS-Det baseline: DBNet-style, MobileNetV3-Large, ImageNet init, HierText pages (control for H9 and H10) | done | full val F1@0.5 0.724 [0.708, 0.739] (P 0.924, R 0.595) | `reports/training/GW-DET-001/` |
-| [GW-DET-002](#gw-det-002) | 2026-10-25 | 08 | GW-DET-001 with a randomly initialised backbone (H9: ImageNet vs scratch, exploratory) | done | full val F1@0.5 0.704 [0.689, 0.719]; −0.020 [−0.023, −0.016] vs GW-DET-001: H9 supported | `reports/training/GW-DET-002/` |
-| [GW-DET-003](#gw-det-003) | 2026-10-25 | 08 | GW-DET-001 with a MobileNetV3-Small backbone (H10: Small within 0.03 F1@0.5 of Large, exploratory) | done | full val F1@0.5 0.668 [0.651, 0.685]; −0.056 [−0.062, −0.051] vs GW-DET-001: H10 not supported | `reports/training/GW-DET-003/` |
+| [GW-DET-002](#gw-det-002) | 2026-10-25 | 08 | GW-DET-001 with a randomly initialised backbone (H9: ImageNet vs scratch, exploratory) | done | full val F1@0.5 0.704 [0.689, 0.719]; −0.020 [−0.023, −0.016] vs GW-DET-001: H9 supported | `reports/training/GW-DET-002/`, `reports/training/GW-DET-001_vs_GW-DET-002.md` |
+| [GW-DET-003](#gw-det-003) | 2026-10-25 | 08 | GW-DET-001 with a MobileNetV3-Small backbone (H10: Small within 0.03 F1@0.5 of Large, exploratory) | done | full val F1@0.5 0.668 [0.651, 0.685]; −0.056 [−0.062, −0.051] vs GW-DET-001: H10 not supported | `reports/training/GW-DET-003/`, `reports/training/GW-DET-001_vs_GW-DET-003.md` |
 | [GW-DET-004](#gw-det-004) | 2026-10-27 | 09 | GW-DET-001 with post-processing calibrated on validation half A, checked on half B (no retraining) | done | half B F1@0.5 0.754 [0.728, 0.775]; +0.032 [+0.025, +0.039] vs the record: adopted | `reports/error_cases/detector/` |
-| [GW-EFF-001](#gw-eff-001) | 2026-10-27 | 09 | GW-DET-001 detector CPU latency at five input resolutions (PyTorch, batch 1) | done | detector 203 ms mean per page at 1280; long sides up to 1536 fit the page target | `reports/efficiency/` |
+| [GW-EFF-001](#gw-eff-001) | 2026-10-27 | 09 | GW-DET-001 detector CPU latency at five input resolutions (PyTorch, batch 1) | done | detector alone 203 ms mean per page at 1280, inside the page target; long sides up to 1536 fit it only on an estimate (+24.4 ms per box), and the measured whole pipeline misses it (GW-EFF-002) | `reports/efficiency/` |
 | [GW-DET-005](#gw-det-005) | 2026-10-27 | 09 | GW-DET-001 at the best input resolution that fits ADR-0011's page target (no retraining) | done | half B +0.018 [+0.013, +0.022] vs 1280: 1536 adopted; full val F1@0.5 0.778 [0.762, 0.792] | `reports/error_cases/detector/` |
 | [GW-DET-006](#gw-det-006) | 2026-10-27 | 09 | Box shape `quad` vs `poly` on validation and its curved lines (RISK_REGISTER R-22) | done | no curved lines in HierText validation (all 4-point); quad kept; R-22 stays open | `reports/error_cases/detector/` |
 | [GW-E2E-003](#gw-e2e-003) | 2026-10-28 | 10 | Line-confidence calibration: temperature fitted on validation half A, ECE on half B (H8) | done | ECE half B 0.217 → 0.089 at T = 2.35 (−0.128 [−0.133, −0.124]): adopted; H8 supported on validation | `reports/calibration/GW-E2E-003/` |
@@ -52,46 +52,46 @@ Rows link to a full entry below. Numbers are copied from generated reports only,
 | [GW-EFF-003](#gw-eff-003) | 2026-10-28 | 17 | ONNX equivalence of the v0.1 bundle against PyTorch on validation data | done | maps 7.3e-6, logits 3.7e-4, text identical on 5,000 lines, page CER equal: export successful | `reports/export/GW-EFF-003/` |
 | [GW-EFF-004](#gw-eff-004) | 2026-10-28 | 17 | Whole-pipeline CPU page time on ONNX Runtime (ADR-0011's measurement) | done | ONNX page mean 5.5 s, p95 12.7 s, 11.2 GB: misses ADR-0011 by far (recognizer); PyTorch default for v0.1 | `reports/efficiency/` |
 | [GW-E2E-004](#gw-e2e-004) | 2026-10-28 | 18 | The installed package (v0.1 bundle, ONNX) against the Phase 10 pipeline on the Phase 5 validation pages | done | page CER 24.33% vs 24.33% (+0.001 points), 16,827/16,835 lines identical: pass | `reports/package/` |
-| [GW-DATA-001](#gw-data-001) | 2026-10-28 | 11 | Phase 11 arm A (no augmentation), seed 2024: GW-REC-015 with the seed changed | done | val CER 8.62% [8.46, 8.78]; GLYPH-C mCE 10.14% (arm A: control) | `reports/training/GW-DATA-001/` |
-| [GW-DATA-002](#gw-data-002) | 2026-10-28 | 11 | Phase 11 arm A (no augmentation), seed 7: GW-REC-015 with the seed changed | done | val CER 8.69% [8.53, 8.86]; GLYPH-C mCE 10.28% (arm A: control) | `reports/training/GW-DATA-002/` |
-| [GW-DATA-003](#gw-data-003) | 2026-10-28 | 11 | Phase 11 arm B (geometric augmentation), seed 2024: GW-REC-016 with the seed changed | done | val CER 8.29% [8.13, 8.45]; GLYPH-C mCE 8.51% (arm B: helps) | `reports/training/GW-DATA-003/` |
-| [GW-DATA-004](#gw-data-004) | 2026-10-28 | 11 | Phase 11 arm B (geometric augmentation), seed 7: GW-REC-016 with the seed changed | done | val CER 8.38% [8.23, 8.55]; GLYPH-C mCE 8.76% (arm B: helps) | `reports/training/GW-DATA-004/` |
-| [GW-DATA-005](#gw-data-005) | 2026-10-28 | 11 | Phase 11 arm C (photometric augmentation), seed 2024: GW-REC-017 with the seed changed | done | val CER 8.55% [8.39, 8.71]; GLYPH-C mCE 10.19% (arm C: no clear effect) | `reports/training/GW-DATA-005/` |
-| [GW-DATA-006](#gw-data-006) | 2026-10-28 | 11 | Phase 11 arm C (photometric augmentation), seed 7: GW-REC-017 with the seed changed | done | val CER 8.56% [8.40, 8.73]; GLYPH-C mCE 10.32% (arm C: no clear effect) | `reports/training/GW-DATA-006/` |
-| [GW-DATA-007](#gw-data-007) | 2026-10-28 | 11 | Phase 11 arm D (degradation augmentation), seed 2024: GW-REC-018 with the seed changed | done | val CER 8.66% [8.50, 8.82]; GLYPH-C mCE 10.03% (arm D: helps) | `reports/training/GW-DATA-007/` |
-| [GW-DATA-008](#gw-data-008) | 2026-10-28 | 11 | Phase 11 arm D (degradation augmentation), seed 7: GW-REC-018 with the seed changed | done | val CER 8.70% [8.54, 8.87]; GLYPH-C mCE 10.04% (arm D: helps) | `reports/training/GW-DATA-008/` |
+| [GW-DATA-001](#gw-data-001) | 2026-10-28 | 11 | Phase 11 arm A (no augmentation), seed 2024: GW-REC-015 with the seed changed | done | val CER 8.62% [8.46, 8.78]; GLYPH-C mCE 10.14% (arm A: control) | `reports/training/GW-DATA-001/`, `reports/robustness/GW-DATA-001.json` |
+| [GW-DATA-002](#gw-data-002) | 2026-10-28 | 11 | Phase 11 arm A (no augmentation), seed 7: GW-REC-015 with the seed changed | done | val CER 8.69% [8.53, 8.86]; GLYPH-C mCE 10.28% (arm A: control) | `reports/training/GW-DATA-002/`, `reports/robustness/GW-DATA-002.json` |
+| [GW-DATA-003](#gw-data-003) | 2026-10-28 | 11 | Phase 11 arm B (geometric augmentation), seed 2024: GW-REC-016 with the seed changed | done | val CER 8.29% [8.13, 8.45]; GLYPH-C mCE 8.51% (arm B: helps) | `reports/training/GW-DATA-003/`, `reports/robustness/GW-DATA-003.json` |
+| [GW-DATA-004](#gw-data-004) | 2026-10-28 | 11 | Phase 11 arm B (geometric augmentation), seed 7: GW-REC-016 with the seed changed | done | val CER 8.38% [8.23, 8.55]; GLYPH-C mCE 8.76% (arm B: helps) | `reports/training/GW-DATA-004/`, `reports/robustness/GW-DATA-004.json` |
+| [GW-DATA-005](#gw-data-005) | 2026-10-28 | 11 | Phase 11 arm C (photometric augmentation), seed 2024: GW-REC-017 with the seed changed | done | val CER 8.55% [8.39, 8.71]; GLYPH-C mCE 10.19% (arm C: no clear effect) | `reports/training/GW-DATA-005/`, `reports/robustness/GW-DATA-005.json` |
+| [GW-DATA-006](#gw-data-006) | 2026-10-28 | 11 | Phase 11 arm C (photometric augmentation), seed 7: GW-REC-017 with the seed changed | done | val CER 8.56% [8.40, 8.73]; GLYPH-C mCE 10.32% (arm C: no clear effect) | `reports/training/GW-DATA-006/`, `reports/robustness/GW-DATA-006.json` |
+| [GW-DATA-007](#gw-data-007) | 2026-10-28 | 11 | Phase 11 arm D (degradation augmentation), seed 2024: GW-REC-018 with the seed changed | done | val CER 8.66% [8.50, 8.82]; GLYPH-C mCE 10.03% (arm D: helps) | `reports/training/GW-DATA-007/`, `reports/robustness/GW-DATA-007.json` |
+| [GW-DATA-008](#gw-data-008) | 2026-10-28 | 11 | Phase 11 arm D (degradation augmentation), seed 7: GW-REC-018 with the seed changed | done | val CER 8.70% [8.54, 8.87]; GLYPH-C mCE 10.04% (arm D: helps) | `reports/training/GW-DATA-008/`, `reports/robustness/GW-DATA-008.json` |
 | [GW-DATA-009](#gw-data-009) | 2026-10-28 | 11 | Phase 11 robustness: the 15 arm runs on GLYPH-C v1 (mCE), paired comparison against arm A, verdict per family (H3) | done | ΔmCE vs no augmentation: geometric −1.67 [−1.73, −1.62], photometric −0.06 [−0.08, −0.02], degradation −0.25 [−0.30, −0.19], full −1.83 [−1.90, −1.75] points; H3 supported | `reports/robustness/` |
-| [GW-DATA-010](#gw-data-010) | 2026-10-29 | 12 | Phase 12 arm +25K: HierText + 25,000 GlyphSynth lines at the control's step budget, seed 1337 | done | val CER 8.29% [8.14, 8.46]; document slice 11.18% (arm +25K: no clear effect) | `reports/training/GW-DATA-010/` |
-| [GW-DATA-011](#gw-data-011) | 2026-10-29 | 12 | Phase 12 arm +25K: HierText + 25,000 GlyphSynth lines at the control's step budget, seed 2024 | done | val CER 8.29% [8.12, 8.46]; document slice 11.05% (arm +25K: no clear effect) | `reports/training/GW-DATA-011/` |
-| [GW-DATA-012](#gw-data-012) | 2026-10-29 | 12 | Phase 12 arm +25K: HierText + 25,000 GlyphSynth lines at the control's step budget, seed 7 | done | val CER 8.28% [8.12, 8.44]; document slice 11.05% (arm +25K: no clear effect) | `reports/training/GW-DATA-012/` |
-| [GW-DATA-013](#gw-data-013) | 2026-10-29 | 12 | Phase 12 arm +50K: HierText + 50,000 GlyphSynth lines at the control's step budget, seed 1337 | done | val CER 8.30% [8.15, 8.46]; document slice 11.18% (arm +50K: hurts) | `reports/training/GW-DATA-013/` |
-| [GW-DATA-014](#gw-data-014) | 2026-10-29 | 12 | Phase 12 arm +100K: HierText + 100,000 GlyphSynth lines at the control's step budget, seed 1337 | done | val CER 8.39% [8.24, 8.56]; document slice 11.22% (arm +100K: hurts) | `reports/training/GW-DATA-014/` |
-| [GW-DATA-015](#gw-data-015) | 2026-10-29 | 12 | Phase 12 arm +100K: HierText + 100,000 GlyphSynth lines at the control's step budget, seed 2024 | done | val CER 8.38% [8.22, 8.54]; document slice 11.22% (arm +100K: hurts) | `reports/training/GW-DATA-015/` |
-| [GW-DATA-016](#gw-data-016) | 2026-10-29 | 12 | Phase 12 arm +100K: HierText + 100,000 GlyphSynth lines at the control's step budget, seed 7 | done | val CER 8.36% [8.21, 8.53]; document slice 11.21% (arm +100K: hurts) | `reports/training/GW-DATA-016/` |
-| [GW-DATA-017](#gw-data-017) | 2026-10-29 | 12 | Phase 12 arm +250K: HierText + 250,000 GlyphSynth lines at the control's step budget, seed 1337 | done | val CER 8.58% [8.42, 8.75]; document slice 11.46% (arm +250K: hurts) | `reports/training/GW-DATA-017/` |
-| [GW-DATA-018](#gw-data-018) | 2026-10-29 | 12 | Phase 12 arm +250K: HierText + 250,000 GlyphSynth lines at the control's step budget, seed 2024 | done | val CER 8.57% [8.40, 8.74]; document slice 11.49% (arm +250K: hurts) | `reports/training/GW-DATA-018/` |
-| [GW-DATA-019](#gw-data-019) | 2026-10-29 | 12 | Phase 12 arm +250K: HierText + 250,000 GlyphSynth lines at the control's step budget, seed 7 | done | val CER 8.52% [8.36, 8.69]; document slice 11.38% (arm +250K: hurts) | `reports/training/GW-DATA-019/` |
-| [GW-DATA-020](#gw-data-020) | 2026-10-29 | 12 | Phase 12 arm +100K, 6 fonts: HierText + 100,000 (6 font families) GlyphSynth lines at the control's step budget, seed 1337 | done | val CER 8.40% [8.24, 8.56]; document slice 11.13% (arm +100K, 6 fonts: no clear effect) | `reports/training/GW-DATA-020/` |
-| [GW-DATA-021](#gw-data-021) | 2026-10-29 | 12 | Phase 12 arm +100K, no capture: HierText + 100,000 (no capture effects) GlyphSynth lines at the control's step budget, seed 1337 | done | val CER 8.38% [8.22, 8.54]; document slice 11.09% (arm +100K, no capture: no clear effect) | `reports/training/GW-DATA-021/` |
+| [GW-DATA-010](#gw-data-010) | 2026-10-29 | 12 | Phase 12 arm +25K: HierText + 25,000 GlyphSynth lines at the control's step budget, seed 1337 | done | val CER 8.29% [8.14, 8.46]; document slice 11.18% (arm +25K: no clear effect) | `reports/training/GW-DATA-010/`, `reports/synthetic/phase12_comparison.json` |
+| [GW-DATA-011](#gw-data-011) | 2026-10-29 | 12 | Phase 12 arm +25K: HierText + 25,000 GlyphSynth lines at the control's step budget, seed 2024 | done | val CER 8.29% [8.12, 8.46]; document slice 11.05% (arm +25K: no clear effect) | `reports/training/GW-DATA-011/`, `reports/synthetic/phase12_comparison.json` |
+| [GW-DATA-012](#gw-data-012) | 2026-10-29 | 12 | Phase 12 arm +25K: HierText + 25,000 GlyphSynth lines at the control's step budget, seed 7 | done | val CER 8.28% [8.12, 8.44]; document slice 11.05% (arm +25K: no clear effect) | `reports/training/GW-DATA-012/`, `reports/synthetic/phase12_comparison.json` |
+| [GW-DATA-013](#gw-data-013) | 2026-10-29 | 12 | Phase 12 arm +50K: HierText + 50,000 GlyphSynth lines at the control's step budget, seed 1337 | done | val CER 8.30% [8.15, 8.46]; document slice 11.18% (arm +50K: hurts) | `reports/training/GW-DATA-013/`, `reports/synthetic/phase12_comparison.json` |
+| [GW-DATA-014](#gw-data-014) | 2026-10-29 | 12 | Phase 12 arm +100K: HierText + 100,000 GlyphSynth lines at the control's step budget, seed 1337 | done | val CER 8.39% [8.24, 8.56]; document slice 11.22% (arm +100K: hurts) | `reports/training/GW-DATA-014/`, `reports/synthetic/phase12_comparison.json` |
+| [GW-DATA-015](#gw-data-015) | 2026-10-29 | 12 | Phase 12 arm +100K: HierText + 100,000 GlyphSynth lines at the control's step budget, seed 2024 | done | val CER 8.38% [8.22, 8.54]; document slice 11.22% (arm +100K: hurts) | `reports/training/GW-DATA-015/`, `reports/synthetic/phase12_comparison.json` |
+| [GW-DATA-016](#gw-data-016) | 2026-10-29 | 12 | Phase 12 arm +100K: HierText + 100,000 GlyphSynth lines at the control's step budget, seed 7 | done | val CER 8.36% [8.21, 8.53]; document slice 11.21% (arm +100K: hurts) | `reports/training/GW-DATA-016/`, `reports/synthetic/phase12_comparison.json` |
+| [GW-DATA-017](#gw-data-017) | 2026-10-29 | 12 | Phase 12 arm +250K: HierText + 250,000 GlyphSynth lines at the control's step budget, seed 1337 | done | val CER 8.58% [8.42, 8.75]; document slice 11.46% (arm +250K: hurts) | `reports/training/GW-DATA-017/`, `reports/synthetic/phase12_comparison.json` |
+| [GW-DATA-018](#gw-data-018) | 2026-10-29 | 12 | Phase 12 arm +250K: HierText + 250,000 GlyphSynth lines at the control's step budget, seed 2024 | done | val CER 8.57% [8.40, 8.74]; document slice 11.49% (arm +250K: hurts) | `reports/training/GW-DATA-018/`, `reports/synthetic/phase12_comparison.json` |
+| [GW-DATA-019](#gw-data-019) | 2026-10-29 | 12 | Phase 12 arm +250K: HierText + 250,000 GlyphSynth lines at the control's step budget, seed 7 | done | val CER 8.52% [8.36, 8.69]; document slice 11.38% (arm +250K: hurts) | `reports/training/GW-DATA-019/`, `reports/synthetic/phase12_comparison.json` |
+| [GW-DATA-020](#gw-data-020) | 2026-10-29 | 12 | Phase 12 arm +100K, 6 fonts: HierText + 100,000 (6 font families) GlyphSynth lines at the control's step budget, seed 1337 | done | val CER 8.40% [8.24, 8.56]; document slice 11.13% (arm +100K, 6 fonts: no clear effect) | `reports/training/GW-DATA-020/`, `reports/synthetic/phase12_comparison.json` |
+| [GW-DATA-021](#gw-data-021) | 2026-10-29 | 12 | Phase 12 arm +100K, no capture: HierText + 100,000 (no capture effects) GlyphSynth lines at the control's step budget, seed 1337 | done | val CER 8.38% [8.22, 8.54]; document slice 11.09% (arm +100K, no capture: no clear effect) | `reports/training/GW-DATA-021/`, `reports/synthetic/phase12_comparison.json` |
 | [GW-DATA-022](#gw-data-022) | 2026-10-29 | 12 | Phase 12 comparison: the synthetic arms against HierText only on the document slice (H2′a), and the font and capture factors (H2′b) | done | document slice vs HierText only: +25K +0.04 [−0.03, +0.11], +100K +0.16 [+0.06, +0.26], +250K +0.39 [+0.25, +0.52]; H2′a and H2′b not supported | `reports/synthetic/` |
-| [GW-REC-025](#gw-rec-025) | 2026-10-30 | 13 | Phase 13 L3 (+ input height 48), seed 2024: GW-REC-006 with the seed changed | done | val CER 7.82% [7.67, 7.98]; GLYPH-C mCE 6.78% | `reports/training/GW-REC-025/` |
-| [GW-REC-026](#gw-rec-026) | 2026-10-30 | 13 | Phase 13 L3 (+ input height 48), seed 7: GW-REC-006 with the seed changed | done | val CER 7.83% [7.68, 7.99]; GLYPH-C mCE 6.84% | `reports/training/GW-REC-026/` |
-| [GW-REC-027](#gw-rec-027) | 2026-10-30 | 13 | Phase 13 L4 (full model), seed 2024: GW-REC-022 with the seed changed | done | val CER 7.59% [7.44, 7.74]; GLYPH-C mCE 6.25% | `reports/training/GW-REC-027/` |
-| [GW-REC-028](#gw-rec-028) | 2026-10-30 | 13 | Phase 13 L4 (full model), seed 7: GW-REC-022 with the seed changed | done | val CER 7.56% [7.41, 7.72]; GLYPH-C mCE 6.33% | `reports/training/GW-REC-028/` |
-| [GW-REC-029](#gw-rec-029) | 2026-10-30 | 13 | Phase 13 L5 (+ wider rotation), seed 1337: GW-REC-022 with rotation up to ±4° on half the lines | done | val CER 7.48% [7.34, 7.64]; GLYPH-C mCE 4.84% | `reports/training/GW-REC-029/` |
-| [GW-REC-030](#gw-rec-030) | 2026-10-30 | 13 | Phase 13 L5 (+ wider rotation), seed 2024: GW-REC-022 with rotation up to ±4° on half the lines | done | val CER 7.43% [7.28, 7.58]; GLYPH-C mCE 4.79% | `reports/training/GW-REC-030/` |
-| [GW-REC-031](#gw-rec-031) | 2026-10-30 | 13 | Phase 13 L5 (+ wider rotation), seed 7: GW-REC-022 with rotation up to ±4° on half the lines | done | val CER 7.44% [7.30, 7.60]; GLYPH-C mCE 4.78% | `reports/training/GW-REC-031/` |
-| [GW-REC-032](#gw-rec-032) | 2026-10-30 | 13 | Phase 13 final, option A, seed 2024: GW-REC-024 with the seed changed (trained only for option A) | not run | option B was chosen (GW-REC-037) | `reports/training/GW-REC-032/` |
-| [GW-REC-033](#gw-rec-033) | 2026-10-30 | 13 | Phase 13 final, option A, seed 7: GW-REC-024 with the seed changed (trained only for option A) | not run | option B was chosen (GW-REC-037) | `reports/training/GW-REC-033/` |
-| [GW-REC-034](#gw-rec-034) | 2026-10-30 | 13 | Phase 13 final, option B, seed 1337: GW-REC-024 with L5's rotation (trained only for option B) | done | val CER 6.30% [6.17, 6.44]; GLYPH-C mCE 3.54% | `reports/training/GW-REC-034/` |
-| [GW-REC-035](#gw-rec-035) | 2026-10-30 | 13 | Phase 13 final, option B, seed 2024: GW-REC-024 with L5's rotation (trained only for option B) | done | val CER 6.28% [6.15, 6.42]; GLYPH-C mCE 3.53% | `reports/training/GW-REC-035/` |
-| [GW-REC-036](#gw-rec-036) | 2026-10-30 | 13 | Phase 13 final, option B, seed 7: GW-REC-024 with L5's rotation (trained only for option B) | done | val CER 6.30% [6.17, 6.44]; GLYPH-C mCE 3.53% | `reports/training/GW-REC-036/` |
-| [GW-DET-007](#gw-det-007) | 2026-10-30 | 13 | GW-DET-001 with labels for smaller text (min_text_size 3) and training rotation up to 30° (Phase 9's deferred fixes) | done | F1@0.5 0.7668 vs 0.7779 (−0.0111 [−0.0146, −0.0075]): not adopted | `reports/training/GW-DET-007/` |
+| [GW-REC-025](#gw-rec-025) | 2026-10-30 | 13 | Phase 13 L3 (+ input height 48), seed 2024: GW-REC-006 with the seed changed | done | val CER 7.82% [7.67, 7.98]; GLYPH-C mCE 6.78% | `reports/training/GW-REC-025/`, `reports/robustness/GW-REC-025.json` |
+| [GW-REC-026](#gw-rec-026) | 2026-10-30 | 13 | Phase 13 L3 (+ input height 48), seed 7: GW-REC-006 with the seed changed | done | val CER 7.83% [7.68, 7.99]; GLYPH-C mCE 6.84% | `reports/training/GW-REC-026/`, `reports/robustness/GW-REC-026.json` |
+| [GW-REC-027](#gw-rec-027) | 2026-10-30 | 13 | Phase 13 L4 (full model), seed 2024: GW-REC-022 with the seed changed | done | val CER 7.59% [7.44, 7.74]; GLYPH-C mCE 6.25% | `reports/training/GW-REC-027/`, `reports/robustness/GW-REC-027.json` |
+| [GW-REC-028](#gw-rec-028) | 2026-10-30 | 13 | Phase 13 L4 (full model), seed 7: GW-REC-022 with the seed changed | done | val CER 7.56% [7.41, 7.72]; GLYPH-C mCE 6.33% | `reports/training/GW-REC-028/`, `reports/robustness/GW-REC-028.json` |
+| [GW-REC-029](#gw-rec-029) | 2026-10-30 | 13 | Phase 13 L5 (+ wider rotation), seed 1337: GW-REC-022 with rotation up to ±4° on half the lines | done | val CER 7.48% [7.34, 7.64]; GLYPH-C mCE 4.84% | `reports/training/GW-REC-029/`, `reports/robustness/GW-REC-029.json` |
+| [GW-REC-030](#gw-rec-030) | 2026-10-30 | 13 | Phase 13 L5 (+ wider rotation), seed 2024: GW-REC-022 with rotation up to ±4° on half the lines | done | val CER 7.43% [7.28, 7.58]; GLYPH-C mCE 4.79% | `reports/training/GW-REC-030/`, `reports/robustness/GW-REC-030.json` |
+| [GW-REC-031](#gw-rec-031) | 2026-10-30 | 13 | Phase 13 L5 (+ wider rotation), seed 7: GW-REC-022 with rotation up to ±4° on half the lines | done | val CER 7.44% [7.30, 7.60]; GLYPH-C mCE 4.78% | `reports/training/GW-REC-031/`, `reports/robustness/GW-REC-031.json` |
+| [GW-REC-032](#gw-rec-032) | 2026-10-30 | 13 | Phase 13 final, option A, seed 2024: GW-REC-024 with the seed changed (trained only for option A) | not run | option B was chosen (GW-REC-037) | — |
+| [GW-REC-033](#gw-rec-033) | 2026-10-30 | 13 | Phase 13 final, option A, seed 7: GW-REC-024 with the seed changed (trained only for option A) | not run | option B was chosen (GW-REC-037) | — |
+| [GW-REC-034](#gw-rec-034) | 2026-10-30 | 13 | Phase 13 final, option B, seed 1337: GW-REC-024 with L5's rotation (trained only for option B) | done | val CER 6.30% [6.17, 6.44]; GLYPH-C mCE 3.54% | `reports/training/GW-REC-034/`, `reports/robustness/GW-REC-034.json` |
+| [GW-REC-035](#gw-rec-035) | 2026-10-30 | 13 | Phase 13 final, option B, seed 2024: GW-REC-024 with L5's rotation (trained only for option B) | done | val CER 6.28% [6.15, 6.42]; GLYPH-C mCE 3.53% | `reports/training/GW-REC-035/`, `reports/robustness/GW-REC-035.json` |
+| [GW-REC-036](#gw-rec-036) | 2026-10-30 | 13 | Phase 13 final, option B, seed 7: GW-REC-024 with L5's rotation (trained only for option B) | done | val CER 6.30% [6.17, 6.44]; GLYPH-C mCE 3.53% | `reports/training/GW-REC-036/`, `reports/robustness/GW-REC-036.json` |
+| [GW-DET-007](#gw-det-007) | 2026-10-30 | 13 | GW-DET-001 with labels for smaller text (min_text_size 3) and training rotation up to 30° (Phase 9's deferred fixes) | done | F1@0.5 0.7668 vs 0.7779 (−0.0111 [−0.0146, −0.0075]): not adopted | `reports/training/GW-DET-007/`, `reports/error_cases/detector/GW-DET-007/pair.json` |
 | [GW-REC-037](#gw-rec-037) | 2026-10-30 | 13 | Phase 13 ablation ladder (L0 to L5) and the final recognizer at the full budget | done | ladder L0 to L5 8.66 to 7.45%, L2 not kept; option B; final 6.29% vs 7.53% (−1.24 [−1.40, −1.11]) | `reports/ablation/` |
 | [GW-E2E-005](#gw-e2e-005) | 2026-11-14 | 13 | Line-confidence calibration of the frozen recognizer GW-REC-034, as GW-E2E-003 | done | ECE half B 0.214 → 0.089 at T = 2.35 (−0.125 [−0.130, −0.122]): adopted | `reports/calibration/GW-E2E-005/` |
 | [GW-E2E-006](#gw-e2e-006) | 2026-11-15 | 14 | The frozen v1 pipeline on HierText validation: Phase 14's reference | done | bag-of-lines page CER 27.57%, E2E F1 58.24% (all 1,715 validation pages) | `reports/external/` |
 | [GW-REC-038](#gw-rec-038) | 2026-11-15 | 14 | The frozen recognizer on the HierText validation evaluation crops (H5′'s reference) | done | 6.51% CER strict, 74,500 crops | `reports/external/` |
-| [GW-EFF-005](#gw-eff-005) | 2026-11-15 | 14 | v1 CPU page latency against PP-OCRv5 mobile in one sitting (H1′ latency) | done | 2,446.7 against 2,954.8 ms per page, −508.1 [−737.7, −256.5] ms | `reports/external/GW-EFF-005/` |
+| [GW-EFF-005](#gw-eff-005) | 2026-11-15 | 14 | v1 CPU page latency against PP-OCRv5 mobile in one sitting (H1′ latency) | done | 2,446.7 against 2,954.8 ms per page, −508.1 [−737.7, −256.5] ms | `reports/external/GW-EFF-005/`, `reports/external/results.json` |
 | [GW-REC-039](#gw-rec-039) | 2026-11-15 | 14 | The frozen recognizer on the test crop packs (H5′, H8′) | done | CER 6.03% HierText test, 4.17% GDC, 7.03% FUNSD; IIIT5K 91.47% words | `reports/external/` |
 | [GW-E2E-007](#gw-e2e-007) | 2026-11-15 | 14 | The frozen pipeline end to end on the test pages (H1′ CER) | done | bag-of-lines page CER 25.16% HierText test, 22.35% GDC | `reports/external/` |
 | [GW-E2E-008](#gw-e2e-008) | 2026-11-15 | 14 | Oracle run on GDC and GDC-scan, for H4 in Phase 15 | done | GDC bag-of-lines page CER 4.17% from ground-truth boxes | `reports/external/` |
@@ -109,7 +109,7 @@ Rows link to a full entry below. Numbers are copied from generated reports only,
 | [GW-EFF-011](#gw-eff-011) | 2026-11-17 | 16 | H6′'s latency: CRNN GW-REC-003 against SVTR GW-REC-020 in ONNX, per line | done | SVTR 32.01 against CRNN 10.16 ms per line, +16.78 [+12.02, +22.04] ms: H6′ not met | `reports/efficiency/phase16/` |
 | [GW-EFF-012](#gw-eff-012) | 2026-11-18 | 17 (v1) | The v1 bundle on the PyTorch backend against the Phase 16 PyTorch v1 references (the shipped path) | done | all four tolerances pass with no difference: map and logits 0.0, 5,000 of 5,000 lines identical, page CER 24.32% on both | `reports/export/GW-EFF-012/` |
 
-### GW-BASE-001 — Tesseract 5 (LSTM, eng): recognition and end to end
+### <a id="gw-base-001"></a>GW-BASE-001 — Tesseract 5 (LSTM, eng): recognition and end to end
 
 - **System:** Tesseract 5 (UB Mannheim build), `-l eng`, default engine; line crops with `--psm 7`, pages with the default page mode (`--psm 3`).
 - **Date allocated / run:** 2026-10-21 / 2026-10-22 to 2026-10-24
@@ -131,7 +131,7 @@ Rows link to a full entry below. Numbers are copied from generated reports only,
 - **Amendment (2026-11-15, Phase 14, before the runs):** the same system, runner, settings and scorer run on the Phase 14 sets as fixed in `docs/PHASE_STATUS.md` (Phase 14, item 4): IIIT5K, FUNSD and GDC-scan recognition; FUNSD and GDC-scan end to end; OmniDocBench end to end on all 755 English pages. Predictions and profiles go to `data/processed/baselines_phase14/GW-BASE-001/`; the Phase 5 files are re-scored once in GW-E2E-009, never re-run or rewritten.
 - **Result (Phase 14, 2026-11-17, GW-E2E-009):** strict track, `reports/external/`. IIIT5K 66.17% words (alphanumeric); FUNSD crops 18.48%, GDC-scan crops 2.48%; pages: FUNSD E2E F1 19.77% (bag-of-lines CER 111.81%), GDC-scan bag-of-lines CER 31.39% (order-aware 17.81%), OmniDocBench order-aware 15.70% [14.23, 17.37] and official text-block edit distance 0.0966, the best of all systems there.
 
-### GW-BASE-002 — PaddleOCR PP-OCRv5 mobile (det + English rec): recognition and end to end
+### <a id="gw-base-002"></a>GW-BASE-002 — PaddleOCR PP-OCRv5 mobile (det + English rec): recognition and end to end
 
 - **System:** PaddleOCR 3.7 with PP-OCRv5_mobile_det and en_PP-OCRv5_mobile_rec, CPU. Pipeline defaults except: document unwarping off (it moves the output polygons into the unwarped image's frame), and the text detector runs without oneDNN because Paddle 3.3's oneDNN path crashes on the PP-OCRv5 detectors on this machine. Recognizer outputs were checked to be identical with oneDNN on and off (64 of 64 GlyphSynth-val lines), so this is a speed-only change.
 - **Date allocated / run:** 2026-10-21 / 2026-10-21 to 2026-10-24
@@ -156,7 +156,7 @@ Rows link to a full entry below. Numbers are copied from generated reports only,
 - **Amendment (2026-11-17, Phase 16, before the run):** one fresh validation profile for H1′'s ONNX verdict (GW-EFF-010), with the same runner, settings and profiling path as the Phase 14 profile (every settings field asserted equal), through `scripts/run_baselines.py --phase 16` in `.venv-baselines`; output `data/processed/baselines_phase16/GW-BASE-002/`. No test data.
 - **Result (Phase 16, 2026-11-18, GW-EFF-010):** fresh 10-thread validation profile, the sitting's first (2026-11-17, 16:40:45 to 16:46:30Z), mains, Balanced plan, power mode "best performance" at start and end, every settings field equal to the Phase 14 profile's: 3,086.0 ms per page mean (`reports/efficiency/phase16/verdicts.md`, with the sitting times). The profile itself (`data/processed/baselines_phase16/GW-BASE-002/profile_ppocr_mobile_e2e_hiertext_val.json`) is not committed; its SHA-256 is in `reports/efficiency/phase16/results.json`.
 
-### GW-BASE-003 — PaddleOCR PP-OCRv5 server (det + rec): recognition and end to end
+### <a id="gw-base-003"></a>GW-BASE-003 — PaddleOCR PP-OCRv5 server (det + rec): recognition and end to end
 
 - **System:** PaddleOCR 3.7 with PP-OCRv5_server_det and PP-OCRv5_server_rec (no English-only server recognizer exists), CPU, same pipeline settings as GW-BASE-002. **Reduced scope:** the server recognizer needs about 1–3 s per line on this CPU, so it runs on GDC test (recognition and end to end) and HierText validation (recognition) only. HierText test and GlyphSynth val would add roughly 45 CPU-hours and are recorded as not run.
 - **Date allocated / run:** 2026-10-21 / 2026-10-24 to 2026-10-25
@@ -178,7 +178,7 @@ Rows link to a full entry below. Numbers are copied from generated reports only,
 - **Amendment (2026-11-15, Phase 14, before the runs):** the same system, runner, settings and scorer run on the Phase 14 sets as fixed in `docs/PHASE_STATUS.md` (Phase 14, item 4): IIIT5K, FUNSD and GDC-scan recognition; FUNSD end to end; OmniDocBench end to end on the fixed 100-page subset (`data/manifests/processed/omnidocbench_subset100.json`). Not run: GDC-scan end to end (it died on GDC's photos of the same size, `research/failures.md`). Predictions and profiles go to `data/processed/baselines_phase14/GW-BASE-003/`; the Phase 5 files are re-scored once in GW-E2E-009, never re-run or rewritten.
 - **Result (Phase 14, 2026-11-17, GW-E2E-009):** strict track, `reports/external/`. IIIT5K 94.80% words; FUNSD crops 29.20%, GDC-scan crops 11.89%; FUNSD E2E F1 61.73%. OmniDocBench subset: not runnable (its detector dies on inputs above about 8 megapixels; `research/failures.md`, 2026-11-17), no substitute.
 
-### GW-BASE-004 — TrOCR-small-printed: recognition only
+### <a id="gw-base-004"></a>GW-BASE-004 — TrOCR-small-printed: recognition only
 
 - **System:** microsoft/trocr-small-printed, transformers on CPU, greedy decoding as in the checkpoint, with `max_new_tokens=256` because the checkpoint sets no length and transformers would otherwise stop at 20 tokens and cut long lines, and with the decoder cache on: the checkpoint ships `use_cache: false`, which re-runs the whole prefix at every step. A one-off setup check found identical outputs on 64 validation lines and about 2.3x faster decoding (an informal check, not a reported result; the profiling pass measures speed). It has no detector, so it is run on recognition only.
 - **Date allocated / run:** 2026-10-21 / 2026-10-23 to 2026-10-25
@@ -200,7 +200,7 @@ Rows link to a full entry below. Numbers are copied from generated reports only,
 - **Amendment (2026-11-15, Phase 14, before the runs):** the same system, runner, settings and scorer run on the Phase 14 sets as fixed in `docs/PHASE_STATUS.md` (Phase 14, item 4): IIIT5K, FUNSD and GDC-scan recognition (no detector). Predictions and profiles go to `data/processed/baselines_phase14/GW-BASE-004/`; the Phase 5 files are re-scored once in GW-E2E-009, never re-run or rewritten.
 - **Result (Phase 14, 2026-11-17, GW-E2E-009):** strict track, `reports/external/`. IIIT5K 71.13% words; crops FUNSD 48.13% strict (12.34% normalised), GDC-scan 75.09% strict (16.78% normalised).
 
-### GW-BASE-005 — PaddleOCR PP-OCRv6 tiny (det + rec): recognition and end to end
+### <a id="gw-base-005"></a>GW-BASE-005 — PaddleOCR PP-OCRv6 tiny (det + rec): recognition and end to end
 
 - **System:** PaddleOCR 3.7 with PP-OCRv6_tiny_det and PP-OCRv6_tiny_rec (multilingual recognizer: Chinese, English, Latin scripts), CPU, same pipeline settings and deviations as GW-BASE-002 (the v6 detectors crash under oneDNN too).
 - **Date allocated / run:** 2026-10-21 / 2026-10-22 to 2026-10-24
@@ -222,7 +222,7 @@ Rows link to a full entry below. Numbers are copied from generated reports only,
 - **Amendment (2026-11-15, Phase 14, before the runs):** the same system, runner, settings and scorer run on the Phase 14 sets as fixed in `docs/PHASE_STATUS.md` (Phase 14, item 4): IIIT5K, FUNSD and GDC-scan recognition; FUNSD and GDC-scan end to end; OmniDocBench end to end on all 755 English pages. Predictions and profiles go to `data/processed/baselines_phase14/GW-BASE-005/`; the Phase 5 files are re-scored once in GW-E2E-009, never re-run or rewritten.
 - **Result (Phase 14, 2026-11-17, GW-E2E-009):** strict track, `reports/external/`. IIIT5K 89.13% words; FUNSD crops 10.35%, GDC-scan crops 0.86%; pages: FUNSD E2E F1 59.29%, GDC-scan bag-of-lines CER 6.83%, OmniDocBench order-aware 60.62%.
 
-### GW-BASE-006 — PaddleOCR PP-OCRv6 small (det + rec): recognition and end to end
+### <a id="gw-base-006"></a>GW-BASE-006 — PaddleOCR PP-OCRv6 small (det + rec): recognition and end to end
 
 - **System:** PaddleOCR 3.7 with PP-OCRv6_small_det and PP-OCRv6_small_rec, CPU, same settings as GW-BASE-005.
 - **Date allocated / run:** 2026-10-21 / 2026-10-23 to 2026-10-24
@@ -244,7 +244,7 @@ Rows link to a full entry below. Numbers are copied from generated reports only,
 - **Amendment (2026-11-15, Phase 14, before the runs):** the same system, runner, settings and scorer run on the Phase 14 sets as fixed in `docs/PHASE_STATUS.md` (Phase 14, item 4): IIIT5K, FUNSD and GDC-scan recognition; FUNSD and GDC-scan end to end; OmniDocBench end to end on all 755 English pages. Predictions and profiles go to `data/processed/baselines_phase14/GW-BASE-006/`; the Phase 5 files are re-scored once in GW-E2E-009, never re-run or rewritten.
 - **Result (Phase 14, 2026-11-17, GW-E2E-009):** strict track, `reports/external/`. IIIT5K 96.43% words; FUNSD crops 9.30%, GDC-scan crops 0.37%; pages: FUNSD E2E F1 64.79%, GDC-scan bag-of-lines CER 6.68%, OmniDocBench order-aware 60.29%.
 
-### GW-BASE-007 — PaddleOCR PP-OCRv6 medium (PaddleOCR 3.7's English default): reduced scope
+### <a id="gw-base-007"></a>GW-BASE-007 — PaddleOCR PP-OCRv6 medium (PaddleOCR 3.7's English default): reduced scope
 
 - **System:** PaddleOCR 3.7 with PP-OCRv6_medium_det and PP-OCRv6_medium_rec, which is what `PaddleOCR(lang="en")` loads by default in 3.7. CPU, same settings as GW-BASE-005. **Reduced scope** for the same reason as GW-BASE-003 (about 1 s per line): GDC test recognition and end to end, HierText validation recognition.
 - **Date allocated / run:** 2026-10-21 / 2026-10-23 to 2026-10-24
@@ -266,7 +266,7 @@ Rows link to a full entry below. Numbers are copied from generated reports only,
 - **Amendment (2026-11-15, Phase 14, before the runs):** the same system, runner, settings and scorer run on the Phase 14 sets as fixed in `docs/PHASE_STATUS.md` (Phase 14, item 4): IIIT5K, FUNSD and GDC-scan recognition; FUNSD and GDC-scan end to end; OmniDocBench end to end on all 755 English pages. Predictions and profiles go to `data/processed/baselines_phase14/GW-BASE-007/`; the Phase 5 files are re-scored once in GW-E2E-009, never re-run or rewritten.
 - **Result (Phase 14, 2026-11-17, GW-E2E-009):** strict track, `reports/external/`. IIIT5K 97.13% words; FUNSD crops 17.91%, GDC-scan crops 0.48%; pages: FUNSD E2E F1 67.70%, GDC-scan bag-of-lines CER 4.94%, OmniDocBench order-aware 60.35%.
 
-### GW-REC-001 — CRNN baseline on HierText lines
+### <a id="gw-rec-001"></a>GW-REC-001 — CRNN baseline on HierText lines
 
 - **Date allocated / run:** 2026-10-22 / 2026-10-22 to 2026-10-23
 - **Phase:** 06
@@ -285,7 +285,7 @@ Rows link to a full entry below. Numbers are copied from generated reports only,
 - **Next experiment:** Phase 7: a longer schedule (the best epoch is the last), then the planned ablations.
 - **Training time:** 4.71 GPU-hours (RTX 4050 Laptop), 30 epochs.
 
-### GW-REC-002 — GW-REC-001 plus a small GlyphSynth mix
+### <a id="gw-rec-002"></a>GW-REC-002 — GW-REC-001 plus a small GlyphSynth mix
 
 - **Date allocated / run:** 2026-10-22 / 2026-10-23
 - **Phase:** 06
@@ -304,9 +304,9 @@ Rows link to a full entry below. Numbers are copied from generated reports only,
 - **Next experiment:** Phase 12 (GW-DATA-*): several GlyphSynth sizes and seeds, budget-matched, on the document-style slice.
 - **Training time:** 5.32 GPU-hours (RTX 4050 Laptop), 30 epochs, with one planned stop and resume.
 
-### GW-REC-003 — Phase 7 control, short budget, seed 1337
+### <a id="gw-rec-003"></a>GW-REC-003 — Phase 7 control, short budget, seed 1337
 
-- **Date allocated / run:** 2026-10-23 / —
+- **Date allocated / run:** 2026-10-23 / 2026-10-23
 - **Phase:** 07
 - **Git commit:** recorded in the run summary   **Config:** `configs/rec/gw-rec-003.yaml`   **Seed(s):** 1337
 - **Dataset version(s):** as GW-REC-001
@@ -323,9 +323,9 @@ Rows link to a full entry below. Numbers are copied from generated reports only,
 - **Next experiment:** the Phase 7 ablations against this control
 - **Training time:** 1.34 GPU-hours (RTX 4050 Laptop, bf16)
 
-### GW-REC-004 — Phase 7 control, short budget, seed 2024
+### <a id="gw-rec-004"></a>GW-REC-004 — Phase 7 control, short budget, seed 2024
 
-- **Date allocated / run:** 2026-10-23 / —
+- **Date allocated / run:** 2026-10-23 / 2026-10-23
 - **Phase:** 07
 - **Git commit:** recorded in the run summary   **Config:** `configs/rec/gw-rec-004.yaml`   **Seed(s):** 2024
 - **Dataset version(s):** as GW-REC-001
@@ -342,7 +342,7 @@ Rows link to a full entry below. Numbers are copied from generated reports only,
 - **Next experiment:** the Phase 7 ablations against this control
 - **Training time:** 1.31 GPU-hours (RTX 4050 Laptop, bf16)
 
-### GW-REC-005 — Phase 7 control, short budget, seed 7
+### <a id="gw-rec-005"></a>GW-REC-005 — Phase 7 control, short budget, seed 7
 
 - **Date allocated / run:** 2026-10-23 / 2026-10-23 to 2026-10-24
 - **Phase:** 07
@@ -361,7 +361,7 @@ Rows link to a full entry below. Numbers are copied from generated reports only,
 - **Next experiment:** the Phase 7 ablations against this control
 - **Training time:** 1.31 GPU-hours (RTX 4050 Laptop, bf16)
 
-### GW-REC-006 — Phase 7 ablation: input height 48
+### <a id="gw-rec-006"></a>GW-REC-006 — Phase 7 ablation: input height 48
 
 - **Date allocated / run:** 2026-10-23 / 2026-10-23 to 2026-10-24
 - **Phase:** 07
@@ -380,7 +380,7 @@ Rows link to a full entry below. Numbers are copied from generated reports only,
 - **Next experiment:** the Phase 7 combination and full-budget confirmation
 - **Training time:** 2.44 GPU-hours (RTX 4050 Laptop, bf16)
 
-### GW-REC-007 — Phase 7 ablation: CNN half as wide
+### <a id="gw-rec-007"></a>GW-REC-007 — Phase 7 ablation: CNN half as wide
 
 - **Date allocated / run:** 2026-10-23 / 2026-10-24
 - **Phase:** 07
@@ -399,7 +399,7 @@ Rows link to a full entry below. Numbers are copied from generated reports only,
 - **Next experiment:** the Phase 7 combination and full-budget confirmation
 - **Training time:** 0.95 GPU-hours (RTX 4050 Laptop, bf16)
 
-### GW-REC-008 — Phase 7 ablation: BiLSTM hidden 128
+### <a id="gw-rec-008"></a>GW-REC-008 — Phase 7 ablation: BiLSTM hidden 128
 
 - **Date allocated / run:** 2026-10-23 / 2026-10-24
 - **Phase:** 07
@@ -418,7 +418,7 @@ Rows link to a full entry below. Numbers are copied from generated reports only,
 - **Next experiment:** the Phase 7 combination and full-budget confirmation
 - **Training time:** 1.52 GPU-hours (RTX 4050 Laptop, bf16)
 
-### GW-REC-009 — Phase 7 ablation: one BiLSTM layer
+### <a id="gw-rec-009"></a>GW-REC-009 — Phase 7 ablation: one BiLSTM layer
 
 - **Date allocated / run:** 2026-10-23 / 2026-10-24
 - **Phase:** 07
@@ -437,7 +437,7 @@ Rows link to a full entry below. Numbers are copied from generated reports only,
 - **Next experiment:** the Phase 7 combination and full-budget confirmation
 - **Training time:** 1.45 GPU-hours (RTX 4050 Laptop, bf16)
 
-### GW-REC-010 — Phase 7 ablation: Adam
+### <a id="gw-rec-010"></a>GW-REC-010 — Phase 7 ablation: Adam
 
 - **Date allocated / run:** 2026-10-23 / 2026-10-24
 - **Phase:** 07
@@ -456,7 +456,7 @@ Rows link to a full entry below. Numbers are copied from generated reports only,
 - **Next experiment:** the Phase 7 combination and full-budget confirmation
 - **Training time:** 1.53 GPU-hours (RTX 4050 Laptop, bf16)
 
-### GW-REC-011 — Phase 7 ablation: cosine schedule
+### <a id="gw-rec-011"></a>GW-REC-011 — Phase 7 ablation: cosine schedule
 
 - **Date allocated / run:** 2026-10-23 / 2026-10-24
 - **Phase:** 07
@@ -475,7 +475,7 @@ Rows link to a full entry below. Numbers are copied from generated reports only,
 - **Next experiment:** the Phase 7 combination and full-budget confirmation
 - **Training time:** 1.40 GPU-hours (RTX 4050 Laptop, bf16)
 
-### GW-REC-012 — Phase 7 ablation: learning rate 5e-4
+### <a id="gw-rec-012"></a>GW-REC-012 — Phase 7 ablation: learning rate 5e-4
 
 - **Date allocated / run:** 2026-10-23 / 2026-10-25
 - **Phase:** 07
@@ -494,7 +494,7 @@ Rows link to a full entry below. Numbers are copied from generated reports only,
 - **Next experiment:** the Phase 7 combination and full-budget confirmation
 - **Training time:** 1.00 GPU-hours (RTX 4050 Laptop, bf16)
 
-### GW-REC-013 — Phase 7 ablation: learning rate 2e-3
+### <a id="gw-rec-013"></a>GW-REC-013 — Phase 7 ablation: learning rate 2e-3
 
 - **Date allocated / run:** 2026-10-23 / 2026-10-25
 - **Phase:** 07
@@ -513,7 +513,7 @@ Rows link to a full entry below. Numbers are copied from generated reports only,
 - **Next experiment:** the Phase 7 combination and full-budget confirmation
 - **Training time:** 0.96 GPU-hours (RTX 4050 Laptop, bf16)
 
-### GW-REC-014 — Phase 7 ablation: weight decay 1e-2
+### <a id="gw-rec-014"></a>GW-REC-014 — Phase 7 ablation: weight decay 1e-2
 
 - **Date allocated / run:** 2026-10-23 / 2026-10-25
 - **Phase:** 07
@@ -532,7 +532,7 @@ Rows link to a full entry below. Numbers are copied from generated reports only,
 - **Next experiment:** the Phase 7 combination and full-budget confirmation
 - **Training time:** 0.97 GPU-hours (RTX 4050 Laptop, bf16)
 
-### GW-REC-015 — Phase 7 ablation: no augmentation
+### <a id="gw-rec-015"></a>GW-REC-015 — Phase 7 ablation: no augmentation
 
 - **Date allocated / run:** 2026-10-23 / 2026-10-24
 - **Phase:** 07
@@ -551,7 +551,7 @@ Rows link to a full entry below. Numbers are copied from generated reports only,
 - **Next experiment:** the Phase 7 combination and full-budget confirmation
 - **Training time:** 1.16 GPU-hours (RTX 4050 Laptop, bf16)
 
-### GW-REC-016 — Phase 7 ablation: geometric augmentation only
+### <a id="gw-rec-016"></a>GW-REC-016 — Phase 7 ablation: geometric augmentation only
 
 - **Date allocated / run:** 2026-10-23 / 2026-10-24
 - **Phase:** 07
@@ -570,7 +570,7 @@ Rows link to a full entry below. Numbers are copied from generated reports only,
 - **Next experiment:** the Phase 7 combination and full-budget confirmation
 - **Training time:** 1.39 GPU-hours (RTX 4050 Laptop, bf16)
 
-### GW-REC-017 — Phase 7 ablation: photometric augmentation only
+### <a id="gw-rec-017"></a>GW-REC-017 — Phase 7 ablation: photometric augmentation only
 
 - **Date allocated / run:** 2026-10-23 / 2026-10-24
 - **Phase:** 07
@@ -589,7 +589,7 @@ Rows link to a full entry below. Numbers are copied from generated reports only,
 - **Next experiment:** the Phase 7 combination and full-budget confirmation
 - **Training time:** 1.16 GPU-hours (RTX 4050 Laptop, bf16)
 
-### GW-REC-018 — Phase 7 ablation: degradation augmentation only
+### <a id="gw-rec-018"></a>GW-REC-018 — Phase 7 ablation: degradation augmentation only
 
 - **Date allocated / run:** 2026-10-23 / 2026-10-24
 - **Phase:** 07
@@ -608,9 +608,9 @@ Rows link to a full entry below. Numbers are copied from generated reports only,
 - **Next experiment:** the Phase 7 combination and full-budget confirmation
 - **Training time:** 1.18 GPU-hours (RTX 4050 Laptop, bf16)
 
-### GW-REC-019 — Phase 7 ablation: frame stride 8
+### <a id="gw-rec-019"></a>GW-REC-019 — Phase 7 ablation: frame stride 8
 
-- **Date allocated / run:** 2026-10-23 / —
+- **Date allocated / run:** 2026-10-23 / 2026-10-24
 - **Phase:** 07
 - **Git commit:** recorded in the run summary   **Config:** `configs/rec/gw-rec-019.yaml`   **Seed(s):** 1337 (single seed: exploratory)
 - **Dataset version(s):** as GW-REC-001
@@ -621,13 +621,13 @@ Rows link to a full entry below. Numbers are copied from generated reports only,
 - **Variables:** independent: frame stride (8 instead of 4); controlled: everything else
 - **Control:** GW-REC-003 (seed spread: GW-REC-004, 005)
 - **Result:** failed. Out of GPU memory at step 1,444 of epoch 1, three times at the same batch (64 lines padded to 3,264 columns); see `research/failures.md`. No result; re-run as GW-REC-021.
-- **Training diagnostics:**
-- **Interpretation:**
+- **Training diagnostics:** not applicable (no epoch finished; `reports/training/GW-REC-019/report.md`)
+- **Interpretation:** not applicable (no result; the cause and the fix are in `research/failures.md`)
 - **Limitations:** single seed; short budget.
 - **Next experiment:** the Phase 7 combination and full-budget confirmation
-- **Training time:**
+- **Training time:** not applicable (no epoch finished)
 
-### GW-REC-020 — GLYPHARIS-Rec-M vs CRNN at matched budget (H6)
+### <a id="gw-rec-020"></a>GW-REC-020 — GLYPHARIS-Rec-M vs CRNN at matched budget (H6)
 
 - **Date allocated / run:** 2026-10-23 / 2026-10-23 to 2026-10-24
 - **Phase:** 07
@@ -648,7 +648,7 @@ Rows link to a full entry below. Numbers are copied from generated reports only,
 - **Next experiment:** if it is competitive, three seeds at the full budget
 - **Training time:** 4.64 GPU-hours (RTX 4050 Laptop, bf16)
 
-### GW-REC-021 — Phase 7 ablation: frame stride 8, CTC-aware batching (re-run of GW-REC-019)
+### <a id="gw-rec-021"></a>GW-REC-021 — Phase 7 ablation: frame stride 8, CTC-aware batching (re-run of GW-REC-019)
 
 - **Date allocated / run:** 2026-10-24 / 2026-10-25
 - **Phase:** 07
@@ -667,9 +667,9 @@ Rows link to a full entry below. Numbers are copied from generated reports only,
 - **Next experiment:** the Phase 7 combination and full-budget confirmation
 - **Training time:** 0.74 GPU-hours (RTX 4050 Laptop, bf16)
 
-### GW-REC-022 — Phase 7 combination: GLYPHARIS-Rec-M (SVTR) at input height 48, weight decay 1e-2
+### <a id="gw-rec-022"></a>GW-REC-022 — Phase 7 combination: GLYPHARIS-Rec-M (SVTR) at input height 48, weight decay 1e-2
 
-- **Date allocated / run:** 2026-10-25 / —
+- **Date allocated / run:** 2026-10-25 / 2026-10-25
 - **Phase:** 07
 - **Git commit:** recorded in the run summary   **Config:** `configs/rec/gw-rec-022.yaml`   **Seed(s):** 1337 (single seed: exploratory)
 - **Dataset version(s):** as GW-REC-001
@@ -680,14 +680,14 @@ Rows link to a full entry below. Numbers are copied from generated reports only,
 - **Variables:** independent: input height, encoder and weight decay together; batching follows from the height; controlled: everything else
 - **Control:** GW-REC-003 (seed spread: GW-REC-004, 005); GW-REC-006, GW-REC-014 and GW-REC-020 for the parts
 - **Amendment (2026-10-25, before the run):** GW-REC-014 (weight decay 1e-2 instead of 1e-4) finished after this entry was written and was judged better under the decision rule (−0.04 points [−0.08, −0.00], below all three control seeds; `reports/training/phase07/ablation_table.md`), so the combination includes it. Its gain is small and its CI touches zero at the second decimal, so this run cannot separate its share from the other two changes. GW-REC-021 (frame stride 8) cannot join an SVTR combination whatever its result: the SVTR encoder's frame stride is fixed at 4 (`model.frame_stride must be 4 for svtr`).
-- **Result:**
-- **Training diagnostics:**
-- **Interpretation:**
+- **Result:** val CER 7.56% [7.40, 7.71]; against GW-REC-003 -0.76 points [-0.81, -0.71] (paired bootstrap over lines, 1,000 resamples): **better** under the Phase 7 decision rule (`reports/training/phase07/ablation_table.md`). The interval is the ablation table's, as for the other Phase 7 arms; the run report prints [7.41, 7.72] for the same 7.56% (`reports/training/GW-REC-022/report.md`). Against GW-REC-006 -0.27 points [-0.32, -0.22] (`reports/training/compare/GW-REC-022_vs_GW-REC-006.md`) and against GW-REC-020 -0.62 [-0.67, -0.58] (`reports/training/compare/GW-REC-022_vs_GW-REC-020.md`). 8 epochs, 45,295 optimizer steps, the final epoch was the best; 7,928,835 parameters. CPU latency 22.8 ms mean and 51.5 ms p95 per line (PyTorch; `reports/training/phase07/cpu_latency.md`), inside ADR-0011's line target.
+- **Training diagnostics:** No flags raised. (`reports/training/GW-REC-022/report.md`)
+- **Interpretation:** the hypothesis of a gain below the sum did not hold (finding F3). The combination gains −0.76 points against the control, while input height 48 (−0.49), the SVTR-style encoder (−0.13) and weight decay (−0.04) add up to −0.66, and its CI lies below that sum. The parts are separate single-seed runs, so the excess over the sum has no interval of its own. Latency rose above GW-REC-020's 13.5 ms per line as expected, but stayed inside ADR-0011's line target. This is the configuration taken to the full-budget confirmation (GW-REC-024).
 - **Limitations:** single seed; short budget; micro-batches differ from the control's.
 - **Next experiment:** the full-budget confirmation of the chosen configuration
-- **Training time:**
+- **Training time:** 4.65 GPU-hours (RTX 4050 Laptop, bf16)
 
-### GW-REC-023 — Phase 7 combination without the encoder change: CRNN at input height 48, weight decay 1e-2
+### <a id="gw-rec-023"></a>GW-REC-023 — Phase 7 combination without the encoder change: CRNN at input height 48, weight decay 1e-2
 
 - **Date allocated / run:** 2026-10-25 / —
 - **Phase:** 07
@@ -699,14 +699,14 @@ Rows link to a full entry below. Numbers are copied from generated reports only,
 - **Method:** `python train.py --config configs/rec/gw-rec-023.yaml`; GW-REC-006 with `train.weight_decay: 1e-2`. Compared line by line with GW-REC-003 (the evidence table), with GW-REC-006 and with GW-REC-022 (`scripts/rec_compare.py`), and timed on the CPU with `scripts/rec_profile.py`.
 - **Variables:** independent: input height and weight decay together; batching as GW-REC-006; controlled: everything else
 - **Control:** GW-REC-003 (seed spread: GW-REC-004, 005); GW-REC-006 and GW-REC-014 for the parts; GW-REC-022 for the encoder
-- **Result:** not run (abandoned 2026-10-26, before it started). GW-REC-022 beat GW-REC-006 by −0.27 points [−0.32, −0.22] (`reports/training/compare/GW-REC-022_vs_GW-REC-006.md`), so the SVTR encoder's gain survives the combination; weight decay alone was worth −0.04 (GW-REC-014), so this run could only have isolated that small share. Its GPU time went to the full-budget confirmation instead.
-- **Training diagnostics:**
-- **Interpretation:**
+- **Result:** not run (abandoned 2026-10-26, before it started). GW-REC-022 beat GW-REC-006 by −0.27 points [−0.32, −0.22] (`reports/training/compare/GW-REC-022_vs_GW-REC-006.md`), so the SVTR encoder's gain survives the combination; weight decay alone was worth −0.04 (GW-REC-014), so this run could only have isolated that small share. Its GPU time went to the full-budget confirmation instead. Recorded in `research/failures.md`.
+- **Training diagnostics:** —
+- **Interpretation:** —
 - **Limitations:** single seed; short budget.
 - **Next experiment:** the full-budget confirmation of the chosen configuration
-- **Training time:**
+- **Training time:** —
 
-### GW-REC-024 — Phase 7 full-budget confirmation: GW-REC-022's recipe at 30 epochs
+### <a id="gw-rec-024"></a>GW-REC-024 — Phase 7 full-budget confirmation: GW-REC-022's recipe at 30 epochs
 
 - **Date allocated / run:** 2026-10-26 / 2026-10-26
 - **Phase:** 07
@@ -719,6 +719,7 @@ Rows link to a full entry below. Numbers are copied from generated reports only,
 - **Variables:** independent: the configuration (encoder, input height, weight decay together) at the full budget; controlled: data, budget, seed, schedule shape
 - **Control:** GW-REC-001
 - **Deviation from the plan:** the Phase 7 plan confirms the chosen configuration with three seeds. This run uses one, to stay within the 30–60 GPU-hour Phase 7 budget (about 35 GPU-hours used before it, about 17 for it). The full-budget seed spread is therefore not measured; the short-budget control seeds (8.30 to 8.32%) are the only seed-noise estimate. Owner decision (2026-10-26): keep one seed for v0.1; the two missing seeds (1337 is this run; 2024 and 7 as in the control) are added later, on a college A100 if access is granted, before the paper (Phase 21), each under its own ID and with the hardware recorded.
+- **Amendment (2026-11-18, Phase 21):** the promise above is closed for v1, without those runs. The two seeds were registered as GW-REC-032 (seed 2024) and GW-REC-033 (seed 7), Phase 13's option A. They were not run, because the ladder kept row L5 and option B was chosen (GW-REC-037). The final recognizer has three seeds at the full budget instead, GW-REC-034 to 036 (seeds 1337, 2024 and 7; validation CER 6.30, 6.28 and 6.30%, `reports/ablation/phase13_final.md`). GW-REC-024, the v0.1 recognizer, stays at one seed, and no registered run used an A100.
 - **Result:** val CER 6.46% [6.33, 6.60] (95% bootstrap CI over 73,888 lines); against GW-REC-001 (7.53%) -1.07 [-1.13, -1.01] points CER and -1.94 [-2.10, -1.79] points WER (paired, `reports/training/compare/GW-REC-024_vs_GW-REC-001.md`). 30 epochs, 169,860 optimizer steps; 7,928,835 parameters. CPU latency 24.4 ms mean and 60.3 ms p95 per line (PyTorch, idle machine; `reports/training/phase07/cpu_latency.md`): within ADR-0011's line target, with little margin on the mean.
 - **Training diagnostics:** No flags raised. One crash mid-run (CUDA "unknown error" at epoch 23 under memory pressure); the queue resumed it from its last checkpoint the same minute (`reports/training/GW-REC-024/report.md`, Notes).
 - **Interpretation:** the hypothesis holds: the configuration chosen on the short budget also wins at the full budget, by about 1.1 points of CER, more than its short-budget gain against the control (−0.76). It is the Phase 7 recognizer configuration for v0.1. Its CPU latency is the main cost: about 2.3 times the CRNN control's per line, just inside the target.
@@ -726,7 +727,7 @@ Rows link to a full entry below. Numbers are copied from generated reports only,
 - **Next experiment:** Phase 8 detector runs; the recognizer is exported in Phase 17.
 - **Training time:** 19.31 GPU-hours (RTX 4050 Laptop, bf16)
 
-### GW-DET-001 — GLYPHARIS-Det baseline: DBNet-style, MobileNetV3-Large, ImageNet init
+### <a id="gw-det-001"></a>GW-DET-001 — GLYPHARIS-Det baseline: DBNet-style, MobileNetV3-Large, ImageNet init
 
 - **Date allocated / run:** 2026-10-25 / 2026-10-26 to 2026-10-27
 - **Phase:** 08
@@ -756,7 +757,7 @@ Rows link to a full entry below. Numbers are copied from generated reports only,
 - **Next experiment:** GW-DET-002 and GW-DET-003 (H9, H10); then Phase 9, which works from this run's saved candidates and probability maps.
 - **Training time:** 4.86 GPU-hours of training (RTX 4050 Laptop, bf16); 5.74 h of GPU wall-clock including the sanity sequence, the resume check and the full-validation scoring (`reports/compute/ledger.md`).
 
-### GW-DET-002 — GW-DET-001 with a randomly initialised backbone (H9)
+### <a id="gw-det-002"></a>GW-DET-002 — GW-DET-001 with a randomly initialised backbone (H9)
 
 - **Date allocated / run:** 2026-10-25 / 2026-10-27
 - **Phase:** 08
@@ -776,7 +777,7 @@ Rows link to a full entry below. Numbers are copied from generated reports only,
 - **Next experiment:** if the owner rules out the ImageNet weight terms for a delivered detector (RISK_REGISTER R-05), this arm is the measured fallback.
 - **Training time:** 4.72 GPU-hours of training; 5.42 h GPU wall-clock with its sanity runs and full-validation scoring.
 
-### GW-DET-003 — GW-DET-001 with a MobileNetV3-Small backbone (H10)
+### <a id="gw-det-003"></a>GW-DET-003 — GW-DET-001 with a MobileNetV3-Small backbone (H10)
 
 - **Date allocated / run:** 2026-10-25 / 2026-10-27
 - **Phase:** 08
@@ -796,7 +797,7 @@ Rows link to a full entry below. Numbers are copied from generated reports only,
 - **Next experiment:** with H9, the evidence for choosing the detector backbone of v0.1.
 - **Training time:** 4.33 GPU-hours of training; 5.02 h GPU wall-clock with its dry run and full-validation scoring.
 
-### GW-DET-004 — Post-processing calibrated on validation
+### <a id="gw-det-004"></a>GW-DET-004 — Post-processing calibrated on validation
 
 - **Date allocated / run:** 2026-10-27 / 2026-10-27 to 2026-10-28
 - **Phase:** 09
@@ -813,7 +814,7 @@ Rows link to a full entry below. Numbers are copied from generated reports only,
 - **Limitations:** chosen and checked on two halves of one validation set from one checkpoint; the uint8 maps differ slightly from float maps, hence the float re-check.
 - **Next experiment:** GW-DET-005 uses the adopted setting.
 
-### GW-EFF-001 — Detector CPU latency by input resolution
+### <a id="gw-eff-001"></a>GW-EFF-001 — Detector CPU latency by input resolution
 
 - **Date allocated / run:** 2026-10-27 / 2026-10-28
 - **Phase:** 09
@@ -830,7 +831,7 @@ Rows link to a full entry below. Numbers are copied from generated reports only,
 - **Limitations:** PyTorch stands in for the Phase 17 ONNX Runtime build; recognition time is estimated from GW-REC-024's mean line time, not measured on the detected crops (Phase 10 measures the pipeline).
 - **Next experiment:** GW-DET-005's eligibility rule.
 
-### GW-DET-005 — Input resolution
+### <a id="gw-det-005"></a>GW-DET-005 — Input resolution
 
 - **Date allocated / run:** 2026-10-27 / 2026-10-28
 - **Phase:** 09
@@ -847,7 +848,7 @@ Rows link to a full entry below. Numbers are copied from generated reports only,
 - **Limitations:** the network was trained with scale jitter 0.5–2.0 around the 1280 scale, so other resolutions test its scale tolerance as much as resolution; post-processing is not re-tuned per resolution.
 - **Next experiment:** GW-DET-006 at the adopted resolution.
 
-### GW-DET-006 — Box shape: `quad` or `poly`
+### <a id="gw-det-006"></a>GW-DET-006 — Box shape: `quad` or `poly`
 
 - **Date allocated / run:** 2026-10-27 / 2026-10-28
 - **Phase:** 09
@@ -864,10 +865,11 @@ Rows link to a full entry below. Numbers are copied from generated reports only,
 - **Limitations:** HierText's curved lines stand in for GDC's phone-captured ones, which cannot be looked at before Phase 14.
 - **Next experiment:** Phase 10 uses the adopted detector settings.
 
-### GW-E2E-003 — Line-confidence calibration
+### <a id="gw-e2e-003"></a>GW-E2E-003 — Line-confidence calibration
 
 - **Date allocated / run:** 2026-10-28 / 2026-10-28
 - **Phase:** 10
+- **Superseded by:** GW-E2E-005, for the temperature v1 ships with (this run fitted it for GW-REC-024). H8's validation verdict stays with this run.
 - **Git commit:** recorded in the result file   **Config:** `configs/det/gw-det-001.yaml` with Phase 9's overrides; `runs/GW-REC-024/config.resolved.yaml`   **Seed(s):** none (no training)
 - **Dataset version(s):** HierText validation pages and lines as in GW-DET-001 and GW-REC-024
 - **Hardware:** RTX 4050 Laptop 6 GB for the validation runs; i7-14650HX CPU for GW-EFF-002
@@ -881,10 +883,11 @@ Rows link to a full entry below. Numbers are copied from generated reports only,
 - **Limitations:** fitted and checked on two halves of one validation set; exact match is a strict notion of right.
 - **Next experiment:** GW-E2E-001 records confidence at the fitted T too.
 
-### GW-E2E-001 — The pipeline on HierText validation
+### <a id="gw-e2e-001"></a>GW-E2E-001 — The pipeline on HierText validation
 
 - **Date allocated / run:** 2026-10-28 / 2026-10-28
 - **Phase:** 10
+- **Superseded by:** GW-E2E-006, for v1's page numbers on the same 1,715 validation pages (this run used GW-REC-024). GW-E2E-006 does not repeat the comparison with the baselines on the 400 Phase 5 pages.
 - **Git commit:** recorded in the result file   **Config:** `configs/det/gw-det-001.yaml` with Phase 9's overrides; `runs/GW-REC-024/config.resolved.yaml`   **Seed(s):** none (no training)
 - **Dataset version(s):** HierText validation pages and lines as in GW-DET-001 and GW-REC-024
 - **Hardware:** RTX 4050 Laptop 6 GB for the validation runs; i7-14650HX CPU for GW-EFF-002
@@ -898,7 +901,7 @@ Rows link to a full entry below. Numbers are copied from generated reports only,
 - **Limitations:** HierText pages are mostly scene photographs, not the documents GLYPHARIS targets; no reading order can be scored on them.
 - **Next experiment:** GW-E2E-002 splits its error.
 
-### GW-E2E-002 — Oracle analysis
+### <a id="gw-e2e-002"></a>GW-E2E-002 — Oracle analysis
 
 - **Date allocated / run:** 2026-10-28 / 2026-10-28
 - **Phase:** 10
@@ -915,10 +918,11 @@ Rows link to a full entry below. Numbers are copied from generated reports only,
 - **Limitations:** ground-truth outlines are cut exactly like training crops, so the oracle also removes any crop-shape mismatch between detector quads and training crops.
 - **Next experiment:** Phase 15 repeats it on the frozen model.
 
-### GW-EFF-002 — Whole-pipeline CPU page time
+### <a id="gw-eff-002"></a>GW-EFF-002 — Whole-pipeline CPU page time
 
 - **Date allocated / run:** 2026-10-28 / 2026-10-28
 - **Phase:** 10
+- **Superseded by:** GW-EFF-007, for v1's CPU page time and memory in PyTorch. That table uses 10 threads and this run 16, so the two are not a like-for-like pair.
 - **Git commit:** recorded in the result file   **Config:** `configs/det/gw-det-001.yaml` with Phase 9's overrides; `runs/GW-REC-024/config.resolved.yaml`   **Seed(s):** none (no training)
 - **Dataset version(s):** HierText validation pages and lines as in GW-DET-001 and GW-REC-024
 - **Hardware:** RTX 4050 Laptop 6 GB for the validation runs; i7-14650HX CPU for GW-EFF-002
@@ -932,10 +936,11 @@ Rows link to a full entry below. Numbers are copied from generated reports only,
 - **Limitations:** PyTorch stands in for the Phase 17 ONNX Runtime build.
 - **Next experiment:** Phase 17 measures the exported pipeline.
 
-### GW-EFF-003 — ONNX equivalence of the v0.1 bundle
+### <a id="gw-eff-003"></a>GW-EFF-003 — ONNX equivalence of the v0.1 bundle
 
 - **Date allocated / run:** 2026-10-28 / 2026-10-28
 - **Phase:** 17
+- **Superseded by:** GW-EFF-006, for the ONNX equivalence of the v1 bundle under the same four tolerances (this run checked the v0.1 bundle).
 - **Git commit:** recorded in the result file   **Config:** the v0.1 bundle's manifest   **Seed(s):** 20261028 (line sample)
 - **Dataset version(s):** HierText validation pages and lines as in GW-E2E-001
 - **Hardware:** i7-14650HX CPU, ONNX Runtime 1.31.1 and PyTorch 2.14.1
@@ -949,10 +954,11 @@ Rows link to a full entry below. Numbers are copied from generated reports only,
 - **Limitations:** CPU only; one ONNX Runtime version.
 - **Next experiment:** GW-EFF-004.
 
-### GW-EFF-004 — Page time on ONNX Runtime
+### <a id="gw-eff-004"></a>GW-EFF-004 — Page time on ONNX Runtime
 
 - **Date allocated / run:** 2026-10-28 / 2026-10-28
 - **Phase:** 17
+- **Superseded by:** GW-EFF-007, for v1's page time and memory on ONNX Runtime (this run measured the v0.1 bundle).
 - **Git commit:** recorded in the result file   **Config:** the v0.1 bundle's manifest   **Seed(s):** 20261028 (line sample)
 - **Dataset version(s):** HierText validation pages and lines as in GW-E2E-001
 - **Hardware:** i7-14650HX CPU, ONNX Runtime 1.31.1 and PyTorch 2.14.1
@@ -966,10 +972,11 @@ Rows link to a full entry below. Numbers are copied from generated reports only,
 - **Limitations:** one machine; default threads.
 - **Next experiment:** Phase 18 packages the bundle.
 
-### GW-E2E-004 — The package against the Phase 10 pipeline
+### <a id="gw-e2e-004"></a>GW-E2E-004 — The package against the Phase 10 pipeline
 
 - **Date allocated / run:** 2026-10-28 / 2026-10-28
 - **Phase:** 18
+- **Superseded by:** GW-E2E-011, for the package check on the v1 bundle. That run uses the PyTorch backend, the path v1 ships on; this one used the v0.1 bundle's ONNX backend.
 - **Git commit:** recorded in the result file   **Config:** the v0.1 bundle's manifest   **Seed(s):** none
 - **Dataset version(s):** the 400 Phase 5 HierText validation pages
 - **Hardware:** i7-14650HX CPU (package); GW-E2E-001 ran on the RTX 4050
@@ -983,7 +990,7 @@ Rows link to a full entry below. Numbers are copied from generated reports only,
 - **Limitations:** GW-E2E-001 ran on the GPU in PyTorch; small numeric differences can move a box or a character.
 - **Next experiment:** Phase 20.
 
-### GW-DATA-001 — Phase 11 arm A (no augmentation), seed 2024
+### <a id="gw-data-001"></a>GW-DATA-001 — Phase 11 arm A (no augmentation), seed 2024
 
 - **Date allocated / run:** 2026-10-28 / 2026-10-28
 - **Phase:** 11
@@ -1002,7 +1009,7 @@ Rows link to a full entry below. Numbers are copied from generated reports only,
 - **Next experiment:** GW-DATA-009
 - **Training time:** 0.80 GPU-hours (RTX 4050 Laptop, bf16)
 
-### GW-DATA-002 — Phase 11 arm A (no augmentation), seed 7
+### <a id="gw-data-002"></a>GW-DATA-002 — Phase 11 arm A (no augmentation), seed 7
 
 - **Date allocated / run:** 2026-10-28 / 2026-10-28
 - **Phase:** 11
@@ -1021,7 +1028,7 @@ Rows link to a full entry below. Numbers are copied from generated reports only,
 - **Next experiment:** GW-DATA-009
 - **Training time:** 0.81 GPU-hours (RTX 4050 Laptop, bf16)
 
-### GW-DATA-003 — Phase 11 arm B (geometric augmentation), seed 2024
+### <a id="gw-data-003"></a>GW-DATA-003 — Phase 11 arm B (geometric augmentation), seed 2024
 
 - **Date allocated / run:** 2026-10-28 / 2026-10-28
 - **Phase:** 11
@@ -1040,7 +1047,7 @@ Rows link to a full entry below. Numbers are copied from generated reports only,
 - **Next experiment:** GW-DATA-009
 - **Training time:** 1.04 GPU-hours (RTX 4050 Laptop, bf16); stopped once by a power cut and resumed from its last checkpoint (step 40,000)
 
-### GW-DATA-004 — Phase 11 arm B (geometric augmentation), seed 7
+### <a id="gw-data-004"></a>GW-DATA-004 — Phase 11 arm B (geometric augmentation), seed 7
 
 - **Date allocated / run:** 2026-10-28 / 2026-10-28
 - **Phase:** 11
@@ -1059,7 +1066,7 @@ Rows link to a full entry below. Numbers are copied from generated reports only,
 - **Next experiment:** GW-DATA-009
 - **Training time:** 0.94 GPU-hours (RTX 4050 Laptop, bf16)
 
-### GW-DATA-005 — Phase 11 arm C (photometric augmentation), seed 2024
+### <a id="gw-data-005"></a>GW-DATA-005 — Phase 11 arm C (photometric augmentation), seed 2024
 
 - **Date allocated / run:** 2026-10-28 / 2026-10-29
 - **Phase:** 11
@@ -1078,7 +1085,7 @@ Rows link to a full entry below. Numbers are copied from generated reports only,
 - **Next experiment:** GW-DATA-009
 - **Training time:** 0.83 GPU-hours (RTX 4050 Laptop, bf16); stopped once by a power cut and resumed from its last checkpoint (step 11,342)
 
-### GW-DATA-006 — Phase 11 arm C (photometric augmentation), seed 7
+### <a id="gw-data-006"></a>GW-DATA-006 — Phase 11 arm C (photometric augmentation), seed 7
 
 - **Date allocated / run:** 2026-10-28 / 2026-10-29
 - **Phase:** 11
@@ -1097,7 +1104,7 @@ Rows link to a full entry below. Numbers are copied from generated reports only,
 - **Next experiment:** GW-DATA-009
 - **Training time:** 0.81 GPU-hours (RTX 4050 Laptop, bf16)
 
-### GW-DATA-007 — Phase 11 arm D (degradation augmentation), seed 2024
+### <a id="gw-data-007"></a>GW-DATA-007 — Phase 11 arm D (degradation augmentation), seed 2024
 
 - **Date allocated / run:** 2026-10-28 / 2026-10-29
 - **Phase:** 11
@@ -1116,7 +1123,7 @@ Rows link to a full entry below. Numbers are copied from generated reports only,
 - **Next experiment:** GW-DATA-009
 - **Training time:** 0.82 GPU-hours (RTX 4050 Laptop, bf16)
 
-### GW-DATA-008 — Phase 11 arm D (degradation augmentation), seed 7
+### <a id="gw-data-008"></a>GW-DATA-008 — Phase 11 arm D (degradation augmentation), seed 7
 
 - **Date allocated / run:** 2026-10-28 / 2026-10-29
 - **Phase:** 11
@@ -1135,7 +1142,7 @@ Rows link to a full entry below. Numbers are copied from generated reports only,
 - **Next experiment:** GW-DATA-009
 - **Training time:** 0.80 GPU-hours (RTX 4050 Laptop, bf16)
 
-### GW-DATA-009 — Phase 11: augmentation families on GLYPH-C
+### <a id="gw-data-009"></a>GW-DATA-009 — Phase 11: augmentation families on GLYPH-C
 
 - **Date allocated / run:** 2026-10-28 / 2026-10-28 to 2026-10-29
 - **Phase:** 11
@@ -1162,7 +1169,7 @@ Rows link to a full entry below. Numbers are copied from generated reports only,
 - **Limitations:** stated with the plan in `docs/PHASE_STATUS.md` (trainer versions across seeds; GLYPH-C's HierText half overlaps the selection set; CRNN short budget, not the v0.1 recognizer). Also: several GLYPH-C corruptions are close relatives of training transforms (rotation and perspective in B, blur, noise and JPEG in C, low resolution in D), so the suite measures robustness to familiar corruptions at higher strength, not to unseen ones; the unweighted mCE is dominated by rotation.
 - **Next experiment:** a wider training rotation range is a Phase 13 candidate; whether the verdicts carry over to the v0.1 recognizer (SVTR, height 48) needs the college GPU.
 
-### GW-DATA-010 — Phase 12 arm +25K, seed 1337
+### <a id="gw-data-010"></a>GW-DATA-010 — Phase 12 arm +25K, seed 1337
 
 - **Date allocated / run:** 2026-10-29 / 2026-10-29
 - **Phase:** 12
@@ -1181,7 +1188,7 @@ Rows link to a full entry below. Numbers are copied from generated reports only,
 - **Next experiment:** GW-DATA-022
 - **Training time:** 1.02 GPU-hours (RTX 4050 Laptop, bf16)
 
-### GW-DATA-011 — Phase 12 arm +25K, seed 2024
+### <a id="gw-data-011"></a>GW-DATA-011 — Phase 12 arm +25K, seed 2024
 
 - **Date allocated / run:** 2026-10-29 / 2026-10-29
 - **Phase:** 12
@@ -1200,7 +1207,7 @@ Rows link to a full entry below. Numbers are copied from generated reports only,
 - **Next experiment:** GW-DATA-022
 - **Training time:** 1.02 GPU-hours (RTX 4050 Laptop, bf16); stopped at the owner's request 1.5 minutes in, before its first checkpoint, and restarted from the beginning
 
-### GW-DATA-012 — Phase 12 arm +25K, seed 7
+### <a id="gw-data-012"></a>GW-DATA-012 — Phase 12 arm +25K, seed 7
 
 - **Date allocated / run:** 2026-10-29 / 2026-10-29
 - **Phase:** 12
@@ -1219,7 +1226,7 @@ Rows link to a full entry below. Numbers are copied from generated reports only,
 - **Next experiment:** GW-DATA-022
 - **Training time:** 1.03 GPU-hours (RTX 4050 Laptop, bf16)
 
-### GW-DATA-013 — Phase 12 arm +50K, seed 1337
+### <a id="gw-data-013"></a>GW-DATA-013 — Phase 12 arm +50K, seed 1337
 
 - **Date allocated / run:** 2026-10-29 / 2026-10-29
 - **Phase:** 12
@@ -1238,7 +1245,7 @@ Rows link to a full entry below. Numbers are copied from generated reports only,
 - **Next experiment:** GW-DATA-022
 - **Training time:** 1.08 GPU-hours (RTX 4050 Laptop, bf16)
 
-### GW-DATA-014 — Phase 12 arm +100K, seed 1337
+### <a id="gw-data-014"></a>GW-DATA-014 — Phase 12 arm +100K, seed 1337
 
 - **Date allocated / run:** 2026-10-29 / 2026-10-29
 - **Phase:** 12
@@ -1257,7 +1264,7 @@ Rows link to a full entry below. Numbers are copied from generated reports only,
 - **Next experiment:** GW-DATA-022
 - **Training time:** 1.24 GPU-hours (RTX 4050 Laptop, bf16)
 
-### GW-DATA-015 — Phase 12 arm +100K, seed 2024
+### <a id="gw-data-015"></a>GW-DATA-015 — Phase 12 arm +100K, seed 2024
 
 - **Date allocated / run:** 2026-10-29 / 2026-10-29
 - **Phase:** 12
@@ -1276,7 +1283,7 @@ Rows link to a full entry below. Numbers are copied from generated reports only,
 - **Next experiment:** GW-DATA-022
 - **Training time:** 1.18 GPU-hours (RTX 4050 Laptop, bf16)
 
-### GW-DATA-016 — Phase 12 arm +100K, seed 7
+### <a id="gw-data-016"></a>GW-DATA-016 — Phase 12 arm +100K, seed 7
 
 - **Date allocated / run:** 2026-10-29 / 2026-10-30
 - **Phase:** 12
@@ -1295,7 +1302,7 @@ Rows link to a full entry below. Numbers are copied from generated reports only,
 - **Next experiment:** GW-DATA-022
 - **Training time:** 1.16 GPU-hours (RTX 4050 Laptop, bf16)
 
-### GW-DATA-017 — Phase 12 arm +250K, seed 1337
+### <a id="gw-data-017"></a>GW-DATA-017 — Phase 12 arm +250K, seed 1337
 
 - **Date allocated / run:** 2026-10-29 / 2026-10-30
 - **Phase:** 12
@@ -1314,7 +1321,7 @@ Rows link to a full entry below. Numbers are copied from generated reports only,
 - **Next experiment:** GW-DATA-022
 - **Training time:** 1.41 GPU-hours (RTX 4050 Laptop, bf16); stopped at step 8,000 by a blocked checkpoint rename (`research/failures.md`) and resumed from step 7,000
 
-### GW-DATA-018 — Phase 12 arm +250K, seed 2024
+### <a id="gw-data-018"></a>GW-DATA-018 — Phase 12 arm +250K, seed 2024
 
 - **Date allocated / run:** 2026-10-29 / 2026-10-30
 - **Phase:** 12
@@ -1333,7 +1340,7 @@ Rows link to a full entry below. Numbers are copied from generated reports only,
 - **Next experiment:** GW-DATA-022
 - **Training time:** 1.37 GPU-hours (RTX 4050 Laptop, bf16)
 
-### GW-DATA-019 — Phase 12 arm +250K, seed 7
+### <a id="gw-data-019"></a>GW-DATA-019 — Phase 12 arm +250K, seed 7
 
 - **Date allocated / run:** 2026-10-29 / 2026-10-30
 - **Phase:** 12
@@ -1352,7 +1359,7 @@ Rows link to a full entry below. Numbers are copied from generated reports only,
 - **Next experiment:** GW-DATA-022
 - **Training time:** 1.40 GPU-hours (RTX 4050 Laptop, bf16)
 
-### GW-DATA-020 — Phase 12 arm +100K, 6 fonts, seed 1337
+### <a id="gw-data-020"></a>GW-DATA-020 — Phase 12 arm +100K, 6 fonts, seed 1337
 
 - **Date allocated / run:** 2026-10-29 / 2026-10-30
 - **Phase:** 12
@@ -1371,7 +1378,7 @@ Rows link to a full entry below. Numbers are copied from generated reports only,
 - **Next experiment:** GW-DATA-022
 - **Training time:** 1.20 GPU-hours (RTX 4050 Laptop, bf16); stopped at step 1,950 when the desktop app that launched the chain restarted, and resumed from step 1,000
 
-### GW-DATA-021 — Phase 12 arm +100K, no capture, seed 1337
+### <a id="gw-data-021"></a>GW-DATA-021 — Phase 12 arm +100K, no capture, seed 1337
 
 - **Date allocated / run:** 2026-10-29 / 2026-10-30
 - **Phase:** 12
@@ -1390,7 +1397,7 @@ Rows link to a full entry below. Numbers are copied from generated reports only,
 - **Next experiment:** GW-DATA-022
 - **Training time:** 1.29 GPU-hours (RTX 4050 Laptop, bf16)
 
-### GW-DATA-022 — Phase 12: synthetic data against HierText only
+### <a id="gw-data-022"></a>GW-DATA-022 — Phase 12: synthetic data against HierText only
 
 - **Date allocated / run:** 2026-10-29 / 2026-10-30
 - **Phase:** 12
@@ -1419,7 +1426,7 @@ Rows link to a full entry below. Numbers are copied from generated reports only,
 - **Limitations:** stated with the plan (equal steps displace real lines; the document slice is a proxy; one seed per factor arm). Also: the arms did not take exactly equal steps (see GW-DATA-010 to 021: up to 2.7% more for 250K, which favours the synthetic arms, so the losses are if anything understated).
 - **Next experiment:** GDC (Phase 14, phone photos of printed documents) is the real document test of whether GlyphSynth helps; for the final model, Phase 13 should not add GlyphSynth beyond 25K lines on the strength of this phase.
 
-### GW-REC-025 — Phase 13 L3 (+ input height 48), seed 2024
+### <a id="gw-rec-025"></a>GW-REC-025 — Phase 13 L3 (+ input height 48), seed 2024
 
 - **Date allocated / run:** 2026-10-30 / 2026-10-30
 - **Phase:** 13
@@ -1438,7 +1445,7 @@ Rows link to a full entry below. Numbers are copied from generated reports only,
 - **Next experiment:** GW-REC-037
 - **Training time:** 2.02 GPU-hours (RTX 4050 Laptop, bf16)
 
-### GW-REC-026 — Phase 13 L3 (+ input height 48), seed 7
+### <a id="gw-rec-026"></a>GW-REC-026 — Phase 13 L3 (+ input height 48), seed 7
 
 - **Date allocated / run:** 2026-10-30 / 2026-10-31
 - **Phase:** 13
@@ -1457,7 +1464,7 @@ Rows link to a full entry below. Numbers are copied from generated reports only,
 - **Next experiment:** GW-REC-037
 - **Training time:** 2.10 GPU-hours (RTX 4050 Laptop, bf16)
 
-### GW-REC-027 — Phase 13 L4 (full model), seed 2024
+### <a id="gw-rec-027"></a>GW-REC-027 — Phase 13 L4 (full model), seed 2024
 
 - **Date allocated / run:** 2026-10-30 / 2026-10-31
 - **Phase:** 13
@@ -1476,7 +1483,7 @@ Rows link to a full entry below. Numbers are copied from generated reports only,
 - **Next experiment:** GW-REC-037
 - **Training time:** 5.34 GPU-hours (RTX 4050 Laptop, bf16)
 
-### GW-REC-028 — Phase 13 L4 (full model), seed 7
+### <a id="gw-rec-028"></a>GW-REC-028 — Phase 13 L4 (full model), seed 7
 
 - **Date allocated / run:** 2026-10-30 / 2026-11-01
 - **Phase:** 13
@@ -1495,7 +1502,7 @@ Rows link to a full entry below. Numbers are copied from generated reports only,
 - **Next experiment:** GW-REC-037
 - **Training time:** 5.37 GPU-hours (RTX 4050 Laptop, bf16)
 
-### GW-REC-029 — Phase 13 L5 (+ wider rotation), seed 1337
+### <a id="gw-rec-029"></a>GW-REC-029 — Phase 13 L5 (+ wider rotation), seed 1337
 
 - **Date allocated / run:** 2026-10-30 / 2026-11-02
 - **Phase:** 13
@@ -1514,7 +1521,7 @@ Rows link to a full entry below. Numbers are copied from generated reports only,
 - **Next experiment:** GW-REC-037
 - **Training time:** 5.05 GPU-hours (RTX 4050 Laptop, bf16)
 
-### GW-REC-030 — Phase 13 L5 (+ wider rotation), seed 2024
+### <a id="gw-rec-030"></a>GW-REC-030 — Phase 13 L5 (+ wider rotation), seed 2024
 
 - **Date allocated / run:** 2026-10-30 / 2026-11-03
 - **Phase:** 13
@@ -1533,7 +1540,7 @@ Rows link to a full entry below. Numbers are copied from generated reports only,
 - **Next experiment:** GW-REC-037
 - **Training time:** 5.87 GPU-hours (RTX 4050 Laptop, bf16)
 
-### GW-REC-031 — Phase 13 L5 (+ wider rotation), seed 7
+### <a id="gw-rec-031"></a>GW-REC-031 — Phase 13 L5 (+ wider rotation), seed 7
 
 - **Date allocated / run:** 2026-10-30 / 2026-11-03
 - **Phase:** 13
@@ -1552,7 +1559,7 @@ Rows link to a full entry below. Numbers are copied from generated reports only,
 - **Next experiment:** GW-REC-037
 - **Training time:** 5.34 GPU-hours (RTX 4050 Laptop, bf16)
 
-### GW-REC-032 — Phase 13 final, option A, seed 2024
+### <a id="gw-rec-032"></a>GW-REC-032 — Phase 13 final, option A, seed 2024
 
 - **Date allocated / run:** 2026-10-30 / —
 - **Phase:** 13
@@ -1565,13 +1572,14 @@ Rows link to a full entry below. Numbers are copied from generated reports only,
 - **Variables:** independent: the seed; controlled: everything else
 - **Control:** the row's parent (GW-REC-037)
 - **Result:** not trained: the ladder kept row L5, so the final runs are option B (GW-REC-034 to 036), as the plan fixed in advance.
+- **Amendment (2026-11-18, Phase 21):** this is one of the two extra GW-REC-024 seeds (seed 2024) promised in that entry for before the paper. It stays not run; GW-REC-024's entry records the promise as closed for v1.
 - **Training diagnostics:** —
 - **Interpretation:** —
 - **Limitations:** stated with the plan.
 - **Next experiment:** GW-REC-037
 - **Training time:** —
 
-### GW-REC-033 — Phase 13 final, option A, seed 7
+### <a id="gw-rec-033"></a>GW-REC-033 — Phase 13 final, option A, seed 7
 
 - **Date allocated / run:** 2026-10-30 / —
 - **Phase:** 13
@@ -1584,13 +1592,14 @@ Rows link to a full entry below. Numbers are copied from generated reports only,
 - **Variables:** independent: the seed; controlled: everything else
 - **Control:** the row's parent (GW-REC-037)
 - **Result:** not trained: the ladder kept row L5, so the final runs are option B (GW-REC-034 to 036), as the plan fixed in advance.
+- **Amendment (2026-11-18, Phase 21):** this is one of the two extra GW-REC-024 seeds (seed 7) promised in that entry for before the paper. It stays not run; GW-REC-024's entry records the promise as closed for v1.
 - **Training diagnostics:** —
 - **Interpretation:** —
 - **Limitations:** stated with the plan.
 - **Next experiment:** GW-REC-037
 - **Training time:** —
 
-### GW-REC-034 — Phase 13 final, option B, seed 1337
+### <a id="gw-rec-034"></a>GW-REC-034 — Phase 13 final, option B, seed 1337
 
 - **Date allocated / run:** 2026-10-30 / 2026-11-10
 - **Phase:** 13
@@ -1609,7 +1618,7 @@ Rows link to a full entry below. Numbers are copied from generated reports only,
 - **Next experiment:** GW-REC-037
 - **Training time:** 20.11 GPU-hours (RTX 4050 Laptop, bf16)
 
-### GW-REC-035 — Phase 13 final, option B, seed 2024
+### <a id="gw-rec-035"></a>GW-REC-035 — Phase 13 final, option B, seed 2024
 
 - **Date allocated / run:** 2026-10-30 / 2026-11-12
 - **Phase:** 13
@@ -1628,7 +1637,7 @@ Rows link to a full entry below. Numbers are copied from generated reports only,
 - **Next experiment:** GW-REC-037
 - **Training time:** 19.09 GPU-hours (RTX 4050 Laptop, bf16)
 
-### GW-REC-036 — Phase 13 final, option B, seed 7
+### <a id="gw-rec-036"></a>GW-REC-036 — Phase 13 final, option B, seed 7
 
 - **Date allocated / run:** 2026-10-30 / 2026-11-14
 - **Phase:** 13
@@ -1647,7 +1656,7 @@ Rows link to a full entry below. Numbers are copied from generated reports only,
 - **Next experiment:** GW-REC-037
 - **Training time:** 19.37 GPU-hours (RTX 4050 Laptop, bf16)
 
-### GW-DET-007 — Phase 13 detector: smaller text and wider rotation
+### <a id="gw-det-007"></a>GW-DET-007 — Phase 13 detector: smaller text and wider rotation
 
 - **Date allocated / run:** 2026-10-30 / 2026-11-04
 - **Phase:** 13
@@ -1666,7 +1675,7 @@ Rows link to a full entry below. Numbers are copied from generated reports only,
 - **Next experiment:** the frozen configuration
 - **Training time:** 7.51 GPU-hours (RTX 4050 Laptop)
 
-### GW-REC-037 — Phase 13: ablation ladder and final recognizer
+### <a id="gw-rec-037"></a>GW-REC-037 — Phase 13: ablation ladder and final recognizer
 
 - **Date allocated / run:** 2026-10-30 / 2026-11-14
 - **Phase:** 13
@@ -1683,7 +1692,7 @@ Rows link to a full entry below. Numbers are copied from generated reports only,
 - **Limitations:** stated with the plan (short-budget ladder; L4 bundles the encoder with its training recipe; earlier seeds come from earlier phases). The baseline at the full budget is one seed, so the final comparison's CI covers page sampling, not the baseline's seed noise; the short-budget seed spread (about 0.05 points) is small next to −1.24.
 - **Next experiment:** Phase 14
 
-### GW-E2E-005 — Line-confidence calibration of the frozen recognizer
+### <a id="gw-e2e-005"></a>GW-E2E-005 — Line-confidence calibration of the frozen recognizer
 
 - **Date allocated / run:** 2026-11-14 / 2026-11-14
 - **Phase:** 13
@@ -1700,7 +1709,7 @@ Rows link to a full entry below. Numbers are copied from generated reports only,
 - **Limitations:** as GW-E2E-003.
 - **Next experiment:** the frozen configuration (`configs/final/glypharis_v1.yaml`)
 
-### GW-E2E-006 — The frozen pipeline on HierText validation (Phase 14 reference)
+### <a id="gw-e2e-006"></a>GW-E2E-006 — The frozen pipeline on HierText validation (Phase 14 reference)
 
 - **Date allocated / run:** 2026-11-15 / 2026-11-15
 - **Phase:** 14
@@ -1717,7 +1726,7 @@ Rows link to a full entry below. Numbers are copied from generated reports only,
 - **Limitations:** validation pages only; not a test result.
 - **Next experiment:** GW-E2E-007
 
-### GW-REC-038 — The frozen recognizer on the HierText validation evaluation crops
+### <a id="gw-rec-038"></a>GW-REC-038 — The frozen recognizer on the HierText validation evaluation crops
 
 - **Date allocated / run:** 2026-11-15 / 2026-11-15
 - **Phase:** 14
@@ -1734,7 +1743,7 @@ Rows link to a full entry below. Numbers are copied from generated reports only,
 - **Limitations:** validation only.
 - **Next experiment:** GW-REC-039
 
-### GW-EFF-005 — v1 CPU page latency against PP-OCRv5 mobile, one sitting
+### <a id="gw-eff-005"></a>GW-EFF-005 — v1 CPU page latency against PP-OCRv5 mobile, one sitting
 
 - **Date allocated / run:** 2026-11-15 / 2026-11-15
 - **Phase:** 14
@@ -1751,7 +1760,7 @@ Rows link to a full entry below. Numbers are copied from generated reports only,
 - **Limitations:** HierText validation pages (no document validation set exists); PyTorch build only (the ONNX v1 build does not exist yet).
 - **Next experiment:** the H1′ verdict in GW-E2E-009
 
-### GW-REC-039 — The frozen recognizer on the test crop packs
+### <a id="gw-rec-039"></a>GW-REC-039 — The frozen recognizer on the test crop packs
 
 - **Date allocated / run:** 2026-11-15 / 2026-11-15
 - **Phase:** 14
@@ -1768,7 +1777,7 @@ Rows link to a full entry below. Numbers are copied from generated reports only,
 - **Limitations:** one frozen model (single seed by design; Phase 14 plan).
 - **Next experiment:** GW-E2E-009
 
-### GW-E2E-007 — The frozen pipeline end to end on the test pages
+### <a id="gw-e2e-007"></a>GW-E2E-007 — The frozen pipeline end to end on the test pages
 
 - **Date allocated / run:** 2026-11-15 / 2026-11-15
 - **Phase:** 14
@@ -1785,7 +1794,7 @@ Rows link to a full entry below. Numbers are copied from generated reports only,
 - **Limitations:** one frozen model; `quad` boxes only.
 - **Next experiment:** GW-E2E-009
 
-### GW-E2E-008 — Oracle run: ground-truth lines through the frozen recognizer
+### <a id="gw-e2e-008"></a>GW-E2E-008 — Oracle run: ground-truth lines through the frozen recognizer
 
 - **Date allocated / run:** 2026-11-15 / 2026-11-15
 - **Phase:** 14
@@ -1802,7 +1811,7 @@ Rows link to a full entry below. Numbers are copied from generated reports only,
 - **Limitations:** as GW-E2E-002.
 - **Next experiment:** Phase 15
 
-### GW-E2E-009 — Phase 14 scoring, comparisons and hypothesis verdicts
+### <a id="gw-e2e-009"></a>GW-E2E-009 — Phase 14 scoring, comparisons and hypothesis verdicts
 
 - **Date allocated / run:** 2026-11-15 / 2026-11-17
 - **Phase:** 14
@@ -1820,7 +1829,7 @@ Rows link to a full entry below. Numbers are copied from generated reports only,
 - **Next experiment:** Phase 15
 
 
-### GW-REC-040 — Recognition errors of the frozen recognizer (Phase 15)
+### <a id="gw-rec-040"></a>GW-REC-040 — Recognition errors of the frozen recognizer (Phase 15)
 
 - **Date allocated / run:** 2026-11-17 / 2026-11-17
 - **Phase:** 15
@@ -1837,7 +1846,7 @@ Rows link to a full entry below. Numbers are copied from generated reports only,
 - **Limitations:** stated with the plan (no labels for touching, broken, noise or fonts on test; GDC-scan numbers only).
 - **Next experiment:** Phase 16
 
-### GW-E2E-010 — Pipeline errors of the frozen pipeline (Phase 15)
+### <a id="gw-e2e-010"></a>GW-E2E-010 — Pipeline errors of the frozen pipeline (Phase 15)
 
 - **Date allocated / run:** 2026-11-17 / 2026-11-17
 - **Phase:** 15
@@ -1854,7 +1863,7 @@ Rows link to a full entry below. Numbers are copied from generated reports only,
 - **Limitations:** no merge or split labels and no detector candidates on test; the oracle share is not a pure detector share.
 - **Next experiment:** Phase 16
 
-### GW-REC-041 — The frozen recognizer on GlyphSynth validation lines
+### <a id="gw-rec-041"></a>GW-REC-041 — The frozen recognizer on GlyphSynth validation lines
 
 - **Date allocated / run:** 2026-11-17 / 2026-11-17
 - **Phase:** 15
@@ -1872,7 +1881,7 @@ Rows link to a full entry below. Numbers are copied from generated reports only,
 - **Next experiment:** Phase 16
 
 
-### GW-EFF-006 — Reference outputs and the v1 fp32 ONNX bundle
+### <a id="gw-eff-006"></a>GW-EFF-006 — Reference outputs and the v1 fp32 ONNX bundle
 
 - **Date allocated / run:** 2026-11-17 / 2026-11-17
 - **Phase:** 16
@@ -1889,7 +1898,7 @@ Rows link to a full entry below. Numbers are copied from generated reports only,
 - **Limitations:** TorchScript exporter only (as Phase 17).
 - **Next experiment:** Phase 17 re-run (the v1 bundle; GW-EFF-012)
 
-### GW-EFF-007 — The v1 cost table
+### <a id="gw-eff-007"></a>GW-EFF-007 — The v1 cost table
 
 - **Date allocated / run:** 2026-11-17 / 2026-11-17
 - **Phase:** 16
@@ -1906,7 +1915,7 @@ Rows link to a full entry below. Numbers are copied from generated reports only,
 - **Limitations:** one laptop; HierText validation pages. Each row is one run, in chain order rather than the mirrored order the Method names (a deviation, `docs/PHASE_STATUS.md`), so the builds are not compared here in a mirrored order (GW-EFF-009's sittings do that for v1's two CPU builds); the GPU rows are PyTorch only.
 - **Next experiment:** Phase 17 re-run (the v1 bundle; GW-EFF-012)
 
-### GW-EFF-008 — Dynamic INT8 of the v1 ONNX recognizer
+### <a id="gw-eff-008"></a>GW-EFF-008 — Dynamic INT8 of the v1 ONNX recognizer
 
 - **Date allocated / run:** 2026-11-17 / 2026-11-17
 - **Phase:** 16
@@ -1923,7 +1932,7 @@ Rows link to a full entry below. Numbers are copied from generated reports only,
 - **Limitations:** the attention products stay fp32; an INT8 bundle is a new version.
 - **Next experiment:** Phase 17 re-run (the v1 bundle; GW-EFF-012)
 
-### GW-EFF-009 — Pareto points (new versions)
+### <a id="gw-eff-009"></a>GW-EFF-009 — Pareto points (new versions)
 
 - **Date allocated / run:** 2026-11-17 / 2026-11-17 to 2026-11-18
 - **Phase:** 16
@@ -1936,11 +1945,11 @@ Rows link to a full entry below. Numbers are copied from generated reports only,
 - **Variables:** see `docs/PHASE_STATUS.md`, Phase 16 plan
 - **Control:** v1 (GW-EFF-006, GW-EFF-007)
 - **Result:** accuracy runs 2026-11-17, 16:20:50Z to 2026-11-18, 00:59:49Z; page sitting 00:59:56 to 05:29:38Z and line sitting 05:29:50 to 05:34:57Z (2026-11-18), each in the mirrored order, each item the mean of its two runs; no sitting void, every variant run (the cut line was not needed). Every point but v1 is a new version, not v1; intervals are descriptive, differences are the point minus v1's fp32 ONNX build. Pages (page CER and E2E F1 on the 400 pages, strict; mean, p95 and peak RAM on the 110 profile pages): v1 PyTorch 24.32% [20.87, 28.15], 60.50%, 2,637.3 [2,395.4, 2,909.1] ms, 5,327.7 ms, 1,665.0 MiB; v1 fp32 ONNX 24.32%, 60.50%, 9,739.4 [8,510.8, 11,113.1] ms, 22,474.1 ms, 6,525.5 MiB; detector long side 1024 31.62%, 55.95%, 8,491.3 ms (+7.29 [+5.55, +9.51] points, −1,248.1 [−1,761.3, −734.3] ms); 1280 26.63%, 58.98%, 9,537.2 ms (+2.31 [+1.66, +2.98], −202.2 [−451.2, +32.6]); 1792 24.21%, 60.67%, 10,168.1 ms (−0.11 [−0.93, +0.92], +428.7 [+230.7, +647.8]); 2048 23.75%, 61.10%, 10,400.0 ms (−0.57 [−1.80, +0.83], +660.6 [+393.3, +949.6]); ONNX detector with the PyTorch recognizer 24.32%, 60.50%, 2,579.1 [2,340.0, 2,844.7] ms, p95 5,186.9 ms, 1,550.0 MiB (+0.00 [+0.00, +0.00], −7,160.4 [−8,258.3, −6,171.7]); INT8 recognizer 24.32%, 60.46%, 6,890.9 ms, 6,896.5 MiB (+0.00 [−0.02, +0.02], −2,848.5 [−3,233.6, −2,505.1]); fused attention (each global mixer exported as one `com.microsoft.MultiHeadAttention` node) 24.32%, 60.50%, 4,020.8 [3,604.2, 4,479.8] ms, p95 8,267.1 ms, 2,393.0 MiB (+0.00 [+0.00, +0.00], −5,718.6 [−6,630.9, −4,883.7]); detector GW-DET-003 27.33%, 57.75%, 9,065.7 ms (+3.00 [+1.52, +4.33], −673.7 [−888.5, −443.8]). Lines (line CER on the 5,000 lines, strict, greedy; mean and p95 on 100 `rec_samples` lines): v1 PyTorch 6.22% [5.73, 6.71], 35.55 [31.32, 40.10] ms, 80.82 ms; v1 fp32 ONNX 6.22%, 95.59 [73.55, 120.41] ms, 340.04 ms; INT8 6.21%, 63.35 ms (−0.01 [−0.04, +0.02] points, −32.24 [−39.97, −24.87] ms); fused attention 6.22%, 39.53 [32.12, 47.52] ms, 112.10 ms (−56.06 [−72.68, −41.23] ms); GW-REC-003 8.34%, 9.07 ms (+2.12 [+1.82, +2.40] points); GW-REC-006 7.85%, 16.67 ms (+1.63 [+1.39, +1.87]); GW-REC-020 8.21%, 29.03 ms (+1.99 [+1.72, +2.23]); GW-REC-022 7.57%, 100.57 ms (+1.35 [+1.13, +1.55] points, +4.98 [+3.12, +6.86] ms). (`reports/efficiency/phase16/pareto.md`, `pareto.png`; the options table for the owner in `README.md`.)
-- **Interpretation:** the recognizer sets the page time. Fusing the attention keeps v1's page CER, E2E F1 and line CER and takes the ONNX page time from 9,739.4 to 4,020.8 ms and peak RAM from 6,525.5 to 2,393.0 MiB, so the plain export's attention is where the ONNX build loses most of its time; it is still slower than PyTorch (2,637.3 ms per page, 35.55 ms per line in the same sittings). Among the points at v1's accuracy, the ONNX detector with the PyTorch recognizer has the lowest mean page time (2,579.1 ms mean, 5,186.9 ms p95, 1,550.0 MiB; about 58 ms below v1-torch's 2,637.3 ms in the same sittings, and no interval for that difference is reported), still over both of ADR-0011's page time targets (within the RAM target). Detector input size and the smaller detector move page accuracy but change the ONNX page time by at most about 13%: 1024 costs +7.29 points for −1,248.1 ms, and GW-DET-003 +3.00 points for −673.7 ms. Every other recognizer reads with a higher line CER than v1's; GW-REC-003 has the lowest mean line time (9.07 ms) at +2.12 points. These are new versions on validation; none replaces v1, and choosing a default backend or shipping a variant is the owner's decision (ADR-0011); Phase 16 changes no default. Findings F35, F37 and F38.
+- **Interpretation:** the recognizer sets the page time. Fusing the attention keeps v1's page CER, E2E F1 and line CER and takes the ONNX page time from 9,739.4 to 4,020.8 ms and peak RAM from 6,525.5 to 2,393.0 MiB, so the plain export's attention is where the ONNX build loses most of its time. PyTorch takes 2,637.3 ms per page and 35.55 ms per line in the same sittings; no interval covers that pair, so no difference is stated. Among the points at v1's accuracy, the ONNX detector with the PyTorch recognizer has the lowest mean page time (2,579.1 ms mean, 5,186.9 ms p95, 1,550.0 MiB; about 58 ms below v1-torch's 2,637.3 ms in the same sittings, and no interval for that difference is reported), still over both of ADR-0011's page time targets (within the RAM target). Detector input size and the smaller detector move page accuracy but change the ONNX page time by at most about 13%: 1024 costs +7.29 points for −1,248.1 ms, and GW-DET-003 +3.00 points for −673.7 ms. Every other recognizer reads with a higher line CER than v1's; GW-REC-003 has the lowest mean line time (9.07 ms) at +2.12 points. These are new versions on validation; none replaces v1, and choosing a default backend or shipping a variant is the owner's decision (ADR-0011); Phase 16 changes no default. Findings F35, F37 and F38.
 - **Limitations:** variants are new versions on validation only; the size points differ in recipe and budget.
 - **Next experiment:** Phase 17 re-run (the v1 bundle; GW-EFF-012)
 
-### GW-EFF-010 — H1′'s ONNX latency verdict
+### <a id="gw-eff-010"></a>GW-EFF-010 — H1′'s ONNX latency verdict
 
 - **Date allocated / run:** 2026-11-17 / 2026-11-17
 - **Phase:** 16
@@ -1957,7 +1966,7 @@ Rows link to a full entry below. Numbers are copied from generated reports only,
 - **Limitations:** HierText validation pages.
 - **Next experiment:** Phase 17 re-run (the v1 bundle; GW-EFF-012)
 
-### GW-EFF-011 — H6′'s latency: SVTR against CRNN in ONNX
+### <a id="gw-eff-011"></a>GW-EFF-011 — H6′'s latency: SVTR against CRNN in ONNX
 
 - **Date allocated / run:** 2026-11-17 / 2026-11-18
 - **Phase:** 16
@@ -1974,7 +1983,7 @@ Rows link to a full entry below. Numbers are copied from generated reports only,
 - **Limitations:** height 32 pair (H6's matched budget); v1 is height 48.
 - **Next experiment:** Phase 17 re-run (the v1 bundle; GW-EFF-012)
 
-### GW-EFF-012 — The v1 bundle on the PyTorch backend (Phase 17 re-run)
+### <a id="gw-eff-012"></a>GW-EFF-012 — The v1 bundle on the PyTorch backend (Phase 17 re-run)
 
 - **Date allocated / run:** 2026-11-18 / 2026-11-18
 - **Phase:** 17 (v1 re-run)
@@ -1991,7 +2000,7 @@ Rows link to a full entry below. Numbers are copied from generated reports only,
 - **Limitations:** HierText validation; CPU only.
 - **Next experiment:** Phase 18 re-run (the package on the v1 bundle)
 
-### GW-E2E-011 — The package on the v1 bundle against the frozen pipeline (Phase 18 re-run)
+### <a id="gw-e2e-011"></a>GW-E2E-011 — The package on the v1 bundle against the frozen pipeline (Phase 18 re-run)
 
 - **Date allocated / run:** 2026-11-18 / 2026-11-18
 - **Phase:** 18 (v1 re-run)
@@ -2008,7 +2017,7 @@ Rows link to a full entry below. Numbers are copied from generated reports only,
 - **Limitations:** HierText validation; the reference ran on the GPU, the package on the CPU.
 - **Next experiment:** Phase 20 re-run (hardening on the v1 bundle)
 
-### GW-E2E-012 — The hardening cases on the v1 bundle (Phase 20 re-run)
+### <a id="gw-e2e-012"></a>GW-E2E-012 — The hardening cases on the v1 bundle (Phase 20 re-run)
 
 - **Date allocated / run:** 2026-11-18 / 2026-11-18
 - **Phase:** 20 (v1 re-run)
@@ -2030,10 +2039,11 @@ Rows link to a full entry below. Numbers are copied from generated reports only,
 ## Entry template
 
 ```markdown
-### GW-XXX-NNN — <short title>
+### <a id="gw-xxx-nnn"></a>GW-XXX-NNN — <short title>
 
 - **Date allocated / run:** YYYY-MM-DD / YYYY-MM-DD
 - **Phase:** NN
+- **Superseded by:** (optional) <ID of the v1 re-run that replaces this result, and what it replaces>
 - **Git commit:** <hash>   **Config:** configs/....yaml   **Seed(s):** ...
 - **Dataset version(s):** <manifest hash or version tag>
 - **Hardware:** RTX 4050 Laptop 6 GB (driver ...), precision ...

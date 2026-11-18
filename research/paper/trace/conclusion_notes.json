@@ -1,0 +1,439 @@
+{
+  "document": "research/paper/conclusion_notes.md",
+  "constants": [
+    {
+      "value": "0.05",
+      "context": "tolerance",
+      "source": "docs/PHASE_STATUS.md#phase-18--inference-package-v1-re-run"
+    },
+    {
+      "value": "1.5",
+      "context": "times worse",
+      "source": "research/hypotheses.md"
+    },
+    {
+      "value": "1.5 s",
+      "context": "target of",
+      "source": "docs/decisions/ADR-0011-cpu-latency-target.md"
+    }
+  ],
+  "derived": [
+    {
+      "name": "ht_glyph",
+      "formula": "x",
+      "inputs": {
+        "x": {
+          "id": "GW-E2E-007",
+          "source": "reports/external/end_to_end.md#track-strict",
+          "row": [
+            "GW-E2E-007",
+            "hiertext_test"
+          ],
+          "header": "Page CER % (bag of lines)"
+        }
+      }
+    },
+    {
+      "name": "d_ht_small",
+      "formula": "x",
+      "inputs": {
+        "x": {
+          "id": "GW-E2E-009",
+          "source": "reports/external/comparisons.md",
+          "row": [
+            "GW-E2E-007",
+            "GW-BASE-006",
+            "hiertext_test",
+            "strict"
+          ],
+          "header": "CER (crops or bag of lines) pp"
+        }
+      }
+    },
+    {
+      "name": "gdc_glyph",
+      "formula": "x",
+      "inputs": {
+        "x": {
+          "id": "GW-E2E-007",
+          "source": "reports/external/end_to_end.md#track-strict",
+          "row": [
+            "GW-E2E-007",
+            "gdc_test"
+          ],
+          "header": "Page CER % (bag of lines)"
+        }
+      }
+    },
+    {
+      "name": "d_gdc_small",
+      "formula": "x",
+      "inputs": {
+        "x": {
+          "id": "GW-E2E-009",
+          "source": "reports/external/comparisons.md",
+          "row": [
+            "GW-E2E-007",
+            "GW-BASE-006",
+            "gdc_test",
+            "strict"
+          ],
+          "header": "CER (crops or bag of lines) pp"
+        }
+      }
+    },
+    {
+      "name": "d_gdc_medium",
+      "formula": "x",
+      "inputs": {
+        "x": {
+          "id": "GW-E2E-009",
+          "source": "reports/external/comparisons.md",
+          "row": [
+            "GW-E2E-007",
+            "GW-BASE-007",
+            "gdc_test",
+            "strict"
+          ],
+          "header": "CER (crops or bag of lines) pp"
+        }
+      }
+    },
+    {
+      "name": "gdc_glyph_oa",
+      "formula": "x",
+      "inputs": {
+        "x": {
+          "id": "GW-E2E-007",
+          "source": "reports/external/end_to_end.md#track-strict",
+          "row": [
+            "GW-E2E-007",
+            "gdc_test"
+          ],
+          "header": "Page CER % (order-aware)"
+        }
+      }
+    },
+    {
+      "name": "d_gdc_medium_oa",
+      "formula": "x",
+      "inputs": {
+        "x": {
+          "id": "GW-E2E-009",
+          "source": "reports/external/comparisons.md",
+          "row": [
+            "GW-E2E-007",
+            "GW-BASE-007",
+            "gdc_test",
+            "strict"
+          ],
+          "header": "Order-aware CER / word acc pp"
+        }
+      }
+    },
+    {
+      "name": "d_gdc_tess_oa",
+      "formula": "x",
+      "inputs": {
+        "x": {
+          "id": "GW-E2E-009",
+          "source": "reports/external/comparisons.md",
+          "row": [
+            "GW-E2E-007",
+            "GW-BASE-001",
+            "gdc_test",
+            "strict"
+          ],
+          "header": "Order-aware CER / word acc pp"
+        }
+      }
+    },
+    {
+      "name": "clean_pages",
+      "formula": "x",
+      "inputs": {
+        "x": {
+          "id": "GW-E2E-010",
+          "source": "reports/error_cases/phase15/oracle_share.md#gdc_test",
+          "row": "L19",
+          "header": "Pages"
+        }
+      }
+    },
+    {
+      "name": "h1_cer",
+      "formula": "x * 100",
+      "inputs": {
+        "x": {
+          "id": "GW-E2E-009",
+          "source": "reports/external/results.json",
+          "row": "hypotheses/H1′ CER/tests/strict_pages/value"
+        }
+      }
+    },
+    {
+      "name": "h1_cer_lo",
+      "formula": "x * 100",
+      "inputs": {
+        "x": {
+          "id": "GW-E2E-009",
+          "source": "reports/external/results.json",
+          "row": "hypotheses/H1′ CER/tests/strict_pages/low"
+        }
+      }
+    },
+    {
+      "name": "h1_cer_hi",
+      "formula": "x * 100",
+      "inputs": {
+        "x": {
+          "id": "GW-E2E-009",
+          "source": "reports/external/results.json",
+          "row": "hypotheses/H1′ CER/tests/strict_pages/high"
+        }
+      }
+    },
+    {
+      "name": "h1_lat",
+      "formula": "x",
+      "inputs": {
+        "x": {
+          "id": "GW-E2E-009",
+          "source": "reports/external/results.json",
+          "row": "hypotheses/H1′ latency/test"
+        }
+      }
+    },
+    {
+      "name": "h5",
+      "formula": "x * 100",
+      "inputs": {
+        "x": {
+          "id": "GW-E2E-009",
+          "source": "reports/external/results.json",
+          "row": "hypotheses/H5′/tests/lines/value"
+        }
+      }
+    },
+    {
+      "name": "h5_lo",
+      "formula": "x * 100",
+      "inputs": {
+        "x": {
+          "id": "GW-E2E-009",
+          "source": "reports/external/results.json",
+          "row": "hypotheses/H5′/tests/lines/low"
+        }
+      }
+    },
+    {
+      "name": "h5_hi",
+      "formula": "x * 100",
+      "inputs": {
+        "x": {
+          "id": "GW-E2E-009",
+          "source": "reports/external/results.json",
+          "row": "hypotheses/H5′/tests/lines/high"
+        }
+      }
+    },
+    {
+      "name": "crop_glyph",
+      "formula": "x",
+      "inputs": {
+        "x": {
+          "id": "GW-REC-039",
+          "source": "reports/external/recognition.md#track-strict",
+          "row": [
+            "GW-REC-039",
+            "gdc_test"
+          ],
+          "header": "CER %"
+        }
+      }
+    },
+    {
+      "name": "crop_medium",
+      "formula": "x",
+      "inputs": {
+        "x": {
+          "id": "GW-BASE-007",
+          "source": "reports/external/recognition.md#track-strict",
+          "row": [
+            "GW-BASE-007",
+            "gdc_test"
+          ],
+          "header": "CER %"
+        }
+      }
+    },
+    {
+      "name": "d_crop_medium",
+      "formula": "x",
+      "inputs": {
+        "x": {
+          "id": "GW-E2E-009",
+          "source": "reports/external/comparisons.md",
+          "row": [
+            "GW-REC-039",
+            "GW-BASE-007",
+            "gdc_test",
+            "strict"
+          ],
+          "header": "CER (crops or bag of lines) pp"
+        }
+      }
+    },
+    {
+      "name": "iiit_glyph",
+      "formula": "x",
+      "inputs": {
+        "x": {
+          "id": "GW-REC-039",
+          "source": "reports/external/recognition.md#iiit5k",
+          "row": [
+            "GW-REC-039"
+          ],
+          "header": "Word acc %"
+        }
+      }
+    },
+    {
+      "name": "iiit_medium",
+      "formula": "x",
+      "inputs": {
+        "x": {
+          "id": "GW-BASE-007",
+          "source": "reports/external/recognition.md#iiit5k",
+          "row": [
+            "GW-BASE-007"
+          ],
+          "header": "Word acc %"
+        }
+      }
+    },
+    {
+      "name": "d_iiit_medium",
+      "formula": "x",
+      "inputs": {
+        "x": {
+          "id": "GW-E2E-009",
+          "source": "reports/external/comparisons.md",
+          "row": [
+            "GW-REC-039",
+            "GW-BASE-007",
+            "iiit5k_test",
+            "alnum"
+          ],
+          "header": "Order-aware CER / word acc pp"
+        }
+      }
+    },
+    {
+      "name": "odb_glyph",
+      "formula": "x",
+      "inputs": {
+        "x": {
+          "id": "GW-E2E-007",
+          "source": "reports/external/end_to_end.md#track-strict",
+          "row": [
+            "GW-E2E-007",
+            "omnidocbench_test"
+          ],
+          "header": "Page CER % (order-aware)"
+        }
+      }
+    },
+    {
+      "name": "odb_tess",
+      "formula": "x",
+      "inputs": {
+        "x": {
+          "id": "GW-BASE-001",
+          "source": "reports/external/end_to_end.md#track-strict",
+          "row": [
+            "GW-BASE-001",
+            "omnidocbench_test"
+          ],
+          "header": "Page CER % (order-aware)"
+        }
+      }
+    },
+    {
+      "name": "d_odb_tess",
+      "formula": "x",
+      "inputs": {
+        "x": {
+          "id": "GW-E2E-009",
+          "source": "reports/external/comparisons.md",
+          "row": [
+            "GW-E2E-007",
+            "GW-BASE-001",
+            "omnidocbench_test",
+            "strict"
+          ],
+          "header": "Order-aware CER / word acc pp"
+        }
+      }
+    },
+    {
+      "name": "missed_ht",
+      "formula": "x",
+      "inputs": {
+        "x": {
+          "id": "GW-E2E-010",
+          "source": "reports/error_cases/phase15/pipeline.md#hiertext_test",
+          "row": "L17",
+          "header": "Share % [page CI]"
+        }
+      }
+    },
+    {
+      "name": "matched_ht",
+      "formula": "x",
+      "inputs": {
+        "x": {
+          "id": "GW-E2E-010",
+          "source": "reports/error_cases/phase15/pipeline.md#hiertext_test",
+          "row": "L18",
+          "header": "Share % [page CI]"
+        }
+      }
+    },
+    {
+      "name": "oracle_all",
+      "formula": "x",
+      "inputs": {
+        "x": {
+          "id": "GW-E2E-010",
+          "source": "reports/error_cases/phase15/oracle_share.md#gdc_test",
+          "row": "all pages",
+          "header": "Share % [page CI]"
+        }
+      }
+    },
+    {
+      "name": "adr_page",
+      "formula": "x",
+      "inputs": {
+        "x": {
+          "id": "GW-EFF-007",
+          "source": "reports/efficiency/phase16/README.md#adr-0011s",
+          "row": "v1 PyTorch, CPU, 10 threads",
+          "header": "page mean (≤ 1,500)"
+        }
+      }
+    },
+    {
+      "name": "h1_onnx",
+      "formula": "x",
+      "inputs": {
+        "x": {
+          "id": "GW-EFF-010",
+          "source": "reports/efficiency/phase16/results.json",
+          "row": "verdicts/H1′ ONNX/test"
+        }
+      }
+    }
+  ]
+}
