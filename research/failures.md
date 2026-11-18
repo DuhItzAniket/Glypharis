@@ -33,6 +33,29 @@ disappointing experiment here, including bugs that invalidated a run.
 - **What we changed:** nothing in the runner. The run is recorded as not runnable on this hardware, as the Phase 5 exit criteria allow; running it with a smaller detector input would be a different, non-default configuration.
 - **Lesson / implication for the paper:** the server pipeline's page-level memory is itself a deployment finding for a laptop-class target; the report states the missing cell and why.
 
+### 2026-10-26 — GW-REC-023 — the CRNN combination was abandoned before it ran
+
+- **What we tried:** nothing was trained. GW-REC-023 was registered on 2026-10-25, while GW-REC-022
+  was running and before its result: GW-REC-006 (CRNN, input height 48) with weight decay 1e-2
+  (`configs/rec/gw-rec-023.yaml`). It was to be the cheaper candidate for the full-budget
+  confirmation, and the run that shows whether the SVTR-style encoder still adds anything on top of
+  the other two changes.
+- **What happened:** it was abandoned on 2026-10-26 without starting, so it has no run report and no
+  job in `reports/compute/ledger.md`. GW-REC-022 had finished at -0.76 points [-0.81, -0.71] against
+  the control (`reports/training/phase07/ablation_table.md`) and -0.27 [-0.32, -0.22] against
+  GW-REC-006 (`reports/training/compare/GW-REC-022_vs_GW-REC-006.md`).
+- **Root cause:** a decision, not a fault. The entry would have preferred this run if GW-REC-022 did
+  not beat it by a clear margin. GW-REC-006 was used in its place for that reading: GW-REC-022 beat
+  it clearly, and weight decay alone was worth only -0.04 (GW-REC-014), so this run could only have
+  isolated that small share.
+- **What we changed:** the GPU time went to the full-budget confirmation, GW-REC-024. The registry
+  keeps the ID and the config, with no report path.
+- **Lesson / implication for the paper:** the -0.27 is not the encoder's effect alone. GW-REC-022
+  differs from GW-REC-006 in the encoder, weight decay, and the encoder's learning rate and
+  micro-batches, and row L4 of the Phase 13 ladder adds them together too (`research/ablations.md`).
+  No run measures the encoder's share with the other changes held equal, so the paper should credit
+  the combination.
+
 ### 2026-10-28 — GW-EFF-003 / GW-EFF-004 / GW-E2E-004 — the first v0.1 bundle had the wrong post-processing
 
 - **What we tried:** building the v0.1 bundle with Phase 9's settings and running the Phase 17 and 18
