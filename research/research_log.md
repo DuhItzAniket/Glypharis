@@ -422,3 +422,11 @@ the bottom. Experiments get their full record in `experiments.md`; this log is t
   build's outputs: no difference in the maps, the logits, the line texts or page CER (GW-EFF-012).
   With Phase 16's ONNX check (GW-EFF-006) the v1 export is declared successful.
 
+### 2026-11-18 — Phase 18 re-run: the installed package reads like the evaluated pipeline
+
+- Installed from the branch, the package on the v1 bundle reads the 400 Phase 5 validation pages
+  line for line as the frozen pipeline did in Phase 14: 16,835 of 16,835 lines with the same text
+  and box and the same 24.32% page CER, CPU against the GPU reference (GW-E2E-011).
+- A clean environment with only the locked dependencies installs it and runs `glypharis-ocr` on a
+  page from outside the repository.
+

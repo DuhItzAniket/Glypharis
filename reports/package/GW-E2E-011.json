@@ -1,0 +1,46 @@
+{
+ "model": "glypharis-v1",
+ "backend": "torch",
+ "model_version": "glypharis_v1",
+ "pages": 400,
+ "page_cer_package": 0.24319528973296592,
+ "page_cer_phase10": 0.24319528973296592,
+ "difference": 0.0,
+ "lines_same_text_and_box": 16835,
+ "lines": 16835,
+ "pass": true,
+ "experiment": "GW-E2E-011",
+ "cer_tolerance": 0.0005,
+ "box_tolerance_px": 1.0,
+ "started_utc": "2026-11-18T08:33:54+00:00",
+ "ended_utc": "2026-11-18T08:52:03+00:00",
+ "git_commit": "c5d7011421f6fd96cd7b6122caf7b12f6411ce00",
+ "git_dirty": false,
+ "config": "configs/det/gw-det-001.yaml",
+ "bundle_version": "glypharis_v1",
+ "bundle_manifest_sha256": "875357a6346e8b1f989005fa96c557b00bf687461043368dc5e3dc532839f037",
+ "loaded_with": "GlypharisOCR.from_pretrained(bundle, backend, threads, cache=False)",
+ "reference": "hiertext_val.jsonl",
+ "reference_sha256": "c8520576f44f8b2ee436f9103556556b2f5e6685379b95bee3ef2403eb73eb4b",
+ "threads": 10,
+ "torch_threads": 10,
+ "torch_interop_threads": 16,
+ "versions": {
+  "python": "3.11.9",
+  "torch": "2.14.1+cu126",
+  "onnxruntime": "1.31.1"
+ },
+ "v1_code": {
+  "tag": "phase14-eval",
+  "tag_commit": "6795186be166d6b60238c701753aad32e44d0e98",
+  "head": "c5d7011421f6fd96cd7b6122caf7b12f6411ce00",
+  "paths": [
+   "glypharis/pipeline",
+   "glypharis/models",
+   "glypharis/export",
+   "glypharis/data",
+   "configs"
+  ],
+  "v1_code": "equal"
+ }
+}
