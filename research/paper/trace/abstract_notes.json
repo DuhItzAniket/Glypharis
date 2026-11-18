@@ -1,0 +1,29 @@
+{
+  "document": "research/paper/abstract_notes.md",
+  "constants": [
+    {
+      "value": "0.5",
+      "context": "IoU",
+      "source": "docs/EXPERIMENT_PROTOCOL.md#3-metrics"
+    },
+    {
+      "value": "1.5",
+      "context": "times worse",
+      "source": "research/hypotheses.md"
+    }
+  ],
+  "derived": [
+    {
+      "name": "gdc_documents",
+      "formula": "x",
+      "inputs": {
+        "x": {
+          "id": "GW-E2E-010",
+          "source": "reports/error_cases/phase15/oracle_share.md#gdc_test",
+          "row": "all pages",
+          "header": "Documents"
+        }
+      }
+    }
+  ]
+}

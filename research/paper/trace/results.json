@@ -1,0 +1,118 @@
+{
+  "document": "research/paper/results.md",
+  "constants": [
+    {"value": "95%", "context": "interval|\\bCI\\b|bootstrap", "source": "docs/EXPERIMENT_PROTOCOL.md"},
+    {"value": "1,000", "context": "resamples", "source": "docs/EXPERIMENT_PROTOCOL.md"},
+    {"value": "0.05", "context": "tolerance", "source": "docs/PHASE_STATUS.md#phase-18--inference-package-v1-re-run"},
+    {"value": "1536", "context": "long side", "source": "configs/final/glypharis_v1.yaml#detector/infer"},
+    {"value": "2.35", "context": "T = 2\\.35|temperature|T=2\\.35|ECE\\(2\\.35\\)", "source": "configs/final/glypharis_v1.yaml#recognizer"},
+    {"value": "1", "context": "T = 1", "source": "reports/external/calibration.md"},
+    {"value": "15", "context": "equal-mass", "source": "reports/external/calibration.md"},
+    {"value": "0.5", "context": "IoU", "source": "reports/baselines/end_to_end.md"},
+    {"value": "10%", "context": "line CER", "source": "reports/baselines/end_to_end.md"},
+    {"value": "10", "context": "threads", "source": "reports/external/README.md#confirmatory-tests-phase-14-plan-item-5"},
+    {"value": "25 ms", "context": "line mean", "source": "docs/decisions/ADR-0011-cpu-latency-target.md"},
+    {"value": "70 ms", "context": "p95", "source": "docs/decisions/ADR-0011-cpu-latency-target.md"},
+    {"value": "1.5 s", "context": "page mean", "source": "docs/decisions/ADR-0011-cpu-latency-target.md"},
+    {"value": "2.7 s", "context": "p95", "source": "docs/decisions/ADR-0011-cpu-latency-target.md"},
+    {"value": "1,836 MiB", "context": "RAM", "source": "docs/decisions/ADR-0011-cpu-latency-target.md"},
+    {"value": "7", "context": "corruptions", "source": "docs/EXPERIMENT_PROTOCOL.md"},
+    {"value": "5", "context": "levels", "source": "docs/EXPERIMENT_PROTOCOL.md"}
+  ],
+  "derived": [
+    {
+      "name": "h7_accuracy_lines",
+      "formula": "x",
+      "note": "The seeded validation lines of GW-EFF-009, as printed in the section heading of pareto.md.",
+      "inputs": {
+        "x": {"id": "GW-EFF-009", "source": "reports/efficiency/phase16/pareto.md#lines-line-cer-on-the-5000-seeded-lines-strict-greedy-one-line-at-a-time-line-time-on-100-rec_samples-lines", "value": "5,000"}
+      }
+    },
+    {
+      "name": "phase5_pages",
+      "formula": "x",
+      "note": "The Phase 5 validation pages, as printed in the section heading of pareto.md.",
+      "inputs": {
+        "x": {"id": "GW-EFF-009", "source": "reports/efficiency/phase16/pareto.md#pages-page-cer-and-e2e-f1-on-the-400-phase-5-pages-strict-page-time-on-the-110-profile-pages", "value": "400"}
+      }
+    },
+    {
+      "name": "funsd_pages",
+      "formula": "x",
+      "inputs": {
+        "x": {"id": "GW-E2E-007", "source": "reports/external/end_to_end.md#detection", "row": ["GW-E2E-007", "funsd_test"], "header": "Pages"}
+      }
+    },
+    {
+      "name": "gdc_documents",
+      "formula": "x",
+      "note": "Source documents of all GDC pages, the 'all pages' row of the oracle share table.",
+      "inputs": {
+        "x": {"id": "GW-E2E-010", "source": "reports/error_cases/phase15/oracle_share.md#gdc_test", "row": ["all pages"], "header": "Documents"}
+      }
+    },
+    {
+      "name": "pages_scan_app",
+      "formula": "x",
+      "inputs": {
+        "x": {"id": "GW-E2E-007", "source": "reports/external/end_to_end.md#gdc-per-capture-condition-information", "row": ["GW-E2E-007", "e2e", "scan_app"], "header": "Units"}
+      }
+    },
+    {
+      "name": "pages_photo_flat",
+      "formula": "x",
+      "inputs": {
+        "x": {"id": "GW-E2E-007", "source": "reports/external/end_to_end.md#gdc-per-capture-condition-information", "row": ["GW-E2E-007", "e2e", "photo_flat"], "header": "Units"}
+      }
+    },
+    {
+      "name": "pages_photo_angled",
+      "formula": "x",
+      "inputs": {
+        "x": {"id": "GW-E2E-007", "source": "reports/external/end_to_end.md#gdc-per-capture-condition-information", "row": ["GW-E2E-007", "e2e", "photo_angled"], "header": "Units"}
+      }
+    },
+    {
+      "name": "pages_distant",
+      "formula": "x",
+      "inputs": {
+        "x": {"id": "GW-E2E-007", "source": "reports/external/end_to_end.md#gdc-per-capture-condition-information", "row": ["GW-E2E-007", "e2e", "distant"], "header": "Units"}
+      }
+    },
+    {
+      "name": "pages_low_light",
+      "formula": "x",
+      "inputs": {
+        "x": {"id": "GW-E2E-007", "source": "reports/external/end_to_end.md#gdc-per-capture-condition-information", "row": ["GW-E2E-007", "e2e", "low_light"], "header": "Units"}
+      }
+    },
+    {
+      "name": "pages_curved",
+      "formula": "x",
+      "inputs": {
+        "x": {"id": "GW-E2E-007", "source": "reports/external/end_to_end.md#gdc-per-capture-condition-information", "row": ["GW-E2E-007", "e2e", "curved"], "header": "Units"}
+      }
+    },
+    {
+      "name": "pages_rotated",
+      "formula": "x",
+      "inputs": {
+        "x": {"id": "GW-E2E-007", "source": "reports/external/end_to_end.md#gdc-per-capture-condition-information", "row": ["GW-E2E-007", "e2e", "rotated"], "header": "Units"}
+      }
+    },
+    {
+      "name": "det_val_pages",
+      "formula": "x",
+      "inputs": {
+        "x": {"id": "GW-DET-007", "source": "reports/error_cases/detector/GW-DET-007/pair.json#pages", "value": "1715"}
+      }
+    },
+    {
+      "name": "det_half_b_pages",
+      "formula": "x",
+      "inputs": {
+        "x": {"id": "GW-DET-004", "source": "reports/error_cases/detector/GW-DET-004/pair_B.json#pages", "value": "858"}
+      }
+    }
+  ]
+}

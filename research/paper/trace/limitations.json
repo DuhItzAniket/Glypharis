@@ -1,0 +1,160 @@
+{
+  "document": "research/paper/limitations.md",
+  "constants": [
+    {
+      "value": "0.05",
+      "context": "tolerance",
+      "source": "docs/PHASE_STATUS.md#phase-18--inference-package-v1-re-run"
+    },
+    {
+      "value": "25",
+      "context": "target of",
+      "source": "docs/decisions/ADR-0011-cpu-latency-target.md"
+    },
+    {
+      "value": "1.5 s",
+      "context": "against",
+      "source": "docs/decisions/ADR-0011-cpu-latency-target.md"
+    },
+    {
+      "value": "1,836",
+      "context": "memory target",
+      "source": "docs/decisions/ADR-0011-cpu-latency-target.md"
+    },
+    {
+      "value": "64",
+      "context": "pixel limit",
+      "source": "docs/PHASE_STATUS.md#phase-20--production-engineering-v1-re-run"
+    }
+  ],
+  "derived": [
+    {
+      "name": "gdc_documents",
+      "formula": "x",
+      "inputs": {
+        "x": {
+          "id": "GW-E2E-010",
+          "source": "reports/error_cases/phase15/oracle_share.md#gdc_test",
+          "row": "all pages",
+          "header": "Documents"
+        }
+      }
+    },
+    {
+      "name": "funsd_pages",
+      "formula": "x",
+      "inputs": {
+        "x": {
+          "id": "GW-E2E-007",
+          "source": "reports/external/end_to_end.md#detection",
+          "row": [
+            "GW-E2E-007",
+            "funsd_test"
+          ],
+          "header": "Pages"
+        }
+      }
+    },
+    {
+      "name": "gdc_scan_pages",
+      "formula": "x",
+      "inputs": {
+        "x": {
+          "id": "GW-E2E-007",
+          "source": "reports/external/end_to_end.md#detection",
+          "row": [
+            "GW-E2E-007",
+            "gdc_scan_test"
+          ],
+          "header": "Pages"
+        }
+      }
+    },
+    {
+      "name": "gdc_rotated_pages",
+      "formula": "x",
+      "inputs": {
+        "x": {
+          "id": "GW-E2E-007",
+          "source": "reports/external/end_to_end.md#gdc-per-capture",
+          "row": [
+            "GW-E2E-007",
+            "e2e",
+            "rotated"
+          ],
+          "header": "Units"
+        }
+      }
+    },
+    {
+      "name": "gdc_curved_pages",
+      "formula": "x",
+      "inputs": {
+        "x": {
+          "id": "GW-E2E-007",
+          "source": "reports/external/end_to_end.md#gdc-per-capture",
+          "row": [
+            "GW-E2E-007",
+            "e2e",
+            "curved"
+          ],
+          "header": "Units"
+        }
+      }
+    },
+    {
+      "name": "gdc_vertical_lines",
+      "formula": "x",
+      "inputs": {
+        "x": {
+          "id": "GW-E2E-007",
+          "source": "reports/external/end_to_end.md#vertical-lines",
+          "row": [
+            "GW-E2E-007",
+            "gdc_test"
+          ],
+          "header": "Lines"
+        }
+      }
+    },
+    {
+      "name": "rotation_bin",
+      "formula": "x",
+      "inputs": {
+        "x": {
+          "id": "GW-E2E-010",
+          "source": "reports/error_cases/phase15/pipeline.md#hiertext_test",
+          "row": "L73",
+          "header": "Bin",
+          "value": "15"
+        }
+      }
+    },
+    {
+      "name": "seed_cer_a",
+      "formula": "x",
+      "inputs": {
+        "x": {
+          "id": "GW-REC-037",
+          "source": "reports/ablation/phase13_final.md",
+          "row": "GW-REC-034, GW-REC-035, GW-REC-036",
+          "header": "Val CER % (per seed)",
+          "value": "6.30"
+        }
+      }
+    },
+    {
+      "name": "seed_cer_b",
+      "formula": "x",
+      "inputs": {
+        "x": {
+          "id": "GW-REC-037",
+          "source": "reports/ablation/phase13_final.md",
+          "row": "GW-REC-034, GW-REC-035, GW-REC-036",
+          "header": "Val CER % (per seed)",
+          "value": "6.28"
+        }
+      }
+    }
+  ]
+}

@@ -1,207 +1,471 @@
 % GLYPHARIS references.
-% Phase 0 draft: entries written from memory of the published works. Check every field (authors,
-% venue, year, pages) against the publisher or arXiv page before Phase 21.
+% Every entry was checked on 2026-11-18. The source used for each entry, and what changed, is in
+% research/paper/trace/references_review.md. A field that could not be confirmed is left out and
+% the omission is logged there. Citation keys are frozen, so a key's year can differ from the
+% entry's year (efron1994bootstrap, liao2022dbnetpp).
+
+% Recognition
 
 @inproceedings{graves2006ctc,
   title     = {Connectionist Temporal Classification: Labelling Unsegmented Sequence Data with Recurrent Neural Networks},
   author    = {Graves, Alex and Fern{\'a}ndez, Santiago and Gomez, Faustino and Schmidhuber, J{\"u}rgen},
-  booktitle = {Proceedings of the International Conference on Machine Learning (ICML)},
-  year      = {2006}
+  booktitle = {Proceedings of the 23rd International Conference on Machine Learning (ICML)},
+  pages     = {369--376},
+  publisher = {ACM},
+  year      = {2006},
+  doi       = {10.1145/1143844.1143891}
 }
 
 @article{shi2017crnn,
   title   = {An End-to-End Trainable Neural Network for Image-Based Sequence Recognition and Its Application to Scene Text Recognition},
   author  = {Shi, Baoguang and Bai, Xiang and Yao, Cong},
   journal = {IEEE Transactions on Pattern Analysis and Machine Intelligence},
-  year    = {2017}
+  volume  = {39},
+  number  = {11},
+  pages   = {2298--2304},
+  year    = {2017},
+  doi     = {10.1109/TPAMI.2016.2646371}
 }
 
 @article{shi2019aster,
   title   = {{ASTER}: An Attentional Scene Text Recognizer with Flexible Rectification},
   author  = {Shi, Baoguang and Yang, Mingkun and Wang, Xinggang and Lyu, Pengyuan and Yao, Cong and Bai, Xiang},
   journal = {IEEE Transactions on Pattern Analysis and Machine Intelligence},
-  year    = {2019}
+  volume  = {41},
+  number  = {9},
+  pages   = {2035--2048},
+  year    = {2019},
+  doi     = {10.1109/TPAMI.2018.2848939}
 }
 
 @inproceedings{fang2021abinet,
   title     = {Read Like Humans: Autonomous, Bidirectional and Iterative Language Modeling for Scene Text Recognition},
   author    = {Fang, Shancheng and Xie, Hongtao and Wang, Yuxin and Mao, Zhendong and Zhang, Yongdong},
-  booktitle = {Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern Recognition (CVPR)},
-  year      = {2021}
+  booktitle = {2021 IEEE/CVF Conference on Computer Vision and Pattern Recognition (CVPR)},
+  pages     = {7094--7103},
+  publisher = {IEEE},
+  year      = {2021},
+  doi       = {10.1109/CVPR46437.2021.00702}
 }
 
 @inproceedings{bautista2022parseq,
   title     = {Scene Text Recognition with Permuted Autoregressive Sequence Models},
   author    = {Bautista, Darwin and Atienza, Rowel},
-  booktitle = {Proceedings of the European Conference on Computer Vision (ECCV)},
-  year      = {2022}
+  booktitle = {Computer Vision -- ECCV 2022, Part XXVIII},
+  series    = {Lecture Notes in Computer Science},
+  volume    = {13688},
+  pages     = {178--196},
+  publisher = {Springer},
+  year      = {2022},
+  doi       = {10.1007/978-3-031-19815-1_11}
 }
 
 @inproceedings{du2022svtr,
   title     = {{SVTR}: Scene Text Recognition with a Single Visual Model},
   author    = {Du, Yongkun and Chen, Zhineng and Jia, Caiyan and Yin, Xiaoting and Zheng, Tianlun and Li, Chenxia and Du, Yuning and Jiang, Yu-Gang},
-  booktitle = {Proceedings of the International Joint Conference on Artificial Intelligence (IJCAI)},
-  year      = {2022}
+  booktitle = {Proceedings of the Thirty-First International Joint Conference on Artificial Intelligence (IJCAI)},
+  pages     = {884--890},
+  year      = {2022},
+  doi       = {10.24963/ijcai.2022/124}
 }
 
-@inproceedings{li2023trocr,
-  title     = {{TrOCR}: Transformer-Based Optical Character Recognition with Pre-trained Models},
-  author    = {Li, Minghao and Lv, Tengchao and Chen, Jingye and Cui, Lei and Lu, Yijuan and Florencio, Dinei and Zhang, Cha and Li, Zhoujun and Wei, Furu},
-  booktitle = {Proceedings of the AAAI Conference on Artificial Intelligence},
-  year      = {2023}
+@article{li2023trocr,
+  title   = {{TrOCR}: Transformer-Based Optical Character Recognition with Pre-trained Models},
+  author  = {Li, Minghao and Lv, Tengchao and Chen, Jingye and Cui, Lei and Lu, Yijuan and Florencio, Dinei and Zhang, Cha and Li, Zhoujun and Wei, Furu},
+  journal = {Proceedings of the AAAI Conference on Artificial Intelligence},
+  volume  = {37},
+  number  = {11},
+  pages   = {13094--13102},
+  year    = {2023},
+  doi     = {10.1609/aaai.v37i11.26538}
 }
+
+% Detection
 
 @inproceedings{zhou2017east,
   title     = {{EAST}: An Efficient and Accurate Scene Text Detector},
   author    = {Zhou, Xinyu and Yao, Cong and Wen, He and Wang, Yuzhi and Zhou, Shuchang and He, Weiran and Liang, Jiajun},
-  booktitle = {Proceedings of the IEEE Conference on Computer Vision and Pattern Recognition (CVPR)},
-  year      = {2017}
+  booktitle = {2017 IEEE Conference on Computer Vision and Pattern Recognition (CVPR)},
+  pages     = {2642--2651},
+  publisher = {IEEE},
+  year      = {2017},
+  doi       = {10.1109/CVPR.2017.283}
 }
 
 @inproceedings{baek2019craft,
   title     = {Character Region Awareness for Text Detection},
   author    = {Baek, Youngmin and Lee, Bado and Han, Dongyoon and Yun, Sangdoo and Lee, Hwalsuk},
-  booktitle = {Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern Recognition (CVPR)},
-  year      = {2019}
+  booktitle = {2019 IEEE/CVF Conference on Computer Vision and Pattern Recognition (CVPR)},
+  pages     = {9357--9366},
+  publisher = {IEEE},
+  year      = {2019},
+  doi       = {10.1109/CVPR.2019.00959}
 }
 
 @inproceedings{wang2019psenet,
   title     = {Shape Robust Text Detection with Progressive Scale Expansion Network},
   author    = {Wang, Wenhai and Xie, Enze and Li, Xiang and Hou, Wenbo and Lu, Tong and Yu, Gang and Shao, Shuai},
-  booktitle = {Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern Recognition (CVPR)},
-  year      = {2019}
+  booktitle = {2019 IEEE/CVF Conference on Computer Vision and Pattern Recognition (CVPR)},
+  pages     = {9328--9337},
+  publisher = {IEEE},
+  year      = {2019},
+  doi       = {10.1109/CVPR.2019.00956}
 }
 
-@inproceedings{liao2020dbnet,
-  title     = {Real-Time Scene Text Detection with Differentiable Binarization},
-  author    = {Liao, Minghui and Wan, Zhaoyi and Yao, Cong and Chen, Kai and Bai, Xiang},
-  booktitle = {Proceedings of the AAAI Conference on Artificial Intelligence},
-  year      = {2020}
+@article{liao2020dbnet,
+  title   = {Real-Time Scene Text Detection with Differentiable Binarization},
+  author  = {Liao, Minghui and Wan, Zhaoyi and Yao, Cong and Chen, Kai and Bai, Xiang},
+  journal = {Proceedings of the AAAI Conference on Artificial Intelligence},
+  volume  = {34},
+  number  = {07},
+  pages   = {11474--11481},
+  year    = {2020},
+  doi     = {10.1609/aaai.v34i07.6812}
 }
 
 @article{liao2022dbnetpp,
   title   = {Real-Time Scene Text Detection with Differentiable Binarization and Adaptive Scale Fusion},
   author  = {Liao, Minghui and Zou, Zhisheng and Wan, Zhaoyi and Yao, Cong and Bai, Xiang},
   journal = {IEEE Transactions on Pattern Analysis and Machine Intelligence},
-  year    = {2022}
+  volume  = {45},
+  number  = {1},
+  pages   = {919--931},
+  year    = {2023},
+  doi     = {10.1109/TPAMI.2022.3155612}
 }
 
 @inproceedings{howard2019mobilenetv3,
   title     = {Searching for {MobileNetV3}},
   author    = {Howard, Andrew and Sandler, Mark and Chu, Grace and Chen, Liang-Chieh and Chen, Bo and Tan, Mingxing and Wang, Weijun and Zhu, Yukun and Pang, Ruoming and Vasudevan, Vijay and Le, Quoc V. and Adam, Hartwig},
-  booktitle = {Proceedings of the IEEE/CVF International Conference on Computer Vision (ICCV)},
-  year      = {2019}
+  booktitle = {2019 IEEE/CVF International Conference on Computer Vision (ICCV)},
+  pages     = {1314--1324},
+  publisher = {IEEE},
+  year      = {2019},
+  doi       = {10.1109/ICCV.2019.00140}
 }
+
+@inproceedings{lin2017fpn,
+  title     = {Feature Pyramid Networks for Object Detection},
+  author    = {Lin, Tsung-Yi and Doll{\'a}r, Piotr and Girshick, Ross and He, Kaiming and Hariharan, Bharath and Belongie, Serge},
+  booktitle = {2017 IEEE Conference on Computer Vision and Pattern Recognition (CVPR)},
+  pages     = {936--944},
+  publisher = {IEEE},
+  year      = {2017},
+  doi       = {10.1109/CVPR.2017.106}
+}
+
+% OCR systems and page-level models
 
 @inproceedings{smith2007tesseract,
   title     = {An Overview of the {Tesseract} {OCR} Engine},
-  author    = {Smith, Ray},
-  booktitle = {Proceedings of the International Conference on Document Analysis and Recognition (ICDAR)},
-  year      = {2007}
+  author    = {Smith, R.},
+  booktitle = {Ninth International Conference on Document Analysis and Recognition (ICDAR 2007)},
+  volume    = {2},
+  pages     = {629--633},
+  publisher = {IEEE},
+  year      = {2007},
+  doi       = {10.1109/ICDAR.2007.4376991}
 }
 
-@article{du2020ppocr,
-  title   = {{PP-OCR}: A Practical Ultra Lightweight {OCR} System},
-  author  = {Du, Yuning and Li, Chenxia and Guo, Ruoyu and Yin, Xiaoting and Liu, Weiwei and Zhou, Jun and Bai, Yifan and Yu, Zilin and Yang, Yehua and Dang, Qingqing and Wang, Haoshuang},
-  journal = {arXiv preprint arXiv:2009.09941},
-  year    = {2020}
+@misc{du2020ppocr,
+  title         = {{PP-OCR}: A Practical Ultra Lightweight {OCR} System},
+  author        = {Du, Yuning and Li, Chenxia and Guo, Ruoyu and Yin, Xiaoting and Liu, Weiwei and Zhou, Jun and Bai, Yifan and Yu, Zilin and Yang, Yehua and Dang, Qingqing and Wang, Haoshuang},
+  year          = {2020},
+  eprint        = {2009.09941},
+  archivePrefix = {arXiv},
+  primaryClass  = {cs.CV},
+  doi           = {10.48550/arXiv.2009.09941}
+}
+
+@misc{cui2025paddleocr,
+  title         = {{PaddleOCR} 3.0 Technical Report},
+  author        = {Cui, Cheng and Sun, Ting and Lin, Manhui and Gao, Tingquan and Zhang, Yubo and Liu, Jiaxuan and Wang, Xueqing and Zhang, Zelun and Zhou, Changda and Liu, Hongen and Zhang, Yue and Lv, Wenyu and Huang, Kui and Zhang, Yichao and Zhang, Jing and Zhang, Jun and Liu, Yi and Yu, Dianhai and Ma, Yanjun},
+  year          = {2025},
+  eprint        = {2507.05595},
+  archivePrefix = {arXiv},
+  primaryClass  = {cs.CV},
+  doi           = {10.48550/arXiv.2507.05595}
+}
+
+@misc{paddleocr_ppocrv6,
+  title         = {{PP-OCRv6}: From 1.5{M} to 34.5{M} Parameters, Surpassing Billion-Scale {VLMs} on {OCR} Tasks},
+  author        = {Zhang, Yubo and Wang, Xueqing and Lin, Manhui and Zhang, Yue and Deng, Penglongyi and Sun, Ting and Gao, Tingquan and Zhang, Zelun and Liu, Jiaxuan and Zhou, Changda and Liu, Hongen and Liang, Suyin and Cui, Cheng and Liu, Yi and Yu, Dianhai and Ma, Yanjun},
+  year          = {2026},
+  eprint        = {2606.13108},
+  archivePrefix = {arXiv},
+  primaryClass  = {cs.CV},
+  doi           = {10.48550/arXiv.2606.13108}
+}
+
+@misc{doctr,
+  title        = {{docTR}: Document Text Recognition},
+  author       = {{Mindee}},
+  year         = {2021},
+  publisher    = {GitHub},
+  howpublished = {\url{https://github.com/mindee/doctr}}
+}
+
+@misc{easyocr,
+  title        = {{EasyOCR}},
+  author       = {{JaidedAI}},
+  howpublished = {\url{https://github.com/JaidedAI/EasyOCR}},
+  note         = {Software repository, accessed 2026-11-18}
 }
 
 @inproceedings{kim2022donut,
   title     = {{OCR}-Free Document Understanding Transformer},
   author    = {Kim, Geewook and Hong, Teakgyu and Yim, Moonbin and Nam, JeongYeon and Park, Jinyoung and Yim, Jinyeong and Hwang, Wonseok and Yun, Sangdoo and Han, Dongyoon and Park, Seunghyun},
-  booktitle = {Proceedings of the European Conference on Computer Vision (ECCV)},
-  year      = {2022}
+  booktitle = {Computer Vision -- ECCV 2022, Part XXVIII},
+  series    = {Lecture Notes in Computer Science},
+  volume    = {13688},
+  pages     = {498--517},
+  publisher = {Springer},
+  year      = {2022},
+  doi       = {10.1007/978-3-031-19815-1_29}
 }
 
-@article{blecher2023nougat,
-  title   = {Nougat: Neural Optical Understanding for Academic Documents},
-  author  = {Blecher, Lukas and Cucurull, Guillem and Scialom, Thomas and Stojnic, Robert},
-  journal = {arXiv preprint arXiv:2308.13418},
-  year    = {2023}
+@misc{blecher2023nougat,
+  title         = {Nougat: Neural Optical Understanding for Academic Documents},
+  author        = {Blecher, Lukas and Cucurull, Guillem and Scialom, Thomas and Stojnic, Robert},
+  year          = {2023},
+  eprint        = {2308.13418},
+  archivePrefix = {arXiv},
+  primaryClass  = {cs.LG},
+  doi           = {10.48550/arXiv.2308.13418}
 }
+
+% Datasets
 
 @inproceedings{gupta2016synthetic,
   title     = {Synthetic Data for Text Localisation in Natural Images},
   author    = {Gupta, Ankush and Vedaldi, Andrea and Zisserman, Andrew},
-  booktitle = {Proceedings of the IEEE Conference on Computer Vision and Pattern Recognition (CVPR)},
-  year      = {2016}
+  booktitle = {2016 IEEE Conference on Computer Vision and Pattern Recognition (CVPR)},
+  pages     = {2315--2324},
+  publisher = {IEEE},
+  year      = {2016},
+  doi       = {10.1109/CVPR.2016.254}
 }
 
 @inproceedings{long2022hiertext,
   title     = {Towards End-to-End Unified Scene Text Detection and Layout Analysis},
   author    = {Long, Shangbang and Qin, Siyang and Panteleev, Dmitry and Bissacco, Alessandro and Fujii, Yasuhisa and Raptis, Michalis},
-  booktitle = {Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern Recognition (CVPR)},
-  year      = {2022}
+  booktitle = {2022 IEEE/CVF Conference on Computer Vision and Pattern Recognition (CVPR)},
+  pages     = {1039--1049},
+  publisher = {IEEE},
+  year      = {2022},
+  doi       = {10.1109/CVPR52688.2022.00112}
+}
+
+@article{kuznetsova2020openimages,
+  title   = {The {Open Images} Dataset {V4}: Unified Image Classification, Object Detection, and Visual Relationship Detection at Scale},
+  author  = {Kuznetsova, Alina and Rom, Hassan and Alldrin, Neil and Uijlings, Jasper and Krasin, Ivan and Pont-Tuset, Jordi and Kamali, Shahab and Popov, Stefan and Malloci, Matteo and Kolesnikov, Alexander and Duerig, Tom and Ferrari, Vittorio},
+  journal = {International Journal of Computer Vision},
+  volume  = {128},
+  number  = {7},
+  pages   = {1956--1981},
+  year    = {2020},
+  doi     = {10.1007/s11263-020-01316-z}
+}
+
+@article{russakovsky2015imagenet,
+  title   = {{ImageNet} Large Scale Visual Recognition Challenge},
+  author  = {Russakovsky, Olga and Deng, Jia and Su, Hao and Krause, Jonathan and Satheesh, Sanjeev and Ma, Sean and Huang, Zhiheng and Karpathy, Andrej and Khosla, Aditya and Bernstein, Michael and Berg, Alexander C. and Fei-Fei, Li},
+  journal = {International Journal of Computer Vision},
+  volume  = {115},
+  number  = {3},
+  pages   = {211--252},
+  year    = {2015},
+  doi     = {10.1007/s11263-015-0816-y}
 }
 
 @inproceedings{mishra2012iiit5k,
   title     = {Scene Text Recognition using Higher Order Language Priors},
   author    = {Mishra, Anand and Alahari, Karteek and Jawahar, C. V.},
   booktitle = {Proceedings of the British Machine Vision Conference (BMVC)},
-  year      = {2012}
+  pages     = {127.1--127.11},
+  publisher = {British Machine Vision Association},
+  year      = {2012},
+  doi       = {10.5244/C.26.127}
 }
 
 @inproceedings{jaume2019funsd,
   title     = {{FUNSD}: A Dataset for Form Understanding in Noisy Scanned Documents},
   author    = {Jaume, Guillaume and Ekenel, Hazim Kemal and Thiran, Jean-Philippe},
-  booktitle = {International Conference on Document Analysis and Recognition Workshops (ICDAR-OST)},
-  year      = {2019}
+  booktitle = {2019 International Conference on Document Analysis and Recognition Workshops (ICDARW)},
+  pages     = {1--6},
+  publisher = {IEEE},
+  year      = {2019},
+  doi       = {10.1109/ICDARW.2019.10029}
+}
+
+@inproceedings{harley2015rvlcdip,
+  title     = {Evaluation of Deep Convolutional Nets for Document Image Classification and Retrieval},
+  author    = {Harley, Adam W. and Ufkes, Alex and Derpanis, Konstantinos G.},
+  booktitle = {2015 13th International Conference on Document Analysis and Recognition (ICDAR)},
+  pages     = {991--995},
+  publisher = {IEEE},
+  year      = {2015},
+  doi       = {10.1109/ICDAR.2015.7333910}
 }
 
 @inproceedings{huang2019sroie,
   title     = {{ICDAR2019} Competition on Scanned Receipt {OCR} and Information Extraction},
   author    = {Huang, Zheng and Chen, Kai and He, Jianhua and Bai, Xiang and Karatzas, Dimosthenis and Lu, Shijian and Jawahar, C. V.},
-  booktitle = {Proceedings of the International Conference on Document Analysis and Recognition (ICDAR)},
-  year      = {2019}
+  booktitle = {2019 International Conference on Document Analysis and Recognition (ICDAR)},
+  pages     = {1516--1520},
+  publisher = {IEEE},
+  year      = {2019},
+  doi       = {10.1109/ICDAR.2019.00244}
 }
 
 @inproceedings{mathew2021docvqa,
   title     = {{DocVQA}: A Dataset for {VQA} on Document Images},
   author    = {Mathew, Minesh and Karatzas, Dimosthenis and Jawahar, C. V.},
-  booktitle = {Proceedings of the IEEE/CVF Winter Conference on Applications of Computer Vision (WACV)},
-  year      = {2021}
+  booktitle = {2021 IEEE Winter Conference on Applications of Computer Vision (WACV)},
+  pages     = {2199--2208},
+  publisher = {IEEE},
+  year      = {2021},
+  doi       = {10.1109/WACV48630.2021.00225}
 }
 
 @inproceedings{ouyang2025omnidocbench,
   title     = {{OmniDocBench}: Benchmarking Diverse {PDF} Document Parsing with Comprehensive Annotations},
-  author    = {Ouyang, Linke and others},
-  booktitle = {Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern Recognition (CVPR)},
-  year      = {2025}
+  author    = {Ouyang, Linke and Qu, Yuan and Zhou, Hongbin and Zhu, Jiawei and Zhang, Rui and Lin, Qunshu and Wang, Bin and Zhao, Zhiyuan and Jiang, Man and Zhao, Xiaomeng and Shi, Jin and Wu, Fan and Chu, Pei and Liu, Minghao and Li, Zhenxiang and Xu, Chao and Zhang, Bo and Shi, Botian and Tu, Zhongying and He, Conghui},
+  booktitle = {2025 IEEE/CVF Conference on Computer Vision and Pattern Recognition (CVPR)},
+  pages     = {24838--24848},
+  publisher = {IEEE},
+  year      = {2025},
+  doi       = {10.1109/CVPR52734.2025.02313}
 }
+
+@inproceedings{rae2020compressive,
+  title     = {Compressive Transformers for Long-Range Sequence Modelling},
+  author    = {Rae, Jack W. and Potapenko, Anna and Jayakumar, Siddhant M. and Hillier, Chloe and Lillicrap, Timothy P.},
+  booktitle = {International Conference on Learning Representations (ICLR)},
+  year      = {2020},
+  url       = {https://openreview.net/forum?id=SylKikSYDH},
+  note      = {Introduces the PG-19 corpus}
+}
+
+% Augmentation and robustness
 
 @inproceedings{groleau2023augraphy,
   title     = {Augraphy: A Data Augmentation Library for Document Images},
   author    = {Groleau, Alexander and Chee, Kok Wei and Larson, Stefan and Maini, Samay and Boarman, Jonathan},
-  booktitle = {Proceedings of the International Conference on Document Analysis and Recognition (ICDAR)},
-  year      = {2023}
+  booktitle = {Document Analysis and Recognition -- ICDAR 2023, Part III},
+  series    = {Lecture Notes in Computer Science},
+  volume    = {14189},
+  pages     = {384--401},
+  publisher = {Springer},
+  year      = {2023},
+  doi       = {10.1007/978-3-031-41682-8_24}
 }
 
 @inproceedings{hendrycks2019benchmarking,
   title     = {Benchmarking Neural Network Robustness to Common Corruptions and Perturbations},
   author    = {Hendrycks, Dan and Dietterich, Thomas},
   booktitle = {International Conference on Learning Representations (ICLR)},
-  year      = {2019}
+  year      = {2019},
+  url       = {https://openreview.net/forum?id=HJz6tiCqYm}
+}
+
+% Evaluation methods
+
+@article{levenshtein1966,
+  title   = {Binary Codes Capable of Correcting Deletions, Insertions, and Reversals},
+  author  = {Levenshtein, Vladimir I.},
+  journal = {Soviet Physics Doklady},
+  volume  = {10},
+  number  = {8},
+  pages   = {707--710},
+  year    = {1966},
+  note    = {English translation; Russian original in Doklady Akademii Nauk SSSR 163(4):845--848, 1965}
 }
 
 @inproceedings{guo2017calibration,
   title     = {On Calibration of Modern Neural Networks},
   author    = {Guo, Chuan and Pleiss, Geoff and Sun, Yu and Weinberger, Kilian Q.},
-  booktitle = {Proceedings of the International Conference on Machine Learning (ICML)},
-  year      = {2017}
+  booktitle = {Proceedings of the 34th International Conference on Machine Learning},
+  editor    = {Precup, Doina and Teh, Yee Whye},
+  series    = {Proceedings of Machine Learning Research},
+  volume    = {70},
+  pages     = {1321--1330},
+  publisher = {PMLR},
+  year      = {2017},
+  url       = {https://proceedings.mlr.press/v70/guo17a.html}
+}
+
+@article{naeini2015ece,
+  title   = {Obtaining Well Calibrated Probabilities Using {Bayesian} Binning},
+  author  = {Naeini, Mahdi Pakdaman and Cooper, Gregory F. and Hauskrecht, Milos},
+  journal = {Proceedings of the AAAI Conference on Artificial Intelligence},
+  volume  = {29},
+  number  = {1},
+  pages   = {2901--2907},
+  year    = {2015},
+  doi     = {10.1609/aaai.v29i1.9602}
 }
 
 @book{efron1994bootstrap,
   title     = {An Introduction to the Bootstrap},
   author    = {Efron, Bradley and Tibshirani, Robert J.},
-  publisher = {Chapman and Hall/CRC},
-  year      = {1994}
+  series    = {Monographs on Statistics and Applied Probability},
+  volume    = {57},
+  publisher = {Chapman \& Hall},
+  year      = {1993},
+  doi       = {10.1007/978-1-4899-4541-9}
 }
 
-@inproceedings{rae2020compressive,
-  title     = {Compressive Transformers for Long-Range Sequence Modelling},
-  author    = {Rae, Jack W. and Potapenko, Anna and Jayakumar, Siddhant M. and Lillicrap, Timothy P.},
+% Layout analysis
+
+@article{nagy1992xycut,
+  title   = {A Prototype Document Image Analysis System for Technical Journals},
+  author  = {Nagy, G. and Seth, S. and Viswanathan, M.},
+  journal = {Computer},
+  volume  = {25},
+  number  = {7},
+  pages   = {10--22},
+  year    = {1992},
+  doi     = {10.1109/2.144436}
+}
+
+% Training methods and software
+
+@inproceedings{loshchilov2019adamw,
+  title     = {Decoupled Weight Decay Regularization},
+  author    = {Loshchilov, Ilya and Hutter, Frank},
   booktitle = {International Conference on Learning Representations (ICLR)},
-  year      = {2020},
-  note      = {Introduces the PG-19 corpus}
+  year      = {2019},
+  url       = {https://openreview.net/forum?id=Bkg6RiCqY7}
+}
+
+@inproceedings{smith2019onecycle,
+  title     = {Super-Convergence: Very Fast Training of Neural Networks Using Large Learning Rates},
+  author    = {Smith, Leslie N. and Topin, Nicholay},
+  booktitle = {Artificial Intelligence and Machine Learning for Multi-Domain Operations Applications},
+  editor    = {Pham, Tien},
+  series    = {Proceedings of SPIE},
+  volume    = {11006},
+  pages     = {1100612},
+  publisher = {SPIE},
+  year      = {2019},
+  doi       = {10.1117/12.2520589}
+}
+
+@inproceedings{paszke2019pytorch,
+  title     = {{PyTorch}: An Imperative Style, High-Performance Deep Learning Library},
+  author    = {Paszke, Adam and Gross, Sam and Massa, Francisco and Lerer, Adam and Bradbury, James and Chanan, Gregory and Killeen, Trevor and Lin, Zeming and Gimelshein, Natalia and Antiga, Luca and Desmaison, Alban and Kopf, Andreas and Yang, Edward and DeVito, Zachary and Raison, Martin and Tejani, Alykhan and Chilamkurthy, Sasank and Steiner, Benoit and Fang, Lu and Bai, Junjie and Chintala, Soumith},
+  booktitle = {Advances in Neural Information Processing Systems},
+  editor    = {Wallach, H. and Larochelle, H. and Beygelzimer, A. and d'Alch{\'e}-Buc, F. and Fox, E. and Garnett, R.},
+  volume    = {32},
+  publisher = {Curran Associates, Inc.},
+  year      = {2019},
+  url       = {https://proceedings.neurips.cc/paper_files/paper/2019/hash/bdbca288fee7f92f2bfa9f7012727740-Abstract.html}
+}
+
+@misc{onnxruntime,
+  title        = {{ONNX Runtime}},
+  author       = {{Microsoft}},
+  howpublished = {\url{https://onnxruntime.ai}},
+  note         = {Accessed 2026-11-18}
 }

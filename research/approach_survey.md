@@ -4,8 +4,11 @@ Phase 0 survey of methods, systems and datasets, and why the GLYPHARIS design wa
 qualitative survey: it records *published* properties and design trade-offs, not numbers measured here.
 Any performance figure quoted from a paper is attributed to that paper and is not comparable with our
 results until reproduced under [EXPERIMENT_PROTOCOL](../docs/EXPERIMENT_PROTOCOL.md). Citation keys refer to
-[`paper/references.bib`](paper/references.bib); entries are to be checked against the publisher pages in
-Phase 21.
+[`paper/references.bib`](paper/references.bib); every entry was checked against a publisher, arXiv or
+project page in Phase 21, and the log is in
+[`paper/trace/references_review.md`](paper/trace/references_review.md). This file stays a record of what
+was known and decided in Phase 0. What the later phases found is in [`findings.md`](findings.md) and in
+[`paper/related_work.md`](paper/related_work.md).
 
 ## 1. Problem framing
 
@@ -19,7 +22,7 @@ text, and a research record that can explain errors.
 | Family | Examples | Strengths | Weaknesses for this project |
 |---|---|---|---|
 | Classical / LSTM engines | Tesseract 4/5 (`smith2007tesseract`) | Mature, CPU-only, good on clean scans | Weak on photos, skew, low contrast, complex layouts; not trainable in our framework. Kept as a **baseline**. |
-| Two-stage det + rec toolkits | PaddleOCR PP-OCR series (`du2020ppocr`), docTR, EasyOCR | Small, fast, strong; same design family as ours | Using their weights would make GLYPHARIS a fine-tune ([ADR-0007](../docs/decisions/ADR-0007-pretrained-weights-policy.md)). PP-OCRv5 is the main **baseline**. |
+| Two-stage det + rec toolkits | PaddleOCR PP-OCR series (`du2020ppocr`, `cui2025paddleocr`, `paddleocr_ppocrv6`), docTR (`doctr`), EasyOCR (`easyocr`) | Small, fast, strong; same design family as ours | Using their weights would make GLYPHARIS a fine-tune ([ADR-0007](../docs/decisions/ADR-0007-pretrained-weights-policy.md)). PP-OCRv5 is the main **baseline**. |
 | Transformer line recognizers | TrOCR (`li2023trocr`), PARSeq (`bautista2022parseq`), ABINet (`fang2021abinet`) | High accuracy on crops | Autoregressive / iterative decoding is slower; TrOCR-Small is still large for CPU. TrOCR-Small kept as a recognition-only **baseline**. |
 | Page-level image-to-sequence | Donut (`kim2022donut`), Nougat (`blecher2023nougat`), OCR-capable VLMs | Handle layout and reading order jointly | Hundreds of millions of parameters or more; not trainable on 6 GB; slow on CPU; hallucination risk; no line boxes by default. Out of scope ([ADR-0001](../docs/decisions/ADR-0001-two-stage-pipeline.md)). |
 

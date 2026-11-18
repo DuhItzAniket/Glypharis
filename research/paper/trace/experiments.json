@@ -1,0 +1,297 @@
+{
+  "document": "research/paper/experiments.md",
+  "constants": [
+    {
+      "value": "95%",
+      "context": "95% bootstrap interval|95% interval",
+      "source": "docs/EXPERIMENT_PROTOCOL.md#4-statistics"
+    },
+    {
+      "value": "10",
+      "context": "first 10 as warm-up",
+      "source": "docs/EXPERIMENT_PROTOCOL.md#efficiency"
+    },
+    {
+      "value": "100",
+      "context": "100 timed",
+      "source": "docs/EXPERIMENT_PROTOCOL.md#efficiency"
+    },
+    {
+      "value": "10",
+      "context": "at 10 threads",
+      "source": "reports/efficiency/phase16/cost_table.md"
+    },
+    {
+      "value": "2",
+      "context": "minus 2 x PP-OCRv5",
+      "source": "research/hypotheses.md#h1--h1-made-testable-for-phase-14-rq1-rq4"
+    },
+    {
+      "value": "53",
+      "context": "53 clean GDC pages",
+      "source": "research/hypotheses.md#h1--h1-made-testable-for-phase-14-rq1-rq4"
+    },
+    {
+      "value": "1.5",
+      "context": "validation crops|GDC crops minus",
+      "source": "research/hypotheses.md#h5--h5-made-testable-for-phase-14-rq6"
+    },
+    {
+      "value": "1.5",
+      "context": "SVTR minus 1\\.5",
+      "source": "research/hypotheses.md#h6--h6s-latency-half-made-testable-for-phase-16-rq7"
+    },
+    {
+      "value": "0.75",
+      "context": "INT8 minus 0\\.75",
+      "source": "research/hypotheses.md#h7--h7-made-testable-for-phase-16-rq7"
+    },
+    {
+      "value": "0.005",
+      "context": "allowance of 0\\.005",
+      "source": "reports/efficiency/phase16/verdicts.md#h7-accuracy-met",
+      "id": "GW-EFF-008"
+    },
+    {
+      "value": "2.35",
+      "context": "T = 2\\.35",
+      "source": "configs/final/glypharis_v1.yaml#recognizer/temperature"
+    },
+    {
+      "value": "0.05",
+      "context": "limit of\\s+0\\.05|0\\.05-point",
+      "source": "research/experiments.md#gw-e2e-011"
+    },
+    {
+      "value": "25",
+      "context": "Target of ADR-0011",
+      "source": "docs/decisions/ADR-0011-cpu-latency-target.md#decision"
+    },
+    {
+      "value": "70",
+      "context": "Target of ADR-0011",
+      "source": "docs/decisions/ADR-0011-cpu-latency-target.md#decision"
+    },
+    {
+      "value": "1.5 s",
+      "context": "Target of ADR-0011",
+      "source": "docs/decisions/ADR-0011-cpu-latency-target.md#decision"
+    },
+    {
+      "value": "2.7 s",
+      "context": "Target of ADR-0011",
+      "source": "docs/decisions/ADR-0011-cpu-latency-target.md#decision"
+    },
+    {
+      "value": "1,836",
+      "context": "Target of ADR-0011",
+      "source": "docs/decisions/ADR-0011-cpu-latency-target.md#decision"
+    }
+  ],
+  "derived": [
+    {
+      "name": "base2_page_phase5",
+      "formula": "x",
+      "note": "PP-OCRv5 mobile, mean ms per page, Phase 5 profile",
+      "inputs": {
+        "x": {
+          "id": "GW-BASE-002",
+          "source": "reports/baselines/efficiency.md",
+          "row": [
+            "GW-BASE-002",
+            "e2e",
+            "hiertext_val"
+          ],
+          "header": "ms mean"
+        }
+      }
+    },
+    {
+      "name": "base2_page_phase14",
+      "formula": "x",
+      "note": "PP-OCRv5 mobile, mean ms per page, Phase 14 sitting",
+      "inputs": {
+        "x": {
+          "id": "GW-E2E-009",
+          "source": "reports/external/README.md#confirmatory-tests-phase-14-plan-item-5",
+          "value": "2954.8"
+        }
+      }
+    },
+    {
+      "name": "base2_page_phase16",
+      "formula": "x",
+      "note": "PP-OCRv5 mobile, mean ms per page, Phase 16 sitting of GW-EFF-010",
+      "inputs": {
+        "x": {
+          "id": "GW-EFF-010",
+          "source": "reports/efficiency/phase16/verdicts.md#h1-onnx-not-met",
+          "value": "3,086.0"
+        }
+      }
+    },
+    {
+      "name": "v1_page_phase14",
+      "formula": "x",
+      "note": "GLYPHARIS v1 PyTorch, mean ms per page, Phase 14 sitting",
+      "inputs": {
+        "x": {
+          "id": "GW-E2E-009",
+          "source": "reports/external/README.md#confirmatory-tests-phase-14-plan-item-5",
+          "value": "2446.7"
+        }
+      }
+    },
+    {
+      "name": "v1_page_phase16",
+      "formula": "x",
+      "note": "GLYPHARIS v1 PyTorch, CPU, mean ms per page, GW-EFF-007",
+      "inputs": {
+        "x": {
+          "id": "GW-EFF-007",
+          "source": "reports/efficiency/phase16/cost_table.md#page-time-by-stage-mean-ms-per-page",
+          "row": "PyTorch, CPU, 10 threads",
+          "header": "Page mean"
+        }
+      }
+    },
+    {
+      "name": "hardening_inputs",
+      "formula": "a + b + c + d + e + f + g + h + i + j + k + l + m + n",
+      "note": "inputs per backend, summed over the kinds of case; the PyTorch backend's counts, the ONNX backend's are equal",
+      "inputs": {
+        "a": {
+          "id": "GW-E2E-012",
+          "source": "reports/hardening/GW-E2E-012.json#inputs/torch/kinds/bad_files/inputs",
+          "value": "6"
+        },
+        "b": {
+          "id": "GW-E2E-012",
+          "source": "reports/hardening/GW-E2E-012.json#inputs/torch/kinds/bad_files_bytes/inputs",
+          "value": "4"
+        },
+        "c": {
+          "id": "GW-E2E-012",
+          "source": "reports/hardening/GW-E2E-012.json#inputs/torch/kinds/fuzz_lite~1damaged_png/inputs",
+          "value": "40"
+        },
+        "d": {
+          "id": "GW-E2E-012",
+          "source": "reports/hardening/GW-E2E-012.json#inputs/torch/kinds/fuzz_lite~1random_array/inputs",
+          "value": "40"
+        },
+        "e": {
+          "id": "GW-E2E-012",
+          "source": "reports/hardening/GW-E2E-012.json#inputs/torch/kinds/fuzz_lite~1random_bytes/inputs",
+          "value": "40"
+        },
+        "f": {
+          "id": "GW-E2E-012",
+          "source": "reports/hardening/GW-E2E-012.json#inputs/torch/kinds/fuzz_lite_bytes~1damaged_png/inputs",
+          "value": "40"
+        },
+        "g": {
+          "id": "GW-E2E-012",
+          "source": "reports/hardening/GW-E2E-012.json#inputs/torch/kinds/fuzz_lite_bytes~1random_array/inputs",
+          "value": "13"
+        },
+        "h": {
+          "id": "GW-E2E-012",
+          "source": "reports/hardening/GW-E2E-012.json#inputs/torch/kinds/fuzz_lite_bytes~1random_bytes/inputs",
+          "value": "40"
+        },
+        "i": {
+          "id": "GW-E2E-012",
+          "source": "reports/hardening/GW-E2E-012.json#inputs/torch/kinds/good_page/inputs",
+          "value": "4"
+        },
+        "j": {
+          "id": "GW-E2E-012",
+          "source": "reports/hardening/GW-E2E-012.json#inputs/torch/kinds/over_pixel_limit/inputs",
+          "value": "6"
+        },
+        "k": {
+          "id": "GW-E2E-012",
+          "source": "reports/hardening/GW-E2E-012.json#inputs/torch/kinds/unusual_pages/inputs",
+          "value": "12"
+        },
+        "l": {
+          "id": "GW-E2E-012",
+          "source": "reports/hardening/GW-E2E-012.json#inputs/torch/kinds/unusual_pages_bytes/inputs",
+          "value": "10"
+        },
+        "m": {
+          "id": "GW-E2E-012",
+          "source": "reports/hardening/GW-E2E-012.json#inputs/torch/kinds/wrong_inputs/inputs",
+          "value": "10"
+        },
+        "n": {
+          "id": "GW-E2E-012",
+          "source": "reports/hardening/GW-E2E-012.json#inputs/torch/kinds/wrong_inputs_bytes/inputs",
+          "value": "4"
+        }
+      }
+    },
+    {
+      "name": "hardening_results",
+      "formula": "a + b + c + d + e + f",
+      "note": "results per backend: the kinds of case that returned any; the others returned none",
+      "inputs": {
+        "a": {
+          "id": "GW-E2E-012",
+          "source": "reports/hardening/GW-E2E-012.json#inputs/torch/kinds/fuzz_lite~1random_array/results",
+          "value": "6"
+        },
+        "b": {
+          "id": "GW-E2E-012",
+          "source": "reports/hardening/GW-E2E-012.json#inputs/torch/kinds/fuzz_lite_bytes~1random_array/results",
+          "value": "13"
+        },
+        "c": {
+          "id": "GW-E2E-012",
+          "source": "reports/hardening/GW-E2E-012.json#inputs/torch/kinds/good_page/results",
+          "value": "4"
+        },
+        "d": {
+          "id": "GW-E2E-012",
+          "source": "reports/hardening/GW-E2E-012.json#inputs/torch/kinds/unusual_pages/results",
+          "value": "11"
+        },
+        "e": {
+          "id": "GW-E2E-012",
+          "source": "reports/hardening/GW-E2E-012.json#inputs/torch/kinds/unusual_pages_bytes/results",
+          "value": "10"
+        },
+        "f": {
+          "id": "GW-E2E-012",
+          "source": "reports/hardening/GW-E2E-012.json#inputs/torch/kinds/wrong_inputs_bytes/results",
+          "value": "3"
+        }
+      }
+    },
+    {
+      "name": "efficiency_lines",
+      "formula": "x",
+      "note": "the seeded validation lines of the export check and of Phase 16",
+      "inputs": {
+        "x": {
+          "id": "GW-EFF-012",
+          "source": "reports/export/GW-EFF-012/torch_bundle_check.json#recognizer/lines",
+          "value": "5000"
+        }
+      }
+    },
+    {
+      "name": "baseline_pages",
+      "formula": "x",
+      "note": "the Phase 5 validation pages the baselines were run on",
+      "inputs": {
+        "x": {
+          "id": "GW-E2E-011",
+          "source": "reports/package/GW-E2E-011.json#pages",
+          "value": "400"
+        }
+      }
+    }
+  ]
+}

@@ -1,0 +1,110 @@
+{
+  "document": "research/paper/error_analysis.md",
+  "constants": [
+    {
+      "value": "95%",
+      "context": "bootstrap",
+      "source": "docs/EXPERIMENT_PROTOCOL.md"
+    },
+    {
+      "value": "1,000",
+      "context": "resamples",
+      "source": "docs/EXPERIMENT_PROTOCOL.md"
+    },
+    {
+      "value": "2,573",
+      "context": "pages of the five",
+      "source": "reports/error_cases/phase15/results.json#consistency"
+    },
+    {
+      "value": "0.5",
+      "context": "IoU",
+      "source": "reports/error_cases/phase15/pipeline.md#hiertext_test"
+    },
+    {
+      "value": "9.35",
+      "context": "height",
+      "source": "reports/error_cases/phase15/README.md"
+    },
+    {
+      "value": "21.485",
+      "context": "height",
+      "source": "reports/error_cases/phase15/README.md"
+    },
+    {
+      "value": "15",
+      "context": "θ",
+      "source": "reports/error_cases/phase15/README.md"
+    },
+    {
+      "value": "7",
+      "context": "rotated pages",
+      "source": "reports/error_cases/phase15/oracle_share.md#gdc_test"
+    },
+    {
+      "value": "20",
+      "context": "worst GDC lines",
+      "source": "reports/error_cases/phase15/recognition.md#gdc_test"
+    },
+    {
+      "value": "70",
+      "context": "70\\+",
+      "source": "reports/error_cases/phase15/recognition.md#gdc_test"
+    },
+    {
+      "value": "10px",
+      "context": "less than|higher|row tolerance",
+      "source": "docs/PHASE_STATUS.md"
+    },
+    {
+      "value": "1",
+      "context": "levels|Corruption",
+      "source": "data/manifests/processed/glyph_c.json#levels"
+    },
+    {
+      "value": "5",
+      "context": "levels|Corruption",
+      "source": "data/manifests/processed/glyph_c.json#levels"
+    },
+    {
+      "value": "50",
+      "context": "FUNSD",
+      "source": "reports/error_cases/phase15/pipeline.md#funsd_test"
+    },
+    {
+      "value": "6",
+      "context": "clusters",
+      "source": "reports/error_cases/phase15/oracle_share.md#gdc_test"
+    },
+    {
+      "value": "21",
+      "context": "clusters|documents",
+      "source": "reports/error_cases/phase15/oracle_share.md#gdc_test"
+    },
+    {
+      "value": "106",
+      "context": "GDC is",
+      "source": "reports/error_cases/phase15/oracle_share.md#gdc_test"
+    },
+    {
+      "value": "64",
+      "context": "crops",
+      "source": "reports/error_cases/phase15/README.md#notes"
+    }
+  ],
+  "derived": [
+    {
+      "name": "trocr_lower_as_upper",
+      "formula": "x * 100",
+      "note": "GW-BASE-004 on GDC, strict: share of lower-case reference characters read as upper case",
+      "inputs": {
+        "x": {
+          "id": "GW-REC-040",
+          "source": "reports/error_cases/phase15/results.json",
+          "row": "baselines/gdc_test/8/class_rates/lower",
+          "header": "upper"
+        }
+      }
+    }
+  ]
+}

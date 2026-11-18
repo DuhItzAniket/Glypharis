@@ -1,0 +1,21 @@
+{
+  "document": "research/paper/conclusion_notes.md",
+  "constants": [
+    {
+      "value": "0.05",
+      "context": "tolerance",
+      "source": "docs/PHASE_STATUS.md#phase-18--inference-package-v1-re-run"
+    },
+    {
+      "value": "1.5 s",
+      "context": "target of",
+      "source": "docs/decisions/ADR-0011-cpu-latency-target.md"
+    },
+    {
+      "value": "1.5",
+      "context": "times worse",
+      "source": "research/hypotheses.md"
+    }
+  ],
+  "derived": []
+}

@@ -1,0 +1,484 @@
+{
+  "document": "research/paper/efficiency.md",
+  "constants": [
+    {
+      "value": "10",
+      "context": "warm-up|threads|intra",
+      "source": "reports/efficiency/phase16/cost_table.md"
+    },
+    {
+      "value": "100",
+      "context": "timed|time on\\s+100|100\\s+lines",
+      "source": "reports/efficiency/phase16/cost_table.md"
+    },
+    {
+      "value": "95%",
+      "context": "bootstrap",
+      "source": "docs/EXPERIMENT_PROTOCOL.md"
+    },
+    {
+      "value": "1,000",
+      "context": "resamples",
+      "source": "docs/EXPERIMENT_PROTOCOL.md"
+    },
+    {
+      "value": "110",
+      "context": "profile\\s+pages|110\\s+pages",
+      "source": "reports/efficiency/phase16/pareto.md"
+    },
+    {
+      "value": "400",
+      "context": "Phase 5\\s+pages|400\\s+pages",
+      "source": "reports/efficiency/phase16/pareto.md"
+    },
+    {
+      "value": "5,000",
+      "context": "lines",
+      "source": "reports/efficiency/phase16/pareto.md"
+    },
+    {
+      "value": "32",
+      "context": "batch of 32",
+      "source": "reports/efficiency/phase16/cost_table.md#lines"
+    },
+    {
+      "value": "0",
+      "context": "below 0|above 0|include 0",
+      "source": "reports/efficiency/phase16/verdicts.md"
+    },
+    {
+      "value": "0.75",
+      "context": "t_fp32",
+      "source": "reports/efficiency/phase16/verdicts.md#h7-latency-met"
+    },
+    {
+      "value": "0.005",
+      "context": "ref_chars",
+      "source": "reports/efficiency/phase16/verdicts.md#h7-accuracy-met"
+    },
+    {
+      "value": "1.5",
+      "context": "t_CRNN",
+      "source": "reports/efficiency/phase16/verdicts.md#h6-not-met"
+    },
+    {
+      "value": "0.05",
+      "context": "tolerance",
+      "source": "research/experiments.md#gw-e2e-011"
+    },
+    {
+      "value": "25",
+      "context": "line mean",
+      "source": "reports/efficiency/phase16/results.json#adr_0011/0/targets"
+    },
+    {
+      "value": "70",
+      "context": "line p95",
+      "source": "reports/efficiency/phase16/results.json#adr_0011/0/targets"
+    },
+    {
+      "value": "1,500",
+      "context": "page mean",
+      "source": "reports/efficiency/phase16/results.json#adr_0011/0/targets"
+    },
+    {
+      "value": "2,700",
+      "context": "page p95",
+      "source": "reports/efficiency/phase16/results.json#adr_0011/0/targets"
+    },
+    {
+      "value": "1,836",
+      "context": "peak RAM on pages",
+      "source": "reports/efficiency/phase16/results.json#adr_0011/0/targets"
+    }
+  ],
+  "derived": [
+    {
+      "name": "onnx_page_ratio_mirrored",
+      "formula": "onnx / torch",
+      "note": "GW-EFF-009, mirrored sittings, mean ms per page",
+      "inputs": {
+        "onnx": {
+          "id": "GW-EFF-009",
+          "source": "reports/efficiency/phase16/pareto.md#pages",
+          "row": "v1-onnx",
+          "header": "Mean ms",
+          "value": "9,739.4"
+        },
+        "torch": {
+          "id": "GW-EFF-009",
+          "source": "reports/efficiency/phase16/pareto.md#pages",
+          "row": "v1-torch",
+          "header": "Mean ms",
+          "value": "2,637.3"
+        }
+      }
+    },
+    {
+      "name": "onnx_ram_ratio_mirrored",
+      "formula": "onnx / torch",
+      "note": "GW-EFF-009, peak RAM on pages",
+      "inputs": {
+        "onnx": {
+          "id": "GW-EFF-009",
+          "source": "reports/efficiency/phase16/pareto.md#pages",
+          "row": "v1-onnx",
+          "header": "Peak RAM MiB"
+        },
+        "torch": {
+          "id": "GW-EFF-009",
+          "source": "reports/efficiency/phase16/pareto.md#pages",
+          "row": "v1-torch",
+          "header": "Peak RAM MiB"
+        }
+      }
+    },
+    {
+      "name": "onnx_page_ratio_chain",
+      "formula": "onnx / torch",
+      "note": "GW-EFF-007, one run per build, page means of the stage table",
+      "inputs": {
+        "onnx": {
+          "id": "GW-EFF-007",
+          "source": "reports/efficiency/phase16/cost_table.md#page-time",
+          "row": "fp32 ONNX, CPU, 10 threads",
+          "header": "Page mean"
+        },
+        "torch": {
+          "id": "GW-EFF-007",
+          "source": "reports/efficiency/phase16/cost_table.md#page-time",
+          "row": "PyTorch, CPU, 10 threads",
+          "header": "Page mean"
+        }
+      }
+    },
+    {
+      "name": "onnx_ram_ratio_chain",
+      "formula": "onnx / torch",
+      "note": "GW-EFF-007, one run per build",
+      "inputs": {
+        "onnx": {
+          "id": "GW-EFF-007",
+          "source": "reports/efficiency/phase16/cost_table.md#pages",
+          "row": "fp32 ONNX, CPU, 10 threads",
+          "header": "Peak RAM MiB"
+        },
+        "torch": {
+          "id": "GW-EFF-007",
+          "source": "reports/efficiency/phase16/cost_table.md#pages",
+          "row": "PyTorch, CPU, 10 threads",
+          "header": "Peak RAM MiB"
+        }
+      }
+    },
+    {
+      "name": "det_variant_max_share",
+      "formula": "abs(delta) / base * 100",
+      "note": "largest absolute page-time change among the detector points (long side 1024)",
+      "inputs": {
+        "delta": {
+          "id": "GW-EFF-009",
+          "source": "reports/efficiency/phase16/pareto.md#pages",
+          "row": "det-long-side-1024",
+          "header": "Δ ms",
+          "value": "-1,248.1"
+        },
+        "base": {
+          "id": "GW-EFF-009",
+          "source": "reports/efficiency/phase16/pareto.md#pages",
+          "row": "v1-onnx",
+          "header": "Mean ms",
+          "value": "9,739.4"
+        }
+      }
+    },
+    {
+      "name": "onnx_det_gap",
+      "formula": "torch - variant",
+      "note": "no interval exists for this difference, and the text says so",
+      "inputs": {
+        "torch": {
+          "id": "GW-EFF-009",
+          "source": "reports/efficiency/phase16/pareto.md#pages",
+          "row": "v1-torch",
+          "header": "Mean ms",
+          "value": "2,637.3"
+        },
+        "variant": {
+          "id": "GW-EFF-009",
+          "source": "reports/efficiency/phase16/pareto.md#pages",
+          "row": "onnx-det-torch-rec",
+          "header": "Mean ms",
+          "value": "2,579.1"
+        }
+      }
+    },
+    {
+      "name": "eff012_page_cer",
+      "formula": "x * 100",
+      "note": "the file stores a fraction",
+      "inputs": {
+        "x": {
+          "id": "GW-EFF-012",
+          "source": "reports/export/GW-EFF-012/torch_bundle_check.json#end_to_end",
+          "row": "page_cer_bundle"
+        }
+      }
+    },
+    {
+      "name": "e2e012_inputs",
+      "formula": "k0 + k1 + k2 + k3 + k4 + k5 + k6 + k7 + k8 + k9 + k10 + k11 + k12 + k13",
+      "note": "sum over the 14 input kinds, PyTorch backend; ONNX has the same counts",
+      "inputs": {
+        "k0": {
+          "id": "GW-E2E-012",
+          "source": "reports/hardening/GW-E2E-012.json",
+          "row": "inputs/torch/kinds/bad_files",
+          "header": "inputs"
+        },
+        "k1": {
+          "id": "GW-E2E-012",
+          "source": "reports/hardening/GW-E2E-012.json",
+          "row": "inputs/torch/kinds/bad_files_bytes",
+          "header": "inputs"
+        },
+        "k2": {
+          "id": "GW-E2E-012",
+          "source": "reports/hardening/GW-E2E-012.json",
+          "row": "inputs/torch/kinds/fuzz_lite~1damaged_png",
+          "header": "inputs"
+        },
+        "k3": {
+          "id": "GW-E2E-012",
+          "source": "reports/hardening/GW-E2E-012.json",
+          "row": "inputs/torch/kinds/fuzz_lite~1random_array",
+          "header": "inputs"
+        },
+        "k4": {
+          "id": "GW-E2E-012",
+          "source": "reports/hardening/GW-E2E-012.json",
+          "row": "inputs/torch/kinds/fuzz_lite~1random_bytes",
+          "header": "inputs"
+        },
+        "k5": {
+          "id": "GW-E2E-012",
+          "source": "reports/hardening/GW-E2E-012.json",
+          "row": "inputs/torch/kinds/fuzz_lite_bytes~1damaged_png",
+          "header": "inputs"
+        },
+        "k6": {
+          "id": "GW-E2E-012",
+          "source": "reports/hardening/GW-E2E-012.json",
+          "row": "inputs/torch/kinds/fuzz_lite_bytes~1random_array",
+          "header": "inputs"
+        },
+        "k7": {
+          "id": "GW-E2E-012",
+          "source": "reports/hardening/GW-E2E-012.json",
+          "row": "inputs/torch/kinds/fuzz_lite_bytes~1random_bytes",
+          "header": "inputs"
+        },
+        "k8": {
+          "id": "GW-E2E-012",
+          "source": "reports/hardening/GW-E2E-012.json",
+          "row": "inputs/torch/kinds/good_page",
+          "header": "inputs"
+        },
+        "k9": {
+          "id": "GW-E2E-012",
+          "source": "reports/hardening/GW-E2E-012.json",
+          "row": "inputs/torch/kinds/over_pixel_limit",
+          "header": "inputs"
+        },
+        "k10": {
+          "id": "GW-E2E-012",
+          "source": "reports/hardening/GW-E2E-012.json",
+          "row": "inputs/torch/kinds/unusual_pages",
+          "header": "inputs"
+        },
+        "k11": {
+          "id": "GW-E2E-012",
+          "source": "reports/hardening/GW-E2E-012.json",
+          "row": "inputs/torch/kinds/unusual_pages_bytes",
+          "header": "inputs"
+        },
+        "k12": {
+          "id": "GW-E2E-012",
+          "source": "reports/hardening/GW-E2E-012.json",
+          "row": "inputs/torch/kinds/wrong_inputs",
+          "header": "inputs"
+        },
+        "k13": {
+          "id": "GW-E2E-012",
+          "source": "reports/hardening/GW-E2E-012.json",
+          "row": "inputs/torch/kinds/wrong_inputs_bytes",
+          "header": "inputs"
+        }
+      }
+    },
+    {
+      "name": "e2e012_results",
+      "formula": "k0 + k1 + k2 + k3 + k4 + k5 + k6 + k7 + k8 + k9 + k10 + k11 + k12 + k13",
+      "note": "sum over the 14 input kinds, PyTorch backend",
+      "inputs": {
+        "k0": {
+          "id": "GW-E2E-012",
+          "source": "reports/hardening/GW-E2E-012.json",
+          "row": "inputs/torch/kinds/bad_files",
+          "header": "results"
+        },
+        "k1": {
+          "id": "GW-E2E-012",
+          "source": "reports/hardening/GW-E2E-012.json",
+          "row": "inputs/torch/kinds/bad_files_bytes",
+          "header": "results"
+        },
+        "k2": {
+          "id": "GW-E2E-012",
+          "source": "reports/hardening/GW-E2E-012.json",
+          "row": "inputs/torch/kinds/fuzz_lite~1damaged_png",
+          "header": "results"
+        },
+        "k3": {
+          "id": "GW-E2E-012",
+          "source": "reports/hardening/GW-E2E-012.json",
+          "row": "inputs/torch/kinds/fuzz_lite~1random_array",
+          "header": "results"
+        },
+        "k4": {
+          "id": "GW-E2E-012",
+          "source": "reports/hardening/GW-E2E-012.json",
+          "row": "inputs/torch/kinds/fuzz_lite~1random_bytes",
+          "header": "results"
+        },
+        "k5": {
+          "id": "GW-E2E-012",
+          "source": "reports/hardening/GW-E2E-012.json",
+          "row": "inputs/torch/kinds/fuzz_lite_bytes~1damaged_png",
+          "header": "results"
+        },
+        "k6": {
+          "id": "GW-E2E-012",
+          "source": "reports/hardening/GW-E2E-012.json",
+          "row": "inputs/torch/kinds/fuzz_lite_bytes~1random_array",
+          "header": "results"
+        },
+        "k7": {
+          "id": "GW-E2E-012",
+          "source": "reports/hardening/GW-E2E-012.json",
+          "row": "inputs/torch/kinds/fuzz_lite_bytes~1random_bytes",
+          "header": "results"
+        },
+        "k8": {
+          "id": "GW-E2E-012",
+          "source": "reports/hardening/GW-E2E-012.json",
+          "row": "inputs/torch/kinds/good_page",
+          "header": "results"
+        },
+        "k9": {
+          "id": "GW-E2E-012",
+          "source": "reports/hardening/GW-E2E-012.json",
+          "row": "inputs/torch/kinds/over_pixel_limit",
+          "header": "results"
+        },
+        "k10": {
+          "id": "GW-E2E-012",
+          "source": "reports/hardening/GW-E2E-012.json",
+          "row": "inputs/torch/kinds/unusual_pages",
+          "header": "results"
+        },
+        "k11": {
+          "id": "GW-E2E-012",
+          "source": "reports/hardening/GW-E2E-012.json",
+          "row": "inputs/torch/kinds/unusual_pages_bytes",
+          "header": "results"
+        },
+        "k12": {
+          "id": "GW-E2E-012",
+          "source": "reports/hardening/GW-E2E-012.json",
+          "row": "inputs/torch/kinds/wrong_inputs",
+          "header": "results"
+        },
+        "k13": {
+          "id": "GW-E2E-012",
+          "source": "reports/hardening/GW-E2E-012.json",
+          "row": "inputs/torch/kinds/wrong_inputs_bytes",
+          "header": "results"
+        }
+      }
+    },
+    {
+      "name": "e2e012_errors",
+      "formula": "k0 + k1 + k2 + k3 + k4 + k5 + k6 + k7 + k8 + k9 + k10",
+      "note": "GlypharisError counts over the input kinds that raised one",
+      "inputs": {
+        "k0": {
+          "id": "GW-E2E-012",
+          "source": "reports/hardening/GW-E2E-012.json",
+          "row": "inputs/torch/kinds/bad_files/glypharis_errors",
+          "header": "invalid_image"
+        },
+        "k1": {
+          "id": "GW-E2E-012",
+          "source": "reports/hardening/GW-E2E-012.json",
+          "row": "inputs/torch/kinds/bad_files_bytes/glypharis_errors",
+          "header": "invalid_image"
+        },
+        "k2": {
+          "id": "GW-E2E-012",
+          "source": "reports/hardening/GW-E2E-012.json",
+          "row": "inputs/torch/kinds/fuzz_lite~1damaged_png/glypharis_errors",
+          "header": "invalid_image"
+        },
+        "k3": {
+          "id": "GW-E2E-012",
+          "source": "reports/hardening/GW-E2E-012.json",
+          "row": "inputs/torch/kinds/fuzz_lite~1random_array/glypharis_errors",
+          "header": "invalid_image"
+        },
+        "k4": {
+          "id": "GW-E2E-012",
+          "source": "reports/hardening/GW-E2E-012.json",
+          "row": "inputs/torch/kinds/fuzz_lite~1random_bytes/glypharis_errors",
+          "header": "invalid_image"
+        },
+        "k5": {
+          "id": "GW-E2E-012",
+          "source": "reports/hardening/GW-E2E-012.json",
+          "row": "inputs/torch/kinds/fuzz_lite_bytes~1damaged_png/glypharis_errors",
+          "header": "invalid_image"
+        },
+        "k6": {
+          "id": "GW-E2E-012",
+          "source": "reports/hardening/GW-E2E-012.json",
+          "row": "inputs/torch/kinds/fuzz_lite_bytes~1random_bytes/glypharis_errors",
+          "header": "invalid_image"
+        },
+        "k7": {
+          "id": "GW-E2E-012",
+          "source": "reports/hardening/GW-E2E-012.json",
+          "row": "inputs/torch/kinds/over_pixel_limit/glypharis_errors",
+          "header": "image_too_large"
+        },
+        "k8": {
+          "id": "GW-E2E-012",
+          "source": "reports/hardening/GW-E2E-012.json",
+          "row": "inputs/torch/kinds/unusual_pages/glypharis_errors",
+          "header": "invalid_image"
+        },
+        "k9": {
+          "id": "GW-E2E-012",
+          "source": "reports/hardening/GW-E2E-012.json",
+          "row": "inputs/torch/kinds/wrong_inputs/glypharis_errors",
+          "header": "invalid_image"
+        },
+        "k10": {
+          "id": "GW-E2E-012",
+          "source": "reports/hardening/GW-E2E-012.json",
+          "row": "inputs/torch/kinds/wrong_inputs_bytes/glypharis_errors",
+          "header": "invalid_image"
+        }
+      }
+    }
+  ]
+}
