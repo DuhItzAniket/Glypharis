@@ -10,10 +10,11 @@ traced through data-dependent branches: both models were written for this.
 recognizer module inside `TextRecognizer` (same call, same ``frames``). ONNX Runtime runs on the
 CPU with its default threads unless ``threads`` is given, and without its memory arena.
 
-Measured (Phase 17): the exported detector runs about twice as fast as PyTorch, but the exported
-recognizer about four and a half times slower, because the SVTR's global attention is exported as
-plain matrix products over every token pair, where PyTorch uses a fused kernel. Until that is
-fixed (Phase 16), PyTorch is the default backend.
+Measured on the CPU at 10 threads with the memory arena off (GW-EFF-007, F34, which corrects F13):
+the exported detector runs at PyTorch's speed (297.5 against 296.4 ms per page), and a line takes
+about 2.7 times as long as in PyTorch (92.25 against 33.90 ms). Most of that gap is the SVTR's
+global attention, exported as plain matrix products over every token pair where PyTorch uses a
+fused kernel (F35). PyTorch is the default backend.
 """
 
 from __future__ import annotations

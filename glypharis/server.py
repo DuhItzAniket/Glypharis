@@ -1,6 +1,6 @@
 """Optional HTTP API: ``glypharis-serve`` (Phase 19).
 
-    glypharis-serve [--model glypharis-0.1.0] [--host 127.0.0.1] [--port 8080]
+    glypharis-serve [--model glypharis-v1] [--host 127.0.0.1] [--port 8080]
     curl --data-binary @page.jpg http://127.0.0.1:8080/ocr
 
 An integration boundary, not a production web service: one process, one request at a time (the
@@ -162,7 +162,7 @@ def make_server(
 
 def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(description="GLYPHARIS HTTP API (one process).")
-    parser.add_argument("--model", default="glypharis-0.1.0", help="bundle name or directory")
+    parser.add_argument("--model", default="glypharis-v1", help="bundle name or directory")
     parser.add_argument("--backend", choices=["torch", "onnx"], default="torch")
     parser.add_argument("--threads", type=int, default=None)
     parser.add_argument("--host", default="127.0.0.1")

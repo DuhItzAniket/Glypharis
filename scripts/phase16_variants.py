@@ -42,11 +42,11 @@ and ``v1-onnx`` are v1 itself, measured by the same code (``"version": "v1"``).
 
 ``--threads N`` is required for build, eval and profile: it is applied before numpy and torch are
 imported (`glypharis.efficiency.threads.set_threads`), and every ONNX session gets N intra-op
-threads. The v1 code must equal the ``phase14-eval`` tag's (`assert_v1_code`) before anything
-loads. Nothing is overwritten. ``--limit`` (eval) and ``--smoke`` (profile) cut the item counts
-for a smoke test; they need ``--out`` and the output is marked ``"smoke": true`` so no report
-uses it. Validation data only: the page and line sets are fixed by the freeze record's configs,
-not by the command line.
+threads. The v1 code must equal the ``v1-code`` tag's (`assert_v1_code`; ``phase14-eval`` for the
+Phase 16 runs, as their ``v1_code`` records show) before anything loads. Nothing is overwritten.
+``--limit`` (eval) and ``--smoke`` (profile) cut the item counts for a smoke test; they need
+``--out`` and the output is marked ``"smoke": true`` so no report uses it. Validation data only: the
+page and line sets are fixed by the freeze record's configs, not by the command line.
 """
 
 # ruff: noqa: E402  (the thread variables are set before numpy and torch are imported)

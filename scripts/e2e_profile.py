@@ -53,20 +53,21 @@ bundle, both sessions from `glypharis.efficiency.threads.ort_session`, after che
 hashes and that its settings equal the record's. ``--threads N`` is set before numpy and torch are
 imported (`set_threads`) and asserted before and after the timed pages, with every ONNX session's
 options; ``--threads default`` (ONNX only) leaves torch, the variables and ONNX Runtime at their
-defaults and records what they were. The v1 code paths must equal ``phase14-eval``
-(`assert_v1_code`) before the model loads. Run conditions and the GPU's state are recorded at the
-start and the end. Each page runs through the same pipeline pieces `GlypharisOCR.predict` calls, in
-the same order, with one clock read between them (`staged_predict`): the page time runs from the
-first reading to the last, as GW-EFF-005 times a page (from the decoded image: the image file is
-read and decoded by `open_page_image` before the clock starts, so its time, recorded per page as
-``file_decode_ms``, is not part of the page time; the first stage, ``to_rgb``, is the RGB array
-`load_rgb` makes). The nine stages of `STAGES` are checked against a second clock read around the
-whole call: they must sum to it within the larger of 1% and 5 ms (asserted). After the timed pages
-the first timed page is read once more with `GlypharisOCR.predict`, untimed by the stages, and must
-give the same lines; both readings' times are recorded. On CUDA every stage boundary is
-synchronised, and peak VRAM is recorded from torch (``max_memory_allocated``), with nvidia-smi's
-memory at the end for this process where the driver reports it (Windows' WDDM driver does not) and
-for the whole GPU (the display and other programs included). The output is never overwritten.
+defaults and records what they were. The v1 code paths must equal ``v1-code`` (`assert_v1_code`;
+``phase14-eval`` for the Phase 16 runs, as their ``v1_code`` records show) before the model loads.
+Run conditions and the GPU's state are recorded at the start and the end. Each page runs through the
+same pipeline pieces `GlypharisOCR.predict` calls, in the same order, with one clock read between
+them (`staged_predict`): the page time runs from the first reading to the last, as GW-EFF-005 times
+a page (from the decoded image: the image file is read and decoded by `open_page_image` before the
+clock starts, so its time, recorded per page as ``file_decode_ms``, is not part of the page time;
+the first stage, ``to_rgb``, is the RGB array `load_rgb` makes). The nine stages of `STAGES` are
+checked against a second clock read around the whole call: they must sum to it within the larger of
+1% and 5 ms (asserted). After the timed pages the first timed page is read once more with
+`GlypharisOCR.predict`, untimed by the stages, and must give the same lines; both readings' times
+are recorded. On CUDA every stage boundary is synchronised, and peak VRAM is recorded from torch
+(``max_memory_allocated``), with nvidia-smi's memory at the end for this process where the driver
+reports it (Windows' WDDM driver does not) and for the whole GPU (the display and other programs
+included). The output is never overwritten.
 """
 
 # ruff: noqa: E402  (the thread variables are set before numpy and torch are imported)

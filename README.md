@@ -8,17 +8,18 @@ GLYPHARIS is built as a research project. Every model is trained and evaluated o
 (RTX 4050, 6 GB), every experiment is registered before it runs, and every reported number traces back to
 a generated report.
 
-> **Status: v0.1 released** (tag `v0.1`: Phases 0 to 10, 17, 18 and 20). The research phases (11 to 16) are next.
+> **Status: v1 evaluated, v1.0 not released yet.** The research phases (11 to 16) are done, and the
+> export, package and hardening phases were re-run on the final model. The research package, final
+> validation and the v1.0 release (Phases 21 to 23) are next; `v0.1` is the earlier usable engine
+> ([ADR-0008](docs/decisions/ADR-0008-usable-engine-first.md)).
 > See [docs/PHASE_STATUS.md](docs/PHASE_STATUS.md) for what is done and every number behind it.
-> v0.1 is the usable engine ([ADR-0008](docs/decisions/ADR-0008-usable-engine-first.md)); the
-> research phases follow it.
 
 ## Using it
 
 ```python
 from glypharis import GlypharisOCR
 
-ocr = GlypharisOCR.from_pretrained("glypharis-0.1.0")  # a model bundle by name or path
+ocr = GlypharisOCR.from_pretrained("glypharis-v1")  # a model bundle by name or path
 result = ocr.predict("page.png")  # path, image file bytes, PIL image or numpy array
 
 print(result.text)  # lines in reading order
@@ -36,13 +37,16 @@ glypharis-ocr --input-dir scans/ --recursive --format json txt
 
 Each image gives `results/<name>.json` and `results/<name>.txt`. Model bundles are not downloaded:
 `from_pretrained` looks in `$GLYPHARIS_MODELS`, `~/.glypharis/models` and `./models` (a bundle is a
-directory with `manifest.json`, two release files and two ONNX files; Phase 17). The default backend is
-PyTorch on the CPU; `backend="onnx"` uses ONNX Runtime, which reads the same but is slower for now.
+directory with `manifest.json`, two release files and two ONNX files; Phase 17). No bundle ships with
+this repository (`runs/` is git-ignored), so `glypharis-v1` resolves only once that directory is in one
+of those places; on the machine that built it, set `GLYPHARIS_MODELS=runs/release` or pass the path
+`runs/release/glypharis-v1`. The default backend is PyTorch on the CPU; `backend="onnx"` uses ONNX
+Runtime, which matches PyTorch within Phase 17's tolerances (GW-EFF-006) but is slower on the CPU (F34).
 
 Over HTTP (optional, Phase 19; `glypharis-serve`, standard library only, one request at a time):
 
 ```
-glypharis-serve --model glypharis-0.1.0 --port 8080
+glypharis-serve --model glypharis-v1 --port 8080
 curl --data-binary @page.png http://127.0.0.1:8080/ocr
 ```
 
@@ -56,7 +60,7 @@ image ─▶ preprocessing ─▶ GLYPHARIS-Det (line detector) ─▶ crop + re
 ```
 
 - **GLYPHARIS-Det**: DBNet-style text-line detector with a MobileNetV3 backbone.
-- **GLYPHARIS-Rec**: CNN + BiLSTM + CTC line recognizer (baseline), with an SVTR-style variant under study.
+- **GLYPHARIS-Rec**: SVTR-style CTC line recognizer in v1 (a CNN + BiLSTM + CTC recognizer is the baseline).
 - Stands alone: any application can call it with an image. It contains no application-specific code.
 
 ## Research questions

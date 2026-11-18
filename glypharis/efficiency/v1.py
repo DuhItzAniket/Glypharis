@@ -1,12 +1,15 @@
 """Is the v1 code still the evaluated code? (Phase 16 plan, item 1.)
 
-v1 is the frozen weights, the freeze record's settings and the model, pipeline and export code as
-it is at the ``phase14-eval`` tag. Phase 16 work happens on later commits (new scripts, this
-package, reports), so `glypharis.pipeline.frozen.pinned_code_check`, which wants the whole tree
-equal to the tag, would refuse every Phase 16 run. `assert_v1_code` checks only the paths that
-make v1 (`V1_PATHS`): the working tree there must equal the tag's, tracked and untracked files
-alike (ignored files, such as caches, are not part of the tree). Every Phase 16 script that builds
-v1 calls it before the model loads and records what it returns.
+v1 is the frozen weights, the freeze record's settings and the model, pipeline and export code as it
+was evaluated at the ``phase14-eval`` tag. The ``v1-code`` tag (`V1_TAG`) is that code with its
+docstrings corrected and the default bundle name changed, nothing else (the end of the freeze,
+2026-11-18; `scripts/v1_code_diff.py` proves it). Later work happens on later commits (new scripts,
+this package, reports), so `glypharis.pipeline.frozen.pinned_code_check`, which wants the whole tree
+equal to ``phase14-eval``, would refuse every such run. `assert_v1_code` checks only the paths that
+make v1 (`V1_PATHS`): the working tree there must equal `V1_TAG`'s, tracked and untracked files
+alike (ignored files, such as caches, are not part of the tree). Every script that builds v1 calls
+it before the model loads and records what it returns (Phase 16 and the re-runs before the end of
+the freeze recorded ``phase14-eval``).
 """
 
 from __future__ import annotations
@@ -15,7 +18,7 @@ import subprocess
 from pathlib import Path
 from typing import Any, Final
 
-V1_TAG: Final = "phase14-eval"  # equals glypharis.pipeline.frozen.PIN_TAG (a test keeps it so)
+V1_TAG: Final = "v1-code"  # not `glypharis.pipeline.frozen.PIN_TAG`, what Phase 14 evaluated
 V1_PATHS: Final = (
     "glypharis/pipeline",
     "glypharis/models",

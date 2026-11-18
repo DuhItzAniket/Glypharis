@@ -1,7 +1,7 @@
 """GLYPHARIS: lightweight OCR engine for document images.
 
     from glypharis import GlypharisOCR
-    result = GlypharisOCR.from_pretrained("glypharis-0.1.0").predict("page.png")
+    result = GlypharisOCR.from_pretrained("glypharis-v1").predict("page.png")
 
 ``GlypharisOCR`` and ``OCRResult`` are imported on first use, so ``import glypharis`` stays light.
 """
