@@ -523,6 +523,9 @@ against GW-REC-001, with 7,928,835 parameters, and reads a line in 24.4 ms mean,
 CPU (PyTorch), inside ADR-0011's line target with little margin on the mean. One seed; the owner
 decided (2026-10-26) to add the two missing seeds later, on a college A100 if access is granted.
 The A100 slot is still booked (2026-10-27), so the seeds wait; nothing before the paper depends on them.
+**Note (2026-11-18, Phase 21):** these two seeds (GW-REC-032, 033) were not run, because Phase 13 chose
+option B (GW-REC-037). The promise is closed for v1, which has three seeds of its own (GW-REC-034 to
+036); GW-REC-024 stays at one seed.
 
 **Implemented**
 - `glypharis/models/rec/svtr.py` (GLYPHARIS-Rec-M), `glypharis/models/rec/base.py`, the CRNN frame
@@ -2173,9 +2176,8 @@ validation's. No GLYPHARIS number exists on any test set.)
      resume after a crash belongs to the same evaluation and is logged as a resume.
    - **Order.**
      1. This plan, the code and its tests are committed and pushed, and CI is green. Before the
-        push, the diff is searched for the identifying strings on GDC-scan's page 1 (name, ID,
-        course code, institution, title), taken from what is already known, not by opening its
-        files.
+        push, the diff is searched for the strings that would identify GDC-scan's author, taken from
+        what is already known, not by opening its files.
      2. Preprocessing: the new crop packs are cut (counts asserted); every prepared file is checked
         against its recorded hash; page line ids are checked for uniqueness; GDC-scan's photos are
         checked for a rotation tag and their size against the alignment record; GDC's
@@ -3668,11 +3670,10 @@ Licence wording is drafted against the placeholder `ADR-0014` and completed in S
 
 
 
-**Decisions the owner must make before the gate closes** (ADR-0014; drafting goes on with the
-defaults, marked as pending): whether GW-DET-001, initialised from ImageNet weights, stays v1's
-detector as a disclosed exception to ADR-0009's commercial-use rule (default: yes); and the terms
-intended for the weights given HierText's share-alike licence (default: CC BY-SA 4.0 with HierText
-and Open Images attribution, effective only on a Phase 23 release).
+**Owner decisions (2026-11-18, ADR-0014):** GW-DET-001, initialised from ImageNet weights, stays
+v1's detector as a disclosed exception to ADR-0009's commercial-use rule; the intended terms for the
+v1 weights are CC BY-SA 4.0 with HierText and Open Images attribution, effective only on a Phase 23
+release. Neither is a legal conclusion.
 
 **Exit criteria** (IMPLEMENTATION_PLAN Phase 21): every number in the paper notes traces to an
 experiment ID and a report file.
