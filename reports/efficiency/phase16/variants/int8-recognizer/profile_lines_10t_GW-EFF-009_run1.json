@@ -1,0 +1,1140 @@
+{
+ "kind": "phase16-variant-profile",
+ "system": "glypharis",
+ "task": "rec",
+ "experiment": "GW-EFF-009",
+ "variant": "int8-recognizer",
+ "version": "variant (new version, not v1)",
+ "setting": "recognizer.runtime",
+ "changed": {
+  "recognizer.runtime": {
+   "from": "onnxruntime fp32",
+   "to": "onnxruntime int8 (dynamic, MatMul weights; glypharis.efficiency.quant.RECIPE)"
+  }
+ },
+ "eval_set": "hiertext_val",
+ "device": "cpu",
+ "threads": {
+  "requested": 10,
+  "intra_op": 10,
+  "inter_op": 10,
+  "env": {
+   "OMP_NUM_THREADS": "10",
+   "OMP_THREAD_LIMIT": "10",
+   "MKL_NUM_THREADS": "10"
+  },
+  "env_before_torch_import": true,
+  "preloaded": []
+ },
+ "session_options": {
+  "detector": {
+   "onnxruntime": "1.31.1",
+   "providers": [
+    "CPUExecutionProvider"
+   ],
+   "intra_op_num_threads": 10,
+   "inter_op_num_threads": 0,
+   "execution_mode": "ORT_SEQUENTIAL",
+   "graph_optimization_level": "ORT_ENABLE_ALL",
+   "enable_cpu_mem_arena": false,
+   "enable_mem_pattern": false,
+   "allow_spinning": "default"
+  },
+  "recognizer": {
+   "onnxruntime": "1.31.1",
+   "providers": [
+    "CPUExecutionProvider"
+   ],
+   "intra_op_num_threads": 10,
+   "inter_op_num_threads": 0,
+   "execution_mode": "ORT_SEQUENTIAL",
+   "graph_optimization_level": "ORT_ENABLE_ALL",
+   "enable_cpu_mem_arena": false,
+   "enable_mem_pattern": false,
+   "allow_spinning": "default"
+  }
+ },
+ "v1_code": {
+  "tag": "phase14-eval",
+  "tag_commit": "6795186be166d6b60238c701753aad32e44d0e98",
+  "head": "a8e8bb6d70a9aaccd9f867fabcae09021b8782f0",
+  "paths": [
+   "glypharis/pipeline",
+   "glypharis/models",
+   "glypharis/export",
+   "glypharis/data",
+   "configs"
+  ],
+  "v1_code": "equal"
+ },
+ "build": {
+  "variant": "int8-recognizer",
+  "version": "variant (new version, not v1)",
+  "setting": "recognizer.runtime",
+  "about": "dynamic INT8 of the v1 fp32 ONNX recognizer (H7′)",
+  "changed": {
+   "recognizer.runtime": {
+    "from": "onnxruntime fp32",
+    "to": "onnxruntime int8 (dynamic, MatMul weights; glypharis.efficiency.quant.RECIPE)"
+   }
+  },
+  "settings": {
+   "detector.model": {
+    "experiment": "GW-DET-001",
+    "weights_sha256": "cb0633e92f990e9085b2aa5aeaee68d37276e1dde9762b2e1071c6887d98e627",
+    "arch": {
+     "backbone": "mobilenet_v3_large",
+     "init": "imagenet",
+     "weights": "raw/imagenet_backbones/mobilenet_v3_large-8738ca79.pth",
+     "weights_sha256": "8738ca797c879b547d18bbd15da5736ff2557b2036a9af72225393ca61759a04",
+     "inner_channels": 96,
+     "channels_last": true
+    },
+    "labels": {
+     "shrink_ratio": 0.4,
+     "thresh_min": 0.3,
+     "thresh_max": 0.7,
+     "min_text_size": 6.0
+    },
+    "label_version": 1
+   },
+   "detector.runtime": "onnxruntime fp32",
+   "detector.infer": {
+    "long_side": 1536
+   },
+   "detector.post": {
+    "bin_thresh": 0.3,
+    "box_thresh": 0.5,
+    "min_component_area": 1,
+    "min_box_side": 3.0,
+    "max_candidates": 5000,
+    "box_type": "quad",
+    "operating_points": [
+     {
+      "name": "inverse09",
+      "unclip_mode": "inverse",
+      "unclip_ratio": 0.9
+     }
+    ]
+   },
+   "detector.operating_point": "inverse09",
+   "recognizer.model": {
+    "experiment": "GW-REC-034",
+    "weights_sha256": "902ff77dd84dc2706e6c329684c09cf3f710e04d817078b655c9baf2f803ee2b",
+    "arch": {
+     "model_name": "svtr",
+     "model": {
+      "cnn_channels": [
+       64,
+       128,
+       256,
+       256,
+       512,
+       512
+      ],
+      "lstm_hidden": 256,
+      "lstm_layers": 2,
+      "dropout": 0.1,
+      "frame_stride": 4,
+      "svtr": {
+       "dims": [
+        96,
+        192,
+        256
+       ],
+       "local_blocks": [
+        3,
+        3,
+        0
+       ],
+       "global_blocks": [
+        0,
+        3,
+        6
+       ],
+       "heads": [
+        3,
+        6,
+        8
+       ],
+       "mlp_ratio": 4.0,
+       "local_kernel": [
+        3,
+        7
+       ]
+      }
+     }
+    },
+    "height": 48,
+    "max_width": 1536,
+    "stride": 4,
+    "classes": 275
+   },
+   "recognizer.runtime": "onnxruntime int8 (dynamic, MatMul weights; glypharis.efficiency.quant.RECIPE)",
+   "recognizer.charset": "bd3625fe8d104696bfe1c00000d35794c6d6c90ae82ad3dc4edfcab9e7e81550",
+   "recognizer.temperature": 2.35,
+   "crop": {
+    "height": 64,
+    "margin": 0.15,
+    "max_aspect": 64.0,
+    "jpeg_quality": 95
+   },
+   "reading_order": true,
+   "max_pixels": 64000000
+  },
+  "v1_settings": {
+   "detector.model": {
+    "experiment": "GW-DET-001",
+    "weights_sha256": "cb0633e92f990e9085b2aa5aeaee68d37276e1dde9762b2e1071c6887d98e627",
+    "arch": {
+     "backbone": "mobilenet_v3_large",
+     "init": "imagenet",
+     "weights": "raw/imagenet_backbones/mobilenet_v3_large-8738ca79.pth",
+     "weights_sha256": "8738ca797c879b547d18bbd15da5736ff2557b2036a9af72225393ca61759a04",
+     "inner_channels": 96,
+     "channels_last": true
+    },
+    "labels": {
+     "shrink_ratio": 0.4,
+     "thresh_min": 0.3,
+     "thresh_max": 0.7,
+     "min_text_size": 6.0
+    },
+    "label_version": 1
+   },
+   "detector.runtime": "torch fp32",
+   "detector.infer": {
+    "long_side": 1536
+   },
+   "detector.post": {
+    "bin_thresh": 0.3,
+    "box_thresh": 0.5,
+    "min_component_area": 1,
+    "min_box_side": 3.0,
+    "max_candidates": 5000,
+    "box_type": "quad",
+    "operating_points": [
+     {
+      "name": "inverse09",
+      "unclip_mode": "inverse",
+      "unclip_ratio": 0.9
+     }
+    ]
+   },
+   "detector.operating_point": "inverse09",
+   "recognizer.model": {
+    "experiment": "GW-REC-034",
+    "weights_sha256": "902ff77dd84dc2706e6c329684c09cf3f710e04d817078b655c9baf2f803ee2b",
+    "arch": {
+     "model_name": "svtr",
+     "model": {
+      "cnn_channels": [
+       64,
+       128,
+       256,
+       256,
+       512,
+       512
+      ],
+      "lstm_hidden": 256,
+      "lstm_layers": 2,
+      "dropout": 0.1,
+      "frame_stride": 4,
+      "svtr": {
+       "dims": [
+        96,
+        192,
+        256
+       ],
+       "local_blocks": [
+        3,
+        3,
+        0
+       ],
+       "global_blocks": [
+        0,
+        3,
+        6
+       ],
+       "heads": [
+        3,
+        6,
+        8
+       ],
+       "mlp_ratio": 4.0,
+       "local_kernel": [
+        3,
+        7
+       ]
+      }
+     }
+    },
+    "height": 48,
+    "max_width": 1536,
+    "stride": 4,
+    "classes": 275
+   },
+   "recognizer.runtime": "torch fp32 (strict)",
+   "recognizer.charset": "bd3625fe8d104696bfe1c00000d35794c6d6c90ae82ad3dc4edfcab9e7e81550",
+   "recognizer.temperature": 2.35,
+   "crop": {
+    "height": 64,
+    "margin": 0.15,
+    "max_aspect": 64.0,
+    "jpeg_quality": 95
+   },
+   "reading_order": true,
+   "max_pixels": 64000000
+  },
+  "variant_json": {
+   "variant": "int8-recognizer",
+   "version": "variant (new version, not v1)",
+   "setting": "recognizer.runtime",
+   "about": "dynamic INT8 of the v1 fp32 ONNX recognizer (H7′)",
+   "record_sha256": "0aa61f9ef4843aaf6c1db0d0f3378b0c5f519fe375b1bf70f3b858509dfb4f32",
+   "bundle": {
+    "path": "runs/release/glypharis-v1",
+    "manifest_sha256": "875357a6346e8b1f989005fa96c557b00bf687461043368dc5e3dc532839f037",
+    "version": "glypharis_v1",
+    "files": {
+     "detector.pt": "caafdce9402de07a775102558eeffa6f48d4f54cd370ac63c09ab0be2a929c99",
+     "detector.onnx": "378c1feda480c1bb1dde838dd4a5f4579a904710a7f7b222d978c583b5bddcb7",
+     "recognizer.pt": "785409f75f1d31e4933a42ddcae8c9ecb84960d975083f3f81ebc47d6070f9ca",
+     "recognizer.onnx": "930329b4bf635a935975823d2004b47371d9123b2504cfe590d52f44db84f438"
+    }
+   },
+   "checkpoint": null,
+   "files": {
+    "recognizer.int8.onnx": {
+     "sha256": "e7a4ee3b8d1f381716b2024c6ab7ef3ed152999d12b352be52df5c3c696a3490",
+     "bytes": 10292313
+    }
+   },
+   "created_utc": "2026-11-17T16:20:38+00:00",
+   "quantization": {
+    "recipe": {
+     "pre_process": "onnxruntime.quantization.quant_pre_process, default arguments",
+     "quantize": "onnxruntime.quantization.quantize_dynamic",
+     "op_types_to_quantize": [
+      "MatMul"
+     ],
+     "per_channel": false,
+     "reduce_range": false,
+     "weight_type": "QInt8",
+     "extra_options": {
+      "MatMulConstBOnly": true
+     }
+    },
+    "onnxruntime": "1.31.1",
+    "onnx": "1.23.2",
+    "input": {
+     "path": "runs/release/glypharis-v1/recognizer.onnx",
+     "sha256": "930329b4bf635a935975823d2004b47371d9123b2504cfe590d52f44db84f438",
+     "bytes": 31879396
+    },
+    "preprocessed_sha256": "70ef91d6152a05a3ddcf08ef92651ef720f61e35d30d317e2ab6b8378ddaa374",
+    "output": {
+     "path": "data/processed/phase16/variants/int8-recognizer/recognizer.int8.onnx",
+     "sha256": "e7a4ee3b8d1f381716b2024c6ab7ef3ed152999d12b352be52df5c3c696a3490",
+     "bytes": 10292313
+    },
+    "nodes_fp32": {
+     "MatMul": 67,
+     "MatMulInteger": 0,
+     "DynamicQuantizeLinear": 0,
+     "Gemm": 0,
+     "Conv": 10
+    },
+    "nodes_int8": {
+     "MatMul": 18,
+     "MatMulInteger": 49,
+     "DynamicQuantizeLinear": 49,
+     "Gemm": 0,
+     "Conv": 10
+    }
+   }
+  },
+  "variant_json_sha256": "5d269ffadff3952b1963e47df1e12df425daa76bcaf9a9426ef28f7223584eca",
+  "provenance": {
+   "record": "configs/final/glypharis_v1.yaml",
+   "record_sha256": "0aa61f9ef4843aaf6c1db0d0f3378b0c5f519fe375b1bf70f3b858509dfb4f32",
+   "name": "glypharis_v1",
+   "recognizer_experiment": "GW-REC-034",
+   "detector_experiment": "GW-DET-001",
+   "recognizer_checkpoint": "checkpoints/GW-REC-034/best.pt",
+   "recognizer_checkpoint_sha256": "c7e745403d01bc23c66e570e3e9596755c7d8fe913daad5dc34f8392c8681a4d",
+   "charset": "data/manifests/charset.json",
+   "charset_sha256": "bbdfab42f62b6a08df9ceffc1119eb304c1f9ad741285035737ac958803e803c",
+   "detector_checkpoint": "checkpoints/GW-DET-001/best.pt",
+   "detector_checkpoint_sha256": "016b2b69d257d9165afd9aa4a7ef5ce36cdf3ad5d2c5926aa6b1b60c43705cd5",
+   "device": "cpu",
+   "device_name": "cpu",
+   "torch": "2.14.1+cu126",
+   "cuda": "12.6",
+   "cudnn": 91002,
+   "numerics": {
+    "cudnn_benchmark": false,
+    "cudnn_deterministic": true,
+    "deterministic_algorithms": true,
+    "cuda_matmul_allow_tf32": false,
+    "cudnn_allow_tf32": false,
+    "float32_matmul_precision": "highest",
+    "recognizer_strict_fp32": true,
+    "cublas_workspace_config": null
+   },
+   "git_commit": "a8e8bb6d70a9aaccd9f867fabcae09021b8782f0",
+   "git_dirty": false
+  }
+ },
+ "git_commit": "a8e8bb6d70a9aaccd9f867fabcae09021b8782f0",
+ "git_dirty": false,
+ "set": "lines",
+ "run": 1,
+ "smoke": false,
+ "settings": {
+  "cpu_threads": 10,
+  "intra_op_threads": 10,
+  "inter_op_threads": 10,
+  "device": "cpu",
+  "runtime": {
+   "detector": "onnxruntime fp32",
+   "recognizer": "onnxruntime int8 (dynamic, MatMul weights; glypharis.efficiency.quant.RECIPE)"
+  },
+  "detector_long_side": 1536,
+  "timing": "TextRecognizer.read of one crop: grey, resize, scale, pad, network, greedy decoding"
+ },
+ "threads_before": {
+  "intra_op": 10,
+  "inter_op": 10,
+  "env": {
+   "OMP_NUM_THREADS": "10",
+   "OMP_THREAD_LIMIT": "10",
+   "MKL_NUM_THREADS": "10"
+  }
+ },
+ "threads_after": {
+  "intra_op": 10,
+  "inter_op": 10,
+  "env": {
+   "OMP_NUM_THREADS": "10",
+   "OMP_THREAD_LIMIT": "10",
+   "MKL_NUM_THREADS": "10"
+  }
+ },
+ "batch": 1,
+ "warmup": 10,
+ "started_utc": "2026-11-18T05:30:30+00:00",
+ "ended_utc": "2026-11-18T05:30:37+00:00",
+ "warmup_times_ms": [
+  17.18,
+  124.833,
+  14.226,
+  19.46,
+  12.137,
+  40.229,
+  14.028,
+  14.847,
+  43.42,
+  51.928
+ ],
+ "times_ms": [
+  23.329,
+  17.043,
+  23.316,
+  40.686,
+  22.813,
+  28.85,
+  21.431,
+  39.333,
+  44.769,
+  18.487,
+  22.64,
+  13.038,
+  14.97,
+  13.097,
+  42.365,
+  14.137,
+  343.957,
+  348.665,
+  119.322,
+  66.788,
+  465.872,
+  51.867,
+  186.091,
+  144.828,
+  276.33,
+  49.365,
+  88.561,
+  89.631,
+  250.425,
+  220.864,
+  16.487,
+  28.737,
+  10.293,
+  65.785,
+  37.513,
+  13.143,
+  13.706,
+  18.112,
+  52.935,
+  11.33,
+  14.37,
+  217.457,
+  218.449,
+  60.242,
+  51.928,
+  163.322,
+  109.981,
+  75.533,
+  22.163,
+  27.373,
+  27.089,
+  36.567,
+  27.605,
+  58.45,
+  27.5,
+  137.795,
+  27.492,
+  17.201,
+  16.682,
+  46.446,
+  11.89,
+  11.179,
+  16.615,
+  11.157,
+  16.527,
+  25.585,
+  20.462,
+  15.657,
+  14.779,
+  76.219,
+  45.206,
+  22.03,
+  27.134,
+  40.581,
+  20.146,
+  23.927,
+  8.541,
+  10.567,
+  23.316,
+  32.385,
+  25.853,
+  38.735,
+  40.421,
+  69.992,
+  18.477,
+  34.813,
+  21.994,
+  20.69,
+  13.813,
+  37.18,
+  27.156,
+  121.97,
+  18.466,
+  18.336,
+  190.036,
+  152.634,
+  141.25,
+  13.019,
+  146.454,
+  20.165
+ ],
+ "keys": [
+  "0037d7c08eef278e/p14/l0",
+  "0037d7c08eef278e/p19/l0",
+  "0037d7c08eef278e/p30/l0",
+  "0037d7c08eef278e/p32/l0",
+  "0037d7c08eef278e/p33/l0",
+  "0037d7c08eef278e/p36/l0",
+  "004cc813a5f74eae/p2/l0",
+  "004cc813a5f74eae/p8/l1",
+  "004cc813a5f74eae/p16/l0",
+  "004cc813a5f74eae/p18/l0",
+  "004cc813a5f74eae/p25/l0",
+  "004cc813a5f74eae/p32/l0",
+  "004cc813a5f74eae/p35/l0",
+  "004cc813a5f74eae/p36/l0",
+  "004cc813a5f74eae/p59/l0",
+  "004cc813a5f74eae/p64/l0",
+  "00b1edd2d4f04296/p5/l0",
+  "00b1edd2d4f04296/p5/l2",
+  "00b1edd2d4f04296/p8/l8",
+  "00b1edd2d4f04296/p8/l10",
+  "00bb9343208cd7f0/p2/l4",
+  "0112b5587ac77c29/p2/l2",
+  "0112b5587ac77c29/p5/l3",
+  "0112b5587ac77c29/p7/l2",
+  "0112b5587ac77c29/p8/l3",
+  "0112b5587ac77c29/p8/l4",
+  "0112b5587ac77c29/p14/l0",
+  "012bfb1d9f9afc48/p0/l0",
+  "012bfb1d9f9afc48/p2/l1",
+  "012bfb1d9f9afc48/p8/l0",
+  "013df9c6e5b5aed4/p0/l5",
+  "013df9c6e5b5aed4/p0/l53",
+  "0144982d3d323b25/p1/l0",
+  "0185186d9d8b04e2/p0/l0",
+  "0185186d9d8b04e2/p1/l0",
+  "0185186d9d8b04e2/p23/l0",
+  "0185186d9d8b04e2/p29/l0",
+  "0185186d9d8b04e2/p34/l0",
+  "0185186d9d8b04e2/p73/l0",
+  "01afa53c9fa2fbc9/p1/l0",
+  "01afa53c9fa2fbc9/p82/l0",
+  "02062d203a421358/p3/l0",
+  "02062d203a421358/p3/l3",
+  "02062d203a421358/p8/l0",
+  "02062d203a421358/p14/l0",
+  "02062d203a421358/p15/l0",
+  "02062d203a421358/p18/l0",
+  "02062d203a421358/p20/l0",
+  "0207fda1fd7e1905/p3/l0",
+  "0207fda1fd7e1905/p6/l0",
+  "0207fda1fd7e1905/p12/l0",
+  "0207fda1fd7e1905/p14/l5",
+  "0207fda1fd7e1905/p14/l6",
+  "02851174b26cdd7b/p0/l0",
+  "02851174b26cdd7b/p3/l0",
+  "02851174b26cdd7b/p9/l0",
+  "02851174b26cdd7b/p12/l0",
+  "02851174b26cdd7b/p14/l0",
+  "02851174b26cdd7b/p15/l0",
+  "02851174b26cdd7b/p22/l0",
+  "02851174b26cdd7b/p24/l0",
+  "02851174b26cdd7b/p27/l0",
+  "028cbc01a0170f5a/p8/l0",
+  "028cbc01a0170f5a/p10/l0",
+  "028cbc01a0170f5a/p14/l0",
+  "028f95007af16e94/p2/l3",
+  "028f95007af16e94/p2/l4",
+  "028f95007af16e94/p2/l14",
+  "028f95007af16e94/p2/l22",
+  "02987cea050eb5a2/p2/l0",
+  "02987cea050eb5a2/p5/l0",
+  "02987cea050eb5a2/p5/l3",
+  "02987cea050eb5a2/p5/l4",
+  "02987cea050eb5a2/p10/l1",
+  "02987cea050eb5a2/p14/l2",
+  "02987cea050eb5a2/p22/l0",
+  "02987cea050eb5a2/p24/l5",
+  "02987cea050eb5a2/p25/l0",
+  "02987cea050eb5a2/p40/l0",
+  "02c8733cf12ebba8/p8/l0",
+  "02ce4d2311b32eab/p6/l0",
+  "030830f3b878c879/p5/l1",
+  "030830f3b878c879/p7/l0",
+  "030830f3b878c879/p10/l0",
+  "030830f3b878c879/p11/l1",
+  "030830f3b878c879/p13/l0",
+  "03159b24127c3e38/p0/l0",
+  "03159b24127c3e38/p1/l0",
+  "03159b24127c3e38/p1/l2",
+  "03159b24127c3e38/p3/l2",
+  "03159b24127c3e38/p4/l2",
+  "03159b24127c3e38/p6/l1",
+  "03159b24127c3e38/p13/l0",
+  "03159b24127c3e38/p14/l0",
+  "03221b6a82a5a02e/p0/l0",
+  "03221b6a82a5a02e/p1/l0",
+  "03221b6a82a5a02e/p3/l0",
+  "03221b6a82a5a02e/p17/l0",
+  "03221b6a82a5a02e/p26/l0",
+  "03221b6a82a5a02e/p41/l0"
+ ],
+ "input_sizes": [
+  [
+   162,
+   64
+  ],
+  [
+   108,
+   64
+  ],
+  [
+   153,
+   64
+  ],
+  [
+   272,
+   64
+  ],
+  [
+   130,
+   64
+  ],
+  [
+   203,
+   64
+  ],
+  [
+   131,
+   64
+  ],
+  [
+   221,
+   64
+  ],
+  [
+   265,
+   64
+  ],
+  [
+   114,
+   64
+  ],
+  [
+   141,
+   64
+  ],
+  [
+   70,
+   64
+  ],
+  [
+   44,
+   64
+  ],
+  [
+   62,
+   64
+  ],
+  [
+   277,
+   64
+  ],
+  [
+   73,
+   64
+  ],
+  [
+   1087,
+   64
+  ],
+  [
+   1116,
+   64
+  ],
+  [
+   595,
+   64
+  ],
+  [
+   422,
+   64
+  ],
+  [
+   1404,
+   64
+  ],
+  [
+   336,
+   64
+  ],
+  [
+   793,
+   64
+  ],
+  [
+   686,
+   64
+  ],
+  [
+   1055,
+   64
+  ],
+  [
+   332,
+   64
+  ],
+  [
+   479,
+   64
+  ],
+  [
+   507,
+   64
+  ],
+  [
+   1011,
+   64
+  ],
+  [
+   917,
+   64
+  ],
+  [
+   91,
+   64
+  ],
+  [
+   177,
+   64
+  ],
+  [
+   37,
+   64
+  ],
+  [
+   415,
+   64
+  ],
+  [
+   256,
+   64
+  ],
+  [
+   65,
+   64
+  ],
+  [
+   86,
+   64
+  ],
+  [
+   102,
+   64
+  ],
+  [
+   318,
+   64
+  ],
+  [
+   43,
+   64
+  ],
+  [
+   46,
+   64
+  ],
+  [
+   883,
+   64
+  ],
+  [
+   870,
+   64
+  ],
+  [
+   383,
+   64
+  ],
+  [
+   338,
+   64
+  ],
+  [
+   727,
+   64
+  ],
+  [
+   550,
+   64
+  ],
+  [
+   461,
+   64
+  ],
+  [
+   162,
+   64
+  ],
+  [
+   206,
+   64
+  ],
+  [
+   179,
+   64
+  ],
+  [
+   226,
+   64
+  ],
+  [
+   208,
+   64
+  ],
+  [
+   364,
+   64
+  ],
+  [
+   214,
+   64
+  ],
+  [
+   669,
+   64
+  ],
+  [
+   187,
+   64
+  ],
+  [
+   91,
+   64
+  ],
+  [
+   88,
+   64
+  ],
+  [
+   332,
+   64
+  ],
+  [
+   85,
+   64
+  ],
+  [
+   83,
+   64
+  ],
+  [
+   89,
+   64
+  ],
+  [
+   85,
+   64
+  ],
+  [
+   89,
+   64
+  ],
+  [
+   209,
+   64
+  ],
+  [
+   138,
+   64
+  ],
+  [
+   89,
+   64
+  ],
+  [
+   105,
+   64
+  ],
+  [
+   475,
+   64
+  ],
+  [
+   311,
+   64
+  ],
+  [
+   153,
+   64
+  ],
+  [
+   211,
+   64
+  ],
+  [
+   284,
+   64
+  ],
+  [
+   137,
+   64
+  ],
+  [
+   197,
+   64
+  ],
+  [
+   42,
+   64
+  ],
+  [
+   50,
+   64
+  ],
+  [
+   193,
+   64
+  ],
+  [
+   249,
+   64
+  ],
+  [
+   191,
+   64
+  ],
+  [
+   225,
+   64
+  ],
+  [
+   266,
+   64
+  ],
+  [
+   456,
+   64
+  ],
+  [
+   131,
+   64
+  ],
+  [
+   245,
+   64
+  ],
+  [
+   132,
+   64
+  ],
+  [
+   147,
+   64
+  ],
+  [
+   85,
+   64
+  ],
+  [
+   233,
+   64
+  ],
+  [
+   183,
+   64
+  ],
+  [
+   633,
+   64
+  ],
+  [
+   93,
+   64
+  ],
+  [
+   128,
+   64
+  ],
+  [
+   834,
+   64
+  ],
+  [
+   702,
+   64
+  ],
+  [
+   647,
+   64
+  ],
+  [
+   82,
+   64
+  ],
+  [
+   690,
+   64
+  ],
+  [
+   152,
+   64
+  ]
+ ],
+ "mean_ms": 63.99913000000001,
+ "p95_ms": 222.34204999999992,
+ "peak_mem_mib": 1097.4,
+ "peak_mem": {
+  "loaded": [
+   "the bundle on ONNX Runtime (load_bundle_onnx)",
+   "recognizer.int8.onnx"
+  ],
+  "numerics": null,
+  "scope": "the deployed build (bundle and variant files, no training checkpoint), read right after the timed items"
+ },
+ "conditions": {
+  "cpu": "Intel(R) Core(TM) i7-14650HX",
+  "physical_cores": 16,
+  "logical_cpus": 24,
+  "on_ac_power": true,
+  "battery_percent": 100,
+  "power_plan": "Power Scheme GUID: 381b4222-f694-41f0-9685-ff5bb260df2e  (Balanced)",
+  "power_mode": "best performance",
+  "cpu_busy_percent_before": 15.0,
+  "thread_env": {
+   "OMP_NUM_THREADS": "10",
+   "OMP_THREAD_LIMIT": "10",
+   "MKL_NUM_THREADS": "10"
+  },
+  "python": "3.11.9",
+  "os": "Windows-10-10.0.26300-SP0"
+ },
+ "conditions_end": {
+  "cpu": "Intel(R) Core(TM) i7-14650HX",
+  "physical_cores": 16,
+  "logical_cpus": 24,
+  "on_ac_power": true,
+  "battery_percent": 100,
+  "power_plan": "Power Scheme GUID: 381b4222-f694-41f0-9685-ff5bb260df2e  (Balanced)",
+  "power_mode": "best performance",
+  "cpu_busy_percent_before": 14.7,
+  "thread_env": {
+   "OMP_NUM_THREADS": "10",
+   "OMP_THREAD_LIMIT": "10",
+   "MKL_NUM_THREADS": "10"
+  },
+  "python": "3.11.9",
+  "os": "Windows-10-10.0.26300-SP0"
+ },
+ "conditions_utc": {
+  "start": "2026-11-18T05:30:27+00:00",
+  "end": "2026-11-18T05:30:37+00:00"
+ },
+ "gpu_state": {
+  "start": {
+   "utc": "2026-11-18T05:30:29+00:00",
+   "gpus": [
+    {
+     "index": 0,
+     "name": "NVIDIA GeForce RTX 4050 Laptop GPU",
+     "driver": "616.56",
+     "pstate": "P8",
+     "clock_sm_mhz": 210,
+     "clock_mem_mhz": 405,
+     "clock_max_sm_mhz": 3105,
+     "clock_max_mem_mhz": 8001,
+     "temperature_c": 43,
+     "memory_used_mib": 305,
+     "memory_total_mib": 6141,
+     "utilization_percent": 0,
+     "power_draw_w": 1.75,
+     "throttle_reasons": "0x0000000000000001"
+    }
+   ]
+  },
+  "end": {
+   "utc": "2026-11-18T05:30:39+00:00",
+   "gpus": [
+    {
+     "index": 0,
+     "name": "NVIDIA GeForce RTX 4050 Laptop GPU",
+     "driver": "616.56",
+     "pstate": "P8",
+     "clock_sm_mhz": 210,
+     "clock_mem_mhz": 405,
+     "clock_max_sm_mhz": 3105,
+     "clock_max_mem_mhz": 8001,
+     "temperature_c": 44,
+     "memory_used_mib": 305,
+     "memory_total_mib": 6141,
+     "utilization_percent": 0,
+     "power_draw_w": 1.75,
+     "throttle_reasons": "0x0000000000000001"
+    }
+   ]
+  }
+ },
+ "cpu_busy_percent_after": 12.0
+}

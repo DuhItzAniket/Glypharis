@@ -1,0 +1,1913 @@
+{
+ "kind": "phase16-variant-profile",
+ "system": "glypharis",
+ "task": "e2e",
+ "experiment": "GW-EFF-009",
+ "variant": "det-GW-DET-003",
+ "version": "variant (new version, not v1)",
+ "setting": "detector.model",
+ "changed": {
+  "detector.model": {
+   "from": {
+    "experiment": "GW-DET-001",
+    "weights_sha256": "cb0633e92f990e9085b2aa5aeaee68d37276e1dde9762b2e1071c6887d98e627",
+    "arch": {
+     "backbone": "mobilenet_v3_large",
+     "init": "imagenet",
+     "weights": "raw/imagenet_backbones/mobilenet_v3_large-8738ca79.pth",
+     "weights_sha256": "8738ca797c879b547d18bbd15da5736ff2557b2036a9af72225393ca61759a04",
+     "inner_channels": 96,
+     "channels_last": true
+    },
+    "labels": {
+     "shrink_ratio": 0.4,
+     "thresh_min": 0.3,
+     "thresh_max": 0.7,
+     "min_text_size": 6.0
+    },
+    "label_version": 1
+   },
+   "to": {
+    "experiment": "GW-DET-003",
+    "weights_sha256": "824526ffb3aebe28361fff10191bd92ea0f2c06fbc350e09a20cc2a50a05b048",
+    "arch": {
+     "backbone": "mobilenet_v3_small",
+     "init": "imagenet",
+     "weights": "raw/imagenet_backbones/mobilenet_v3_small-047dcff4.pth",
+     "weights_sha256": "047dcff4addef86ea5bc2eff13c9614dc11f47ab1160d0a71a25e7db994f4e1f",
+     "inner_channels": 96,
+     "channels_last": true
+    },
+    "labels": {
+     "shrink_ratio": 0.4,
+     "thresh_min": 0.3,
+     "thresh_max": 0.7,
+     "min_text_size": 6.0
+    },
+    "label_version": 1
+   }
+  }
+ },
+ "eval_set": "hiertext_val",
+ "device": "cpu",
+ "threads": {
+  "requested": 10,
+  "intra_op": 10,
+  "inter_op": 10,
+  "env": {
+   "OMP_NUM_THREADS": "10",
+   "OMP_THREAD_LIMIT": "10",
+   "MKL_NUM_THREADS": "10"
+  },
+  "env_before_torch_import": true,
+  "preloaded": []
+ },
+ "session_options": {
+  "detector": {
+   "onnxruntime": "1.31.1",
+   "providers": [
+    "CPUExecutionProvider"
+   ],
+   "intra_op_num_threads": 10,
+   "inter_op_num_threads": 0,
+   "execution_mode": "ORT_SEQUENTIAL",
+   "graph_optimization_level": "ORT_ENABLE_ALL",
+   "enable_cpu_mem_arena": false,
+   "enable_mem_pattern": false,
+   "allow_spinning": "default"
+  },
+  "recognizer": {
+   "onnxruntime": "1.31.1",
+   "providers": [
+    "CPUExecutionProvider"
+   ],
+   "intra_op_num_threads": 10,
+   "inter_op_num_threads": 0,
+   "execution_mode": "ORT_SEQUENTIAL",
+   "graph_optimization_level": "ORT_ENABLE_ALL",
+   "enable_cpu_mem_arena": false,
+   "enable_mem_pattern": false,
+   "allow_spinning": "default"
+  }
+ },
+ "v1_code": {
+  "tag": "phase14-eval",
+  "tag_commit": "6795186be166d6b60238c701753aad32e44d0e98",
+  "head": "a8e8bb6d70a9aaccd9f867fabcae09021b8782f0",
+  "paths": [
+   "glypharis/pipeline",
+   "glypharis/models",
+   "glypharis/export",
+   "glypharis/data",
+   "configs"
+  ],
+  "v1_code": "equal"
+ },
+ "build": {
+  "variant": "det-GW-DET-003",
+  "version": "variant (new version, not v1)",
+  "setting": "detector.model",
+  "about": "the smaller detector GW-DET-003",
+  "changed": {
+   "detector.model": {
+    "from": {
+     "experiment": "GW-DET-001",
+     "weights_sha256": "cb0633e92f990e9085b2aa5aeaee68d37276e1dde9762b2e1071c6887d98e627",
+     "arch": {
+      "backbone": "mobilenet_v3_large",
+      "init": "imagenet",
+      "weights": "raw/imagenet_backbones/mobilenet_v3_large-8738ca79.pth",
+      "weights_sha256": "8738ca797c879b547d18bbd15da5736ff2557b2036a9af72225393ca61759a04",
+      "inner_channels": 96,
+      "channels_last": true
+     },
+     "labels": {
+      "shrink_ratio": 0.4,
+      "thresh_min": 0.3,
+      "thresh_max": 0.7,
+      "min_text_size": 6.0
+     },
+     "label_version": 1
+    },
+    "to": {
+     "experiment": "GW-DET-003",
+     "weights_sha256": "824526ffb3aebe28361fff10191bd92ea0f2c06fbc350e09a20cc2a50a05b048",
+     "arch": {
+      "backbone": "mobilenet_v3_small",
+      "init": "imagenet",
+      "weights": "raw/imagenet_backbones/mobilenet_v3_small-047dcff4.pth",
+      "weights_sha256": "047dcff4addef86ea5bc2eff13c9614dc11f47ab1160d0a71a25e7db994f4e1f",
+      "inner_channels": 96,
+      "channels_last": true
+     },
+     "labels": {
+      "shrink_ratio": 0.4,
+      "thresh_min": 0.3,
+      "thresh_max": 0.7,
+      "min_text_size": 6.0
+     },
+     "label_version": 1
+    }
+   }
+  },
+  "settings": {
+   "detector.model": {
+    "experiment": "GW-DET-003",
+    "weights_sha256": "824526ffb3aebe28361fff10191bd92ea0f2c06fbc350e09a20cc2a50a05b048",
+    "arch": {
+     "backbone": "mobilenet_v3_small",
+     "init": "imagenet",
+     "weights": "raw/imagenet_backbones/mobilenet_v3_small-047dcff4.pth",
+     "weights_sha256": "047dcff4addef86ea5bc2eff13c9614dc11f47ab1160d0a71a25e7db994f4e1f",
+     "inner_channels": 96,
+     "channels_last": true
+    },
+    "labels": {
+     "shrink_ratio": 0.4,
+     "thresh_min": 0.3,
+     "thresh_max": 0.7,
+     "min_text_size": 6.0
+    },
+    "label_version": 1
+   },
+   "detector.runtime": "onnxruntime fp32",
+   "detector.infer": {
+    "long_side": 1536
+   },
+   "detector.post": {
+    "bin_thresh": 0.3,
+    "box_thresh": 0.5,
+    "min_component_area": 1,
+    "min_box_side": 3.0,
+    "max_candidates": 5000,
+    "box_type": "quad",
+    "operating_points": [
+     {
+      "name": "inverse09",
+      "unclip_mode": "inverse",
+      "unclip_ratio": 0.9
+     }
+    ]
+   },
+   "detector.operating_point": "inverse09",
+   "recognizer.model": {
+    "experiment": "GW-REC-034",
+    "weights_sha256": "902ff77dd84dc2706e6c329684c09cf3f710e04d817078b655c9baf2f803ee2b",
+    "arch": {
+     "model_name": "svtr",
+     "model": {
+      "cnn_channels": [
+       64,
+       128,
+       256,
+       256,
+       512,
+       512
+      ],
+      "lstm_hidden": 256,
+      "lstm_layers": 2,
+      "dropout": 0.1,
+      "frame_stride": 4,
+      "svtr": {
+       "dims": [
+        96,
+        192,
+        256
+       ],
+       "local_blocks": [
+        3,
+        3,
+        0
+       ],
+       "global_blocks": [
+        0,
+        3,
+        6
+       ],
+       "heads": [
+        3,
+        6,
+        8
+       ],
+       "mlp_ratio": 4.0,
+       "local_kernel": [
+        3,
+        7
+       ]
+      }
+     }
+    },
+    "height": 48,
+    "max_width": 1536,
+    "stride": 4,
+    "classes": 275
+   },
+   "recognizer.runtime": "onnxruntime fp32",
+   "recognizer.charset": "bd3625fe8d104696bfe1c00000d35794c6d6c90ae82ad3dc4edfcab9e7e81550",
+   "recognizer.temperature": 2.35,
+   "crop": {
+    "height": 64,
+    "margin": 0.15,
+    "max_aspect": 64.0,
+    "jpeg_quality": 95
+   },
+   "reading_order": true,
+   "max_pixels": 64000000
+  },
+  "v1_settings": {
+   "detector.model": {
+    "experiment": "GW-DET-001",
+    "weights_sha256": "cb0633e92f990e9085b2aa5aeaee68d37276e1dde9762b2e1071c6887d98e627",
+    "arch": {
+     "backbone": "mobilenet_v3_large",
+     "init": "imagenet",
+     "weights": "raw/imagenet_backbones/mobilenet_v3_large-8738ca79.pth",
+     "weights_sha256": "8738ca797c879b547d18bbd15da5736ff2557b2036a9af72225393ca61759a04",
+     "inner_channels": 96,
+     "channels_last": true
+    },
+    "labels": {
+     "shrink_ratio": 0.4,
+     "thresh_min": 0.3,
+     "thresh_max": 0.7,
+     "min_text_size": 6.0
+    },
+    "label_version": 1
+   },
+   "detector.runtime": "torch fp32",
+   "detector.infer": {
+    "long_side": 1536
+   },
+   "detector.post": {
+    "bin_thresh": 0.3,
+    "box_thresh": 0.5,
+    "min_component_area": 1,
+    "min_box_side": 3.0,
+    "max_candidates": 5000,
+    "box_type": "quad",
+    "operating_points": [
+     {
+      "name": "inverse09",
+      "unclip_mode": "inverse",
+      "unclip_ratio": 0.9
+     }
+    ]
+   },
+   "detector.operating_point": "inverse09",
+   "recognizer.model": {
+    "experiment": "GW-REC-034",
+    "weights_sha256": "902ff77dd84dc2706e6c329684c09cf3f710e04d817078b655c9baf2f803ee2b",
+    "arch": {
+     "model_name": "svtr",
+     "model": {
+      "cnn_channels": [
+       64,
+       128,
+       256,
+       256,
+       512,
+       512
+      ],
+      "lstm_hidden": 256,
+      "lstm_layers": 2,
+      "dropout": 0.1,
+      "frame_stride": 4,
+      "svtr": {
+       "dims": [
+        96,
+        192,
+        256
+       ],
+       "local_blocks": [
+        3,
+        3,
+        0
+       ],
+       "global_blocks": [
+        0,
+        3,
+        6
+       ],
+       "heads": [
+        3,
+        6,
+        8
+       ],
+       "mlp_ratio": 4.0,
+       "local_kernel": [
+        3,
+        7
+       ]
+      }
+     }
+    },
+    "height": 48,
+    "max_width": 1536,
+    "stride": 4,
+    "classes": 275
+   },
+   "recognizer.runtime": "torch fp32 (strict)",
+   "recognizer.charset": "bd3625fe8d104696bfe1c00000d35794c6d6c90ae82ad3dc4edfcab9e7e81550",
+   "recognizer.temperature": 2.35,
+   "crop": {
+    "height": 64,
+    "margin": 0.15,
+    "max_aspect": 64.0,
+    "jpeg_quality": 95
+   },
+   "reading_order": true,
+   "max_pixels": 64000000
+  },
+  "variant_json": {
+   "variant": "det-GW-DET-003",
+   "version": "variant (new version, not v1)",
+   "setting": "detector.model",
+   "about": "the smaller detector GW-DET-003",
+   "record_sha256": "0aa61f9ef4843aaf6c1db0d0f3378b0c5f519fe375b1bf70f3b858509dfb4f32",
+   "bundle": {
+    "path": "runs/release/glypharis-v1",
+    "manifest_sha256": "875357a6346e8b1f989005fa96c557b00bf687461043368dc5e3dc532839f037",
+    "version": "glypharis_v1",
+    "files": {
+     "detector.pt": "caafdce9402de07a775102558eeffa6f48d4f54cd370ac63c09ab0be2a929c99",
+     "detector.onnx": "378c1feda480c1bb1dde838dd4a5f4579a904710a7f7b222d978c583b5bddcb7",
+     "recognizer.pt": "785409f75f1d31e4933a42ddcae8c9ecb84960d975083f3f81ebc47d6070f9ca",
+     "recognizer.onnx": "930329b4bf635a935975823d2004b47371d9123b2504cfe590d52f44db84f438"
+    }
+   },
+   "checkpoint": {
+    "path": "checkpoints/GW-DET-003/best.pt",
+    "sha256": "9af3e12ef2daed93862f55d53a071dbaff78cf82717ab28620ebfd0bdf8dbb1b",
+    "experiment": "GW-DET-003"
+   },
+   "files": {
+    "detector.onnx": {
+     "sha256": "9019206d699e3b90e17e9a821e18e3618b73ff6ab23f720e221477e6ec52429d",
+     "bytes": 4403929
+    }
+   },
+   "created_utc": "2026-11-17T17:05:14+00:00",
+   "detector_spec": {
+    "model": {
+     "backbone": "mobilenet_v3_small",
+     "init": "imagenet",
+     "weights": "raw/imagenet_backbones/mobilenet_v3_small-047dcff4.pth",
+     "weights_sha256": "047dcff4addef86ea5bc2eff13c9614dc11f47ab1160d0a71a25e7db994f4e1f",
+     "inner_channels": 96,
+     "channels_last": true
+    },
+    "labels": {
+     "shrink_ratio": 0.4,
+     "thresh_min": 0.3,
+     "thresh_max": 0.7,
+     "min_text_size": 6.0
+    },
+    "infer": {
+     "long_side": 1536
+    },
+    "post": {
+     "bin_thresh": 0.3,
+     "box_thresh": 0.5,
+     "min_component_area": 1,
+     "min_box_side": 3.0,
+     "max_candidates": 5000,
+     "box_type": "quad",
+     "operating_points": [
+      {
+       "name": "inverse09",
+       "unclip_mode": "inverse",
+       "unclip_ratio": 0.9
+      }
+     ]
+    },
+    "operating_point": "inverse09",
+    "label_version": 1
+   }
+  },
+  "variant_json_sha256": "5bb7eff65174111250cc55803adde3aa8180417fecc0237a6d8625cd964c64a0",
+  "provenance": {
+   "record": "configs/final/glypharis_v1.yaml",
+   "record_sha256": "0aa61f9ef4843aaf6c1db0d0f3378b0c5f519fe375b1bf70f3b858509dfb4f32",
+   "name": "glypharis_v1",
+   "recognizer_experiment": "GW-REC-034",
+   "detector_experiment": "GW-DET-001",
+   "recognizer_checkpoint": "checkpoints/GW-REC-034/best.pt",
+   "recognizer_checkpoint_sha256": "c7e745403d01bc23c66e570e3e9596755c7d8fe913daad5dc34f8392c8681a4d",
+   "charset": "data/manifests/charset.json",
+   "charset_sha256": "bbdfab42f62b6a08df9ceffc1119eb304c1f9ad741285035737ac958803e803c",
+   "detector_checkpoint": "checkpoints/GW-DET-001/best.pt",
+   "detector_checkpoint_sha256": "016b2b69d257d9165afd9aa4a7ef5ce36cdf3ad5d2c5926aa6b1b60c43705cd5",
+   "device": "cpu",
+   "device_name": "cpu",
+   "torch": "2.14.1+cu126",
+   "cuda": "12.6",
+   "cudnn": 91002,
+   "numerics": {
+    "cudnn_benchmark": false,
+    "cudnn_deterministic": true,
+    "deterministic_algorithms": true,
+    "cuda_matmul_allow_tf32": false,
+    "cudnn_allow_tf32": false,
+    "float32_matmul_precision": "highest",
+    "recognizer_strict_fp32": true,
+    "cublas_workspace_config": null
+   },
+   "git_commit": "a8e8bb6d70a9aaccd9f867fabcae09021b8782f0",
+   "git_dirty": false
+  }
+ },
+ "git_commit": "a8e8bb6d70a9aaccd9f867fabcae09021b8782f0",
+ "git_dirty": false,
+ "set": "pages",
+ "run": 2,
+ "smoke": false,
+ "settings": {
+  "cpu_threads": 10,
+  "intra_op_threads": 10,
+  "inter_op_threads": 10,
+  "device": "cpu",
+  "runtime": {
+   "detector": "onnxruntime fp32",
+   "recognizer": "onnxruntime fp32"
+  },
+  "detector_long_side": 1536,
+  "timing": "GlypharisOCR.predict of the RGB page array, one page at a time"
+ },
+ "threads_before": {
+  "intra_op": 10,
+  "inter_op": 10,
+  "env": {
+   "OMP_NUM_THREADS": "10",
+   "OMP_THREAD_LIMIT": "10",
+   "MKL_NUM_THREADS": "10"
+  }
+ },
+ "threads_after": {
+  "intra_op": 10,
+  "inter_op": 10,
+  "env": {
+   "OMP_NUM_THREADS": "10",
+   "OMP_THREAD_LIMIT": "10",
+   "MKL_NUM_THREADS": "10"
+  }
+ },
+ "batch": 1,
+ "warmup": 10,
+ "started_utc": "2026-11-18T03:15:37+00:00",
+ "ended_utc": "2026-11-18T03:31:56+00:00",
+ "warmup_times_ms": [
+  2864.606,
+  17869.388,
+  1715.924,
+  8334.867,
+  7998.108,
+  5873.586,
+  6559.128,
+  4188.554,
+  7219.945,
+  5199.864
+ ],
+ "times_ms": [
+  5712.169,
+  7332.717,
+  18951.99,
+  11959.392,
+  5919.301,
+  6221.171,
+  17353.142,
+  4150.13,
+  19440.772,
+  6110.149,
+  10166.242,
+  12811.035,
+  6501.571,
+  19385.62,
+  14415.794,
+  14472.279,
+  2950.311,
+  11663.639,
+  15392.87,
+  2746.565,
+  6065.017,
+  5498.042,
+  9969.629,
+  5398.527,
+  13919.822,
+  17501.347,
+  5648.78,
+  14605.137,
+  9834.12,
+  7246.411,
+  4703.149,
+  20879.943,
+  3253.301,
+  5301.117,
+  3707.466,
+  3091.859,
+  13829.175,
+  4412.926,
+  14098.083,
+  3414.014,
+  10869.577,
+  3563.341,
+  6056.367,
+  29601.437,
+  6574.553,
+  248.011,
+  15231.047,
+  6242.343,
+  4464.955,
+  4166.278,
+  10053.988,
+  3873.135,
+  11094.112,
+  35872.979,
+  20578.605,
+  24954.284,
+  1941.94,
+  2328.983,
+  4959.17,
+  2076.783,
+  5275.021,
+  7040.23,
+  7182.834,
+  16785.064,
+  3338.915,
+  3931.579,
+  2081.661,
+  5106.122,
+  6195.008,
+  5456.744,
+  15481.312,
+  14141.874,
+  11823.445,
+  5302.981,
+  10763.311,
+  6201.314,
+  10485.053,
+  6513.03,
+  14892.14,
+  19730.503,
+  3925.686,
+  5349.08,
+  2031.635,
+  10422.102,
+  3167.586,
+  5947.978,
+  11067.177,
+  4971.724,
+  8302.021,
+  7479.912,
+  15097.258,
+  3633.656,
+  4023.297,
+  7511.473,
+  2279.077,
+  7490.065,
+  5857.743,
+  21840.956,
+  2968.498,
+  6688.669
+ ],
+ "parts_ms": [
+  {
+   "load": 0.024,
+   "detect": 288.885,
+   "recognise": 5413.349,
+   "order": 2.216,
+   "total": 5704.474
+  },
+  {
+   "load": 0.027,
+   "detect": 269.827,
+   "recognise": 7053.929,
+   "order": 1.272,
+   "total": 7325.054
+  },
+  {
+   "load": 0.014,
+   "detect": 241.571,
+   "recognise": 18702.998,
+   "order": 2.713,
+   "total": 18947.297
+  },
+  {
+   "load": 0.014,
+   "detect": 248.815,
+   "recognise": 11701.167,
+   "order": 4.378,
+   "total": 11954.373
+  },
+  {
+   "load": 0.016,
+   "detect": 273.771,
+   "recognise": 5635.451,
+   "order": 4.269,
+   "total": 5913.506
+  },
+  {
+   "load": 0.025,
+   "detect": 223.411,
+   "recognise": 5989.745,
+   "order": 1.174,
+   "total": 6214.355
+  },
+  {
+   "load": 0.011,
+   "detect": 208.638,
+   "recognise": 17139.65,
+   "order": 2.265,
+   "total": 17350.565
+  },
+  {
+   "load": 0.024,
+   "detect": 258.697,
+   "recognise": 3883.036,
+   "order": 1.465,
+   "total": 4143.221
+  },
+  {
+   "load": 0.021,
+   "detect": 266.783,
+   "recognise": 19161.202,
+   "order": 7.481,
+   "total": 19435.486
+  },
+  {
+   "load": 0.014,
+   "detect": 226.051,
+   "recognise": 5877.979,
+   "order": 2.087,
+   "total": 6106.13
+  },
+  {
+   "load": 0.011,
+   "detect": 195.895,
+   "recognise": 9968.347,
+   "order": 1.216,
+   "total": 10165.469
+  },
+  {
+   "load": 0.022,
+   "detect": 317.761,
+   "recognise": 12483.202,
+   "order": 2.452,
+   "total": 12803.436
+  },
+  {
+   "load": 0.014,
+   "detect": 218.3,
+   "recognise": 6280.292,
+   "order": 0.932,
+   "total": 6499.538
+  },
+  {
+   "load": 0.015,
+   "detect": 247.788,
+   "recognise": 19131.359,
+   "order": 1.589,
+   "total": 19380.752
+  },
+  {
+   "load": 0.011,
+   "detect": 231.205,
+   "recognise": 14181.065,
+   "order": 1.476,
+   "total": 14413.757
+  },
+  {
+   "load": 0.018,
+   "detect": 287.239,
+   "recognise": 14177.857,
+   "order": 1.277,
+   "total": 14466.39
+  },
+  {
+   "load": 0.013,
+   "detect": 246.859,
+   "recognise": 2700.494,
+   "order": 1.471,
+   "total": 2948.837
+  },
+  {
+   "load": 0.011,
+   "detect": 238.129,
+   "recognise": 11421.636,
+   "order": 2.024,
+   "total": 11661.8
+  },
+  {
+   "load": 0.014,
+   "detect": 369.286,
+   "recognise": 15005.936,
+   "order": 11.277,
+   "total": 15386.512
+  },
+  {
+   "load": 0.014,
+   "detect": 254.698,
+   "recognise": 2484.286,
+   "order": 1.512,
+   "total": 2740.51
+  },
+  {
+   "load": 0.025,
+   "detect": 240.364,
+   "recognise": 5816.316,
+   "order": 3.02,
+   "total": 6059.725
+  },
+  {
+   "load": 0.02,
+   "detect": 245.201,
+   "recognise": 5244.738,
+   "order": 1.705,
+   "total": 5491.664
+  },
+  {
+   "load": 0.009,
+   "detect": 257.387,
+   "recognise": 9707.307,
+   "order": 4.51,
+   "total": 9969.214
+  },
+  {
+   "load": 0.01,
+   "detect": 378.205,
+   "recognise": 5016.4,
+   "order": 3.429,
+   "total": 5398.043
+  },
+  {
+   "load": 0.016,
+   "detect": 280.161,
+   "recognise": 13635.07,
+   "order": 1.107,
+   "total": 13916.353
+  },
+  {
+   "load": 0.011,
+   "detect": 305.392,
+   "recognise": 17191.033,
+   "order": 3.002,
+   "total": 17499.437
+  },
+  {
+   "load": 0.013,
+   "detect": 227.98,
+   "recognise": 5415.602,
+   "order": 1.119,
+   "total": 5644.714
+  },
+  {
+   "load": 0.013,
+   "detect": 265.153,
+   "recognise": 14337.074,
+   "order": 1.535,
+   "total": 14603.775
+  },
+  {
+   "load": 0.027,
+   "detect": 230.131,
+   "recognise": 9595.843,
+   "order": 1.841,
+   "total": 9827.842
+  },
+  {
+   "load": 0.011,
+   "detect": 214.078,
+   "recognise": 7028.233,
+   "order": 1.57,
+   "total": 7243.892
+  },
+  {
+   "load": 0.025,
+   "detect": 240.176,
+   "recognise": 4455.733,
+   "order": 0.994,
+   "total": 4696.929
+  },
+  {
+   "load": 0.013,
+   "detect": 232.447,
+   "recognise": 20640.383,
+   "order": 3.271,
+   "total": 20876.115
+  },
+  {
+   "load": 0.016,
+   "detect": 254.633,
+   "recognise": 2992.554,
+   "order": 0.595,
+   "total": 3247.798
+  },
+  {
+   "load": 0.015,
+   "detect": 271.774,
+   "recognise": 5022.564,
+   "order": 1.644,
+   "total": 5295.997
+  },
+  {
+   "load": 0.013,
+   "detect": 247.283,
+   "recognise": 3454.245,
+   "order": 1.345,
+   "total": 3702.886
+  },
+  {
+   "load": 0.027,
+   "detect": 362.995,
+   "recognise": 2717.689,
+   "order": 1.511,
+   "total": 3082.222
+  },
+  {
+   "load": 0.013,
+   "detect": 298.856,
+   "recognise": 13527.36,
+   "order": 1.447,
+   "total": 13827.675
+  },
+  {
+   "load": 0.013,
+   "detect": 209.155,
+   "recognise": 4198.34,
+   "order": 1.221,
+   "total": 4408.73
+  },
+  {
+   "load": 0.012,
+   "detect": 244.586,
+   "recognise": 13845.895,
+   "order": 2.915,
+   "total": 14093.408
+  },
+  {
+   "load": 0.018,
+   "detect": 266.337,
+   "recognise": 3141.555,
+   "order": 2.509,
+   "total": 3410.418
+  },
+  {
+   "load": 0.014,
+   "detect": 256.14,
+   "recognise": 10607.521,
+   "order": 1.207,
+   "total": 10864.882
+  },
+  {
+   "load": 0.014,
+   "detect": 261.488,
+   "recognise": 3294.26,
+   "order": 3.081,
+   "total": 3558.843
+  },
+  {
+   "load": 0.012,
+   "detect": 299.837,
+   "recognise": 5751.64,
+   "order": 2.59,
+   "total": 6054.078
+  },
+  {
+   "load": 0.012,
+   "detect": 252.311,
+   "recognise": 29339.934,
+   "order": 4.85,
+   "total": 29597.107
+  },
+  {
+   "load": 0.016,
+   "detect": 254.754,
+   "recognise": 6313.511,
+   "order": 0.644,
+   "total": 6568.926
+  },
+  {
+   "load": 0.011,
+   "detect": 213.63,
+   "recognise": 30.867,
+   "order": 0.035,
+   "total": 244.543
+  },
+  {
+   "load": 0.015,
+   "detect": 234.57,
+   "recognise": 14988.439,
+   "order": 2.399,
+   "total": 15225.423
+  },
+  {
+   "load": 0.01,
+   "detect": 329.446,
+   "recognise": 5910.687,
+   "order": 1.067,
+   "total": 6241.209
+  },
+  {
+   "load": 0.012,
+   "detect": 213.822,
+   "recognise": 4246.01,
+   "order": 1.115,
+   "total": 4460.959
+  },
+  {
+   "load": 0.013,
+   "detect": 226.648,
+   "recognise": 3933.638,
+   "order": 1.755,
+   "total": 4162.053
+  },
+  {
+   "load": 0.009,
+   "detect": 270.234,
+   "recognise": 9780.965,
+   "order": 2.446,
+   "total": 10053.656
+  },
+  {
+   "load": 0.023,
+   "detect": 232.537,
+   "recognise": 3634.606,
+   "order": 1.013,
+   "total": 3868.178
+  },
+  {
+   "load": 0.013,
+   "detect": 241.349,
+   "recognise": 10846.966,
+   "order": 1.195,
+   "total": 11089.524
+  },
+  {
+   "load": 0.015,
+   "detect": 287.511,
+   "recognise": 35575.988,
+   "order": 4.133,
+   "total": 35867.648
+  },
+  {
+   "load": 0.017,
+   "detect": 263.462,
+   "recognise": 20309.035,
+   "order": 1.378,
+   "total": 20573.892
+  },
+  {
+   "load": 0.015,
+   "detect": 236.229,
+   "recognise": 24710.712,
+   "order": 2.182,
+   "total": 24949.138
+  },
+  {
+   "load": 0.011,
+   "detect": 330.554,
+   "recognise": 1609.02,
+   "order": 1.016,
+   "total": 1940.601
+  },
+  {
+   "load": 0.015,
+   "detect": 204.213,
+   "recognise": 2119.515,
+   "order": 1.011,
+   "total": 2324.755
+  },
+  {
+   "load": 0.012,
+   "detect": 249.366,
+   "recognise": 4704.002,
+   "order": 0.868,
+   "total": 4954.248
+  },
+  {
+   "load": 0.013,
+   "detect": 262.609,
+   "recognise": 1808.366,
+   "order": 1.084,
+   "total": 2072.072
+  },
+  {
+   "load": 0.014,
+   "detect": 259.318,
+   "recognise": 5011.534,
+   "order": 0.927,
+   "total": 5271.792
+  },
+  {
+   "load": 0.013,
+   "detect": 246.668,
+   "recognise": 6786.319,
+   "order": 1.951,
+   "total": 7034.952
+  },
+  {
+   "load": 0.012,
+   "detect": 195.898,
+   "recognise": 6981.418,
+   "order": 1.412,
+   "total": 7178.739
+  },
+  {
+   "load": 0.015,
+   "detect": 273.178,
+   "recognise": 16505.236,
+   "order": 1.997,
+   "total": 16780.426
+  },
+  {
+   "load": 0.011,
+   "detect": 249.615,
+   "recognise": 3086.32,
+   "order": 1.134,
+   "total": 3337.081
+  },
+  {
+   "load": 0.01,
+   "detect": 194.915,
+   "recognise": 3731.719,
+   "order": 3.26,
+   "total": 3929.904
+  },
+  {
+   "load": 0.024,
+   "detect": 236.344,
+   "recognise": 1838.756,
+   "order": 1.413,
+   "total": 2076.537
+  },
+  {
+   "load": 0.017,
+   "detect": 331.215,
+   "recognise": 4766.172,
+   "order": 1.47,
+   "total": 5098.874
+  },
+  {
+   "load": 0.015,
+   "detect": 245.437,
+   "recognise": 5943.913,
+   "order": 0.825,
+   "total": 6190.191
+  },
+  {
+   "load": 0.01,
+   "detect": 380.368,
+   "recognise": 5072.595,
+   "order": 2.806,
+   "total": 5455.778
+  },
+  {
+   "load": 0.014,
+   "detect": 257.299,
+   "recognise": 15218.458,
+   "order": 0.942,
+   "total": 15476.713
+  },
+  {
+   "load": 0.012,
+   "detect": 136.477,
+   "recognise": 14001.221,
+   "order": 1.489,
+   "total": 14139.199
+  },
+  {
+   "load": 0.012,
+   "detect": 315.626,
+   "recognise": 11497.739,
+   "order": 5.467,
+   "total": 11818.844
+  },
+  {
+   "load": 0.013,
+   "detect": 221.228,
+   "recognise": 5077.312,
+   "order": 1.483,
+   "total": 5300.036
+  },
+  {
+   "load": 0.017,
+   "detect": 310.701,
+   "recognise": 10443.502,
+   "order": 2.262,
+   "total": 10756.483
+  },
+  {
+   "load": 0.018,
+   "detect": 293.848,
+   "recognise": 5899.598,
+   "order": 1.781,
+   "total": 6195.245
+  },
+  {
+   "load": 0.013,
+   "detect": 252.524,
+   "recognise": 10225.301,
+   "order": 2.003,
+   "total": 10479.842
+  },
+  {
+   "load": 0.013,
+   "detect": 284.968,
+   "recognise": 6221.143,
+   "order": 2.163,
+   "total": 6508.287
+  },
+  {
+   "load": 0.012,
+   "detect": 260.749,
+   "recognise": 14626.497,
+   "order": 3.193,
+   "total": 14890.452
+  },
+  {
+   "load": 0.01,
+   "detect": 306.675,
+   "recognise": 19417.537,
+   "order": 5.624,
+   "total": 19729.846
+  },
+  {
+   "load": 0.019,
+   "detect": 315.14,
+   "recognise": 3601.849,
+   "order": 0.897,
+   "total": 3917.904
+  },
+  {
+   "load": 0.016,
+   "detect": 191.609,
+   "recognise": 5152.121,
+   "order": 1.038,
+   "total": 5344.784
+  },
+  {
+   "load": 0.013,
+   "detect": 217.864,
+   "recognise": 1807.89,
+   "order": 1.19,
+   "total": 2026.957
+  },
+  {
+   "load": 0.013,
+   "detect": 343.979,
+   "recognise": 10074.442,
+   "order": 2.452,
+   "total": 10420.886
+  },
+  {
+   "load": 0.022,
+   "detect": 250.47,
+   "recognise": 2908.406,
+   "order": 2.002,
+   "total": 3160.9
+  },
+  {
+   "load": 0.015,
+   "detect": 247.678,
+   "recognise": 5693.814,
+   "order": 1.158,
+   "total": 5942.664
+  },
+  {
+   "load": 0.013,
+   "detect": 200.725,
+   "recognise": 10863.049,
+   "order": 1.522,
+   "total": 11065.309
+  },
+  {
+   "load": 0.019,
+   "detect": 216.7,
+   "recognise": 4749.236,
+   "order": 1.312,
+   "total": 4967.267
+  },
+  {
+   "load": 0.013,
+   "detect": 233.466,
+   "recognise": 8062.432,
+   "order": 1.86,
+   "total": 8297.77
+  },
+  {
+   "load": 0.013,
+   "detect": 285.254,
+   "recognise": 7182.809,
+   "order": 9.1,
+   "total": 7477.176
+  },
+  {
+   "load": 0.02,
+   "detect": 222.386,
+   "recognise": 14870.146,
+   "order": 1.689,
+   "total": 15094.241
+  },
+  {
+   "load": 0.015,
+   "detect": 250.95,
+   "recognise": 3376.686,
+   "order": 0.71,
+   "total": 3628.359
+  },
+  {
+   "load": 0.012,
+   "detect": 194.276,
+   "recognise": 3821.886,
+   "order": 3.625,
+   "total": 4019.8
+  },
+  {
+   "load": 0.013,
+   "detect": 258.0,
+   "recognise": 7250.541,
+   "order": 0.852,
+   "total": 7509.406
+  },
+  {
+   "load": 0.025,
+   "detect": 284.653,
+   "recognise": 1988.269,
+   "order": 0.972,
+   "total": 2273.918
+  },
+  {
+   "load": 0.015,
+   "detect": 229.115,
+   "recognise": 7253.135,
+   "order": 2.196,
+   "total": 7484.461
+  },
+  {
+   "load": 0.015,
+   "detect": 247.028,
+   "recognise": 5603.72,
+   "order": 1.644,
+   "total": 5852.408
+  },
+  {
+   "load": 0.015,
+   "detect": 302.747,
+   "recognise": 21529.753,
+   "order": 4.791,
+   "total": 21837.305
+  },
+  {
+   "load": 0.012,
+   "detect": 159.381,
+   "recognise": 2804.99,
+   "order": 2.431,
+   "total": 2966.813
+  },
+  {
+   "load": 0.023,
+   "detect": 232.036,
+   "recognise": 6448.233,
+   "order": 1.635,
+   "total": 6681.928
+  }
+ ],
+ "lines": [
+  29,
+  17,
+  37,
+  65,
+  64,
+  42,
+  35,
+  41,
+  110,
+  31,
+  26,
+  80,
+  20,
+  39,
+  21,
+  21,
+  37,
+  47,
+  177,
+  21,
+  45,
+  24,
+  64,
+  52,
+  27,
+  45,
+  23,
+  25,
+  37,
+  22,
+  21,
+  30,
+  12,
+  37,
+  21,
+  33,
+  38,
+  28,
+  30,
+  52,
+  27,
+  44,
+  57,
+  61,
+  19,
+  1,
+  33,
+  37,
+  23,
+  40,
+  37,
+  22,
+  27,
+  88,
+  47,
+  24,
+  12,
+  22,
+  25,
+  23,
+  26,
+  28,
+  33,
+  51,
+  26,
+  42,
+  33,
+  34,
+  26,
+  74,
+  22,
+  36,
+  133,
+  21,
+  53,
+  63,
+  50,
+  32,
+  49,
+  107,
+  28,
+  35,
+  15,
+  55,
+  28,
+  28,
+  21,
+  34,
+  23,
+  132,
+  23,
+  20,
+  53,
+  27,
+  20,
+  32,
+  23,
+  64,
+  37,
+  38
+ ],
+ "input_sizes": [
+  [
+   1200,
+   1600
+  ],
+  [
+   1195,
+   1600
+  ],
+  [
+   1600,
+   1062
+  ],
+  [
+   1600,
+   1163
+  ],
+  [
+   1600,
+   1200
+  ],
+  [
+   1600,
+   1066
+  ],
+  [
+   1280,
+   774
+  ],
+  [
+   1600,
+   1066
+  ],
+  [
+   1600,
+   1200
+  ],
+  [
+   1479,
+   1013
+  ],
+  [
+   700,
+   395
+  ],
+  [
+   1600,
+   1200
+  ],
+  [
+   640,
+   960
+  ],
+  [
+   1600,
+   1200
+  ],
+  [
+   768,
+   1024
+  ],
+  [
+   1200,
+   1600
+  ],
+  [
+   800,
+   600
+  ],
+  [
+   700,
+   1009
+  ],
+  [
+   1600,
+   1600
+  ],
+  [
+   1600,
+   1200
+  ],
+  [
+   1066,
+   1600
+  ],
+  [
+   1600,
+   1200
+  ],
+  [
+   600,
+   424
+  ],
+  [
+   515,
+   486
+  ],
+  [
+   1013,
+   1261
+  ],
+  [
+   1024,
+   768
+  ],
+  [
+   979,
+   1484
+  ],
+  [
+   637,
+   800
+  ],
+  [
+   1062,
+   1600
+  ],
+  [
+   1190,
+   837
+  ],
+  [
+   1600,
+   1066
+  ],
+  [
+   1068,
+   1475
+  ],
+  [
+   1236,
+   1600
+  ],
+  [
+   1600,
+   1200
+  ],
+  [
+   1600,
+   1200
+  ],
+  [
+   1600,
+   1600
+  ],
+  [
+   789,
+   661
+  ],
+  [
+   1600,
+   1066
+  ],
+  [
+   1600,
+   1252
+  ],
+  [
+   813,
+   1600
+  ],
+  [
+   1100,
+   1600
+  ],
+  [
+   1600,
+   1102
+  ],
+  [
+   1000,
+   800
+  ],
+  [
+   1600,
+   1066
+  ],
+  [
+   1262,
+   1600
+  ],
+  [
+   988,
+   1600
+  ],
+  [
+   1047,
+   1600
+  ],
+  [
+   642,
+   645
+  ],
+  [
+   1600,
+   1074
+  ],
+  [
+   1600,
+   1071
+  ],
+  [
+   480,
+   360
+  ],
+  [
+   1600,
+   1071
+  ],
+  [
+   1600,
+   1197
+  ],
+  [
+   1200,
+   1600
+  ],
+  [
+   1600,
+   1200
+  ],
+  [
+   1600,
+   1200
+  ],
+  [
+   612,
+   612
+  ],
+  [
+   1600,
+   989
+  ],
+  [
+   1600,
+   1200
+  ],
+  [
+   1600,
+   1200
+  ],
+  [
+   1280,
+   960
+  ],
+  [
+   1600,
+   1200
+  ],
+  [
+   1599,
+   904
+  ],
+  [
+   1235,
+   1600
+  ],
+  [
+   968,
+   704
+  ],
+  [
+   612,
+   1024
+  ],
+  [
+   1600,
+   1062
+  ],
+  [
+   1600,
+   1600
+  ],
+  [
+   1600,
+   1200
+  ],
+  [
+   612,
+   612
+  ],
+  [
+   1216,
+   1600
+  ],
+  [
+   1600,
+   669
+  ],
+  [
+   1600,
+   1200
+  ],
+  [
+   1200,
+   870
+  ],
+  [
+   1235,
+   1500
+  ],
+  [
+   1600,
+   1200
+  ],
+  [
+   1600,
+   1195
+  ],
+  [
+   1150,
+   1600
+  ],
+  [
+   800,
+   600
+  ],
+  [
+   640,
+   480
+  ],
+  [
+   1600,
+   1600
+  ],
+  [
+   1600,
+   847
+  ],
+  [
+   1600,
+   1200
+  ],
+  [
+   612,
+   612
+  ],
+  [
+   1600,
+   1062
+  ],
+  [
+   1600,
+   1195
+  ],
+  [
+   651,
+   1029
+  ],
+  [
+   1600,
+   1066
+  ],
+  [
+   1600,
+   1066
+  ],
+  [
+   827,
+   1181
+  ],
+  [
+   1024,
+   675
+  ],
+  [
+   1600,
+   1200
+  ],
+  [
+   1600,
+   901
+  ],
+  [
+   710,
+   1024
+  ],
+  [
+   1200,
+   1600
+  ],
+  [
+   1200,
+   1600
+  ],
+  [
+   1200,
+   1600
+  ],
+  [
+   1211,
+   986
+  ],
+  [
+   1215,
+   455
+  ],
+  [
+   1600,
+   1063
+  ]
+ ],
+ "mean_ms": 9085.70346,
+ "p95_ms": 20593.671899999998,
+ "peak_mem_mib": 6105.4,
+ "peak_mem": {
+  "loaded": [
+   "the bundle on ONNX Runtime (load_bundle_onnx)",
+   "detector.onnx with the spec in variant.json"
+  ],
+  "numerics": null,
+  "scope": "the deployed build (bundle and variant files, no training checkpoint), read right after the timed items"
+ },
+ "conditions": {
+  "cpu": "Intel(R) Core(TM) i7-14650HX",
+  "physical_cores": 16,
+  "logical_cpus": 24,
+  "on_ac_power": true,
+  "battery_percent": 100,
+  "power_plan": "Power Scheme GUID: 381b4222-f694-41f0-9685-ff5bb260df2e  (Balanced)",
+  "power_mode": "best performance",
+  "cpu_busy_percent_before": 3.3,
+  "thread_env": {
+   "OMP_NUM_THREADS": "10",
+   "OMP_THREAD_LIMIT": "10",
+   "MKL_NUM_THREADS": "10"
+  },
+  "python": "3.11.9",
+  "os": "Windows-10-10.0.26300-SP0"
+ },
+ "conditions_end": {
+  "cpu": "Intel(R) Core(TM) i7-14650HX",
+  "physical_cores": 16,
+  "logical_cpus": 24,
+  "on_ac_power": true,
+  "battery_percent": 100,
+  "power_plan": "Power Scheme GUID: 381b4222-f694-41f0-9685-ff5bb260df2e  (Balanced)",
+  "power_mode": "best performance",
+  "cpu_busy_percent_before": 14.3,
+  "thread_env": {
+   "OMP_NUM_THREADS": "10",
+   "OMP_THREAD_LIMIT": "10",
+   "MKL_NUM_THREADS": "10"
+  },
+  "python": "3.11.9",
+  "os": "Windows-10-10.0.26300-SP0"
+ },
+ "conditions_utc": {
+  "start": "2026-11-18T03:15:34+00:00",
+  "end": "2026-11-18T03:31:56+00:00"
+ },
+ "gpu_state": {
+  "start": {
+   "utc": "2026-11-18T03:15:36+00:00",
+   "gpus": [
+    {
+     "index": 0,
+     "name": "NVIDIA GeForce RTX 4050 Laptop GPU",
+     "driver": "616.56",
+     "pstate": "P8",
+     "clock_sm_mhz": 210,
+     "clock_mem_mhz": 405,
+     "clock_max_sm_mhz": 3105,
+     "clock_max_mem_mhz": 8001,
+     "temperature_c": 43,
+     "memory_used_mib": 299,
+     "memory_total_mib": 6141,
+     "utilization_percent": 0,
+     "power_draw_w": 1.63,
+     "throttle_reasons": "0x0000000000000001"
+    }
+   ]
+  },
+  "end": {
+   "utc": "2026-11-18T03:31:58+00:00",
+   "gpus": [
+    {
+     "index": 0,
+     "name": "NVIDIA GeForce RTX 4050 Laptop GPU",
+     "driver": "616.56",
+     "pstate": "P8",
+     "clock_sm_mhz": 210,
+     "clock_mem_mhz": 405,
+     "clock_max_sm_mhz": 3105,
+     "clock_max_mem_mhz": 8001,
+     "temperature_c": 43,
+     "memory_used_mib": 299,
+     "memory_total_mib": 6141,
+     "utilization_percent": 0,
+     "power_draw_w": 1.59,
+     "throttle_reasons": "0x0000000000000001"
+    }
+   ]
+  }
+ },
+ "cpu_busy_percent_after": 10.7,
+ "mean_lines": 39.7
+}
