@@ -26,7 +26,7 @@ Phases run in the order set by [ADR-0008](decisions/ADR-0008-usable-engine-first
 | 16 | Efficiency optimisation | **COMPLETE** | `phase-16` |
 | 17 (v1) | Model export, v1 re-run | **COMPLETE** | `phase-17-v1` |
 | 18 (v1) | Inference package, v1 re-run | **COMPLETE** | `phase-18-v1` |
-| 20 (v1) | Production engineering, v1 re-run | not started | — |
+| 20 (v1) | Production engineering, v1 re-run | **IN PROGRESS** (plan registered) | — |
 | 17 | Model export | **COMPLETE** | `phase-17` |
 | 18 | Inference package | **COMPLETE** | `phase-18` |
 | 19 | Optional HTTP API | **COMPLETE** | `phase-19` |
@@ -1388,6 +1388,57 @@ same tree and parents).
 
 **CI status:** green on the branch, the pull request and `main` (run 40624323452, on the merge as
 GitHub made it; the re-created merge has the same tree).
+
+---
+
+## Phase 20 — Production engineering (v1 re-run)
+
+**Status:** IN PROGRESS. Opened 2026-11-18 on `phase/20-v1-rerun` after the Phase 18 re-run.
+Validation and made-up inputs only; no test data is read and `research/test_access_log.md` gets no
+row. The v0.1 record above stays as it is (ADR-0008 item 3).
+
+**Objective:** the hardening holds on the v1 bundle itself, not only on the tiny models the tests
+use: every input BookWorm can pass and every damaged bundle ends in a result or a typed
+`GlypharisError`, never another exception.
+
+**Plan** (registered 2026-11-18, before any Phase 20 re-run measurement)
+
+1. **Failure-path tests: cited and re-run.** `tests/test_hardening.py` (corrupt, truncated and
+   non-image files; huge images refused before decoding; empty and unusual pages; wrong types and
+   values; the 120 seeded fuzz-lite cases; damaged bundles; caching, stats, logging and versions)
+   in the full suite and in CI. The hardening code is unchanged since `phase14-eval` apart from
+   Phase 19's bytes input, which is part of the frozen v1 code.
+2. **GW-E2E-012, the same cases on the v1 bundle.** A new script, `scripts/hardening_check.py`
+   (outside the frozen paths, with a test on a tiny bundle so CI covers it), loads the v1 bundle
+   (manifest SHA-256 `875357a6…`, refused otherwise; never written to) with
+   `GlypharisOCR.from_pretrained` on each backend, PyTorch and ONNX, at 10 threads, and runs:
+   - the 120 seeded fuzz-lite cases of `tests/test_hardening.py` (the generator shared, not
+     copied), the unusual-page and wrong-type lists, and the same inputs as bytes;
+   - corrupt, truncated, empty and non-image files, a missing path, a directory, and an image over
+     the pixel limit;
+   - damaged bundles, made only in temporary copies: each file removed, one byte changed in an ONNX
+     and a `.pt` file, an unreadable manifest, a foreign format, and a file that fails to load
+     although its hash matches (the copy's manifest re-hashed). Each must raise `ModelLoadError`;
+   - caching (the same object with `cache`, a new one without), the load log line naming
+     `glypharis_v1`, `version_info()` and `glypharis-ocr --version`;
+   - the CLI on a folder holding a good page and a bad file (exit code 1, the bad file reported
+     with its error code) and the HTTP API's `POST /ocr` (Phase 19) through its test client.
+
+   It records, per backend and case kind, how many inputs gave a result and how many a
+   `GlypharisError` with which code, and every other exception with its type; `assert_v1_code`,
+   the bundle hash, the git state and the times. **Pass rule:** no exception other than a
+   `GlypharisError` anywhere, every damaged bundle a `ModelLoadError`, and the caching, version,
+   CLI and API checks as stated. Times are not measured (the latency numbers are Phase 16's).
+3. **Records.** GW-E2E-012's entry; the completion record beside the v0.1 one; then the commit that
+   ends the v1 code freeze (owner decision of 2026-11-18), as its own step after this phase.
+
+**Exit criteria** (IMPLEMENTATION_PLAN Phase 20): failure-path tests (corrupt image, huge image,
+empty page, non-image); no unhandled exceptions in the fuzz-lite test.
+
+**Known limitations, stated in advance**
+- The fuzz cases are seeded and few; most are refused before they reach the models.
+- `max_pixels` (64 million) is still not measured; this phase does not change it.
+- `glypharis_version` stays `0.1.0.dev0` beside `model_version` `glypharis_v1` until Phase 23.
 
 ---
 

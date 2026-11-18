@@ -99,6 +99,7 @@ Rows link to a full entry below. Numbers are copied from generated reports only,
 | [GW-REC-040](#gw-rec-040) | 2026-11-17 | 15 | Recognition errors of the frozen recognizer on the Phase 14 hand-off (RQ5) | done | GDC: deletions 3.19 of 4.17% CER, full stops 44.176% deleted, the 20 worst lines dot leaders; HierText test: rotation ≥ 5° 34.92% of errors | `reports/error_cases/phase15/`, `reports/confusion_analysis/GW-REC-040/` |
 | [GW-E2E-010](#gw-e2e-010) | 2026-11-17 | 15 | Pipeline errors: page error budget, detection, reading order, the oracle share (RQ5, H4) | done | missed lines 49.45% of HierText test and 45.32% of GDC page error; GDC oracle share 18.66% (clean 32.70%); H4 not supported on GDC (post hoc) | `reports/error_cases/phase15/` |
 | [GW-E2E-011](#gw-e2e-011) | 2026-11-18 | 18 (v1) | The package on the v1 bundle (PyTorch backend) against the frozen v1 pipeline (GW-E2E-006) on the 400 Phase 5 validation pages | done | 24.32% page CER on both, difference 0.0; 16,835 of 16,835 lines with identical text and box: pass | `reports/package/` |
+| [GW-E2E-012](#gw-e2e-012) | 2026-11-18 | 20 (v1) | Failure paths, fuzz-lite and damaged bundles on the v1 bundle, both backends | planned | — | `reports/hardening/` |
 | [GW-REC-041](#gw-rec-041) | 2026-11-17 | 15 | The frozen recognizer on GlyphSynth validation, sliced by font and capture labels | done | CER 0.71% [0.63, 0.79]; ink spread 1.41% against 0.58% without | `reports/error_cases/phase15/` |
 | [GW-EFF-006](#gw-eff-006) | 2026-11-17 | 16 | Reference outputs of PyTorch v1 on the CPU; the v1 fp32 ONNX bundle from the freeze record, checked against them | done | Phase 17's four checks pass: maps 7.33e-6, logits 3.09e-4, text identical, page CER within 1.49e-5; bundle `875357a6…` | `reports/efficiency/phase16/` |
 | [GW-EFF-007](#gw-eff-007) | 2026-11-17 | 16 | The v1 cost table: parameters, sizes, CPU and GPU latency, throughput, memory, page-time split | done | 11,116,044 parameters; CPU pages at 10 threads: PyTorch 2,566 ms, 1,641.8 MiB; fp32 ONNX 8,574 ms, 6,529.6 MiB (recognizer network 95%); GPU 1,049 ms | `reports/efficiency/phase16/`, `reports/benchmark_results/efficiency_comparison.md` |
@@ -2006,6 +2007,23 @@ Rows link to a full entry below. Numbers are copied from generated reports only,
 - **Interpretation:** the installed package on the v1 bundle reads these pages line for line as the frozen pipeline Phase 14 evaluated, though the reference ran on the GPU in strict fp32 and the package on the CPU. The Phase 18 gate's output match holds for v1.
 - **Limitations:** HierText validation; the reference ran on the GPU, the package on the CPU.
 - **Next experiment:** Phase 20 re-run (hardening on the v1 bundle)
+
+### GW-E2E-012 — The hardening cases on the v1 bundle (Phase 20 re-run)
+
+- **Date allocated / run:** 2026-11-18 / —
+- **Phase:** 20 (v1 re-run)
+- **Git commit:** recorded in the report   **Config:** the v1 bundle   **Seed(s):** the fuzz-lite generator's (`tests/test_hardening.py`)
+- **Dataset version(s):** made-up inputs; one HierText validation page for the good-page cases
+- **Hardware:** laptop CPU, 10 threads
+- **Research question:** do the typed errors hold on the v1 bundle itself, on both backends?
+- **Hypothesis (written before the run):** none; the pass rule is Phase 20's (`docs/PHASE_STATUS.md`, Phase 20 v1 re-run, item 2).
+- **Method:** `scripts/hardening_check.py` on the bundle with manifest SHA-256 `875357a6…`: fuzz-lite, unusual and wrong inputs (also as bytes), bad files, damaged bundle copies, caching, versions, the CLI and the HTTP API.
+- **Variables:** backend (PyTorch, ONNX)
+- **Control:** `tests/test_hardening.py` on the tiny models
+- **Result:** —
+- **Interpretation:** —
+- **Limitations:** seeded, small case set; no latency.
+- **Next experiment:** Phase 21
 
 ---
 
