@@ -10,16 +10,28 @@ Reads the queue logs, where each job has a START line and a DONE or FAIL line wi
 scoring, which counts under GW-DATA-009), ``runs/phase12_queue.log`` (Phase 12: the same, scoring
 under GW-DATA-022; building the GlyphSynth packs is CPU work and is left out),
 ``runs/phase_progress.log`` (Phase 13, its ``P13`` lines only: training, GLYPH-C scoring under
-GW-REC-037 and the detector evaluations under GW-DET-007) and
-``data/processed/baselines/chain.log`` (Phase 5 baselines). CPU steps logged in a GPU chain
-(latency profiles, comparisons) are left out of the GPU hours. A START is paired with the next end
-line for the same experiment and kind (training, resume, sanity, resume check, baseline run), so
-overlapping jobs still pair correctly. A ``STOPPED before`` line written when a running step was
-stopped by hand ends that step as ``stopped``. Wall-clock time is what the job occupied the device;
-the training time in each run summary (``<runs>/<id>/summary.json``) is listed beside it. ``--runs``
-takes several directories, since the detector runs live in their own worktree. Jobs run by hand
-outside a queue (the Phase 6 sanity sequence, the GPU resume check, crash probes, tests) are not in
-these logs; the ledger says so instead of guessing them.
+GW-REC-037 and the detector evaluations under GW-DET-007),
+``data/processed/baselines/chain.log`` (Phase 5 baselines) and ``runs/phase16_chain.log`` (the
+Phase 16 measurement chain, ``--phase16-logs``). CPU steps logged in a GPU chain (latency profiles,
+comparisons) are left out of the GPU hours. A START is paired with the next end line for the same
+experiment and kind (training, resume, sanity, resume check, baseline run), so overlapping jobs
+still pair correctly. A ``STOPPED before`` line written when a running step was stopped by hand
+ends that step as ``stopped``. Wall-clock time is what the job occupied the device; the training
+time in each run summary (``<runs>/<id>/summary.json``) is listed beside it. ``--runs`` takes
+several directories, since the detector runs live in their own worktree. Jobs run by hand outside a
+queue (the Phase 6 sanity sequence, the GPU resume check, crash probes, tests) are not in these
+logs; the ledger says so instead of guessing them.
+
+The Phase 16 chain has its own line format: UTC timestamps (``2026-11-17T13:45:11Z``) and a step
+number (``START 2/94 eff006_ref_write``), and a START is paired with the next end line of the same
+step; its ``CHAIN START``, ``RESUME`` and ``ALL DONE`` lines are not jobs. Its steps are CPU work
+except the three GPU profiles (``eff007_l_cuda_b1``, ``eff007_l_cuda_b32``, ``eff007_p_cuda``),
+which count as GPU hours. A step counts under the experiment its name starts with (``eff006_`` is
+GW-EFF-006, and so on to ``eff011_``), except ``eff010_baseline``, the Phase 16 amendment to
+GW-BASE-002, which has its own row in Phase 16 apart from the Phase 5 GW-BASE-002 jobs. The scorer
+(``score_check``, ``score``) reads every Phase 16 experiment's outputs and judges tests from three
+of them, so it has its own row, "Phase 16 scoring", rather than being charged to one experiment.
+GW-EFF-007 ran on both devices and gets one row per device.
 
 Writes ``reports/compute/ledger.md`` and ``ledger.json``.
 """
@@ -41,6 +53,13 @@ LINE = re.compile(
 # Logs shared with other work: only the lines with this prefix are jobs.
 ONLY = {"phase_progress.log": "P13 "}
 EXIT = re.compile(r"\(exit (\d+)\)")
+# Phase 16 chain: "2026-11-17T15:40:20Z FAIL 10/94 eff007_p_cuda (exit 1, 110s; see ...)".
+P16_LINE = re.compile(
+    r"^(\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}Z) (START|DONE|FAIL) (\d+)/\d+ (\S+)(?: \((.*)\))?$"
+)
+P16_GPU_STEPS = ("eff007_l_cuda_b1", "eff007_l_cuda_b32", "eff007_p_cuda")
+P16_SCORING = "Phase 16 scoring"
+P16_AMENDMENT = "eff010_baseline"  # the Phase 16 amendment to GW-BASE-002
 
 
 @dataclass
@@ -56,6 +75,12 @@ class Job:
 
 
 def phase_of(experiment: str) -> str:
+    """The phase of a ledger row: an experiment ID or one of the Phase 16 row names."""
+    if experiment == P16_SCORING or experiment.endswith("(Phase 16 amendment)"):
+        return "16"
+    if experiment.startswith("GW-EFF"):
+        n = int(re.match(r"GW-EFF-(\d{3})", experiment).group(1))
+        return "16" if n >= 6 else "?"
     if experiment.startswith("GW-BASE"):
         return "05"
     if experiment.startswith("GW-DET"):
@@ -155,6 +180,55 @@ def parse(log: Path, device: str) -> list[Job]:
     return jobs
 
 
+def classify_phase16(step: str) -> tuple[str, str]:
+    """(experiment, kind) for a Phase 16 chain step name."""
+    if step in ("score_check", "score"):
+        return P16_SCORING, "score"
+    if step == P16_AMENDMENT:
+        return "GW-BASE-002", "baseline"
+    exp = re.match(r"eff(\d{3})_", step)
+    return (f"GW-EFF-{exp.group(1)}" if exp else "?"), "efficiency"
+
+
+def parse_phase16(log: Path) -> list[Job]:
+    open_steps: dict[str, tuple[str, str]] = {}
+    jobs: list[Job] = []
+    for raw in log.read_text(encoding="utf-8", errors="replace").splitlines():
+        m = P16_LINE.match(raw)
+        if not m:
+            continue  # CHAIN START, RESUME, ALL DONE
+        stamp, what, number, step, note = m.groups()
+        experiment, kind = classify_phase16(step)
+        device = "gpu" if step in P16_GPU_STEPS else "cpu"
+        if what == "START":
+            if number in open_steps:  # started again with no end line: duration unknown
+                start, _ = open_steps.pop(number)
+                jobs.append(Job(device, experiment, kind, step, start, stamp, None, "interrupted"))
+            open_steps[number] = (stamp, step)
+            continue
+        if open_steps.get(number, ("", ""))[1] != step:
+            continue  # an end line without its start
+        start, _ = open_steps.pop(number)
+        code = re.match(r"exit (\d+)", note or "")
+        outcome = (
+            "done" if what == "DONE" else f"failed (exit {code.group(1)})" if code else "failed"
+        )
+        jobs.append(Job(device, experiment, kind, step, start, stamp,
+                        hours_between(start, stamp), outcome))  # fmt: skip
+    for start, step in open_steps.values():
+        experiment, kind = classify_phase16(step)
+        device = "gpu" if step in P16_GPU_STEPS else "cpu"
+        jobs.append(Job(device, experiment, kind, step, start, None, None, "running"))
+    return jobs
+
+
+def row_of(job: Job) -> str:
+    """The by-experiment row a job counts under."""
+    if job.kind == "baseline" and job.detail == P16_AMENDMENT:
+        return f"{job.experiment} (Phase 16 amendment)"
+    return job.experiment
+
+
 def hours_between(start: str, end: str) -> float:
     return (
         dt.datetime.fromisoformat(end) - dt.datetime.fromisoformat(start)
@@ -198,11 +272,14 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--gpu-logs", nargs="*", type=Path, default=gpu_logs)
     parser.add_argument("--cpu-logs", nargs="*", type=Path,
                         default=[Path("data/processed/baselines/chain.log")])  # fmt: skip
+    parser.add_argument("--phase16-logs", nargs="*", type=Path,
+                        default=[Path("runs/phase16_chain.log")])  # fmt: skip
     parser.add_argument("--runs", nargs="*", type=Path, default=[Path("runs")])
     parser.add_argument("--out", type=Path, default=Path("reports/compute"))
     args = parser.parse_args(argv)
     jobs = [j for log in args.gpu_logs if log.exists() for j in parse(log, "gpu")]
     jobs += [j for log in args.cpu_logs if log.exists() for j in parse(log, "cpu")]
+    jobs += [j for log in args.phase16_logs if log.exists() for j in parse_phase16(log)]
     jobs.sort(key=lambda j: j.start)
 
     train_h: dict[str, float] = {}
@@ -222,21 +299,24 @@ def main(argv: list[str] | None = None) -> int:
 
     def total(device: str, phase: str | None = None, only_failed: bool = False) -> float:
         return sum(j.hours or 0.0 for j in jobs if j.device == device
-                   and (phase is None or phase_of(j.experiment) == phase)
+                   and (phase is None or phase_of(row_of(j)) == phase)
                    and (not only_failed or failed(j)))  # fmt: skip
 
     per_exp: dict[str, dict[str, Any]] = {}
     for j in jobs:
-        fresh = {"device": j.device, "phase": phase_of(j.experiment), "jobs": 0,
+        row = row_of(j)
+        if per_exp.get(row, {}).get("device", j.device) != j.device:
+            row = f"{row} ({j.device.upper()} jobs)"  # one row per device
+        fresh = {"device": j.device, "phase": phase_of(row), "jobs": 0,
                  "failed_jobs": 0, "wall_h": 0.0}  # fmt: skip
-        e = per_exp.setdefault(j.experiment, fresh)
+        e = per_exp.setdefault(row, fresh)
         e["jobs"] += 1
         e["failed_jobs"] += failed(j)
         e["wall_h"] += j.hours or 0.0
     for exp, e in per_exp.items():
         e["train_h"] = train_h.get(exp)
 
-    phases = sorted({phase_of(j.experiment) for j in jobs})
+    phases = sorted({phase_of(row_of(j)) for j in jobs})
     rows = []
     for exp, e in sorted(per_exp.items()):
         trained = "" if e["train_h"] is None else f"{e['train_h']:.2f}"
@@ -271,8 +351,14 @@ def main(argv: list[str] | None = None) -> int:
         "",
         "Jobs run by hand outside a queue: the Phase 6 sanity sequence (its own report gives the",
         "durations), the redesigned GPU resume check, the exit-crash probes, the GW-REC-001/002",
-        "re-scores, the Phase 8 training-crop preview and CPU label-ceiling check, and all test",
-        "runs. They are short next to the totals above but not counted.",
+        "re-scores, the Phase 8 training-crop preview and CPU label-ceiling check, the Phase 16",
+        "re-score after the report-path fix, and all test runs. They are short next to the totals",
+        "above but not counted.",
+        "",
+        "Phases 9, 10, 14 and 15 are not counted either: Phase 9's chain log is not read here,",
+        "Phase 10's lines in `runs/phase_progress.log` are skipped, and Phase 14's and Phase 15's",
+        "runs were recorded per run (logs and run metadata), not in a queue log. Each phase's",
+        "record in `docs/PHASE_STATUS.md` gives its compute.",
         "",
     ]  # fmt: skip
     args.out.mkdir(parents=True, exist_ok=True)

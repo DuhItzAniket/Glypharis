@@ -3,6 +3,13 @@ from __future__ import annotations
 import json
 
 import compute_ledger
+import pytest
+
+
+@pytest.fixture(autouse=True)
+def _no_default_logs(tmp_path, monkeypatch):
+    # The default log paths are relative: run from an empty folder so no real log is read.
+    monkeypatch.chdir(tmp_path)
 
 
 def test_jobs_pair_by_experiment_even_when_they_overlap(tmp_path):
@@ -155,3 +162,102 @@ def test_phase13_progress_log_keeps_only_its_lines_and_hand_stops(tmp_path):
     assert res["experiments"]["GW-REC-028"]["failed_jobs"] == 1
     assert res["experiments"]["GW-REC-028"]["phase"] == "13"
     assert res["experiments"]["GW-DET-007"]["phase"] == "13"
+
+
+PHASE16_LOG = (
+    "2026-11-17T13:44:59Z CHAIN START (6 steps)\n"
+    "2026-11-17T13:44:59Z START 1/6 eff006_ref_write\n"
+    "2026-11-17T14:44:59Z DONE 1/6 eff006_ref_write (3600s)\n"
+    "2026-11-17T14:45:00Z START 2/6 eff007_l_torch\n"
+    "2026-11-17T14:51:00Z DONE 2/6 eff007_l_torch (360s)\n"
+    "2026-11-17T14:51:00Z START 3/6 eff007_p_cuda\n"
+    "2026-11-17T15:09:00Z FAIL 3/6 eff007_p_cuda (exit 1, 1080s; see the step log)\n"
+    "2026-11-17T15:10:00Z RESUME after FAIL 3 (a fix)\n"
+    "2026-11-17T15:10:00Z START 3/6 eff007_p_cuda\n"
+    "2026-11-17T15:46:00Z DONE 3/6 eff007_p_cuda (2160s)\n"
+    "2026-11-17T23:30:00Z START 4/6 eff010_baseline\n"
+    "2026-11-18T00:15:00Z DONE 4/6 eff010_baseline (2700s)\n"
+    "2026-11-18T00:15:00Z START 5/6 eff009_eval_lines_rec-GW-REC-020\n"
+    "2026-11-18T00:27:00Z DONE 5/6 eff009_eval_lines_rec-GW-REC-020 (720s)\n"
+    "2026-11-18T00:27:00Z START 6/6 score\n"
+    "2026-11-18T00:30:00Z DONE 6/6 score (180s)\n"
+    "2026-11-18T00:30:00Z ALL DONE\n"
+)
+
+
+def test_phase16_chain_lines_pair_by_step(tmp_path):
+    log = tmp_path / "phase16_chain.log"
+    log.write_text(PHASE16_LOG, encoding="utf-8")
+    jobs = compute_ledger.parse_phase16(log)
+    got = [(j.device, j.experiment, j.kind, j.detail, j.outcome, round(j.hours * 60))
+           for j in jobs]  # fmt: skip
+    assert got == [  # CHAIN START, RESUME and ALL DONE are not jobs
+        ("cpu", "GW-EFF-006", "efficiency", "eff006_ref_write", "done", 60),
+        ("cpu", "GW-EFF-007", "efficiency", "eff007_l_torch", "done", 6),
+        ("gpu", "GW-EFF-007", "efficiency", "eff007_p_cuda", "failed (exit 1)", 18),
+        ("gpu", "GW-EFF-007", "efficiency", "eff007_p_cuda", "done", 36),
+        ("cpu", "GW-BASE-002", "baseline", "eff010_baseline", "done", 45),
+        ("cpu", "GW-EFF-009", "efficiency", "eff009_eval_lines_rec-GW-REC-020", "done", 12),
+        ("cpu", "Phase 16 scoring", "score", "score", "done", 3),
+    ]
+    assert jobs[0].start == "2026-11-17T13:44:59Z"  # the UTC stamp as logged
+    assert jobs[4].hours == 0.75  # across midnight
+
+
+def test_phase16_end_lines_without_their_start_and_open_steps(tmp_path):
+    log = tmp_path / "phase16_chain.log"
+    log.write_text(
+        "2026-11-17T13:00:00Z DONE 1/3 eff006_bundle (12s)\n"
+        "2026-11-17T13:00:00Z START 2/3 eff008_eval_v1-onnx\n"
+        "2026-11-17T13:30:00Z START 2/3 eff008_eval_v1-onnx\n"
+        "2026-11-17T13:40:00Z DONE 2/3 eff008_eval_v1-onnx (600s)\n"
+        "2026-11-17T13:40:00Z START 3/3 eff011_time_rec-GW-REC-003_1\n",
+        encoding="utf-8",
+    )
+    got = [(j.experiment, j.outcome, j.hours) for j in compute_ledger.parse_phase16(log)]
+    assert got == [
+        ("GW-EFF-008", "interrupted", None),
+        ("GW-EFF-008", "done", 1 / 6),
+        ("GW-EFF-011", "running", None),
+    ]
+
+
+def test_phase16_rows_and_totals(tmp_path):
+    log = tmp_path / "phase16_chain.log"
+    log.write_text(PHASE16_LOG, encoding="utf-8")
+    cpu = tmp_path / "chain.log"
+    cpu.write_text(
+        "2026-10-21 21:05:54 START GW-BASE-002 ppocr_mobile rec glyphsynth_val\n"
+        "2026-10-21 21:35:54 DONE  GW-BASE-002 ppocr_mobile rec glyphsynth_val :: 10000 new\n",
+        encoding="utf-8",
+    )
+    out = tmp_path / "out"
+    assert compute_ledger.main(["--gpu-logs", "--cpu-logs", str(cpu), "--phase16-logs",
+                                str(log), "--runs", "--out", str(out)]) == 0  # fmt: skip
+    res = json.loads((out / "ledger.json").read_text(encoding="utf-8"))
+    exps = {k: (v["phase"], v["device"], v["jobs"], v["failed_jobs"], round(v["wall_h"] * 60))
+            for k, v in res["experiments"].items()}  # fmt: skip
+    assert exps == {
+        "GW-BASE-002": ("05", "cpu", 1, 0, 30),  # Phase 5's job keeps its own row
+        "GW-BASE-002 (Phase 16 amendment)": ("16", "cpu", 1, 0, 45),
+        "GW-EFF-006": ("16", "cpu", 1, 0, 60),
+        "GW-EFF-007": ("16", "cpu", 1, 0, 6),
+        "GW-EFF-007 (GPU jobs)": ("16", "gpu", 2, 1, 54),
+        "GW-EFF-009": ("16", "cpu", 1, 0, 12),
+        "Phase 16 scoring": ("16", "cpu", 1, 0, 3),
+    }
+    totals = res["totals"]
+    assert abs(totals["gpu_h"] - 0.9) < 1e-9 and abs(totals["gpu_failed_h"] - 0.3) < 1e-9
+    assert abs(totals["cpu_h"] - (0.5 + 126 / 60)) < 1e-9 and totals["cpu_failed_h"] == 0
+    md = (out / "ledger.md").read_text(encoding="utf-8")
+    assert "| 05 | 0.0 | 0.0 | 0.5 | 0.0 |" in md
+    assert "| 16 | 0.9 | 0.3 | 2.1 | 0.0 |" in md
+    assert "| GW-EFF-007 (GPU jobs) | 16 | GPU | 2 | 1 | 0.90 |  |" in md
+
+
+def test_phase_of_phase16_rows():
+    assert compute_ledger.phase_of("GW-EFF-006") == "16"
+    assert compute_ledger.phase_of("GW-EFF-011") == "16"
+    assert compute_ledger.phase_of("GW-BASE-002") == "05"
+    assert compute_ledger.phase_of("GW-BASE-002 (Phase 16 amendment)") == "16"
+    assert compute_ledger.phase_of("Phase 16 scoring") == "16"
