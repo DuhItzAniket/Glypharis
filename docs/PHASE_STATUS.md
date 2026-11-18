@@ -24,7 +24,7 @@ Phases run in the order set by [ADR-0008](decisions/ADR-0008-usable-engine-first
 | 14 | External evaluation | **COMPLETE** | `phase-14` |
 | 15 | Error analysis | **COMPLETE** | `phase-15` |
 | 16 | Efficiency optimisation | **COMPLETE** | `phase-16` |
-| 17 (v1) | Model export, v1 re-run | **IN PROGRESS** (plan registered) | — |
+| 17 (v1) | Model export, v1 re-run | **IN PROGRESS** (gate: push, CI, merge) | — |
 | 18 (v1) | Inference package, v1 re-run | not started | — |
 | 20 (v1) | Production engineering, v1 re-run | not started | — |
 | 17 | Model export | **COMPLETE** | `phase-17` |
@@ -1007,8 +1007,8 @@ GitHub made it; the re-created merge has the same tree).
 
 ## Phase 17 — Model export (v1 re-run)
 
-**Status:** IN PROGRESS. Opened 2026-11-18 on `phase/17-v1-rerun`, branched from `main` after
-Phase 16 (merge `0af7fc4`). Validation data only; `research/test_access_log.md` gets no row. The
+**Status:** results written (2026-11-18). Gate open: push, pull request, CI and the owner's merge.
+Opened 2026-11-18 on `phase/17-v1-rerun`, branched from `main` after Phase 16 (merge `0af7fc4`). Validation data only; `research/test_access_log.md` gets no row. The
 v0.1 record above stays as it is (ADR-0008 item 3: Phases 17, 18 and 20 are re-run on the final
 model with the already-tested tooling and a new completion record).
 
@@ -1067,6 +1067,57 @@ equivalence tests pass and are recorded; CI runs ONNX equivalence on the tiny mo
 **Known limitations, stated in advance**
 - One laptop, HierText validation only; the phone candidate is not measured here.
 - The ONNX evidence is Phase 16's (GW-EFF-006); only the PyTorch path is run again.
+
+**Results (2026-11-18)** (GW-EFF-012; `reports/export/GW-EFF-012/torch_bundle_check.json`, written
+by `scripts/phase17_v1_check.py` at `8c70747`, clean tree; validation only, no test data read)
+
+- *Preflight.* `assert_v1_code` passed (the v1 paths equal `phase14-eval`); the bundle's manifest
+  SHA-256 was `875357a6…` and `bundle_problems` found nothing; the Phase 16 references matched
+  their hashes and the committed manifest. The bundle was not rebuilt or written to.
+- *GW-EFF-012* (2026-11-18T07:29:27Z to 07:50:27Z, 10 threads, `model_version` `glypharis_v1`):
+  all four tolerances pass with no difference at all.
+
+  | Check | Limit | Measured |
+  |---|---|---|
+  | Detector map max abs difference (110 pages) | 1e-4 | 0.0 |
+  | Logits max abs difference (5,000 lines) | 1e-3 | 0.0 |
+  | Text (5,000 lines) | near ties ≤ 0.1%, no other difference | 5,000 identical, no near ties |
+  | Page CER (400 pages, strict) | 0.05 points | 24.32% on both, difference 0.0; 400 pages identical |
+
+  The shipped path, the bundle read with the PyTorch backend through `from_pretrained`, gives
+  exactly the outputs of the PyTorch v1 build that Phase 14 evaluated.
+- *ONNX* (cited, item 3): GW-EFF-006 passed the same four tolerances for the bundle's ONNX files
+  (map 7.33e-06, logits 3.09e-04, no text differences, page CER within 1.49e-05;
+  `reports/efficiency/phase16/reference_check.json`).
+- *ADR-0011* (cited, item 5): GW-EFF-007, 009 and 010; every v1 CPU build misses the latency
+  targets (F38), and by the owner's decision v1 keeps PyTorch as its default.
+
+**The v1 export is declared successful** for bundle `875357a6…`: the ONNX equivalence tests
+(GW-EFF-006) and the PyTorch path (GW-EFF-012) both pass and are recorded.
+
+**Exit criteria check** (IMPLEMENTATION_PLAN Phase 17)
+
+| Criterion | Status | Evidence |
+|---|---|---|
+| Export declared successful only after the equivalence tests pass and are recorded | pass | GW-EFF-006, GW-EFF-012 (above) |
+| CI runs ONNX equivalence on the tiny model | pass | `tests/test_export.py`; the tiny SVTR tests in `tests/test_phase16_reference.py` |
+| CI green | pending (after the push) | — |
+
+**Tests:** the CPU suite passes in a clone without tags (1,218 passed, 4 skipped, at `8c70747`);
+the new tests cover the check on tiny models: a pass with no difference on the same model, and
+refusal of another bundle hash, a bundle unlike the record, changed references and an existing
+output.
+
+**Compute:** GW-EFF-012 ran by hand for 21 minutes on the CPU, outside the queue logs, so the
+compute ledger does not count it.
+
+**Known issues**
+- The `glypharis/export/onnx.py` docstring still gives F13's old figures; it is corrected in the
+  commit that ends the v1 code freeze, after the Phase 20 re-run (owner decision, 2026-11-18).
+- `from_pretrained`'s default name is still `glypharis-0.1.0`, which does not resolve to the v1
+  bundle; v1 is loaded by path. Changed in the same end-of-freeze commit.
+
+**Git:** branch `phase/17-v1-rerun`; push and merge pending.
 
 ## Phase 18 — Inference package
 
