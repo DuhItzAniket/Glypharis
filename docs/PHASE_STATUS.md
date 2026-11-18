@@ -24,8 +24,8 @@ Phases run in the order set by [ADR-0008](decisions/ADR-0008-usable-engine-first
 | 14 | External evaluation | **COMPLETE** | `phase-14` |
 | 15 | Error analysis | **COMPLETE** | `phase-15` |
 | 16 | Efficiency optimisation | **COMPLETE** | `phase-16` |
-| 17 (v1) | Model export, v1 re-run | **IN PROGRESS** (gate: push, CI, merge) | — |
-| 18 (v1) | Inference package, v1 re-run | not started | — |
+| 17 (v1) | Model export, v1 re-run | **COMPLETE** | `phase-17-v1` |
+| 18 (v1) | Inference package, v1 re-run | **IN PROGRESS** | — |
 | 20 (v1) | Production engineering, v1 re-run | not started | — |
 | 17 | Model export | **COMPLETE** | `phase-17` |
 | 18 | Inference package | **COMPLETE** | `phase-18` |
@@ -1007,8 +1007,7 @@ GitHub made it; the re-created merge has the same tree).
 
 ## Phase 17 — Model export (v1 re-run)
 
-**Status:** results written (2026-11-18). Gate open: push, pull request, CI and the owner's merge.
-Opened 2026-11-18 on `phase/17-v1-rerun`, branched from `main` after Phase 16 (merge `0af7fc4`). Validation data only; `research/test_access_log.md` gets no row. The
+**Status:** COMPLETE (2026-11-18). Opened 2026-11-18 on `phase/17-v1-rerun`, branched from `main` after Phase 16 (merge `0af7fc4`). Validation data only; `research/test_access_log.md` gets no row. The
 v0.1 record above stays as it is (ADR-0008 item 3: Phases 17, 18 and 20 are re-run on the final
 model with the already-tested tooling and a new completion record).
 
@@ -1101,7 +1100,7 @@ by `scripts/phase17_v1_check.py` at `8c70747`, clean tree; validation only, no t
 |---|---|---|
 | Export declared successful only after the equivalence tests pass and are recorded | pass | GW-EFF-006, GW-EFF-012 (above) |
 | CI runs ONNX equivalence on the tiny model | pass | `tests/test_export.py`; the tiny SVTR tests in `tests/test_phase16_reference.py` |
-| CI green | pending (after the push) | — |
+| CI green | pass | runs 44263370636 (branch), 44263400419 (pull request), 44267047137 (`main`) |
 
 **Tests:** the CPU suite passes in a clone without tags (1,218 passed, 4 skipped, at `8c70747`);
 the new tests cover the check on tiny models: a pass with no difference on the same model, and
@@ -1117,7 +1116,10 @@ compute ledger does not count it.
 - `from_pretrained`'s default name is still `glypharis-0.1.0`, which does not resolve to the v1
   bundle; v1 is loaded by path. Changed in the same end-of-freeze commit.
 
-**Git:** branch `phase/17-v1-rerun`; push and merge pending.
+**Git:** branch `phase/17-v1-rerun`, merged through pull request #22. Merge commit `e2cd8f6`, tag
+`phase-17-v1` (merge re-created with the noreply identity; same tree and parents).
+
+**CI status:** green on the branch, the pull request and `main` (run 44267047137).
 
 ## Phase 18 — Inference package
 
