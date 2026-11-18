@@ -775,3 +775,35 @@ def test_memory_probe_takes_the_worst_batches_and_runs_a_step(tiny):
     assert rec_memory_probe.worst_batches(cfg) == [(2, 320), (8, 96)]  # widest lines; fullest batch
     rows = rec_memory_probe.probe(cfg, torch.device("cpu"), 28)
     assert [r["fits"] for r in rows] == [True, True] and rows[0]["height"] == 32
+
+
+@pytest.mark.parametrize(
+    ("validation_pack", "attributed"),
+    [("processed/hiertext/lines_validation", True), ("processed/glyphsynth/lines_val", False)],
+)
+def test_the_worst_lines_of_a_hiertext_run_carry_the_licence_notice(
+    tmp_path, validation_pack, attributed
+):
+    from glypharis.training.report import HIERTEXT_NOTICE, write_report
+
+    pack = {"count": 2, "bin_sha256": "0" * 64}
+    summary = {
+        "experiment_id": "GW-REC-999", "config_hash": "0" * 64, "train_seconds": 60,
+        "device": "cpu",
+        "precision": "fp32", "torch": "0", "parameters": 1, "train_lines": 2, "val_lines": 2,
+        "epochs_run": 1, "steps": 1, "stopped_early": False,
+        "data": {"processed/hiertext/lines_train": pack, validation_pack: pack},
+    }  # fmt: skip
+    samples = [{"key": f"k{i}", "label": "cat", "pred": "cot", "cer": 1 / 3} for i in range(2)]
+    run = tmp_path / "run"
+    run.mkdir()
+    (run / "summary.json").write_text(json.dumps(summary), encoding="utf-8")
+    (run / "val_best_samples.jsonl").write_text(
+        "".join(json.dumps(s) + "\n" for s in samples), encoding="utf-8"
+    )
+    report = write_report(run, tmp_path / "report").read_text(encoding="utf-8")
+    assert (HIERTEXT_NOTICE in report) is attributed
+    if attributed:
+        section = report.split("## Worst validation lines", 1)[1]
+        assert section.index(HIERTEXT_NOTICE) < section.index("| Key | Reference |")
+        assert "CC BY-SA 4.0" in HIERTEXT_NOTICE and "CC BY 2.0" in HIERTEXT_NOTICE

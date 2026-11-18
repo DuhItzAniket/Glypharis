@@ -1,0 +1,1972 @@
+{
+ "document": "DATASETS.md",
+ "published": [
+  {
+   "value": "11,639",
+   "context": "images",
+   "citation": "long2022hiertext"
+  },
+  {
+   "value": "8,281",
+   "context": "train",
+   "citation": "long2022hiertext"
+  },
+  {
+   "value": "1,724",
+   "context": "validation",
+   "citation": "long2022hiertext"
+  },
+  {
+   "value": "1,634",
+   "context": "test",
+   "citation": "long2022hiertext"
+  },
+  {
+   "value": "1.2M",
+   "context": "words",
+   "citation": "long2022hiertext"
+  },
+  {
+   "value": "5,000",
+   "context": "cropped words",
+   "citation": "mishra2012iiit5k"
+  },
+  {
+   "value": "2,000",
+   "context": "train",
+   "citation": "mishra2012iiit5k"
+  },
+  {
+   "value": "3,000",
+   "context": "per the paper",
+   "citation": "mishra2012iiit5k"
+  },
+  {
+   "value": "1919",
+   "context": "published before",
+   "citation": "https://github.com/google-deepmind/pg19"
+  },
+  {
+   "value": "199",
+   "context": "forms",
+   "citation": "jaume2019funsd"
+  },
+  {
+   "value": "149",
+   "context": "train",
+   "citation": "jaume2019funsd"
+  },
+  {
+   "value": "50",
+   "context": "149 train",
+   "citation": "jaume2019funsd"
+  },
+  {
+   "value": "31,485",
+   "context": "words",
+   "citation": "jaume2019funsd"
+  },
+  {
+   "value": "1,651",
+   "context": "page images",
+   "citation": "https://huggingface.co/datasets/opendatalab/OmniDocBench"
+  },
+  {
+   "value": "1,000",
+   "context": "receipts",
+   "citation": "huang2019sroie"
+  },
+  {
+   "value": "800",
+   "context": "thousand images",
+   "citation": "https://www.robots.ox.ac.uk/~vgg/data/scenetext/"
+  },
+  {
+   "value": "8",
+   "context": "million word",
+   "citation": "https://www.robots.ox.ac.uk/~vgg/data/scenetext/"
+  },
+  {
+   "value": "12",
+   "context": "month",
+   "citation": "https://www.robots.ox.ac.uk/~vgg/terms/dataset-group-2-access.html",
+   "note": "term of the VGG licence"
+  }
+ ],
+ "derived": [
+  {
+   "name": "hiertext_legible_words",
+   "formula": "train + validation + test",
+   "inputs": {
+    "train": {
+     "id": "data/manifests/hiertext.json",
+     "source": "data/manifests/hiertext.json",
+     "row": "counts/train/annotations/words_legible"
+    },
+    "validation": {
+     "id": "data/manifests/hiertext.json",
+     "source": "data/manifests/hiertext.json",
+     "row": "counts/validation/annotations/words_legible"
+    },
+    "test": {
+     "id": "data/manifests/hiertext.json",
+     "source": "data/manifests/hiertext.json",
+     "row": "counts/test/annotations/words_legible"
+    }
+   }
+  },
+  {
+   "name": "hiertext_all_words",
+   "formula": "train + validation + test",
+   "inputs": {
+    "train": {
+     "id": "data/manifests/hiertext.json",
+     "source": "data/manifests/hiertext.json",
+     "row": "counts/train/annotations/words"
+    },
+    "validation": {
+     "id": "data/manifests/hiertext.json",
+     "source": "data/manifests/hiertext.json",
+     "row": "counts/validation/annotations/words"
+    },
+    "test": {
+     "id": "data/manifests/hiertext.json",
+     "source": "data/manifests/hiertext.json",
+     "row": "counts/test/annotations/words"
+    }
+   }
+  },
+  {
+   "name": "hiertext_archives_gib",
+   "formula": "(train + validation + test) / 1073741824",
+   "inputs": {
+    "train": {
+     "id": "data/manifests/hiertext.json",
+     "source": "data/manifests/hiertext.json",
+     "row": "files/images_train/bytes"
+    },
+    "validation": {
+     "id": "data/manifests/hiertext.json",
+     "source": "data/manifests/hiertext.json",
+     "row": "files/images_validation/bytes"
+    },
+    "test": {
+     "id": "data/manifests/hiertext.json",
+     "source": "data/manifests/hiertext.json",
+     "row": "files/images_test/bytes"
+    }
+   },
+   "note": "image archives, bytes to GiB"
+  },
+  {
+   "name": "hiertext_gt_mib",
+   "formula": "(gtrain + gvalidation + gtest) / 1048576",
+   "inputs": {
+    "gtrain": {
+     "id": "data/manifests/hiertext.json",
+     "source": "data/manifests/hiertext.json",
+     "row": "files/gt_train/bytes"
+    },
+    "gvalidation": {
+     "id": "data/manifests/hiertext.json",
+     "source": "data/manifests/hiertext.json",
+     "row": "files/gt_validation/bytes"
+    },
+    "gtest": {
+     "id": "data/manifests/hiertext.json",
+     "source": "data/manifests/hiertext.json",
+     "row": "files/gt_test/bytes"
+    }
+   },
+   "note": "ground-truth files, bytes to MiB"
+  },
+  {
+   "name": "hiertext_total_gib",
+   "formula": "(train + validation + test + gtrain + gvalidation + gtest) / 1073741824",
+   "inputs": {
+    "train": {
+     "id": "data/manifests/hiertext.json",
+     "source": "data/manifests/hiertext.json",
+     "row": "files/images_train/bytes"
+    },
+    "validation": {
+     "id": "data/manifests/hiertext.json",
+     "source": "data/manifests/hiertext.json",
+     "row": "files/images_validation/bytes"
+    },
+    "test": {
+     "id": "data/manifests/hiertext.json",
+     "source": "data/manifests/hiertext.json",
+     "row": "files/images_test/bytes"
+    },
+    "gtrain": {
+     "id": "data/manifests/hiertext.json",
+     "source": "data/manifests/hiertext.json",
+     "row": "files/gt_train/bytes"
+    },
+    "gvalidation": {
+     "id": "data/manifests/hiertext.json",
+     "source": "data/manifests/hiertext.json",
+     "row": "files/gt_validation/bytes"
+    },
+    "gtest": {
+     "id": "data/manifests/hiertext.json",
+     "source": "data/manifests/hiertext.json",
+     "row": "files/gt_test/bytes"
+    }
+   }
+  },
+  {
+   "name": "hiertext_val_usable",
+   "formula": "x",
+   "inputs": {
+    "x": {
+     "id": "data/manifests/processed/hiertext.json",
+     "source": "data/manifests/processed/hiertext.json",
+     "row": "splits/validation/lines_rec_ok"
+    }
+   }
+  },
+  {
+   "name": "hiertext_val_oov",
+   "formula": "x",
+   "inputs": {
+    "x": {
+     "id": "data/manifests/processed/hiertext.json",
+     "source": "data/manifests/processed/hiertext.json",
+     "row": "splits/validation/rec_skip/out_of_charset"
+    }
+   }
+  },
+  {
+   "name": "hiertext_val_long",
+   "formula": "x",
+   "inputs": {
+    "x": {
+     "id": "data/manifests/processed/hiertext.json",
+     "source": "data/manifests/processed/hiertext.json",
+     "row": "splits/validation/rec_skip/too_long"
+    }
+   }
+  },
+  {
+   "name": "hiertext_val_crops",
+   "formula": "usable + oov + long",
+   "inputs": {
+    "usable": {
+     "id": "data/manifests/processed/hiertext.json",
+     "source": "data/manifests/processed/hiertext.json",
+     "row": "splits/validation/lines_rec_ok"
+    },
+    "oov": {
+     "id": "data/manifests/processed/hiertext.json",
+     "source": "data/manifests/processed/hiertext.json",
+     "row": "splits/validation/rec_skip/out_of_charset"
+    },
+    "long": {
+     "id": "data/manifests/processed/hiertext.json",
+     "source": "data/manifests/processed/hiertext.json",
+     "row": "splits/validation/rec_skip/too_long"
+    }
+   },
+   "note": "equals the crop count of the evaluation pack in eval_crops.json"
+  },
+  {
+   "name": "hiertext_test_usable",
+   "formula": "x",
+   "inputs": {
+    "x": {
+     "id": "data/manifests/processed/hiertext.json",
+     "source": "data/manifests/processed/hiertext.json",
+     "row": "splits/test/lines_rec_ok"
+    }
+   }
+  },
+  {
+   "name": "hiertext_test_oov",
+   "formula": "x",
+   "inputs": {
+    "x": {
+     "id": "data/manifests/processed/hiertext.json",
+     "source": "data/manifests/processed/hiertext.json",
+     "row": "splits/test/rec_skip/out_of_charset"
+    }
+   }
+  },
+  {
+   "name": "hiertext_test_long",
+   "formula": "x",
+   "inputs": {
+    "x": {
+     "id": "data/manifests/processed/hiertext.json",
+     "source": "data/manifests/processed/hiertext.json",
+     "row": "splits/test/rec_skip/too_long"
+    }
+   }
+  },
+  {
+   "name": "hiertext_test_crops",
+   "formula": "usable + oov + long",
+   "inputs": {
+    "usable": {
+     "id": "data/manifests/processed/hiertext.json",
+     "source": "data/manifests/processed/hiertext.json",
+     "row": "splits/test/lines_rec_ok"
+    },
+    "oov": {
+     "id": "data/manifests/processed/hiertext.json",
+     "source": "data/manifests/processed/hiertext.json",
+     "row": "splits/test/rec_skip/out_of_charset"
+    },
+    "long": {
+     "id": "data/manifests/processed/hiertext.json",
+     "source": "data/manifests/processed/hiertext.json",
+     "row": "splits/test/rec_skip/too_long"
+    }
+   },
+   "note": "equals the crop count of the evaluation pack in eval_crops.json"
+  },
+  {
+   "name": "gdc_landscape_captures",
+   "formula": "(w0 + w1 + w2 + w3 + w4 + w5 + w6 + w7 + w8 + w9 + w10 + w11 + w12 + w13 + w14 + w15 + w16 + w17 + w18 + w19 + w20 + w21 + w22 + w23 + w24 + w25 + w26 + w27 + w28 + w29 + w30 + w31 + w32 + w33 + w34 + w35 + w36 + w37 + w38 + w39 + w40 + w41 + w42 + w43 + w44 + w45 + w46 + w47 + w48 + w49 + w50 + w51 + w52 + w53 + w54 + w55 + w56 + w57 + w58 + w59 + w60 + w61 + w62 + w63 + w64 + w65 + w66 + w67 + w68 + w69 + w70 + w71 + w72 + w73 + w74 + w75 + w76 + w77 + w78 + w79 + w80 + w81 + w82 + w83 + w84 + w85 + w86 + w87 + w88 + w89 + w90 + w91 + w92 + w93 + w94 + w95 + w96 + w97 + w98 + w99 + w100 + w101 + w102 + w103 + w104 + w105 - 106 * 3072) / 1008",
+   "inputs": {
+    "w0": {
+     "id": "data/manifests/gdc/alignment.json",
+     "source": "data/manifests/gdc/alignment.json",
+     "row": "results/0/size/0"
+    },
+    "w1": {
+     "id": "data/manifests/gdc/alignment.json",
+     "source": "data/manifests/gdc/alignment.json",
+     "row": "results/1/size/0"
+    },
+    "w2": {
+     "id": "data/manifests/gdc/alignment.json",
+     "source": "data/manifests/gdc/alignment.json",
+     "row": "results/2/size/0"
+    },
+    "w3": {
+     "id": "data/manifests/gdc/alignment.json",
+     "source": "data/manifests/gdc/alignment.json",
+     "row": "results/3/size/0"
+    },
+    "w4": {
+     "id": "data/manifests/gdc/alignment.json",
+     "source": "data/manifests/gdc/alignment.json",
+     "row": "results/4/size/0"
+    },
+    "w5": {
+     "id": "data/manifests/gdc/alignment.json",
+     "source": "data/manifests/gdc/alignment.json",
+     "row": "results/5/size/0"
+    },
+    "w6": {
+     "id": "data/manifests/gdc/alignment.json",
+     "source": "data/manifests/gdc/alignment.json",
+     "row": "results/6/size/0"
+    },
+    "w7": {
+     "id": "data/manifests/gdc/alignment.json",
+     "source": "data/manifests/gdc/alignment.json",
+     "row": "results/7/size/0"
+    },
+    "w8": {
+     "id": "data/manifests/gdc/alignment.json",
+     "source": "data/manifests/gdc/alignment.json",
+     "row": "results/8/size/0"
+    },
+    "w9": {
+     "id": "data/manifests/gdc/alignment.json",
+     "source": "data/manifests/gdc/alignment.json",
+     "row": "results/9/size/0"
+    },
+    "w10": {
+     "id": "data/manifests/gdc/alignment.json",
+     "source": "data/manifests/gdc/alignment.json",
+     "row": "results/10/size/0"
+    },
+    "w11": {
+     "id": "data/manifests/gdc/alignment.json",
+     "source": "data/manifests/gdc/alignment.json",
+     "row": "results/11/size/0"
+    },
+    "w12": {
+     "id": "data/manifests/gdc/alignment.json",
+     "source": "data/manifests/gdc/alignment.json",
+     "row": "results/12/size/0"
+    },
+    "w13": {
+     "id": "data/manifests/gdc/alignment.json",
+     "source": "data/manifests/gdc/alignment.json",
+     "row": "results/13/size/0"
+    },
+    "w14": {
+     "id": "data/manifests/gdc/alignment.json",
+     "source": "data/manifests/gdc/alignment.json",
+     "row": "results/14/size/0"
+    },
+    "w15": {
+     "id": "data/manifests/gdc/alignment.json",
+     "source": "data/manifests/gdc/alignment.json",
+     "row": "results/15/size/0"
+    },
+    "w16": {
+     "id": "data/manifests/gdc/alignment.json",
+     "source": "data/manifests/gdc/alignment.json",
+     "row": "results/16/size/0"
+    },
+    "w17": {
+     "id": "data/manifests/gdc/alignment.json",
+     "source": "data/manifests/gdc/alignment.json",
+     "row": "results/17/size/0"
+    },
+    "w18": {
+     "id": "data/manifests/gdc/alignment.json",
+     "source": "data/manifests/gdc/alignment.json",
+     "row": "results/18/size/0"
+    },
+    "w19": {
+     "id": "data/manifests/gdc/alignment.json",
+     "source": "data/manifests/gdc/alignment.json",
+     "row": "results/19/size/0"
+    },
+    "w20": {
+     "id": "data/manifests/gdc/alignment.json",
+     "source": "data/manifests/gdc/alignment.json",
+     "row": "results/20/size/0"
+    },
+    "w21": {
+     "id": "data/manifests/gdc/alignment.json",
+     "source": "data/manifests/gdc/alignment.json",
+     "row": "results/21/size/0"
+    },
+    "w22": {
+     "id": "data/manifests/gdc/alignment.json",
+     "source": "data/manifests/gdc/alignment.json",
+     "row": "results/22/size/0"
+    },
+    "w23": {
+     "id": "data/manifests/gdc/alignment.json",
+     "source": "data/manifests/gdc/alignment.json",
+     "row": "results/23/size/0"
+    },
+    "w24": {
+     "id": "data/manifests/gdc/alignment.json",
+     "source": "data/manifests/gdc/alignment.json",
+     "row": "results/24/size/0"
+    },
+    "w25": {
+     "id": "data/manifests/gdc/alignment.json",
+     "source": "data/manifests/gdc/alignment.json",
+     "row": "results/25/size/0"
+    },
+    "w26": {
+     "id": "data/manifests/gdc/alignment.json",
+     "source": "data/manifests/gdc/alignment.json",
+     "row": "results/26/size/0"
+    },
+    "w27": {
+     "id": "data/manifests/gdc/alignment.json",
+     "source": "data/manifests/gdc/alignment.json",
+     "row": "results/27/size/0"
+    },
+    "w28": {
+     "id": "data/manifests/gdc/alignment.json",
+     "source": "data/manifests/gdc/alignment.json",
+     "row": "results/28/size/0"
+    },
+    "w29": {
+     "id": "data/manifests/gdc/alignment.json",
+     "source": "data/manifests/gdc/alignment.json",
+     "row": "results/29/size/0"
+    },
+    "w30": {
+     "id": "data/manifests/gdc/alignment.json",
+     "source": "data/manifests/gdc/alignment.json",
+     "row": "results/30/size/0"
+    },
+    "w31": {
+     "id": "data/manifests/gdc/alignment.json",
+     "source": "data/manifests/gdc/alignment.json",
+     "row": "results/31/size/0"
+    },
+    "w32": {
+     "id": "data/manifests/gdc/alignment.json",
+     "source": "data/manifests/gdc/alignment.json",
+     "row": "results/32/size/0"
+    },
+    "w33": {
+     "id": "data/manifests/gdc/alignment.json",
+     "source": "data/manifests/gdc/alignment.json",
+     "row": "results/33/size/0"
+    },
+    "w34": {
+     "id": "data/manifests/gdc/alignment.json",
+     "source": "data/manifests/gdc/alignment.json",
+     "row": "results/34/size/0"
+    },
+    "w35": {
+     "id": "data/manifests/gdc/alignment.json",
+     "source": "data/manifests/gdc/alignment.json",
+     "row": "results/35/size/0"
+    },
+    "w36": {
+     "id": "data/manifests/gdc/alignment.json",
+     "source": "data/manifests/gdc/alignment.json",
+     "row": "results/36/size/0"
+    },
+    "w37": {
+     "id": "data/manifests/gdc/alignment.json",
+     "source": "data/manifests/gdc/alignment.json",
+     "row": "results/37/size/0"
+    },
+    "w38": {
+     "id": "data/manifests/gdc/alignment.json",
+     "source": "data/manifests/gdc/alignment.json",
+     "row": "results/38/size/0"
+    },
+    "w39": {
+     "id": "data/manifests/gdc/alignment.json",
+     "source": "data/manifests/gdc/alignment.json",
+     "row": "results/39/size/0"
+    },
+    "w40": {
+     "id": "data/manifests/gdc/alignment.json",
+     "source": "data/manifests/gdc/alignment.json",
+     "row": "results/40/size/0"
+    },
+    "w41": {
+     "id": "data/manifests/gdc/alignment.json",
+     "source": "data/manifests/gdc/alignment.json",
+     "row": "results/41/size/0"
+    },
+    "w42": {
+     "id": "data/manifests/gdc/alignment.json",
+     "source": "data/manifests/gdc/alignment.json",
+     "row": "results/42/size/0"
+    },
+    "w43": {
+     "id": "data/manifests/gdc/alignment.json",
+     "source": "data/manifests/gdc/alignment.json",
+     "row": "results/43/size/0"
+    },
+    "w44": {
+     "id": "data/manifests/gdc/alignment.json",
+     "source": "data/manifests/gdc/alignment.json",
+     "row": "results/44/size/0"
+    },
+    "w45": {
+     "id": "data/manifests/gdc/alignment.json",
+     "source": "data/manifests/gdc/alignment.json",
+     "row": "results/45/size/0"
+    },
+    "w46": {
+     "id": "data/manifests/gdc/alignment.json",
+     "source": "data/manifests/gdc/alignment.json",
+     "row": "results/46/size/0"
+    },
+    "w47": {
+     "id": "data/manifests/gdc/alignment.json",
+     "source": "data/manifests/gdc/alignment.json",
+     "row": "results/47/size/0"
+    },
+    "w48": {
+     "id": "data/manifests/gdc/alignment.json",
+     "source": "data/manifests/gdc/alignment.json",
+     "row": "results/48/size/0"
+    },
+    "w49": {
+     "id": "data/manifests/gdc/alignment.json",
+     "source": "data/manifests/gdc/alignment.json",
+     "row": "results/49/size/0"
+    },
+    "w50": {
+     "id": "data/manifests/gdc/alignment.json",
+     "source": "data/manifests/gdc/alignment.json",
+     "row": "results/50/size/0"
+    },
+    "w51": {
+     "id": "data/manifests/gdc/alignment.json",
+     "source": "data/manifests/gdc/alignment.json",
+     "row": "results/51/size/0"
+    },
+    "w52": {
+     "id": "data/manifests/gdc/alignment.json",
+     "source": "data/manifests/gdc/alignment.json",
+     "row": "results/52/size/0"
+    },
+    "w53": {
+     "id": "data/manifests/gdc/alignment.json",
+     "source": "data/manifests/gdc/alignment.json",
+     "row": "results/53/size/0"
+    },
+    "w54": {
+     "id": "data/manifests/gdc/alignment.json",
+     "source": "data/manifests/gdc/alignment.json",
+     "row": "results/54/size/0"
+    },
+    "w55": {
+     "id": "data/manifests/gdc/alignment.json",
+     "source": "data/manifests/gdc/alignment.json",
+     "row": "results/55/size/0"
+    },
+    "w56": {
+     "id": "data/manifests/gdc/alignment.json",
+     "source": "data/manifests/gdc/alignment.json",
+     "row": "results/56/size/0"
+    },
+    "w57": {
+     "id": "data/manifests/gdc/alignment.json",
+     "source": "data/manifests/gdc/alignment.json",
+     "row": "results/57/size/0"
+    },
+    "w58": {
+     "id": "data/manifests/gdc/alignment.json",
+     "source": "data/manifests/gdc/alignment.json",
+     "row": "results/58/size/0"
+    },
+    "w59": {
+     "id": "data/manifests/gdc/alignment.json",
+     "source": "data/manifests/gdc/alignment.json",
+     "row": "results/59/size/0"
+    },
+    "w60": {
+     "id": "data/manifests/gdc/alignment.json",
+     "source": "data/manifests/gdc/alignment.json",
+     "row": "results/60/size/0"
+    },
+    "w61": {
+     "id": "data/manifests/gdc/alignment.json",
+     "source": "data/manifests/gdc/alignment.json",
+     "row": "results/61/size/0"
+    },
+    "w62": {
+     "id": "data/manifests/gdc/alignment.json",
+     "source": "data/manifests/gdc/alignment.json",
+     "row": "results/62/size/0"
+    },
+    "w63": {
+     "id": "data/manifests/gdc/alignment.json",
+     "source": "data/manifests/gdc/alignment.json",
+     "row": "results/63/size/0"
+    },
+    "w64": {
+     "id": "data/manifests/gdc/alignment.json",
+     "source": "data/manifests/gdc/alignment.json",
+     "row": "results/64/size/0"
+    },
+    "w65": {
+     "id": "data/manifests/gdc/alignment.json",
+     "source": "data/manifests/gdc/alignment.json",
+     "row": "results/65/size/0"
+    },
+    "w66": {
+     "id": "data/manifests/gdc/alignment.json",
+     "source": "data/manifests/gdc/alignment.json",
+     "row": "results/66/size/0"
+    },
+    "w67": {
+     "id": "data/manifests/gdc/alignment.json",
+     "source": "data/manifests/gdc/alignment.json",
+     "row": "results/67/size/0"
+    },
+    "w68": {
+     "id": "data/manifests/gdc/alignment.json",
+     "source": "data/manifests/gdc/alignment.json",
+     "row": "results/68/size/0"
+    },
+    "w69": {
+     "id": "data/manifests/gdc/alignment.json",
+     "source": "data/manifests/gdc/alignment.json",
+     "row": "results/69/size/0"
+    },
+    "w70": {
+     "id": "data/manifests/gdc/alignment.json",
+     "source": "data/manifests/gdc/alignment.json",
+     "row": "results/70/size/0"
+    },
+    "w71": {
+     "id": "data/manifests/gdc/alignment.json",
+     "source": "data/manifests/gdc/alignment.json",
+     "row": "results/71/size/0"
+    },
+    "w72": {
+     "id": "data/manifests/gdc/alignment.json",
+     "source": "data/manifests/gdc/alignment.json",
+     "row": "results/72/size/0"
+    },
+    "w73": {
+     "id": "data/manifests/gdc/alignment.json",
+     "source": "data/manifests/gdc/alignment.json",
+     "row": "results/73/size/0"
+    },
+    "w74": {
+     "id": "data/manifests/gdc/alignment.json",
+     "source": "data/manifests/gdc/alignment.json",
+     "row": "results/74/size/0"
+    },
+    "w75": {
+     "id": "data/manifests/gdc/alignment.json",
+     "source": "data/manifests/gdc/alignment.json",
+     "row": "results/75/size/0"
+    },
+    "w76": {
+     "id": "data/manifests/gdc/alignment.json",
+     "source": "data/manifests/gdc/alignment.json",
+     "row": "results/76/size/0"
+    },
+    "w77": {
+     "id": "data/manifests/gdc/alignment.json",
+     "source": "data/manifests/gdc/alignment.json",
+     "row": "results/77/size/0"
+    },
+    "w78": {
+     "id": "data/manifests/gdc/alignment.json",
+     "source": "data/manifests/gdc/alignment.json",
+     "row": "results/78/size/0"
+    },
+    "w79": {
+     "id": "data/manifests/gdc/alignment.json",
+     "source": "data/manifests/gdc/alignment.json",
+     "row": "results/79/size/0"
+    },
+    "w80": {
+     "id": "data/manifests/gdc/alignment.json",
+     "source": "data/manifests/gdc/alignment.json",
+     "row": "results/80/size/0"
+    },
+    "w81": {
+     "id": "data/manifests/gdc/alignment.json",
+     "source": "data/manifests/gdc/alignment.json",
+     "row": "results/81/size/0"
+    },
+    "w82": {
+     "id": "data/manifests/gdc/alignment.json",
+     "source": "data/manifests/gdc/alignment.json",
+     "row": "results/82/size/0"
+    },
+    "w83": {
+     "id": "data/manifests/gdc/alignment.json",
+     "source": "data/manifests/gdc/alignment.json",
+     "row": "results/83/size/0"
+    },
+    "w84": {
+     "id": "data/manifests/gdc/alignment.json",
+     "source": "data/manifests/gdc/alignment.json",
+     "row": "results/84/size/0"
+    },
+    "w85": {
+     "id": "data/manifests/gdc/alignment.json",
+     "source": "data/manifests/gdc/alignment.json",
+     "row": "results/85/size/0"
+    },
+    "w86": {
+     "id": "data/manifests/gdc/alignment.json",
+     "source": "data/manifests/gdc/alignment.json",
+     "row": "results/86/size/0"
+    },
+    "w87": {
+     "id": "data/manifests/gdc/alignment.json",
+     "source": "data/manifests/gdc/alignment.json",
+     "row": "results/87/size/0"
+    },
+    "w88": {
+     "id": "data/manifests/gdc/alignment.json",
+     "source": "data/manifests/gdc/alignment.json",
+     "row": "results/88/size/0"
+    },
+    "w89": {
+     "id": "data/manifests/gdc/alignment.json",
+     "source": "data/manifests/gdc/alignment.json",
+     "row": "results/89/size/0"
+    },
+    "w90": {
+     "id": "data/manifests/gdc/alignment.json",
+     "source": "data/manifests/gdc/alignment.json",
+     "row": "results/90/size/0"
+    },
+    "w91": {
+     "id": "data/manifests/gdc/alignment.json",
+     "source": "data/manifests/gdc/alignment.json",
+     "row": "results/91/size/0"
+    },
+    "w92": {
+     "id": "data/manifests/gdc/alignment.json",
+     "source": "data/manifests/gdc/alignment.json",
+     "row": "results/92/size/0"
+    },
+    "w93": {
+     "id": "data/manifests/gdc/alignment.json",
+     "source": "data/manifests/gdc/alignment.json",
+     "row": "results/93/size/0"
+    },
+    "w94": {
+     "id": "data/manifests/gdc/alignment.json",
+     "source": "data/manifests/gdc/alignment.json",
+     "row": "results/94/size/0"
+    },
+    "w95": {
+     "id": "data/manifests/gdc/alignment.json",
+     "source": "data/manifests/gdc/alignment.json",
+     "row": "results/95/size/0"
+    },
+    "w96": {
+     "id": "data/manifests/gdc/alignment.json",
+     "source": "data/manifests/gdc/alignment.json",
+     "row": "results/96/size/0"
+    },
+    "w97": {
+     "id": "data/manifests/gdc/alignment.json",
+     "source": "data/manifests/gdc/alignment.json",
+     "row": "results/97/size/0"
+    },
+    "w98": {
+     "id": "data/manifests/gdc/alignment.json",
+     "source": "data/manifests/gdc/alignment.json",
+     "row": "results/98/size/0"
+    },
+    "w99": {
+     "id": "data/manifests/gdc/alignment.json",
+     "source": "data/manifests/gdc/alignment.json",
+     "row": "results/99/size/0"
+    },
+    "w100": {
+     "id": "data/manifests/gdc/alignment.json",
+     "source": "data/manifests/gdc/alignment.json",
+     "row": "results/100/size/0"
+    },
+    "w101": {
+     "id": "data/manifests/gdc/alignment.json",
+     "source": "data/manifests/gdc/alignment.json",
+     "row": "results/101/size/0"
+    },
+    "w102": {
+     "id": "data/manifests/gdc/alignment.json",
+     "source": "data/manifests/gdc/alignment.json",
+     "row": "results/102/size/0"
+    },
+    "w103": {
+     "id": "data/manifests/gdc/alignment.json",
+     "source": "data/manifests/gdc/alignment.json",
+     "row": "results/103/size/0"
+    },
+    "w104": {
+     "id": "data/manifests/gdc/alignment.json",
+     "source": "data/manifests/gdc/alignment.json",
+     "row": "results/104/size/0"
+    },
+    "w105": {
+     "id": "data/manifests/gdc/alignment.json",
+     "source": "data/manifests/gdc/alignment.json",
+     "row": "results/105/size/0"
+    }
+   },
+   "note": "stored width is 3072 (portrait) or 4080 (landscape); counts the 4080s"
+  },
+  {
+   "name": "gdc_low_score_lines",
+   "formula": "n0 + n1 + n2 + n3 + n4 + n5 + n6 + n7 + n8 + n9 + n10 + n11 + n12 + n13 + n14 + n15 + n16 + n17 + n18 + n19 + n20 + n21 + n22 + n23 + n24 + n25 + n26 + n27 + n28 + n29 + n30 + n31 + n32 + n33 + n34 + n35 + n36 + n37 + n38 + n39 + n40 + n41 + n42 + n43 + n44 + n45 + n46 + n47 + n48 + n49 + n50 + n51 + n52 + n53 + n54 + n55 + n56 + n57 + n58 + n59 + n60 + n61 + n62 + n63 + n64 + n65 + n66 + n67 + n68 + n69 + n70 + n71 + n72 + n73 + n74 + n75 + n76 + n77 + n78 + n79 + n80 + n81 + n82 + n83 + n84 + n85 + n86 + n87 + n88 + n89 + n90 + n91 + n92 + n93 + n94 + n95 + n96 + n97 + n98 + n99 + n100 + n101 + n102 + n103 + n104 + n105",
+   "inputs": {
+    "n0": {
+     "id": "data/manifests/gdc/alignment.json",
+     "source": "data/manifests/gdc/alignment.json",
+     "row": "results/0/lines_low_score"
+    },
+    "n1": {
+     "id": "data/manifests/gdc/alignment.json",
+     "source": "data/manifests/gdc/alignment.json",
+     "row": "results/1/lines_low_score"
+    },
+    "n2": {
+     "id": "data/manifests/gdc/alignment.json",
+     "source": "data/manifests/gdc/alignment.json",
+     "row": "results/2/lines_low_score"
+    },
+    "n3": {
+     "id": "data/manifests/gdc/alignment.json",
+     "source": "data/manifests/gdc/alignment.json",
+     "row": "results/3/lines_low_score"
+    },
+    "n4": {
+     "id": "data/manifests/gdc/alignment.json",
+     "source": "data/manifests/gdc/alignment.json",
+     "row": "results/4/lines_low_score"
+    },
+    "n5": {
+     "id": "data/manifests/gdc/alignment.json",
+     "source": "data/manifests/gdc/alignment.json",
+     "row": "results/5/lines_low_score"
+    },
+    "n6": {
+     "id": "data/manifests/gdc/alignment.json",
+     "source": "data/manifests/gdc/alignment.json",
+     "row": "results/6/lines_low_score"
+    },
+    "n7": {
+     "id": "data/manifests/gdc/alignment.json",
+     "source": "data/manifests/gdc/alignment.json",
+     "row": "results/7/lines_low_score"
+    },
+    "n8": {
+     "id": "data/manifests/gdc/alignment.json",
+     "source": "data/manifests/gdc/alignment.json",
+     "row": "results/8/lines_low_score"
+    },
+    "n9": {
+     "id": "data/manifests/gdc/alignment.json",
+     "source": "data/manifests/gdc/alignment.json",
+     "row": "results/9/lines_low_score"
+    },
+    "n10": {
+     "id": "data/manifests/gdc/alignment.json",
+     "source": "data/manifests/gdc/alignment.json",
+     "row": "results/10/lines_low_score"
+    },
+    "n11": {
+     "id": "data/manifests/gdc/alignment.json",
+     "source": "data/manifests/gdc/alignment.json",
+     "row": "results/11/lines_low_score"
+    },
+    "n12": {
+     "id": "data/manifests/gdc/alignment.json",
+     "source": "data/manifests/gdc/alignment.json",
+     "row": "results/12/lines_low_score"
+    },
+    "n13": {
+     "id": "data/manifests/gdc/alignment.json",
+     "source": "data/manifests/gdc/alignment.json",
+     "row": "results/13/lines_low_score"
+    },
+    "n14": {
+     "id": "data/manifests/gdc/alignment.json",
+     "source": "data/manifests/gdc/alignment.json",
+     "row": "results/14/lines_low_score"
+    },
+    "n15": {
+     "id": "data/manifests/gdc/alignment.json",
+     "source": "data/manifests/gdc/alignment.json",
+     "row": "results/15/lines_low_score"
+    },
+    "n16": {
+     "id": "data/manifests/gdc/alignment.json",
+     "source": "data/manifests/gdc/alignment.json",
+     "row": "results/16/lines_low_score"
+    },
+    "n17": {
+     "id": "data/manifests/gdc/alignment.json",
+     "source": "data/manifests/gdc/alignment.json",
+     "row": "results/17/lines_low_score"
+    },
+    "n18": {
+     "id": "data/manifests/gdc/alignment.json",
+     "source": "data/manifests/gdc/alignment.json",
+     "row": "results/18/lines_low_score"
+    },
+    "n19": {
+     "id": "data/manifests/gdc/alignment.json",
+     "source": "data/manifests/gdc/alignment.json",
+     "row": "results/19/lines_low_score"
+    },
+    "n20": {
+     "id": "data/manifests/gdc/alignment.json",
+     "source": "data/manifests/gdc/alignment.json",
+     "row": "results/20/lines_low_score"
+    },
+    "n21": {
+     "id": "data/manifests/gdc/alignment.json",
+     "source": "data/manifests/gdc/alignment.json",
+     "row": "results/21/lines_low_score"
+    },
+    "n22": {
+     "id": "data/manifests/gdc/alignment.json",
+     "source": "data/manifests/gdc/alignment.json",
+     "row": "results/22/lines_low_score"
+    },
+    "n23": {
+     "id": "data/manifests/gdc/alignment.json",
+     "source": "data/manifests/gdc/alignment.json",
+     "row": "results/23/lines_low_score"
+    },
+    "n24": {
+     "id": "data/manifests/gdc/alignment.json",
+     "source": "data/manifests/gdc/alignment.json",
+     "row": "results/24/lines_low_score"
+    },
+    "n25": {
+     "id": "data/manifests/gdc/alignment.json",
+     "source": "data/manifests/gdc/alignment.json",
+     "row": "results/25/lines_low_score"
+    },
+    "n26": {
+     "id": "data/manifests/gdc/alignment.json",
+     "source": "data/manifests/gdc/alignment.json",
+     "row": "results/26/lines_low_score"
+    },
+    "n27": {
+     "id": "data/manifests/gdc/alignment.json",
+     "source": "data/manifests/gdc/alignment.json",
+     "row": "results/27/lines_low_score"
+    },
+    "n28": {
+     "id": "data/manifests/gdc/alignment.json",
+     "source": "data/manifests/gdc/alignment.json",
+     "row": "results/28/lines_low_score"
+    },
+    "n29": {
+     "id": "data/manifests/gdc/alignment.json",
+     "source": "data/manifests/gdc/alignment.json",
+     "row": "results/29/lines_low_score"
+    },
+    "n30": {
+     "id": "data/manifests/gdc/alignment.json",
+     "source": "data/manifests/gdc/alignment.json",
+     "row": "results/30/lines_low_score"
+    },
+    "n31": {
+     "id": "data/manifests/gdc/alignment.json",
+     "source": "data/manifests/gdc/alignment.json",
+     "row": "results/31/lines_low_score"
+    },
+    "n32": {
+     "id": "data/manifests/gdc/alignment.json",
+     "source": "data/manifests/gdc/alignment.json",
+     "row": "results/32/lines_low_score"
+    },
+    "n33": {
+     "id": "data/manifests/gdc/alignment.json",
+     "source": "data/manifests/gdc/alignment.json",
+     "row": "results/33/lines_low_score"
+    },
+    "n34": {
+     "id": "data/manifests/gdc/alignment.json",
+     "source": "data/manifests/gdc/alignment.json",
+     "row": "results/34/lines_low_score"
+    },
+    "n35": {
+     "id": "data/manifests/gdc/alignment.json",
+     "source": "data/manifests/gdc/alignment.json",
+     "row": "results/35/lines_low_score"
+    },
+    "n36": {
+     "id": "data/manifests/gdc/alignment.json",
+     "source": "data/manifests/gdc/alignment.json",
+     "row": "results/36/lines_low_score"
+    },
+    "n37": {
+     "id": "data/manifests/gdc/alignment.json",
+     "source": "data/manifests/gdc/alignment.json",
+     "row": "results/37/lines_low_score"
+    },
+    "n38": {
+     "id": "data/manifests/gdc/alignment.json",
+     "source": "data/manifests/gdc/alignment.json",
+     "row": "results/38/lines_low_score"
+    },
+    "n39": {
+     "id": "data/manifests/gdc/alignment.json",
+     "source": "data/manifests/gdc/alignment.json",
+     "row": "results/39/lines_low_score"
+    },
+    "n40": {
+     "id": "data/manifests/gdc/alignment.json",
+     "source": "data/manifests/gdc/alignment.json",
+     "row": "results/40/lines_low_score"
+    },
+    "n41": {
+     "id": "data/manifests/gdc/alignment.json",
+     "source": "data/manifests/gdc/alignment.json",
+     "row": "results/41/lines_low_score"
+    },
+    "n42": {
+     "id": "data/manifests/gdc/alignment.json",
+     "source": "data/manifests/gdc/alignment.json",
+     "row": "results/42/lines_low_score"
+    },
+    "n43": {
+     "id": "data/manifests/gdc/alignment.json",
+     "source": "data/manifests/gdc/alignment.json",
+     "row": "results/43/lines_low_score"
+    },
+    "n44": {
+     "id": "data/manifests/gdc/alignment.json",
+     "source": "data/manifests/gdc/alignment.json",
+     "row": "results/44/lines_low_score"
+    },
+    "n45": {
+     "id": "data/manifests/gdc/alignment.json",
+     "source": "data/manifests/gdc/alignment.json",
+     "row": "results/45/lines_low_score"
+    },
+    "n46": {
+     "id": "data/manifests/gdc/alignment.json",
+     "source": "data/manifests/gdc/alignment.json",
+     "row": "results/46/lines_low_score"
+    },
+    "n47": {
+     "id": "data/manifests/gdc/alignment.json",
+     "source": "data/manifests/gdc/alignment.json",
+     "row": "results/47/lines_low_score"
+    },
+    "n48": {
+     "id": "data/manifests/gdc/alignment.json",
+     "source": "data/manifests/gdc/alignment.json",
+     "row": "results/48/lines_low_score"
+    },
+    "n49": {
+     "id": "data/manifests/gdc/alignment.json",
+     "source": "data/manifests/gdc/alignment.json",
+     "row": "results/49/lines_low_score"
+    },
+    "n50": {
+     "id": "data/manifests/gdc/alignment.json",
+     "source": "data/manifests/gdc/alignment.json",
+     "row": "results/50/lines_low_score"
+    },
+    "n51": {
+     "id": "data/manifests/gdc/alignment.json",
+     "source": "data/manifests/gdc/alignment.json",
+     "row": "results/51/lines_low_score"
+    },
+    "n52": {
+     "id": "data/manifests/gdc/alignment.json",
+     "source": "data/manifests/gdc/alignment.json",
+     "row": "results/52/lines_low_score"
+    },
+    "n53": {
+     "id": "data/manifests/gdc/alignment.json",
+     "source": "data/manifests/gdc/alignment.json",
+     "row": "results/53/lines_low_score"
+    },
+    "n54": {
+     "id": "data/manifests/gdc/alignment.json",
+     "source": "data/manifests/gdc/alignment.json",
+     "row": "results/54/lines_low_score"
+    },
+    "n55": {
+     "id": "data/manifests/gdc/alignment.json",
+     "source": "data/manifests/gdc/alignment.json",
+     "row": "results/55/lines_low_score"
+    },
+    "n56": {
+     "id": "data/manifests/gdc/alignment.json",
+     "source": "data/manifests/gdc/alignment.json",
+     "row": "results/56/lines_low_score"
+    },
+    "n57": {
+     "id": "data/manifests/gdc/alignment.json",
+     "source": "data/manifests/gdc/alignment.json",
+     "row": "results/57/lines_low_score"
+    },
+    "n58": {
+     "id": "data/manifests/gdc/alignment.json",
+     "source": "data/manifests/gdc/alignment.json",
+     "row": "results/58/lines_low_score"
+    },
+    "n59": {
+     "id": "data/manifests/gdc/alignment.json",
+     "source": "data/manifests/gdc/alignment.json",
+     "row": "results/59/lines_low_score"
+    },
+    "n60": {
+     "id": "data/manifests/gdc/alignment.json",
+     "source": "data/manifests/gdc/alignment.json",
+     "row": "results/60/lines_low_score"
+    },
+    "n61": {
+     "id": "data/manifests/gdc/alignment.json",
+     "source": "data/manifests/gdc/alignment.json",
+     "row": "results/61/lines_low_score"
+    },
+    "n62": {
+     "id": "data/manifests/gdc/alignment.json",
+     "source": "data/manifests/gdc/alignment.json",
+     "row": "results/62/lines_low_score"
+    },
+    "n63": {
+     "id": "data/manifests/gdc/alignment.json",
+     "source": "data/manifests/gdc/alignment.json",
+     "row": "results/63/lines_low_score"
+    },
+    "n64": {
+     "id": "data/manifests/gdc/alignment.json",
+     "source": "data/manifests/gdc/alignment.json",
+     "row": "results/64/lines_low_score"
+    },
+    "n65": {
+     "id": "data/manifests/gdc/alignment.json",
+     "source": "data/manifests/gdc/alignment.json",
+     "row": "results/65/lines_low_score"
+    },
+    "n66": {
+     "id": "data/manifests/gdc/alignment.json",
+     "source": "data/manifests/gdc/alignment.json",
+     "row": "results/66/lines_low_score"
+    },
+    "n67": {
+     "id": "data/manifests/gdc/alignment.json",
+     "source": "data/manifests/gdc/alignment.json",
+     "row": "results/67/lines_low_score"
+    },
+    "n68": {
+     "id": "data/manifests/gdc/alignment.json",
+     "source": "data/manifests/gdc/alignment.json",
+     "row": "results/68/lines_low_score"
+    },
+    "n69": {
+     "id": "data/manifests/gdc/alignment.json",
+     "source": "data/manifests/gdc/alignment.json",
+     "row": "results/69/lines_low_score"
+    },
+    "n70": {
+     "id": "data/manifests/gdc/alignment.json",
+     "source": "data/manifests/gdc/alignment.json",
+     "row": "results/70/lines_low_score"
+    },
+    "n71": {
+     "id": "data/manifests/gdc/alignment.json",
+     "source": "data/manifests/gdc/alignment.json",
+     "row": "results/71/lines_low_score"
+    },
+    "n72": {
+     "id": "data/manifests/gdc/alignment.json",
+     "source": "data/manifests/gdc/alignment.json",
+     "row": "results/72/lines_low_score"
+    },
+    "n73": {
+     "id": "data/manifests/gdc/alignment.json",
+     "source": "data/manifests/gdc/alignment.json",
+     "row": "results/73/lines_low_score"
+    },
+    "n74": {
+     "id": "data/manifests/gdc/alignment.json",
+     "source": "data/manifests/gdc/alignment.json",
+     "row": "results/74/lines_low_score"
+    },
+    "n75": {
+     "id": "data/manifests/gdc/alignment.json",
+     "source": "data/manifests/gdc/alignment.json",
+     "row": "results/75/lines_low_score"
+    },
+    "n76": {
+     "id": "data/manifests/gdc/alignment.json",
+     "source": "data/manifests/gdc/alignment.json",
+     "row": "results/76/lines_low_score"
+    },
+    "n77": {
+     "id": "data/manifests/gdc/alignment.json",
+     "source": "data/manifests/gdc/alignment.json",
+     "row": "results/77/lines_low_score"
+    },
+    "n78": {
+     "id": "data/manifests/gdc/alignment.json",
+     "source": "data/manifests/gdc/alignment.json",
+     "row": "results/78/lines_low_score"
+    },
+    "n79": {
+     "id": "data/manifests/gdc/alignment.json",
+     "source": "data/manifests/gdc/alignment.json",
+     "row": "results/79/lines_low_score"
+    },
+    "n80": {
+     "id": "data/manifests/gdc/alignment.json",
+     "source": "data/manifests/gdc/alignment.json",
+     "row": "results/80/lines_low_score"
+    },
+    "n81": {
+     "id": "data/manifests/gdc/alignment.json",
+     "source": "data/manifests/gdc/alignment.json",
+     "row": "results/81/lines_low_score"
+    },
+    "n82": {
+     "id": "data/manifests/gdc/alignment.json",
+     "source": "data/manifests/gdc/alignment.json",
+     "row": "results/82/lines_low_score"
+    },
+    "n83": {
+     "id": "data/manifests/gdc/alignment.json",
+     "source": "data/manifests/gdc/alignment.json",
+     "row": "results/83/lines_low_score"
+    },
+    "n84": {
+     "id": "data/manifests/gdc/alignment.json",
+     "source": "data/manifests/gdc/alignment.json",
+     "row": "results/84/lines_low_score"
+    },
+    "n85": {
+     "id": "data/manifests/gdc/alignment.json",
+     "source": "data/manifests/gdc/alignment.json",
+     "row": "results/85/lines_low_score"
+    },
+    "n86": {
+     "id": "data/manifests/gdc/alignment.json",
+     "source": "data/manifests/gdc/alignment.json",
+     "row": "results/86/lines_low_score"
+    },
+    "n87": {
+     "id": "data/manifests/gdc/alignment.json",
+     "source": "data/manifests/gdc/alignment.json",
+     "row": "results/87/lines_low_score"
+    },
+    "n88": {
+     "id": "data/manifests/gdc/alignment.json",
+     "source": "data/manifests/gdc/alignment.json",
+     "row": "results/88/lines_low_score"
+    },
+    "n89": {
+     "id": "data/manifests/gdc/alignment.json",
+     "source": "data/manifests/gdc/alignment.json",
+     "row": "results/89/lines_low_score"
+    },
+    "n90": {
+     "id": "data/manifests/gdc/alignment.json",
+     "source": "data/manifests/gdc/alignment.json",
+     "row": "results/90/lines_low_score"
+    },
+    "n91": {
+     "id": "data/manifests/gdc/alignment.json",
+     "source": "data/manifests/gdc/alignment.json",
+     "row": "results/91/lines_low_score"
+    },
+    "n92": {
+     "id": "data/manifests/gdc/alignment.json",
+     "source": "data/manifests/gdc/alignment.json",
+     "row": "results/92/lines_low_score"
+    },
+    "n93": {
+     "id": "data/manifests/gdc/alignment.json",
+     "source": "data/manifests/gdc/alignment.json",
+     "row": "results/93/lines_low_score"
+    },
+    "n94": {
+     "id": "data/manifests/gdc/alignment.json",
+     "source": "data/manifests/gdc/alignment.json",
+     "row": "results/94/lines_low_score"
+    },
+    "n95": {
+     "id": "data/manifests/gdc/alignment.json",
+     "source": "data/manifests/gdc/alignment.json",
+     "row": "results/95/lines_low_score"
+    },
+    "n96": {
+     "id": "data/manifests/gdc/alignment.json",
+     "source": "data/manifests/gdc/alignment.json",
+     "row": "results/96/lines_low_score"
+    },
+    "n97": {
+     "id": "data/manifests/gdc/alignment.json",
+     "source": "data/manifests/gdc/alignment.json",
+     "row": "results/97/lines_low_score"
+    },
+    "n98": {
+     "id": "data/manifests/gdc/alignment.json",
+     "source": "data/manifests/gdc/alignment.json",
+     "row": "results/98/lines_low_score"
+    },
+    "n99": {
+     "id": "data/manifests/gdc/alignment.json",
+     "source": "data/manifests/gdc/alignment.json",
+     "row": "results/99/lines_low_score"
+    },
+    "n100": {
+     "id": "data/manifests/gdc/alignment.json",
+     "source": "data/manifests/gdc/alignment.json",
+     "row": "results/100/lines_low_score"
+    },
+    "n101": {
+     "id": "data/manifests/gdc/alignment.json",
+     "source": "data/manifests/gdc/alignment.json",
+     "row": "results/101/lines_low_score"
+    },
+    "n102": {
+     "id": "data/manifests/gdc/alignment.json",
+     "source": "data/manifests/gdc/alignment.json",
+     "row": "results/102/lines_low_score"
+    },
+    "n103": {
+     "id": "data/manifests/gdc/alignment.json",
+     "source": "data/manifests/gdc/alignment.json",
+     "row": "results/103/lines_low_score"
+    },
+    "n104": {
+     "id": "data/manifests/gdc/alignment.json",
+     "source": "data/manifests/gdc/alignment.json",
+     "row": "results/104/lines_low_score"
+    },
+    "n105": {
+     "id": "data/manifests/gdc/alignment.json",
+     "source": "data/manifests/gdc/alignment.json",
+     "row": "results/105/lines_low_score"
+    }
+   }
+  },
+  {
+   "name": "gdc_lines",
+   "formula": "x",
+   "inputs": {
+    "x": {
+     "id": "data/manifests/gdc/gdc_v1.json",
+     "source": "data/manifests/gdc/gdc_v1.json",
+     "row": "lines"
+    }
+   }
+  },
+  {
+   "name": "gdc_captures",
+   "formula": "x",
+   "inputs": {
+    "x": {
+     "id": "data/manifests/gdc/alignment.json",
+     "source": "data/manifests/gdc/alignment.json",
+     "row": "captures"
+    }
+   }
+  },
+  {
+   "name": "gdc_crops",
+   "formula": "x",
+   "inputs": {
+    "x": {
+     "id": "data/manifests/processed/eval_crops.json",
+     "source": "data/manifests/processed/eval_crops.json",
+     "row": "gdc_test/count"
+    }
+   }
+  },
+  {
+   "name": "gdc_scan_out_of_charset",
+   "formula": "n0 + n1 + n2 + n3 + n4 + n5 + n6 + n7 + n8 + n9 + n10 + n11 + n12 + n13 + n14 + n15 + n16 + n17 + n18 + n19 + n20 + n21 + n22 + n23 + n24 + n25 + n26 + n27",
+   "inputs": {
+    "n0": {
+     "id": "data/manifests/gdc_scan/alignment.json",
+     "source": "data/manifests/gdc_scan/alignment.json",
+     "row": "results/0/lines_out_of_charset"
+    },
+    "n1": {
+     "id": "data/manifests/gdc_scan/alignment.json",
+     "source": "data/manifests/gdc_scan/alignment.json",
+     "row": "results/1/lines_out_of_charset"
+    },
+    "n2": {
+     "id": "data/manifests/gdc_scan/alignment.json",
+     "source": "data/manifests/gdc_scan/alignment.json",
+     "row": "results/2/lines_out_of_charset"
+    },
+    "n3": {
+     "id": "data/manifests/gdc_scan/alignment.json",
+     "source": "data/manifests/gdc_scan/alignment.json",
+     "row": "results/3/lines_out_of_charset"
+    },
+    "n4": {
+     "id": "data/manifests/gdc_scan/alignment.json",
+     "source": "data/manifests/gdc_scan/alignment.json",
+     "row": "results/4/lines_out_of_charset"
+    },
+    "n5": {
+     "id": "data/manifests/gdc_scan/alignment.json",
+     "source": "data/manifests/gdc_scan/alignment.json",
+     "row": "results/5/lines_out_of_charset"
+    },
+    "n6": {
+     "id": "data/manifests/gdc_scan/alignment.json",
+     "source": "data/manifests/gdc_scan/alignment.json",
+     "row": "results/6/lines_out_of_charset"
+    },
+    "n7": {
+     "id": "data/manifests/gdc_scan/alignment.json",
+     "source": "data/manifests/gdc_scan/alignment.json",
+     "row": "results/7/lines_out_of_charset"
+    },
+    "n8": {
+     "id": "data/manifests/gdc_scan/alignment.json",
+     "source": "data/manifests/gdc_scan/alignment.json",
+     "row": "results/8/lines_out_of_charset"
+    },
+    "n9": {
+     "id": "data/manifests/gdc_scan/alignment.json",
+     "source": "data/manifests/gdc_scan/alignment.json",
+     "row": "results/9/lines_out_of_charset"
+    },
+    "n10": {
+     "id": "data/manifests/gdc_scan/alignment.json",
+     "source": "data/manifests/gdc_scan/alignment.json",
+     "row": "results/10/lines_out_of_charset"
+    },
+    "n11": {
+     "id": "data/manifests/gdc_scan/alignment.json",
+     "source": "data/manifests/gdc_scan/alignment.json",
+     "row": "results/11/lines_out_of_charset"
+    },
+    "n12": {
+     "id": "data/manifests/gdc_scan/alignment.json",
+     "source": "data/manifests/gdc_scan/alignment.json",
+     "row": "results/12/lines_out_of_charset"
+    },
+    "n13": {
+     "id": "data/manifests/gdc_scan/alignment.json",
+     "source": "data/manifests/gdc_scan/alignment.json",
+     "row": "results/13/lines_out_of_charset"
+    },
+    "n14": {
+     "id": "data/manifests/gdc_scan/alignment.json",
+     "source": "data/manifests/gdc_scan/alignment.json",
+     "row": "results/14/lines_out_of_charset"
+    },
+    "n15": {
+     "id": "data/manifests/gdc_scan/alignment.json",
+     "source": "data/manifests/gdc_scan/alignment.json",
+     "row": "results/15/lines_out_of_charset"
+    },
+    "n16": {
+     "id": "data/manifests/gdc_scan/alignment.json",
+     "source": "data/manifests/gdc_scan/alignment.json",
+     "row": "results/16/lines_out_of_charset"
+    },
+    "n17": {
+     "id": "data/manifests/gdc_scan/alignment.json",
+     "source": "data/manifests/gdc_scan/alignment.json",
+     "row": "results/17/lines_out_of_charset"
+    },
+    "n18": {
+     "id": "data/manifests/gdc_scan/alignment.json",
+     "source": "data/manifests/gdc_scan/alignment.json",
+     "row": "results/18/lines_out_of_charset"
+    },
+    "n19": {
+     "id": "data/manifests/gdc_scan/alignment.json",
+     "source": "data/manifests/gdc_scan/alignment.json",
+     "row": "results/19/lines_out_of_charset"
+    },
+    "n20": {
+     "id": "data/manifests/gdc_scan/alignment.json",
+     "source": "data/manifests/gdc_scan/alignment.json",
+     "row": "results/20/lines_out_of_charset"
+    },
+    "n21": {
+     "id": "data/manifests/gdc_scan/alignment.json",
+     "source": "data/manifests/gdc_scan/alignment.json",
+     "row": "results/21/lines_out_of_charset"
+    },
+    "n22": {
+     "id": "data/manifests/gdc_scan/alignment.json",
+     "source": "data/manifests/gdc_scan/alignment.json",
+     "row": "results/22/lines_out_of_charset"
+    },
+    "n23": {
+     "id": "data/manifests/gdc_scan/alignment.json",
+     "source": "data/manifests/gdc_scan/alignment.json",
+     "row": "results/23/lines_out_of_charset"
+    },
+    "n24": {
+     "id": "data/manifests/gdc_scan/alignment.json",
+     "source": "data/manifests/gdc_scan/alignment.json",
+     "row": "results/24/lines_out_of_charset"
+    },
+    "n25": {
+     "id": "data/manifests/gdc_scan/alignment.json",
+     "source": "data/manifests/gdc_scan/alignment.json",
+     "row": "results/25/lines_out_of_charset"
+    },
+    "n26": {
+     "id": "data/manifests/gdc_scan/alignment.json",
+     "source": "data/manifests/gdc_scan/alignment.json",
+     "row": "results/26/lines_out_of_charset"
+    },
+    "n27": {
+     "id": "data/manifests/gdc_scan/alignment.json",
+     "source": "data/manifests/gdc_scan/alignment.json",
+     "row": "results/27/lines_out_of_charset"
+    }
+   }
+  },
+  {
+   "name": "gdc_scan_low_score",
+   "formula": "n0 + n1 + n2 + n3 + n4 + n5 + n6 + n7 + n8 + n9 + n10 + n11 + n12 + n13 + n14 + n15 + n16 + n17 + n18 + n19 + n20 + n21 + n22 + n23 + n24 + n25 + n26 + n27",
+   "inputs": {
+    "n0": {
+     "id": "data/manifests/gdc_scan/alignment.json",
+     "source": "data/manifests/gdc_scan/alignment.json",
+     "row": "results/0/lines_low_score"
+    },
+    "n1": {
+     "id": "data/manifests/gdc_scan/alignment.json",
+     "source": "data/manifests/gdc_scan/alignment.json",
+     "row": "results/1/lines_low_score"
+    },
+    "n2": {
+     "id": "data/manifests/gdc_scan/alignment.json",
+     "source": "data/manifests/gdc_scan/alignment.json",
+     "row": "results/2/lines_low_score"
+    },
+    "n3": {
+     "id": "data/manifests/gdc_scan/alignment.json",
+     "source": "data/manifests/gdc_scan/alignment.json",
+     "row": "results/3/lines_low_score"
+    },
+    "n4": {
+     "id": "data/manifests/gdc_scan/alignment.json",
+     "source": "data/manifests/gdc_scan/alignment.json",
+     "row": "results/4/lines_low_score"
+    },
+    "n5": {
+     "id": "data/manifests/gdc_scan/alignment.json",
+     "source": "data/manifests/gdc_scan/alignment.json",
+     "row": "results/5/lines_low_score"
+    },
+    "n6": {
+     "id": "data/manifests/gdc_scan/alignment.json",
+     "source": "data/manifests/gdc_scan/alignment.json",
+     "row": "results/6/lines_low_score"
+    },
+    "n7": {
+     "id": "data/manifests/gdc_scan/alignment.json",
+     "source": "data/manifests/gdc_scan/alignment.json",
+     "row": "results/7/lines_low_score"
+    },
+    "n8": {
+     "id": "data/manifests/gdc_scan/alignment.json",
+     "source": "data/manifests/gdc_scan/alignment.json",
+     "row": "results/8/lines_low_score"
+    },
+    "n9": {
+     "id": "data/manifests/gdc_scan/alignment.json",
+     "source": "data/manifests/gdc_scan/alignment.json",
+     "row": "results/9/lines_low_score"
+    },
+    "n10": {
+     "id": "data/manifests/gdc_scan/alignment.json",
+     "source": "data/manifests/gdc_scan/alignment.json",
+     "row": "results/10/lines_low_score"
+    },
+    "n11": {
+     "id": "data/manifests/gdc_scan/alignment.json",
+     "source": "data/manifests/gdc_scan/alignment.json",
+     "row": "results/11/lines_low_score"
+    },
+    "n12": {
+     "id": "data/manifests/gdc_scan/alignment.json",
+     "source": "data/manifests/gdc_scan/alignment.json",
+     "row": "results/12/lines_low_score"
+    },
+    "n13": {
+     "id": "data/manifests/gdc_scan/alignment.json",
+     "source": "data/manifests/gdc_scan/alignment.json",
+     "row": "results/13/lines_low_score"
+    },
+    "n14": {
+     "id": "data/manifests/gdc_scan/alignment.json",
+     "source": "data/manifests/gdc_scan/alignment.json",
+     "row": "results/14/lines_low_score"
+    },
+    "n15": {
+     "id": "data/manifests/gdc_scan/alignment.json",
+     "source": "data/manifests/gdc_scan/alignment.json",
+     "row": "results/15/lines_low_score"
+    },
+    "n16": {
+     "id": "data/manifests/gdc_scan/alignment.json",
+     "source": "data/manifests/gdc_scan/alignment.json",
+     "row": "results/16/lines_low_score"
+    },
+    "n17": {
+     "id": "data/manifests/gdc_scan/alignment.json",
+     "source": "data/manifests/gdc_scan/alignment.json",
+     "row": "results/17/lines_low_score"
+    },
+    "n18": {
+     "id": "data/manifests/gdc_scan/alignment.json",
+     "source": "data/manifests/gdc_scan/alignment.json",
+     "row": "results/18/lines_low_score"
+    },
+    "n19": {
+     "id": "data/manifests/gdc_scan/alignment.json",
+     "source": "data/manifests/gdc_scan/alignment.json",
+     "row": "results/19/lines_low_score"
+    },
+    "n20": {
+     "id": "data/manifests/gdc_scan/alignment.json",
+     "source": "data/manifests/gdc_scan/alignment.json",
+     "row": "results/20/lines_low_score"
+    },
+    "n21": {
+     "id": "data/manifests/gdc_scan/alignment.json",
+     "source": "data/manifests/gdc_scan/alignment.json",
+     "row": "results/21/lines_low_score"
+    },
+    "n22": {
+     "id": "data/manifests/gdc_scan/alignment.json",
+     "source": "data/manifests/gdc_scan/alignment.json",
+     "row": "results/22/lines_low_score"
+    },
+    "n23": {
+     "id": "data/manifests/gdc_scan/alignment.json",
+     "source": "data/manifests/gdc_scan/alignment.json",
+     "row": "results/23/lines_low_score"
+    },
+    "n24": {
+     "id": "data/manifests/gdc_scan/alignment.json",
+     "source": "data/manifests/gdc_scan/alignment.json",
+     "row": "results/24/lines_low_score"
+    },
+    "n25": {
+     "id": "data/manifests/gdc_scan/alignment.json",
+     "source": "data/manifests/gdc_scan/alignment.json",
+     "row": "results/25/lines_low_score"
+    },
+    "n26": {
+     "id": "data/manifests/gdc_scan/alignment.json",
+     "source": "data/manifests/gdc_scan/alignment.json",
+     "row": "results/26/lines_low_score"
+    },
+    "n27": {
+     "id": "data/manifests/gdc_scan/alignment.json",
+     "source": "data/manifests/gdc_scan/alignment.json",
+     "row": "results/27/lines_low_score"
+    }
+   }
+  },
+  {
+   "name": "gdc_scan_ncc_median",
+   "formula": "(a + b) / 2",
+   "inputs": {
+    "a": {
+     "id": "data/manifests/gdc_scan/alignment.json",
+     "source": "data/manifests/gdc_scan/alignment.json",
+     "row": "results/9/ncc_refined"
+    },
+    "b": {
+     "id": "data/manifests/gdc_scan/alignment.json",
+     "source": "data/manifests/gdc_scan/alignment.json",
+     "row": "results/17/ncc_refined"
+    }
+   },
+   "note": "the two middle values of the 28 pages' ncc_refined"
+  },
+  {
+   "name": "gdc_scan_ncc_min",
+   "formula": "min(n0, n1, n2, n3, n4, n5, n6, n7, n8, n9, n10, n11, n12, n13, n14, n15, n16, n17, n18, n19, n20, n21, n22, n23, n24, n25, n26, n27)",
+   "inputs": {
+    "n0": {
+     "id": "data/manifests/gdc_scan/alignment.json",
+     "source": "data/manifests/gdc_scan/alignment.json",
+     "row": "results/0/ncc_refined"
+    },
+    "n1": {
+     "id": "data/manifests/gdc_scan/alignment.json",
+     "source": "data/manifests/gdc_scan/alignment.json",
+     "row": "results/1/ncc_refined"
+    },
+    "n2": {
+     "id": "data/manifests/gdc_scan/alignment.json",
+     "source": "data/manifests/gdc_scan/alignment.json",
+     "row": "results/2/ncc_refined"
+    },
+    "n3": {
+     "id": "data/manifests/gdc_scan/alignment.json",
+     "source": "data/manifests/gdc_scan/alignment.json",
+     "row": "results/3/ncc_refined"
+    },
+    "n4": {
+     "id": "data/manifests/gdc_scan/alignment.json",
+     "source": "data/manifests/gdc_scan/alignment.json",
+     "row": "results/4/ncc_refined"
+    },
+    "n5": {
+     "id": "data/manifests/gdc_scan/alignment.json",
+     "source": "data/manifests/gdc_scan/alignment.json",
+     "row": "results/5/ncc_refined"
+    },
+    "n6": {
+     "id": "data/manifests/gdc_scan/alignment.json",
+     "source": "data/manifests/gdc_scan/alignment.json",
+     "row": "results/6/ncc_refined"
+    },
+    "n7": {
+     "id": "data/manifests/gdc_scan/alignment.json",
+     "source": "data/manifests/gdc_scan/alignment.json",
+     "row": "results/7/ncc_refined"
+    },
+    "n8": {
+     "id": "data/manifests/gdc_scan/alignment.json",
+     "source": "data/manifests/gdc_scan/alignment.json",
+     "row": "results/8/ncc_refined"
+    },
+    "n9": {
+     "id": "data/manifests/gdc_scan/alignment.json",
+     "source": "data/manifests/gdc_scan/alignment.json",
+     "row": "results/9/ncc_refined"
+    },
+    "n10": {
+     "id": "data/manifests/gdc_scan/alignment.json",
+     "source": "data/manifests/gdc_scan/alignment.json",
+     "row": "results/10/ncc_refined"
+    },
+    "n11": {
+     "id": "data/manifests/gdc_scan/alignment.json",
+     "source": "data/manifests/gdc_scan/alignment.json",
+     "row": "results/11/ncc_refined"
+    },
+    "n12": {
+     "id": "data/manifests/gdc_scan/alignment.json",
+     "source": "data/manifests/gdc_scan/alignment.json",
+     "row": "results/12/ncc_refined"
+    },
+    "n13": {
+     "id": "data/manifests/gdc_scan/alignment.json",
+     "source": "data/manifests/gdc_scan/alignment.json",
+     "row": "results/13/ncc_refined"
+    },
+    "n14": {
+     "id": "data/manifests/gdc_scan/alignment.json",
+     "source": "data/manifests/gdc_scan/alignment.json",
+     "row": "results/14/ncc_refined"
+    },
+    "n15": {
+     "id": "data/manifests/gdc_scan/alignment.json",
+     "source": "data/manifests/gdc_scan/alignment.json",
+     "row": "results/15/ncc_refined"
+    },
+    "n16": {
+     "id": "data/manifests/gdc_scan/alignment.json",
+     "source": "data/manifests/gdc_scan/alignment.json",
+     "row": "results/16/ncc_refined"
+    },
+    "n17": {
+     "id": "data/manifests/gdc_scan/alignment.json",
+     "source": "data/manifests/gdc_scan/alignment.json",
+     "row": "results/17/ncc_refined"
+    },
+    "n18": {
+     "id": "data/manifests/gdc_scan/alignment.json",
+     "source": "data/manifests/gdc_scan/alignment.json",
+     "row": "results/18/ncc_refined"
+    },
+    "n19": {
+     "id": "data/manifests/gdc_scan/alignment.json",
+     "source": "data/manifests/gdc_scan/alignment.json",
+     "row": "results/19/ncc_refined"
+    },
+    "n20": {
+     "id": "data/manifests/gdc_scan/alignment.json",
+     "source": "data/manifests/gdc_scan/alignment.json",
+     "row": "results/20/ncc_refined"
+    },
+    "n21": {
+     "id": "data/manifests/gdc_scan/alignment.json",
+     "source": "data/manifests/gdc_scan/alignment.json",
+     "row": "results/21/ncc_refined"
+    },
+    "n22": {
+     "id": "data/manifests/gdc_scan/alignment.json",
+     "source": "data/manifests/gdc_scan/alignment.json",
+     "row": "results/22/ncc_refined"
+    },
+    "n23": {
+     "id": "data/manifests/gdc_scan/alignment.json",
+     "source": "data/manifests/gdc_scan/alignment.json",
+     "row": "results/23/ncc_refined"
+    },
+    "n24": {
+     "id": "data/manifests/gdc_scan/alignment.json",
+     "source": "data/manifests/gdc_scan/alignment.json",
+     "row": "results/24/ncc_refined"
+    },
+    "n25": {
+     "id": "data/manifests/gdc_scan/alignment.json",
+     "source": "data/manifests/gdc_scan/alignment.json",
+     "row": "results/25/ncc_refined"
+    },
+    "n26": {
+     "id": "data/manifests/gdc_scan/alignment.json",
+     "source": "data/manifests/gdc_scan/alignment.json",
+     "row": "results/26/ncc_refined"
+    },
+    "n27": {
+     "id": "data/manifests/gdc_scan/alignment.json",
+     "source": "data/manifests/gdc_scan/alignment.json",
+     "row": "results/27/ncc_refined"
+    }
+   }
+  },
+  {
+   "name": "sample_val_pages",
+   "formula": "x",
+   "inputs": {
+    "x": {
+     "id": "data/manifests/processed/hiertext.json",
+     "source": "data/manifests/processed/hiertext.json",
+     "row": "splits/validation/pages"
+    }
+   }
+  },
+  {
+   "name": "sample_phase5_pages",
+   "formula": "x",
+   "inputs": {
+    "x": {
+     "id": "GW-BASE-006",
+     "source": "reports/baselines/README.md#coverage",
+     "value": "400"
+    }
+   }
+  },
+  {
+   "name": "sample_baseline_lines",
+   "formula": "x",
+   "inputs": {
+    "x": {
+     "id": "GW-BASE-006",
+     "source": "reports/baselines/README.md#coverage",
+     "value": "10,000"
+    }
+   }
+  },
+  {
+   "name": "sample_profile_pages",
+   "formula": "x",
+   "inputs": {
+    "x": {
+     "id": "GW-EFF-009",
+     "source": "reports/efficiency/phase16/pareto.md#pages",
+     "value": "110"
+    }
+   }
+  },
+  {
+   "name": "sample_export_lines",
+   "formula": "x",
+   "inputs": {
+    "x": {
+     "id": "GW-EFF-009",
+     "source": "reports/efficiency/phase16/pareto.md#lines",
+     "value": "5,000"
+    }
+   }
+  },
+  {
+   "name": "sample_slice_pages",
+   "formula": "x",
+   "inputs": {
+    "x": {
+     "id": "GW-DATA-022",
+     "source": "reports/synthetic/phase12_comparison.md",
+     "value": "104"
+    }
+   }
+  },
+  {
+   "name": "sample_odb_pages",
+   "formula": "x",
+   "inputs": {
+    "x": {
+     "id": "GW-E2E-007",
+     "source": "reports/external/end_to_end.md#track-strict",
+     "row": [
+      "GW-E2E-007",
+      "omnidocbench_test (subset100)"
+     ],
+     "value": "100"
+    }
+   }
+  }
+ ]
+}
