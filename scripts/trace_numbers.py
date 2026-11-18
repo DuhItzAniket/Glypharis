@@ -1,25 +1,28 @@
 r"""Check that every number in the paper package traces to a report (Phase 21, plan item 9).
 
     python scripts/trace_numbers.py --doc research/paper/results.md [--all] [--hints]
-    python scripts/trace_numbers.py [--mutation-audit --seed 20261118]
+    python scripts/trace_numbers.py [--seed 20261118]
     python scripts/trace_numbers.py --check
 
 The documents are ``research/paper/*.md``, ``MODEL_CARD.md`` and ``DATASETS.md``.
 
 ``--doc`` is for drafting: it checks the named documents, prints every number it cannot resolve as
 ``file:line:column  number  reason``, and writes nothing. ``--all`` also prints the resolved
-numbers, ``--hints`` adds where else a number with the same digits is printed. Without ``--doc`` the
-script checks all documents and writes ``reports/paper_trace/derived.json``, ``trace.json`` and
-``trace.md``, or nothing at all if anything fails. ``--check`` writes nothing: everything must pass
-and the three files must equal what would be written, after turning CRLF into LF. It repeats the
-mutation audit when ``trace.json`` records one. Exit status 0 on success, 1 otherwise.
+numbers, ``--hints`` adds where else a number with the same digits is printed, and
+``--mutation-audit`` adds the audits. Without ``--doc`` the script checks all documents, always runs
+the audits, and writes ``reports/paper_trace/derived.json``, ``trace.json`` and ``trace.md``, or
+nothing at all if anything fails. ``--check`` writes nothing: everything must pass and the three
+files must equal what would be written, after turning CRLF into LF. It repeats the audits with the
+seed ``trace.json`` records, and fails if that file records none. Exit status 0 on success, 1
+otherwise.
 
 How a number is resolved
 ========================
 
 The directives are in the docstring of `numtrace.py`. The first rule that applies decides:
 
-1. ``derived``. The number must equal the named entry of this document's trace file.
+1. ``derived``. The number must equal the named entry of this document's trace file. An interval
+   pin (see below) covers every number of the interval it is written on.
 2. A ``trace-table`` binding. The number must match the report cells the binding selects.
 3. A constant in the trace file, or in ``DATASETS.md`` a published figure, found by value and
    context.
@@ -41,37 +44,53 @@ has said where the numbers come from, and this is what makes anchors effective. 
 a file named without its folder is looked for in the folders named around it, and a folder or an ID
 named alone brings in what the registry's Report cell lists for it.
 
-Three checks keep a number from passing by chance somewhere in a long report:
+Finding the digits in a report is not enough. These checks keep a number from passing on the wrong
+line of a report:
 
 - A number with fewer than 3 significant digits resolves only in a file named by a directive, its
   block or its caption.
-- A table cell outside any binding must be on a source line that also holds another number of its
-  row or its column, or in a source table that holds two of them (only those with at least 3
-  significant digits count; a cell with none is not checked this way). A table assembled from
-  scattered lines needs ``trace-table``.
-- A number in prose must be on a source line that shares a word (three letters or more, common words
-  aside) with the 80 characters around it, or holds a number from the lines around it. In JSON and
-  YAML the key path stands for the line. If the wording cannot share one, pin the number: a derived
-  entry with the formula ``x`` and one input ``x`` selected by ``row`` and ``header``.
+- Every number and every interval outside a binding or a pin must fit its source row. The words of
+  each source row are its text and its section heading (for JSON and YAML, its key path), and words
+  shared by all rows of the source do not count. The number's context is its sentence, where the
+  word next to it counts most (the next one a quarter, then a ninth), or for a table cell the text
+  of its row plus its column header; the paragraph, the caption and the headings above break ties.
+  Words beyond a comma or an ``and``, ``against`` or ``versus`` count far less. The row must be
+  the one the context names best, among all the sources in scope, and among equals
+  the one with the fewest distinctive words left unnamed. So in ``GLYPHARIS 25.16% against PP-OCRv6
+  small 42.93%`` each number fits the row named beside it, and exchanging the two fails.
+- A table cell must also not fit another column of its source row better than its own, and if its
+  row and the source row both name GW IDs, they must share one.
+- When the context names no row at all, a table cell passes only if another number of its row is on
+  the same source line, and a number in prose does not pass.
 
-The last two do not apply to a source narrowed by its anchor to at most 5 numbers.
+A source narrowed by its anchor to a single row or key needs no words of its own, unless another
+source in scope fits the context better. To state a number the context cannot tie to its row, use
+``trace-table`` for a table and a pin for prose: a derived entry with the formula ``x`` and one
+input ``x`` selected by ``row`` and ``header``. If the selected cell holds ``v [lo, hi]``, the entry
+pins the whole interval; write ``<!-- derived: name -->`` before its first number.
 
 Sources must be under ``reports/``, ``data/manifests/`` or ``configs/``. ``research/findings.md``,
 the research log and the paper itself never count.
 
-The ID must be registered as done in ``research/experiments.md`` and tied to the report by one of:
-its ``Generated by`` line (``GW-EFF-006 to 011`` is a range) or JSON run field; the report's path;
-the map `derive_values.REPORT_IDS`; the registry's Report cell; or the ID written in the bound row,
-the anchored section or, for a whole-file source, anywhere in the file. A path stands in for the ID
-only under ``data/manifests/`` or ``configs/``, for a report that names no experiment at all, or, in
-rows bound with ``trace-table`` that name no experiment, for a report in
-`derive_values.AGGREGATE_REPORTS`: the compute ledger's phase totals belong to no single run.
+The ID must be registered as done in ``research/experiments.md``. A report is tied to an ID by its
+``Generated by`` line or title (``GW-EFF-006 to 011`` is a range), its JSON run field, its path or
+the map `derive_values.REPORT_IDS`; the registry's Report cell brings a file into scope but ties
+nothing. A directive may also cite an ID written only inside the source. Each number is then
+credited by `derive_values.Repo.credit`: to the cited ID if the matched row names it, to the
+experiments in the row's label if the row has one, else to the cited ID if the report belongs to it
+or a heading above the number names it, else to the report's own experiment. A number with none of
+these does not resolve. A path stands in for the ID only under ``data/manifests/`` or ``configs/``,
+for a report that names no experiment at all, or, in rows bound with ``trace-table`` that name no
+experiment, for a report in `derive_values.AGGREGATE_REPORTS`: the compute ledger's phase totals
+belong to no single run.
 
 A value matches when it is within half a unit of the printed last digit, inclusive, and:
 
 - it is not printed more finely than the source (``6.30`` does not match ``6.3``). JSON numbers are
   exempt because JSON drops trailing zeros;
-- signs agree when the document prints one; an unsigned number is compared by size;
+- signs agree when the document prints one. A table cell and every part of an interval must also
+  carry the minus sign of a negative source value. In prose an unsigned number is otherwise compared
+  by size, because ``lower by 17.50 points`` is correct;
 - units do not conflict. ``%``, ``points`` and ``pp`` are one family. ``K`` and ``M`` must be on
   both sides. Any other change of unit needs a derived value;
 - ×100 applies only to the JSON files and keys in `FRACTION_JSON`, and only when the number has a
@@ -110,7 +129,7 @@ needed while drafting::
 ``document`` (required) is the document's path from the repository root.
 
 ``constants`` are fixed settings of the protocol, not results: bootstrap resamples, thresholds,
-targets, bin edges.
+targets, bin edges. Anything a run measured belongs in a directive or a derived entry.
 
 - ``value``: the number as a string; one number, with its unit if it has one.
 - ``context``: a case-insensitive regular expression. The constant applies to a number of this value
@@ -119,7 +138,8 @@ targets, bin edges.
 - ``source``: ``path`` or ``path#anchor`` under ``docs/``, ``configs/``, ``reports/``,
   ``data/manifests/`` or ``research/`` (not findings, the log or the paper). The value must be
   there.
-- ``id`` (optional): an experiment ID, if a run fixed the value. The path stands in otherwise.
+- ``id``: the experiment ID, required for a source under ``reports/`` that names experiments.
+  Elsewhere the path stands in.
 - ``note`` (optional): free text.
 
 ``published`` (``DATASETS.md`` only) lists figures from a dataset's authors: ``value`` and
@@ -139,15 +159,29 @@ targets, bin edges.
 The printed number must round from the computed value, and may be no finer than the inputs allow
 (see `derive_values`).
 
+An interval pin is an entry whose formula is its one input and whose ``row`` and ``header`` select a
+cell holding ``v [lo, hi]`` (in JSON, an object with ``value``, ``low`` and ``high``). The document
+writes ``<!-- derived: name --> 25.16% [23.44, 26.79]``. Every part is compared with its part of
+the cell, under the matching rules above.
+
 Lints and the audit
 ===================
 
 Failures: personal paths and email addresses; sentences saying Phase 22 or 23 happened or that the
-model is released; SOTA wording outside quotation marks and block quotes. The word ``best`` is
-listed in ``trace.md`` for a person to read and does not fail.
+model is released (a hedge cancels the claim only if it comes before it); SOTA wording outside
+quotation marks and block quotes, also across a line break; a line that starts with a comment and
+goes on with text, which Markdown renders as raw HTML. The word ``best`` is listed in ``trace.md``
+for a person to read and does not fail.
 
-``--mutation-audit --seed N`` changes sampled resolved numbers by 1 to 3 units of their last digit
-and counts how many still resolve. The target is at most 5% per document; a document above it fails.
+Two audits run on every full run and with ``--check``. Each works on sampled resolved numbers and
+counts the changes that still resolve. A document above either target fails.
+
+- Digit audit: a number moves by 1 to 3 units of its last digit. Target: at most 5% per document.
+- Substitution audit: a number, or a whole ``v [lo, hi]``, is replaced by a value printed on another
+  row of the same source, rounded to the printed precision. Values that also sit on the right row
+  are not drawn, so this measures wrong-row errors and not wrong-column ones. Target: at most 5% per
+  document, once every number is bound, pinned or named by its context. Numbers that do not resolve
+  are not sampled.
 """
 
 from __future__ import annotations
@@ -160,9 +194,9 @@ import random
 import re
 import sys
 from collections import Counter
-from collections.abc import Iterable, Sequence
+from collections.abc import Callable, Iterable, Sequence
 from dataclasses import dataclass, field, replace
-from decimal import Decimal
+from decimal import ROUND_HALF_EVEN, Decimal
 from fractions import Fraction
 from pathlib import Path
 from typing import Any, Final
@@ -176,10 +210,17 @@ NARROW: Final = ("directive", "block", "caption")
 UNRESOLVED: Final = "unresolved"
 MIN_SIGNIFICANT: Final = 3
 CONTEXT_CHARS: Final = 80
-SMALL_SOURCE: Final = 5  # numbers; a source this narrow cannot match by chance
+PROSE_CELL_WORDS: Final = 4  # a table cell with this many words is read as prose
+_FAR: Final = 1000  # words at this place or beyond are not in the number's clause
+_CLAUSE_BREAK: Final = re.compile(
+    r"[;:]|,(?=\s+[^\W\d])|\b(?:and|against|versus|vs|while|whereas|but|compared)\b"
+)
 AUDIT_TARGET: Final = Fraction(5, 100)
+SUBSTITUTION_TARGET: Final = Fraction(5, 100)
 AUDIT_MUTATIONS: Final = 400
 AUDIT_UNITS: Final = (-3, -2, -1, 1, 2, 3)
+SUBSTITUTION_DRAWS: Final = 3  # per number or interval
+SUBSTITUTION_TRIES: Final = 12  # values looked at for one draw
 DEFAULT_SEED: Final = 20261118
 
 _PERCENT: Final = frozenset({"%", "points", "pp"})
@@ -219,16 +260,16 @@ FRACTION_JSON: Final[tuple[tuple[str, frozenset[str]], ...]] = (
     ("reports/robustness/*.json", frozenset({"mean", "worst_level"})),
 )
 
-# Too common to show that a sentence and a source line are about the same thing.
-_WORD: Final = re.compile(r"[a-z]{3,}")
-_COMMON_WORDS: Final = frozenset(
-    _WORD.findall(
-        "about all also and any are both but can column each five for four from had has have into "
-        "its less line lines may mean more most not number numbers one only over page pages per "
-        "rate row rows set sets than that the their then these this those three table test two "
-        "under value values was were when where which while with"
+# Words that say nothing about which row is meant.
+_LABEL_WORD: Final = re.compile(r"[a-z][a-z0-9]{2,}|[a-z][0-9]")
+_STOP_WORDS: Final = frozenset(
+    _LABEL_WORD.findall(
+        "about all also and any are both but can each for from had has have into its may more most "
+        "not one only over per than that the their then these this those was were when where "
+        "which while with"
     )
 )
+_SAME_WORD: Final = {"val": "validation"}
 
 _COMMENT: Final = re.compile(r"<!--.*?-->", re.S)
 _FENCE: Final = re.compile(r"^[ \t>]*(`{3,}|~{3,})")
@@ -243,7 +284,7 @@ _SENTENCE_END: Final = re.compile(
 _QUOTED: Final = re.compile(r"\"[^\"\n]*\"|\u201c[^\u201d]*\u201d")
 
 _PERSONAL_PATH: Final = re.compile(
-    r"\b[A-Za-z]:[\\/]+Users[\\/]|(?<![\w.-])/(?:c/Users|Users|home)/[\w.-]+", re.I
+    r"\b[A-Za-z]:[\\/]+Users[\\/]|(?<![\w.-])(?:/mnt)?/(?:[a-z]/Users|Users|home)/[\w.-]+", re.I
 )
 # The last label must start with a letter: ``F1@0.5`` is a metric name (see `numtrace`).
 _EMAIL: Final = re.compile(r"[\w.+-]+@[\w-]+(?:\.[\w-]+)*\.[A-Za-z][\w-]*")
@@ -318,8 +359,78 @@ def _signed(value: nt.ReportValue) -> bool:
     return value.raw[:1] in ("-", "\u2212") or value.value < 0
 
 
+def _keeps_minus(token: nt.NumberToken, value: nt.ReportValue) -> bool:
+    """False when a part of an interval drops the minus sign of its source value."""
+    return bool(token.sign) or not _signed(value)
+
+
+def _label_word(word: str) -> str:
+    if len(word) > 3 and word.endswith("s") and not word.endswith("ss"):
+        word = word[:-1]
+    return _SAME_WORD.get(word, word)
+
+
+def label_positions(text: str) -> list[tuple[int, str]]:
+    """The label words of a text with their offsets, in order: IDs whole, plurals normalized."""
+    found = [(m.start(), f"gw-{m[1]}-{m[2]}".lower()) for m in dv.KEY_ID.finditer(text)]
+    rest = dv.KEY_ID.sub(lambda m: " " * len(m[0]), text).lower().replace("_", " ")
+    for match in _LABEL_WORD.finditer(rest):
+        if match[0] not in _STOP_WORDS:
+            found.append((match.start(), _label_word(match[0])))
+    return sorted(found)
+
+
+def label_words(text: str) -> frozenset[str]:
+    return frozenset(word for _, word in label_positions(text))
+
+
+# A context: each label word with its place relative to the number, counted in words (negative
+# before it, positive after it). Words with no particular place, as in a table row, have place 0.
+# Words in another clause of the sentence have places beyond `_FAR` and count far less.
+Context = tuple[tuple[str, int], ...]
+
+
+def _places(text: str, offset: int) -> Context:
+    """The label words of a sentence with their places relative to an offset."""
+    words = label_positions(text)
+    before = sum(1 for at, _ in words if at < offset)
+    breaks = [m.start() for m in _CLAUSE_BREAK.finditer(text)]
+    clause = bisect.bisect_right(breaks, offset)
+    places: list[tuple[str, int]] = []
+    for index, (at, word) in enumerate(words):
+        place = index - before if index < before else index - before + 1
+        if bisect.bisect_right(breaks, at) != clause:
+            place += _FAR if place > 0 else -_FAR
+        places.append((word, place))
+    return tuple(places)
+
+
+def _weights(context: Context, keep: Callable[[str], bool]) -> dict[str, Fraction]:
+    """How much each kept word counts: the nearest on either side 1, the next 1/4, then 1/9.
+
+    Distance is counted over the kept words only, so words every row shares do not push a name
+    away from its number. A word in another clause counts a sixteenth of that.
+    """
+    weights: dict[str, Fraction] = {}
+    kept = sorted((place, word) for word, place in context if keep(word))
+    before = [(place, word) for place, word in reversed(kept) if place < 0]
+    after = [(place, word) for place, word in kept if place > 0]
+    for side in (before, after):
+        for distance, (place, word) in enumerate(side, 1):
+            weight = Fraction(1, distance * distance)
+            if abs(place) >= _FAR:
+                weight /= 16
+            weights[word] = max(weights.get(word, Fraction(0)), weight)
+    for place, word in kept:
+        if place == 0:
+            weights[word] = Fraction(1)
+    return weights
+
+
 def _conflict(token: nt.NumberToken, value: nt.ReportValue, kind: str, scale: int) -> str | None:
     """Why a value close enough to the number still does not match it, or None."""
+    if token.cell is not None and token.cell.row >= 0 and not token.sign and _signed(value):
+        return f"the source is negative ({value.file}:{value.line})"
     if token.sign == "-" and not _signed(value):
         return f"the source has no minus sign ({value.file}:{value.line})"
     if token.sign == "+" and _signed(value):
@@ -378,9 +489,12 @@ def _group(value: nt.ReportValue, kind: str) -> str:
 class View:
     """The values of one source, or of one anchored part of it, ready for look-up."""
 
-    def __init__(self, indexed: nt.IndexedFile, anchor: str | None) -> None:
+    def __init__(self, indexed: nt.IndexedFile, anchor: str | None, lines: Sequence[str]) -> None:
         self.kind = indexed.kind
         self.values = indexed.values_in(anchor)
+        self.intervals = indexed.intervals_in(anchor)
+        self.tables = indexed.tables
+        self.lines = lines
         keyed = [(abs(Fraction(v.value)), i) for i, v in enumerate(self.values)]
         for i, v in enumerate(self.values):
             if self.kind == "json" and stores_fraction(v.file, v.where):
@@ -391,6 +505,91 @@ class View:
         self.groups: dict[str, list[nt.ReportValue]] = {}
         for v in self.values:
             self.groups.setdefault(_group(v, self.kind), []).append(v)
+        self._words: dict[str, frozenset[str]] | None = None
+        self._counts: Counter[str] = Counter()
+        self._holders: dict[str, list[str]] = {}
+        self._best: dict[object, tuple[Fraction, frozenset[str]]] = {}
+
+    def record(self, value: nt.ReportValue) -> str:
+        """What counts as one row of the source: a line, or a JSON or YAML key path."""
+        if self.kind not in ("json", "yaml"):
+            return str(value.line)
+        parts = value.where.split("/")
+        while len(parts) > 1 and _is_detail_key(parts[-1]):
+            parts.pop()
+        return "/".join(parts)
+
+    def _record_text(self, value: nt.ReportValue) -> str:
+        if self.kind in ("json", "yaml"):
+            return value.where
+        line = self.lines[value.line - 1] if 0 < value.line <= len(self.lines) else ""
+        header = " ".join(self.tables[value.table].header) if value.table >= 0 else ""
+        return f"{line} {header} {value.where}"
+
+    def _index_records(self) -> dict[str, frozenset[str]]:
+        if self._words is None:
+            self._words = {}
+            for value in self.values:
+                key = self.record(value)
+                if key not in self._words:
+                    self._words[key] = label_words(self._record_text(value))
+            for key, words in self._words.items():
+                self._counts.update(words)
+                for word in words:
+                    self._holders.setdefault(word, []).append(key)
+        return self._words
+
+    @property
+    def record_count(self) -> int:
+        return len(self._index_records())
+
+    def _is_distinctive(self, word: str) -> bool:
+        return self._counts[word] < self.record_count or self.record_count == 1
+
+    def _scores(self, weights: dict[str, Fraction]) -> dict[str, Fraction]:
+        scores: dict[str, Fraction] = {}
+        for word, weight in weights.items():
+            for key in self._holders.get(word, ()):
+                scores[key] = scores.get(key, Fraction(0)) + weight
+        return scores
+
+    def _unnamed(self, key: str, context: frozenset[str]) -> Fraction:
+        """How much a row says that the context does not; rarer words weigh more."""
+        total = self.record_count
+        words = self._index_records()[key] - context
+        return sum(
+            (Fraction(1, self._counts[w]) for w in words if self._counts[w] < total), Fraction(0)
+        )
+
+    def rank(self, primary: Context, secondary: frozenset[str]) -> tuple[Fraction, frozenset[str]]:
+        """How well a context names this source, and the rows it names best (none if none)."""
+        cached = (primary, secondary)
+        if cached not in self._best:
+            words = self._index_records()
+            first = self._scores(_weights(primary, self._is_distinctive))
+            wider = {w: Fraction(1) for w in secondary if self._is_distinctive(w)}
+            second = self._scores(wider)
+            scores = first or second
+            result = (Fraction(0), frozenset[str]())
+            if scores:
+                top = max(scores.values())
+                keys = [k for k, n in scores.items() if n == top]
+                if first and second:
+                    tie = max(second.get(k, Fraction(0)) for k in keys)
+                    keys = [k for k in keys if second.get(k, Fraction(0)) == tie]
+                context = frozenset(word for word, _ in primary) | secondary
+                penalties = {k: self._unnamed(k, context) for k in keys}
+                least = min(penalties.values())
+                best = frozenset(k for k, n in penalties.items() if n == least)
+                # Against other sources every word counts, also those all rows here share.
+                everything = _weights(primary, lambda _word: True)
+                named = max(
+                    sum((everything.get(w, Fraction(0)) for w in words[k]), Fraction(0))
+                    for k in best
+                )
+                result = (named, best)
+            self._best[cached] = result
+        return self._best[cached]
 
     def near(self, token: nt.NumberToken) -> list[nt.ReportValue]:
         """Values within half a unit of the number, in file order."""
@@ -420,21 +619,6 @@ class View:
             for other in others
             for value in group
         )
-
-    def in_same_table(self, hit: Hit, others: Sequence[nt.NumberToken]) -> bool:
-        """True when two of these numbers (or all, if fewer) are in the hit's source table."""
-        table = hit.value.table
-        if table < 0 or not others:
-            return False
-        found = 0
-        for other in others:
-            for value in self.near(other):
-                if value.table == table and match_value(other, value, self.kind)[0] is not None:
-                    found += 1
-                    break
-            if found >= 2:
-                return True
-        return found == len(others)
 
 
 @dataclass
@@ -471,20 +655,17 @@ class Trace:
     scale: int = 1
     link: str = ""
     reason: str = ""
+    anchor: str | None = None
+    value: nt.ReportValue | None = None
 
     @property
     def resolved(self) -> bool:
         return self.kind != UNRESOLVED
 
 
-# Links that only show the ID is written in the report, not that the report belongs to it.
-_WEAK_LINKS: Final = frozenset({"row", "section", "mention"})
-
-
-def _words(text: str) -> frozenset[str]:
-    """The distinctive words of a text, in lower case; ``_`` separates words."""
-    found = _WORD.findall(text.lower().replace("_", " "))
-    return frozenset(found) - _COMMON_WORDS
+# Documents every phase edits: a number traced to one is re-resolved by each check, but the report
+# does not pin the file's hash or line, or the next phase's status entry would fail CI.
+LIVING_SOURCES: Final = ("docs/", "research/")
 
 
 def _key(token: nt.NumberToken) -> tuple[int, int]:
@@ -493,6 +674,28 @@ def _key(token: nt.NumberToken) -> tuple[int, int]:
 
 def _blank_comments(text: str) -> str:
     return _COMMENT.sub(lambda m: re.sub(r"[^\n]", " ", m[0]), text)
+
+
+def _sentence_at(text: str, offset: int) -> tuple[int, str]:
+    """The sentence of a text around an offset, with where it starts."""
+    start = 0
+    end = len(text)
+    for mark in _SENTENCE_END.finditer(text):
+        if mark.start() <= offset:
+            start = mark.end()
+        else:
+            end = mark.start()
+            break
+    return start, text[start:end]
+
+
+def _cell_text(line: str, column: int) -> tuple[str, int]:
+    """The table cell of a line around a 1-based column, and the column it starts at."""
+    at = column - 1
+    bars = [m.start() for m in re.finditer(r"(?<!\\)\|", line)]
+    start = max((b + 1 for b in bars if b < at), default=0)
+    end = min((b for b in bars if b >= at), default=len(line))
+    return line[start:end], start + 1
 
 
 class DocumentCheck:
@@ -523,8 +726,10 @@ class DocumentCheck:
         self.notes: dict[int, list[str]] = {}
         self.used: set[str] = set()
         self.table_tokens: dict[int, list[nt.NumberToken]] = {}
-        self.source_words: dict[tuple[str, int, str], frozenset[str]] = {}
         self.block_tokens: dict[int, list[nt.NumberToken]] = {}
+        self.pins: dict[tuple[int, int], tuple[dv.DerivedValue, nt.ReportValue | None]] = {}
+        self.replaced: dict[tuple[int, int], nt.NumberToken] = {}
+        self.contexts: dict[tuple[int, int], tuple[Context, frozenset[str]]] = {}
         for token in self.document.tokens:
             self.block_tokens.setdefault(token.block, []).append(token)
             if token.cell is not None and token.cell.row >= 0:
@@ -533,12 +738,25 @@ class DocumentCheck:
             for member in (interval.point, interval.low, interval.high):
                 if member is not None:
                     self.intervals[_key(member)] = interval
+            self._read_pin(interval)
         self._read_directives()
+
+    def _read_pin(self, interval: nt.Interval) -> None:
+        """Tie every part of an interval to the cell its first number is pinned to."""
+        first = interval.point or interval.low
+        entry = self.derived.get(first.derived or "")
+        if entry is None or not entry.members:
+            return
+        cell = entry.members
+        self.pins[_key(interval.low)] = (entry, cell[-2])
+        self.pins[_key(interval.high)] = (entry, cell[-1])
+        if interval.point is not None:
+            self.pins[_key(interval.point)] = (entry, cell[0] if len(cell) == 3 else None)
 
     def _view(self, path: str, anchor: str | None) -> View:
         key = (path, anchor)
         if key not in self.views:
-            self.views[key] = View(self.repo.index.file(path), anchor)
+            self.views[key] = View(self.repo.index.file(path), anchor, self.repo.lines(path))
         return self.views[key]
 
     def _directive_source(self, directive: nt.Directive) -> Source | None:
@@ -584,7 +802,9 @@ class DocumentCheck:
                 and directive.experiment == directive.path
                 and directive.path in dv.AGGREGATE_REPORTS
             ):
-                # Only bound rows may cite such a report; unbound rows get no source from it.
+                # Only bound rows may cite such a report. The empty entry marks the table as
+                # directed, so unbound rows do not fall through to the section around it.
+                self.block_sources.setdefault(directive.target, [])
                 for binding in directive.bindings:
                     self._read_binding(directive, binding)
                 continue
@@ -724,9 +944,11 @@ class DocumentCheck:
                 for experiment in ids:
                     if experiment in seen_ids:
                         for file in self.repo.registered_files(experiment):
-                            self._add_pair(
-                                sources, (file, None), level, experiment, "registry", False
-                            )
+                            link = self.repo.link(experiment, file)
+                            if link:
+                                self._add_pair(
+                                    sources, (file, None), level, experiment, link, False
+                                )
         found = [s for s in sources.values() if s.experiments]
         rank = {name: i for i, name in enumerate(("directive", *[n for n, _ in levels]))}
         found.sort(key=lambda s: rank[s.level])
@@ -771,36 +993,47 @@ class DocumentCheck:
         if not claimed and self.repo.stand_in_problem(key[0]) is None:
             self._add_pair(sources, key, level, key[0], "stand-in", named)
 
-    def _credit(self, source: Source, token: nt.NumberToken, hit: nt.ReportValue) -> str:
-        """The ID to credit, among those the report itself claims if there are any.
+    def _credit(
+        self, source: Source, token: nt.NumberToken, value: nt.ReportValue
+    ) -> tuple[str, str] | None:
+        """The ID to credit and how it is known; see `derive_values.Repo.credit`.
 
-        The one on the source line wins, then the one in the headings above it, then the one on
-        the number's own line, then the nearest named in the document.
+        Among cited IDs that hold, the one on the source line wins, then the one in the headings
+        above it, then the one on the number's own line, then the nearest named in the document.
         """
-        names = [n for n, how in source.experiments.items() if how not in _WEAK_LINKS]
-        names = names or list(source.experiments)
-        if len(names) == 1:
-            return names[0]
+        credits = {name: self.repo.credit(name, value) for name in source.experiments}
+        kept = [name for name, credit in credits.items() if credit and credit[0] == name]
+        if not kept:
+            return next((credit for credit in credits.values() if credit), None)
         lines = self.repo.lines(source.path)
-        hit_line = lines[hit.line - 1] if 0 < hit.line <= len(lines) else ""
+        hit_line = lines[value.line - 1] if 0 < value.line <= len(lines) else ""
         above: list[str] = []
         level = 7
         for heading in reversed(self.repo.index.file(source.path).headings):
-            if heading.line <= hit.line and heading.level < level:
+            if heading.line <= value.line and heading.level < level:
                 above.append(heading.text)
                 level = heading.level
         for text in (hit_line, *above, self.visible[token.line - 1]):
-            for name in names:
+            for name in kept:
                 if name in text:
-                    return name
-        return names[0]
+                    return credits[name]
+        return credits[kept[0]]
 
     # Resolution
 
     def _trace(self, token: nt.NumberToken, kind: str, source: Source, hit: Hit) -> Trace:
-        experiment = self._credit(source, token, hit.value)
+        credit = self._credit(source, token, hit.value)
+        if credit is None:
+            cited = ", ".join(source.experiments)
+            place = f"{hit.value.file}:{hit.value.line}"
+            return self._unresolved(
+                token,
+                f"nothing ties {place} to {cited}: its row names no experiment and the report "
+                "does not belong to it",
+            )
+        experiment, link = credit
         indexed = self.repo.index.file(source.path)
-        if kind == "report" and (experiment == source.path):
+        if kind == "report" and experiment == source.path:
             kind = "manifest"
         return Trace(
             token,
@@ -812,7 +1045,9 @@ class DocumentCheck:
             indexed.sha256,
             hit.value.raw + hit.value.unit,
             hit.scale,
-            source.experiments[experiment],
+            link,
+            anchor=source.anchor,
+            value=hit.value,
         )
 
     def _unresolved(self, token: nt.NumberToken, reason: str) -> Trace:
@@ -824,6 +1059,8 @@ class DocumentCheck:
             target = dv.trace_file_path(self.path)
             return self._unresolved(token, f"derived value {name!r} is not declared in {target}")
         self.used.add(name)
+        if token.cell is not None and token.cell.row >= 0 and not token.sign and entry.value < 0:
+            return self._unresolved(token, f"derived value {name} is negative")
         printed = Fraction(token.value)
         value = entry.value if token.sign else abs(entry.value)
         printed = printed if token.sign else abs(printed)
@@ -845,6 +1082,152 @@ class DocumentCheck:
             dv.text_sha256(rendered),
             dv.decimal_text(entry.value, 6),
         )
+
+    def _resolve_pinned(
+        self, token: nt.NumberToken, entry: dv.DerivedValue, cell: nt.ReportValue | None
+    ) -> Trace:
+        """One part of an interval against the source cell its pin selects."""
+        self.used.add(entry.name)
+        if cell is None:
+            return self._unresolved(token, f"derived value {entry.name} has no point estimate")
+        interval = self._interval_of(token)
+        members = [] if interval is None else [interval.point, interval.low, interval.high]
+        percent = any(m is not None and _percent_like(m) for m in members)
+        kind = self.repo.index.file(cell.file).kind
+        hit, why = match_value(token, cell, kind, percent)
+        if hit is None or not _keeps_minus(token, cell):
+            detail = why or f"the source has {cell.raw}{cell.unit}"
+            return self._unresolved(token, f"derived value {entry.name}: {detail}")
+        rendered = self.derived_text
+        return Trace(
+            token,
+            "derived",
+            "directive",
+            ", ".join(entry.experiments),
+            dv.DERIVED_OUTPUT,
+            dv.entry_line(rendered, self.path, entry.name) if rendered else 0,
+            dv.text_sha256(rendered),
+            cell.raw + cell.unit,
+            hit.scale,
+        )
+
+    def _heading_words(self, section: int) -> frozenset[str]:
+        headings = self.document.headings
+        words: set[str] = set()
+        level = 7
+        for at in range(section, -1, -1):
+            if headings[at].level < level:
+                words |= label_words(headings[at].text)
+                level = headings[at].level
+        return frozenset(words)
+
+    def _block_text(self, index: int) -> str:
+        block = self.document.blocks[index]
+        return "\n".join(self.visible[block.start_line - 1 : block.end_line])
+
+    def _context(self, token: nt.NumberToken) -> tuple[Context, frozenset[str]]:
+        """The words that say which source row a number means.
+
+        First the number's sentence, nearer words counting more, or its table row and column
+        header. Second the paragraph or caption and the headings above, which only break ties.
+        """
+        key = _key(token)
+        if key not in self.contexts:
+            self.contexts[key] = self._read_context(token)
+        return self.contexts[key]
+
+    def _read_context(self, token: nt.NumberToken) -> tuple[Context, frozenset[str]]:
+        cell = token.cell
+        if token.block < 0:
+            return _places(self.visible[token.line - 1], token.column - 1), frozenset()
+        block = self.document.blocks[token.block]
+        around = self._heading_words(block.section)
+        if cell is not None:
+            table = self.document.tables[cell.table]
+            row = table.rows[cell.row].cells if cell.row >= 0 else table.header
+            text, first = _cell_text(self.visible[token.line - 1], token.column)
+            start, sentence = _sentence_at(text, token.column - first)
+            captions = " ".join(self._block_text(i) for i in self._caption_blocks(token.block))
+            around = around | label_words(captions)
+            if len(label_words(sentence)) < PROSE_CELL_WORDS:
+                words = label_words(" ".join((*row, sentence, cell.header)))
+                return tuple((word, 0) for word in sorted(words)), around
+            # A cell that is itself prose speaks for its own numbers, sentence by sentence; its
+            # row label and column header come last.
+            labels = label_words(f"{row[0] if row else ''} {cell.header}")
+            near = _places(sentence, token.column - first - start)
+            return (*near, *((word, _FAR) for word in sorted(labels))), around
+        lines = self.visible[block.start_line - 1 : block.end_line]
+        before = lines[: token.line - block.start_line]
+        offset = sum(len(line) + 1 for line in before) + token.column - 1
+        text = "\n".join(lines)
+        start, sentence = _sentence_at(text, offset)
+        return _places(sentence, offset - start), around | label_words(text)
+
+    def _column_fits(self, token: nt.NumberToken, value: nt.ReportValue) -> bool:
+        """False when a table cell's labels fit another column of the source row better."""
+        cell = token.cell
+        tables = self.repo.index.file(value.file).tables
+        if cell is None or cell.row < 0 or not 0 <= value.table < len(tables):
+            return True
+        row = self.document.tables[cell.table].rows[cell.row]
+        label = label_words(f"{row.cells[0] if row.cells else ''} {cell.header}")
+        own = len(label & label_words(value.header))
+        return all(len(label & label_words(other)) <= own for other in tables[value.table].header)
+
+    def _row_neighbours(self, token: nt.NumberToken) -> list[nt.NumberToken]:
+        """Well-specified numbers of the same table row, outside the number's own interval."""
+        cell = token.cell
+        if cell is None or cell.row < 0:
+            return []
+        interval = self.intervals.get(_key(token))
+        own = (
+            set()
+            if interval is None
+            else {_key(m) for m in (interval.point, interval.low, interval.high) if m is not None}
+        )
+        return [
+            other
+            for other in self.table_tokens.get(cell.table, [])
+            if other.cell is not None
+            and other.cell.row == cell.row
+            and _key(other) != _key(token)
+            and _key(other) not in own
+            and other.value != token.value
+            and other.significant_digits >= MIN_SIGNIFICANT
+        ]
+
+    def _row_fits(self, token: nt.NumberToken, value: nt.ReportValue, view: View) -> bool:
+        """True when a source value sits on the row this number's context points to."""
+        primary, secondary = self._context(token)
+        cell = token.cell
+        if cell is not None and cell.row >= 0:
+            ours = dv.expand_ids(" ".join(self.document.tables[cell.table].rows[cell.row].cells))
+            theirs = self.repo.line_ids(value)
+            if ours and theirs and not set(ours) & set(theirs):
+                return False
+            if not self._column_fits(token, value):
+                return False
+        top, best = view.rank(primary, secondary)
+        for source in self._scope_sources(token.block):
+            other = self._source_view(source)
+            if other is not None and other is not view and other.rank(primary, secondary)[0] > top:
+                return False
+        if best:
+            return view.record(value) in best
+        return view.record_count <= 1 or view.beside(Hit(value, 1), self._row_neighbours(token))
+
+    def _pointed_at(self, token: nt.NumberToken, view: View) -> str:
+        """For a failure message: the source rows this number's context names best."""
+        primary, secondary = self._context(token)
+        best = sorted(view.rank(primary, secondary)[1])
+        if not best:
+            return " (its context names no row there)"
+        shown = ", ".join(best[:2]) + (", ..." if len(best) > 2 else "")
+        return f" (its context names {shown})"
+
+    def _names_cited_id(self, source: Source, value: nt.ReportValue) -> bool:
+        return bool(set(source.experiments) & set(self.repo.line_ids(value)))
 
     def _window(self, token: nt.NumberToken) -> str:
         """The text around a number that a constant's context is searched in."""
@@ -972,7 +1355,9 @@ class DocumentCheck:
             return None
 
         def swap(member: nt.NumberToken | None) -> nt.NumberToken | None:
-            return token if member is not None and _key(member) == _key(token) else member
+            if member is None:
+                return None
+            return token if _key(member) == _key(token) else self.replaced.get(_key(member), member)
 
         point = swap(interval.point)
         low, high = swap(interval.low), swap(interval.high)
@@ -986,20 +1371,40 @@ class DocumentCheck:
             or interval.high.significant_digits < MIN_SIGNIFICANT
         )
         wide_hit = ""
+        elsewhere = ""
+        unlinked = ""
         for source in sources:
             view = self._source_view(source)
             if view is None:
                 continue
-            found = _match_triple(interval, view.groups, view.kind, view.near(interval.low))
+            lows = view.near(interval.low)
+            if _match_triple(interval, view.groups, view.kind, lows) is None:
+                continue
+            fitting = [v for v in lows if self._row_fits(interval.low, v, view)]
+            fitting.sort(key=lambda v: not self._names_cited_id(source, v))
+            found = _match_triple(interval, view.groups, view.kind, fitting)
             if found is None:
+                pointed = self._pointed_at(interval.low, view)
+                elsewhere = elsewhere or f"{source.path}:{lows[0].line}{pointed}"
                 continue
             if weak and not source.narrow:
                 wide_hit = wide_hit or f"{source.path} ({source.level} scope)"
                 continue
-            return self._trace(token, "interval", source, found[_key(token)])
+            trace = self._trace(token, "interval", source, found[_key(token)])
+            if trace.resolved:
+                return trace
+            unlinked = unlinked or trace.reason
+        if unlinked:
+            return self._unresolved(token, unlinked)
         if wide_hit:
             return self._unresolved(
                 token, f"short interval found only in {wide_hit}: add a directive or an anchor"
+            )
+        if elsewhere:
+            return self._unresolved(
+                token,
+                f"this interval is at {elsewhere}, but that is not the row its context names: "
+                "name the row, bind the table with trace-table, or pin it with a derived entry",
             )
         if not sources:
             return self._unresolved(token, self._no_source(token.block))
@@ -1018,52 +1423,13 @@ class DocumentCheck:
         extra = f" ({notes})" if notes else ""
         return f"no report or experiment in scope: add a trace directive{extra}"
 
-    def _neighbours(self, token: nt.NumberToken) -> list[nt.NumberToken]:
-        """Well-specified numbers in the same table row or column, other than this one."""
-        cell = token.cell
-        if cell is None or cell.row < 0:
-            return []
-        return [
-            other
-            for other in self.table_tokens.get(cell.table, [])
-            if other.cell is not None
-            and (other.cell.row == cell.row or other.cell.column == cell.column)
-            and _key(other) != _key(token)
-            and other.value != token.value
-            and other.significant_digits >= MIN_SIGNIFICANT
-        ]
-
-    def _nearby(self, token: nt.NumberToken) -> list[nt.NumberToken]:
-        """Well-specified numbers on the lines around a number in prose."""
-        return [
-            other
-            for other in self.block_tokens.get(token.block, [])
-            if abs(other.line - token.line) <= 1
-            and _key(other) != _key(token)
-            and other.value != token.value
-            and other.significant_digits >= MIN_SIGNIFICANT
-        ]
-
-    def _line_words(self, value: nt.ReportValue, kind: str) -> frozenset[str]:
-        """The words of a source line; for JSON and YAML, of the value's key path."""
-        key = (value.file, value.line, value.where)
-        if key not in self.source_words:
-            if kind in ("json", "yaml"):
-                text = value.where
-            else:
-                lines = self.repo.lines(value.file)
-                text = lines[value.line - 1] if 0 < value.line <= len(lines) else ""
-            self.source_words[key] = _words(text)
-        return self.source_words[key]
-
     def _resolve_scoped(self, token: nt.NumberToken) -> Trace:
         sources = self._scope_sources(token.block)
         weak = token.significant_digits < MIN_SIGNIFICANT
         in_table = token.cell is not None
-        neighbours = self._neighbours(token) if in_table else self._nearby(token)
-        words = frozenset() if in_table else _words(self._window(token))
         wide_hit = ""
         alone = ""
+        unlinked = ""
         why = None
         for source in sources:
             view = self._source_view(source)
@@ -1077,31 +1443,30 @@ class DocumentCheck:
                 where = f"{hits[0].value.file}:{hits[0].value.line}"
                 wide_hit = wide_hit or f"{where} ({source.level} scope)"
                 continue
-            chosen = hits[0]
-            if len(view.values) > SMALL_SOURCE and (neighbours or not in_table):
-                together = [
-                    h
-                    for h in hits
-                    if view.beside(h, neighbours)
-                    or (in_table and view.in_same_table(h, neighbours))
-                    or words & self._line_words(h.value, view.kind)
-                ]
-                if not together:
-                    alone = alone or f"{chosen.value.file}:{chosen.value.line}"
-                    continue
-                chosen = together[0]
-            return self._trace(token, "report", source, chosen)
+            fitting = [h for h in hits if self._row_fits(token, h.value, view)]
+            if not fitting:
+                pointed = self._pointed_at(token, view)
+                alone = alone or f"{hits[0].value.file}:{hits[0].value.line}{pointed}"
+                continue
+            fitting.sort(key=lambda h: not self._names_cited_id(source, h.value))
+            for hit in fitting:
+                trace = self._trace(token, "report", source, hit)
+                if trace.resolved:
+                    return trace
+                unlinked = unlinked or trace.reason
+        if unlinked:
+            return self._unresolved(token, unlinked)
         if alone and in_table:
             return self._unresolved(
                 token,
-                f"found at {alone}, but no other number of its row or column is on that line "
-                "or in that table: check the cell or bind the table with trace-table",
+                f"found at {alone}, but that is not the row or column this cell's labels name: "
+                "check the cell, name the row, or bind the table with trace-table",
             )
         if alone:
             return self._unresolved(
                 token,
-                f"found at {alone}, but that line shares no word or nearby number with this "
-                "sentence: name the row in the sentence, or pin the number with a derived entry",
+                f"found at {alone}, but this sentence does not name that row: name it in the "
+                "sentence, or pin the number with a derived entry",
             )
         if wide_hit:
             return self._unresolved(
@@ -1118,6 +1483,9 @@ class DocumentCheck:
         return self._unresolved(token, f"not in {names}{more}")
 
     def resolve(self, token: nt.NumberToken) -> Trace:
+        pin = self.pins.get(_key(token))
+        if pin is not None:
+            return self._resolve_pinned(token, *pin)
         if token.derived is not None:
             return self._resolve_derived(token, token.derived)
         bound = self.bound.get(_key(token))
@@ -1134,6 +1502,14 @@ class DocumentCheck:
     def run(self) -> list[Trace]:
         return [self.resolve(token) for token in self.document.tokens]
 
+    def resolve_changed(self, changed: Sequence[nt.NumberToken]) -> bool:
+        """True when all these changed numbers, read together, still resolve."""
+        self.replaced = {_key(token): token for token in changed}
+        try:
+            return all(self.resolve(token).resolved for token in changed)
+        finally:
+            self.replaced = {}
+
 
 def _match_triple(
     interval: nt.Interval,
@@ -1141,7 +1517,11 @@ def _match_triple(
     kind: str,
     lows: Sequence[nt.ReportValue],
 ) -> dict[tuple[int, int], Hit] | None:
-    """Hits for all parts of an interval on one source line, or None."""
+    """Hits for all parts of an interval on one source line, or None.
+
+    Unlike a lone number, a part of an interval must keep the minus sign of its source value:
+    dropping it reverses a difference, or makes an interval that spans zero look clear of it.
+    """
 
     def side(token: nt.NumberToken, value: nt.ReportValue) -> Fraction:
         number = Fraction(value.value)
@@ -1151,12 +1531,12 @@ def _match_triple(
     percent = any(_percent_like(m) for m in members)
     for candidate in lows:
         low = match_value(interval.low, candidate, kind, percent)[0]
-        if low is None:
+        if low is None or not _keeps_minus(interval.low, candidate):
             continue
         group = groups.get(_group(candidate, kind), [])
         for other in group:
             high = match_value(interval.high, other, kind, percent)[0]
-            if high is None or high.scale != low.scale:
+            if high is None or high.scale != low.scale or not _keeps_minus(interval.high, other):
                 continue
             if side(interval.low, candidate) > side(interval.high, other):
                 continue
@@ -1165,7 +1545,11 @@ def _match_triple(
                 return found
             for value in group:
                 point = match_value(interval.point, value, kind, percent)[0]
-                if point is not None and point.scale == low.scale:
+                if (
+                    point is not None
+                    and point.scale == low.scale
+                    and _keeps_minus(interval.point, value)
+                ):
                     found[_key(interval.point)] = point
                     return found
     return None
@@ -1213,33 +1597,58 @@ def _sentences(document: nt.Document, lines: Sequence[str]) -> Iterable[tuple[in
                 yield block.start_line + text.count("\n", 0, start), part
 
 
+def _starts_with_comment(line: str) -> bool:
+    """True for a line Markdown turns into raw HTML although it also holds text."""
+    if not re.match(r" {0,3}<!--", line):
+        return False
+    return bool(_COMMENT.sub("", line).strip())
+
+
+def _comes_first(claim: re.Match[str], hedge: re.Match[str] | None) -> bool:
+    """True when no hedge comes before the end of the claim."""
+    return hedge is None or hedge.start() >= claim.end()
+
+
 def lint_document(text: str, path: str = "") -> tuple[list[LintFinding], list[LintFinding]]:
     """(failures, lines for human review) of one document."""
     text = text.replace("\r\n", "\n").replace("\r", "\n")
     failures: list[LintFinding] = []
+    fence = ""
     for number, line in enumerate(text.split("\n"), 1):
         if _PERSONAL_PATH.search(line):
             failures.append(LintFinding(number, "personal path"))
         if _EMAIL.search(line):
             failures.append(LintFinding(number, "email address"))
+        opened = _FENCE.match(line)
+        if fence:
+            fence = "" if opened and opened[1].startswith(fence) else fence
+        elif opened:
+            fence = opened[1]
+        elif _starts_with_comment(line):
+            failures.append(
+                LintFinding(number, "a line starts with a comment and goes on with text")
+            )
     lines = _prose_lines(text)
     document = nt.parse_document(text, path)
     for number, sentence in _sentences(document, lines):
         flat = " ".join(sentence.split())
-        if _HEDGE.search(flat):
-            continue
-        if _LATER_PHASE.search(flat) and _DONE.search(flat):
+        hedge = _HEDGE.search(flat)
+        done = _DONE.search(flat)
+        claim = _RELEASE_CLAIM.search(flat)
+        if _LATER_PHASE.search(flat) and done and _comes_first(done, hedge):
             failures.append(LintFinding(number, f"reads as if a later phase happened: {flat[:90]}"))
-        elif _RELEASE_CLAIM.search(flat) and not _NEGATED.search(flat):
+        elif claim and _comes_first(claim, hedge) and not _NEGATED.search(flat):
             failures.append(LintFinding(number, f"reads as a release claim: {flat[:90]}"))
-    review: list[LintFinding] = []
-    for number, line in enumerate(lines, 1):
-        unquoted = "" if line.lstrip().startswith(">") else _QUOTED.sub(" ", line)
-        match = _SOTA.search(unquoted)
+    unquoted = ["" if line.lstrip().startswith(">") else line for line in lines]
+    for number, sentence in _sentences(document, unquoted):
+        match = _SOTA.search(_QUOTED.sub(" ", " ".join(sentence.split())))
         if match:
             failures.append(LintFinding(number, f"SOTA wording outside a quotation: {match[0]}"))
-        if _BEST.search(line):
-            review.append(LintFinding(number, " ".join(line.split())[:120]))
+    review = [
+        LintFinding(number, " ".join(line.split())[:120])
+        for number, line in enumerate(lines, 1)
+        if _BEST.search(line)
+    ]
     failures.sort(key=lambda f: f.line)
     return failures, review
 
@@ -1262,17 +1671,139 @@ def mutate(token: nt.NumberToken, units: int) -> nt.NumberToken:
 
 @dataclass(frozen=True)
 class AuditResult:
+    """Both audits of one document. ``by_kind`` counts escapes of ``number`` and ``interval``."""
+
     mutations: int
     escaped: int
     by_scope: dict[str, int]
+    substitutions: int = 0
+    substitutions_escaped: int = 0
+    by_kind: dict[str, int] = field(default_factory=dict)
+    examples: tuple[str, ...] = ()
 
     @property
     def rate(self) -> Fraction:
         return Fraction(self.escaped, self.mutations) if self.mutations else Fraction(0)
 
+    @property
+    def substitution_rate(self) -> Fraction:
+        if not self.substitutions:
+            return Fraction(0)
+        return Fraction(self.substitutions_escaped, self.substitutions)
+
+    @property
+    def over_target(self) -> bool:
+        return self.rate > AUDIT_TARGET or self.substitution_rate > SUBSTITUTION_TARGET
+
+
+def _reprinted(
+    token: nt.NumberToken, value: nt.ReportValue, view: View, percent: bool
+) -> nt.NumberToken | None:
+    """A source value written the way this number is printed, if it could stand there."""
+    if view.kind != "json" and value.exponent > token.exponent:
+        return None
+    fraction = view.kind == "json" and percent and stores_fraction(value.file, value.where)
+    exact = value.value * 100 if fraction else value.value
+    rounded = exact.quantize(Decimal(1).scaleb(token.exponent), rounding=ROUND_HALF_EVEN)
+    sign = "-" if rounded < 0 else ("+" if token.sign == "+" else "")
+    changed = replace(token, value=rounded, raw=format(rounded, "f"), sign=sign)
+    if changed.significant_digits < min(token.significant_digits, MIN_SIGNIFICANT):
+        return None
+    hit, _why = match_value(changed, value, view.kind, percent)
+    return changed if hit is not None else None
+
+
+@dataclass(frozen=True)
+class _Target:
+    """What the substitution audit replaces: one number, or all parts of one interval."""
+
+    tokens: tuple[nt.NumberToken, ...]
+    view: View
+    own_rows: frozenset[str]
+    percent: bool
+
+
+def _audit_source(check: DocumentCheck, trace: Trace) -> tuple[View, frozenset[str]] | None:
+    """The source a resolved number came from, and its own rows there."""
+    line = trace.source_line
+    path, anchor = trace.source, trace.anchor
+    if trace.kind == "derived":
+        pin = check.pins.get(_key(trace.token))
+        entry = pin[0] if pin else check.derived.get(trace.token.derived or "")
+        if entry is None or not entry.inputs:
+            return None
+        path, anchor, line = entry.inputs[0].path, None, entry.inputs[0].line
+    elif trace.kind not in ("report", "manifest", "interval", "table", "constant"):
+        return None
+    view = check._view(path, anchor)
+    bound = check.bound.get(_key(trace.token))
+    if bound is not None:
+        selected = check._bound_values(trace.token, *bound)
+        return view, frozenset(view.record(v) for v in selected)
+    if trace.value is not None:
+        return view, frozenset({view.record(trace.value)})
+    return view, frozenset(view.record(v) for v in view.values if v.line == line)
+
+
+def _audit_targets(check: DocumentCheck, traces: Sequence[Trace]) -> list[_Target]:
+    by_key = {_key(t.token): t for t in traces}
+    targets: list[_Target] = []
+    seen: set[tuple[int, int]] = set()
+    for trace in traces:
+        key = _key(trace.token)
+        if not trace.resolved or key in seen:
+            continue
+        interval = check.intervals.get(key)
+        tokens: tuple[nt.NumberToken, ...] = (trace.token,)
+        if interval is not None:
+            parts = (interval.point, interval.low, interval.high)
+            tokens = tuple(m for m in parts if m is not None)
+            seen.update(_key(m) for m in tokens)
+            if not all(_key(m) in by_key and by_key[_key(m)].resolved for m in tokens):
+                continue
+        found = _audit_source(check, by_key[_key(tokens[-1])])
+        if found is not None:
+            percent = any(_percent_like(m) for m in tokens)
+            targets.append(_Target(tokens, found[0], found[1], percent))
+    return targets
+
+
+def _substitute(target: _Target, rng: random.Random) -> list[nt.NumberToken] | None:
+    """The target with the values of another source row, or None if none could be drawn."""
+    view = target.view
+    tokens = target.tokens
+    own = [v for v in view.values if view.record(v) in target.own_rows]
+    if len(tokens) > 1:
+        pool = [
+            [m for m in (item.point, item.low, item.high) if m is not None]
+            for item in view.intervals
+            if (item.point is not None) == (len(tokens) == 3)
+        ]
+        pool = [m for m in pool if view.record(m[-1]) not in target.own_rows]
+    else:
+        pool = [[v] for v in view.values if view.record(v) not in target.own_rows]
+    if not pool:
+        return None
+    for _ in range(SUBSTITUTION_TRIES):
+        chosen = rng.choice(pool)
+        changed = [
+            _reprinted(t, v, view, target.percent) for t, v in zip(tokens, chosen, strict=True)
+        ]
+        ready = [c for c in changed if c is not None]
+        if len(ready) != len(tokens):
+            continue
+        if all(c.value == t.value for c, t in zip(ready, tokens, strict=True)):
+            continue
+        printed_here = {_reprinted(tokens[-1], v, view, target.percent) for v in own}
+        values_here = {c.value for c in printed_here if c is not None}
+        if ready[-1].value in values_here:
+            continue
+        return ready
+    return None
+
 
 def audit_document(check: DocumentCheck, traces: Sequence[Trace], seed: int) -> AuditResult:
-    """Change sampled numbers and count those that still resolve."""
+    """Change sampled numbers, in both ways, and count those that still resolve."""
     pairs = [
         (index, units)
         for index, trace in enumerate(traces)
@@ -1288,7 +1819,32 @@ def audit_document(check: DocumentCheck, traces: Sequence[Trace], seed: int) -> 
         if result.resolved:
             escaped += 1
             scopes[result.scope] += 1
-    return AuditResult(len(chosen), escaped, dict(sorted(scopes.items())))
+    rng = random.Random(f"{seed}:substitution:{check.path}")
+    draws = _audit_targets(check, traces) * SUBSTITUTION_DRAWS
+    rng.shuffle(draws)
+    done = 0
+    kinds: Counter[str] = Counter()
+    examples: set[str] = set()
+    for target in draws:
+        if done >= AUDIT_MUTATIONS:
+            break
+        changed = _substitute(target, rng)
+        if changed is None:
+            continue
+        done += 1
+        if check.resolve_changed(changed):
+            kinds["interval" if len(changed) > 1 else "number"] += 1
+            first, last = target.tokens[-1], changed[-1]
+            examples.add(f"{check.path}:{first.line}:{first.column} {first.raw} -> {last.raw}")
+    return AuditResult(
+        len(chosen),
+        escaped,
+        dict(sorted(scopes.items())),
+        done,
+        sum(kinds.values()),
+        dict(sorted(kinds.items())),
+        tuple(sorted(examples)),
+    )
 
 
 # Running
@@ -1311,7 +1867,7 @@ class DocumentResult:
 
     @property
     def failed(self) -> bool:
-        over = self.audit is not None and self.audit.rate > AUDIT_TARGET
+        over = self.audit is not None and self.audit.over_target
         return bool(self.unresolved or self.problems or self.lint_failures or over)
 
 
@@ -1345,8 +1901,17 @@ def _count(traces: Iterable[Trace], attribute: str) -> dict[str, int]:
     return dict(sorted(counts.items()))
 
 
+def _recorded_place(trace: Trace) -> tuple[int, str]:
+    """The source line and hash a report keeps for ``trace``. Living documents (`LIVING_SOURCES`)
+    change with every phase, so they keep neither: each check resolves the number in them again."""
+    if trace.source.startswith(LIVING_SOURCES):
+        return 0, ""
+    return trace.source_line, trace.sha256
+
+
 def _number_entry(trace: Trace) -> dict[str, Any]:
     token = trace.token
+    source_line, sha256 = _recorded_place(trace)
     return {
         "line": token.line,
         "column": token.column,
@@ -1355,16 +1920,16 @@ def _number_entry(trace: Trace) -> dict[str, Any]:
         "scope": trace.scope,
         "id": trace.experiment,
         "source": trace.source,
-        "source_line": trace.source_line,
-        "source_sha256": trace.sha256,
+        "source_line": source_line,
+        "source_sha256": sha256,
         "source_value": trace.matched,
         "scale": trace.scale,
         "id_link": trace.link,
     }
 
 
-def _rate_text(result: AuditResult) -> str:
-    return f"{float(result.rate) * 100:.1f}%"
+def _percent_text(rate: Fraction) -> str:
+    return f"{float(rate) * 100:.1f}%"
 
 
 def render_json(results: Sequence[DocumentResult], seed: int | None) -> str:
@@ -1382,15 +1947,24 @@ def render_json(results: Sequence[DocumentResult], seed: int | None) -> str:
             entry["mutation_audit"] = {
                 "mutations": result.audit.mutations,
                 "escaped": result.audit.escaped,
-                "escape_rate": _rate_text(result.audit),
+                "escape_rate": _percent_text(result.audit.rate),
                 "escaped_by_scope": result.audit.by_scope,
+                "substitutions": result.audit.substitutions,
+                "substitutions_escaped": result.audit.substitutions_escaped,
+                "substitution_escape_rate": _percent_text(result.audit.substitution_rate),
+                "substitutions_escaped_by_kind": result.audit.by_kind,
             }
         documents[result.path] = entry
     body: dict[str, Any] = {
         "generated_by": "scripts/trace_numbers.py",
         "mutation_audit": None
         if seed is None
-        else {"seed": seed, "target": "5.0%", "units": list(AUDIT_UNITS)},
+        else {
+            "seed": seed,
+            "target": _percent_text(AUDIT_TARGET),
+            "units": list(AUDIT_UNITS),
+            "substitution_target": _percent_text(SUBSTITUTION_TARGET),
+        },
         "documents": documents,
     }
     return json.dumps(body, indent=1, ensure_ascii=False) + "\n"
@@ -1411,26 +1985,33 @@ def render_markdown(results: Sequence[DocumentResult], seed: int | None) -> str:
         "",
         "## Summary",
         "",
-        "| Document | Numbers | Classes | Scopes | Mutations | Escaped | Escape rate |",
-        "|---|---|---|---|---|---|---|",
+        "| Document | Numbers | Classes | Scopes | Digit changes | Escaped | Escape rate "
+        "| Row substitutions | Escaped | Escape rate |",
+        "|---|---|---|---|---|---|---|---|---|---|",
     ]
     for result in results:
         classes = ", ".join(f"{k} {v}" for k, v in _count(result.traces, "kind").items())
         scopes = ", ".join(f"{k} {v}" for k, v in _count(result.traces, "scope").items())
         audit = result.audit
-        tail = "n/a | n/a | n/a"
+        tail = "n/a | n/a | n/a | n/a | n/a | n/a"
         if audit is not None:
-            tail = f"{audit.mutations} | {audit.escaped} | {_rate_text(audit)}"
+            tail = (
+                f"{audit.mutations} | {audit.escaped} | {_percent_text(audit.rate)} | "
+                f"{audit.substitutions} | {audit.substitutions_escaped} | "
+                f"{_percent_text(audit.substitution_rate)}"
+            )
         row = f"| `{result.path}` | {len(result.traces)} | {classes} | {scopes} | {tail} |"
         out.append(row)
     out.append("")
     if seed is None:
-        out += ["The mutation audit was not run for this file.", ""]
+        out += ["The audits were not run for this file.", ""]
     else:
         out += [
-            f"Mutation audit: seed {seed}; each mutation moves a resolved number by 1 to 3 units",
-            "of its last digit, and an escape is a changed number that still resolves. Target: at",
-            "most 5.0% per document.",
+            f"Mutation audit: seed {seed}. A digit change moves a resolved number by 1 to 3 units",
+            "of its last digit. A row substitution replaces a resolved number, or a whole",
+            "interval, with a value printed on another row of the same source. An escape is a",
+            f"change that still resolves. Targets: at most {_percent_text(AUDIT_TARGET)} of digit",
+            f"changes and {_percent_text(SUBSTITUTION_TARGET)} of row substitutions per document.",
             "",
         ]
     review = [(r.path, item) for r in results for item in r.review]
@@ -1457,11 +2038,11 @@ def render_markdown(results: Sequence[DocumentResult], seed: int | None) -> str:
         ]
         for trace in result.traces:
             token = trace.token
-            line = trace.source_line or "n/a"
+            source_line, sha256 = _recorded_place(trace)
             out.append(
                 f"| {token.line} | {_cell(token.raw + token.unit)} | {trace.kind} | {trace.scope}"
-                f" | {_cell(trace.experiment)} | `{trace.source}` | {line}"
-                f" | {trace.sha256[:12] or 'n/a'} |"
+                f" | {_cell(trace.experiment)} | `{trace.source}` | {source_line or 'n/a'}"
+                f" | {sha256[:12] or 'n/a'} |"
             )
         out.append("")
     return "\n".join(out)
@@ -1493,8 +2074,15 @@ def print_document(result: DocumentResult, show_all: bool = False) -> None:
         audit = result.audit
         print(
             f"{result.path}: mutation audit {audit.escaped} of {audit.mutations} escaped "
-            f"({_rate_text(audit)}), by scope {audit.by_scope}"
+            f"({_percent_text(audit.rate)}), by scope {audit.by_scope}"
         )
+        print(
+            f"{result.path}: row substitutions {audit.substitutions_escaped} of "
+            f"{audit.substitutions} escaped ({_percent_text(audit.substitution_rate)}), "
+            f"by kind {audit.by_kind}"
+        )
+        for example in audit.examples:
+            print(f"  still resolves after substitution: {example}")
     if result.unused:
         print(f"{result.path}: not used: {', '.join(result.unused)}")
 
@@ -1578,9 +2166,13 @@ def _run_documents(repo: dv.Repo, args: argparse.Namespace) -> int:
 
 
 def _run_all(repo: dv.Repo, args: argparse.Namespace) -> int:
-    seed = args.seed if args.mutation_audit else None
-    if args.check and seed is None:
-        seed = _recorded_seed(repo.root)
+    seed = args.seed
+    if args.check:
+        recorded = _recorded_seed(repo.root)
+        if recorded is None:
+            print(f"error: {TRACE_JSON} records no mutation audit")
+            return 1
+        seed = recorded
     documents = dv.document_paths(repo.root)
     files, problems = dv.load_all(repo, documents)
     for name in dv.ROOT_DOCUMENTS:
@@ -1625,7 +2217,9 @@ def main(argv: Sequence[str] | None = None) -> int:
     parser.add_argument("--doc", nargs="+", help="check these documents only; write nothing")
     parser.add_argument("--all", action="store_true", help="with --doc: print resolved numbers")
     parser.add_argument("--hints", action="store_true", help="with --doc: where digits appear")
-    parser.add_argument("--mutation-audit", action="store_true")
+    parser.add_argument(
+        "--mutation-audit", action="store_true", help="with --doc: run the audits too"
+    )
     parser.add_argument("--seed", type=int, default=DEFAULT_SEED)
     args = parser.parse_args(argv)
     if args.doc and args.check:

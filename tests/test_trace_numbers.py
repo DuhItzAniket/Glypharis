@@ -470,7 +470,7 @@ def test_a_directive_anchor_narrows(root: Path) -> None:
 
 def test_stacked_directives(root: Path) -> None:
     second = "<!-- trace: GW-REC-001 reports/rec/report.md#test -->\n"
-    body = f"# D\n\n{TRACE_VAL}{second}The funsd set has 2,647 and gdc 8,372 lines.\n"
+    body = f"# D\n\n{TRACE_VAL}{second}The funsd set has 2,647 lines. The gdc set has 8,372.\n"
     found = traces(root, body)
     assert found["2,647"].resolved and found["8,372"].resolved
 
@@ -481,8 +481,9 @@ def test_id_is_credited_from_the_source_line(root: Path) -> None:
         "the gdc_test F1 was 71.25 and hiertext_test had 60.50.\n"
     )
     found = traces(root, body)
-    assert found["60.50"].experiment == "GW-E2E-009"  # the header's ID is the report's own
-    assert found["60.50"].link == "header"
+    assert found["60.50"].experiment == "GW-E2E-007"  # the row names it
+    assert found["60.50"].link == "row"
+    assert found["71.25"].resolved and found["71.25"].link == "header"  # GW-E2E-008 is not done
 
 
 # Numbers with few significant digits
@@ -513,13 +514,27 @@ def test_three_significant_digits_are_enough_in_a_section(root: Path) -> None:
 # Chance matches
 
 
-def test_table_cell_needs_a_neighbour_on_its_source_line(root: Path) -> None:
+def test_table_cell_must_be_on_the_row_its_label_names(root: Path) -> None:
     good = "| Set | Lines | WER % |\n|---|---|---|\n| funsd | 2,647 | 25.88 |\n"
     found = traces(root, f"# D\n\n{TRACE_VAL}{good}")
     assert found["2,647"].resolved and found["25.88"].resolved
     swapped = "| Set | Lines | WER % |\n|---|---|---|\n| funsd | 2,647 | 19.78 |\n"
     found = traces(root, f"# D\n\n{TRACE_VAL}{swapped}")
-    assert all(t.resolved for t in found.values())  # same source table: bind it to catch this
+    assert found["2,647"].resolved and not found["19.78"].resolved
+    assert "row or column" in found["19.78"].reason
+
+
+def test_table_cell_must_be_in_the_column_its_header_names(root: Path) -> None:
+    table = "| Set | CER % |\n|---|---|\n| funsd | 25.88 |\n"  # the WER of that row
+    trace = one(root, f"# D\n\n{TRACE_VAL}{table}", "25.88")
+    assert not trace.resolved and "row or column" in trace.reason
+
+
+def test_a_row_without_words_leans_on_its_neighbours(root: Path) -> None:
+    good = "| a | b |\n|---|---|\n| 2,647 | 25.88 |\n"
+    assert all(t.resolved for t in traces(root, f"# D\n\n{TRACE_VAL}{good}").values())
+    mixed = "| a | b |\n|---|---|\n| 2,647 | 19.78 |\n"
+    assert not any(t.resolved for t in traces(root, f"# D\n\n{TRACE_VAL}{mixed}").values())
 
 
 def test_table_cell_from_another_part_of_the_report_is_refused(root: Path) -> None:
@@ -545,13 +560,14 @@ def test_prose_number_must_share_a_word_with_its_source_line(root: Path) -> None
     good = f"# D\n\n{TRACE_VAL}Mean latency was 92.25 here.\n"
     assert resolved(root, good, "92.25")
     trace = one(root, f"# D\n\n{TRACE_VAL}Something unrelated was 92.25 here.\n", "92.25")
-    assert not trace.resolved and "shares no word" in trace.reason
+    assert not trace.resolved and "does not name that row" in trace.reason
 
 
-def test_prose_number_may_lean_on_a_neighbour_instead(root: Path) -> None:
+def test_prose_number_cannot_lean_on_a_neighbour(root: Path) -> None:
     body = f"# D\n\n{TRACE_VAL}We counted 74,500 and 6.51 overall.\n"
-    found = traces(root, body)
-    assert found["74,500"].resolved and found["6.51"].resolved
+    assert not any(t.resolved for t in traces(root, body).values())
+    named = f"# D\n\n{TRACE_VAL}On hiertext we counted 74,500 and 6.51 overall.\n"
+    assert all(t.resolved for t in traces(root, named).values())
 
 
 def test_a_very_narrow_source_needs_no_shared_word(root: Path) -> None:
@@ -610,6 +626,14 @@ def test_the_ledger_does_not_stand_in_for_a_row_of_one_experiment(root: Path) ->
     write(root, LEDGER_PATH, LEDGER)
     check = run(root, "# D\n\n" + ledger_binding("Phase 5=L14") + LEDGER_TABLE)
     assert any("names an experiment" in p.message for p in check.problems)
+
+
+def test_an_unbound_ledger_row_gets_no_wider_scope(root: Path) -> None:
+    write(root, LEDGER_PATH, LEDGER)
+    table = LEDGER_TABLE + "| Phase 13 | 217.2 | 61.7 |\n"
+    body = "# D\n\n## Costs of GW-REC-001\n\n" + ledger_binding("Phase 5=L7") + table
+    trace = one(root, body, "217.2")
+    assert not trace.resolved
 
 
 def test_the_ledger_stands_in_only_through_bound_rows(root: Path) -> None:
@@ -919,6 +943,49 @@ def test_sota_wording_fails(line: str) -> None:
 
 
 @pytest.mark.parametrize(
+    "text", ["This model is state of the\nart for documents.", "A cutting\nedge system."]
+)
+def test_sota_wording_is_found_across_a_line_break(text: str) -> None:
+    assert any("SOTA" in m for m in lint_messages(f"# D\n\n{text}\n"))
+
+
+@pytest.mark.parametrize(
+    "line",
+    [
+        "Phase 22 passed before the release.",
+        "Phase 23 published the weights once Phase 22 passed.",
+        "The v1 weights were released when Phase 21 ended.",
+    ],
+)
+def test_a_hedge_after_the_claim_does_not_cancel_it(line: str) -> None:
+    assert lint_messages(f"# D\n\n{line}\n")
+
+
+def test_a_wsl_home_is_a_personal_path() -> None:
+    assert "personal path" in lint_messages("# D\n\nSee /mnt/c/Users/someone/x.\n")
+
+
+@pytest.mark.parametrize(
+    "line", ["<!-- derived: a --> 6.30 was the value.", "  <!-- derived: a --> <!-- b --> Text."]
+)
+def test_a_line_starting_with_a_comment_and_text_fails(line: str) -> None:
+    assert any("starts with a comment" in m for m in lint_messages(f"# D\n\n{line}\n"))
+
+
+@pytest.mark.parametrize(
+    "text",
+    [
+        "<!-- trace: GW-REC-001 reports/rec/report.md -->\nText after it.",
+        "<!-- derived: a --> <!-- derived: b -->\n6.30 and 6.28.",
+        "Words <!-- derived: a --> 6.30 here.",
+        "```\n<!-- derived: a --> 6.30\n```",
+    ],
+)
+def test_comments_that_render_safely_pass(text: str) -> None:
+    assert not any("starts with a comment" in m for m in lint_messages(f"# D\n\n{text}\n"))
+
+
+@pytest.mark.parametrize(
     "line", ['They call it "state of the art" there.', "> This is state of the art, they wrote."]
 )
 def test_sota_wording_in_quotations_passes(line: str) -> None:
@@ -980,9 +1047,7 @@ def test_audit_counts_an_escape(root: Path) -> None:
 
 
 def test_audit_is_repeatable_and_depends_on_the_seed(root: Path) -> None:
-    long_table = "| Set | Lines |\n|---|---|\n" + "".join(
-        f"| s{n} | 74,500 |\n" for n in range(100)
-    )
+    long_table = "| Set | Lines |\n|---|---|\n" + "| hiertext | 74,500 |\n" * 100
     check = run(root, f"# D\n\n{TRACE_VAL}{long_table}")
     found = check.run()
     assert len(found) == 100
@@ -997,6 +1062,290 @@ def test_labels_are_not_mutated(root: Path) -> None:
     binding = "<!-- trace-table: GW-REC-001 reports/rec/s.md 1024=1024 -->\n"
     check = run(root, "# D\n\n" + binding + table)
     assert tn.audit_document(check, check.run(), 1).mutations == 6
+
+
+# Wrong rows, signs and credit: the mistakes the first review found by hand
+
+
+STRICT_PATH = "reports/external/strict.md"
+STRICT = """Generated by `scripts/phase14_score.py` (GW-E2E-009); do not edit by hand.
+
+# End to end
+
+## Track: strict
+
+| ID | System | Set | Pages | Page CER % |
+|---|---|---|---|---|
+| GW-E2E-007 | GLYPHARIS v1 | hiertext_test | 1,634 | 25.16 [23.44, 26.79] |
+| GW-BASE-006 | PP-OCRv6 small | hiertext_test | 1,634 | 42.93 [40.48, 45.29] |
+| GW-E2E-007 | GLYPHARIS v1 | gdc_test | 106 | 22.35 [15.87, 30.11] |
+| GW-BASE-007 | PP-OCRv6 medium | gdc_test | 106 | 20.96 [13.57, 29.78] |
+| GW-E2E-007 | GLYPHARIS v1 | omnidocbench_test | 755 | 27.28 [23.95, 30.57] |
+
+## Differences
+
+| Pair | Set | Difference (points) |
+|---|---|---|
+| GLYPHARIS v1 against PP-OCRv6 small | hiertext_test | -17.77 [-19.51, -16.01] |
+| GLYPHARIS v1 against PP-OCRv6 medium | gdc_test | +1.39 [-2.71, +6.88] |
+"""
+HEADLINE = (
+    "On HierText test (1,634 pages) GLYPHARIS had page CER 25.16% [23.44, 26.79], "
+    "against PP-OCRv6 small at 42.93% [40.48, 45.29].\n"
+)
+
+
+@pytest.fixture
+def strict(root: Path) -> Path:
+    write(root, STRICT_PATH, STRICT)
+    rows = "".join(
+        f"| GW-BASE-00{n} | 2026-10-01 | 05 | Baseline | done | CER | — |\n" for n in (6, 7)
+    )
+    write(root, "research/experiments.md", REGISTRY + rows)
+    return root
+
+
+def strict_body(sentence: str, anchor: str = "track-strict") -> str:
+    return f"# D\n\n<!-- trace: GW-E2E-009 {STRICT_PATH}#{anchor} -->\n{sentence}"
+
+
+def test_each_number_fits_the_row_named_beside_it(strict: Path) -> None:
+    found = traces(strict, strict_body(HEADLINE))
+    assert all(t.resolved for t in found.values())
+    assert found["25.16"].experiment == "GW-E2E-007"
+    assert found["42.93"].experiment == "GW-BASE-006"
+
+
+def test_two_intervals_exchanged_in_a_sentence_fail(strict: Path) -> None:
+    text = HEADLINE.replace("25.16% [23.44, 26.79]", "@@").replace(
+        "42.93% [40.48, 45.29]", "25.16% [23.44, 26.79]"
+    )
+    found = traces(strict, strict_body(text.replace("@@", "42.93% [40.48, 45.29]")))
+    assert not found["25.16"].resolved and not found["42.93"].resolved
+    assert "not the row" in found["42.93"].reason
+
+
+def test_an_interval_from_another_set_fails(strict: Path) -> None:
+    text = HEADLINE.replace("25.16% [23.44, 26.79]", "22.35% [15.87, 30.11]")
+    trace = one(strict, strict_body(text), "22.35")
+    assert not trace.resolved and "not the row" in trace.reason
+
+
+def test_a_page_count_from_another_set_fails(strict: Path) -> None:
+    trace = one(strict, strict_body(HEADLINE.replace("1,634", "755")), "755")
+    assert not trace.resolved and "does not name that row" in trace.reason
+
+
+def test_rows_exchanged_in_an_unbound_table_fail(strict: Path) -> None:
+    table = (
+        "| System | Set | Page CER % |\n|---|---|---|\n"
+        "| GLYPHARIS v1 (GW-E2E-007) | hiertext_test | 25.16 [23.44, 26.79] |\n"
+        "| PP-OCRv6 small (GW-BASE-006) | hiertext_test | 42.93 [40.48, 45.29] |\n"
+    )
+    assert all(t.resolved for t in traces(strict, strict_body(table)).values())
+    swapped = table.replace("25.16 [23.44, 26.79]", "@").replace(
+        "42.93 [40.48, 45.29]", "25.16 [23.44, 26.79]"
+    )
+    found = traces(strict, strict_body(swapped.replace("@", "42.93 [40.48, 45.29]")))
+    assert not found["25.16"].resolved and not found["42.93"].resolved
+
+
+def test_a_row_naming_another_id_is_refused(strict: Path) -> None:
+    table = (
+        "| System | Page CER % |\n|---|---|\n"
+        "| PP-OCRv6 small (GW-BASE-007) | 42.93 [40.48, 45.29] |\n"
+    )
+    assert not one(strict, strict_body(table), "42.93").resolved
+
+
+@pytest.mark.parametrize(
+    ("printed", "raw"),
+    [
+        ("GLYPHARIS against PP-OCRv6 small: 17.77 [16.01, 19.51] points", "17.77"),
+        ("GLYPHARIS against PP-OCRv6 small: -17.77 [19.51, 16.01] points", "19.51"),
+        ("GLYPHARIS against PP-OCRv6 medium: 1.39 [2.71, 6.88] points", "2.71"),
+        ("GLYPHARIS against PP-OCRv6 medium: +1.39 [2.71, +6.88] points", "2.71"),
+    ],
+)
+def test_a_dropped_minus_sign_in_an_interval_fails(strict: Path, printed: str, raw: str) -> None:
+    assert not one(strict, strict_body(f"{printed}.\n", "differences"), raw).resolved
+
+
+def test_signed_intervals_still_resolve(strict: Path) -> None:
+    body = strict_body(
+        "GLYPHARIS against PP-OCRv6 small: \u221217.77 [\u221219.51, \u221216.01].\n",
+        "differences",
+    )
+    assert all(t.resolved for t in traces(strict, body).values())
+    body = strict_body(
+        "GLYPHARIS against PP-OCRv6 medium: +1.39 [-2.71, +6.88] points.\n", "differences"
+    )
+    assert all(t.resolved for t in traces(strict, body).values())
+
+
+def test_a_table_cell_may_not_drop_a_minus_sign(strict: Path) -> None:
+    write(strict, "reports/rec/d.md", "Generated by `s` (GW-REC-001).\n\n| Set | D |\n|---|---|\n")
+    source = "Generated by `s` (GW-REC-001).\n\n| Set | D |\n|---|---|\n| hiertext | -1.25 |\n"
+    write(strict, "reports/rec/d.md", source)
+    directive = "<!-- trace: GW-REC-001 reports/rec/d.md -->\n"
+    table = "| Set | D |\n|---|---|\n| hiertext | 1.25 |\n"
+    assert not one(strict, f"# D\n\n{directive}{table}", "1.25").resolved
+    prose = f"# D\n\n{directive}On hiertext it was lower by 1.25.\n"
+    assert one(strict, prose, "1.25").resolved  # a size in prose
+
+
+def test_credit_follows_the_row_not_the_directive(strict: Path) -> None:
+    cited = f"<!-- trace: GW-E2E-007 {STRICT_PATH}#track-strict -->\n"
+    trace = one(strict, f"# D\n\n{cited}{HEADLINE}", "42.93")
+    assert trace.resolved and trace.experiment == "GW-BASE-006" and trace.link == "row"
+    own = one(strict, f"# D\n\n{cited}{HEADLINE}", "25.16")
+    assert own.experiment == "GW-E2E-007" and own.link == "row"
+
+
+def test_an_id_the_source_does_not_name_is_refused(strict: Path) -> None:
+    wrong = f"<!-- trace: GW-REC-001 {STRICT_PATH}#track-strict -->\n"
+    check = run(strict, f"# D\n\n{wrong}{HEADLINE}")
+    assert any("does not match" in p.message for p in check.problems)
+
+
+def test_the_registry_does_not_tie_an_id_to_a_file_in_its_folder(root: Path) -> None:
+    write(root, "reports/other/note.md", "# Notes\n\n| Set | N |\n|---|---|\n| a | 123 |\n")
+    check = run(root, "# D\n\n<!-- trace: GW-REC-003 reports/other/note.md -->\nThe a set: 123.\n")
+    assert any("does not match" in p.message for p in check.problems)
+
+
+def test_a_section_mentioning_an_id_does_not_credit_other_lines(root: Path) -> None:
+    write(
+        root,
+        "reports/other/mixed.md",
+        "# Notes\n\n## part\n\nCompare GW-REC-003 here.\n\nThe tally was 123.\n",
+    )
+    directive = "<!-- trace: GW-REC-003 reports/other/mixed.md#part -->\n"
+    trace = one(root, f"# D\n\n{directive}The tally was 123.\n", "123")
+    assert not trace.resolved and "nothing ties" in trace.reason
+
+
+def test_a_measured_constant_needs_its_id(strict: Path) -> None:
+    entry = {"value": "1,634", "context": "pages", "source": STRICT_PATH}
+    write(strict, DOC, "# D\n")
+    write(strict, dv.trace_file_path(DOC), json.dumps({"document": DOC, "constants": [entry]}))
+    _, problems = dv.load_trace_file(dv.Repo(strict), DOC)
+    assert problems and "comes from experiments" in problems[0].message
+    entry["id"] = "GW-E2E-007"
+    write(strict, dv.trace_file_path(DOC), json.dumps({"document": DOC, "constants": [entry]}))
+    loaded, problems = dv.load_trace_file(dv.Repo(strict), DOC)
+    assert not problems and loaded.constants[0].experiment == "GW-E2E-007"
+
+
+# Interval pins
+
+
+def pin(name: str, row: list[str], header: str = "Page CER %") -> dict[str, object]:
+    source = {"id": "GW-E2E-009", "source": f"{STRICT_PATH}#track-strict"}
+    return {
+        "name": name,
+        "formula": "x",
+        "inputs": {"x": {**source, "row": row, "header": header}},
+    }
+
+
+PINS = {
+    "derived": [
+        pin("glypharis", ["GLYPHARIS v1", "hiertext_test"]),
+        pin("small", ["PP-OCRv6 small", "hiertext_test"]),
+    ]
+}
+PINNED = (
+    "The pair was <!-- derived: glypharis --> 25.16% [23.44, 26.79] and "
+    "<!-- derived: small --> 42.93% [40.48, 45.29], in that order.\n"
+)
+
+
+def test_a_pin_fixes_the_whole_interval(strict: Path) -> None:
+    found = traces(strict, f"# D\n\n{PINNED}", PINS)
+    assert {t.kind for t in found.values()} == {"derived"}
+    assert found["23.44"].experiment == "GW-E2E-007"
+    assert found["45.29"].experiment == "GW-BASE-006"
+    assert found["26.79"].matched == "26.79"
+
+
+@pytest.mark.parametrize(
+    ("old", "new"),
+    [("23.44", "23.45"), ("26.79", "45.29"), ("25.16%", "42.93%")],
+)
+def test_a_pinned_interval_must_equal_its_cell(strict: Path, old: str, new: str) -> None:
+    check = run(strict, f"# D\n\n{PINNED.replace(old, new, 1)}", PINS)
+    assert not all(t.resolved for t in check.run())
+
+
+def test_a_pinned_interval_keeps_its_minus_signs(strict: Path) -> None:
+    entry = pin("gap", ["GLYPHARIS v1 against PP-OCRv6 small"], "Difference (points)")
+    entry["inputs"]["x"]["source"] = f"{STRICT_PATH}#differences"  # type: ignore[index]
+    good = "Here <!-- derived: gap --> -17.77 [-19.51, -16.01] points.\n"
+    assert all(t.resolved for t in traces(strict, f"# D\n\n{good}", {"derived": [entry]}).values())
+    bad = "Here <!-- derived: gap --> 17.77 [16.01, 19.51] points.\n"
+    found = traces(strict, f"# D\n\n{bad}", {"derived": [entry]})
+    assert not any(t.resolved for t in found.values())
+
+
+def test_a_pin_in_a_json_source(root: Path) -> None:
+    entry = {
+        "name": "cer",
+        "formula": "x",
+        "inputs": {"x": {"id": "GW-REC-003", "source": "reports/other/results.json", "row": "cer"}},
+    }
+    body = "# D\n\nIt was <!-- derived: cer --> 6.51% [6.36, 6.65].\n"
+    found = traces(root, body, {"derived": [entry]})
+    assert all(t.resolved for t in found.values()) and found["6.65"].scale == 100
+
+
+# The substitution audit
+
+
+def test_substitution_audit_catches_wrong_rows(strict: Path) -> None:
+    table = (
+        "| System | Set | Page CER % |\n|---|---|---|\n"
+        "| GLYPHARIS v1 | hiertext_test | 25.16 [23.44, 26.79] |\n"
+        "| PP-OCRv6 small | hiertext_test | 42.93 [40.48, 45.29] |\n"
+        "| GLYPHARIS v1 | gdc_test | 22.35 [15.87, 30.11] |\n"
+    )
+    check = run(strict, strict_body(table))
+    found = check.run()
+    assert all(t.resolved for t in found)
+    audit = tn.audit_document(check, found, 1)
+    assert audit.substitutions > 0 and audit.substitutions_escaped == 0
+    assert audit.substitution_rate <= tn.SUBSTITUTION_TARGET and not audit.over_target
+
+
+def test_substitution_audit_counts_an_escape(root: Path) -> None:
+    # Both rows carry the same label, so nothing in the document can tell them apart.
+    write(
+        root,
+        "reports/rec/twin.md",
+        "Generated by `s` (GW-REC-001).\n\n| Set | N |\n|---|---|\n"
+        "| twin | 1,234 |\n| twin | 5,678 |\n| other | 9,999 |\n",
+    )
+    source = "<!-- trace: GW-REC-001 reports/rec/twin.md -->\n"
+    check = run(root, f"# D\n\n{source}The twin set has 1,234.\n")
+    found = check.run()
+    audit = tn.audit_document(check, found, 1)
+    assert audit.substitutions_escaped > 0 and audit.by_kind.get("number")
+    assert audit.substitution_rate > tn.SUBSTITUTION_TARGET and audit.over_target
+    assert any("1,234 -> 5678" in example for example in audit.examples)
+
+
+def test_substitution_audit_keeps_the_sign_and_the_precision(root: Path) -> None:
+    token = nt.tokenize("-1.25")[0]
+    view = tn.View(nt.index_text("reports/a.md", "| a |\n|---|\n| 7.5 |\n| 7.51 |\n"), None, [])
+    assert tn._reprinted(token, view.values[0], view, False) is None  # coarser than printed
+    changed = tn._reprinted(token, view.values[1], view, False)
+    assert changed is not None and changed.value == Decimal("7.51") and not changed.sign
+
+
+def test_substitution_audit_is_repeatable(strict: Path) -> None:
+    check = run(strict, strict_body(HEADLINE))
+    found = check.run()
+    assert tn.audit_document(check, found, 3) == tn.audit_document(check, found, 3)
 
 
 # The command line
@@ -1056,6 +1405,28 @@ def test_lint_failure_stops_the_run(root: Path, capsys: pytest.CaptureFixture[st
     assert "lint" in capsys.readouterr().out
 
 
+def test_a_full_run_always_records_the_audits(root: Path) -> None:
+    write(root, DOC, GOOD)
+    assert main(root) == 0
+    data = json.loads((root / tn.TRACE_JSON).read_text(encoding="utf-8"))
+    assert data["mutation_audit"]["seed"] == tn.DEFAULT_SEED
+    assert data["mutation_audit"]["substitution_target"] == "5.0%"
+    assert "substitution_escape_rate" in data["documents"][DOC]["mutation_audit"]
+
+
+def test_check_fails_when_no_audit_is_recorded(
+    root: Path, capsys: pytest.CaptureFixture[str]
+) -> None:
+    write(root, DOC, GOOD)
+    assert main(root) == 0
+    path = root / tn.TRACE_JSON
+    data = json.loads(path.read_text(encoding="utf-8"))
+    data["mutation_audit"] = None
+    path.write_text(json.dumps(data), encoding="utf-8")
+    assert main(root, "--check") == 1
+    assert "records no mutation audit" in capsys.readouterr().out
+
+
 def test_check_current_stale_crlf_and_missing(root: Path) -> None:
     write(root, DOC, GOOD)
     assert main(root, "--check") == 1  # nothing written yet
@@ -1103,9 +1474,9 @@ def test_audit_above_target_fails(root: Path, capsys: pytest.CaptureFixture[str]
     write(root, "reports/rec/d.md", "# GW-REC-001\n\nThe dense values 5.50, 5.51, 5.52 and 5.53.\n")
     source = "<!-- trace: GW-REC-001 reports/rec/d.md -->\n"
     write(root, DOC, f"# D\n\n{source}The dense values held 5.50 steady.\n")
-    assert main(root) == 0
-    assert main(root, "--mutation-audit") == 1
+    assert main(root) == 1
     assert "mutation audit" in capsys.readouterr().out
+    assert outputs(root) == []
 
 
 def test_doc_mode_prints_place_and_reason(root: Path, capsys: pytest.CaptureFixture[str]) -> None:
@@ -1189,3 +1560,19 @@ def test_docstring_example_is_valid_json() -> None:
     example = json.loads(block[0])
     assert set(example) == {"document", "constants", "derived"}
     assert set(example["derived"][0]) == {"name", "formula", "note", "inputs"}
+
+
+def test_living_documents_keep_no_line_or_hash_in_the_report():
+    token = nt.tokenize("It was 12.5 here.")[0]
+    living = tn.Trace(token, "constant", source="docs/PHASE_STATUS.md", source_line=9, sha256="ab")
+    report = tn.Trace(token, "report", source="reports/x.md", source_line=9, sha256="ab")
+    entry = tn._number_entry(living)
+    assert (entry["source"], entry["source_line"], entry["source_sha256"]) == (
+        "docs/PHASE_STATUS.md",
+        0,
+        "",
+    )
+    assert (tn._number_entry(report)["source_line"], tn._number_entry(report)["source_sha256"]) == (
+        9,
+        "ab",
+    )

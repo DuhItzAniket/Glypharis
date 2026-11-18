@@ -1230,3 +1230,17 @@ def test_main_reports_directive_errors(tmp_path: Path, capsys: pytest.CaptureFix
     write(tmp_path, "d.md", "<!-- trace: nonsense -->\n\nText.\n")
     assert nt.main([str(tmp_path / "d.md")]) == 1
     assert "line 1" in capsys.readouterr().err
+
+
+@pytest.mark.parametrize(
+    ("text", "numbers"),
+    [
+        ("the validation figures 6.30, 6.22 and 24.32 differ", ["6.30", "6.22", "24.32"]),
+        ("the figures 6, 22 and 24 differ", ["6", "22", "24"]),
+        ("a figure 6.30 and a table 2.5", ["6.30", "2.5"]),
+        ("in total 1,000 items 2.5 long", ["1,000", "2.5"]),
+        ("See Figure 6, Figures 7 and 8, Table 2 and tables.", []),
+    ],
+)
+def test_reference_words_do_not_hide_quantities(text: str, numbers: list[str]) -> None:
+    assert [t.raw for t in nt.tokenize(text)] == numbers

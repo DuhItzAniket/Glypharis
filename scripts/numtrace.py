@@ -72,8 +72,11 @@ by column; every number in the second must come from the report's ``CER %`` cell
 ``derived`` names an entry of ``reports/paper_trace/derived.json``, and the number it applies to
 must equal that entry. Inside a paragraph, list or table cell it applies to the next number after
 it in the same block: ``about <!-- derived: fps_ratio --> 3.3 times``. Alone on its line it applies
-to the first number of the next block; several in a row take the numbers of that block in order. A
-name is letters, digits, ``_``, ``.`` and ``-``, starting with a letter or digit.
+to the first number of the next block; several in a row take the numbers of that block in order. An
+entry that pins a whole interval (see `trace_numbers`) is written before the interval's first
+number and covers all of it. A name is letters, digits, ``_``, ``.`` and ``-``, starting with a
+letter or digit. Do not start a line with a ``derived`` comment followed by text: Markdown would
+render that line as raw HTML. Keep at least one word before it.
 
 What counts as a number
 =======================
@@ -97,6 +100,10 @@ licences (``CC BY 4.0``, ``GPL-3.0``); digits inside a name (``fp32``, ``INT8``,
 hardware names (``RTX 4050``, ``i7-14650HX``). A number the rules do not recognise as one of these
 stays a number, so a mistake here shows up as a failed trace, not as a number nobody checked. To
 state a number that is not a quantity, put it in a code span.
+
+``Table``, ``Figure``, ``Item``, ``Step`` and ``Stage`` are references only before a whole number of
+at most three digits, and ``Tables`` and ``Figures`` only with a capital: in ``the figures 6.30 and
+6.22`` both numbers are quantities and are traced.
 
 The report index
 ================
@@ -162,16 +169,23 @@ _DAY: Final = r"[0-9]{1,2}(?:st|nd|rd|th)?"
 # Not the start of a larger number: "step 45,295" is a quantity.
 _NOT_THOUSANDS: Final = r"(?![0-9])(?!,[0-9]{3}(?![0-9]))"
 _REF: Final = rf"[0-9]{{1,3}}(?:\.[0-9]+)*[a-z]?{_NOT_THOUSANDS}"
+# For words that are also ordinary nouns: "figures 6.30" is a quantity, "Figure 6" a reference.
+_WHOLE_REF: Final = r"[0-9]{1,3}[a-z]?(?![0-9]|[.,][0-9])"
 _FILE_TYPES: Final = (
     "md|json|ya?ml|csv|tsv|txt|py|toml|png|jpe?g|pdf|onnx|pt|pth|ckpt|bib|tex|html?|log|zip|tar|gz"
     "|whl|safetensors|lock|sh|ps1|bin"
 )
 
 
-def _numbered(singular: str, plural: str, item: str = _REF) -> str:
-    """A reference word and its number: one number or range, or a list after the plural."""
+def _numbered(singular: str, plural: str, item: str = _REF, capital_plural: bool = False) -> str:
+    """A reference word and its number: one number or range, or a list after the plural.
+
+    With ``capital_plural`` the plural counts only when capitalized, because in lower case it is
+    ordinary prose: "the validation figures 6, 22 and 24".
+    """
+    many = plural if capital_plural else f"(?i:{plural})"
     return (
-        rf"(?<![\w-])(?i:{plural}){_WS}{item}(?:{_JOIN}{item})*"
+        rf"(?<![\w-]){many}{_WS}{item}(?:{_JOIN}{item})*"
         rf"|(?<![\w-])(?i:{singular}){_WS}{item}(?:{_RANGE}{item})?"
     )
 
@@ -246,11 +260,11 @@ _IDENTIFIERS: Final[tuple[tuple[re.Pattern[str], Callable[[str], bool] | None], 
         # References to parts of the project or the document.
         (_numbered("Phase", "Phases", rf"[0-9]{{1,2}}[a-z]?{_NOT_THOUSANDS}"), None),
         (_numbered("Section", "Sections"), None),
-        (_numbered("Table", "Tables"), None),
-        (_numbered("Figure", "Figures"), None),
-        (_numbered("Item", "Items"), None),
-        (_numbered("Step", "Steps"), None),
-        (_numbered("Stage", "Stages"), None),
+        (_numbered("Table", "Tables", _WHOLE_REF, capital_plural=True), None),
+        (_numbered("Figure", "Figures", _WHOLE_REF, capital_plural=True), None),
+        (_numbered("Item", "Items", _WHOLE_REF), None),
+        (_numbered("Step", "Steps", _WHOLE_REF), None),
+        (_numbered("Stage", "Stages", _WHOLE_REF), None),
         (_numbered("Chapter", "Chapters"), None),
         (_numbered("Equation", "Equations"), None),
         (_numbered("Algorithm", "Algorithms"), None),
