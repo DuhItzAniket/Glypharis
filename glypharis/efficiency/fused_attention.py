@@ -3,7 +3,7 @@
 The plain export (`glypharis.export.onnx.export_recognizer_onnx`) writes each global mixer's
 ``scaled_dot_product_attention`` as separate MatMul, Softmax and masking nodes over every token
 pair, where PyTorch runs a fused kernel; that is why the exported v1 recognizer is slower than
-PyTorch on the CPU (F9). This module swaps each `_GlobalMixer` of a copy of the model for
+PyTorch on the CPU (F13, F35). This module swaps each `_GlobalMixer` of a copy of the model for
 `FusedGlobalMixer` at export time, which computes the same thing and exports it as one
 ``com.microsoft.MultiHeadAttention`` node (ONNX Runtime's contrib op, CPU kernel included):
 

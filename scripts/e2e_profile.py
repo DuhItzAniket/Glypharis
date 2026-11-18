@@ -61,12 +61,12 @@ first reading to the last, as GW-EFF-005 times a page (from the decoded image: t
 read and decoded by `open_page_image` before the clock starts, so its time, recorded per page as
 ``file_decode_ms``, is not part of the page time; the first stage, ``to_rgb``, is the RGB array
 `load_rgb` makes). The nine stages of `STAGES` are checked against a second clock read around the
-whole call: they must sum to it within 1% (asserted). After the timed pages the first timed page
-is read once more with `GlypharisOCR.predict`, untimed by the stages, and must give the same
-lines; both readings' times are recorded. On CUDA every stage boundary is synchronised, and peak
-VRAM is recorded from torch (``max_memory_allocated``), with nvidia-smi's memory at the end for
-this process where the driver reports it (Windows' WDDM driver does not) and for the whole GPU
-(the display and other programs included). The output is never overwritten.
+whole call: they must sum to it within the larger of 1% and 5 ms (asserted). After the timed pages
+the first timed page is read once more with `GlypharisOCR.predict`, untimed by the stages, and must
+give the same lines; both readings' times are recorded. On CUDA every stage boundary is
+synchronised, and peak VRAM is recorded from torch (``max_memory_allocated``), with nvidia-smi's
+memory at the end for this process where the driver reports it (Windows' WDDM driver does not) and
+for the whole GPU (the display and other programs included). The output is never overwritten.
 """
 
 # ruff: noqa: E402  (the thread variables are set before numpy and torch are imported)
