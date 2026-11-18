@@ -85,7 +85,7 @@ transforms. Robustness is measured with a fixed corruption suite in the style of
 | Two-stage detector + recognizer | ADR-0001 |
 | Lines + CTC | ADR-0002 |
 | GlyphSynth next to SynthText | ADR-0003 |
-| Drop SynthText; commercially usable training data only | ADR-0009 |
+| Drop SynthText; commercially usable training data only | ADR-0009; v1 detector exception in ADR-0014 |
 | Fixed dataset roles | ADR-0005 |
 | ImageNet backbones only, no OCR weights | ADR-0007 |
 | Usable engine first, CPU-first inference | ADR-0008 |

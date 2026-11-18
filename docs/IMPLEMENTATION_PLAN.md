@@ -69,6 +69,7 @@ The answers, with their evidence, are in [`research/paper/results.md`](../resear
 Full provenance, licences, and citations are in [DATASETS.md](../DATASETS.md). Roles are fixed in
 [ADR-0005](decisions/ADR-0005-evaluation-data-roles.md) and [ADR-0009](decisions/ADR-0009-no-synthtext.md)
 and must not drift. Only commercially usable sources train delivered models; SynthText is dropped (ADR-0009).
+The v1 detector's ImageNet-1K initialisation is a disclosed exception (ADR-0014).
 
 | Role | Sources | Notes |
 |---|---|---|
@@ -502,7 +503,7 @@ Phases 0 to 20 have passed their gates, including the re-runs of 17, 18 and 20 o
 | GDC replaces the name "BookWorm-OCR-Challenge" | Keeps the repo consumer-neutral (brief §66) | — |
 | Phases 17, 18, 20 run right after Phase 10 for a v0.1, then again for the final model | The consumer needs a usable engine before the studies finish | ADR-0008 |
 | CPU-first inference; English printed text only | Deployment target undecided; owner decision on scope | ADR-0008 |
-| SynthText dropped; synthetic data only from GlyphSynth; RQ2 reframed; delivered models train only on commercially usable data | SynthText licence is non-commercial, 12-month, links withdrawn | ADR-0009 |
+| SynthText dropped; synthetic data only from GlyphSynth; RQ2 reframed; delivered models train only on commercially usable data | SynthText licence is non-commercial, 12-month, links withdrawn | ADR-0009; v1 detector exception in ADR-0014 |
 | GDC-scan built from one owner document's text layer instead of a hand-transcribed set of old scans | The born-digital source of the owner's document exists, so its text is exact; old scans remain a gap in GDC | ADR-0013 |
 | CLEval-style detection metrics descoped from Phase 8 | The Phase 8 task names "CLEval-style metrics per protocol", but EXPERIMENT_PROTOCOL §3 never defined one, so none was pre-registered. What CLEval measures, whether merges, splits and partial lines hide real detection quality, is answered in Phase 9 from merge and split counts, and a metric defined after the detector exists would be chosen after the fact. Signed off by the owner at the Phase 8 gate (2026-10-27) | EXPERIMENT_PROTOCOL §11 (2026-10-25) |
 | External test sets downloaded in Phase 14 and GlyphSynth inputs registered in Phase 4, not in Phase 2 | Each is fetched when it is first used | PHASE_STATUS, Phase 2 |
@@ -528,6 +529,7 @@ Phases 0 to 20 have passed their gates, including the re-runs of 17, 18 and 20 o
 | The Phase 21 number check also covers `MODEL_CARD.md` and `DATASETS.md` | WORKFLOW §6 applies to every document | PHASE_STATUS, Phase 21 |
 | Phase 22 also evaluates the fused-attention build and records the phone-measurement gap | Owner decision of 2026-11-18. A new version, not v1; validation and laptop figures only; to be evaluated in Phase 22 | ADR-0011, Phase 22 above |
 | v1's detector is initialised from ImageNet weights although ADR-0009 asks that sources allow commercial use | Owner decision of 2026-11-18: a disclosed exception, not a legal conclusion. Intended terms under ADR-0014, effective only if released | [ADR-0014](decisions/ADR-0014-weights-and-backbone-terms.md), Phase 23 above, `DATASETS.md`, ADR-0007, ADR-0009 |
+| `git grep "before v0.1"` still finds the old licence note in `data/sources.yaml`, `data/manifests/imagenet_backbones.json` and `data/DATASET_MANIFEST.yaml` | They record the note as written at download, and the number trace cites `imagenet_backbones.json` by hash, so Phase 21 leaves them alone. ADR-0014 and `DATASETS.md` carry the current statement; a later data pass may regenerate them | ADR-0014, PHASE_STATUS Phase 21 item 2 |
 
 ## 9. Traceability (brief section → where it is handled)
 

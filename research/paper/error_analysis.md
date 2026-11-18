@@ -17,24 +17,23 @@ rows resample source documents, and IIIT5K and GlyphSynth resample lines. The Ph
 from two marginal intervals. Slices are marginal and confounded (blur on a resized crop goes with
 line height, GDC condition with document). Bin edges are quartiles of the validation lines
 (GW-REC-038), fixed before any test row was read. GDC-scan is one document and appears as numbers
-only (ADR-0013). HierText-derived numbers: HierText annotations CC BY-SA 4.0, images CC BY 2.0;
-tables derived from them are shared alike.
+only (ADR-0013). HierText is released under CC BY-SA 4.0; its images come from Open Images, which
+lists them as CC BY 2.0. Tables derived from it are shared alike.
 
 ## 1. Where page error comes from
 
 The frozen pipeline's bag-of-lines errors on a page split into three parts: characters of
 ground-truth lines that no prediction matched (missed), errors on matched lines (matched), and
 characters of spurious predictions (spurious). The hand-off's pair sums agree with the page files on
-all 2,573 pages of the five page sets, OmniDocBench included. OmniDocBench has no budget, because its
-reference unit is a layout block.
+all <!-- derived: consistency_pages --> 2,573 pages of the five page sets, OmniDocBench included.
+OmniDocBench has no budget, because its reference unit is a layout block.
 
-<!-- trace: GW-E2E-010 reports/error_cases/phase15/pipeline.md#hiertext_test -->
-<!-- trace: GW-E2E-010 reports/error_cases/phase15/pipeline.md#gdc_test -->
-<!-- trace: GW-E2E-010 reports/error_cases/phase15/pipeline.md#gdc_scan_test -->
-<!-- trace: GW-E2E-010 reports/error_cases/phase15/pipeline.md#funsd_test -->
-
-Strict budgets: HierText test 203,171 bag errors on 1,634 pages, GDC 71,886 bag errors on 106 pages,
-GDC-scan 1,490 bag errors on 28 pages, FUNSD 16,074 bag errors on 50 pages.
+Strict budgets: HierText test <!-- derived: budget_ht_errors --> 203,171 bag errors
+on <!-- derived: budget_ht_pages --> 1,634 pages, GDC <!-- derived: budget_gdc_errors --> 71,886 bag
+errors on <!-- derived: budget_gdc_pages --> 106 pages,
+GDC-scan <!-- derived: budget_scan_errors --> 1,490 bag errors on <!-- derived: budget_scan_pages --> 28
+pages, FUNSD <!-- derived: budget_fu_errors --> 16,074 bag errors
+on <!-- derived: budget_fu_pages --> 50 pages.
 
 <!-- trace-table: GW-E2E-010 reports/error_cases/phase15/pipeline.md HierText test;missed=L17|HierText test;matched=L18|HierText test;spurious=L19|GDC;missed=L85|GDC;matched=L86|GDC;spurious=L87|GDC-scan;missed=L200|GDC-scan;matched=L201|GDC-scan;spurious=L202|FUNSD;missed=L264|FUNSD;matched=L265|FUNSD;spurious=L266 -->
 
@@ -57,8 +56,9 @@ GDC-scan 1,490 bag errors on 28 pages, FUNSD 16,074 bag errors on 50 pages.
 
 On HierText test and GDC about half of the page error was ground-truth lines that no prediction
 matched at IoU 0.5, and about a quarter was misread matched lines. On FUNSD the missed and spurious
-parts each held about two fifths. GDC's `rotated` pages differ: matched lines carried
-78.16% [45.80, 97.26] of the errors there (document CI), discussed in section 2.
+parts each held about two fifths. GDC's `rotated` pages differ: matched lines
+carried <!-- derived: rotated_matched --> 78.16% [45.80, 97.26] of the errors there (document CI), discussed
+in section 2.
 
 ### The oracle share (H4)
 
@@ -82,18 +82,19 @@ make if detection were perfect (GW-E2E-010).
 | curved | 8 | 8 | 12.47 [0.71, 35.21] | 12.47 [0.71, 35.21] |
 | rotated | 7 | 6 | 1.03 [0.34, 2.93] | 1.03 [0.36, 2.94] |
 
-<!-- trace: GW-E2E-010 reports/error_cases/phase15/oracle_share.md -->
-
-Over all GDC pages the oracle made 13,413 errors against the pipeline's 71,886, a share of 18.66%. On
-GDC-scan the share was 22.08% [12.65, 47.58] (information only). The point estimate is below half in
-every slice, the clean one included, although the clean slice's page interval reaches 51.91% and
-`scan_app`'s 58.41%. H4 expected the recognizer to account for most page error on clean pages, and
-on GDC these numbers do not support that (post hoc). H4 had no registered operational rule, and the
-per-condition page CERs published in Phase 14 already pointed this way, so this is a reading of the
-numbers, not a test. The share's complement is not a pure detector share either: it holds missed and
-poorly boxed lines, spurious predictions and the effect of crop shape. The same picture held on
-HierText validation in Phase 10, where ground-truth boxes would have left about a quarter of the page
-error (F10).
+Over all GDC pages the oracle made <!-- derived: oracle_all_errors --> 13,413 errors against the
+pipeline's <!-- derived: oracle_all_pipeline --> 71,886, a share
+of <!-- derived: oracle_all_share --> 18.66%. On GDC-scan the share
+was <!-- derived: oracle_scan_share --> 22.08% [12.65, 47.58] (information only). The point estimate is
+below half in every slice, the clean one included, although the clean slice's page interval
+reaches <!-- derived: oracle_clean_high --> 51.91% and
+`scan_app`'s <!-- derived: oracle_scanapp_high --> 58.41%. H4 expected the recognizer to account for most page
+error on clean pages, and on GDC these numbers do not support that (post hoc). H4 had no registered
+operational rule, and the per-condition page CERs published in Phase 14 already pointed this way, so
+this is a reading of the numbers, not a test. The share's complement is not a pure detector share
+either: it holds missed and poorly boxed lines, spurious predictions and the effect of crop shape.
+The same picture held on HierText validation in Phase 10, where ground-truth boxes would have left
+about a quarter of the page error (F10).
 
 ## 2. Detection failures
 
@@ -127,7 +128,7 @@ or a loose box cannot be told from IoU on test.
 On validation, Phase 9's analysis of the same detector (GW-DET-001 at the adopted settings) put the
 missed lines, fn 21,178 of 74,500 care lines, and the false alarms into these categories:
 
-<!-- trace: GW-DET-001 reports/error_cases/detector/phase09_adopted/analysis.md -->
+<!-- trace-table: GW-DET-001 reports/error_cases/detector/phase09_adopted/analysis.md#missed-lines-fn-by-category missed_no_candidate=missed_no_candidate|missed_low_score=missed_low_score|merged=merged|poorly_localised=poorly_localised|partly_found=partly_found|split=split|missed_dropped=missed_dropped -->
 
 | Category | Lines | Share of fn |
 |---|---|---|
@@ -139,7 +140,7 @@ missed lines, fn 21,178 of 74,500 care lines, and the false alarms into these ca
 | split | 747 | 3.5% |
 | missed_dropped | 53 | 0.3% |
 
-<!-- trace: GW-DET-001 reports/error_cases/detector/phase09_adopted/analysis.md -->
+<!-- trace-table: GW-DET-001 reports/error_cases/detector/phase09_adopted/analysis.md#false-alarms-fp-by-category background=background|fragment=fragment|merge=merge|poorly_localised=poorly_localised|other=other -->
 
 | Category | Predictions | Share of fp |
 |---|---|---|
@@ -171,11 +172,12 @@ for the GDC condition rows.
 | GDC | condition curved | 326 | 226 | 69.33 [58.17, 76.01] |
 | GDC | condition scan_app | 2,732 | 2,469 | 90.37 [85.67, 93.84] |
 
-`curved` and `scan_app` are the lowest and highest of GDC's seven conditions.
+`curved` and `scan_app` have the lowest and highest point estimates of GDC's seven conditions; no
+condition is called worse than another.
 
 Phase 9 saw the same pattern on validation at its own inference-scale bins:
 
-<!-- trace: GW-DET-001 reports/error_cases/detector/phase09_adopted/analysis.md -->
+<!-- trace-table: GW-DET-001 reports/error_cases/detector/phase09_adopted/analysis.md height 0–8 px=L42|angle 45° or more=L53 -->
 
 | Validation slice | Lines | Recall at IoU 0.5 |
 |---|---|---|
@@ -200,11 +202,10 @@ Matched-line CER by matched IoU (GW-E2E-010). Cited intervals are by page.
 | FUNSD | 0.7 to 0.85 | 860 | 5.61 [3.95, 7.78] | 7.39 |
 | FUNSD | 0.85 or more | 125 | 6.40 [3.32, 10.15] | 1.90 |
 
-<!-- trace: GW-E2E-010 reports/error_cases/phase15/results.json#pipeline/gdc_test/oracle_difference -->
-
-Paired on the same 7,041 matched GDC lines, the pipeline's crop made 2.048 [0.753, 3.817] (page CI)
-more errors per line than the ground-truth crop (sum 14,421; 1,160 lines more, 5,567 equal, 314
-fewer).
+Paired on the same <!-- derived: od_lines --> 7,041 matched GDC lines, the pipeline's crop
+made <!-- derived: od_mean --> 2.048 [0.753, 3.817] (page CI) more errors per line than the ground-truth
+crop (sum <!-- derived: od_sum --> 14,421; <!-- derived: od_more --> 1,160 lines
+more, <!-- derived: od_equal --> 5,567 equal, <!-- derived: od_fewer --> 314 fewer).
 
 ### Rotated pages
 
@@ -214,15 +215,12 @@ fewer).
 |---|---|---|---|
 | recall of their lines | 402 | 347 | 86.32 [61.83, 98.99] |
 
-<!-- trace: GW-REC-040 reports/error_cases/phase15/recognition.md#gdc_test -->
-<!-- trace: GW-E2E-010 reports/error_cases/phase15/oracle_share.md#gdc_test -->
-<!-- trace: GW-E2E-010 reports/error_cases/phase15/pipeline.md#gdc_test -->
-
-GDC's 7 rotated pages were photographed sideways. From ground-truth crops the recognizer read their
-lines at 0.82% [0.25, 2.67] CER (GW-REC-040, document CI; this is a crop CER, not the oracle page CER
-of F24). Matched lines still carried 78.16% [45.80, 97.26] of the pipeline's errors there and the
-oracle share was 1.03% [0.34, 2.93]. The pipeline hands the recognizer sideways crops because it has
-no page-orientation step (F24).
+GDC's <!-- derived: rotated_pages --> 7 rotated pages were photographed sideways. From ground-truth
+crops the recognizer read their lines at <!-- derived: rotated_crop_cer --> 0.82% [0.25, 2.67] CER
+(GW-REC-040, document CI; this is a crop CER, not the oracle page CER of F24). Matched lines still
+carried <!-- derived: rotated_matched --> 78.16% [45.80, 97.26] of the pipeline's errors there, and
+the oracle share was <!-- derived: rotated_oracle --> 1.03% [0.34, 2.93]. The pipeline hands the
+recognizer sideways crops because it has no page-orientation step (F24).
 
 ### Forms
 
@@ -230,9 +228,13 @@ no page-orientation step (F24).
 <!-- trace: GW-E2E-010 reports/error_cases/phase15/pipeline.md#hiertext_test -->
 <!-- trace: GW-E2E-010 reports/error_cases/phase15/pipeline.md#gdc_test -->
 
-FUNSD's boxes are loose. At 0.7 or more, the matched IoU share is 47.11 [42.48, 51.39]% of its
-2,091 matches, against 85.90 [85.08, 86.70]% on HierText test and 91.14 [88.27, 93.44]% on GDC (page
-CIs). Matched lines carry 19.39% of its page error.
+On FUNSD, <!-- derived: iou_fu --> 47.11
+[<!-- derived: iou_fu_low --> 42.48, <!-- derived: iou_fu_high --> 51.39]% of the <!-- derived: iou_fu_matches --> 2,091 matches have a
+matched IoU of 0.7 or more, against <!-- derived: iou_ht --> 85.90
+[<!-- derived: iou_ht_low --> 85.08, <!-- derived: iou_ht_high --> 86.70]% on HierText test
+and <!-- derived: iou_gdc --> 91.14
+[<!-- derived: iou_gdc_low --> 88.27, <!-- derived: iou_gdc_high --> 93.44]% on GDC (page CIs). Matched lines
+carry <!-- derived: funsd_matched_share --> 19.39% of FUNSD's page error.
 
 <!-- trace-table: GW-E2E-009 reports/external/comparisons.md PP-OCRv6 small=L47 -->
 
@@ -260,12 +262,11 @@ not an exact decomposition).
 | GW-BASE-006 PP-OCRv6 small | 42.86 | 22.29 | +681.642 [320.701, 1022.451] |
 | GW-BASE-007 PP-OCRv6 medium | 42.87 | 20.96 | +721.915 [347.764, 1068.379] |
 
-<!-- trace: GW-E2E-010 reports/error_cases/phase15/results.json#pipeline/gdc_test/inversions -->
-
-On GDC 1,010 of 6,935 consecutive matched ground-truth lines came out in the opposite order,
-14.56% [9.93, 20.36] (page CI). The interval of the mean difference lies above zero for the four
-PaddleOCR systems and crosses zero for GLYPHARIS. For Tesseract it lies below zero: its bag-of-lines
-error exceeds its order-aware error.
+On GDC <!-- derived: inv_count --> 1,010 of <!-- derived: inv_total --> 6,935 consecutive matched
+ground-truth lines came out in the opposite order, <!-- derived: inv_share --> 14.56% [9.93, 20.36]
+(page CI). The interval of the mean difference lies above zero for the four PaddleOCR systems and
+crosses zero for GLYPHARIS. For Tesseract it lies below zero: its bag-of-lines error exceeds its
+order-aware error.
 
 On OmniDocBench only the order-aware column means anything. The bag-of-lines CERs beside it are not
 meaningful, because OmniDocBench's reference is blocks, not lines, and Phase 14 marks bag of lines
@@ -355,9 +356,9 @@ The rate is per occurrence of the reference character (`reports/confusion_analys
 | § read as 8 | 34 | 73.913 |
 | π read as T | 20 | 68.966 |
 
-<!-- trace: GW-REC-040 reports/error_cases/phase15/examples.md#the-most-frequent-gdc-edit-operation-types -->
-
-The 4,941 space deletions fall on 583 GDC lines and the 4,153 full-stop deletions on 391 lines.
+The <!-- derived: space_del_count --> 4,941 space deletions fall
+on <!-- derived: space_del_lines --> 583 GDC lines and the <!-- derived: stop_del_count --> 4,153
+full-stop deletions on <!-- derived: stop_del_lines --> 391 lines.
 
 <!-- trace: GW-REC-040 reports/error_cases/phase15/recognition.md#gdc_test -->
 
@@ -404,21 +405,36 @@ matrices for GDC and HierText test are PNG files beside the reports).
 
 CER with its cited interval, then the slice's share of the set's errors.
 
-<!-- trace: GW-REC-040 reports/error_cases/phase15/recognition.md#hiertext_test -->
-<!-- trace: GW-REC-040 reports/error_cases/phase15/recognition.md#gdc_test -->
-<!-- trace: GW-REC-040 reports/error_cases/phase15/recognition.md#funsd_test -->
+<!-- trace-table: GW-REC-040 reports/error_cases/phase15/recognition.md HierText test;height < 9.35 px=L47|HierText test;height ≥ 21.485 px=L50|HierText test;blur\, lowest quartile=L56|HierText test;contrast\, lowest quartile=L65|HierText test;rotation 15° or more=L95|HierText test;digit lines=L102|HierText test;all-upper-case lines=L116|HierText test;out of charset=L130|HierText test;confidence\, lowest quartile=L83|GDC;height < 9.35 px=L237|GDC;height ≥ 21.485 px=L240|GDC;blur\, lowest quartile=L246|GDC;contrast\, lowest quartile=L255|GDC;rotation 15° or more=L285|GDC;digit lines=L301|GDC;all-upper-case lines=L315|GDC;out of charset=L329|GDC;confidence\, lowest quartile=L273|FUNSD;height < 9.35 px=L580|FUNSD;height ≥ 21.485 px=L583|FUNSD;digit lines=L630|FUNSD;all-upper-case lines=L644|FUNSD;out of charset=L658|FUNSD;confidence\, lowest quartile=L614 -->
 
-| Slice | HierText test | GDC | FUNSD |
+| Set | Slice | CER % [cited CI] | Share of the set's errors % |
 |---|---|---|---|
-| height < 9.35 px | 11.01 [9.90, 12.22], 30.24% | 61.06 [29.54, 98.00], 0.51% | 21.76 [5.35, 54.19], 2.81% |
-| height ≥ 21.485 px | 7.05 [6.27, 7.92], 31.83% | 4.01 [2.19, 6.32], 84.65% | 27.74 [17.30, 38.51], 37.62% |
-| blur, lowest quartile | 11.53 [10.67, 12.50], 35.96% | 23.78 [16.34, 61.62], 4.46% | no lines |
-| contrast, lowest quartile | 9.35 [8.49, 10.28], 33.97% | 15.44 [6.32, 32.15], 25.30% | no lines |
-| \|θ\| ≥ 15° | 10.82 [9.60, 12.07], 19.01% | 1.32 [0.24, 3.50], 1.38% | no lines |
-| digit lines | 6.79 [5.85, 7.88], 22.16% | 7.45 [3.98, 11.51], 81.00% | 11.22 [9.77, 12.65], 44.06% |
-| all-upper-case lines | 8.61 [7.82, 9.45], 35.38% | 42.79 [3.71, 57.26], 13.20% | 4.40 [3.20, 6.00], 20.82% |
-| out of charset | 25.98 [14.37, 39.80], 2.65% | 16.07 [6.68, 27.47], 13.62% | 15.89 [8.77, 27.54], 2.52% |
-| confidence, lowest quartile | 24.01 [22.88, 25.25], 78.51% | 27.83 [21.82, 36.66], 22.79% | 28.62 [21.41, 36.84], 65.42% |
+| HierText test | height < 9.35 px | 11.01 [9.90, 12.22] | 30.24 |
+| HierText test | height ≥ 21.485 px | 7.05 [6.27, 7.92] | 31.83 |
+| HierText test | blur, lowest quartile | 11.53 [10.67, 12.50] | 35.96 |
+| HierText test | contrast, lowest quartile | 9.35 [8.49, 10.28] | 33.97 |
+| HierText test | rotation 15° or more | 10.82 [9.60, 12.07] | 19.01 |
+| HierText test | digit lines | 6.79 [5.85, 7.88] | 22.16 |
+| HierText test | all-upper-case lines | 8.61 [7.82, 9.45] | 35.38 |
+| HierText test | out of charset | 25.98 [14.37, 39.80] | 2.65 |
+| HierText test | confidence, lowest quartile | 24.01 [22.88, 25.25] | 78.51 |
+| GDC | height < 9.35 px | 61.06 [29.54, 98.00] | 0.51 |
+| GDC | height ≥ 21.485 px | 4.01 [2.19, 6.32] | 84.65 |
+| GDC | blur, lowest quartile | 23.78 [16.34, 61.62] | 4.46 |
+| GDC | contrast, lowest quartile | 15.44 [6.32, 32.15] | 25.30 |
+| GDC | rotation 15° or more | 1.32 [0.24, 3.50] | 1.38 |
+| GDC | digit lines | 7.45 [3.98, 11.51] | 81.00 |
+| GDC | all-upper-case lines | 42.79 [3.71, 57.26] | 13.20 |
+| GDC | out of charset | 16.07 [6.68, 27.47] | 13.62 |
+| GDC | confidence, lowest quartile | 27.83 [21.82, 36.66] | 22.79 |
+| FUNSD | height < 9.35 px | 21.76 [5.35, 54.19] | 2.81 |
+| FUNSD | height ≥ 21.485 px | 27.74 [17.30, 38.51] | 37.62 |
+| FUNSD | digit lines | 11.22 [9.77, 12.65] | 44.06 |
+| FUNSD | all-upper-case lines | 4.40 [3.20, 6.00] | 20.82 |
+| FUNSD | out of charset | 15.89 [8.77, 27.54] | 2.52 |
+| FUNSD | confidence, lowest quartile | 28.62 [21.41, 36.84] | 65.42 |
+
+FUNSD has no lines in the lowest blur or contrast quartile, or at a rotation of 15° or more.
 
 Confidence by quartile, with the edges taken from the validation lines:
 
@@ -445,12 +461,11 @@ Document groups carry no interval.
 | form | 1,649 | 12 | 2.96 | 13.99 |
 | paper | 3,630 | 44 | 1.02 | 11.70 |
 
-<!-- trace: GW-REC-040 reports/error_cases/phase15/recognition.md#gdc_test -->
-
-By condition `scan_app` holds 53.40% of the errors at 6.55% [2.42, 11.30] (document CI). The paper
-group, like the book group, was photographed in every condition. Its lowest and highest condition
-CERs are below. Conditions go with documents (the condition by group table of the report), so the
-condition rows are not condition effects.
+By condition `scan_app` holds <!-- derived: scanapp_share --> 53.40% of the errors
+at <!-- derived: scanapp_cer --> 6.55% [2.42, 11.30] (document CI). The paper group, like the book
+group, was photographed in every condition. Its lowest and highest condition CERs are below.
+Conditions go with documents (the condition by group table of the report), so the condition rows are
+not condition effects.
 
 <!-- trace-table: GW-REC-040 reports/error_cases/phase15/recognition.md curved=L367|distant=L368 -->
 
@@ -464,23 +479,17 @@ condition rows are not condition effects.
 Every wrong line gets one primary category by a fixed precedence, in the order of this table. Shares
 are of the set's character errors, in percent.
 
-<!-- trace: GW-REC-040 reports/error_cases/phase15/recognition.md#hiertext_test -->
-<!-- trace: GW-REC-040 reports/error_cases/phase15/recognition.md#hiertext_val -->
-<!-- trace: GW-REC-040 reports/error_cases/phase15/recognition.md#gdc_test -->
-<!-- trace: GW-REC-040 reports/error_cases/phase15/recognition.md#funsd_test -->
-<!-- trace: GW-REC-040 reports/error_cases/phase15/recognition.md#iiit5k_test -->
-
 | Category | HierText test | HierText validation | GDC | FUNSD | IIIT5K |
 |---|---|---|---|---|---|
-| out_of_charset | 2.65 | 4.20 | 13.62 | 2.52 | 0.00 |
-| rotation_ge_5 | 34.92 | 37.69 | 1.90 | 0.00 | 0.00 |
-| height_q1 | 21.30 | 18.31 | 0.45 | 2.70 | 0.00 |
-| blur_q1 | 8.28 | 6.96 | 3.96 | 0.00 | 0.00 |
-| contrast_q1 | 5.46 | 5.09 | 20.41 | 0.00 | 2.76 |
-| digit | 7.23 | 5.54 | 49.21 | 43.21 | 1.66 |
-| punctuation | 8.48 | 8.11 | 9.34 | 31.32 | 0.00 |
-| long_word | 1.93 | 2.52 | 0.34 | 11.46 | 7.73 |
-| other | 9.75 | 11.59 | 0.78 | 8.79 | 87.85 |
+| out_of_charset | <!-- derived: cat_ht_out_of_charset --> 2.65 | <!-- derived: cat_val_out_of_charset --> 4.20 | <!-- derived: cat_gdc_out_of_charset --> 13.62 | <!-- derived: cat_fu_out_of_charset --> 2.52 | <!-- derived: cat_iiit_out_of_charset --> 0.00 |
+| rotation_ge_5 | <!-- derived: cat_ht_rotation_ge_5 --> 34.92 | <!-- derived: cat_val_rotation_ge_5 --> 37.69 | <!-- derived: cat_gdc_rotation_ge_5 --> 1.90 | <!-- derived: cat_fu_rotation_ge_5 --> 0.00 | <!-- derived: cat_iiit_rotation_ge_5 --> 0.00 |
+| height_q1 | <!-- derived: cat_ht_height_q1 --> 21.30 | <!-- derived: cat_val_height_q1 --> 18.31 | <!-- derived: cat_gdc_height_q1 --> 0.45 | <!-- derived: cat_fu_height_q1 --> 2.70 | <!-- derived: cat_iiit_height_q1 --> 0.00 |
+| blur_q1 | <!-- derived: cat_ht_blur_q1 --> 8.28 | <!-- derived: cat_val_blur_q1 --> 6.96 | <!-- derived: cat_gdc_blur_q1 --> 3.96 | <!-- derived: cat_fu_blur_q1 --> 0.00 | <!-- derived: cat_iiit_blur_q1 --> 0.00 |
+| contrast_q1 | <!-- derived: cat_ht_contrast_q1 --> 5.46 | <!-- derived: cat_val_contrast_q1 --> 5.09 | <!-- derived: cat_gdc_contrast_q1 --> 20.41 | <!-- derived: cat_fu_contrast_q1 --> 0.00 | <!-- derived: cat_iiit_contrast_q1 --> 2.76 |
+| digit | <!-- derived: cat_ht_digit --> 7.23 | <!-- derived: cat_val_digit --> 5.54 | <!-- derived: cat_gdc_digit --> 49.21 | <!-- derived: cat_fu_digit --> 43.21 | <!-- derived: cat_iiit_digit --> 1.66 |
+| punctuation | <!-- derived: cat_ht_punctuation --> 8.48 | <!-- derived: cat_val_punctuation --> 8.11 | <!-- derived: cat_gdc_punctuation --> 9.34 | <!-- derived: cat_fu_punctuation --> 31.32 | <!-- derived: cat_iiit_punctuation --> 0.00 |
+| long_word | <!-- derived: cat_ht_long_word --> 1.93 | <!-- derived: cat_val_long_word --> 2.52 | <!-- derived: cat_gdc_long_word --> 0.34 | <!-- derived: cat_fu_long_word --> 11.46 | <!-- derived: cat_iiit_long_word --> 7.73 |
+| other | <!-- derived: cat_ht_other --> 9.75 | <!-- derived: cat_val_other --> 11.59 | <!-- derived: cat_gdc_other --> 0.78 | <!-- derived: cat_fu_other --> 8.79 | <!-- derived: cat_iiit_other --> 87.85 |
 
 On HierText, test and validation alike, `rotation_ge_5` and `height_q1` are the two largest
 categories, which fits F15's rotation weakness on GLYPH-C. `digit` and `contrast_q1` lead on GDC, and
@@ -501,6 +510,8 @@ ADR-0002's buckets, by strict-normalised reference length.
 | HierText test | 70+ | 797 | 3.31 | 4.74 |
 | GDC | 70+ | 1,388 | 6.37 | 61.80 |
 
+<!-- trace: GW-REC-040 reports/error_cases/phase15/recognition.md#gdc_test -->
+
 Long lines hold a small share of HierText's errors, so ADR-0002's revisit trigger was not reached.
 The 20 worst GDC lines are dot leaders, and the seeded draws show leaders in other documents too, but
 no per-line attribute labels them, so their share of the 70+ bucket and of the full-stop deletions
@@ -514,9 +525,8 @@ Likely label fragments (a very short reference read as a much longer string) are
 HierText test, with 145 character errors (0.30% of the set's) and 139 insertions (1.94% of its
 insertions). Without them CER is 6.02%.
 
-<!-- trace: GW-REC-040 reports/error_cases/phase15/recognition.md#hiertext_val -->
-
-On validation they are 15 lines and 0.19% of the character errors.
+On validation they are <!-- derived: frag_val_lines --> 15 lines
+and <!-- derived: frag_val_share --> 0.19% of the character errors.
 
 ## 5. Labelled synthetic slices
 
@@ -548,10 +558,11 @@ serif reads at 0.83%, sans at 0.60% and mono at 0.62%.
 <!-- trace: GW-REC-034 reports/robustness/GW-REC-034.json#clean_cer -->
 <!-- trace: GW-REC-034 reports/robustness/GW-REC-034.json#mce -->
 
-GLYPH-C gives the corruption side for GW-REC-034, the shipped recognizer. Its 216,000 crops come from
-6,000 samples, 3,000 from HierText validation lines and 3,000 from GlyphSynth validation lines. The
-clean CER of 1.93% is on that mixed pack, half of it rendered lines, so it is not comparable with a
-HierText CER. Its mCE is 3.54%.
+GLYPH-C gives the corruption side for GW-REC-034, the shipped recognizer. Its 216,000 crops come
+from 6,000 samples, <!-- derived: glyphc_per_source --> 3,000 from HierText validation lines
+and <!-- derived: glyphc_per_source --> 3,000 from GlyphSynth validation lines. The clean CER of 1.93%
+is on that mixed pack, half of it rendered lines, so it is not comparable with a HierText CER. Its
+mCE is 3.54%.
 
 <!-- trace-table: GW-REC-034 reports/robustness/GW-REC-034.json#cer_per_corruption_level rotate=rotate|low_resolution=low_resolution|jpeg=jpeg|perspective=perspective|gaussian_noise=gaussian_noise|gaussian_blur=gaussian_blur|contrast=contrast -->
 
@@ -612,12 +623,15 @@ GLYPHARIS's crop CER on GDC is above that of PP-OCRv5 mobile, PP-OCRv6 small and
 <!-- trace: GW-REC-040 reports/error_cases/phase15/recognition.md#gdc_test -->
 
 Every system but TrOCR-small-printed has a higher deletion rate than substitution rate on GDC, and
-every system but PP-OCRv5 server reads between 87.11% (PP-OCRv6 tiny) and 90.69% (Tesseract) of the
-reference spaces as spaces. GLYPHARIS reads 73.02% of reference punctuation as itself, PP-OCRv5
-mobile and PP-OCRv6 86.90 to 89.95%, and Tesseract 71.42%. PP-OCRv5 mobile and PP-OCRv6 also read
-some out-of-charset characters (26.97 to 43.33% on the strict track), which GLYPHARIS cannot by
-construction. The class rates have no interval, so no difference between systems is stated from
-them.
+every system but PP-OCRv5 server reads between <!-- derived: space_lowest --> 87.11% (PP-OCRv6 tiny)
+and <!-- derived: space_highest --> 90.69% (Tesseract) of the reference spaces as spaces. GLYPHARIS
+reads <!-- derived: punct_glypharis --> 73.02% of reference punctuation as itself, PP-OCRv5 mobile
+and PP-OCRv6 <!-- derived: punct_lowest_ppocr --> 86.90
+to <!-- derived: punct_highest_ppocr --> 89.95%, and
+Tesseract <!-- derived: punct_tesseract --> 71.42%. PP-OCRv5 mobile and PP-OCRv6 also read some out-of-charset
+characters (<!-- derived: oov_lowest --> 26.97 to <!-- derived: oov_highest --> 43.33% on the strict
+track), which GLYPHARIS cannot by construction. The class rates have no interval, so no difference
+between systems is stated from them.
 
 <!-- trace-table: GW-REC-040 reports/error_cases/phase15/recognition.md GW-REC-039 GLYPHARIS v1=L163|GW-BASE-006 PP-OCRv6 small=L173 -->
 
@@ -632,16 +646,18 @@ them.
 |---|---|---|
 | GLYPHARIS minus PP-OCRv6 small | 67,574 | -1.03 [-1.14, -0.92] |
 
-PP-OCRv6 small has the lowest crop CER of the baselines run on HierText test. The class and deletion
-rates in the first table carry no interval, so no difference is stated from them.
+PP-OCRv6 small has the lowest crop CER point estimate of the baselines run on HierText test. The
+class and deletion rates in the first table carry no interval, so no difference is stated from them.
 
 ## 7. Limits
 
 <!-- trace: GW-REC-040 reports/error_cases/phase15/README.md#notes -->
 
-- GDC is 106 pages from 21 documents, GDC-scan one document and FUNSD 50 forms. The document-cluster
-  intervals with 6 to 21 clusters (the per-condition ones fewest) cover less than nominal, and
-  conditions go with documents, so no per-condition contrast is drawn.
+- GDC is <!-- derived: gdc_pages --> 106 pages from <!-- derived: gdc_documents --> 21 documents,
+  GDC-scan one document and FUNSD <!-- derived: budget_fu_pages --> 50 forms. The document-cluster
+  intervals with <!-- derived: rotated_documents --> 6 to <!-- derived: gdc_documents --> 21
+  clusters (the per-condition ones fewest) cover less than nominal, and conditions go with
+  documents, so no per-condition contrast is drawn.
 - Merges and splits cannot be told apart from IoU on test; Phase 9's validation categories stand
   in for them, from the same detector.
 - The oracle share is not a pure detector share, and H4 is read post hoc.

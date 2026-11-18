@@ -14,9 +14,9 @@ manifest or a configuration file, and carries its experiment ID where a run prod
 Final validation (Phase 22) has not been run. Configuration frozen and recorded; reproduction
 pending Phase 22. No weights are distributed; release is Phase 23.
 
-Numbers derived from HierText come from annotations under CC BY-SA 4.0 and images under CC BY 2.0
-(`long2022hiertext`; the images come from Open Images, `kuznetsova2020openimages`). Tables derived
-from them are shared alike.
+HierText is released under CC BY-SA 4.0; its images come from Open Images, which lists them as
+CC BY 2.0 (`long2022hiertext`, `kuznetsova2020openimages`). Tables derived from HierText are shared
+alike.
 
 ## 1. System overview
 
@@ -91,17 +91,17 @@ used for recognizer training. The test row is a count from the manifest; no test
 to write it.
 
 <!-- trace: data/manifests/processed/hiertext.json data/manifests/processed/hiertext.json#crop_settings -->
-Line crops were cut once and stored. Each line was warped along its quadrilateral to a strip 64
-pixels high, with a margin of 0.15 of the line height on every side, and saved as JPEG at quality
-95. Lines longer than 64 times their height were not cut for the training packs.
+Line crops were cut once and stored. Each line was warped along its quadrilateral to a strip <!-- derived: crop_height --> 64
+pixels high, with a margin of 0.15 of the line height on every side, and saved as JPEG at quality 95.
+Lines longer than <!-- derived: crop_max_aspect --> 64 times their height were not cut for the training packs.
 
 <!-- trace: data/manifests/processed/hiertext.json data/manifests/processed/hiertext.json#splits/validation/rec_skip -->
 <!-- trace: data/manifests/processed/hiertext.json data/manifests/processed/hiertext.json#splits/validation/lines_rec_ok -->
 <!-- trace: data/manifests/processed/eval_crops.json data/manifests/processed/eval_crops.json#hiertext_val/count -->
 Two validation line sets exist, and they give different numbers. The training pack holds the 73,888
 lines the recognizer can represent, and it was used for checkpoint selection and calibration. The
-evaluation pack adds back the 590 out-of-charset lines and the 22 lines that were too long, which
-gives 74,500 crops, so that an evaluation set is not shaped by one system's limits.
+evaluation pack adds back the 590 out-of-charset lines and the <!-- derived: val_too_long --> 22 lines that were too long, which
+gives <!-- derived: val_eval_crops --> 74,500 crops, so that an evaluation set is not shaped by one system's limits.
 
 Code: `glypharis/data/hiertext.py`, `glypharis/data/crops.py`, `glypharis/data/linepack.py`,
 `scripts/prepare_hiertext.py`, `scripts/build_eval_crops.py`. Configuration:
@@ -119,7 +119,7 @@ different in print.
 <!-- trace: data/manifests/charset.json data/manifests/charset.json#special_tokens -->
 The character set was derived from HierText training labels only. It holds every Latin or Greek
 letter, digit, punctuation mark and symbol seen at least 10 times, plus the space. With the CTC
-blank at index 0 the recognizer has 275 output classes. Lines containing other characters were left
+blank at index 0 the recognizer has <!-- derived: charset_classes --> 275 output classes. Lines containing other characters were left
 out of recognizer training but stay in the evaluation sets, where such characters count as errors
 no model with this character set can avoid. Their share of the reference is reported next to each
 result as the charset ceiling.
@@ -135,7 +135,7 @@ GlyphSynth is a generator of document-style text lines written for this project.
 determined by a seed and an index. It takes text from public-domain books (PG-19,
 `rae2020compressive`) and from generated modern snippets, renders it in fonts from a pinned
 collection, and adds capture effects such as paper texture, uneven light, blur and noise. The
-training pack has 100,000 lines from 85 font families. The validation pack has 10,000 lines from
+training pack has <!-- derived: synth_train_lines --> 100,000 lines from 85 font families. The validation pack has 10,000 lines from
 other font families and other source texts, so it measures reading of unseen typefaces and text.
 
 GlyphSynth was used in the Phase 12 study, in the Phase 13 ladder row that tested it, as half of the
@@ -152,7 +152,7 @@ Code: `glypharis/data/synth.py`, `scripts/build_glyphsynth.py`,
 <!-- trace: data/manifests/processed/glyph_c.json data/manifests/processed/glyph_c.json#crops -->
 GLYPH-C is the project's frozen corruption suite, built from validation data in the manner of
 `hendrycks2019benchmarking`. It takes 3,000 lines from HierText validation and 3,000 from GlyphSynth
-validation, 6,000 source lines in all. Each is stored clean and under seven corruptions (Gaussian
+validation, <!-- derived: glyph_c_samples --> 6,000 source lines in all. Each is stored clean and under seven corruptions (Gaussian
 blur, Gaussian noise, JPEG, low resolution, contrast, rotation, perspective) at five levels, which
 gives 216,000 crops. The mean corruption error (mCE) is the unweighted mean of the micro CER over
 the 35 corruption-level cells.
@@ -193,7 +193,7 @@ text.
 <!-- trace: data/manifests/gdc_scan/gdc_scan_v1.json data/manifests/gdc_scan/gdc_scan_v1.json -->
 GDC (Glypharis Document Challenge) was built for this project: born-digital documents were printed
 and photographed, and ground truth was projected from the PDF text layer through markers on each
-sheet, so no OCR engine produced any of it. Version 1.1 has 106 sheets and 8,606 ground-truth lines.
+sheet, so no OCR engine produced any of it. Version 1.1 has <!-- derived: gdc_sheets --> 106 sheets and 8,606 ground-truth lines.
 GDC-scan v1 has 28 pages and 779 ground-truth lines from one document. It is a case study: its
 intervals are conditional on that document, and only its numbers are published.
 
@@ -211,17 +211,21 @@ The recognizer maps a grey line image to per-frame character probabilities and i
 
 <!-- trace: configs/rec/gw-rec-020.yaml configs/rec/gw-rec-020.yaml#model/svtr -->
 A stem of two strided convolutions reduces height and width by a factor of 4, so one output frame
-covers 4 input columns. Three stages of mixing blocks follow, with embedding widths 96, 192 and 256.
-The first stage has 3 local blocks, the second 3 local and 3 global, the third 6 global. A local
-block is a depthwise convolution with a local kernel of 3 by 7. A global block is multi-head
-self-attention over all tokens of the line, with 6 heads in the second stage and 8 in the third.
-Every block ends in a feed-forward layer with an MLP ratio of 4. Between stages a convolution halves
+covers 4 input columns. Three stages of mixing blocks follow, with embedding widths <!-- derived: svtr_dim_1 --> 96, <!-- derived: svtr_dim_2 --> 192
+and <!-- derived: svtr_dim_3 --> 256. The first stage has 3 local blocks, the second 3 local and 3 global, the third 6 global.
+
+<!-- trace: configs/rec/gw-rec-020.yaml configs/rec/gw-rec-020.yaml#model/svtr/local_kernel -->
+A local block is a depthwise convolution with a local kernel of 3 by 7.
+
+<!-- trace: configs/rec/gw-rec-020.yaml configs/rec/gw-rec-020.yaml#model/svtr -->
+A global block is multi-head self-attention over all tokens of the line, with 6 heads in the second
+stage and 8 in the third. Every block ends in a feed-forward layer with an MLP ratio of 4. Between stages a convolution halves
 the height and changes the embedding width. The remaining height is averaged away and a linear layer
 gives the logits. Padded columns are never attended to, so a line reads the same alone or in a batch.
 
 <!-- trace: GW-REC-034 reports/training/GW-REC-034/report.md#run -->
 <!-- trace: data/manifests/charset.json data/manifests/charset.json#vocabulary_size -->
-With 275 output classes the model has 7,928,835 parameters (30.2 MiB of weights and buffers).
+With <!-- derived: charset_classes --> 275 output classes the model has 7,928,835 parameters (30.2 MiB of weights and buffers).
 Decoding is greedy CTC, with no language model and no lexicon.
 
 The baseline against which it was developed is a CRNN (`shi2017crnn`), a convolutional stack and a
@@ -236,7 +240,7 @@ Code: `glypharis/models/rec/svtr.py`, `glypharis/models/rec/base.py`,
 
 <!-- trace: configs/rec/gw-rec-022.yaml configs/rec/gw-rec-022.yaml#data -->
 A crop was converted to grey, resized to a height of 48 pixels with its aspect ratio kept, squeezed
-only if it would be wider than 1536 pixels, scaled to the range from minus one to one, and padded
+only if it would be wider than <!-- derived: rec_max_width --> 1536 pixels, scaled to the range from minus one to one, and padded
 on the right. In training, a line too narrow for CTC (fewer frames than its label needs) was padded with
 background instead of being stretched. Batches were formed by width buckets, with a cap of 6,144 on
 lines times the widest line of the batch.
@@ -252,17 +256,17 @@ Code: `glypharis/data/rec_dataset.py` (`WidthBucketBatchSampler`, `collate`),
 <!-- trace: configs/rec/gw-rec-001.yaml configs/rec/gw-rec-001.yaml#train/batch_size -->
 The optimizer was AdamW (`loshchilov2019adamw`) with learning rate 5e-4 and weight decay 1e-2, under
 a OneCycle schedule (`smith2019onecycle`) sized from all optimizer steps of the run. Gradients were
-clipped at a global norm of 5.0. Each optimizer step accumulated 8 micro-batches of 8 lines, which
+clipped at a global norm of 5.0. Each optimizer step accumulated <!-- derived: rec_accumulation --> 8 micro-batches of <!-- derived: rec_micro_batch --> 8 lines, which
 keeps the 64 lines per step of the CRNN control. The forward pass ran under bf16 autocast and the
 CTC loss in fp32.
 
 <!-- trace: configs/rec/gw-rec-024.yaml configs/rec/gw-rec-024.yaml#train/epochs -->
 <!-- trace: GW-REC-034 reports/training/GW-REC-034/report.md#run -->
 <!-- trace: GW-REC-034 reports/training/GW-REC-034/report.md#best-and-final-epoch -->
-GW-REC-034 trained on the 348,935 HierText lines for 30 epochs, 169,860 optimizer steps and 20.11
+GW-REC-034 trained on the 348,935 HierText lines for <!-- derived: rec_epochs --> 30 epochs, 169,860 optimizer steps and 20.11
 GPU-hours on the laptop's RTX 4050, with seed 1337. It was validated at the end of each epoch on the
 73,888 validation lines. The selected checkpoint is the one with the lowest validation CER on the
-strict track, and it came from the last epoch (index 29). Its validation CER is 6.30% [6.17, 6.44]
+strict track, and it came from the last epoch (index <!-- derived: rec_best_epoch --> 29). Its validation CER is 6.30% [6.17, 6.44]
 (by line) and its WER 19.37%. Early stopping was configured and did not fire, and no diagnostic flag
 was raised.
 
@@ -326,13 +330,14 @@ Code: `glypharis/models/det/dbnet.py`, `glypharis/models/det/backbone.py`,
 <!-- trace: configs/det/gw-det-001.yaml configs/det/gw-det-001.yaml#det/data/scale_max -->
 <!-- trace: configs/det/gw-det-001.yaml configs/det/gw-det-001.yaml#det/data/rotate_max_deg -->
 <!-- trace: configs/det/gw-det-001.yaml configs/det/gw-det-001.yaml#det/data/text_crop_p -->
+The detector was trained on crops of <!-- derived: det_crop_size --> 640 pixels square, 4 per page per epoch, with the scale drawn
+between 0.5 and 2.0 and rotation up to <!-- derived: det_rotate --> 10 degrees, followed by photometric augmentation. A crop was
+placed around a text line with probability 0.8.
+
 <!-- trace: configs/det/gw-det-001.yaml configs/det/gw-det-001.yaml#train -->
-The detector was trained on crops of 640 pixels square, 4 per page per epoch, with the scale drawn
-between 0.5 and 2.0 and rotation up to 10 degrees, followed by photometric augmentation. A crop was
-placed around a text line with probability 0.8. The optimizer was AdamW with learning rate 5e-3 and
-weight decay 1e-4, under a cosine schedule with 2,000 warm-up steps. The batch size was 8 crops,
-gradients were clipped at a norm of 10.0, and the forward pass ran under bf16. The learning rate was
-fixed from the sanity sequence before the main run.
+The optimizer was AdamW with learning rate 5e-3 and weight decay 1e-4, under a cosine schedule with
+2,000 warm-up steps. The batch size was 8 crops, gradients were clipped at a norm of 10.0, and the
+forward pass ran under bf16. The learning rate was fixed from the sanity sequence before the main run.
 
 <!-- trace: GW-DET-001 reports/training/GW-DET-001/report.md#run -->
 <!-- trace: GW-DET-001 reports/training/GW-DET-001/report.md#best-and-final-epoch -->
@@ -358,8 +363,8 @@ grown back to a text line and returned as a rotated rectangle.
 <!-- trace: configs/final/glypharis_v1.yaml configs/final/glypharis_v1.yaml#detector/post/operating_points -->
 These settings did not come from the training run. In Phase 9 the validation pages were split into
 two fixed halves. GW-DET-004 scored a grid of post-processing settings on half A and tested the best
-one on half B against the settings of record. The adopted setting has a binarisation threshold of
-0.3, a box threshold of 0.5, a minimum component area of 1 and the `inverse09` unclip with ratio 0.9.
+one on half B against the settings of record. The adopted setting has a binarisation threshold of <!-- derived: det_bin_thresh --> 0.3,
+a box threshold of 0.5, a minimum component area of 1 and the `inverse09` unclip with ratio 0.9.
 
 <!-- trace: configs/final/glypharis_v1.yaml configs/final/glypharis_v1.yaml#detector/infer -->
 <!-- trace: GW-DET-005 reports/error_cases/detector/GW-DET-005/resolution_A.md -->
@@ -369,9 +374,9 @@ of the long side 1280 of the training configuration.
 
 <!-- trace: GW-DET-001 reports/error_cases/detector/phase09_adopted/eval_full.json#headline -->
 <!-- trace: GW-DET-001 reports/error_cases/detector/phase09_adopted/analysis.md -->
-With both changes, on all 1,715 validation pages (74,500 care lines) and at the primary IoU
-threshold, the detector has F1 0.7779 [0.7621, 0.7919] (by page), precision 0.8519 [0.8381, 0.8644]
-and recall 0.7157 [0.6953, 0.7338]. The result of each step is in `experiments.md`, section 5.6.
+With both changes, on all <!-- derived: det_val_pages --> 1,715 validation pages (<!-- derived: det_care_lines --> 74,500 care lines) and at the primary IoU
+threshold, the detector has F1 <!-- derived: det_f1 --> 0.7779 [0.7621, 0.7919] (by page), precision <!-- derived: det_precision --> 0.8519 [0.8381, 0.8644]
+and recall <!-- derived: det_recall --> 0.7157 [0.6953, 0.7338]. The result of each step is in `experiments.md`, section 5.6.
 
 Code: `glypharis/models/det/postprocess.py`, `glypharis/models/det/preprocess.py`,
 `glypharis/models/det/detector.py`, `scripts/det_sweep.py`, `scripts/det_choose.py`. Configuration:
@@ -421,10 +426,10 @@ read through the pipeline's recognizer and split by page into the two halves use
 counts as right when its text equals the label exactly on the strict track. The temperature was
 chosen on half A (35,976 lines) by minimising the binary negative log-likelihood of correctness, and
 the expected calibration error (`guo2017calibration`, `naeini2015ece`) was measured on half B (37,912
-lines, accuracy 0.724) with 15 equal-mass bins.
+lines, accuracy <!-- derived: cal_accuracy --> 0.724) with 15 equal-mass bins.
 
 <!-- trace: GW-E2E-005 reports/calibration/GW-E2E-005/calibration.md -->
-The fitted temperature is 2.35. On half B the ECE was 0.2140 for the raw confidences and 0.0886 for
+The fitted temperature is <!-- derived: cal_temperature --> 2.35. On half B the ECE was 0.2140 for the raw confidences and <!-- derived: cal_ece_fitted --> 0.0886 for
 the fitted ones, a difference of -0.1254 [-0.1296, -0.1217] (by line). The rule fixed beforehand was
 to adopt the temperature if this interval lay below zero, so it was adopted, and it was kept for
 every later evaluation whatever those evaluations showed. Whether it transfers to other data was

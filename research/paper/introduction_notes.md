@@ -3,8 +3,8 @@
 Status: Final validation (Phase 22) has not been run. No weights are distributed; release is
 Phase 23.
 
-HierText annotations are CC BY-SA 4.0 and its images CC BY 2.0 through Open Images; figures derived
-from them are shared alike.
+HierText is released under CC BY-SA 4.0; its images come from Open Images, which lists them as
+CC BY 2.0. Figures derived from HierText are shared alike.
 
 ## Motivation
 
@@ -86,5 +86,6 @@ the contribution is the record: what was run, on which data, and what came out, 
 
 Every number in these notes traces to an experiment ID and a generated report. Tracks are strict
 unless stated, and each interval says whether it is over lines, pages or documents. Only the
-registered tests (H1′, H5′, H8′ and the Phase 16 tests) carry verdicts; every other interval is
-descriptive.
+registered confirmatory tests (H1′, H5′, H8′ and the Phase 16 tests) carry the verdicts met, not met
+and holds. Other hypotheses keep the exploratory status recorded in `research/hypotheses.md`, and
+every other interval is descriptive.

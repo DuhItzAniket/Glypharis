@@ -24,15 +24,17 @@ point value. Page time was measured on the 110 profile pages, page CER and E2E F
 pages (strict, by page), and line CER on 5,000 seeded validation lines (strict, greedy, by line).
 The Phase 16 reports print 95 intervals: 4 are confirmatory (H7′ latency, H7′ accuracy, H6′, H1′
 ONNX) and 91 descriptive, and only the four carry a verdict. v1 is the frozen build evaluated in
-Phase 14; every other point is a new version, not v1. HierText-derived numbers: HierText annotations
-CC BY-SA 4.0, images CC BY 2.0; tables derived from them are shared alike.
+Phase 14; every other point is a new version, not v1. HierText is released under CC BY-SA 4.0; its
+images come from Open Images, which lists them as CC BY 2.0. Tables derived from it are shared alike.
 
 ## 1. The same model in another runtime (GW-EFF-006)
 
 v1's plain fp32 ONNX export (TorchScript exporter, as in Phase 17) was checked against outputs
-written once from the PyTorch v1 build on the CPU. The detector map was compared on the 110 profile
-pages, recognizer logits and text on 5,000 lines, and page CER (as a fraction) on 400 pages. The
-bundle manifest SHA-256 is `875357a6346e8b1f989005fa96c557b00bf687461043368dc5e3dc532839f037`.
+written once from the PyTorch v1 build on the CPU. The detector map was compared on
+the <!-- derived: eff006_det_pages --> 110 profile pages, recognizer logits and text
+on <!-- derived: eff006_rec_lines --> 5,000 lines, and page CER (as a fraction)
+on <!-- derived: eff006_e2e_pages --> 400 pages. The bundle manifest SHA-256 is
+`875357a6346e8b1f989005fa96c557b00bf687461043368dc5e3dc532839f037`.
 
 <!-- trace-table: GW-EFF-006 reports/efficiency/phase16/README.md#gw-eff-006-the-v1-fp32-onnx-bundle detector map, max abs difference=L22|recognizer logits, max abs difference=L23|text=L24|page CER difference=L25 -->
 
@@ -79,11 +81,11 @@ Pages, one page at a time, with lines batched as the pipeline batches them. Inte
 Each row is one run in chain order, not a mirrored pair.
 
 The mirrored comparison of the two CPU builds is GW-EFF-009's (the tables in sections 3 and 5). In
-those sittings the fp32 ONNX build took <!-- derived: onnx_page_ratio_mirrored --> 3.69 times as long
-per page as PyTorch and used <!-- derived: onnx_ram_ratio_mirrored --> 3.92 times its peak page RAM.
-The one-run chain-order rows above give <!-- derived: onnx_page_ratio_chain --> 3.34 and
-<!-- derived: onnx_ram_ratio_chain --> 3.98. These ratios are computed from the printed means and have
-no interval; the interval on the page-time difference is in section 3.
+those sittings the fp32 ONNX build took <!-- derived: onnx_page_ratio_mirrored --> 3.69 times as
+long per page as PyTorch and used <!-- derived: onnx_ram_ratio_mirrored --> 3.92 times its peak page
+RAM. The one-run chain-order rows above give <!-- derived: onnx_page_ratio_chain --> 3.34
+and <!-- derived: onnx_ram_ratio_chain --> 3.98. These ratios are computed from the printed means and
+have no interval; the interval on the page-time difference is in section 3.
 
 ### Where the page time goes
 
@@ -100,11 +102,12 @@ Mean ms per page; the stages sum to the page time.
 <!-- trace: GW-EFF-007 reports/efficiency/phase16/cost_table.md#page-time -->
 
 The other seven stages (image to RGB, detector preprocessing and post-processing, cropping,
-recognizer batch build, decoding, reading order) each took at most 43.6 ms on the CPU at 10 threads.
-The detector network took 297.5 ms per page in fp32 ONNX and 296.4 ms in PyTorch, one run each, so no
-difference is stated. The recognizer network took 8,167.7 ms in fp32 ONNX and 2,148.2 ms in PyTorch,
-and it is the stage that separates the two CPU builds. An earlier side measurement in which the
-exported detector ran twice as fast was taken with ONNX Runtime's memory arena on (F13, revised; F34).
+recognizer batch build, decoding, reading order) each took at
+most <!-- derived: other_stages_max --> 43.6 ms on the CPU at 10 threads. The detector network took 297.5
+ms per page in fp32 ONNX and 296.4 ms in PyTorch, one run each, so no difference is stated. The
+recognizer network took 8,167.7 ms in fp32 ONNX and 2,148.2 ms in PyTorch, one run each, and it is
+the largest stage in both CPU builds. An earlier side measurement in which the exported detector ran
+twice as fast was taken with ONNX Runtime's memory arena on (F13, revised; F34).
 
 ## 3. Why the export is slow (GW-EFF-009)
 
@@ -113,9 +116,17 @@ exported detector ran twice as fast was taken with ONNX Runtime's memory arena o
 
 The plain exporter writes each global mixer's attention as separate MatMul, Softmax and masking
 nodes, where PyTorch runs a fused kernel. The same weights were exported with each mixer as one
-`com.microsoft.MultiHeadAttention` node (`glypharis/efficiency/fused_attention.py`). Against v1's
-fp32 ONNX build, on the same items, page CER changed by +0.00 [+0.00, +0.00] points by page and line
-CER by +0.00 [+0.00, +0.00] points by line.
+`com.microsoft.MultiHeadAttention` node (`glypharis/efficiency/fused_attention.py`). CER of the
+fused build minus CER of v1's fp32 ONNX build, on the same items:
+
+<!-- trace-table: GW-EFF-009 reports/efficiency/phase16/pareto.md page CER (interval by page)=L19,Δ CER (points)|line CER (interval by line)=L29,Δ CER (points) -->
+
+| Measure | Δ CER (points) |
+|---|---|
+| page CER (interval by page) | +0.00 [+0.00, +0.00] |
+| line CER (interval by line) | +0.00 [+0.00, +0.00] |
+
+Accuracy, page time and memory of these builds on pages:
 
 <!-- trace-table: GW-EFF-009 reports/efficiency/phase16/pareto.md#pages v1 PyTorch=v1-torch|v1 fp32 ONNX=v1-onnx|fused attention (new version)=fused-attention|INT8 recognizer (new version)=int8-recognizer -->
 
@@ -128,8 +139,9 @@ CER by +0.00 [+0.00, +0.00] points by line.
 
 Δ ms is the point minus v1's fp32 ONNX build on the same pages (descriptive, interval by page).
 
-The fused build's mean page time here and its mean line time in section 5 are above v1 PyTorch's. No
-interval was computed for those differences, so no difference from PyTorch is stated (F35).
+The fused build printed a higher mean page time here, and a higher mean line time in section 5, than
+v1 PyTorch. No interval was computed for those differences, so no difference from PyTorch is stated
+(F35).
 
 ## 4. INT8 (H7′, GW-EFF-008)
 
@@ -137,16 +149,18 @@ interval was computed for those differences, so no difference from PyTorch is st
 
 Dynamic INT8 of the v1 fp32 ONNX recognizer, by the registered recipe (ONNX Runtime's
 `quant_pre_process`, then `quantize_dynamic` on MatMuls with a constant weight, QInt8, per tensor),
-turned 49 of the 67 MatMul nodes into MatMulInteger. The other 18 MatMul nodes stayed fp32, among
-them the attention products, which have no constant input. The file shrank from 30.40 to 9.82 MiB.
+turned <!-- derived: int8_matmul_done --> 49 of the <!-- derived: int8_matmul_all --> 67 MatMul
+nodes into MatMulInteger. The other <!-- derived: int8_matmul_left --> 18 MatMul nodes stayed fp32,
+among them the attention products, which have no constant input. The file shrank from 30.40 to 9.82
+MiB.
 
 <!-- trace: GW-EFF-008 reports/efficiency/phase16/verdicts.md#h7-latency-met -->
 <!-- trace: GW-EFF-008 reports/efficiency/phase16/verdicts.md#h7-accuracy-met -->
 
 | Half | Rule (met if the interval lies below 0) | Interval | Verdict |
 |---|---|---|---|
-| latency | mean(t_INT8 − 0.75 × t_fp32) per line | −10.00 [−12.79, −7.37] ms | met |
-| accuracy | paired ratio difference of errors_INT8 − 0.005 × ref_chars against errors_fp32, by line | −0.512 [−0.541, −0.484] points | met |
+| latency | mean(t_INT8 − 0.75 × t_fp32) per line | <!-- derived: h7_latency_interval --> −10.00 [−12.79, −7.37] ms | met |
+| accuracy | paired ratio difference of errors_INT8 − 0.005 × ref_chars against errors_fp32, by line | <!-- derived: h7_accuracy_point --> −0.512 [<!-- derived: h7_accuracy_low --> −0.541, <!-- derived: h7_accuracy_high --> −0.484] points | met |
 
 The latency half compared per-line times, each line the mean of its two runs in one sitting:
 
@@ -159,15 +173,15 @@ The latency half compared per-line times, each line the mean of its two runs in 
 
 <!-- trace: GW-EFF-008 reports/efficiency/phase16/verdicts.md#h7-accuracy-met -->
 
-Strict line CER on the 5,000 lines was 6.208% for INT8 against 6.221% for fp32. H7′ holds (F36).
+Strict line CER on the <!-- derived: h7_accuracy_lines --> 5,000 lines was 6.208% for INT8 against
+6.221% for fp32. H7′ holds (F36).
 
-<!-- trace: GW-EFF-008 reports/efficiency/phase16/int8.md -->
-<!-- trace: GW-EFF-009 reports/efficiency/phase16/pareto.md#pages -->
-
-On pages (descriptive, by page) the page CER difference was +0.00 [−0.02, +0.02] points and the time
-difference −2,848.5 [−3,233.6, −2,505.1] ms. Fusing the attention gave −5,718.6 [−6,630.9, −4,883.7]
-ms against the same build (section 3). No paired interval was computed between the two variants, so
-no difference between them is stated.
+On pages (GW-EFF-009, descriptive, by page) the INT8 build's page CER difference
+was <!-- derived: int8_page_dcer --> +0.00 [−0.02, +0.02] points and its time
+difference <!-- derived: int8_page_dms --> −2,848.5 [−3,233.6, −2,505.1] ms. Fusing the attention gave a time
+difference of <!-- derived: fused_page_dms --> −5,718.6 [−6,630.9, −4,883.7] ms against the same
+build (section 3). No paired interval was computed between the two variants, so no difference
+between them is stated.
 
 ## 5. Accuracy against latency (GW-EFF-009)
 
@@ -192,14 +206,15 @@ fp32 ONNX build on the same items (descriptive, intervals by page).
 
 `det-long-side-1024`, `det-long-side-1280` and `det-GW-DET-003` raised page CER (their intervals lie
 above 0); the intervals of `det-long-side-1792` and `det-long-side-2048` include 0. The largest
-change in mean page time among these five detector points was
-<!-- derived: det_variant_max_share --> 12.8% of v1's fp32 ONNX time, at `det-long-side-1024` (F37).
+change in mean page time among these five detector points
+was <!-- derived: det_variant_max_share --> 12.8% of v1's fp32 ONNX time, at `det-long-side-1024` (F37).
 The recognizer network takes 95% of the fp32 ONNX build's page time at 10 threads (section 2).
 
 The ONNX detector with the PyTorch recognizer printed the lowest mean page time among the points at
-v1's page CER and F1, 2,579.1 ms against 2,637.3 ms for v1 PyTorch in the same sittings, which is
-<!-- derived: onnx_det_gap --> 58.2 ms lower. No interval was computed for that difference, so no
-difference between the two is stated (F38).
+v1's page CER and F1, <!-- derived: onnx_det_ms --> 2,579.1 ms
+against <!-- derived: v1_torch_ms --> 2,637.3 ms for v1 PyTorch in the same sittings, a gap
+of <!-- derived: onnx_det_gap --> 58.2 ms. No interval was computed for that gap, so no difference
+between the two is stated (F38).
 
 Recognizer points. Every row but v1 is a new version, not v1. CER is on 5,000 lines and time on
 100 lines, one line at a time; intervals are by line.
@@ -228,11 +243,12 @@ validation line CER over all lines reported for GW-REC-034 and GW-REC-038.
 
 | Test | Rule (met if the interval lies below 0) | Interval | Verdict |
 |---|---|---|---|
-| H6′ (GW-EFF-011) | mean(t_SVTR − 1.5 × t_CRNN) per line, fp32 ONNX | +16.78 [+12.02, +22.04] ms | not met |
-| H1′ ONNX (GW-EFF-010) | mean per-page time(v1 fp32 ONNX) − time(GW-BASE-002) | +6,537.6 [+5,383.7, +7,806.3] ms | not met |
+| H6′ (GW-EFF-011) | mean(t_SVTR − 1.5 × t_CRNN) per line, fp32 ONNX | <!-- derived: h6_interval --> +16.78 [+12.02, +22.04] ms | not met |
+| H1′ ONNX (GW-EFF-010) | mean per-page time(v1 fp32 ONNX) − time(GW-BASE-002) | <!-- derived: h1_onnx_interval --> +6,537.6 [+5,383.7, +7,806.3] ms | not met |
 
 H6′ compared the SVTR-style GW-REC-020 with the CRNN GW-REC-003 in fp32 ONNX, each line the mean of
-its two runs. Both exports first passed their logit and text checks on the 5,000 lines.
+its two runs. Both exports first passed their logit and text checks on
+the <!-- derived: h6_check_lines --> 5,000 lines.
 
 <!-- trace-table: GW-EFF-011 reports/efficiency/phase16/verdicts.md#h6-not-met CRNN=CRNN|SVTR=SVTR -->
 
@@ -255,10 +271,11 @@ wider in ONNX than in PyTorch, but this was not measured for GW-REC-020 (F39).
 
 <!-- trace: GW-EFF-010 reports/efficiency/phase16/verdicts.md#h1-onnx-not-met -->
 
-H1′ ONNX: the v1 fp32 ONNX bundle took 9,623.6 ms per page against 3,086.0 ms for a fresh PP-OCRv5
-mobile profile in the same sitting, by Phase 14's rule (F40). The verdict applies only to the bundle
-named by the hash in section 1. Page times of the same baseline from other sittings are not compared
-with these. H1′ itself holds from Phase 14, whose latency half is the PyTorch build (GW-EFF-005).
+H1′ ONNX: the v1 fp32 ONNX bundle took <!-- derived: h1_onnx_bundle_ms --> 9,623.6 ms per page
+against <!-- derived: h1_onnx_base_ms --> 3,086.0 ms for a fresh PP-OCRv5 mobile profile in the same
+sitting, by Phase 14's rule (F40). The verdict applies only to the bundle named by the hash in
+section 1. Page times of the same baseline from other sittings are not compared with these. H1′
+itself holds from Phase 14, whose latency half is the PyTorch build (GW-EFF-005).
 
 ## 7. Against the CPU targets, and the owner's decision
 
@@ -277,9 +294,8 @@ Every CPU build of v1 was over the line and page time targets; only the PyTorch 
 was within its target (F38). Every page point in sections 3 and 5 was over the page time targets.
 Among the variants, only the ONNX detector with the PyTorch recognizer was within the RAM target.
 
-<!-- trace: GW-EFF-007 reports/efficiency/phase16/cost_table.md#pages -->
-
-On the GPU, which ADR-0011 does not cover, PyTorch read a page in 1,049 ms on average.
+On the GPU, which ADR-0011 does not cover, PyTorch read a page
+in <!-- derived: gpu_page_ms --> 1,049 ms on average.
 
 <!-- trace: GW-EFF-009 reports/efficiency/phase16/pareto.md#pages -->
 
@@ -308,21 +324,28 @@ change and H1′ ONNX still refers to it.
 <!-- trace: GW-EFF-012 reports/export/GW-EFF-012/torch_bundle_check.json#end_to_end -->
 
 GW-EFF-012 ran the bundle on the PyTorch backend, the path v1 ships on, against the Phase 16 PyTorch
-references at 10 threads. The detector map on 110 pages and the logits on 5,000 lines had a maximum
-absolute difference of 0.0 (limits 0.0001 and 0.001), 5,000 of 5,000 line texts were identical, and
-all 400 pages had identical text, with a page CER difference of 0.0 as a fraction (limit 0.0005).
-Page CER was <!-- derived: eff012_page_cer --> 24.32% on both sides.
+references at <!-- derived: eff012_threads --> 10 threads. The detector map
+on <!-- derived: eff012_det_pages --> 110 pages had a maximum absolute difference
+of <!-- derived: eff012_det_diff --> 0.0 (limit <!-- derived: eff012_det_limit --> 0.0001), and the
+logits on <!-- derived: eff012_rec_lines --> 5,000 lines one
+of <!-- derived: eff012_rec_diff --> 0.0 (limit <!-- derived: eff012_rec_limit --> 0.001). Line texts
+were identical on <!-- derived: eff012_text_same --> 5,000 of those lines, and
+all <!-- derived: eff012_pages_same --> 400 pages had identical text, with a page CER difference
+of <!-- derived: eff012_cer_diff --> 0.0 as a fraction
+(limit <!-- derived: eff012_cer_limit --> 0.0005). Page CER was <!-- derived: eff012_page_cer --> 24.32% on
+both sides.
 
 <!-- trace: GW-E2E-011 reports/package/GW-E2E-011.json -->
 
-GW-E2E-011 ran the package on the same bundle against the frozen pipeline on the 400 pages:
-page CER 24.32% on both, and 16,835 of 16,835 lines with identical text and box (corners within
-1.0 px).
+GW-E2E-011 ran the package on the same bundle against the frozen pipeline on
+the <!-- derived: e2e011_pages --> 400 pages: page CER 24.32% on both,
+and <!-- derived: e2e011_lines_same --> 16,835 of <!-- derived: e2e011_lines --> 16,835 lines with
+identical text and box (corners within <!-- derived: e2e011_box_px --> 1.0 px).
 
-GW-E2E-012 repeated the hardening cases on the bundle with both backends. On each backend
-<!-- derived: e2e012_inputs --> 269 inputs gave <!-- derived: e2e012_results --> 47 results and
-<!-- derived: e2e012_errors --> 222 typed errors, with no other exception, and every damaged-bundle
-case behaved as registered (`reports/hardening/GW-E2E-012.json`).
+GW-E2E-012 repeated the hardening cases on the bundle with both backends. On each backend,
+of <!-- derived: e2e012_inputs --> 269 inputs, <!-- derived: e2e012_results --> 47 gave results and the
+other <!-- derived: e2e012_errors --> 222 gave typed errors, with no other exception, and every
+damaged-bundle case behaved as registered (`reports/hardening/GW-E2E-012.json`).
 
 <!-- trace: GW-E2E-011 reports/package/GW-E2E-011.json -->
 

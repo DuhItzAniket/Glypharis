@@ -66,8 +66,10 @@ row L2 of the Phase 13 ladder (GW-REC-037). L2 was not kept
 
 ## Dataset cards
 
-Each card gives purpose, source and URL, licence, citation, download date, version, samples,
-annotation format, intended task, preprocessing, split usage and known issues. Citation keys refer to
+Each card for a dataset the project used gives purpose and intended task, source and URL, licence,
+citation, download or capture date where something was downloaded or captured, version, samples,
+annotation format, preprocessing, split usage and known issues. Cards for datasets not used give
+purpose, source, terms where visible, citation and the decision. Citation keys refer to
 `research/paper/references.bib`.
 
 ### HierText
@@ -76,10 +78,11 @@ annotation format, intended task, preprocessing, split usage and known issues. C
 - **Source / URL:** Google Research, <https://github.com/google-research-datasets/hiertext> (archived
   by its owner on 2026-04-19, read-only). Images are hosted in the Open Images bucket; the exact URLs
   are in `data/manifests/hiertext.json`.
-- **Licence:** the README releases the dataset under CC BY-SA 4.0. The images come from Open Images
+- **Licence:** HierText is released under CC BY-SA 4.0; its images come from Open Images
   (`kuznetsova2020openimages`), which lists them as CC BY 2.0 and makes no warranty about the licence
-  status of any one image. Obligations: attribution, and share-alike for the annotations and material
-  derived from them.
+  status of any one image. The README's licence section names "The HierText dataset" and gives no
+  separate licence for annotations or images (checked 2026-11-18). Obligations: attribution, and
+  share-alike for the dataset and material adapted from it.
 - **Citation:** Long et al., *Towards End-to-End Unified Scene Text Detection and Layout Analysis*,
   CVPR 2022 (`long2022hiertext`).
 - **Download date:** 2026-10-10.
@@ -103,9 +106,8 @@ Samples, measured (`data/manifests/hiertext.json`):
 | test | 1,634 | 46,316 | 94,564 | 73,737 | 7,103 | 194,374 | 167,188 |
 
 The published word count matches the legible words, <!-- derived: hiertext_legible_words --> 1,208,147
-in total; the files hold <!-- derived: hiertext_all_words --> 1,418,861 words. The download is
-<!-- derived: hiertext_archives_gib --> 3.64 GiB of image archives plus
-<!-- derived: hiertext_gt_mib --> 79 MiB of ground truth, <!-- derived: hiertext_total_gib --> 3.72 GiB
+in total; the files hold <!-- derived: hiertext_all_words --> 1,418,861 words. The download is <!-- derived: hiertext_archives_gib --> 3.64 GiB
+of image archives plus <!-- derived: hiertext_gt_mib --> 79 MiB of ground truth, <!-- derived: hiertext_total_gib --> 3.72 GiB
 in total.
 
 Audit and preprocessing (Phases 3 and 4, `reports/data_quality_report.md`,
@@ -132,7 +134,7 @@ dropped silently.
 | test | 1,634 | 94,564 | 67,277 | 20,827 | 5,738 | 424 | 282 | 15 |
 
 <!-- trace: data/manifests/processed/hiertext.json data/manifests/processed/hiertext.json#crop_settings -->
-Crop settings: height 64 px, margin 0.15 of the line height, JPEG quality 95. Lines longer than 64
+Crop settings: height 64 px, margin 0.15 of the line height, JPEG quality 95. Lines longer than <!-- derived: crop_max_aspect --> 64
 times their height are not cut.
 
 <!-- trace: data/manifests/charset.json data/manifests/charset.json#vocabulary_size -->
@@ -249,8 +251,8 @@ Phase 12 variants, all with seed 20261010 and used only in the synthetic-data st
   training.
 
 <!-- trace: data/manifests/processed/glyph_c.json data/manifests/processed/glyph_c.json -->
-Samples: 3,000 HierText validation lines and 3,000 GlyphSynth validation lines (6,000 in total), seed 7,
-giving 216,000 crops.
+Samples: <!-- derived: glyph_c_per_source --> 3,000 HierText validation lines and <!-- derived: glyph_c_per_source --> 3,000
+GlyphSynth validation lines (<!-- derived: glyph_c_samples --> 6,000 in total), seed 7, giving 216,000 crops.
 
 - **Known issues:** half of the pack is synthetic, so a clean CER on GLYPH-C cannot be compared with a
   CER on HierText. Its corruptions are close relatives of the training augmentations, and its HierText
@@ -277,6 +279,8 @@ giving 216,000 crops.
 - **Rules:** frozen with a hash manifest before any model was evaluated on it (ADR-0010), never trained
   on, sources on the training exclusion list (`data/manifests/exclusions/gdc_sources.json`, checked by a
   test), and used only in Phases 5 and 14, with Phase 22 the only remaining permitted use.
+- **Split usage:** test only; evaluated in Phases 5 and 14, with Phase 22 the only remaining permitted
+  use.
 - **Composition:** phone captures only. There are no flatbed scans, no old scans and no separate
   low-resolution condition. No transcribed subset of old scans exists: the planned real-scan slice
   became GDC-scan, a modern printed document with text-layer ground truth, so the old-scan target is
@@ -292,8 +296,8 @@ The pages hold 8,606 ground-truth lines.
 They come from 21 source documents.
 
 <!-- trace: data/manifests/gdc/alignment.json data/manifests/gdc/alignment.json#results/0/size -->
-Captures are 3072 by 4080 pixels; <!-- derived: gdc_landscape_captures --> 4 of the
-<!-- derived: gdc_captures --> 106 are stored in landscape orientation.
+Captures are 3072 by 4080 pixels; <!-- derived: gdc_landscape_captures --> 4 of the <!-- derived: gdc_captures --> 106
+are stored in landscape orientation.
 
 <!-- trace: data/manifests/gdc/alignment.json data/manifests/gdc/alignment.json#rules/min_line_score -->
 Each line carries an alignment score. Lines scoring below 0.3 have untrusted boxes and are excluded from
@@ -314,13 +318,17 @@ Capture conditions, assigned with fixed quotas (`data/manifests/gdc/pack.json`):
 
 - **Known issues:** text inside raster images has no text-layer ground truth, so it becomes ignore
   regions. Side-by-side form headers merge into one line. The set has few source documents, so
-  document-level intervals are wide.
+  document-level intervals are wide. The licence labels printed in
+  `reports/error_cases/phase15/examples.md` date from selection and are not all current, for example
+  those of `frb_fsr` and `hefferon_linalg`; the table below is.
 
 #### GDC source documents
 
 None of the Gutenberg books is in the PG-19 text used for GlyphSynth. "Quoted" says whether
 `reports/error_cases/phase15/examples.md` quotes lines from the document; each quoted line there
-carries its key, URL and licence. Lines of the two textbooks are never quoted.
+carries its key, URL and licence. Lines of the two textbooks are never quoted. Licence labels in that
+generated report date from selection; where they differ from this table, as for `frb_fsr` and
+`hefferon_linalg`, this table is current.
 
 | Key | Group | Credit | Licence | URL | Quoted |
 |---|---|---|---|---|---|
@@ -347,7 +355,9 @@ carries its key, URL and licence. Lines of the two textbooks are never quoted.
 | irs_w9 | form | Internal Revenue Service, `Form W-9 (2024)` | not subject to copyright, by the IRS's statement | <https://www.irs.gov/pub/irs-prior/fw9--2024.pdf> | yes |
 
 The Hefferon book is offered under either licence at the user's choice. No election is needed here,
-because no line of it is redistributed. File sizes and SHA-256 are in `data/manifests/gdc_sources.json`.
+because no line of it is redistributed; single words from it can occur in the pooled GDC word-confusion
+pairs ([Redistribution](#redistribution)). File sizes and SHA-256 are in
+`data/manifests/gdc_sources.json`.
 
 ### GDC-scan v1 (ours)
 
@@ -357,10 +367,14 @@ because no line of it is redistributed. File sizes and SHA-256 are in `data/mani
   per-line outputs stay local, and its source is on the training exclusion list by hash only
   (`data/manifests/exclusions/gdc_scan.json`).
 - **Citation:** none.
+- **Capture and freeze date:** frozen 2026-11-14 (`frozen_utc` in
+  `data/manifests/gdc_scan/gdc_scan_v1.json`); the manifest records no separate capture date.
 - **Version:** version 1.0, frozen 2026-11-14 (`data/manifests/gdc_scan/gdc_scan_v1.json`). SHA-256 of the page
   file: `fc7d0cc79de34359e3c85ec6ea5e174011988a5629e9d32932e1ac9c2afbc1b8`. The manifest also lists the
   hashes of the sources and of every capture.
-- **Method (`scripts/gdc_scan_build.py`):** each printed page was photographed with a phone. Ground
+- **Annotation format:** page records as for GDC, with line text, boxes, reading order, alignment scores
+  and ignore regions. They stay local.
+- **Preprocessing and method (`scripts/gdc_scan_build.py`):** each printed page was photographed with a phone. Ground
   truth comes from the text layer of the born-digital source, as for GDC, and the owner confirmed that
   the printed document is that source with no edits after printing. Without corner markers, each photo
   is matched to its page by SIFT features and a RANSAC homography, then refined with GDC's optical
@@ -375,10 +389,9 @@ because no line of it is redistributed. File sizes and SHA-256 are in `data/mani
 | lines | 779 |
 
 <!-- trace: data/manifests/gdc_scan/alignment.json data/manifests/gdc_scan/alignment.json#rules/min_line_score -->
-Of these lines, <!-- derived: gdc_scan_out_of_charset --> 87 have characters outside the charset, and
-<!-- derived: gdc_scan_low_score --> 3 score below 0.3 and are excluded from box-based metrics. Refined
-page-to-photo agreement has a median NCC of <!-- derived: gdc_scan_ncc_median --> 0.826 and a minimum of
-<!-- derived: gdc_scan_ncc_min --> 0.695.
+Of these lines, <!-- derived: gdc_scan_out_of_charset --> 87 have characters outside the charset, and <!-- derived: gdc_scan_low_score --> 3
+score below 0.3 and are excluded from box-based metrics. Refined page-to-photo agreement has a median
+NCC of <!-- derived: gdc_scan_ncc_median --> 0.826 and a minimum of <!-- derived: gdc_scan_ncc_min --> 0.695.
 
 - **Known issues and limit:** it is one document, one printer and one font family, so results are a case
   study and not a benchmark. Its confidence intervals are conditional on that document and it carries
@@ -495,7 +508,7 @@ Samples, published: 1,000 receipts.
 - **Source / URL:** <https://rrc.cvc.uab.es/?ch=17>; registration required, and the terms are behind the
   login.
 - **Citation:** Mathew, Karatzas and Jawahar, WACV 2021 (`mathew2021docvqa`).
-- **Status:** not downloaded.
+- **Decision:** not downloaded or used.
 
 ### SynthText (dropped)
 
@@ -588,6 +601,10 @@ The only pretrained weights GLYPHARIS uses, under
   file is checked against `det.model.weights_sha256` before it is loaded. GW-DET-001 uses Large,
   GW-DET-003 Small, and GW-DET-002 neither. A trained detector checkpoint holds all its weights and does
   not need these files.
+- **Known issues:** `data/sources.yaml`, `data/manifests/imagenet_backbones.json` and
+  `data/DATASET_MANIFEST.yaml` keep the licence note written at download, which leaves the question open
+  for the owner. They are kept as recorded, because changing them would change tracked manifests.
+  [ADR-0014](docs/decisions/ADR-0014-weights-and-backbone-terms.md) supersedes that note.
 
 ### Baseline OCR weights
 
@@ -639,7 +656,8 @@ The repository contains, and so redistributes:
   attribution is at dataset level.
 - Quoted GDC lines from the arXiv papers, the US federal documents and the Gutenberg books, in
   `reports/error_cases/phase15/examples.md` and `recognition.md`, each with its key, URL and licence, and
-  GDC word-confusion pairs in `reports/confusion_analysis/GW-REC-040/`.
+  GDC word-confusion pairs in `reports/confusion_analysis/GW-REC-040/`, pooled over all <!-- derived: gdc_source_documents --> 21
+  sources, including the two textbooks, without the source of each word.
 - Manifests with image IDs, line keys, hashes and URLs.
 - Aggregate tables computed from every dataset.
 
@@ -648,7 +666,8 @@ The repository does not contain:
 - raw or processed datasets, or the GDC captures;
 - any GDC-scan text, image, page file or per-line output;
 - images or text of FUNSD, IIIT5K or OmniDocBench;
-- lines of `hefferon_linalg` or `mit_mcs`, which appear by key and numbers only;
+- full lines of `hefferon_linalg` or `mit_mcs`; these documents are listed by key and numbers, and single
+  words from them can occur in the pooled GDC word-confusion pairs;
 - checkpoints or exported weights.
 
 ## Licensing implications for v1
@@ -677,7 +696,7 @@ here paraphrase and should be confirmed on the page before being relied on.
 
 | Source | Page | Checked | Result |
 |---|---|---|---|
-| HierText | <https://github.com/google-research-datasets/hiertext> | 2026-11-18 | README releases the dataset under CC BY-SA 4.0 and states no separate image licence; repository archived 2026-04-19 |
+| HierText | <https://github.com/google-research-datasets/hiertext> | 2026-11-18 | the README's licence section releases "The HierText dataset" under CC BY-SA 4.0 and gives no separate licence for annotations or images; the repository's licence file is CC BY-SA 4.0; repository archived 2026-04-19 |
 | Open Images | <https://storage.googleapis.com/openimages/web/factsfigures_v7.html> | 2026-11-18 | images listed as CC BY 2.0, no warranty about any image's licence status, users told to verify; Google's own annotations CC BY 4.0 (not used here) |
 | Google Fonts | <https://github.com/google/fonts> | 2026-11-18 | top-level directories indicate the licence; SIL OFL version 1.1, Apache 2.0 and Ubuntu Font Licence named |
 | PG-19 | <https://github.com/google-deepmind/pg19> | 2026-11-18 | Apache 2.0 listed for the dataset; no separate statement for the texts |

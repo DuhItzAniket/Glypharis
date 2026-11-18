@@ -32,8 +32,8 @@ local under `runs/`.
 Generated files are not edited after the fact, so this notice covers the ones written before they
 carried an attribution line:
 
-- the 53 `reports/training/*/report.md` files with a "Worst validation lines" table, and the
-  `worst_lines.png` strip beside each of them;
+- the 53 `reports/training/*/report.md` files with a "Worst validation lines" section (the GW-REC-019
+  table is empty), and the 52 `worst_lines.png` strips beside the others;
 - `reports/data_analysis/hiertext/line_crops.png`;
 - `reports/data_analysis/augmentation_preview.png` and `reports/data_analysis/glyph_c_preview.png`;
 - `reports/training/sanity/GW-DET-001/preview.jpg`.

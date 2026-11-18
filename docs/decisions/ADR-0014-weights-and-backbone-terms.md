@@ -19,6 +19,12 @@ no test results of its own.
 The recognizer and the detector were trained on HierText, whose annotations are CC BY-SA 4.0 and whose
 images come from Open Images (CC BY 2.0). ADR-0009 left the terms for the weights to the model card.
 
+*Clarification, 2026-11-18 (the decision below is unchanged).* The sentence above is narrower than the
+publisher's statement. HierText's README, checked on 2026-11-18, says the HierText dataset is released
+under CC BY-SA 4.0, and gives no separate licence for its annotations or its images. The wording to use
+is: HierText is released under CC BY-SA 4.0; its images come from Open Images, which lists them as
+CC BY 2.0.
+
 ## Decision
 1. **GW-DET-001 stays v1's detector, as a disclosed exception to ADR-0009's rule.** The model card and
    DATASETS.md say that its backbone was initialised from ImageNet-1K weights and that those terms do not

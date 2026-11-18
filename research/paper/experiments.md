@@ -10,14 +10,15 @@ they define an experiment or decided what happened next. The registry of every r
 The strict text track is the default. Every interval is a 95% bootstrap interval, and the text says
 whether lines, pages or documents were resampled. Final validation (Phase 22) has not been run.
 
-HierText-derived numbers: annotations under CC BY-SA 4.0, images under CC BY 2.0 from Open Images
-(`long2022hiertext`, `kuznetsova2020openimages`). Tables derived from them are shared alike.
+HierText is released under CC BY-SA 4.0; its images come from Open Images, which lists them as
+CC BY 2.0 (`long2022hiertext`, `kuznetsova2020openimages`). Tables derived from HierText are shared
+alike.
 
 ## 1. Setup
 
 <!-- trace: reports/environment/env_report.md reports/environment/env_report.md#system -->
 All work ran on one laptop: an Intel Core i7-14650HX with 16 physical cores and 24 logical CPUs, an
-NVIDIA GeForce RTX 4050 Laptop GPU with 6140 MiB of memory, and 15.71 GiB of RAM at the time of the
+NVIDIA GeForce RTX 4050 Laptop GPU with <!-- derived: gpu_memory --> 6140 MiB of memory, and 15.71 GiB of RAM at the time of the
 environment report, under Windows 11. There was no cluster and no cloud run. The same machine
 trained the models, ran the baselines and took every latency measurement, and it was also in use for
 other work during long training runs. For that reason latency was never taken from a training or
@@ -54,7 +55,7 @@ Code: `glypharis/training/report.py`, `scripts/experiment_summary.py`. Configura
 <!-- trace: configs/rec/gw-rec-001.yaml configs/rec/gw-rec-001.yaml#train/batch_size -->
 Two training budgets were used for the recognizer. The short budget of 8 epochs served the ablations,
 and the full budget of 30 epochs the baseline and final models. Compared arms had the same epoch
-budget, the same 64 lines per optimizer step and the same schedule unless one of those was the
+budget, the same <!-- derived: lines_per_step --> 64 lines per optimizer step and the same schedule unless one of those was the
 variable under study. Wall-clock time was recorded but never used for matching, because laptop
 thermals make it noisy.
 
@@ -123,8 +124,8 @@ result. GW-REC-035 and GW-REC-036 measure the spread of the recipe and are not p
 <!-- trace: GW-DET-001 reports/error_cases/detector/phase09_adopted/eval_full.json#headline/f1_50 -->
 The detector GW-DET-001 is described in `methodology.md`, section 4. Its result at the settings of
 training, on all 1,715 validation pages (74,500 care lines) at the operating point stored in the
-checkpoint, was F1 0.7238 [0.7075, 0.7390] (by page) at the primary IoU threshold. After the Phase 9
-changes of section 5.6 the same network has F1 0.7779 [0.7621, 0.7919].
+checkpoint, was F1 <!-- derived: det_f1_training --> 0.7238 [0.7075, 0.7390] (by page) at the primary IoU threshold. After the Phase 9
+changes of section 5.6 the same network has F1 <!-- derived: det_f1_phase9 --> 0.7779 [0.7621, 0.7919].
 
 Code: `train.py`, `glypharis/training/rec_trainer.py`, `glypharis/training/det_trainer.py`.
 Configuration: `configs/rec/`, `configs/det/gw-det-001.yaml`; the run reports are under
@@ -138,15 +139,15 @@ Configuration: `configs/rec/`, `configs/det/gw-det-001.yaml`; the run reports ar
 <!-- trace: GW-E2E-006 reports/external/end_to_end.md -->
 | Figure | Value % | Experiment | Set | Resampled by |
 |---|---|---|---|---|
-| Line CER, training-time validation | 6.30 [6.17, 6.44] | GW-REC-034 | the 73,888 lines of the training validation pack | line |
-| Line CER, evaluation pack | 6.51 [6.36, 6.65] | GW-REC-038 | 74,500 crops, with out-of-charset and long lines kept | line |
-| Line CER, efficiency sample | 6.22 [5.73, 6.71] | GW-EFF-009 | <!-- derived: efficiency_lines --> 5,000 seeded lines from the training validation pack | line |
-| Page CER, bag of lines, all pages | 27.57 [25.11, 30.36] | GW-E2E-006 | all 1,715 validation pages | page |
-| Page CER, bag of lines, Phase 5 pages | 24.32 [20.87, 28.15] | GW-EFF-009 | the <!-- derived: baseline_pages --> 400 pages the baselines were run on | page |
+| Line CER, training-time validation | <!-- derived: train_val_cer --> 6.30 [<!-- derived: train_val_cer_low --> 6.17, <!-- derived: train_val_cer_high --> 6.44] | GW-REC-034 | the 73,888 lines of the training validation pack | line |
+| Line CER, evaluation pack | <!-- derived: eval_pack_cer --> 6.51 [6.36, 6.65] | GW-REC-038 | <!-- derived: eval_pack_crops --> 74,500 crops, with out-of-charset and long lines kept | line |
+| Line CER, efficiency sample | <!-- derived: efficiency_line_cer --> 6.22 [5.73, 6.71] | GW-EFF-009 | <!-- derived: efficiency_lines --> 5,000 seeded lines from the training validation pack | line |
+| Page CER, bag of lines, all pages | 27.57 [25.11, 30.36] | GW-E2E-006 | all <!-- derived: val_pages_all --> 1,715 validation pages | page |
+| Page CER, bag of lines, Phase 5 pages | <!-- derived: phase5_page_cer --> 24.32 [20.87, 28.15] | GW-EFF-009 | the <!-- derived: baseline_pages --> 400 pages the baselines were run on | page |
 
-Table 2. The same model on different validation sets. Only the evaluation-pack figure, 6.51, is placed
+Table 2. The same model on different validation sets. Only the evaluation-pack figure, <!-- derived: eval_pack_cer_point --> 6.51, is placed
 beside the test results of Phase 14, because it was produced by the same code and precision on crops
-cut the same way. The 400-page figure is the one to compare with the Phase 5 baselines.
+cut the same way. The <!-- derived: baseline_pages --> 400-page figure is the one to compare with the Phase 5 baselines.
 
 Code: `scripts/ext_eval.py`, `scripts/phase14_score.py`, `scripts/phase16_score.py`. Configuration:
 `configs/final/glypharis_v1.yaml`, `data/manifests/processed/eval_crops.json`.
@@ -185,9 +186,9 @@ Code: `scripts/run_baselines.py`, `scripts/evaluate_baselines.py`. Configuration
 <!-- trace: GW-REC-038 reports/external/recognition.md#track-strict -->
 <!-- trace: GW-E2E-006 reports/external/end_to_end.md#detection -->
 In Phase 5 the baselines read a seeded subsample of HierText validation (10,000 line crops and 400
-pages), all 10,000 GlyphSynth validation lines, and both test sets in full: HierText test (67,574
-crops, 1,634 pages) and GDC (8,372 crops, 106 pages). On validation they therefore cover fewer lines
-and pages than the GLYPHARIS figures in the broad tables, which use 74,500 crops and 1,715 pages.
+pages), all 10,000 GlyphSynth validation lines, and both test sets in full: HierText test (<!-- derived: base_test_crops --> 67,574
+crops, <!-- derived: base_test_pages --> 1,634 pages) and GDC (<!-- derived: base_gdc_crops --> 8,372 crops, <!-- derived: base_gdc_pages --> 106 pages). On validation they therefore cover fewer lines
+and pages than the GLYPHARIS figures in the broad tables, which use <!-- derived: eval_pack_crops --> 74,500 crops and <!-- derived: val_pages_all --> 1,715 pages.
 Where a baseline stands beside GLYPHARIS on validation, the table names the set.
 
 PP-OCRv5 server and PP-OCRv6 medium ran at a scope reduced before the runs, because on this CPU their
@@ -252,7 +253,7 @@ Code: `scripts/ablation_ladder.py`. Configuration: `research/ablations.md` holds
 
 <!-- trace: GW-REC-003 reports/training/phase07/ablation_table.md#control-and-seed-spread -->
 The control was GW-REC-001's configuration at the short budget, trained at three seeds (GW-REC-003 to
-GW-REC-005). Their validation CER ranged from 8.30 to 8.32%, and that range was the noise floor each
+GW-REC-005). Their validation CER ranged from <!-- derived: control_cer_low --> 8.30 to <!-- derived: control_cer_high --> 8.32%, and that range was the noise floor each
 arm was read against.
 
 <!-- trace: GW-REC-003 reports/training/phase07/ablation_table.md#arms-against-gw-rec-003 -->
@@ -290,12 +291,12 @@ Code: `scripts/glyph_c_eval.py`. Configuration: `configs/rec/gw-data-001.yaml` t
 ### 5.4 Phase 12: synthetic data
 
 <!-- trace: GW-DATA-022 reports/synthetic/phase12_comparison.md -->
-GlyphSynth lines were added to HierText in four arms: +25K (GW-DATA-010 to GW-DATA-012), +50K
+GlyphSynth lines were added to HierText in four arms: +25K (GW-DATA-010 to GW-DATA-012), <!-- derived: synth_arm_50k --> +50K
 (GW-DATA-013), +100K (GW-DATA-014 to GW-DATA-016) and +250K (GW-DATA-017 to GW-DATA-019). Every arm was
 kept at the HierText-only control's lines per epoch, so that added lines replace HierText lines in each
 epoch rather than lengthen it. Two more arms changed one generator factor each: +100K, 6 fonts
 (GW-DATA-020), against the 85 families of the standard generator, and +100K, no capture (GW-DATA-021).
-The primary measure was the CER on the document slice, the 104 HierText validation pages with at least
+The primary measure was the CER on the document slice, the <!-- derived: doc_slice_pages --> 104 HierText validation pages with at least
 100 validation lines, paired over pages.
 
 Code: `scripts/synth_study.py`, `scripts/build_glyphsynth_variants.py`. Configuration:
@@ -332,7 +333,7 @@ were partly known when the rules were written.
 <!-- trace: GW-REC-037 reports/ablation/phase13_final.md -->
 The chosen recipe was trained at the full budget with three seeds (GW-REC-034 to GW-REC-036). Their
 validation CER is 6.30, 6.28 and 6.30%, mean 6.29%, against the CRNN baseline GW-REC-001 at the same
-budget: -1.24 [-1.40, -1.11] points, paired over pages. The baseline has one seed, so this interval
+budget: <!-- derived: final_vs_baseline --> -1.24 [-1.40, -1.11] points, paired over pages. The baseline has one seed, so this interval
 covers page sampling and not its seed variation.
 
 Code: `scripts/ablation_ladder.py`, `scripts/freeze_final.py`. Configuration:
@@ -351,11 +352,11 @@ and GW-DET-005 were chosen on half A of the validation pages and checked on half
 <!-- trace: GW-DET-005 reports/error_cases/detector/GW-DET-005/resolution_A.md -->
 | Experiment | Change | Pages | Difference in F1 (95% interval, by page) | What followed |
 |---|---|---|---|---|
-| GW-DET-002 | random backbone initialisation instead of ImageNet | all validation pages | GW-DET-001 minus this run: +0.0197 [+0.0161, +0.0232] | ImageNet kept |
-| GW-DET-003 | MobileNetV3-Small instead of Large | all validation pages | GW-DET-001 minus this run: +0.0556 [+0.0505, +0.0616] | Large kept |
-| GW-DET-004 | post-processing chosen on half A | half B | this setting minus the setting of record: +0.0316 [+0.0247, +0.0386] | adopted |
-| GW-DET-005 | long side 1536 instead of 1280 | half B | +0.0177 [+0.0131, +0.0221] | adopted |
-| GW-DET-007 | labels for smaller text, wider training rotation | all validation pages | this run minus GW-DET-001: -0.0111 [-0.0146, -0.0075] | not adopted |
+| GW-DET-002 | random backbone initialisation instead of ImageNet | all validation pages | GW-DET-001 minus this run: <!-- derived: det_002_diff --> +0.0197 [+0.0161, +0.0232] | ImageNet kept |
+| GW-DET-003 | MobileNetV3-Small instead of Large | all validation pages | GW-DET-001 minus this run: <!-- derived: det_003_diff --> +0.0556 [+0.0505, +0.0616] | Large kept |
+| GW-DET-004 | post-processing chosen on half A | half B | this setting minus the setting of record: <!-- derived: det_004_diff --> +0.0316 [+0.0247, +0.0386] | adopted |
+| GW-DET-005 | long side 1536 instead of 1280 | half B | <!-- derived: det_005_diff --> +0.0177 [+0.0131, +0.0221] | adopted |
+| GW-DET-007 | labels for smaller text, wider training rotation | all validation pages | this run minus GW-DET-001: <!-- derived: det_007_diff --> -0.0111 [-0.0146, -0.0075] | not adopted |
 
 Table 7. The detector steps, with F1 at the primary IoU threshold. GW-DET-002 and GW-DET-003 are
 measured at the settings of training, the others at the Phase 9 settings as they became available.
@@ -396,14 +397,14 @@ Code: `scripts/ext_eval.py`, `scripts/phase14_score.py`, `scripts/phase15_errors
 <!-- trace: GW-EFF-010 reports/efficiency/phase16/verdicts.md#h1-onnx-not-met -->
 | Test | Quantity whose interval decides | Experiment | Result (95% interval) | Verdict |
 |---|---|---|---|---|
-| H1′, CER half | page CER of GLYPHARIS minus 2 x PP-OCRv5 mobile, 53 clean GDC pages, by page | GW-E2E-009 | -34.98 [-47.44, -24.08] points | met |
-| H1′, latency half | GLYPHARIS (PyTorch) minus PP-OCRv5 mobile, ms per page, one sitting, by page | GW-EFF-005 | -508.11 [-737.66, -256.52] ms | met |
-| H1′, ONNX build | v1 fp32 ONNX minus PP-OCRv5 mobile, ms per page, one sitting | GW-EFF-010 | +6,537.6 [+5,383.7, +7,806.3] ms | not met |
-| H5′ | CER on GDC crops minus 1.5 x CER on validation crops, by line | GW-E2E-009 | -5.59 [-6.07, -5.01] points | not met |
-| H6′ | SVTR minus 1.5 x CRNN, ONNX, ms per line | GW-EFF-011 | +16.78 [+12.02, +22.04] ms | not met |
-| H7′, latency half | INT8 minus 0.75 x fp32, ms per line | GW-EFF-008 | -10.00 [-12.79, -7.37] ms | met |
-| H7′, accuracy half | line CER of INT8 minus fp32, with an allowance of 0.005 errors per reference character | GW-EFF-008 | -0.512 [-0.541, -0.484] points | met |
-| H8′, transfers | ECE at T = 2.35 minus ECE at T = 1, GDC crops, by line | GW-E2E-009 | -0.1253 [-0.1319, -0.1190] | met |
+| H1′, CER half | page CER of GLYPHARIS minus 2 x PP-OCRv5 mobile, 53 clean GDC pages, by page | GW-E2E-009 | <!-- derived: h1_cer --> -34.98 [<!-- derived: h1_cer_low --> -47.44, <!-- derived: h1_cer_high --> -24.08] points | met |
+| H1′, latency half | GLYPHARIS (PyTorch) minus PP-OCRv5 mobile, ms per page, one sitting, by page | GW-EFF-005 | <!-- derived: h1_latency --> -508.11 [-737.66, -256.52] ms | met |
+| H1′, ONNX build | v1 fp32 ONNX minus PP-OCRv5 mobile, ms per page, one sitting | GW-EFF-010 | <!-- derived: h1_onnx --> +6,537.6 [+5,383.7, +7,806.3] ms | not met |
+| H5′ | CER on GDC crops minus 1.5 x CER on validation crops, by line | GW-E2E-009 | <!-- derived: h5 --> -5.59 [<!-- derived: h5_low --> -6.07, <!-- derived: h5_high --> -5.01] points | not met |
+| H6′ | SVTR minus 1.5 x CRNN, ONNX, ms per line | GW-EFF-011 | <!-- derived: h6 --> +16.78 [+12.02, +22.04] ms | not met |
+| H7′, latency half | INT8 minus 0.75 x fp32, ms per line | GW-EFF-008 | <!-- derived: h7_latency --> -10.00 [-12.79, -7.37] ms | met |
+| H7′, accuracy half | line CER of INT8 minus fp32, with an allowance of 0.005 errors per reference character | GW-EFF-008 | <!-- derived: h7_accuracy --> -0.512 [<!-- derived: h7_accuracy_low --> -0.541, <!-- derived: h7_accuracy_high --> -0.484] points | met |
+| H8′, transfers | ECE at T = 2.35 minus ECE at T = 1, GDC crops, by line | GW-E2E-009 | <!-- derived: h8_transfers --> -0.1253 [-0.1319, -0.1190] | met |
 
 Table 8. The confirmatory tests. H1′ holds as a whole on the PyTorch build, with both of its halves
 met; the verdict on the ONNX build is separate and applies to that bundle only. H7′ holds. H7′ concerns
@@ -595,13 +596,13 @@ no run separates the encoder's share (section 5.2).
 <!-- trace: GW-E2E-004 reports/package/attempt1_record_post/GW-E2E-004.json -->
 The first v0.1 bundle carried the detector's old post-processing, because a helper in a local build
 script failed silently. Its own export checks passed, and the package check against the Phase 10
-pipeline caught it: page CER 26.28% against 24.33% on the 400 pages. The bundle was rebuilt. An export
+pipeline caught it: page CER 26.28% against <!-- derived: bundle_reference_cer --> 24.33% on the <!-- derived: bundle_check_pages --> 400 pages. The bundle was rebuilt. An export
 can match itself exactly and still be the wrong model, which is why v1 has a check against the measured
 pipeline (section 10).
 
 <!-- trace: GW-REC-034 reports/training/GW-REC-034/report.md#notes -->
-The final recognizer stopped once with CUDA out of memory in its epoch 25, most likely because another
-program took GPU memory, and resumed from step 142,000. Two other interruptions had causes outside
+The final recognizer stopped once with CUDA out of memory in its epoch <!-- derived: resume_epoch --> 25, most likely because another
+program took GPU memory, and resumed from step <!-- derived: resume_step --> 142,000. Two other interruptions had causes outside
 the method: a file lock on a checkpoint rename (GW-DATA-017) and an unrelated `uv run` that
 half-replaced the environment during GW-REC-034, after which the packages were reinstalled at their
 locked versions. Neither changed a result.
@@ -632,16 +633,16 @@ manifest SHA-256 `875357a6…`. PyTorch is its default backend.
 <!-- trace: GW-EFF-012 reports/export/GW-EFF-012/torch_bundle_check.json#detector/pages -->
 <!-- trace: GW-EFF-012 reports/export/GW-EFF-012/torch_bundle_check.json#end_to_end/pages_with_identical_text -->
 GW-EFF-012 checked the bundle on the PyTorch backend against the reference outputs that Phase 16 wrote
-once from the PyTorch v1 build on the CPU. The detector probability maps on the 110 profile pages
-differ by 0.0 (limit 0.0001). The recognizer logits on the 5,000 lines differ by 0.0 (limit 0.001),
-with all 5,000 lines giving identical text. On the 400 pages all page texts are identical.
+once from the PyTorch v1 build on the CPU. The detector probability maps on the <!-- derived: bundle_profile_pages --> 110 profile pages
+differ by <!-- derived: bundle_map_difference --> 0.0 (limit 0.0001). The recognizer logits on the <!-- derived: efficiency_lines --> 5,000 lines differ by <!-- derived: bundle_logit_difference --> 0.0 (limit 0.001),
+with all <!-- derived: bundle_identical_lines --> 5,000 lines giving identical text. On the 400 pages all page texts are identical.
 
 <!-- trace: GW-E2E-011 reports/package/GW-E2E-011.json -->
 GW-E2E-011 ran the installed package on the bundle over the <!-- derived: baseline_pages --> 400 Phase
 5 validation pages and compared it with GW-E2E-006's predictions for the same pages, which came from
 the GPU in strict fp32. The page CER is 24.32% for both, a difference of 0.0 points against a limit of
 0.05, and 16,835 of 16,835 lines have identical text and box. In that report the key
-`page_cer_phase10` holds this 400-page reference, despite its name.
+`page_cer_phase10` holds this <!-- derived: baseline_pages --> 400-page reference, despite its name.
 
 <!-- trace: GW-E2E-012 reports/hardening/GW-E2E-012.json#fuzz_cases -->
 <!-- trace: GW-E2E-012 reports/hardening/GW-E2E-012.json#inputs/torch/good_page_lines -->

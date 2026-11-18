@@ -95,6 +95,38 @@
  ],
  "derived": [
   {
+   "name": "crop_max_aspect",
+   "formula": "x",
+   "note": "longest width-to-height ratio cut for the training packs",
+   "inputs": {
+    "x": {"id": "data/manifests/processed/hiertext.json", "source": "data/manifests/processed/hiertext.json", "row": "crop_settings/max_aspect"}
+   }
+  },
+  {
+   "name": "glyph_c_per_source",
+   "formula": "x",
+   "note": "GLYPH-C source lines taken from each of HierText validation and GlyphSynth validation",
+   "inputs": {
+    "x": {"id": "data/manifests/processed/glyph_c.json", "source": "data/manifests/processed/glyph_c.json", "row": "per_source"}
+   }
+  },
+  {
+   "name": "glyph_c_samples",
+   "formula": "x",
+   "note": "GLYPH-C source lines in all",
+   "inputs": {
+    "x": {"id": "data/manifests/processed/glyph_c.json", "source": "data/manifests/processed/glyph_c.json", "row": "samples"}
+   }
+  },
+  {
+   "name": "gdc_source_documents",
+   "formula": "x",
+   "note": "GDC source documents, as stated with the H1' test",
+   "inputs": {
+    "x": {"id": "GW-E2E-009", "source": "reports/external/README.md#confirmatory-tests-phase-14-plan-item-5", "value": "21"}
+   }
+  },
+  {
    "name": "hiertext_legible_words",
    "formula": "train + validation + test",
    "inputs": {

@@ -1,7 +1,8 @@
 # Limitations
 
-HierText annotations are CC BY-SA 4.0 and its images CC BY 2.0 through Open Images; figures derived
-from them are shared alike. Tracks are strict unless stated. GDC-scan appears as numbers only.
+HierText is released under CC BY-SA 4.0; its images come from Open Images, which lists them as
+CC BY 2.0. Figures derived from HierText are shared alike. Tracks are strict unless stated. GDC-scan
+appears as numbers only.
 
 ## Status of the evidence
 
@@ -11,73 +12,80 @@ pending Phase 22. No weights are distributed; release is Phase 23.
 <!-- trace: GW-E2E-011 reports/package/GW-E2E-011.json -->
 Test results come from the GPU strict-fp32 evaluation; equality with the bundle is shown on
 validation only. Phase 22 checks reproduction within the 0.05-point tolerance. The check on
-validation covered 400 HierText pages through the bundle's PyTorch backend: all 16,835 lines kept
-their text and box (GW-E2E-011). The same bundle's agreement with the PyTorch references is recorded
-in GW-EFF-012, and the ONNX export's in GW-EFF-006.
+validation covered <!-- derived: pkg_pages --> 400 HierText pages through the bundle's PyTorch
+backend: all <!-- derived: pkg_lines --> 16,835 lines kept their text and box (GW-E2E-011). The same
+bundle's agreement with the PyTorch references is recorded in GW-EFF-012, and the ONNX export's in
+GW-EFF-006.
 
 ## Size and make-up of the test sets
 
-<!-- trace: GW-E2E-007 reports/external/end_to_end.md#detection -->
-<!-- trace: GW-REC-039 reports/external/recognition.md#track-strict -->
-GDC has 106 pages from <!-- derived: gdc_documents --> 21 documents, FUNSD
-<!-- derived: funsd_pages --> 50 forms and GDC-scan <!-- derived: gdc_scan_pages --> 28 pages from
+<!-- trace: GW-E2E-009 reports/external/end_to_end.md#detection -->
+<!-- trace: GW-E2E-009 reports/external/recognition.md#iiit5k -->
+GDC has <!-- derived: gdc_pages --> 106 pages from <!-- derived: gdc_documents --> 21 documents,
+FUNSD <!-- derived: funsd_pages --> 50 forms and GDC-scan <!-- derived: gdc_scan_pages --> 28 pages from
 one document. GDC-scan is a case study: its intervals are conditional on that document and it
-carries no verdict (ADR-0013). HierText test has 1,634 pages and is mostly scene-style. OmniDocBench
-has 755 pages. Its text blocks and FUNSD's fields include content that v1 does not try to read. GDC
-and FUNSD leave wide page intervals. IIIT5K has 3,000 cropped words, which is not the line task v1
-was built for.
+carries no verdict (ADR-0013). HierText test has <!-- derived: ht_pages --> 1,634 pages and is mostly
+scene-style. OmniDocBench has <!-- derived: odb_pages --> 755 pages. Its text blocks and FUNSD's
+fields include content that v1 does not try to read. GDC and FUNSD leave wide page intervals. IIIT5K
+has <!-- derived: iiit_words --> 3,000 cropped words, which is not the line task v1 was built for.
 
 <!-- trace: GW-E2E-007 reports/external/end_to_end.md#gdc-per-capture -->
 GDC's capture conditions are confounded with its documents, and some are small:
-<!-- derived: gdc_rotated_pages --> 7 rotated and
-<!-- derived: gdc_curved_pages --> 8 curved pages. Per-condition figures such as
-64.60% [47.03, 82.96] bag-of-lines CER on curved pages are descriptive and are not contrasts
-between conditions.
+only <!-- derived: gdc_rotated_pages --> 7 pages are rotated and <!-- derived: gdc_curved_pages --> 8
+curved. Per-condition figures such as the bag-of-lines CER
+of <!-- derived: gdc_curved_cer --> 64.60% [47.03, 82.96] on curved pages are descriptive and are not
+contrasts between conditions.
 
 No old or degraded archival scans were evaluated. GDC's target for them is unmet, and GDC-scan is a
 modern printed document (ADR-0013). SROIE was skipped, so receipts were not tested.
 
 ## What v1 does not handle
 
-<!-- trace: GW-E2E-007 reports/external/end_to_end.md#gdc-per-capture -->
+<!-- trace: GW-E2E-009 reports/external/end_to_end.md#gdc-per-capture -->
 There is no page-orientation step (F24). On GDC's <!-- derived: gdc_rotated_pages --> 7 rotated
-pages the bag-of-lines CER of v1 was 80.53% [62.13, 92.43]. From ground-truth boxes the same
-recognizer reached 0.83% [0.26, 2.19] (GW-E2E-008), and PP-OCRv6 small, which classifies page
-orientation first, 1.70% [0.42, 5.79] (GW-BASE-006). Intervals are over pages.
+pages the bag-of-lines CER of v1 was <!-- derived: rot_glyph --> 80.53% [62.13, 92.43]. From
+ground-truth boxes the same recognizer reached <!-- derived: rot_oracle --> 0.83% [0.26, 2.19]
+(GW-E2E-008), and PP-OCRv6 small, which classifies page orientation
+first, <!-- derived: rot_small --> 1.70% [0.42, 5.79] (GW-BASE-006). Intervals are over pages.
 
 <!-- trace: GW-E2E-007 reports/external/end_to_end.md#vertical-lines -->
 Vertical text is not read. Of GDC's <!-- derived: gdc_vertical_lines --> 32 vertical lines, the
-detector matched 18.75% [5.26, 40.00] (interval over pages).
+detector matched <!-- derived: vert_recall --> 18.75% [5.26, 40.00] (interval over pages).
 
 <!-- trace: GW-E2E-010 reports/error_cases/phase15/pipeline.md#hiertext_test -->
-The detector loses small and steep lines. On HierText test its recall was 57.92% [54.64, 61.17] for
-lines under 9.35 px high and 49.53% [45.80, 53.19] for lines in the steepest rotation bin, at
-<!-- derived: rotation_bin --> 15 degrees or more. Loose boxes cost the recognizer: CER on matched
-lines was 29.24% [27.83, 30.64] in the lowest IoU bin and 3.63% [2.99, 4.49] in the highest.
+The detector loses small and steep lines. On HierText test its recall
+was <!-- derived: recall_small --> 57.92% [54.64, 61.17] for lines
+under <!-- derived: small_height --> 9.35 px high and <!-- derived: recall_steep --> 49.53% [45.80, 53.19]
+for lines in the steepest rotation bin, at <!-- derived: rotation_bin --> 15 degrees or more. CER on
+matched lines was <!-- derived: iou_low --> 29.24% [27.83, 30.64] in the lowest IoU bin
+and <!-- derived: iou_high --> 3.63% [2.99, 4.49] in the highest. These slices are marginal and
+confounded, so they do not isolate the effect of the box.
 
 <!-- trace: GW-E2E-010 reports/error_cases/phase15/pipeline.md#gdc_test -->
-On GDC the detector found none of the 113 lines under 9.35 px high.
+On GDC the detector found none of the <!-- derived: gdc_small_lines --> 113 lines
+under <!-- derived: small_height_gdc --> 9.35 px high.
 
 <!-- trace: GW-E2E-010 reports/error_cases/phase15/pipeline.md#reading-order -->
 Reading order is a heuristic. On GDC 14.56% [9.93, 20.36] of consecutive matched lines came out in
-the opposite order (page interval). Tables, sidebars and other complex layouts are not solved, and
-OmniDocBench's overall score could not be computed because tables and formulas were not produced.
+the opposite order (page interval). Tables, sidebars
+and other complex layouts are not solved, and OmniDocBench's overall score could not be computed
+because tables and formulas were not produced.
 
 <!-- trace: reports/charset/charset_report.md reports/charset/charset_report.md -->
-The character set is English-oriented, with 274 characters. Handwritten lines were excluded from
-recognizer training, and other scripts are out of scope.
+The character set is English-oriented. The charset file has 274 characters. Handwritten lines were
+excluded from recognizer training, and other scripts are out of scope.
 
 ## Seeds
 
 <!-- trace: GW-REC-037 reports/ablation/phase13_final.md -->
 <!-- trace: GW-REC-034 reports/training/GW-REC-034/report.md -->
 The v1 recognizer was trained with three seeds, GW-REC-034 to 036, with validation CER
-<!-- derived: seed_cer_a --> 6.30, <!-- derived: seed_cer_b --> 6.28 and
-<!-- derived: seed_cer_a --> 6.30% over 73,888 lines. The test sets were read by GW-REC-034
-alone, so they do not show the spread between seeds. The v0.1 recognizer, GW-REC-024, stayed at one seed. Two more seeds were
-registered for it as GW-REC-032 and GW-REC-033 and were not run, because option B was chosen in
-GW-REC-037. The promise of extra v0.1 seeds is closed for v1 by the three v1 seeds and is not met
-for v0.1.
+of <!-- derived: seed_cer_a --> 6.30, <!-- derived: seed_cer_b --> 6.28
+and <!-- derived: seed_cer_a --> 6.30%, over <!-- derived: rec034_lines --> 73,888 lines. The test sets
+were read by GW-REC-034 alone, so they do not show the spread between seeds. The v0.1 recognizer,
+GW-REC-024, stayed at one seed. Two more seeds were registered for it as GW-REC-032 and GW-REC-033
+and were not run, because option B was chosen in GW-REC-037. The promise of extra v0.1 seeds is
+closed for v1 by the three v1 seeds and is not met for v0.1.
 
 The detector GW-DET-001 has one seed, and so does each detector compared with it (GW-DET-002, 003,
 007). The detector variations therefore show no seed spread.
@@ -94,25 +102,61 @@ Only H1′, H5′ and H8′ (and the Phase 16 tests) are confirmatory; every oth
 descriptive. PP-OCRv5 mobile ran PaddleOCR's two orientation models in the H1′ latency half, as it
 did for its accuracy numbers.
 
+<!-- trace: GW-E2E-009 reports/external/recognition.md#track-strict -->
+<!-- trace: GW-E2E-009 reports/external/comparisons.md -->
+Several comparisons went against GLYPHARIS. On GDC's line crops, read from ground-truth boxes, its
+CER was <!-- derived: crop_glyph --> 4.17% [3.72, 4.67] against <!-- derived: crop_medium --> 3.20%
+[2.91, 3.56] for PP-OCRv6 medium, a difference of <!-- derived: d_crop_medium --> +0.97
+[+0.76, +1.20] points. Its CER was also higher than that of PP-OCRv6 small,
+by <!-- derived: d_crop_small --> +0.71 [+0.53, +0.91], and of PP-OCRv5 mobile,
+by <!-- derived: d_crop_mobile --> +0.49 [+0.23, +0.78] (intervals over lines).
+
+<!-- trace: GW-E2E-009 reports/external/recognition.md#iiit5k -->
+<!-- trace: GW-E2E-009 reports/external/comparisons.md -->
+On IIIT5K's alphanumeric track its word accuracy was <!-- derived: iiit_glyph --> 91.47%
+[90.43, 92.47] against <!-- derived: iiit_medium --> 97.13% [96.57, 97.73] for PP-OCRv6 medium, a
+difference of <!-- derived: d_iiit_medium --> −5.67 [−6.53, −4.77] points (intervals over words).
+
+<!-- trace: GW-E2E-009 reports/external/end_to_end.md#track-strict -->
+<!-- trace: GW-E2E-009 reports/external/comparisons.md -->
+<!-- trace: GW-E2E-009 reports/external/official.md#omnidocbench -->
+On OmniDocBench its order-aware CER was <!-- derived: odb_glyph --> 27.28% [23.95, 30.57]
+against <!-- derived: odb_tess --> 15.70% [14.23, 17.37] for Tesseract 5 (a difference
+of <!-- derived: d_odb_tess --> +11.58 [+8.37, +14.88] points, intervals over pages). This is the
+project's metric, not the official protocol. The official text-block edit distance, where lower is
+better and no interval exists, was <!-- derived: off_glyph_whole --> 0.1859 for GLYPHARIS
+against <!-- derived: off_tess_whole --> 0.0847 for Tesseract 5 over the whole set,
+and <!-- derived: off_glyph_page --> 0.1007 against <!-- derived: off_tess_page --> 0.0966 as a page
+average; no difference is stated.
+
+<!-- trace: GW-E2E-009 reports/external/end_to_end.md#detection -->
+FUNSD detection F1 at IoU 0.5 was <!-- derived: funsd_glyph --> 79.07%
+[75.56, 82.16], below the point estimates of all five PaddleOCR systems,
+from <!-- derived: funsd_mobile --> 81.81% for PP-OCRv5 mobile to <!-- derived: funsd_server --> 85.03%
+for PP-OCRv5 server. There is no paired interval for it, so no difference is stated.
+
 <!-- trace: GW-BASE-002 reports/baselines/recognition.md -->
 <!-- trace: GW-BASE-002 reports/baselines/end_to_end.md -->
 <!-- trace: GW-REC-038 reports/external/recognition.md#track-strict -->
 <!-- trace: GW-E2E-006 reports/external/end_to_end.md#track-strict -->
-Validation results are not all on the same sample. The Phase 5 baselines cover 10,000 HierText
-validation lines and 400 pages, while the broad GLYPHARIS tables cover 74,500 crops and 1,715 pages.
-Baseline coverage of the test sets also differs: PP-OCRv5 server and PP-OCRv6 medium were not run
-end to end on HierText test.
+Validation results are not all on the same sample. The Phase 5 baselines
+cover <!-- derived: base_val_lines --> 10,000 HierText validation lines
+and <!-- derived: base_val_pages --> 400 pages, while the broad GLYPHARIS tables
+cover <!-- derived: val_crops --> 74,500 crops and <!-- derived: val_pages --> 1,715 pages. Baseline
+coverage of the test sets also differs: PP-OCRv5 server and PP-OCRv6 medium were not run end to end
+on HierText test.
 
 <!-- trace: GW-BASE-004 reports/external/recognition.md -->
 TrOCR-small-printed was run on line crops only, so it has no end-to-end result. On GDC crops its CER
-was 72.34% [71.65, 73.16] strict and 13.07% [12.33, 13.98] normalised (intervals over lines), so its
+was <!-- derived: trocr_strict --> 72.34% [71.65, 73.16] strict
+and <!-- derived: trocr_norm --> 13.07% [12.33, 13.98] normalised (intervals over lines), so its
 standing depends on the track.
 
-<!-- trace: GW-E2E-007 reports/external/end_to_end.md#track-strict -->
-On OmniDocBench the PaddleOCR systems had order-aware CER from 60.29% [58.23, 62.26] to 60.62%
+<!-- trace: GW-E2E-009 reports/external/end_to_end.md#track-strict -->
+On OmniDocBench the PaddleOCR systems had order-aware CER
+from <!-- derived: odb_small --> 60.29% [58.23, 62.26] to <!-- derived: odb_tiny --> 60.62%
 [58.68, 62.55]. A top-to-bottom box sort was proposed as the cause (F26), but the measure registered
-for it could not decide the question (F33). The cause is unmeasured and none is claimed. The
-order-aware CER on this set is the project's metric, not the official protocol.
+for it could not decide the question (F33). The cause is unmeasured and none is claimed.
 
 H4 was closed post hoc: no decision rule was registered before the oracle was scored, so the
 statement that it is not supported on GDC is a reading of the numbers and not a test.
@@ -120,30 +164,35 @@ statement that it is not supported on GDC is a reading of the numbers and not a 
 ## Efficiency
 
 <!-- trace: GW-EFF-007 reports/efficiency/phase16/README.md#adr-0011s -->
-ADR-0011's laptop targets were missed and are recorded as missed. The PyTorch build at 10 threads
-took 33.9 ms per line against a target of 25 and 2,565.7 ms per page against 1.5 s. It stayed within
-the page memory target, at 1,641.8 MiB against 1,836. The ONNX builds were over on all five targets.
+ADR-0011's laptop targets were missed and are recorded as missed. The PyTorch build at
+10 threads took <!-- derived: adr_line --> 33.9 ms per line against a target
+of 25 and <!-- derived: adr_page --> 2,565.7 ms per page against 1.5 s. It stayed within the page
+memory target, at <!-- derived: adr_ram --> 1,641.8 MiB against 1,836. The ONNX builds were over on
+all five targets.
 
 <!-- trace: GW-EFF-010 reports/efficiency/phase16/verdicts.md#h1-onnx -->
-The v1 ONNX bundle took +6,537.6 [+5,383.7, +7,806.3] ms per page against PP-OCRv5 mobile, so H1′ is
+The v1 ONNX bundle took <!-- derived: h1_onnx --> +6,537.6 [+5,383.7, +7,806.3] ms per page against PP-OCRv5 mobile, so H1′ is
 not met for it. H1′ holds for the PyTorch build only.
 
 <!-- trace: GW-EFF-007 reports/efficiency/phase16/cost_table.md#pages -->
-All latencies come from one laptop (Intel Core i7-14650HX, 10 threads) on HierText validation pages,
-which average 40.9 lines, and not on document pages. Phones are the target hardware; no phone has
-been measured.
+All latencies come from one laptop (Intel Core i7-14650HX, 10 threads) on
+HierText validation pages, which average <!-- derived: lines_per_page --> 40.9 lines, and not on
+document pages. Phones are the target hardware; no phone has been measured.
 
 <!-- trace: GW-E2E-009 reports/external/README.md#confirmatory-tests -->
 <!-- trace: GW-EFF-007 reports/benchmark_results/efficiency_comparison.md#pages -->
 <!-- trace: GW-EFF-010 reports/efficiency/phase16/verdicts.md#h1-onnx -->
 Page latencies from different sittings are not compared. The mean page time of PP-OCRv5 mobile
-(GW-BASE-002) was 3,408.2 ms in Phase 5, 2,954.8 ms in Phase 14 and, for GW-BASE-002 in Phase 16,
-3,086.0 ms. PyTorch v1 took 2,446.7 ms in Phase 14 and 2,565.7 ms in Phase 16. Thermal drift within
-a sitting is limited by the mirrored run order of the compared arms, not removed.
+(GW-BASE-002) was <!-- derived: mobile_p5 --> 3,408.2 ms in Phase 5, <!-- derived: mobile_p14 -->
+2,954.8 ms in Phase 14 and, in Phase 16, <!-- derived: mobile_p16 --> 3,086.0 ms. PyTorch v1
+took <!-- derived: torch_p14 --> 2,446.7 ms in Phase 14 and <!-- derived: torch_p16 --> 2,565.7 ms in
+Phase 16. Thermal drift within a sitting is limited by the mirrored run order of the compared arms,
+not removed.
 
 <!-- trace: GW-EFF-009 reports/efficiency/phase16/pareto.md#pages -->
-The fused-attention build took 4,020.8 ms [3,604.2, 4,479.8] per page on the laptop with 2,393.0 MiB
-at peak. A new version, not v1; validation and laptop figures only; to be evaluated in Phase 22.
+The fused-attention build took <!-- derived: fused_ms --> 4,020.8 ms [3,604.2, 4,479.8] per page on
+the laptop with <!-- derived: fused_ram --> 2,393.0 MiB at peak. A new version, not v1; validation
+and laptop figures only; to be evaluated in Phase 22.
 
 The compute ledger counts only queue-logged jobs. Experiments it does not cover are listed by ID in
 `reports/experiment_summary.md`, so its totals are not the total compute of the project.
@@ -151,30 +200,33 @@ The compute ledger counts only queue-logged jobs. Experiments it does not cover 
 ## Calibration
 
 <!-- trace: GW-REC-039 reports/external/calibration.md -->
-One temperature, T = 2.35, fitted on HierText validation, does not suit every kind of text. On
-IIIT5K words the change in ECE was +0.0572 [+0.0431, +0.0716], so calibration became worse (interval
-over words). On GDC's pipeline lines ECE stayed at 0.2489 after scaling. H8 is not supported on GDC:
-the reduction transferred, but the halving was not shown, because the line and page bootstraps
-disagreed. Line confidence should not be read as a calibrated probability on document pages.
+One temperature, T = 2.35, fitted on HierText validation, does not suit
+every kind of text. On IIIT5K words the change in ECE was <!-- derived: ece_iiit --> +0.0572
+[+0.0431, +0.0716], so calibration became worse (interval over words). On GDC's pipeline lines ECE
+was still <!-- derived: ece_pipe --> 0.2489 after scaling. H8 is not supported on GDC: the reduction
+transferred, but the halving was not shown, because the line and page bootstraps disagreed. Line
+confidence should not be read as a calibrated probability on document pages.
 
 ## Synthetic data and robustness
 
 <!-- trace: GW-DATA-022 reports/synthetic/phase12_comparison.md -->
 v1 contains no GlyphSynth. H2′ was not supported at the tested budget: with the CRNN at a fixed step
-budget, no amount of added lines lowered CER on the document slice of HierText validation, and +250K
-lines raised it by +0.39 [+0.25, +0.52] points (paired over pages). The slice is a proxy, 104
-validation pages with many lines and not a document set, and the study was not repeated on the
+budget, no amount of added lines lowered CER on the document slice of HierText validation, and
++250K lines raised it by <!-- derived: synth_250 --> +0.39
+[+0.25, +0.52] points (paired over pages). The slice is a proxy, <!-- derived: doc_slice_pages -->
+104 validation pages with many lines and not a document set, and the study was not repeated on the
 SVTR-style model.
 
 <!-- trace: GW-DATA-009 reports/robustness/phase11_comparison.md -->
-H3 was tested on the CRNN at the short budget only: degradation augmentation lowered GLYPH-C mCE by
-−0.25 [−0.30, −0.19] points. It was not tested on the SVTR-style recognizer.
+H3 was tested on the CRNN at the short budget only: degradation augmentation lowered GLYPH-C mCE
+by <!-- derived: h3_delta --> −0.25 [−0.30, −0.19] points. It was not tested on the SVTR-style
+recognizer.
 
 <!-- trace: GW-REC-037 reports/ablation/phase13_final.md -->
 GLYPH-C is derived from validation lines, half of them rendered by GlyphSynth, so its mCE for v1
-(3.54, 3.53 and 3.53% over the three seeds) and its clean CER are not comparable with HierText CER.
-SynthText was not compared with GlyphSynth, because its licence is incompatible with the intended
-use (ADR-0009).
+(<!-- derived: mce_a --> 3.54, <!-- derived: mce_b --> 3.53 and <!-- derived: mce_b --> 3.53% over
+the three seeds) and its clean CER are not comparable with HierText CER. SynthText was not compared
+with GlyphSynth, because its licence is incompatible with the intended use (ADR-0009).
 
 ## Engineering limits
 

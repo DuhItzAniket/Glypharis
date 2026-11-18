@@ -3418,6 +3418,17 @@ Exit criterion (`docs/IMPLEMENTATION_PLAN.md:398-402`): every number in the pape
 ADR-0009's rule is that sources must allow commercial use, and `DATASETS.md:241` says the ImageNet terms do not clearly allow it. The ADR must state how v1 relates to that rule.
 *Check:* `git grep "before v0.1"` finds no open licence wording.
 
+*Note, 2026-11-18.* The owner's answers are the "Owner decisions" paragraph at the end of this
+section.
+
+*Note, 2026-11-18.* The check still finds the licence note written at download in `data/sources.yaml`,
+`data/manifests/imagenet_backbones.json` and `data/DATASET_MANIFEST.yaml`, and they keep it on
+purpose. They are source records: `data/sources.yaml` is the download registry the manifests come
+from, and the number trace cites `imagenet_backbones.json` by SHA-256, so an edit would change a cited
+hash. `DATASETS.md` (MobileNetV3 card, known issues) and ADR-0014 carry the correct statement, and
+`docs/IMPLEMENTATION_PLAN.md` §8 records the exception. A later data pass may regenerate these files.
+The hit at line 685 of this file is the Phase 8 record, and the one above is this check.
+
 **B. Registry repair (`research/experiments.md`, `research/failures.md`)**
 
 **3. GW-REC-022** (row L38, entry L670-688): set status done, run date 2026-10-25.
@@ -3480,6 +3491,9 @@ ADR-0009's rule is that sources must allow commercial use, and `DATASETS.md:241`
 - List the 28 registered IDs without a ledger row. Update the ledger's "Not in these logs" note only if the logs allow it; otherwise the summary states the gap.
 
 *Tests:* one failing case per rule, determinism, `--check` stale and current, and no file written on failure.
+
+*Note, 2026-11-18.* The third reader's design is recorded in the docstring of
+`scripts/experiment_summary.py` (rules R1-R11).
 
 **8. `scripts/experiment_comparison.py`, `tests/test_experiment_comparison.py`.** Brief §63 asks for a generated table of Model, Dataset, CER, WER, F1, Latency, Params, Model Size and VRAM. No report has it, and no reader scoped it.
 
@@ -3587,6 +3601,11 @@ For GDC, publish 8,606 lines, 8,372 crops and the rule `is_rec_line` (`glypharis
 - Remove matching detail from the docstring in `scripts/gdc_scan_build.py` and the identifier list at `docs/PHASE_STATUS.md:2176-2177`.
 - Repeat the Phase 14 pre-push search of the diff for known identifying strings, kept local and never written to the repository.
 
+*Note, 2026-11-18.* Not done yet. The search so far covered one package's files and did not have the
+strings. Before the branch is pushed, someone who holds them runs it over `git diff main...HEAD` and
+any uncommitted or untracked files, including `reports/paper_trace/`. Only the outcome goes here: the
+commit searched and whether anything was found.
+
 **14. `research/paper/references.bib`.**
 - Verify all 29 entries against publisher or arXiv pages.
 - Add DOI or eprint, volume, number and pages where they exist.
@@ -3664,6 +3683,10 @@ Licence wording is drafted against the placeholder `ADR-0014` and completed in S
 4. **Licence and privacy review:** attribution notes, redistribution statement, GDC-scan numbers-only, no textbook lines, no personal data, local diff search.
 5. **Completeness review:** tick every line of the coverage table below.
 6. **Fresh-reader review:** starting only from `MODEL_CARD.md`, reach the source report of ten numbers.
+
+*Note, 2026-11-18.* No separate coverage table was written. The coverage list for review 5 is items
+1-16, the Fixed rules, the Conventions, the Phase 22/23 claims table, the Phase 21 entry in
+`docs/IMPLEMENTATION_PLAN.md`, and brief §§9, 13, 43, 45, 53, 54, 62-65 and Phase 21.
 
 **Gate checks**
 - Ruff, `ruff format --check`, mypy, pytest in a clone without tags, `scripts/validate_configs.py`, all three `--check` commands, `trace_numbers.py` exit 0.
