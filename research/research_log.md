@@ -430,3 +430,11 @@ the bottom. Experiments get their full record in `experiments.md`; this log is t
 - A clean environment with only the locked dependencies installs it and runs `glypharis-ocr` on a
   page from outside the repository.
 
+### 2026-11-18 — Phase 20 re-run: the typed errors hold on the real model
+
+- The hardening tests had only ever run on tiny untrained models. On the v1 bundle, on both
+  backends, 269 inputs per backend ended in a result or a typed error and nothing else, and every
+  damaged copy of the bundle was refused at load, except junk in the `.onnx` files on PyTorch,
+  which never opens them (GW-E2E-012).
+- With this the export, the package and the hardening have all been re-run on the final model.
+

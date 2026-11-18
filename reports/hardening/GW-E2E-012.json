@@ -1,0 +1,688 @@
+{
+ "experiment": "GW-E2E-012",
+ "what": "the Phase 20 hardening cases (fuzz-lite, unusual pages, wrong inputs, bad files, oversized images, damaged bundles, cache, log, versions, CLI, HTTP API) on the v1 bundle",
+ "pass_rule": "no exception other than a GlypharisError anywhere, every damaged bundle a ModelLoadError (junk in a file the backend never opens must load), the cache, load log, version, CLI and API checks as stated, the good page read on every backend with the same text from its path and its bytes, and the bundle unchanged afterwards",
+ "pass": true,
+ "checks": {
+  "no_other_exceptions": true,
+  "damaged_bundles_model_load_error": true,
+  "cache": true,
+  "load_log_names_model_version": true,
+  "versions": true,
+  "cli": true,
+  "api": true,
+  "good_page": true,
+  "bundle_unchanged": true
+ },
+ "other_exceptions": [],
+ "expected_outcomes": {
+  "torch": {
+   "unusual_pages_read_but_the_empty_one": true,
+   "wrong_inputs_invalid_image": true,
+   "bad_files_invalid_image": true,
+   "bad_files_bytes_invalid_image": true,
+   "over_pixel_limit_image_too_large": true,
+   "good_page_read": true,
+   "fuzz_lite_120_cases": true
+  },
+  "onnx": {
+   "unusual_pages_read_but_the_empty_one": true,
+   "wrong_inputs_invalid_image": true,
+   "bad_files_invalid_image": true,
+   "bad_files_bytes_invalid_image": true,
+   "over_pixel_limit_image_too_large": true,
+   "good_page_read": true,
+   "fuzz_lite_120_cases": true
+  }
+ },
+ "bundle_unchanged": true,
+ "loaded_with": "GlypharisOCR.from_pretrained(bundle, backend, threads, cache=False)",
+ "bundle": "glypharis-v1",
+ "bundle_manifest_sha256": "875357a6346e8b1f989005fa96c557b00bf687461043368dc5e3dc532839f037",
+ "bundle_version": "glypharis_v1",
+ "bundle_files": {
+  "detector.pt": "caafdce9402de07a775102558eeffa6f48d4f54cd370ac63c09ab0be2a929c99",
+  "detector.onnx": "378c1feda480c1bb1dde838dd4a5f4579a904710a7f7b222d978c583b5bddcb7",
+  "recognizer.pt": "785409f75f1d31e4933a42ddcae8c9ecb84960d975083f3f81ebc47d6070f9ca",
+  "recognizer.onnx": "930329b4bf635a935975823d2004b47371d9123b2504cfe590d52f44db84f438"
+ },
+ "model_version": "glypharis_v1",
+ "backends": [
+  "torch",
+  "onnx"
+ ],
+ "threads": 10,
+ "page": "002a72617c3b1335.jpg",
+ "page_sha256": "d7e1bc9bb92eaf1231a1b0a4d9546f65d0e9910fe5794d242064474d1203a5f4",
+ "fuzz_seed": 20261028,
+ "fuzz_cases": 120,
+ "inputs": {
+  "torch": {
+   "kinds": {
+    "bad_files": {
+     "inputs": 6,
+     "results": 0,
+     "glypharis_errors": {
+      "invalid_image": 6
+     },
+     "no_bytes_form": 0,
+     "other_exceptions": []
+    },
+    "bad_files_bytes": {
+     "inputs": 4,
+     "results": 0,
+     "glypharis_errors": {
+      "invalid_image": 4
+     },
+     "no_bytes_form": 2,
+     "other_exceptions": []
+    },
+    "fuzz_lite/damaged_png": {
+     "inputs": 40,
+     "results": 0,
+     "glypharis_errors": {
+      "invalid_image": 40
+     },
+     "no_bytes_form": 0,
+     "other_exceptions": []
+    },
+    "fuzz_lite/random_array": {
+     "inputs": 40,
+     "results": 6,
+     "glypharis_errors": {
+      "invalid_image": 34
+     },
+     "no_bytes_form": 0,
+     "other_exceptions": []
+    },
+    "fuzz_lite/random_bytes": {
+     "inputs": 40,
+     "results": 0,
+     "glypharis_errors": {
+      "invalid_image": 40
+     },
+     "no_bytes_form": 0,
+     "other_exceptions": []
+    },
+    "fuzz_lite_bytes/damaged_png": {
+     "inputs": 40,
+     "results": 0,
+     "glypharis_errors": {
+      "invalid_image": 40
+     },
+     "no_bytes_form": 0,
+     "other_exceptions": []
+    },
+    "fuzz_lite_bytes/random_array": {
+     "inputs": 13,
+     "results": 13,
+     "glypharis_errors": {},
+     "no_bytes_form": 27,
+     "other_exceptions": []
+    },
+    "fuzz_lite_bytes/random_bytes": {
+     "inputs": 40,
+     "results": 0,
+     "glypharis_errors": {
+      "invalid_image": 40
+     },
+     "no_bytes_form": 0,
+     "other_exceptions": []
+    },
+    "good_page": {
+     "inputs": 4,
+     "results": 4,
+     "glypharis_errors": {},
+     "no_bytes_form": 0,
+     "other_exceptions": []
+    },
+    "over_pixel_limit": {
+     "inputs": 6,
+     "results": 0,
+     "glypharis_errors": {
+      "image_too_large": 6
+     },
+     "no_bytes_form": 0,
+     "other_exceptions": []
+    },
+    "unusual_pages": {
+     "inputs": 12,
+     "results": 11,
+     "glypharis_errors": {
+      "invalid_image": 1
+     },
+     "no_bytes_form": 0,
+     "other_exceptions": []
+    },
+    "unusual_pages_bytes": {
+     "inputs": 10,
+     "results": 10,
+     "glypharis_errors": {},
+     "no_bytes_form": 2,
+     "other_exceptions": []
+    },
+    "wrong_inputs": {
+     "inputs": 10,
+     "results": 0,
+     "glypharis_errors": {
+      "invalid_image": 10
+     },
+     "no_bytes_form": 0,
+     "other_exceptions": []
+    },
+    "wrong_inputs_bytes": {
+     "inputs": 4,
+     "results": 3,
+     "glypharis_errors": {
+      "invalid_image": 1
+     },
+     "no_bytes_form": 6,
+     "other_exceptions": []
+    }
+   },
+   "good_page_lines": {
+    "path": 47,
+    "bytes": 47,
+    "pil": 47,
+    "array": 47
+   },
+   "good_page_path_and_bytes_same_text": true,
+   "max_pixels": 64000000
+  },
+  "onnx": {
+   "kinds": {
+    "bad_files": {
+     "inputs": 6,
+     "results": 0,
+     "glypharis_errors": {
+      "invalid_image": 6
+     },
+     "no_bytes_form": 0,
+     "other_exceptions": []
+    },
+    "bad_files_bytes": {
+     "inputs": 4,
+     "results": 0,
+     "glypharis_errors": {
+      "invalid_image": 4
+     },
+     "no_bytes_form": 2,
+     "other_exceptions": []
+    },
+    "fuzz_lite/damaged_png": {
+     "inputs": 40,
+     "results": 0,
+     "glypharis_errors": {
+      "invalid_image": 40
+     },
+     "no_bytes_form": 0,
+     "other_exceptions": []
+    },
+    "fuzz_lite/random_array": {
+     "inputs": 40,
+     "results": 6,
+     "glypharis_errors": {
+      "invalid_image": 34
+     },
+     "no_bytes_form": 0,
+     "other_exceptions": []
+    },
+    "fuzz_lite/random_bytes": {
+     "inputs": 40,
+     "results": 0,
+     "glypharis_errors": {
+      "invalid_image": 40
+     },
+     "no_bytes_form": 0,
+     "other_exceptions": []
+    },
+    "fuzz_lite_bytes/damaged_png": {
+     "inputs": 40,
+     "results": 0,
+     "glypharis_errors": {
+      "invalid_image": 40
+     },
+     "no_bytes_form": 0,
+     "other_exceptions": []
+    },
+    "fuzz_lite_bytes/random_array": {
+     "inputs": 13,
+     "results": 13,
+     "glypharis_errors": {},
+     "no_bytes_form": 27,
+     "other_exceptions": []
+    },
+    "fuzz_lite_bytes/random_bytes": {
+     "inputs": 40,
+     "results": 0,
+     "glypharis_errors": {
+      "invalid_image": 40
+     },
+     "no_bytes_form": 0,
+     "other_exceptions": []
+    },
+    "good_page": {
+     "inputs": 4,
+     "results": 4,
+     "glypharis_errors": {},
+     "no_bytes_form": 0,
+     "other_exceptions": []
+    },
+    "over_pixel_limit": {
+     "inputs": 6,
+     "results": 0,
+     "glypharis_errors": {
+      "image_too_large": 6
+     },
+     "no_bytes_form": 0,
+     "other_exceptions": []
+    },
+    "unusual_pages": {
+     "inputs": 12,
+     "results": 11,
+     "glypharis_errors": {
+      "invalid_image": 1
+     },
+     "no_bytes_form": 0,
+     "other_exceptions": []
+    },
+    "unusual_pages_bytes": {
+     "inputs": 10,
+     "results": 10,
+     "glypharis_errors": {},
+     "no_bytes_form": 2,
+     "other_exceptions": []
+    },
+    "wrong_inputs": {
+     "inputs": 10,
+     "results": 0,
+     "glypharis_errors": {
+      "invalid_image": 10
+     },
+     "no_bytes_form": 0,
+     "other_exceptions": []
+    },
+    "wrong_inputs_bytes": {
+     "inputs": 4,
+     "results": 3,
+     "glypharis_errors": {
+      "invalid_image": 1
+     },
+     "no_bytes_form": 6,
+     "other_exceptions": []
+    }
+   },
+   "good_page_lines": {
+    "path": 47,
+    "bytes": 47,
+    "pil": 47,
+    "array": 47
+   },
+   "good_page_path_and_bytes_same_text": true,
+   "max_pixels": 64000000
+  }
+ },
+ "cache_and_log": {
+  "torch": {
+   "cached_twice_same_object": true,
+   "uncached_new_object": true,
+   "load_log_line": "loaded GLYPHARIS model glypharis_v1 (torch backend) from <bundle> in <seconds> s",
+   "load_log_names_model_version": true,
+   "model_version": "glypharis_v1"
+  },
+  "onnx": {
+   "cached_twice_same_object": true,
+   "uncached_new_object": true,
+   "load_log_line": "loaded GLYPHARIS model glypharis_v1 (onnx backend) from <bundle> in <seconds> s",
+   "load_log_names_model_version": true,
+   "model_version": "glypharis_v1"
+  }
+ },
+ "api": {
+  "torch": {
+   "good_page": {
+    "status": 200,
+    "lines": 47,
+    "model_version": "glypharis_v1",
+    "error": null
+   },
+   "bad_file": {
+    "status": 400,
+    "error": "invalid_image"
+   },
+   "ok": true
+  },
+  "onnx": {
+   "good_page": {
+    "status": 200,
+    "lines": 47,
+    "model_version": "glypharis_v1",
+    "error": null
+   },
+   "bad_file": {
+    "status": 400,
+    "error": "invalid_image"
+   },
+   "ok": true
+  }
+ },
+ "stats": {
+  "torch": {
+   "pages": 48,
+   "lines": 235,
+   "failed": 223
+  },
+  "onnx": {
+   "pages": 48,
+   "lines": 235,
+   "failed": 223
+  }
+ },
+ "damaged_bundles": [
+  {
+   "case": "removed:detector.pt",
+   "backend": "torch",
+   "expected": "model_load_error",
+   "outcome": "model_load_error",
+   "message": "<copy>/detector.pt: missing from the bundle",
+   "ok": true
+  },
+  {
+   "case": "removed:detector.pt",
+   "backend": "onnx",
+   "expected": "model_load_error",
+   "outcome": "model_load_error",
+   "message": "<copy>/detector.pt: missing from the bundle",
+   "ok": true
+  },
+  {
+   "case": "removed:detector.onnx",
+   "backend": "torch",
+   "expected": "model_load_error",
+   "outcome": "model_load_error",
+   "message": "<copy>/detector.onnx: missing from the bundle",
+   "ok": true
+  },
+  {
+   "case": "removed:detector.onnx",
+   "backend": "onnx",
+   "expected": "model_load_error",
+   "outcome": "model_load_error",
+   "message": "<copy>/detector.onnx: missing from the bundle",
+   "ok": true
+  },
+  {
+   "case": "removed:recognizer.pt",
+   "backend": "torch",
+   "expected": "model_load_error",
+   "outcome": "model_load_error",
+   "message": "<copy>/recognizer.pt: missing from the bundle",
+   "ok": true
+  },
+  {
+   "case": "removed:recognizer.pt",
+   "backend": "onnx",
+   "expected": "model_load_error",
+   "outcome": "model_load_error",
+   "message": "<copy>/recognizer.pt: missing from the bundle",
+   "ok": true
+  },
+  {
+   "case": "removed:recognizer.onnx",
+   "backend": "torch",
+   "expected": "model_load_error",
+   "outcome": "model_load_error",
+   "message": "<copy>/recognizer.onnx: missing from the bundle",
+   "ok": true
+  },
+  {
+   "case": "removed:recognizer.onnx",
+   "backend": "onnx",
+   "expected": "model_load_error",
+   "outcome": "model_load_error",
+   "message": "<copy>/recognizer.onnx: missing from the bundle",
+   "ok": true
+  },
+  {
+   "case": "removed:manifest.json",
+   "backend": "torch",
+   "expected": "model_load_error",
+   "outcome": "model_load_error",
+   "message": "no GLYPHARIS model bundle '<copy>' (a directory with manifest.json); looked in: <home>/.glypharis/models, models",
+   "ok": true
+  },
+  {
+   "case": "removed:manifest.json",
+   "backend": "onnx",
+   "expected": "model_load_error",
+   "outcome": "model_load_error",
+   "message": "no GLYPHARIS model bundle '<copy>' (a directory with manifest.json); looked in: <home>/.glypharis/models, models",
+   "ok": true
+  },
+  {
+   "case": "bundle_missing",
+   "backend": "torch",
+   "expected": "model_load_error",
+   "outcome": "model_load_error",
+   "message": "no GLYPHARIS model bundle '<copy>' (a directory with manifest.json); looked in: <home>/.glypharis/models, models",
+   "ok": true
+  },
+  {
+   "case": "bundle_missing",
+   "backend": "onnx",
+   "expected": "model_load_error",
+   "outcome": "model_load_error",
+   "message": "no GLYPHARIS model bundle '<copy>' (a directory with manifest.json); looked in: <home>/.glypharis/models, models",
+   "ok": true
+  },
+  {
+   "case": "byte_changed:detector.pt",
+   "backend": "torch",
+   "expected": "model_load_error",
+   "outcome": "model_load_error",
+   "message": "<copy>/detector.pt: SHA-256 2c687faf660f does not match the manifest",
+   "ok": true
+  },
+  {
+   "case": "byte_changed:detector.pt",
+   "backend": "onnx",
+   "expected": "model_load_error",
+   "outcome": "model_load_error",
+   "message": "<copy>/detector.pt: SHA-256 2c687faf660f does not match the manifest",
+   "ok": true
+  },
+  {
+   "case": "byte_changed:detector.onnx",
+   "backend": "torch",
+   "expected": "model_load_error",
+   "outcome": "model_load_error",
+   "message": "<copy>/detector.onnx: SHA-256 e022a04c33ea does not match the manifest",
+   "ok": true
+  },
+  {
+   "case": "byte_changed:detector.onnx",
+   "backend": "onnx",
+   "expected": "model_load_error",
+   "outcome": "model_load_error",
+   "message": "<copy>/detector.onnx: SHA-256 e022a04c33ea does not match the manifest",
+   "ok": true
+  },
+  {
+   "case": "byte_changed:recognizer.pt",
+   "backend": "torch",
+   "expected": "model_load_error",
+   "outcome": "model_load_error",
+   "message": "<copy>/recognizer.pt: SHA-256 de53333c5bb7 does not match the manifest",
+   "ok": true
+  },
+  {
+   "case": "byte_changed:recognizer.pt",
+   "backend": "onnx",
+   "expected": "model_load_error",
+   "outcome": "model_load_error",
+   "message": "<copy>/recognizer.pt: SHA-256 de53333c5bb7 does not match the manifest",
+   "ok": true
+  },
+  {
+   "case": "byte_changed:recognizer.onnx",
+   "backend": "torch",
+   "expected": "model_load_error",
+   "outcome": "model_load_error",
+   "message": "<copy>/recognizer.onnx: SHA-256 c5edf0e9f542 does not match the manifest",
+   "ok": true
+  },
+  {
+   "case": "byte_changed:recognizer.onnx",
+   "backend": "onnx",
+   "expected": "model_load_error",
+   "outcome": "model_load_error",
+   "message": "<copy>/recognizer.onnx: SHA-256 c5edf0e9f542 does not match the manifest",
+   "ok": true
+  },
+  {
+   "case": "manifest_not_json",
+   "backend": "torch",
+   "expected": "model_load_error",
+   "outcome": "model_load_error",
+   "message": "<copy>: no readable manifest.json (Expecting property name enclosed in double quotes: line 1 column 2 (char 1))",
+   "ok": true
+  },
+  {
+   "case": "manifest_not_json",
+   "backend": "onnx",
+   "expected": "model_load_error",
+   "outcome": "model_load_error",
+   "message": "<copy>: no readable manifest.json (Expecting property name enclosed in double quotes: line 1 column 2 (char 1))",
+   "ok": true
+  },
+  {
+   "case": "manifest_foreign_format",
+   "backend": "torch",
+   "expected": "model_load_error",
+   "outcome": "model_load_error",
+   "message": "<copy> is not a glypharis-bundle-1 directory",
+   "ok": true
+  },
+  {
+   "case": "manifest_foreign_format",
+   "backend": "onnx",
+   "expected": "model_load_error",
+   "outcome": "model_load_error",
+   "message": "<copy> is not a glypharis-bundle-1 directory",
+   "ok": true
+  },
+  {
+   "case": "junk_rehashed:detector.pt",
+   "backend": "torch",
+   "expected": "model_load_error",
+   "outcome": "model_load_error",
+   "message": "<copy>: cannot load the bundle (ValueError: <copy>/detector.pt is not a detector release file (a training checkpoint? wr",
+   "ok": true
+  },
+  {
+   "case": "junk_rehashed:detector.pt",
+   "backend": "onnx",
+   "expected": "model_load_error",
+   "outcome": "model_load_error",
+   "message": "<copy>: cannot load the bundle (ValueError: <copy>/detector.pt is not a detector release file (a training checkpoint? wr",
+   "ok": true
+  },
+  {
+   "case": "junk_rehashed:detector.onnx",
+   "backend": "torch",
+   "expected": "loaded",
+   "outcome": "loaded",
+   "message": null,
+   "ok": true
+  },
+  {
+   "case": "junk_rehashed:detector.onnx",
+   "backend": "onnx",
+   "expected": "model_load_error",
+   "outcome": "model_load_error",
+   "message": "<copy>: cannot load the bundle (InvalidProtobuf: [ONNXRuntimeError] : 7 : INVALID_PROTOBUF : Load model from <copy>/dete",
+   "ok": true
+  },
+  {
+   "case": "junk_rehashed:recognizer.pt",
+   "backend": "torch",
+   "expected": "model_load_error",
+   "outcome": "model_load_error",
+   "message": "<copy>: cannot load the bundle (UnpicklingError: Weights only load failed. In PyTorch 2.6, we changed the default value ",
+   "ok": true
+  },
+  {
+   "case": "junk_rehashed:recognizer.pt",
+   "backend": "onnx",
+   "expected": "model_load_error",
+   "outcome": "model_load_error",
+   "message": "<copy>: cannot load the bundle (UnpicklingError: Weights only load failed. In PyTorch 2.6, we changed the default value ",
+   "ok": true
+  },
+  {
+   "case": "junk_rehashed:recognizer.onnx",
+   "backend": "torch",
+   "expected": "loaded",
+   "outcome": "loaded",
+   "message": null,
+   "ok": true
+  },
+  {
+   "case": "junk_rehashed:recognizer.onnx",
+   "backend": "onnx",
+   "expected": "model_load_error",
+   "outcome": "model_load_error",
+   "message": "<copy>: cannot load the bundle (InvalidProtobuf: [ONNXRuntimeError] : 7 : INVALID_PROTOBUF : Load model from <copy>/reco",
+   "ok": true
+  }
+ ],
+ "versions": {
+  "glypharis": "0.1.0.dev0",
+  "python": "3.11.9",
+  "numpy": "2.4.6",
+  "torch": "2.14.1+cu126",
+  "onnxruntime": "1.31.1",
+  "opencv-contrib-python-headless": "5.0.0.93",
+  "pillow": "12.3.0"
+ },
+ "cli_version": {
+  "exit_code": 0,
+  "printed": {
+   "glypharis": "0.1.0.dev0",
+   "python": "3.11.9",
+   "numpy": "2.4.6",
+   "torch": "2.14.1+cu126",
+   "onnxruntime": "1.31.1",
+   "opencv-contrib-python-headless": "5.0.0.93",
+   "pillow": "12.3.0"
+  }
+ },
+ "cli": {
+  "command": "python -m glypharis.cli --input-dir <input> --model <bundle> --backend torch --output <output>",
+  "cwd": "a temporary folder outside the repository",
+  "runs_this_code": true,
+  "exit_code": 1,
+  "failed_line": "FAILED <input>/not_an_image.png: [invalid_image] <input>/not_an_image.png: not a readable image (cannot identify image file '<input>/not_an_image.png')",
+  "bad_file_reported_with_code": true,
+  "good_page_line": "<input>/002a72617c3b1335.jpg: 47 lines in <seconds> s",
+  "good_page_json_written": true,
+  "ok": true
+ },
+ "v1_code": {
+  "tag": "phase14-eval",
+  "tag_commit": "6795186be166d6b60238c701753aad32e44d0e98",
+  "head": "958f24cded1dd804c8cd66d141087a711104b3a2",
+  "paths": [
+   "glypharis/pipeline",
+   "glypharis/models",
+   "glypharis/export",
+   "glypharis/data",
+   "configs"
+  ],
+  "v1_code": "equal"
+ },
+ "git_commit": "958f24cded1dd804c8cd66d141087a711104b3a2",
+ "git_dirty": false,
+ "started_utc": "2026-11-18T10:36:16+00:00",
+ "ended_utc": "2026-11-18T10:38:01+00:00"
+}

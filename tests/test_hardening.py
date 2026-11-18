@@ -10,6 +10,7 @@ import numpy as np
 import pytest
 import torch
 from det_fixtures import rect_polygon
+from hardening_cases import blank_page, empty_page, fuzz_cases, unusual_pages, wrong_inputs
 from PIL import Image
 from test_pipeline import _page, tiny_detector, tiny_recognizer
 
@@ -61,65 +62,23 @@ def test_huge_images_are_refused_before_decoding(ocr, tmp_path):
 
 
 def test_empty_blank_tiny_and_unusual_pages(ocr):
-    assert ocr.predict(np.full((300, 400, 3), 255, np.uint8)).lines == []  # blank page
+    assert ocr.predict(blank_page()).lines == []  # blank page
     with pytest.raises(InvalidImageError, match="empty"):
-        ocr.predict(np.zeros((0, 10, 3), np.uint8))
-    for img in (
-        np.zeros((1, 1), np.uint8),
-        np.zeros((5, 3000), np.uint8),  # extreme aspect
-        np.full((40, 60, 4), 200, np.uint8),  # RGBA
-        np.full((40, 60, 1), 200, np.uint8),
-        np.ones((40, 60), bool),
-        np.full((40, 60), 40000, np.uint16),
-        np.random.default_rng(0).random((40, 60, 3)),  # floats in [0, 1]
-        Image.new("I;16", (60, 40), 1000),
-        Image.new("P", (60, 40)),
-        Image.new("CMYK", (60, 40)),
-    ):
+        ocr.predict(empty_page())
+    for _, img in unusual_pages():
         res = ocr.predict(img)
         assert res.width >= 1 and isinstance(res.text, str)
 
 
-@pytest.mark.parametrize(
-    "bad",
-    [
-        None,
-        42,
-        b"bytes",
-        [[0, 1], [2, 3]],
-        np.zeros((2, 3, 4, 5), np.uint8),
-        np.zeros((10, 10, 2), np.uint8),
-        np.full((10, 10), np.nan),
-        np.full((10, 10), -1.0),
-        np.full((10, 10), 300, np.int64),
-        np.zeros((10, 10), np.complex64),
-    ],
-)
+@pytest.mark.parametrize("bad", [bad for _, bad in wrong_inputs()])
 def test_wrong_types_and_values_say_what_is_wrong(ocr, bad):
     with pytest.raises(InvalidImageError):
         ocr.predict(bad)
 
 
 def test_fuzz_lite_never_raises_anything_but_glypharis_errors(ocr, tmp_path):
-    rng = np.random.default_rng(20261028)
-    dtypes = [np.uint8, np.uint16, np.float32, np.float64, np.int32, np.bool_, np.int8]
     outcomes = {"ok": 0, "refused": 0}
-    for k in range(120):
-        kind = k % 3
-        if kind == 0:  # random arrays
-            shape = tuple(int(x) for x in rng.integers(0, 70, size=int(rng.integers(1, 5))))
-            dt = dtypes[int(rng.integers(len(dtypes)))]
-            x = (rng.random(shape) * rng.choice([1, 255, 70000])).astype(dt)
-        elif kind == 1:  # random bytes behind an image suffix
-            x = tmp_path / f"f{k}.{['png', 'jpg', 'tif', 'bmp'][k % 4]}"
-            x.write_bytes(rng.integers(0, 256, int(rng.integers(0, 400)), np.uint8).tobytes())
-        else:  # a real image, then damaged in place
-            x = tmp_path / f"d{k}.png"
-            Image.fromarray(rng.integers(0, 255, (30, 50, 3), np.uint8)).save(x)
-            b = bytearray(x.read_bytes())
-            for i in rng.integers(0, len(b), 8):
-                b[int(i)] = int(rng.integers(0, 256))
-            x.write_bytes(bytes(b))
+    for _, x in fuzz_cases(tmp_path):  # 120 seeded cases (hardening_cases.FUZZ_SEED)
         try:
             ocr.predict(x)
             outcomes["ok"] += 1
