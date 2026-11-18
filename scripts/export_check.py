@@ -24,8 +24,9 @@ The export counts as successful only if every check passes. Validation data only
 ``--frozen`` (Phase 16, GW-EFF-006) builds the v1 bundle from the freeze record instead: the
 pipeline from `load_frozen("cpu")` (every setting the record's, hashes checked), the detector
 release from the record's checkpoint, and the manifest's ``sources`` from the record and the
-build's provenance. The v1 code paths must equal the ``phase14-eval`` tag's
-(`glypharis.efficiency.v1.assert_v1_code`). Once written, the manifest's detector spec, the
+build's provenance. The v1 code paths must equal the ``v1-code`` tag's
+(`glypharis.efficiency.v1.assert_v1_code`); GW-EFF-006 itself ran against ``phase14-eval``, as the
+manifest's ``sources.v1_code`` records. Once written, the manifest's detector spec, the
 recognizer's height, maximum width and temperature, and the source checkpoint hashes are compared
 with the record (`bundle_problems`); a bundle that differs gets its manifest renamed to
 ``manifest.rejected.json``, so nothing loads it, and the run fails. An existing bundle or

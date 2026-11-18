@@ -41,7 +41,7 @@ def _write(repo: Path, rel: str, text: str) -> None:
 
 @pytest.fixture
 def repo(tmp_path: Path) -> Path:
-    """A repository with v1 paths tagged ``phase14-eval`` and one later commit outside them."""
+    """A repository with v1 paths tagged `V1_TAG` and one later commit outside them."""
     repo = tmp_path / "repo"
     repo.mkdir()
     _git(repo, "init", "-q")
@@ -59,10 +59,10 @@ def repo(tmp_path: Path) -> Path:
     return repo
 
 
-def test_v1_constants_match_the_freeze_module():
+def test_v1_tag_moved_and_the_freeze_pin_did_not():
     from glypharis.pipeline.frozen import PIN_TAG
 
-    assert V1_TAG == PIN_TAG
+    assert V1_TAG == "v1-code" and PIN_TAG == "phase14-eval"  # the check moved, the pin did not
     assert V1_PATHS == (
         "glypharis/pipeline",
         "glypharis/models",

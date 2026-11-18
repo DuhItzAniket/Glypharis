@@ -38,11 +38,11 @@ reads a page's lines: sorted by width, split into batches at `MAX_BATCH_LINES` a
 (batch 1 only) pads to the line rounded up to `PAD_MULTIPLE`, as Phase 7's `read_line` does, for
 re-confirming Phase 7's table. Each item's time is recorded; on CUDA the device is synchronised
 before and after each item and peak VRAM is recorded from torch (``max_memory_allocated``) with
-nvidia-smi's memory at the end, for this process where the driver reports it (Windows' WDDM
-driver does not) and for the whole GPU (the display and other programs included).
-``--precision int8`` is checked against the ONNX file's operators after the timed items. The v1
-code paths must equal ``phase14-eval`` (`assert_v1_code`); run conditions and the GPU's state are
-recorded at the start and the end.
+nvidia-smi's memory at the end, for this process where the driver reports it (Windows' WDDM driver
+does not) and for the whole GPU (the display and other programs included). ``--precision int8`` is
+checked against the ONNX file's operators after the timed items. The v1 code paths must equal
+``v1-code`` (`assert_v1_code`; ``phase14-eval`` for the Phase 16 runs, as their ``v1_code`` records
+show); run conditions and the GPU's state are recorded at the start and the end.
 """
 
 # ruff: noqa: E402  (the thread variables are set before numpy and torch are imported)

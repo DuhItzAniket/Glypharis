@@ -1,15 +1,17 @@
 """The GLYPHARIS model bundle: one directory with everything inference needs (Phase 17).
 
-    write_bundle(det_checkpoint, det_spec, recognizer, out_dir)   # once, from trained runs
-    ocr = load_bundle(out_dir, backend="onnx")                     # GlypharisOCR
+    write_bundle(det_checkpoint, det_spec, recognizer, out_dir, version)   # once, from trained runs
+    ocr = load_bundle(out_dir)                                     # GlypharisOCR, PyTorch backend
 
 Files: ``detector.pt`` and ``recognizer.pt`` (release files, readable with
 ``torch.load(..., weights_only=True)``), ``detector.onnx`` and ``recognizer.onnx``, and
 ``manifest.json`` with the SHA-256 of each, the detector spec (resolution, post-processing,
 operating point), the recognizer's input settings and temperature, and where they came from.
-`load_bundle` checks every hash before it loads anything. Both backends read the same: ONNX
-matches PyTorch on validation (GW-EFF-003). PyTorch is the default because it is faster here: the
-exported recognizer is slower than PyTorch's (GW-EFF-004; `glypharis.export.onnx`).
+`load_bundle` checks every hash before it loads anything. For v1, ONNX matches PyTorch on
+validation within Phase 17's tolerances (GW-EFF-006), and the PyTorch backend gives exactly the
+outputs of v1 built from the freeze record on the CPU, on the same validation items (GW-EFF-012).
+PyTorch is the default because it is faster here: the exported recognizer is slower than PyTorch's
+(GW-EFF-007, F34; `glypharis.export.onnx`).
 """
 
 from __future__ import annotations

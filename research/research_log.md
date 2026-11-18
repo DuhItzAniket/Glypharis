@@ -438,3 +438,11 @@ the bottom. Experiments get their full record in `experiments.md`; this log is t
   which never opens them (GW-E2E-012).
 - With this the export, the package and the hardening have all been re-run on the final model.
 
+### 2026-11-18 — The v1 code freeze ends
+
+- With the export, package and hardening re-run on the final model, the frozen code could finally
+  say true things about itself: the docstrings no longer claim the exported detector is twice as
+  fast, and the default bundle name is `glypharis-v1`.
+- `v1-code` is that commit. A syntax-tree comparison against `phase14-eval` shows nothing else
+  changed, so the Phase 14 results still describe this code.
+

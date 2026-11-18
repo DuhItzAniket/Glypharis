@@ -1,6 +1,6 @@
 """`GlypharisOCR`: a page image in, its text lines in reading order out (Phase 10).
 
-    ocr = GlypharisOCR.from_pretrained("glypharis-0.1.0")   # a model bundle (Phase 17/18)
+    ocr = GlypharisOCR.from_pretrained("glypharis-v1")   # a model bundle (Phase 17/18)
     result = ocr.predict(image)   # path, file bytes, PIL image or HWC uint8 RGB array -> OCRResult
     result.text                   # the lines joined with newlines, in reading order
     result.to_json()              # the documented JSON (OCRResult.to_dict)
@@ -221,17 +221,17 @@ class GlypharisOCR:
     @classmethod
     def from_pretrained(
         cls,
-        name_or_path: str | Path = "glypharis-0.1.0",
+        name_or_path: str | Path = "glypharis-v1",
         backend: str = "torch",
         threads: int | None = None,
         cache: bool = True,
     ) -> GlypharisOCR:
         """A model bundle by path, or by name from the model directories
         (`glypharis.export.bundle.find_bundle`). Nothing is downloaded. ``backend`` is ``torch``
-        (the default, PyTorch on the CPU) or ``onnx`` (ONNX Runtime; reads the same, but its
-        recognizer is slower for now, Phase 17). With ``cache`` a bundle already loaded in this
-        process with the same backend and threads is returned again. A missing or damaged bundle
-        raises `glypharis.errors.ModelLoadError`."""
+        (the default, PyTorch on the CPU) or ``onnx`` (ONNX Runtime; matches PyTorch within Phase
+        17's tolerances, GW-EFF-006, but its recognizer is slower on the CPU, F34). With ``cache``
+        a bundle already loaded in this process with the same backend and threads is returned
+        again. A missing or damaged bundle raises `glypharis.errors.ModelLoadError`."""
         from glypharis.export.bundle import find_bundle, load_bundle
 
         path = find_bundle(name_or_path)

@@ -26,7 +26,7 @@ Phases run in the order set by [ADR-0008](decisions/ADR-0008-usable-engine-first
 | 16 | Efficiency optimisation | **COMPLETE** | `phase-16` |
 | 17 (v1) | Model export, v1 re-run | **COMPLETE** | `phase-17-v1` |
 | 18 (v1) | Inference package, v1 re-run | **COMPLETE** | `phase-18-v1` |
-| 20 (v1) | Production engineering, v1 re-run | **IN PROGRESS** (gate: push, CI, merge) | — |
+| 20 (v1) | Production engineering, v1 re-run | **COMPLETE** | `phase-20-v1` |
 | 17 | Model export | **COMPLETE** | `phase-17` |
 | 18 | Inference package | **COMPLETE** | `phase-18` |
 | 19 | Optional HTTP API | **COMPLETE** | `phase-19` |
@@ -1393,8 +1393,7 @@ GitHub made it; the re-created merge has the same tree).
 
 ## Phase 20 — Production engineering (v1 re-run)
 
-**Status:** results written (2026-11-18). Gate open: push, pull request, CI and the owner's merge.
-Opened 2026-11-18 on `phase/20-v1-rerun` after the Phase 18 re-run.
+**Status:** COMPLETE (2026-11-18). Opened 2026-11-18 on `phase/20-v1-rerun` after the Phase 18 re-run.
 Validation and made-up inputs only; no test data is read and `research/test_access_log.md` gets no
 row. The v0.1 record above stays as it is (ADR-0008 item 3).
 
@@ -1491,7 +1490,7 @@ no test data read). **Pass** on every check, for bundle `875357a6…` on both ba
 |---|---|---|
 | Failure-path tests: corrupt image, huge image, empty page, non-image | pass | `tests/test_hardening.py`; on the v1 bundle GW-E2E-012 |
 | No unhandled exceptions in the fuzz-lite test | pass | `tests/test_hardening.py`; the same 120 cases on the v1 bundle, both backends, GW-E2E-012 |
-| CI green | pending (after the push) | — |
+| CI green | pass | runs 44288817497 (branch), 44288826149 (pull request), 44291099138 (`main`) |
 
 **Tests:** the CPU suite passes in a clone without tags (1,230 passed, 4 skipped, at `958f24c`). The
 new tests run the check on a tiny bundle on both backends (a full pass, the report's structure, no
@@ -1508,7 +1507,36 @@ compute ledger does not count it.
 - `max_pixels` is still not measured, and the default model name still does not resolve to v1; the
   name changes in the end-of-freeze commit.
 
-**Git:** branch `phase/20-v1-rerun`; push and merge pending.
+**Git:** branch `phase/20-v1-rerun`, merged through pull request #25. Merge commit `fdd6b5d`, tag
+`phase-20-v1` (merge re-created with the noreply identity; same tree and parents).
+
+**CI status:** green on the branch, the pull request and `main` (run 44291099138, on `4574576`, which
+also holds pull request #24, the server's 413 fix).
+
+### The end of the v1 code freeze (2026-11-18)
+
+The owner decided on 2026-11-18 that the freeze of the v1 code ends with one tagged commit after
+the Phase 20 re-run (Phase 17 re-run, owner decisions). That commit is `efb197a`, tag `v1-code`.
+
+- **What changed in the v1 paths** (`glypharis/pipeline`, `models`, `export`, `data`, `configs`):
+  three files. `glypharis/export/onnx.py` and `bundle.py` changed in their docstrings only, which
+  closes the deviation Phase 16 recorded: the export docstring's old figures are replaced by F34's
+  and F35's. `glypharis/pipeline/ocr.py` changed in its docstrings and in one default, the bundle
+  name of `from_pretrained`, from `glypharis-0.1.0` to `glypharis-v1`.
+- **The proof:** `scripts/v1_code_diff.py` compares `phase14-eval` with `v1-code` from git's raw
+  blobs, as syntax trees with the docstrings removed, and passes
+  (`reports/export/v1-code/code_diff.json`). Weights, settings and every code path that produces a
+  reading are unchanged, so this is not a new version of v1, and Phase 14's results and GW-EFF-006,
+  GW-EFF-012, GW-E2E-011 and GW-E2E-012 still apply. The bundle was not rebuilt (manifest SHA-256
+  `875357a6…`).
+- **The check:** `assert_v1_code` now compares the v1 paths with `v1-code` (`V1_TAG`). `PIN_TAG`
+  stays `phase14-eval`, the code Phase 14 evaluated. Reports written before this commit record
+  `phase14-eval` in their `v1_code`, as they should. The change is in EXPERIMENT_PROTOCOL §11.
+- **The default name:** `glypharis-v1` is the v1 bundle's directory name. It resolves once that
+  directory is in a model directory (`$GLYPHARIS_MODELS`, `~/.glypharis/models` or `./models`); on
+  the laptop, set `GLYPHARIS_MODELS=runs/release`, which is not searched by default. No bundle ships
+  with the repository yet.
+- **Tests:** the CPU suite passes in a clone without tags (1,252 passed, 4 skipped, at `efb197a`).
 
 ---
 

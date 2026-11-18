@@ -1,7 +1,7 @@
 """Command-line OCR: ``glypharis-ocr`` (or ``python infer.py``) (Phase 18).
 
     glypharis-ocr --image page.jpg [--image other.png ...] [--output results]
-    glypharis-ocr --input-dir scans/ [--recursive] [--format json txt] [--model glypharis-0.1.0]
+    glypharis-ocr --input-dir scans/ [--recursive] [--format json txt] [--model glypharis-v1]
 
 Each image gets ``<output>/<name>.json`` (`OCRResult.to_dict`) and/or ``<output>/<name>.txt`` (the
 text in reading order). Images that cannot be read are reported and skipped; the exit code is 1 if
@@ -41,7 +41,7 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--recursive", action="store_true")
     parser.add_argument("--output", type=Path, default=Path("results"))
     parser.add_argument("--format", nargs="+", choices=["json", "txt"], default=["json", "txt"])
-    parser.add_argument("--model", default="glypharis-0.1.0", help="bundle name or directory")
+    parser.add_argument("--model", default="glypharis-v1", help="bundle name or directory")
     parser.add_argument("--backend", choices=["torch", "onnx"], default="torch")
     parser.add_argument("--threads", type=int, default=None)
     parser.add_argument("--version", action="store_true", help="print versions and exit")
