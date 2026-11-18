@@ -23,7 +23,7 @@ Phases run in the order set by [ADR-0008](decisions/ADR-0008-usable-engine-first
 | 13 | Ablation study | **COMPLETE** | `phase-13` |
 | 14 | External evaluation | **COMPLETE** | `phase-14` |
 | 15 | Error analysis | **COMPLETE** | `phase-15` |
-| 16 | Efficiency optimisation | **IN PROGRESS** (gate: push, CI, merge) | — |
+| 16 | Efficiency optimisation | **COMPLETE** | `phase-16` |
 | 17 | Model export | **COMPLETE** | `phase-17` |
 | 18 | Inference package | **COMPLETE** | `phase-18` |
 | 19 | Optional HTTP API | **COMPLETE** | `phase-19` |
@@ -2550,7 +2550,7 @@ guards, the hash and consistency refusals and atomic output) and the GlyphSynth 
 
 ## Phase 16 — Efficiency optimisation
 
-**Status:** results written (2026-11-18). Gate open: push, pull request, CI and the owner's merge.
+**Status:** COMPLETE (2026-11-18).
 Opened 2026-11-17 on `phase/16-efficiency`, branched from `main` after Phase 15 (merge `ed372db`).
 Validation data only.
 
@@ -2949,7 +2949,7 @@ CI is checked on the PR.
 | Accuracy/latency Pareto plot | pass, on validation; every point but v1 a new version | `pareto.md`, `pareto.png` (GW-EFF-009) |
 | INT8 measured with its accuracy loss | pass: strict line CER 6.221% (fp32) and 6.208% (INT8); page CER +0.00 [−0.02, +0.02] points (descriptive) | `int8.md`, `verdicts.md` (GW-EFF-008, GW-EFF-009) |
 | The four verdicts | pass: H7′ latency met, H7′ accuracy met (H7′ holds), H6′ not met, H1′ ONNX not met | `verdicts.md` |
-| CI green | to be confirmed on the PR | — |
+| CI green | pass | runs 44249945309 (branch), 44249996705 (pull request), 44253277519 (`main`) |
 
 **Known issues**
 - `cost_table.md` says each page's stage sum was checked within 1% of a second clock. Since
@@ -2967,4 +2967,7 @@ CI is checked on the PR.
   lines batched as the pipeline batches them; no CPU batch-size sweep was run (the registered
   plan's scope, item 2).
 
-**Git:** branch `phase/16-efficiency`; push and merge pending.
+**Git:** branch `phase/16-efficiency`, merged through pull request #21. Merge commit `0af7fc4`, tag
+`phase-16` (merge re-created with the noreply identity; same tree and parents).
+
+**CI status:** green on the branch, the pull request and `main` (run 44253277519).
