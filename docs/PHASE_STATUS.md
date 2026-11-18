@@ -1537,6 +1537,10 @@ the Phase 20 re-run (Phase 17 re-run, owner decisions). That commit is `efb197a`
   the laptop, set `GLYPHARIS_MODELS=runs/release`, which is not searched by default. No bundle ships
   with the repository yet.
 - **Tests:** the CPU suite passes in a clone without tags (1,252 passed, 4 skipped, at `efb197a`).
+- **Git:** branch `phase/20-v1-end-of-freeze`, merged through pull request #26. Merge commit
+  `6caf327` (re-created with the noreply identity; same tree and parents); `v1-code` is in `main`'s
+  history. CI green on the branch (run 44295660367), the pull request (44295705382) and `main`
+  (44298874690).
 
 ---
 
