@@ -31,7 +31,7 @@ Phases run in the order set by [ADR-0008](decisions/ADR-0008-usable-engine-first
 | 18 | Inference package | **COMPLETE** | `phase-18` |
 | 19 | Optional HTTP API | **COMPLETE** | `phase-19` |
 | 20 | Production engineering | **COMPLETE** | `phase-20`, `v0.1` |
-| 21 | Research package | **IN PROGRESS** (gate: push, CI, merge) | — |
+| 21 | Research package | **COMPLETE** | `phase-21` |
 | 22 | Final validation | not started | — |
 | 23 | Release v1.0 | not started | — |
 
@@ -3363,8 +3363,7 @@ CI is checked on the PR.
 
 ## Phase 21 — Research package
 
-**Status:** results written (2026-11-18). Gate open: push, pull request, CI and the owner's merge.
-The plan was registered before any Phase 21 deliverable. Opened
+**Status:** COMPLETE (2026-11-18). The plan was registered before any Phase 21 deliverable. Opened
 2026-11-18 on `phase/21-research-package`, branched from `main` after the end of the v1 code freeze
 (merge `6caf327`). It reads recorded reports only: no training, evaluation or test data, and no
 GPU. Line numbers below are for `034b867`.
@@ -3742,7 +3741,7 @@ experiment ID and a report file.
 | `research/paper/*` finalised from recorded evidence | pass | `research/paper/`, `reports/paper_trace/trace.md` |
 | `references.bib` complete | pass, with three fields on secondary records | `research/paper/trace/references_review.md`, `tests/test_references.py` |
 | Every number in the paper notes traces to an experiment ID and a report file | pass | `scripts/trace_numbers.py --check`, in CI |
-| CI green | pending (after the push) | — |
+| CI green | pass | runs 44339800784 (branch), 44339885181 (pull request), 44343507005 (`main`) |
 
 **Tests:** the CPU suite passes in a clone without tags (2,072 passed, 5 skipped, at `955c7a9`), with
 the three generated-file checks and `scripts/validate_configs.py`.
@@ -3760,4 +3759,7 @@ the three generated-file checks and `scripts/validate_configs.py`.
   searched identifying strings. Rewriting history is the owner's decision.
 - Nothing here has been validated from a clean machine, and no phone has been measured (Phase 22).
 
-**Git:** branch `phase/21-research-package`; push and merge pending.
+**Git:** branch `phase/21-research-package`, merged through pull request #27. Merge commit `420e095`,
+tag `phase-21` (merge re-created with the noreply identity; same tree and parents).
+
+**CI status:** green on the branch, the pull request and `main` (run 44343507005).

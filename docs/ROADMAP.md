@@ -118,8 +118,8 @@ stays open until the last of them has passed.
 | Git history | all | ☐ | Kept through Phase 20; open until Phase 23 |
 | Phase documentation | all | ☐ | `docs/PHASE_STATUS.md`, through Phase 20; open until Phase 23 |
 | Research documentation | all | ☐ | `research/`; open until Phase 23 |
-| Model card | 21 | ☐ | `MODEL_CARD.md`, under review in the Phase 21 gate |
-| Dataset documentation | 2, 21 | ☐ | `DATASETS.md`, under review in the Phase 21 gate |
+| Model card | 21 | ☑ | `MODEL_CARD.md`, tag `phase-21` |
+| Dataset documentation | 2, 21 | ☑ | `DATASETS.md`, tag `phase-21` |
 | Reproducible final experiment | 13, 22 | ☐ | Configuration frozen and recorded; reproduction pending Phase 22. `configs/final/glypharis_v1.yaml` |
 
 ## 5. Beyond v1.0 (not scheduled)
