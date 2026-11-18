@@ -107,6 +107,7 @@ def prepare_iiit5k(root: Path) -> dict[str, Any]:
         "pack": "processed/iiit5k/words_test",
         "count": out["count"],
         "bin_sha256": out["bin_sha256"],
+        "index_sha256": sha256(prefix.with_suffix(".index.jsonl")),
         "source": "testdata.mat",
         "source_sha256": sha256(base / "testdata.mat"),
     }

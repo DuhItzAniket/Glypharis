@@ -164,6 +164,9 @@ def test_main_writes_packs_pages_and_manifest(tmp_path):
     assert pb.main(["all", "--data-root", str(root), "--manifest", str(manifest)]) == 0
     m = json.loads(manifest.read_text(encoding="utf-8"))
     assert m["iiit5k_test"]["count"] == 2
+    index = root / "processed/iiit5k/words_test.index.jsonl"
+    assert m["iiit5k_test"]["index_sha256"] == pb.sha256(index)
+    assert list(m["iiit5k_test"])[2:4] == ["bin_sha256", "index_sha256"]  # as in the manifest
     assert m["funsd_test"]["page_count"] == 1 and m["funsd_test"]["line_count"] == 1
     assert m["omnidocbench_en"]["page_count"] == 1 and m["omnidocbench_en"]["block_count"] == 1
     reader = LinePackReader(root / "processed/iiit5k/words_test")
