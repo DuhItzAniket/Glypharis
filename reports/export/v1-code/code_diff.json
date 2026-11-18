@@ -1,0 +1,39 @@
+{
+ "what": "the v1 code at the end of its freeze against the code Phase 14 evaluated",
+ "base": "phase14-eval",
+ "base_commit": "6795186be166d6b60238c701753aad32e44d0e98",
+ "head": "v1-code",
+ "head_commit": "efb197a5cd17570d810d39fe88a6895e20c4c639",
+ "paths": [
+  "glypharis/pipeline",
+  "glypharis/models",
+  "glypharis/export",
+  "glypharis/data",
+  "configs"
+ ],
+ "files": [
+  {
+   "file": "glypharis/export/bundle.py",
+   "ok": true,
+   "change": "docstrings or comments only"
+  },
+  {
+   "file": "glypharis/export/onnx.py",
+   "ok": true,
+   "change": "docstrings or comments only"
+  },
+  {
+   "file": "glypharis/pipeline/ocr.py",
+   "ok": true,
+   "change": "docstrings or comments, and the registered default",
+   "default": {
+    "function": "from_pretrained",
+    "from": "glypharis-0.1.0",
+    "to": "glypharis-v1"
+   }
+  }
+ ],
+ "pass": true,
+ "git_commit": "efb197a5cd17570d810d39fe88a6895e20c4c639",
+ "git_dirty": false
+}
