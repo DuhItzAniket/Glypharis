@@ -24,6 +24,9 @@ Phases run in the order set by [ADR-0008](decisions/ADR-0008-usable-engine-first
 | 14 | External evaluation | **COMPLETE** | `phase-14` |
 | 15 | Error analysis | **COMPLETE** | `phase-15` |
 | 16 | Efficiency optimisation | **COMPLETE** | `phase-16` |
+| 17 (v1) | Model export, v1 re-run | **IN PROGRESS** (plan registered) | — |
+| 18 (v1) | Inference package, v1 re-run | not started | — |
+| 20 (v1) | Production engineering, v1 re-run | not started | — |
 | 17 | Model export | **COMPLETE** | `phase-17` |
 | 18 | Inference package | **COMPLETE** | `phase-18` |
 | 19 | Optional HTTP API | **COMPLETE** | `phase-19` |
@@ -1001,6 +1004,69 @@ and parents).
 GitHub made it; the re-created merge has the same tree).
 
 ---
+
+## Phase 17 — Model export (v1 re-run)
+
+**Status:** IN PROGRESS. Opened 2026-11-18 on `phase/17-v1-rerun`, branched from `main` after
+Phase 16 (merge `0af7fc4`). Validation data only; `research/test_access_log.md` gets no row. The
+v0.1 record above stays as it is (ADR-0008 item 3: Phases 17, 18 and 20 are re-run on the final
+model with the already-tested tooling and a new completion record).
+
+**Objective:** declare the export of v1 successful for one named bundle, the GW-EFF-006 bundle
+(`runs/release/glypharis-v1`, manifest SHA-256 `875357a6346e8b1f989005fa96c557b00bf687461043368dc5e3dc532839f037`),
+and check the path v1 ships on, that bundle read with the PyTorch backend, against the same PyTorch
+v1 references.
+
+**Owner decisions (2026-11-18, before this plan)**
+- v1 keeps PyTorch as its default backend; ADR-0011's laptop targets are recorded as missed for v1.
+- BookWorm's target hardware is lightweight devices such as smartphones, which triggers ADR-0011's
+  revisit; the phone candidate is the all-ONNX build with fused attention, a new version evaluated
+  in Phase 22 (ADR-0011, owner decision).
+- The re-runs of 17, 18 and 20 go on three branches in that order, each with its own gate and
+  record. Phase 18's package check runs the PyTorch backend only; its clean-venv install test may
+  download CPU torch 2.14.1, torchvision 0.29.1 and `requirements/lock.txt` into a throwaway venv.
+- The v1 code freeze (`assert_v1_code` against `phase14-eval`) ends with one commit after the
+  Phase 20 re-run, tagged and made the new reference for the check; until then `glypharis/pipeline`,
+  `models`, `export`, `data` and `configs` stay byte for byte as at the tag.
+
+**Plan** (registered 2026-11-18, before any Phase 17 re-run measurement)
+
+1. **Preflight.** `assert_v1_code`; the bundle's manifest SHA-256 is the one above and
+   `read_manifest` re-hashes its four files; the Phase 16 reference outputs load against their
+   committed manifest (`reports/efficiency/phase16/reference_manifest.json`). The bundle is never
+   rebuilt or written to: a rebuild changes its hash, and the H1′ ONNX verdict (GW-EFF-010) is for
+   this hash only.
+2. **Release files and the ONNX export: cited.** The bundle's `detector.pt` and `recognizer.pt`
+   with the manifest's provenance, and its two ONNX files with dynamic axes, from GW-EFF-006
+   (`reports/efficiency/phase16/v1_bundle.json`). The export is the TorchScript exporter at opset
+   17, as at v0.1.
+3. **The four equivalence tolerances for the ONNX backend: cited** from GW-EFF-006
+   (`reference_check.json`): detector map max abs difference ≤ 1e-4, logits ≤ 1e-3, decoded text
+   identical except near ties (top-2 gap < 1e-3) on at most 0.1% of lines, page CER within 0.05
+   points. The comparison is against the hashed PyTorch v1 references, as the 2026-11-17 change row
+   in EXPERIMENT_PROTOCOL §11 records, not against the bundle's own PyTorch backend.
+4. **GW-EFF-012: the bundle on the PyTorch backend against the same references.** A new script,
+   `scripts/phase17_v1_check.py` (outside the frozen paths, with tests on tiny models), loads the
+   bundle through `GlypharisOCR.from_pretrained(..., backend="torch")`, the shipped path, at 10
+   threads, and runs Phase 16's reference check unchanged: the same four tolerances on the same 110
+   profile pages, 5,000 seeded lines and 400 pages. It refuses a bundle with another manifest
+   SHA-256, bundle problems, references written from another freeze record, and an existing
+   output. Pass rule: all four tolerances hold. Expected about 40 minutes on the CPU.
+5. **ADR-0011: cited.** GW-EFF-007, 009 and 010 measured this bundle with the same tooling on
+   2026-11-17 and 18; they are this re-run's measurement against ADR-0011, not repeated.
+6. **Default backend: PyTorch**, as at v0.1 and by the owner's decision; the code already defaults
+   to it (`load_bundle`, `from_pretrained`, the CLI and the server).
+7. **CI.** The tiny-model ONNX equivalence tests (`tests/test_export.py`, and the tiny SVTR tests in
+   `tests/test_phase16_reference.py`) run in CI; the full suite passes in a clone without tags.
+8. **Records.** GW-EFF-012's entry; GW-EFF-006 to 010's "next experiment" lines; the export is
+   declared successful only once GW-EFF-012 passes and is recorded.
+
+**Exit criteria** (IMPLEMENTATION_PLAN Phase 17): the export declared successful only after the
+equivalence tests pass and are recorded; CI runs ONNX equivalence on the tiny model.
+
+**Known limitations, stated in advance**
+- One laptop, HierText validation only; the phone candidate is not measured here.
+- The ONNX evidence is Phase 16's (GW-EFF-006); only the PyTorch path is run again.
 
 ## Phase 18 — Inference package
 

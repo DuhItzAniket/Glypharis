@@ -105,6 +105,7 @@ Rows link to a full entry below. Numbers are copied from generated reports only,
 | [GW-EFF-009](#gw-eff-009) | 2026-11-17 | 16 | Pareto points: input sizes, INT8, mixed backends, fused attention, other model sizes (new versions) | done | lowest mean page time at v1's accuracy: ONNX detector with PyTorch recognizer, 2,579.1 ms per page; fused attention 4,020.8 against 9,739.4 ms; detector size moves CER, ONNX page time by at most about 13% | `reports/efficiency/phase16/` |
 | [GW-EFF-010](#gw-eff-010) | 2026-11-17 | 16 | H1′'s ONNX latency: a fresh GW-BASE-002 profile and the v1 ONNX bundle in one sitting | done | 9,623.6 against 3,086.0 ms per page, +6,537.6 [+5,383.7, +7,806.3] ms: H1′ ONNX not met (bundle `875357a6…`) | `reports/efficiency/phase16/` |
 | [GW-EFF-011](#gw-eff-011) | 2026-11-17 | 16 | H6′'s latency: CRNN GW-REC-003 against SVTR GW-REC-020 in ONNX, per line | done | SVTR 32.01 against CRNN 10.16 ms per line, +16.78 [+12.02, +22.04] ms: H6′ not met | `reports/efficiency/phase16/` |
+| [GW-EFF-012](#gw-eff-012) | 2026-11-18 | 17 (v1) | The v1 bundle on the PyTorch backend against the Phase 16 PyTorch v1 references (the shipped path) | planned | — | `reports/export/GW-EFF-012/` |
 
 ### GW-BASE-001 — Tesseract 5 (LSTM, eng): recognition and end to end
 
@@ -1970,6 +1971,23 @@ Rows link to a full entry below. Numbers are copied from generated reports only,
 - **Interpretation:** H6′ is not met: in fp32 ONNX the SVTR-style recognizer takes about 3.2 times the CRNN's time per line, against about 1.2 times in PyTorch at 10 threads, which matches Phase 7's 16-thread timings (SVTR slower than CRNN by less than 1.5 times; information, not a test). The plain export's unfused attention (F35) is the likely reason the ONNX gap is wider than PyTorch's; a fused export of GW-REC-020 was not measured. H6′, which supersedes H6's latency half, is not met (2026-11-18, GW-EFF-011); with its CER half exploratory, H6 as a whole stays at most inconclusive, as registered. Finding F39.
 - **Limitations:** height 32 pair (H6's matched budget); v1 is height 48.
 - **Next experiment:** Phase 17 re-run (the v1 bundle)
+
+### GW-EFF-012 — The v1 bundle on the PyTorch backend (Phase 17 re-run)
+
+- **Date allocated / run:** 2026-11-18 / —
+- **Phase:** 17 (v1 re-run)
+- **Git commit:** recorded in the report   **Config:** `configs/final/glypharis_v1.yaml` (through the bundle)   **Seed(s):** none (no training); the 5,000 lines seeded 20261028
+- **Dataset version(s):** HierText validation: the Phase 5 profile pages (110), the 5,000 lines seeded 20261028 from `processed/hiertext/lines_validation`, the 400 Phase 5 pages; the Phase 16 reference outputs (`reports/efficiency/phase16/reference_manifest.json`)
+- **Hardware:** laptop CPU, 10 threads; mains, Balanced plan, power mode recorded
+- **Research question:** does the path v1 ships on, the GW-EFF-006 bundle read with the PyTorch backend, give the PyTorch v1 references' outputs?
+- **Hypothesis (written before the run):** none; Phase 17's four tolerances are the pass rule (`docs/PHASE_STATUS.md`, Phase 17 v1 re-run, item 4).
+- **Method:** `GlypharisOCR.from_pretrained(bundle, backend="torch")` on the bundle with manifest SHA-256 `875357a6…`; Phase 16's reference check unchanged (detector maps, recognizer logits and text, page CER).
+- **Variables:** none (one frozen model, one backend)
+- **Control:** the Phase 16 PyTorch v1 reference outputs (GW-EFF-006)
+- **Result:** —
+- **Interpretation:** —
+- **Limitations:** HierText validation; CPU only.
+- **Next experiment:** Phase 18 re-run (the package on the v1 bundle)
 
 ---
 
