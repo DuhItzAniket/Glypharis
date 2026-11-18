@@ -4462,3 +4462,6 @@ given the go-ahead, and the PC has been restarted.
 (GW-EFF-015 part a, `reports/final_validation/GW-EFF-015/operator_check.json`), so the candidate work
 stays open. It covers one validation line and says nothing about speed or memory.
 
+**Progress: items 4 and 5 passed (GW-E2E-013).** The walkthrough from a fresh clone passed, and its three
+findings were fixed at `8a4b3a3` and re-checked in the clean clone (`docs/FINAL_VALIDATION.md`, section 1).
+

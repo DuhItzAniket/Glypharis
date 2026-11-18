@@ -1,0 +1,63 @@
+2026-11-18T19:26:04Z CHAIN START (29 steps)
+2026-11-18T19:26:04Z START 1/29 clone
+2026-11-18T19:26:25Z DONE 1/29 clone (21s)
+2026-11-18T19:26:25Z START 2/29 venv
+2026-11-18T19:26:41Z DONE 2/29 venv (15s)
+2026-11-18T19:26:41Z START 3/29 pip_upgrade
+2026-11-18T19:26:54Z DONE 3/29 pip_upgrade (13s)
+2026-11-18T19:26:54Z START 4/29 pip_torch
+2026-11-18T19:34:36Z DONE 4/29 pip_torch (462s)
+2026-11-18T19:34:36Z START 5/29 pip_lock
+2026-11-18T19:39:35Z DONE 5/29 pip_lock (299s)
+2026-11-18T19:39:35Z START 6/29 pip_package
+2026-11-18T19:39:44Z DONE 6/29 pip_package (9s)
+2026-11-18T19:39:44Z START 7/29 pip_check
+2026-11-18T19:39:45Z DONE 7/29 pip_check (1s)
+2026-11-18T19:39:45Z START 8/29 env_report
+2026-11-18T19:40:06Z DONE 8/29 env_report (21s)
+2026-11-18T19:40:06Z START 9/29 pytest
+2026-11-18T19:49:40Z FINDING 9/29 pytest (exit 1, 574s; expected, recorded)
+2026-11-18T19:49:40Z START 10/29 validate_configs
+2026-11-18T19:49:41Z DONE 10/29 validate_configs (1s)
+2026-11-18T19:49:41Z START 11/29 download_dry_run
+2026-11-18T19:49:42Z DONE 11/29 download_dry_run (1s)
+2026-11-18T19:49:42Z START 12/29 download_hiertext
+2026-11-18T20:21:25Z FAIL 12/29 download_hiertext (exit 1, 1903s)
+2026-11-18T20:22:38Z RESUME
+2026-11-18T20:22:38Z START 12/29 download_hiertext
+2026-11-18T20:25:36Z DONE 12/29 download_hiertext (178s)
+2026-11-18T20:25:36Z START 13/29 download_rest
+2026-11-18T20:29:39Z DONE 13/29 download_rest (243s)
+2026-11-18T20:29:39Z START 14/29 raw_manifest_diff
+2026-11-18T20:29:39Z DONE 14/29 raw_manifest_diff (0s)
+2026-11-18T20:29:39Z START 15/29 verify_hashes
+2026-11-18T20:30:13Z DONE 15/29 verify_hashes (34s)
+2026-11-18T20:30:13Z START 16/29 prepare_hiertext
+2026-11-18T20:32:41Z DONE 16/29 prepare_hiertext (148s)
+2026-11-18T20:32:41Z START 17/29 hiertext_manifest_same
+2026-11-18T20:32:42Z DONE 17/29 hiertext_manifest_same (1s)
+2026-11-18T20:32:42Z START 18/29 crops_hiertext_val
+2026-11-18T20:32:58Z DONE 18/29 crops_hiertext_val (16s)
+2026-11-18T20:32:58Z START 19/29 prepare_funsd
+2026-11-18T20:32:59Z DONE 19/29 prepare_funsd (1s)
+2026-11-18T20:32:59Z START 20/29 prepare_iiit5k
+2026-11-18T20:33:30Z DONE 20/29 prepare_iiit5k (31s)
+2026-11-18T20:33:30Z START 21/29 crops_funsd
+2026-11-18T20:33:32Z DONE 21/29 crops_funsd (2s)
+2026-11-18T20:33:32Z START 22/29 derived_manifest_diff
+2026-11-18T20:33:33Z FINDING 22/29 derived_manifest_diff (exit 1, 0s; expected, recorded)
+2026-11-18T20:33:33Z START 23/29 only_expected_difference
+2026-11-18T20:33:33Z DONE 23/29 only_expected_difference (0s)
+2026-11-18T20:33:33Z START 24/29 copy_bundle
+2026-11-18T20:33:33Z DONE 24/29 copy_bundle (0s)
+2026-11-18T20:33:33Z START 25/29 copy_reference
+2026-11-18T20:33:34Z DONE 25/29 copy_reference (1s)
+2026-11-18T20:33:34Z START 26/29 cli_torch
+2026-11-18T20:33:43Z DONE 26/29 cli_torch (9s)
+2026-11-18T20:33:43Z START 27/29 cli_onnx
+2026-11-18T20:33:59Z DONE 27/29 cli_onnx (16s)
+2026-11-18T20:33:59Z START 28/29 package_check
+2026-11-18T20:49:46Z DONE 28/29 package_check (947s)
+2026-11-18T20:49:46Z START 29/29 keep_evidence
+2026-11-18T20:49:46Z DONE 29/29 keep_evidence (0s)
+2026-11-18T20:49:46Z ALL DONE

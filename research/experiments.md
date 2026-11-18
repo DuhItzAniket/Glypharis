@@ -108,7 +108,7 @@ Rows link to a full entry below. Numbers are copied from generated reports only,
 | [GW-EFF-010](#gw-eff-010) | 2026-11-17 | 16 | H1′'s ONNX latency: a fresh GW-BASE-002 profile and the v1 ONNX bundle in one sitting | done | 9,623.6 against 3,086.0 ms per page, +6,537.6 [+5,383.7, +7,806.3] ms: H1′ ONNX not met (bundle `875357a6…`) | `reports/efficiency/phase16/` |
 | [GW-EFF-011](#gw-eff-011) | 2026-11-17 | 16 | H6′'s latency: CRNN GW-REC-003 against SVTR GW-REC-020 in ONNX, per line | done | SVTR 32.01 against CRNN 10.16 ms per line, +16.78 [+12.02, +22.04] ms: H6′ not met | `reports/efficiency/phase16/` |
 | [GW-EFF-012](#gw-eff-012) | 2026-11-18 | 17 (v1) | The v1 bundle on the PyTorch backend against the Phase 16 PyTorch v1 references (the shipped path) | done | all four tolerances pass with no difference: map and logits 0.0, 5,000 of 5,000 lines identical, page CER 24.32% on both | `reports/export/GW-EFF-012/` |
-| [GW-E2E-013](#gw-e2e-013) | 2026-11-18 | 22 | Clean-machine-style walkthrough: the installed package on the v1 bundle against GW-E2E-006 | planned | — | — |
+| [GW-E2E-013](#gw-e2e-013) | 2026-11-18 | 22 | Clean-machine-style walkthrough: the installed package on the v1 bundle against GW-E2E-006 | done | passes: page CER 24.32% on both, difference 0.0 points; 16,835 of 16,835 lines identical | `reports/package/GW-E2E-013.json` |
 | [GW-E2E-014](#gw-e2e-014) | 2026-11-18 | 22 | v1 re-run rehearsal on HierText validation pages | planned | — | — |
 | [GW-E2E-015](#gw-e2e-015) | 2026-11-18 | 22 | Pass A: re-score the saved Phase 14 files with the unchanged scorer | planned | — | — |
 | [GW-E2E-016](#gw-e2e-016) | 2026-11-18 | 22 | v1 re-run on the test pages | planned | — | — |
@@ -2052,7 +2052,7 @@ Rows link to a full entry below. Numbers are copied from generated reports only,
 
 ### <a id="gw-e2e-013"></a>GW-E2E-013 — Clean-machine-style walkthrough: the installed package on the v1 bundle
 
-- **Date allocated / run:** 2026-11-18 / —
+- **Date allocated / run:** 2026-11-18 / 2026-11-18
 - **Phase:** 22
 - **Git commit:** a fresh public clone at `420e095`; fixes recorded in `docs/FINAL_VALIDATION.md`   **Config:** `configs/det/gw-det-001.yaml`, the v1 bundle   **Seed(s):** none
 - **Dataset version(s):** HierText, MobileNetV3 weights, FUNSD and IIIT5K downloaded again and checked against the committed manifests; reference `hiertext_val.jsonl` from GW-E2E-006, SHA-256 `c8520576…`
@@ -2062,8 +2062,8 @@ Rows link to a full entry below. Numbers are copied from generated reports only,
 - **Method:** the commands of item 4, then `scripts/package_check.py --v1 --backend torch` on the 400 Phase 5 validation pages; the report goes to `reports/package/GW-E2E-013.json`, and every retry, deviation and hand action to `docs/FINAL_VALIDATION.md`.
 - **Variables:** none
 - **Control:** GW-E2E-006 (the frozen pipeline on the same pages)
-- **Result:** — (planned)
-- **Interpretation:** —
+- **Result:** pass (`reports/package/GW-E2E-013.json`, steps in `reports/final_validation/GW-E2E-013/steps.txt`). From a fresh public clone at `420e095`, every downloaded file matched its recorded hash and the prepared HierText and FUNSD manifests were unchanged. The installed package read the 400 Phase 5 validation pages on the PyTorch backend with 24.32% page CER, as GW-E2E-006 did, difference 0.0 points (limit 0.05), and 16,835 of 16,835 lines had identical text and box. Three findings were fixed at `8a4b3a3` and the affected steps repeated: 23 scorer tests depended on the real tag, the IIIT5K manifest entry lacked `index_sha256`, and no document gave the order of work.
+- **Interpretation:** the project installs and its public data can be fetched and prepared from the repository alone. The model and the reference file cannot yet: both were placed by hand (`docs/FINAL_VALIDATION.md`, section 1.3).
 - **Limitations:** same OS, driver, base Python and git config as the original work; the weights come by hand, so their download path is untested until Phase 23; GDC and GDC-scan cannot be fetched by a stranger.
 - **Next experiment:** GW-REC-042 and GW-E2E-014
 

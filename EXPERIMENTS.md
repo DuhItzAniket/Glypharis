@@ -11,10 +11,10 @@ Each ID links to its full entry. Key results are copied from the registry. The g
 | GW-BASE | 7 | 7 | 0 | 0 | 0 | 0 | 0 |
 | GW-REC | 45 | 37 | 1 | 1 | 2 | 4 | 0 |
 | GW-DET | 7 | 7 | 0 | 0 | 0 | 0 | 0 |
-| GW-E2E | 21 | 12 | 0 | 0 | 0 | 9 | 0 |
+| GW-E2E | 21 | 13 | 0 | 0 | 0 | 8 | 0 |
 | GW-DATA | 22 | 22 | 0 | 0 | 0 | 0 | 0 |
 | GW-EFF | 15 | 12 | 0 | 0 | 0 | 3 | 0 |
-| all | 117 | 97 | 1 | 1 | 2 | 16 | 0 |
+| all | 117 | 98 | 1 | 1 | 2 | 15 | 0 |
 
 ## Scope
 
@@ -34,9 +34,9 @@ Not attributed to one experiment: Phase 16 scoring, 0.00 CPU-hours over 2 jobs.
 
 44 registered experiments have no ledger row:
 
-- Abandoned or not run (19): GW-REC-023, GW-REC-032, GW-REC-033, GW-REC-042, GW-REC-043, GW-REC-044, GW-REC-045, GW-E2E-013, GW-E2E-014, GW-E2E-015, GW-E2E-016, GW-E2E-017, GW-E2E-018, GW-E2E-019, GW-E2E-020, GW-E2E-021, GW-EFF-013, GW-EFF-014, GW-EFF-015
+- Abandoned or not run (18): GW-REC-023, GW-REC-032, GW-REC-033, GW-REC-042, GW-REC-043, GW-REC-044, GW-REC-045, GW-E2E-014, GW-E2E-015, GW-E2E-016, GW-E2E-017, GW-E2E-018, GW-E2E-019, GW-E2E-020, GW-E2E-021, GW-EFF-013, GW-EFF-014, GW-EFF-015
 - In phases the ledger says it does not count (9, 10, 14, 15) (18): GW-REC-038, GW-REC-039, GW-REC-040, GW-REC-041, GW-DET-004, GW-DET-005, GW-DET-006, GW-E2E-001, GW-E2E-002, GW-E2E-003, GW-E2E-006, GW-E2E-007, GW-E2E-008, GW-E2E-009, GW-E2E-010, GW-EFF-001, GW-EFF-002, GW-EFF-005
-- Ran, with no ledger row; its note names neither them nor their phase (7): GW-E2E-004, GW-E2E-005, GW-E2E-011, GW-E2E-012, GW-EFF-003, GW-EFF-004, GW-EFF-012
+- Ran, with no ledger row; its note names neither them nor their phase (8): GW-E2E-004, GW-E2E-005, GW-E2E-011, GW-E2E-012, GW-E2E-013, GW-EFF-003, GW-EFF-004, GW-EFF-012
 
 ## Flags
 
@@ -239,7 +239,7 @@ Not attributed to one experiment: Phase 16 scoring, 0.00 CPU-hours over 2 jobs.
 | [GW-REC-043](research/experiments.md#gw-rec-043) | v1 re-run on the test crops | planned | — | — | — | — | — |
 | [GW-REC-044](research/experiments.md#gw-rec-044) | Phone candidate: validation gate on crops, against GW-REC-038 | planned | — | — | — | — | — |
 | [GW-REC-045](research/experiments.md#gw-rec-045) | Phone candidate on the test crops | planned | — | — | — | — | — |
-| [GW-E2E-013](research/experiments.md#gw-e2e-013) | Clean-machine-style walkthrough: the installed package on the v1 bundle against GW-E2E-006 | planned | — | — | — | — | — |
+| [GW-E2E-013](research/experiments.md#gw-e2e-013) | Clean-machine-style walkthrough: the installed package on the v1 bundle against GW-E2E-006 | done | passes: page CER 24.32% on both, difference 0.0 points; 16,835 of 16,835 lines identical | [`reports/package/GW-E2E-013.json`](reports/package/GW-E2E-013.json) | — | — | — |
 | [GW-E2E-014](research/experiments.md#gw-e2e-014) | v1 re-run rehearsal on HierText validation pages | planned | — | — | — | — | — |
 | [GW-E2E-015](research/experiments.md#gw-e2e-015) | Pass A: re-score the saved Phase 14 files with the unchanged scorer | planned | — | — | — | — | — |
 | [GW-E2E-016](research/experiments.md#gw-e2e-016) | v1 re-run on the test pages | planned | — | — | — | — | — |

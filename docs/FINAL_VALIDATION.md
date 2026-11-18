@@ -13,47 +13,54 @@ A clean-machine-style run from a fresh clone at `420e095`, in a clean folder out
 
 | Item | Value |
 |---|---|
-| Date | not run |
-| Commit of the clone | not run |
-| OS, Python, GPU driver | not run |
-| Environment report | not run |
+| Date | 2026-11-18, 19:26:04Z to 20:49:46Z (`reports/final_validation/GW-E2E-013/steps.txt`) |
+| Commit of the clone | `420e095`; the affected steps repeated at `8a4b3a3` |
+| OS, Python, GPU driver | Windows 11 (10.0.26300), Python 3.11.9, PyTorch 2.14.1 for CUDA 12.6, NVIDIA driver 616.56 |
+| Environment report | written by `scripts/env_report.py` in the clean folder; its GPU checks passed |
 
 ### 1.2 Steps in order
 
 | Step | Command or action | Result | Evidence |
 |---|---|---|---|
-| Clone | `git clone`, then `git checkout --detach 420e095` | not run | |
-| Install | virtual environment, PyTorch, `requirements/lock.txt`, editable package, `pip check` | not run | |
-| Environment and tests | `env_report.py`, `pytest`, `validate_configs.py` | not run | |
-| Download | HierText, MobileNetV3 weights, FUNSD, IIIT5K | not run | |
-| Verify | `download_datasets.py --verify`; only `downloaded_utc` may change | not run | |
-| Prepare | `prepare_hiertext.py`, `prepare_benchmarks.py`, `build_eval_crops.py`; no derived manifest differs | not run | |
-| Load the model | the v1 bundle, placed by hand | not run | |
-| Infer | `glypharis-ocr` on one validation page, both backends, from outside the repository | not run | |
-| Evaluate | `package_check.py --v1`, 400 validation pages | not run | |
+| Clone | `git clone`, then `git checkout --detach 420e095` | pass; clean tree | `steps.txt` step 1 |
+| Install | virtual environment, PyTorch, `requirements/lock.txt`, editable package, `pip check` | pass | steps 2 to 7 |
+| Environment and tests | `env_report.py`, `pytest`, `validate_configs.py` | 2,049 passed, 23 failed, 5 skipped at `420e095`, all 23 in `tests/test_phase14_score.py` (finding 1); 62 of 62 configs valid | steps 8 to 10 |
+| Download | HierText, MobileNetV3 weights, FUNSD, IIIT5K | pass after one resumed download (manual step 5) | steps 11 to 13 |
+| Verify | `download_datasets.py --verify`; only `downloaded_utc` may change | pass: every file matches its recorded hash | steps 14, 15 |
+| Prepare | `prepare_hiertext.py`, `prepare_benchmarks.py`, `build_eval_crops.py`; no derived manifest differs | pass, except the expected IIIT5K line (finding 2), cleared at `8a4b3a3` | steps 16 to 23 |
+| Load the model | the v1 bundle, placed by hand; manifest SHA-256 `875357a6…` matched | pass | step 24 |
+| Infer | `glypharis-ocr` on one validation page, both backends, from outside the repository | pass: 47 lines, JSON and text written, on each backend | steps 26, 27 |
+| Evaluate | `package_check.py --v1`, 400 validation pages | **pass:** page CER 24.32% on both, difference 0.0 points (limit 0.05), 16,835 of 16,835 lines with identical text and box | `reports/package/GW-E2E-013.json` |
+
+The report records `git_dirty: true`: the only tracked difference at that moment was the expected IIIT5K
+manifest line (finding 2).
 
 ### 1.3 Manual steps
 
-One row for every action not done by a listed command, and for every retry or deviation. The first four
-are known in advance.
+One row for every action not done by a listed command, and for every retry or deviation.
 
 | # | Manual step | Why it was needed | Done by | Outcome | Retry or deviation |
 |---|---|---|---|---|---|
-| 1 | Copy the v1 bundle into the clean folder | The weights are not distributed before Phase 23 | | not run | |
-| 2 | Copy the GW-E2E-006 reference file (`hiertext_val.jsonl`, SHA-256 `c8520576…`) | It is an evaluation output and is not in git | | not run | |
-| 3 | Set `GLYPHARIS_MODELS` | The package has to find the copied bundle | | not run | |
-| 4 | Run `glypharis-ocr` on one page with each backend | Smoke check of the installed command | | not run | |
+| 1 | Copy the v1 bundle into the clean folder | The weights are not distributed before Phase 23 | script, from the worktree's copy | hash matched | none |
+| 2 | Copy the GW-E2E-006 reference file (`hiertext_val.jsonl`, SHA-256 `c8520576…`) | It is an evaluation output and is not in git | script | hash matched | none |
+| 3 | Set `GLYPHARIS_MODELS` | The package has to find the copied bundle | script | bundle found by name | none |
+| 4 | Run `glypharis-ocr` on one page with each backend | Smoke check of the installed command | script | pass | none |
+| 5 | Run the HierText download again | `test.tgz` stopped at 348,371,966 of 537,066,598 bytes when the connection dropped | resumed the same command | finished; the hash matched | one retry, from the kept partial file |
+| 6 | Restore `data/manifests` after downloading | Downloading rewrites `downloaded_utc` | `git checkout`, as listed in the plan | only those lines had changed | none |
 
 ### 1.4 Findings and fixes
 
 | Finding | Fix | Commit | Steps repeated |
 |---|---|---|---|
-| not run | | | |
+| 1. In a clone with the `phase14-eval` tag, 23 scorer tests failed: they reached the real tag through `hash-phase5` | the tests no longer depend on the real tag; the scorer is unchanged | `8a4b3a3` | full suite in the clean clone: 2,154 passed, 5 skipped |
+| 2. `prepare_benchmarks.py iiit5k` left out `index_sha256`, so the fresh manifest differed from the recorded one by that line (`reports/final_validation/GW-E2E-013/derived_manifests_before_fix.diff`) | the script writes it | `8a4b3a3` | `prepare_benchmarks.py iiit5k`; `git diff --exit-code` on the derived manifests passes |
+| 3. No document gave the order of work from a fresh clone | `docs/REPRODUCING.md` | `8a4b3a3` | not applicable |
 
 ### 1.5 What the walkthrough does not show
 
-To be confirmed in the write-up: it shares the OS, driver, base Python and git config with the original
-work, and the weights came by hand, so the weight download path is untested until Phase 23.
+It is clean-machine-style, not a second machine: it shares the OS, driver, base Python and git config with
+the original work. The weights and the reference file came by hand, so the weight download path is untested
+until Phase 23. GDC and GDC-scan cannot be fetched by anyone else. The evaluation is on validation pages.
 
 ## 2. Reproduction of v1
 
