@@ -1429,6 +1429,17 @@ use: every input BookWorm can pass and every damaged bundle ends in a result or 
    the bundle hash, the git state and the times. **Pass rule:** no exception other than a
    `GlypharisError` anywhere, every damaged bundle a `ModelLoadError`, and the caching, version,
    CLI and API checks as stated. Times are not measured (the latency numbers are Phase 16's).
+   **Amendment (2026-11-18, after the harness was written and before it ran on the v1 bundle).**
+   (a) The PyTorch backend never opens the two `.onnx` files (the ONNX backend reads all four: the
+   `.pt` files give it the settings and the character set), so junk in an `.onnx` file, with its
+   hash re-written in the copy's manifest, loads on PyTorch; for those cases "loaded" is the
+   expected outcome, and every other damaged-bundle case must raise `ModelLoadError`. Each of the
+   four files gets one changed byte, and a removed manifest and a missing bundle are added
+   (16 cases per backend). (b) Two checks join the pass rule: the good page gives a result on every
+   backend, with the same text from its path and its bytes; and the bundle's files still match its
+   manifest afterwards. The other outcomes per input kind (bad files refused as `invalid_image`,
+   oversized images as `image_too_large`, and so on) are recorded but not part of the rule, since a
+   few wrong arrays become readable images once encoded as bytes.
 3. **Records.** GW-E2E-012's entry; the completion record beside the v0.1 one; then the commit that
    ends the v1 code freeze (owner decision of 2026-11-18), as its own step after this phase.
 
