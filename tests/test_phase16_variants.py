@@ -374,6 +374,8 @@ def test_other_recognizer_checkpoints_change_only_the_model(frozen, v1_root, tmp
     assert changed["from"]["experiment"] == "GW-REC-034"
     assert changed["to"]["experiment"] == "GW-REC-020" and changed["to"]["height"] == 48
     assert build.version == VARIANT_LABEL
+    reported = json.dumps(variants.report_record(build.record))
+    assert tmp_path.as_posix() not in reported and '"path": "GW-REC-020.pt"' in reported
     assert build.record["settings"]["recognizer.temperature"] == 2.35  # the record's, kept
     assert build.torch_reference is not None and build.torch_reference.height == 48
     crops = [Image.fromarray(np.random.default_rng(2).integers(0, 255, (40, 220), np.uint8))]
@@ -826,3 +828,26 @@ def test_the_real_freeze_record_names_the_evaluation_sets():
     pages, pack = pv.eval_paths(REPO / FREEZE_RECORD, Path("data"))
     assert pages.as_posix() == "data/processed/hiertext/pages_validation.jsonl.gz"
     assert pack.as_posix() == "data/processed/hiertext/lines_validation"
+
+
+def test_reports_record_checkpoint_paths_without_local_folders():
+    from glypharis.efficiency.variants import portable_path, report_record
+
+    assert portable_path("C:/Users/someone/work/Glypharis/checkpoints/GW-REC-003/best.pt") == (
+        "checkpoints/GW-REC-003/best.pt"
+    )
+    assert portable_path("/home/x/checkpoints/old/checkpoints/GW-DET-003/best.pt") == (
+        "checkpoints/GW-DET-003/best.pt"
+    )
+    assert portable_path("D:/elsewhere/best.pt") == "best.pt"
+    ck = {"path": "C:/Users/someone/checkpoints/GW-REC-020/best.pt", "sha256": "ab"}
+    record = {"checkpoint": ck, "changed": ["x"]}
+    out = report_record(record)
+    assert out == {"checkpoint": {"path": "checkpoints/GW-REC-020/best.pt", "sha256": "ab"},
+                   "changed": ["x"]}  # fmt: skip
+    assert record["checkpoint"]["path"].startswith("C:/Users/")  # the work record is untouched
+    nested = {"variant_json": {"checkpoint": dict(ck)}, "variant_json_sha256": "cd"}
+    assert report_record(nested)["variant_json"]["checkpoint"]["path"] == (
+        "checkpoints/GW-REC-020/best.pt"
+    )
+    assert report_record({"checkpoint": None}) == {"checkpoint": None}

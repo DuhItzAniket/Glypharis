@@ -412,6 +412,28 @@ def _checkpoint(spec: VariantSpec, path: str | Path | None) -> dict[str, Any]:
     return {"path": p.as_posix(), "sha256": sha256_file(p), "experiment": spec.checkpoint}
 
 
+def portable_path(path: str | Path) -> str:
+    """A checkpoint path as a report records it: from its ``checkpoints`` folder on (or the file
+    name alone), so no machine's folders or user name reach a committed file. The work folder's
+    record keeps the full path, which the later steps read; the SHA-256 names the file."""
+    parts = Path(path).as_posix().split("/")
+    if "checkpoints" in parts:
+        return "/".join(parts[len(parts) - 1 - parts[::-1].index("checkpoints") :])
+    return parts[-1]
+
+
+def report_record(record: Mapping[str, Any]) -> dict[str, Any]:
+    """A copy of a build record (`Build.record`) for a report, with the checkpoint path in its
+    copy of the work folder's record made portable. ``variant_json_sha256`` still names the work
+    folder's file, which keeps the full path."""
+    out = json.loads(json.dumps(record))
+    for holder in (out, out.get("variant_json") or {}):
+        ck = holder.get("checkpoint")
+        if ck and "path" in ck:
+            ck["path"] = portable_path(ck["path"])
+    return out
+
+
 def _same_experiment(spec: VariantSpec, got: str) -> None:
     if got != spec.checkpoint:
         raise VariantError(f"{spec.name}: the checkpoint is {got}, not {spec.checkpoint}")

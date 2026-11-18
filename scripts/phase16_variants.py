@@ -129,6 +129,7 @@ from glypharis.efficiency.variants import (
     load_variant,
     prepare_variant,
     profile_file,
+    report_record,
     same_build,
     sitting_order,
     variant_spec,
@@ -402,7 +403,7 @@ def _common(
         "threads": threads,
         "session_options": sessions or check_sessions(build.ocr, args.threads),
         "v1_code": v1_code,
-        "build": build.record,
+        "build": report_record(build.record),
         **git_state(),
     }
 
