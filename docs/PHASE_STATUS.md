@@ -23,7 +23,10 @@ Phases run in the order set by [ADR-0008](decisions/ADR-0008-usable-engine-first
 | 13 | Ablation study | **COMPLETE** | `phase-13` |
 | 14 | External evaluation | **COMPLETE** | `phase-14` |
 | 15 | Error analysis | **COMPLETE** | `phase-15` |
-| 16 | Efficiency optimisation | **IN PROGRESS** (gate: push, CI, merge) | — |
+| 16 | Efficiency optimisation | **COMPLETE** | `phase-16` |
+| 17 (v1) | Model export, v1 re-run | **IN PROGRESS** (gate: push, CI, merge) | — |
+| 18 (v1) | Inference package, v1 re-run | not started | — |
+| 20 (v1) | Production engineering, v1 re-run | not started | — |
 | 17 | Model export | **COMPLETE** | `phase-17` |
 | 18 | Inference package | **COMPLETE** | `phase-18` |
 | 19 | Optional HTTP API | **COMPLETE** | `phase-19` |
@@ -1001,6 +1004,120 @@ and parents).
 GitHub made it; the re-created merge has the same tree).
 
 ---
+
+## Phase 17 — Model export (v1 re-run)
+
+**Status:** results written (2026-11-18). Gate open: push, pull request, CI and the owner's merge.
+Opened 2026-11-18 on `phase/17-v1-rerun`, branched from `main` after Phase 16 (merge `0af7fc4`). Validation data only; `research/test_access_log.md` gets no row. The
+v0.1 record above stays as it is (ADR-0008 item 3: Phases 17, 18 and 20 are re-run on the final
+model with the already-tested tooling and a new completion record).
+
+**Objective:** declare the export of v1 successful for one named bundle, the GW-EFF-006 bundle
+(`runs/release/glypharis-v1`, manifest SHA-256 `875357a6346e8b1f989005fa96c557b00bf687461043368dc5e3dc532839f037`),
+and check the path v1 ships on, that bundle read with the PyTorch backend, against the same PyTorch
+v1 references.
+
+**Owner decisions (2026-11-18, before this plan)**
+- v1 keeps PyTorch as its default backend; ADR-0011's laptop targets are recorded as missed for v1.
+- BookWorm's target hardware is lightweight devices such as smartphones, which triggers ADR-0011's
+  revisit; the phone candidate is the all-ONNX build with fused attention, a new version evaluated
+  in Phase 22 (ADR-0011, owner decision).
+- The re-runs of 17, 18 and 20 go on three branches in that order, each with its own gate and
+  record. Phase 18's package check runs the PyTorch backend only; its clean-venv install test may
+  download CPU torch 2.14.1, torchvision 0.29.1 and `requirements/lock.txt` into a throwaway venv.
+- The v1 code freeze (`assert_v1_code` against `phase14-eval`) ends with one commit after the
+  Phase 20 re-run, tagged and made the new reference for the check; until then `glypharis/pipeline`,
+  `models`, `export`, `data` and `configs` stay byte for byte as at the tag.
+
+**Plan** (registered 2026-11-18, before any Phase 17 re-run measurement)
+
+1. **Preflight.** `assert_v1_code`; the bundle's manifest SHA-256 is the one above and
+   `read_manifest` re-hashes its four files; the Phase 16 reference outputs load against their
+   committed manifest (`reports/efficiency/phase16/reference_manifest.json`). The bundle is never
+   rebuilt or written to: a rebuild changes its hash, and the H1′ ONNX verdict (GW-EFF-010) is for
+   this hash only.
+2. **Release files and the ONNX export: cited.** The bundle's `detector.pt` and `recognizer.pt`
+   with the manifest's provenance, and its two ONNX files with dynamic axes, from GW-EFF-006
+   (`reports/efficiency/phase16/v1_bundle.json`). The export is the TorchScript exporter at opset
+   17, as at v0.1.
+3. **The four equivalence tolerances for the ONNX backend: cited** from GW-EFF-006
+   (`reference_check.json`): detector map max abs difference ≤ 1e-4, logits ≤ 1e-3, decoded text
+   identical except near ties (top-2 gap < 1e-3) on at most 0.1% of lines, page CER within 0.05
+   points. The comparison is against the hashed PyTorch v1 references, as the 2026-11-17 change row
+   in EXPERIMENT_PROTOCOL §11 records, not against the bundle's own PyTorch backend.
+4. **GW-EFF-012: the bundle on the PyTorch backend against the same references.** A new script,
+   `scripts/phase17_v1_check.py` (outside the frozen paths, with tests on tiny models), loads the
+   bundle through `GlypharisOCR.from_pretrained(..., backend="torch")`, the shipped path, at 10
+   threads, and runs Phase 16's reference check unchanged: the same four tolerances on the same 110
+   profile pages, 5,000 seeded lines and 400 pages. It refuses a bundle with another manifest
+   SHA-256, bundle problems, references written from another freeze record, and an existing
+   output. Pass rule: all four tolerances hold. Expected about 40 minutes on the CPU.
+5. **ADR-0011: cited.** GW-EFF-007, 009 and 010 measured this bundle with the same tooling on
+   2026-11-17 and 18; they are this re-run's measurement against ADR-0011, not repeated.
+6. **Default backend: PyTorch**, as at v0.1 and by the owner's decision; the code already defaults
+   to it (`load_bundle`, `from_pretrained`, the CLI and the server).
+7. **CI.** The tiny-model ONNX equivalence tests (`tests/test_export.py`, and the tiny SVTR tests in
+   `tests/test_phase16_reference.py`) run in CI; the full suite passes in a clone without tags.
+8. **Records.** GW-EFF-012's entry; GW-EFF-006 to 010's "next experiment" lines; the export is
+   declared successful only once GW-EFF-012 passes and is recorded.
+
+**Exit criteria** (IMPLEMENTATION_PLAN Phase 17): the export declared successful only after the
+equivalence tests pass and are recorded; CI runs ONNX equivalence on the tiny model.
+
+**Known limitations, stated in advance**
+- One laptop, HierText validation only; the phone candidate is not measured here.
+- The ONNX evidence is Phase 16's (GW-EFF-006); only the PyTorch path is run again.
+
+**Results (2026-11-18)** (GW-EFF-012; `reports/export/GW-EFF-012/torch_bundle_check.json`, written
+by `scripts/phase17_v1_check.py` at `8c70747`, clean tree; validation only, no test data read)
+
+- *Preflight.* `assert_v1_code` passed (the v1 paths equal `phase14-eval`); the bundle's manifest
+  SHA-256 was `875357a6…` and `bundle_problems` found nothing; the Phase 16 references matched
+  their hashes and the committed manifest. The bundle was not rebuilt or written to.
+- *GW-EFF-012* (2026-11-18T07:29:27Z to 07:50:27Z, 10 threads, `model_version` `glypharis_v1`):
+  all four tolerances pass with no difference at all.
+
+  | Check | Limit | Measured |
+  |---|---|---|
+  | Detector map max abs difference (110 pages) | 1e-4 | 0.0 |
+  | Logits max abs difference (5,000 lines) | 1e-3 | 0.0 |
+  | Text (5,000 lines) | near ties ≤ 0.1%, no other difference | 5,000 identical, no near ties |
+  | Page CER (400 pages, strict) | 0.05 points | 24.32% on both, difference 0.0; 400 pages identical |
+
+  The shipped path, the bundle read with the PyTorch backend through `from_pretrained`, gives
+  exactly the outputs of the PyTorch v1 build that Phase 14 evaluated.
+- *ONNX* (cited, item 3): GW-EFF-006 passed the same four tolerances for the bundle's ONNX files
+  (map 7.33e-06, logits 3.09e-04, no text differences, page CER within 1.49e-05;
+  `reports/efficiency/phase16/reference_check.json`).
+- *ADR-0011* (cited, item 5): GW-EFF-007, 009 and 010; every v1 CPU build misses the latency
+  targets (F38), and by the owner's decision v1 keeps PyTorch as its default.
+
+**The v1 export is declared successful** for bundle `875357a6…`: the ONNX equivalence tests
+(GW-EFF-006) and the PyTorch path (GW-EFF-012) both pass and are recorded.
+
+**Exit criteria check** (IMPLEMENTATION_PLAN Phase 17)
+
+| Criterion | Status | Evidence |
+|---|---|---|
+| Export declared successful only after the equivalence tests pass and are recorded | pass | GW-EFF-006, GW-EFF-012 (above) |
+| CI runs ONNX equivalence on the tiny model | pass | `tests/test_export.py`; the tiny SVTR tests in `tests/test_phase16_reference.py` |
+| CI green | pending (after the push) | — |
+
+**Tests:** the CPU suite passes in a clone without tags (1,218 passed, 4 skipped, at `8c70747`);
+the new tests cover the check on tiny models: a pass with no difference on the same model, and
+refusal of another bundle hash, a bundle unlike the record, changed references and an existing
+output.
+
+**Compute:** GW-EFF-012 ran by hand for 21 minutes on the CPU, outside the queue logs, so the
+compute ledger does not count it.
+
+**Known issues**
+- The `glypharis/export/onnx.py` docstring still gives F13's old figures; it is corrected in the
+  commit that ends the v1 code freeze, after the Phase 20 re-run (owner decision, 2026-11-18).
+- `from_pretrained`'s default name is still `glypharis-0.1.0`, which does not resolve to the v1
+  bundle; v1 is loaded by path. Changed in the same end-of-freeze commit.
+
+**Git:** branch `phase/17-v1-rerun`; push and merge pending.
 
 ## Phase 18 — Inference package
 
@@ -2550,7 +2667,7 @@ guards, the hash and consistency refusals and atomic output) and the GlyphSynth 
 
 ## Phase 16 — Efficiency optimisation
 
-**Status:** results written (2026-11-18). Gate open: push, pull request, CI and the owner's merge.
+**Status:** COMPLETE (2026-11-18).
 Opened 2026-11-17 on `phase/16-efficiency`, branched from `main` after Phase 15 (merge `ed372db`).
 Validation data only.
 
@@ -2949,7 +3066,7 @@ CI is checked on the PR.
 | Accuracy/latency Pareto plot | pass, on validation; every point but v1 a new version | `pareto.md`, `pareto.png` (GW-EFF-009) |
 | INT8 measured with its accuracy loss | pass: strict line CER 6.221% (fp32) and 6.208% (INT8); page CER +0.00 [−0.02, +0.02] points (descriptive) | `int8.md`, `verdicts.md` (GW-EFF-008, GW-EFF-009) |
 | The four verdicts | pass: H7′ latency met, H7′ accuracy met (H7′ holds), H6′ not met, H1′ ONNX not met | `verdicts.md` |
-| CI green | to be confirmed on the PR | — |
+| CI green | pass | runs 44249945309 (branch), 44249996705 (pull request), 44253277519 (`main`) |
 
 **Known issues**
 - `cost_table.md` says each page's stage sum was checked within 1% of a second clock. Since
@@ -2967,4 +3084,7 @@ CI is checked on the PR.
   lines batched as the pipeline batches them; no CPU batch-size sweep was run (the registered
   plan's scope, item 2).
 
-**Git:** branch `phase/16-efficiency`; push and merge pending.
+**Git:** branch `phase/16-efficiency`, merged through pull request #21. Merge commit `0af7fc4`, tag
+`phase-16` (merge re-created with the noreply identity; same tree and parents).
+
+**CI status:** green on the branch, the pull request and `main` (run 44253277519).

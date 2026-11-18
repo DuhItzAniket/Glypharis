@@ -1,6 +1,6 @@
 # ADR-0011: CPU latency target for GLYPHARIS v0.1
 
-- **Status:** Accepted; revisit triggered at Phase 17, still open after the Phase 16 measurement (2026-11-18; owner decision pending, see below) (2026-10-25, Phase 5; approved by the owner)
+- **Status:** Accepted for v1 as a missed target; revisit triggered again by a change of target hardware (owner decision 2026-11-18, see below) (2026-10-25, Phase 5; approved by the owner)
 
 ## Context
 ADR-0008 makes CPU latency the primary efficiency number and leaves the target to be set from
@@ -108,7 +108,27 @@ The options for the owner, restated:
 4. set a GPU target as a separate decision.
 
 Phase 16 does not tighten the targets and changes no default; which option to take is the owner's
-decision. The Phase 17 re-run measures v1 against this ADR again.
+decision. The Phase 17 re-run measures v1 against this ADR again (see the owner's decision below).
+
+## Owner decision (2026-11-18)
+After the Phase 16 measurement the owner decided:
+1. **v1 keeps PyTorch as its default backend** (option 1 above). The v1 build stays as it was
+   evaluated in Phase 14, and these targets are recorded as missed for it on this laptop, not
+   restated.
+2. **BookWorm's target hardware is lightweight devices such as smartphones**, not only this
+   laptop. That is this ADR's second revisit trigger. The targets above are for this laptop's CPU;
+   a target for phones needs measurements on a phone, which this laptop cannot give. Until then the
+   laptop numbers only rank candidate builds.
+3. **The phone candidate is the all-ONNX build with fused attention** (GW-EFF-009's
+   `fused-attention`: v1's page CER and F1 on validation at 4,021 ms mean per page and 2,393.0 MiB
+   on this laptop; F35). It is a new version, not v1, and is evaluated as such in Phase 22. The
+   owner first chose option 2 with the ONNX detector and PyTorch recognizer in mind; that build
+   keeps a PyTorch recognizer, which phone runtimes do not run, so the all-ONNX build replaced it.
+   Fused attention combined with the INT8 recognizer was not measured in Phase 16 and may be
+   measured on validation before Phase 22 fixes its candidate.
+
+The Phase 17 re-run for v1 cites GW-EFF-007, 009 and 010 as its measurement against this ADR (same
+bundle, same tooling, 2026-11-17 and 18) instead of profiling again.
 
 ## Revisit if
 - The exported v0.1 misses the target by a wide margin and the trade-off needs an owner decision.

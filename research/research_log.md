@@ -413,3 +413,12 @@ the bottom. Experiments get their full record in `experiments.md`; this log is t
   PyTorch recognizer, at 2,579.1 ms per page, still over both page time targets but within the RAM
   target (GW-EFF-009, F38). Which backend is the default, and whether any variant ships, is the
   owner's call; Phase 16 changes no default.
+
+### 2026-11-18 — Phase 17 re-run: the shipped path is the evaluated model
+
+- After Phase 16 the owner kept PyTorch as v1's backend and named phones as the target hardware;
+  the all-ONNX build with fused attention becomes the phone candidate for Phase 22 (ADR-0011).
+- The v1 bundle read through the PyTorch backend, the way it ships, gives exactly the PyTorch v1
+  build's outputs: no difference in the maps, the logits, the line texts or page CER (GW-EFF-012).
+  With Phase 16's ONNX check (GW-EFF-006) the v1 export is declared successful.
+
