@@ -6,7 +6,9 @@ from __future__ import annotations
 import http.client
 import io
 import json
+import socket
 import threading
+import time
 from collections.abc import Iterator
 from contextlib import contextmanager
 from pathlib import Path
@@ -18,11 +20,14 @@ from det_fixtures import rect_polygon
 from test_pipeline import _page, tiny_detector, tiny_recognizer
 
 from glypharis import __version__
+from glypharis import server as server_module
 from glypharis.export.bundle import write_bundle
 from glypharis.pipeline import GlypharisOCR
 from glypharis.server import main, make_server
 
 pytest.importorskip("onnxruntime")
+
+LARGE_BODY = 8 * 1024 * 1024  # more than the socket buffers hold, so the client is still sending
 
 
 @pytest.fixture(scope="module")
@@ -69,6 +74,29 @@ def call(
     return resp.status, json.loads(resp.read().decode("utf-8"))
 
 
+class NoModel:
+    """For requests that must be refused before the model is reached."""
+
+    model_version = "none"
+
+    def predict(self, image: bytes) -> None:
+        raise AssertionError("a refused request reached the model")
+
+
+def connect(conn: http.client.HTTPConnection) -> socket.socket:
+    """A raw client socket to the same server, for what http.client cannot be made to do."""
+    return socket.create_connection(("127.0.0.1", conn.port), timeout=60)
+
+
+def read_answer(sock: socket.socket) -> tuple[int, dict[str, Any]]:
+    """Read to the end of the connection, as a client of a ``Connection: close`` answer does."""
+    data = b""
+    while chunk := sock.recv(1 << 16):
+        data += chunk
+    head, _, payload = data.partition(b"\r\n\r\n")
+    return int(head.split()[1]), json.loads(payload.decode("utf-8"))
+
+
 def test_health_reports_the_versions(ocr):
     with serving(ocr) as conn:
         status, body = call(conn, "GET", "/health")
@@ -108,6 +136,49 @@ def test_size_limits_are_413(bundle, page_png):
     with serving(small) as conn:
         status, body = call(conn, "POST", "/ocr", page_png)
     assert status == 413 and body["error"] == "image_too_large"
+
+
+@pytest.mark.parametrize(
+    ("request_line", "length_header", "status", "code"),
+    [
+        ("POST /ocr", f"Content-Length: {LARGE_BODY}", 413, "request_too_large"),
+        ("POST /ocr", "Transfer-Encoding: chunked", 411, "length_required"),
+        ("POST /elsewhere", f"Content-Length: {LARGE_BODY}", 404, "not_found"),
+        ("PUT /ocr", f"Content-Length: {LARGE_BODY}", 405, "method_not_allowed"),
+    ],
+)
+def test_a_refused_upload_still_receives_its_answer(request_line, length_header, status, code):
+    head = f"{request_line} HTTP/1.1\r\nHost: test\r\n{length_header}\r\n\r\n".encode("ascii")
+    with serving(NoModel(), max_bytes=10) as conn, connect(conn) as sock:
+        sock.sendall(head)  # apart from the body, as http.client sends them
+        sock.sendall(b"\0" * LARGE_BODY)
+        sock.shutdown(socket.SHUT_WR)
+        got_status, body = read_answer(sock)
+    assert got_status == status and body["error"] == code
+
+
+def test_the_answer_does_not_wait_for_the_body_and_a_stalled_client_is_dropped(monkeypatch):
+    monkeypatch.setattr(server_module, "DISCARD_SECONDS", 0.2)
+    with serving(NoModel(), max_bytes=10) as conn, connect(conn) as stalled:
+        stalled.sendall(b"POST /ocr HTTP/1.1\r\nHost: test\r\nContent-Length: 1000\r\n\r\n")
+        status, body = read_answer(stalled)  # nothing of the body was sent
+        assert status == 413 and body["error"] == "request_too_large"
+        start = time.monotonic()
+        assert call(conn, "GET", "/health")[0] == 200  # while this client still holds on
+        elapsed = time.monotonic() - start
+    assert elapsed < server_module.SOCKET_TIMEOUT / 3
+
+
+def test_discarding_stops_at_the_byte_limit(monkeypatch):
+    monkeypatch.setattr(server_module, "DISCARD_MAX_BYTES", 1024)
+    monkeypatch.setattr(server_module, "DISCARD_SECONDS", 60.0)
+    head = f"POST /ocr HTTP/1.1\r\nHost: test\r\nContent-Length: {1 << 30}\r\n\r\n".encode("ascii")
+    with serving(NoModel(), max_bytes=10) as conn, connect(conn) as sock:
+        sock.sendall(head + b"\0" * 2048)
+        start = time.monotonic()
+        assert call(conn, "GET", "/health")[0] == 200  # not held for DISCARD_SECONDS
+        elapsed = time.monotonic() - start
+    assert elapsed < 20
 
 
 def test_missing_length_unknown_paths_and_methods(ocr):

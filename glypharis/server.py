@@ -22,6 +22,11 @@ for a body that is not a readable image, 411 ``length_required`` without a Conte
 ``request_too_large`` for a body above ``--max-bytes`` and ``image_too_large`` for more pixels than
 ``--max-pixels``, 404 and 405 for unknown paths and methods, and 500 ``internal_error`` (logged
 with its traceback, never sent) for anything else.
+
+A request refused before its body was read gets its answer at once; the server then discards what
+the client is still sending, up to ``DISCARD_MAX_BYTES`` and ``DISCARD_SECONDS``, so that closing
+the connection does not destroy the answer. A client still sending past those limits may see the
+connection reset before it reads the answer.
 """
 
 from __future__ import annotations
@@ -29,7 +34,9 @@ from __future__ import annotations
 import argparse
 import json
 import logging
+import socket
 import sys
+import time
 from http.server import BaseHTTPRequestHandler, HTTPServer
 from typing import Any
 
@@ -38,6 +45,8 @@ from glypharis.errors import GlypharisError, ImageTooLargeError
 
 DEFAULT_MAX_BYTES = 25 * 1024 * 1024  # a 600 dpi A4 scan as PNG is about 10 MB
 SOCKET_TIMEOUT = 30.0  # seconds a client may stay silent mid-request
+DISCARD_MAX_BYTES = 64 * 1024 * 1024  # of a refused request's body, read and thrown away
+DISCARD_SECONDS = 5.0  # the longest a refused request may keep this one-at-a-time server busy
 log = logging.getLogger(__name__)
 
 
@@ -64,19 +73,32 @@ def make_handler(ocr: Any, max_bytes: int = DEFAULT_MAX_BYTES) -> type[BaseHTTPR
         def _error(self, status: int, code: str, message: str) -> None:
             self._send(status, {"error": code, "message": message})
 
-        def _drain(self) -> None:
-            # Read a refused request's body (up to the size limit) before answering: closing a
-            # socket with unread data can reset the connection before the client reads the answer
-            # (seen on Windows).
-            length = self.headers.get("Content-Length", "")
-            left = int(length) if length.strip().isdigit() else 0
-            if left > max_bytes:
-                return
-            while left > 0:
-                chunk = self.rfile.read(min(left, 1 << 16))
-                if not chunk:
-                    break
-                left -= len(chunk)
+        def _refuse(self, status: int, code: str, message: str) -> None:
+            """Answer a request whose body was not read, and close without losing the answer."""
+            self._error(status, code, message)
+            self._discard_body()
+
+        def _discard_body(self) -> None:
+            # Closing a socket with unread data resets the connection, and the reset can destroy
+            # an answer the client has not read yet (seen on Windows). So finish our side first and
+            # take what the client is still sending, within limits: this server has one thread.
+            if "Content-Length" not in self.headers and "Transfer-Encoding" not in self.headers:
+                return  # no body was announced
+            try:
+                left = min(int(self.headers["Content-Length"]), DISCARD_MAX_BYTES)
+            except (TypeError, ValueError):  # chunked or unreadable: until the client stops
+                left = DISCARD_MAX_BYTES
+            deadline = time.monotonic() + DISCARD_SECONDS
+            try:
+                self.connection.shutdown(socket.SHUT_WR)
+                while left > 0 and (remaining := deadline - time.monotonic()) > 0:
+                    self.connection.settimeout(remaining)
+                    chunk = self.rfile.read1(min(left, 1 << 16))
+                    if not chunk:
+                        break
+                    left -= len(chunk)
+            except OSError:  # timed out or the client went away: nothing more to do
+                pass
 
         def do_GET(self) -> None:
             if self.path == "/health":
@@ -89,22 +111,21 @@ def make_handler(ocr: Any, max_bytes: int = DEFAULT_MAX_BYTES) -> type[BaseHTTPR
                     },
                 )
             elif self.path == "/ocr":
-                self._error(405, "method_not_allowed", "POST the image file to /ocr")
+                self._refuse(405, "method_not_allowed", "POST the image file to /ocr")
             else:
-                self._error(404, "not_found", f"no endpoint {self.path}; use POST /ocr")
+                self._refuse(404, "not_found", f"no endpoint {self.path}; use POST /ocr")
 
         def do_POST(self) -> None:
             if self.path != "/ocr":
-                self._drain()
-                self._error(404, "not_found", f"no endpoint {self.path}; use POST /ocr")
+                self._refuse(404, "not_found", f"no endpoint {self.path}; use POST /ocr")
                 return
             length = self.headers.get("Content-Length")
             if length is None or not length.strip().isdigit():
-                self._error(411, "length_required", "send the image with a Content-Length header")
+                self._refuse(411, "length_required", "send the image with a Content-Length header")
                 return
             n = int(length)
             if n > max_bytes:
-                self._error(
+                self._refuse(
                     413, "request_too_large", f"the body has {n} bytes; the limit is {max_bytes}"
                 )
                 return
@@ -122,8 +143,7 @@ def make_handler(ocr: Any, max_bytes: int = DEFAULT_MAX_BYTES) -> type[BaseHTTPR
                 self._send(200, result.to_dict())
 
         def do_PUT(self) -> None:
-            self._drain()
-            self._error(405, "method_not_allowed", "POST the image file to /ocr")
+            self._refuse(405, "method_not_allowed", "POST the image file to /ocr")
 
         do_DELETE = do_PATCH = do_PUT
 
