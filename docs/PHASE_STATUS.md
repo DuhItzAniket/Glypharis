@@ -26,7 +26,7 @@ Phases run in the order set by [ADR-0008](decisions/ADR-0008-usable-engine-first
 | 16 | Efficiency optimisation | **COMPLETE** | `phase-16` |
 | 17 (v1) | Model export, v1 re-run | **COMPLETE** | `phase-17-v1` |
 | 18 (v1) | Inference package, v1 re-run | **COMPLETE** | `phase-18-v1` |
-| 20 (v1) | Production engineering, v1 re-run | **IN PROGRESS** (plan registered) | — |
+| 20 (v1) | Production engineering, v1 re-run | **IN PROGRESS** (gate: push, CI, merge) | — |
 | 17 | Model export | **COMPLETE** | `phase-17` |
 | 18 | Inference package | **COMPLETE** | `phase-18` |
 | 19 | Optional HTTP API | **COMPLETE** | `phase-19` |
@@ -1393,7 +1393,8 @@ GitHub made it; the re-created merge has the same tree).
 
 ## Phase 20 — Production engineering (v1 re-run)
 
-**Status:** IN PROGRESS. Opened 2026-11-18 on `phase/20-v1-rerun` after the Phase 18 re-run.
+**Status:** results written (2026-11-18). Gate open: push, pull request, CI and the owner's merge.
+Opened 2026-11-18 on `phase/20-v1-rerun` after the Phase 18 re-run.
 Validation and made-up inputs only; no test data is read and `research/test_access_log.md` gets no
 row. The v0.1 record above stays as it is (ADR-0008 item 3).
 
@@ -1450,6 +1451,64 @@ empty page, non-image); no unhandled exceptions in the fuzz-lite test.
 - The fuzz cases are seeded and few; most are refused before they reach the models.
 - `max_pixels` (64 million) is still not measured; this phase does not change it.
 - `glypharis_version` stays `0.1.0.dev0` beside `model_version` `glypharis_v1` until Phase 23.
+
+**Results (2026-11-18)** (GW-E2E-012; `reports/hardening/GW-E2E-012.json`, written by
+`scripts/hardening_check.py` at `958f24c`, clean tree, 2026-11-18T10:36:16Z to 10:38:01Z, 10 threads;
+no test data read). **Pass** on every check, for bundle `875357a6…` on both backends.
+
+| Inputs, per backend (the same on PyTorch and ONNX) | Inputs | Results | `GlypharisError` |
+|---|---|---|---|
+| Fuzz-lite: random arrays | 40 | 6 | 34 `invalid_image` |
+| Fuzz-lite: random bytes behind image suffixes | 40 | 0 | 40 `invalid_image` |
+| Fuzz-lite: damaged PNGs | 40 | 0 | 40 `invalid_image` |
+| The fuzz-lite inputs as bytes (arrays with a bytes form) | 93 | 13 | 80 `invalid_image` |
+| Unusual pages, and as bytes | 22 | 21 | 1 `invalid_image` (the empty page) |
+| Wrong types and values, and as bytes | 14 | 3 | 11 `invalid_image` |
+| Bad files, and as bytes | 10 | 0 | 10 `invalid_image` |
+| Over the pixel limit | 6 | 0 | 6 `image_too_large` |
+| The good page (path, bytes, PIL image, array) | 4 | 4 | 0 |
+| **All** | **269** | **47** | **222** |
+
+- *No other exception* on either backend. The three wrong inputs that give a result as bytes are
+  arrays that become ordinary images once encoded, as the amended plan says.
+- *Damaged bundles* (16 cases per backend, in temporary copies): each file or the manifest removed,
+  the bundle missing, one byte changed in each file, an unreadable manifest, a foreign format, and
+  each file replaced by junk with its hash re-written. All 32 ended as registered: `ModelLoadError`,
+  except junk in the two `.onnx` files on PyTorch, which never opens them, and which loads.
+- *The good page* gave 47 lines from its path, its bytes, a PIL image and an array, with the same
+  text from the path and the bytes.
+- *Cache, log, versions:* the same object with `cache`, a new one without; the load log line names
+  `glypharis_v1` and the backend; `version_info()` and `--version` agree (`glypharis` `0.1.0.dev0`).
+- *CLI* (from a folder outside the repository, PyTorch): a folder with the good page and a bad file
+  gives exit code 1, the bad file reported with `[invalid_image]`, and the good page's JSON written.
+- *HTTP API* (`POST /ocr`, each backend): 200 with 47 lines for the good page, 400 `invalid_image`
+  for the bad file.
+- The bundle's files matched its manifest afterwards.
+
+**Exit criteria check** (IMPLEMENTATION_PLAN Phase 20)
+
+| Criterion | Status | Evidence |
+|---|---|---|
+| Failure-path tests: corrupt image, huge image, empty page, non-image | pass | `tests/test_hardening.py`; on the v1 bundle GW-E2E-012 |
+| No unhandled exceptions in the fuzz-lite test | pass | `tests/test_hardening.py`; the same 120 cases on the v1 bundle, both backends, GW-E2E-012 |
+| CI green | pending (after the push) | — |
+
+**Tests:** the CPU suite passes in a clone without tags (1,230 passed, 4 skipped, at `958f24c`). The
+new tests run the check on a tiny bundle on both backends (a full pass, the report's structure, no
+local path in it) and cover its refusals (an existing output, another manifest hash, other v1
+code). `tests/test_hardening.py` now takes its cases from `scripts/hardening_cases.py`, unchanged.
+
+**Compute:** GW-E2E-012 ran by hand for under 2 minutes on the CPU, outside the queue logs, so the
+compute ledger does not count it.
+
+**Known issues**
+- An array with NaN values is refused, but the same values in a float image file are not: the file
+  is read as a blank page, with NumPy's "All-NaN slice" `RuntimeWarning` from `_pil_rgb` when every
+  value is NaN. No exception escapes; the code is frozen, so this stays as it is for v1.
+- `max_pixels` is still not measured, and the default model name still does not resolve to v1; the
+  name changes in the end-of-freeze commit.
+
+**Git:** branch `phase/20-v1-rerun`; push and merge pending.
 
 ---
 
