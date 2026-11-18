@@ -25,7 +25,7 @@ Phases run in the order set by [ADR-0008](decisions/ADR-0008-usable-engine-first
 | 15 | Error analysis | **COMPLETE** | `phase-15` |
 | 16 | Efficiency optimisation | **COMPLETE** | `phase-16` |
 | 17 (v1) | Model export, v1 re-run | **COMPLETE** | `phase-17-v1` |
-| 18 (v1) | Inference package, v1 re-run | **IN PROGRESS** (gate: push, CI, merge) | — |
+| 18 (v1) | Inference package, v1 re-run | **COMPLETE** | `phase-18-v1` |
 | 20 (v1) | Production engineering, v1 re-run | not started | — |
 | 17 | Model export | **COMPLETE** | `phase-17` |
 | 18 | Inference package | **COMPLETE** | `phase-18` |
@@ -1180,8 +1180,7 @@ run for that merge, which contains Phase 18, passed (40624323452).
 
 ## Phase 18 — Inference package (v1 re-run)
 
-**Status:** results written (2026-11-18). Gate open: push, pull request, CI and the owner's merge.
-Opened 2026-11-18 on `phase/18-v1-rerun`, branched from `main` after the Phase 17 re-run (merge
+**Status:** COMPLETE (2026-11-18). Opened 2026-11-18 on `phase/18-v1-rerun`, branched from `main` after the Phase 17 re-run (merge
 `e2cd8f6`). Validation data only; `research/test_access_log.md` gets no row.
 The v0.1 record above stays as it is (ADR-0008 item 3).
 
@@ -1263,7 +1262,7 @@ outputs match the pipeline on the validation sample (here the frozen v1 pipeline
 | API tests on fixtures | pass | `tests/test_api.py`, `tests/test_export.py`, `tests/test_server.py`, `tests/test_package_check.py` |
 | Clean-venv install test | pass | item 6 above; CI's fresh-environment install |
 | Outputs match the pipeline on the validation sample | pass (GW-E2E-011) | `reports/package/GW-E2E-011.json` |
-| CI green | pending (after the push) | — |
+| CI green | pass | runs 44273719841 (branch), 44273747616 (pull request), 44285968356 (`main`) |
 
 **Tests:** the CPU suite passes in a clone without tags (1,226 passed, 4 skipped, at `c5d7011`).
 A first run at the same commit had one failure that did not repeat; its name was not captured, and
@@ -1280,7 +1279,10 @@ compute ledger does not count it.
   changed in the end-of-freeze commit after the Phase 20 re-run).
 - The package version stays `0.1.0.dev0` until Phase 23.
 
-**Git:** branch `phase/18-v1-rerun`; push and merge pending.
+**Git:** branch `phase/18-v1-rerun`, merged through pull request #23. Merge commit `0dd8f19`, tag
+`phase-18-v1` (merge re-created with the noreply identity; same tree and parents).
+
+**CI status:** green on the branch, the pull request and `main` (run 44285968356).
 
 ---
 
