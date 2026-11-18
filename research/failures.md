@@ -212,3 +212,20 @@ disappointing experiment here, including bugs that invalidated a run.
 - **Lesson / implication for the paper:** none for the results. A record written for the machine
   and a record written for the repository are different things; a report should be built for the
   repository from the start, not cleaned afterwards.
+
+### 2026-11-19 — GW-EFF-015 — a code test reached the owner's phone before the registered run
+
+- **What we tried:** testing the `build` and `run` commands of `scripts/phase22_android.py` from a
+  throwaway repository, expecting `run` to stop with "no authorized device".
+- **What happened:** the owner had connected the Samsung M52 for the coming check while the test was
+  under way, so `run` went through: it installed the app, copied the fused recognizer and one
+  validation tensor to the phone, ran them and fetched the result. No test data or GDC-scan content
+  was involved. The session was created and the logits had the expected shape.
+- **Root cause:** the test relied on no phone being attached instead of faking the device.
+- **What we changed:** the app and its files were removed from the phone straight away, and the
+  run's files were kept out of the official record. The official run is made from the committed build.
+  Tests of this script use a fake `adb`.
+- **Lesson / implication for the paper:** the operator check's outcome was seen once before the official
+  run. Its pass rule is mechanical and was registered first, and nothing about the candidate was chosen
+  from this run.
+

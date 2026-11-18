@@ -93,13 +93,13 @@ account is recorded.
 
 | Condition | Samsung Galaxy M52 5G | Moto G35 5G |
 |---|---|---|
-| SoC | not read | not read |
-| RAM | not read | not read |
-| Android build | not read | not read |
-| ABI | not read | not read |
-| Listed by `adb devices` as authorized | not checked | not checked |
-| `onnxruntime-android` package and SHA-256 | not recorded | not recorded |
-| JDK, Gradle and Android Gradle Plugin versions | not recorded | not recorded |
+| SoC | Qualcomm SM7325 (platform `lahaina`) | not read |
+| RAM | 5,500,000 kB reported by `/proc/meminfo` | not read |
+| Android build | Android 13, SDK 33, `TP1A.220624.014.M526BXXS7CYD2` | not read |
+| ABI | `arm64-v8a` | not read |
+| Listed by `adb devices` as authorized | yes | not checked |
+| `onnxruntime-android` package and SHA-256 | 1.31.1, `d4d50660300ed2c4f38ffdfd5ab5bfa3a22f995f282dda24f42ea3ea55467b49` | same package |
+| JDK, Gradle and Android Gradle Plugin versions | Temurin 21.0.12.1, Gradle 8.14.7, plugin 8.13.2 (Kotlin 2.3.21) | same build |
 | Session options (sequential execution, all graph optimisations, CPU arena off, memory patterns off) | not set | not set |
 | Thread count, spinning setting | not set | not set |
 | Process rule (a new app process per arm and run, force-stopped between runs) | not confirmed | not confirmed |
@@ -110,6 +110,18 @@ account is recorded.
 | Each run's mean time | not run | not run |
 | Thermal state, start and end of each run | not run | not run |
 | Logits and greedy text against the laptop (separate pass) | not run | not run |
+
+The phone app uses the stock `onnxruntime-android` package, unchanged and checked by its SHA-256. The
+package's network permissions and its telemetry start-up provider are removed at manifest merge, and
+the app turns telemetry off, so the APK asks for no permissions. `scripts/phase22_android.py run`
+refuses an APK that asks for any.
+
+**Unplanned run before registration (2026-11-19).** While the check's code was being tested, a test run
+reached the M52, which had just been connected, although the tester expected no phone. It installed
+the app from a throwaway commit, ran the fused recognizer on the one validation tensor, and the app and
+its files were then removed. The session was created and the output had the expected shape. It is not
+the result of GW-EFF-015: the official run below is made from the committed build, and the pass rule was
+fixed before it and is not changed. See `research/failures.md`.
 
 ## 5. Closure checks
 

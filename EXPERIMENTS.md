@@ -250,7 +250,7 @@ Not attributed to one experiment: Phase 16 scoring, 0.00 CPU-hours over 2 jobs.
 | [GW-E2E-021](research/experiments.md#gw-e2e-021) | Phone candidate: the scoring pass and H11 | planned | — | — | — | — | — |
 | [GW-EFF-013](research/experiments.md#gw-eff-013) | Phone candidate selection: `fused`, `fused-int8`, `fused-single-line` | planned | — | — | — | — | — |
 | [GW-EFF-014](research/experiments.md#gw-eff-014) | Phone candidate bundle and its equivalence check | planned | — | — | — | — | — |
-| [GW-EFF-015](research/experiments.md#gw-eff-015) | Android operator check, then the phone measurement on named devices | planned | — | — | — | — | — |
+| [GW-EFF-015](research/experiments.md#gw-eff-015) | Android operator check, then the phone measurement on named devices | planned | — | — | — | — | failure note |
 
 ## Superseded results
 

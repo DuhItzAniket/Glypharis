@@ -1,0 +1,22 @@
+# Gradle, Kotlin and IDE state, and every build output
+.gradle/
+.kotlin/
+.idea/
+build/
+captures/
+local.properties
+
+# Packaged apps
+*.apk
+*.aab
+
+# Model and tensor files never enter the repository
+*.onnx
+*.ort
+*.gwt
+*.npy
+*.npz
+*.pt
+*.pth
+*.safetensors
+*.tflite
