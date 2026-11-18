@@ -93,11 +93,11 @@ account is recorded.
 
 | Condition | Samsung Galaxy M52 5G | Moto G35 5G |
 |---|---|---|
-| SoC | Qualcomm SM7325 (platform `lahaina`) | not read |
-| RAM | 5,500,000 kB reported by `/proc/meminfo` | not read |
-| Android build | Android 13, SDK 33, `TP1A.220624.014.M526BXXS7CYD2` | not read |
-| ABI | `arm64-v8a` | not read |
-| Listed by `adb devices` as authorized | yes | not checked |
+| SoC | Qualcomm SM7325 (platform `lahaina`) | Spreadtrum UMS9620 (platform `ums9620`) |
+| RAM | 5,500,000 kB reported by `/proc/meminfo` | 3,464,688 kB reported by `/proc/meminfo` |
+| Android build | Android 13, SDK 33, `TP1A.220624.014.M526BXXS7CYD2` | Android 15, SDK 35, `VUOAS35.116-151-3` |
+| ABI | `arm64-v8a` | `arm64-v8a` |
+| Listed by `adb devices` as authorized | yes | yes, with no extra driver |
 | `onnxruntime-android` package and SHA-256 | 1.31.1, `d4d50660300ed2c4f38ffdfd5ab5bfa3a22f995f282dda24f42ea3ea55467b49` | same package |
 | JDK, Gradle and Android Gradle Plugin versions | Temurin 21.0.12.1, Gradle 8.14.7, plugin 8.13.2 (Kotlin 2.3.21) | same build |
 | Session options (sequential execution, all graph optimisations, CPU arena off, memory patterns off) | not set | not set |
