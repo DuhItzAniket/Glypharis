@@ -31,7 +31,7 @@ Phases run in the order set by [ADR-0008](decisions/ADR-0008-usable-engine-first
 | 18 | Inference package | **COMPLETE** | `phase-18` |
 | 19 | Optional HTTP API | **COMPLETE** | `phase-19` |
 | 20 | Production engineering | **COMPLETE** | `phase-20`, `v0.1` |
-| 21 | Research package | **IN PROGRESS** (plan registered) | — |
+| 21 | Research package | **IN PROGRESS** (gate: push, CI, merge) | — |
 | 22 | Final validation | not started | — |
 | 23 | Release v1.0 | not started | — |
 
@@ -3363,7 +3363,8 @@ CI is checked on the PR.
 
 ## Phase 21 — Research package
 
-**Status:** IN PROGRESS (plan registered 2026-11-18, before any Phase 21 deliverable). Opened
+**Status:** results written (2026-11-18). Gate open: push, pull request, CI and the owner's merge.
+The plan was registered before any Phase 21 deliverable. Opened
 2026-11-18 on `phase/21-research-package`, branched from `main` after the end of the v1 code freeze
 (merge `6caf327`). It reads recorded reports only: no training, evaluation or test data, and no
 GPU. Line numbers below are for `034b867`.
@@ -3705,3 +3706,60 @@ release. Neither is a legal conclusion.
 
 **Exit criteria** (IMPLEMENTATION_PLAN Phase 21): every number in the paper notes traces to an
 experiment ID and a report file.
+
+**Results (2026-11-18)** (recorded evidence only: no model was run, no test data was read, and
+`research/test_access_log.md` has no new row)
+
+- *The package:* `MODEL_CARD.md`, a corrected `DATASETS.md`, the generated `EXPERIMENTS.md` and
+  `reports/experiment_summary.*`, the generated comparison table
+  (`reports/benchmark_results/comparison_table.*`), the paper notes in `research/paper/`, a
+  bibliography of 44 entries with its review log (`research/paper/trace/references_review.md`), and
+  ADR-0014.
+- *The exit criterion:* all 5,128 numbers in the 12 traced documents resolve to an experiment ID and
+  a report or recorded source (`reports/paper_trace/trace.md`, written by
+  `scripts/trace_numbers.py`). Dataset counts trace to tracked manifests, and authors' published
+  figures in `DATASETS.md` are marked as such.
+- *How far the check can be trusted:* two seeded audits (seed 20261118) change numbers and count the
+  changes that still pass. The highest rates are 1.8% for changed digits (`methodology.md`) and 1.0%
+  for values taken from another row of the same source (`efficiency.md`); the target is at most 5%
+  per document. A passing trace shows that a number is in the cited place. It does not show that the
+  sentence interprets it correctly, which is why the claims were reviewed separately.
+- *Reviews:* six independent reviews (tools, a seeded sample of 350 numbers checked by hand against
+  their reports, claims, licences and privacy, completeness, a fresh reader) raised 54 issues. The
+  sample found no wrong value, though several numbers were tied to the wrong row or experiment. All
+  54 are closed. The first checker passed a correct interval taken from the wrong row and an interval
+  with its minus signs removed; it was rebuilt to refuse both. The abstract and conclusion had left
+  out Tesseract 5, the closest baseline for GDC order-aware page CER, where no difference can be
+  stated; they now give it.
+- *Findings revised:* F22 overstated one comparison (PP-OCRv5 mobile's bag-of-lines interval on GDC
+  excludes zero) and F35 claimed a difference no interval supports.
+- *Privacy (item 13):* the search of this phase's changes for the strings that would identify
+  GDC-scan's author found none. The search terms are kept local.
+
+**Exit criteria check** (IMPLEMENTATION_PLAN Phase 21)
+
+| Criterion | Status | Evidence |
+|---|---|---|
+| `MODEL_CARD.md`, `DATASETS.md`, `EXPERIMENTS.md` (generated) finalised | pass | the files; `scripts/experiment_summary.py --check` |
+| `research/paper/*` finalised from recorded evidence | pass | `research/paper/`, `reports/paper_trace/trace.md` |
+| `references.bib` complete | pass, with three fields on secondary records | `research/paper/trace/references_review.md`, `tests/test_references.py` |
+| Every number in the paper notes traces to an experiment ID and a report file | pass | `scripts/trace_numbers.py --check`, in CI |
+| CI green | pending (after the push) | — |
+
+**Tests:** the CPU suite passes in a clone without tags (2,072 passed, 5 skipped, at `955c7a9`), with
+the three generated-file checks and `scripts/validate_configs.py`.
+
+**Compute:** none beyond tests and report parsing; no GPU.
+
+**Known issues**
+- `data/sources.yaml` and the manifests made from it keep two old licence wordings (item 2's note).
+  Older generated reports keep "HierText annotations CC BY-SA 4.0" and Hefferon as plain CC BY-SA
+  3.0; they are not edited, and `DATASETS.md` has the current statements.
+- Some licence pages could not be opened on 2026-11-18; `DATASETS.md` lists them. Attribution for
+  Open Images is at dataset level, not per image.
+- Three bibliography fields rest on secondary records and need a check in a browser.
+- The older, longer description of GDC-scan stays in the public git history. It contains none of the
+  searched identifying strings. Rewriting history is the owner's decision.
+- Nothing here has been validated from a clean machine, and no phone has been measured (Phase 22).
+
+**Git:** branch `phase/21-research-package`; push and merge pending.
