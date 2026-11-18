@@ -24,8 +24,8 @@ Phases run in the order set by [ADR-0008](decisions/ADR-0008-usable-engine-first
 | 14 | External evaluation | **COMPLETE** | `phase-14` |
 | 15 | Error analysis | **COMPLETE** | `phase-15` |
 | 16 | Efficiency optimisation | **COMPLETE** | `phase-16` |
-| 17 (v1) | Model export, v1 re-run | **IN PROGRESS** (gate: push, CI, merge) | — |
-| 18 (v1) | Inference package, v1 re-run | not started | — |
+| 17 (v1) | Model export, v1 re-run | **COMPLETE** | `phase-17-v1` |
+| 18 (v1) | Inference package, v1 re-run | **IN PROGRESS** (gate: push, CI, merge) | — |
 | 20 (v1) | Production engineering, v1 re-run | not started | — |
 | 17 | Model export | **COMPLETE** | `phase-17` |
 | 18 | Inference package | **COMPLETE** | `phase-18` |
@@ -1007,8 +1007,7 @@ GitHub made it; the re-created merge has the same tree).
 
 ## Phase 17 — Model export (v1 re-run)
 
-**Status:** results written (2026-11-18). Gate open: push, pull request, CI and the owner's merge.
-Opened 2026-11-18 on `phase/17-v1-rerun`, branched from `main` after Phase 16 (merge `0af7fc4`). Validation data only; `research/test_access_log.md` gets no row. The
+**Status:** COMPLETE (2026-11-18). Opened 2026-11-18 on `phase/17-v1-rerun`, branched from `main` after Phase 16 (merge `0af7fc4`). Validation data only; `research/test_access_log.md` gets no row. The
 v0.1 record above stays as it is (ADR-0008 item 3: Phases 17, 18 and 20 are re-run on the final
 model with the already-tested tooling and a new completion record).
 
@@ -1101,7 +1100,7 @@ by `scripts/phase17_v1_check.py` at `8c70747`, clean tree; validation only, no t
 |---|---|---|
 | Export declared successful only after the equivalence tests pass and are recorded | pass | GW-EFF-006, GW-EFF-012 (above) |
 | CI runs ONNX equivalence on the tiny model | pass | `tests/test_export.py`; the tiny SVTR tests in `tests/test_phase16_reference.py` |
-| CI green | pending (after the push) | — |
+| CI green | pass | runs 44263370636 (branch), 44263400419 (pull request), 44267047137 (`main`) |
 
 **Tests:** the CPU suite passes in a clone without tags (1,218 passed, 4 skipped, at `8c70747`);
 the new tests cover the check on tiny models: a pass with no difference on the same model, and
@@ -1117,7 +1116,10 @@ compute ledger does not count it.
 - `from_pretrained`'s default name is still `glypharis-0.1.0`, which does not resolve to the v1
   bundle; v1 is loaded by path. Changed in the same end-of-freeze commit.
 
-**Git:** branch `phase/17-v1-rerun`; push and merge pending.
+**Git:** branch `phase/17-v1-rerun`, merged through pull request #22. Merge commit `e2cd8f6`, tag
+`phase-17-v1` (merge re-created with the noreply identity; same tree and parents).
+
+**CI status:** green on the branch, the pull request and `main` (run 44267047137).
 
 ## Phase 18 — Inference package
 
@@ -1173,6 +1175,112 @@ and parents).
 **CI status:** green on the branch (run 40623224823) and the pull request (run 40623231007). On
 `main`, the run for this merge (40624284890) was cancelled when Phase 20 merged a minute later; the
 run for that merge, which contains Phase 18, passed (40624323452).
+
+---
+
+## Phase 18 — Inference package (v1 re-run)
+
+**Status:** results written (2026-11-18). Gate open: push, pull request, CI and the owner's merge.
+Opened 2026-11-18 on `phase/18-v1-rerun`, branched from `main` after the Phase 17 re-run (merge
+`e2cd8f6`). Validation data only; `research/test_access_log.md` gets no row.
+The v0.1 record above stays as it is (ADR-0008 item 3).
+
+**Objective:** the installed package, loading the v1 bundle the way it ships (PyTorch backend),
+reads the validation pages like the frozen v1 pipeline Phase 14 evaluated, and installs and runs
+in a clean environment.
+
+**Plan** (registered 2026-11-18, before any Phase 18 re-run measurement; the owner's decisions of
+2026-11-18 are in the Phase 17 re-run record: PyTorch only, and the clean-venv download approved)
+
+1. **Preflight.** `assert_v1_code`; the bundle's manifest SHA-256 is `875357a6…` (GW-EFF-006,
+   declared successful in the Phase 17 re-run); the reference predictions,
+   `data/processed/phase14/GW-E2E-006/hiertext_val.jsonl`, have SHA-256 `c8520576…`, the value in
+   `data/manifests/processed/phase14_outputs.json`.
+2. **Tooling.** `scripts/package_check.py` gains `--experiment`, `--v1` (the v1 code check and
+   the bundle against the freeze record), `--expect-manifest-sha256`, `--reference-sha256`,
+   `--threads`, a refusal to overwrite its output, and provenance in the report (git state, the
+   bundle and reference hashes, versions, times); tests on a tiny bundle. The comparison itself is
+   unchanged: the 400 Phase 5 pages, strict bag-of-lines page CER, the 0.05-point tolerance and
+   the 1 px box agreement.
+3. **GW-E2E-011, the package against the frozen v1 pipeline:** `GlypharisOCR.from_pretrained` on
+   the v1 bundle with the PyTorch backend, on the CPU, over the 400 Phase 5 validation pages,
+   compared with GW-E2E-006's predictions on those pages (the frozen pipeline on the GPU in strict
+   fp32, Phase 14's validation reference). Passes when the page CER differs by at most 0.05
+   points; the share of lines with identical text and box (corners within 1 px) is reported. As at
+   v0.1 (GW-E2E-004 against GW-E2E-001), the reference ran on the GPU and the package runs on the
+   CPU. About 30 minutes.
+4. **API tests:** `tests/test_api.py`, `tests/test_export.py`, `tests/test_server.py` and the full
+   suite, in a clone without tags.
+5. **Smoke on the real bundle** (a check, not a result; no numbers in the docs): `infer.py
+   --image` and `--input-dir` on two validation pages write their JSON and text files;
+   `model_version` is `glypharis_v1`; a path, a PIL image, an array and `predict_batch` give the
+   same lines.
+6. **Clean-venv install:** a new virtual environment outside the repository; CPU `torch` 2.14.1 and
+   `torchvision` 0.29.1 from the PyTorch CPU index, then `requirements/lock.txt`, then the package
+   from this branch (`pip install <worktree> --no-deps`, not editable). From a folder outside the
+   repository: `glypharis-ocr --version`, and one validation page read with the v1 bundle given by
+   its path. The environment is deleted afterwards. CI's install into a fresh environment on every
+   run is cited beside it.
+7. **Packaging:** `pyproject.toml` stays at `0.1.0.dev0`; the version for v1.0 is Phase 23's.
+8. **Records:** GW-E2E-011's entry; the completion record beside the v0.1 one.
+
+**Exit criteria** (IMPLEMENTATION_PLAN Phase 18): API tests on fixtures; clean-venv install test;
+outputs match the pipeline on the validation sample (here the frozen v1 pipeline, GW-E2E-006).
+
+**Known limitations, stated in advance**
+- `from_pretrained`'s default name `glypharis-0.1.0` does not resolve to the v1 bundle; v1 is
+  loaded by path until the end-of-freeze commit after the Phase 20 re-run.
+- The PyTorch backend only (owner decision); the ONNX files' equivalence is GW-EFF-006's.
+- Model bundles are still not distributed; `from_pretrained` finds one only where it is placed.
+
+**Results (2026-11-18)** (GW-E2E-011; validation only, no test data read)
+
+- *Preflight* (item 1): `assert_v1_code` passed; the bundle's manifest SHA-256 was `875357a6…` and
+  the reference predictions' `c8520576…`, both checked by the script before anything loaded.
+- *Tooling* (item 2): `scripts/package_check.py` at `c5d7011`, with its first tests
+  (`tests/test_package_check.py`); the comparison is unchanged.
+- *GW-E2E-011* (item 3; `reports/package/GW-E2E-011.json`, 2026-11-18T08:33:54Z to 08:52:03Z,
+  PyTorch backend, 10 torch threads, clean tree): **pass**. The package reads the 400 Phase 5
+  validation pages with 24.32% page CER, as the frozen pipeline did in Phase 14 (GW-E2E-006),
+  difference 0.0 points (limit 0.05), and 16,835 of 16,835 lines have identical text and box
+  (corners within 1 px), though the reference ran on the GPU in strict fp32 and the package on the
+  CPU. The report names the reference by its file name and SHA-256 only.
+- *Smoke on the real bundle* (item 5; a check, no numbers): `infer.py --input-dir` over two
+  validation pages wrote a JSON and a text file for each; `model_version` was `glypharis_v1`; a
+  path, a PIL image, an array, the image's bytes and `predict_batch` gave identical lines.
+- *Clean-venv install* (item 6, 2026-11-18): a new environment outside the repository with CPU
+  `torch` 2.14.1, `torchvision` 0.29.1 and `requirements/lock.txt`, then the package from
+  `c5d7011` (not editable). From a folder outside the repository the installed
+  `glypharis-ocr --version` printed its versions, and `glypharis-ocr --image` read a validation
+  page with the v1 bundle given by its path and wrote its JSON and text; the package was imported
+  from the new environment. The environment was then deleted. CI installs the package into a fresh
+  environment on every run as well.
+
+**Exit criteria check** (IMPLEMENTATION_PLAN Phase 18)
+
+| Criterion | Status | Evidence |
+|---|---|---|
+| API tests on fixtures | pass | `tests/test_api.py`, `tests/test_export.py`, `tests/test_server.py`, `tests/test_package_check.py` |
+| Clean-venv install test | pass | item 6 above; CI's fresh-environment install |
+| Outputs match the pipeline on the validation sample | pass (GW-E2E-011) | `reports/package/GW-E2E-011.json` |
+| CI green | pending (after the push) | — |
+
+**Tests:** the CPU suite passes in a clone without tags (1,226 passed, 4 skipped, at `c5d7011`).
+A first run at the same commit had one failure that did not repeat; its name was not captured, and
+the tests of this phase's code passed on their own in between, so which test it was is not known.
+The new tests cover the package check on a tiny bundle: a pass with every provenance field, a
+bundle by name, the refusals (existing output, wrong hashes, `--v1` with other code or a bundle
+unlike the record) and references that fail.
+
+**Compute:** GW-E2E-011 ran by hand for 18 minutes on the CPU, outside the queue logs, so the
+compute ledger does not count it.
+
+**Known issues**
+- `from_pretrained`'s default name `glypharis-0.1.0` still does not resolve to v1 (frozen code;
+  changed in the end-of-freeze commit after the Phase 20 re-run).
+- The package version stays `0.1.0.dev0` until Phase 23.
+
+**Git:** branch `phase/18-v1-rerun`; push and merge pending.
 
 ---
 
