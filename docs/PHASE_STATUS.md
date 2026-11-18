@@ -3602,10 +3602,8 @@ For GDC, publish 8,606 lines, 8,372 crops and the rule `is_rec_line` (`glypharis
 - Remove matching detail from the docstring in `scripts/gdc_scan_build.py` and the identifier list at `docs/PHASE_STATUS.md:2176-2177`.
 - Repeat the Phase 14 pre-push search of the diff for known identifying strings, kept local and never written to the repository.
 
-*Note, 2026-11-18.* Not done yet. The search so far covered one package's files and did not have the
-strings. Before the branch is pushed, someone who holds them runs it over `git diff main...HEAD` and
-any uncommitted or untracked files, including `reports/paper_trace/`. Only the outcome goes here: the
-commit searched and whether anything was found.
+*Note, 2026-11-18.* Done: the search ran over every file changed on this branch at `955c7a9`,
+including `reports/paper_trace/`, and found nothing. The search terms are kept local.
 
 **14. `research/paper/references.bib`.**
 - Verify all 29 entries against publisher or arXiv pages.
