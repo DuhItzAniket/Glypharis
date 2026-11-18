@@ -262,6 +262,92 @@ arm's `best.pt` at its stored operating point. The arg-max over operating points
 validation set is reported for information only and is never used for H9 or H10. Both differences are
 also reported with each arm at each common fixed operating point, for transparency.
 
+### H11 — The phone candidate is non-inferior to v1 (RQ7)
+
+Written 2026-11-18, before the candidate was selected and before any candidate build read a test
+set. Known when written: v1's Phase 14 results on every test set (GW-REC-039, GW-E2E-007,
+GW-E2E-009), and the fused-attention build's validation results on this laptop (GW-EFF-009).
+
+- **Statement:** on the strict track, the candidate that leaves the selection rule below is
+  non-inferior to v1 in line CER, bag-of-lines page CER and E2E F1, on both HierText test and GDC.
+- **Files:** the candidate's are GW-REC-045 (crops) and GW-E2E-020 (pages). v1's are the Phase 14
+  files GW-REC-039 and GW-E2E-007, checked against `phase14_outputs.json` first. The v1 re-run is not
+  used. Both sides cover the same crops or pages in the scorer's key order, and scoring stops if
+  their references differ (as `compare_rec` and `_same_ref` in `scripts/phase14_score.py` do). The
+  candidate reads its crops under the batching rule its bundle ships (selection rule, below).
+- **Margin:** `m = 0.0005` as a fraction (0.05 points). `m = 0.005` (0.5 points) only if the selected
+  candidate is `fused-int8`. On GDC, one end-to-end true positive is about 0.0115 points (about 17,400
+  predicted and reference lines, GW-E2E-007), so `m = 0.0005` is about four lines there, and a net loss
+  of two lines is expected to give `not shown` (checked on made-up pages of that size, before any
+  candidate result).
+- **Per-unit values,** strict track, subscript `c` for the candidate and `v` for v1:
+  - crops, from `rec_units`: `keep = den > 0`, `e = err[keep]`, `n = den[keep]`;
+  - pages, from `page_units`, one value per page of `PageResult`: `b = bag_errors`,
+    `r = bag_ref_chars`, `tp = e2e_tp`, `d = e2e_pred + e2e_gt`.
+- **The six tests,** each with the defaults of `glypharis.eval.stats` (1,000 resamples, seed
+  20261010, 95% percentile interval), the same resampled units for both systems:
+
+  | Metric | Sets | Interval | Verdict |
+  |---|---|---|---|
+  | Line CER | HierText test; GDC | `paired_ratio_diff_ci(e_c - m * n, e_v, n, "lines")` | `verdict(iv, "below")` |
+  | Bag-of-lines page CER | HierText test; GDC | `paired_ratio_diff_ci(b_c - m * r, b_v, r, "pages")` | `verdict(iv, "below")` |
+  | E2E F1 | HierText test; GDC | `paired_ratios_diff_ci(2 * tp_c + m * d_c, d_c, 2 * tp_v, d_v, "pages")` | `verdict(iv, "above")` |
+
+- **GDC document check.** GDC's 106 pages come from 21 source documents, so captures of one document
+  are not independent. As for H1′ and H5′, each of the three GDC tests is also run with source documents
+  as the unit, and its verdict is `combined([unit verdict, document verdict])` (`scripts/phase14_score.py`:
+  the verdict if the two agree, otherwise `not shown`). The count of tests stays six. `g` is the source
+  document of each kept unit: `gdc_sources()[pages[k].image]` for a page,
+  `gdc_sources()[pages[crops[k].doc_id].image]` for a kept crop.
+  - Line CER: `cluster_paired_ratio_diff_ci(e_c - m * n, e_v, n, g, "documents")`, below 0.
+  - Bag-of-lines page CER: `cluster_paired_ratio_diff_ci(b_c - m * r, b_v, r, g, "documents")`, below 0.
+  - E2E F1: sum `2 * tp_c + m * d_c`, `d_c`, `2 * tp_v` and `d_v` per document, in one document order,
+    then `paired_ratios_diff_ci` on the four sums with unit `"documents"`, above 0.
+- **Rule:** each test is met, not met or not shown, as `verdict` words them (on GDC, as `combined`
+  gives them). H11 holds only if all six are met. It is not met if any test is not met, and otherwise
+  not shown. In both of those cases the candidate is not shown non-inferior. All six are required, so
+  no multiplicity correction is applied. Every other set and metric is descriptive. T stays 2.35. A
+  fix after a result would be another new version, outside Phase 22.
+- **Validation gate, before any test set is opened:** the same three formulas on HierText validation,
+  GW-REC-044 against GW-REC-038 (`"lines"`) and GW-E2E-019 against GW-E2E-006 (`"pages"`), unit
+  intervals only. All three must be met, or no test set is opened.
+- **Test:** Phase 22 (verdict in GW-E2E-021).
+- **Status:** registered 2026-11-18; not tested.
+
+**Selection rule for the arms (GW-EFF-013), fixed with H11.** The arms are `fused` (GW-EFF-009's
+`fused-attention`, the default), `fused-int8` and `fused-single-line`. Exactly one leaves as the
+candidate. The result stays `fused` unless another arm `a` meets all of the following:
+
+- **Accuracy,** on the laptop, strict track, against `fused` (subscript `f`), with `s = 0.005` for
+  `fused-int8` and `s = 0.0005` for `fused-single-line`, each verdict `met`:
+  - the 5,000 seeded validation lines: `paired_ratio_diff_ci(e_a - s * n, e_f, n, "lines")`, below 0;
+  - the 400 Phase 5 validation pages: `paired_ratio_diff_ci(b_a - s * r, b_f, r, "pages")`, below 0;
+  - the same pages: `paired_ratios_diff_ci(2 * tp_a + s * d_a, d_a, 2 * tp_f, d_f, "pages")`, above 0.
+
+  Each arm reads the 5,000 lines under the batching rule its bundle would ship: `fused` and `fused-int8`
+  through the recognizer's width-sorted batches with 256 crops per call, `fused-single-line` one line
+  per recognizer run. GW-REC-044 and GW-REC-045 follow the same rule for the selected arm.
+- **Speed,** on the Samsung Galaxy M52 5G: 10 warm-up and 100 timed Phase 5 profile pages, one sitting,
+  arms in order and then reversed, so each arm runs twice. `t` is a page's network time, the mean of its
+  two runs. `verdict(mean_ci(t_a - 0.9 * t_f, "pages"), "below")` is `met`. The same verdict must also
+  be `met` on each half alone: `mean_ci(t_a1 - 0.9 * t_f1, "pages")` on each arm's first run and
+  `mean_ci(t_a2 - 0.9 * t_f2, "pages")` on each arm's second run, because mirrored order cancels only
+  steady drift and a phone can throttle late.
+- **Memory,** in the same sitting: the arm's peak `VmHWM`, the larger of its two runs, is not above
+  `fused`'s.
+- **How the phone runs are made.** Each arm and run is a new app process, force-stopped between runs,
+  because `VmHWM` never falls within a process. A timing run loads one input tensor at a time, times only
+  `session.run`, reads `VmHWM` immediately after the last timed item and holds no reference logits. The
+  logit and greedy-text check is a separate pass in its own process and gives no time or memory figure.
+
+An arm that fails accuracy is not taken to the phone. An arm that does not load on the phone, or fails
+the phone's logit and text check, is out. If `fused` itself fails that check, GW-EFF-015 part b is
+recorded as failed, no other arm can be selected, `fused` stays the candidate for the laptop evaluation
+and the phone gap stays open. If the M52 cannot be used the Moto G35 5G takes its place, and
+if neither can be used the speed and memory conditions are judged on the laptop in the same way
+(per-page time and peak working set, Phase 16 conditions); either change is recorded. If two arms
+qualify, the one with the larger `mean(t_f - t_a)` is taken.
+
 ---
 
 The numeric thresholds above are planning thresholds set before any data was seen. They may be refined

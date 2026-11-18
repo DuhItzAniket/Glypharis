@@ -9,12 +9,12 @@ Each ID links to its full entry. Key results are copied from the registry. The g
 | Prefix | Registered | done | failed | abandoned | not run | planned | running |
 |---|---|---|---|---|---|---|---|
 | GW-BASE | 7 | 7 | 0 | 0 | 0 | 0 | 0 |
-| GW-REC | 41 | 37 | 1 | 1 | 2 | 0 | 0 |
+| GW-REC | 45 | 37 | 1 | 1 | 2 | 4 | 0 |
 | GW-DET | 7 | 7 | 0 | 0 | 0 | 0 | 0 |
-| GW-E2E | 12 | 12 | 0 | 0 | 0 | 0 | 0 |
+| GW-E2E | 21 | 12 | 0 | 0 | 0 | 9 | 0 |
 | GW-DATA | 22 | 22 | 0 | 0 | 0 | 0 | 0 |
-| GW-EFF | 12 | 12 | 0 | 0 | 0 | 0 | 0 |
-| all | 101 | 97 | 1 | 1 | 2 | 0 | 0 |
+| GW-EFF | 15 | 12 | 0 | 0 | 0 | 3 | 0 |
+| all | 117 | 97 | 1 | 1 | 2 | 16 | 0 |
 
 ## Scope
 
@@ -32,9 +32,9 @@ The queue logs in [`reports/compute/ledger.md`](reports/compute/ledger.md) hold 
 
 Not attributed to one experiment: Phase 16 scoring, 0.00 CPU-hours over 2 jobs.
 
-28 registered experiments have no ledger row:
+44 registered experiments have no ledger row:
 
-- Abandoned or not run (3): GW-REC-023, GW-REC-032, GW-REC-033
+- Abandoned or not run (19): GW-REC-023, GW-REC-032, GW-REC-033, GW-REC-042, GW-REC-043, GW-REC-044, GW-REC-045, GW-E2E-013, GW-E2E-014, GW-E2E-015, GW-E2E-016, GW-E2E-017, GW-E2E-018, GW-E2E-019, GW-E2E-020, GW-E2E-021, GW-EFF-013, GW-EFF-014, GW-EFF-015
 - In phases the ledger says it does not count (9, 10, 14, 15) (18): GW-REC-038, GW-REC-039, GW-REC-040, GW-REC-041, GW-DET-004, GW-DET-005, GW-DET-006, GW-E2E-001, GW-E2E-002, GW-E2E-003, GW-E2E-006, GW-E2E-007, GW-E2E-008, GW-E2E-009, GW-E2E-010, GW-EFF-001, GW-EFF-002, GW-EFF-005
 - Ran, with no ledger row; its note names neither them nor their phase (7): GW-E2E-004, GW-E2E-005, GW-E2E-011, GW-E2E-012, GW-EFF-003, GW-EFF-004, GW-EFF-012
 
@@ -230,6 +230,27 @@ Not attributed to one experiment: Phase 16 scoring, 0.00 CPU-hours over 2 jobs.
 | ID | Question | Status | Key result | Reports | GPU-h | CPU-h | Flags |
 |---|---|---|---|---|---|---|---|
 | [GW-E2E-012](research/experiments.md#gw-e2e-012) | Failure paths, fuzz-lite and damaged bundles on the v1 bundle, both backends | done | pass on both backends: 269 inputs each, 47 results and 222 typed errors, no other exception; all 32 damaged-bundle cases as registered | [`reports/hardening/`](reports/hardening/) | — | — | — |
+
+## Phase 22
+
+| ID | Question | Status | Key result | Reports | GPU-h | CPU-h | Flags |
+|---|---|---|---|---|---|---|---|
+| [GW-REC-042](research/experiments.md#gw-rec-042) | v1 re-run rehearsal on HierText validation crops | planned | — | — | — | — | — |
+| [GW-REC-043](research/experiments.md#gw-rec-043) | v1 re-run on the test crops | planned | — | — | — | — | — |
+| [GW-REC-044](research/experiments.md#gw-rec-044) | Phone candidate: validation gate on crops, against GW-REC-038 | planned | — | — | — | — | — |
+| [GW-REC-045](research/experiments.md#gw-rec-045) | Phone candidate on the test crops | planned | — | — | — | — | — |
+| [GW-E2E-013](research/experiments.md#gw-e2e-013) | Clean-machine-style walkthrough: the installed package on the v1 bundle against GW-E2E-006 | planned | — | — | — | — | — |
+| [GW-E2E-014](research/experiments.md#gw-e2e-014) | v1 re-run rehearsal on HierText validation pages | planned | — | — | — | — | — |
+| [GW-E2E-015](research/experiments.md#gw-e2e-015) | Pass A: re-score the saved Phase 14 files with the unchanged scorer | planned | — | — | — | — | — |
+| [GW-E2E-016](research/experiments.md#gw-e2e-016) | v1 re-run on the test pages | planned | — | — | — | — | — |
+| [GW-E2E-017](research/experiments.md#gw-e2e-017) | v1 re-run of the oracle on GDC and GDC-scan | planned | — | — | — | — | — |
+| [GW-E2E-018](research/experiments.md#gw-e2e-018) | Pass B: score the v1 re-run; the 0.05-point tolerance verdict | planned | — | — | — | — | — |
+| [GW-E2E-019](research/experiments.md#gw-e2e-019) | Phone candidate: validation gate on pages, against GW-E2E-006 | planned | — | — | — | — | — |
+| [GW-E2E-020](research/experiments.md#gw-e2e-020) | Phone candidate on the test pages | planned | — | — | — | — | — |
+| [GW-E2E-021](research/experiments.md#gw-e2e-021) | Phone candidate: the scoring pass and H11 | planned | — | — | — | — | — |
+| [GW-EFF-013](research/experiments.md#gw-eff-013) | Phone candidate selection: `fused`, `fused-int8`, `fused-single-line` | planned | — | — | — | — | — |
+| [GW-EFF-014](research/experiments.md#gw-eff-014) | Phone candidate bundle and its equivalence check | planned | — | — | — | — | — |
+| [GW-EFF-015](research/experiments.md#gw-eff-015) | Android operator check, then the phone measurement on named devices | planned | — | — | — | — | — |
 
 ## Superseded results
 

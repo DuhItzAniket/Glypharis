@@ -130,6 +130,21 @@ After the Phase 16 measurement the owner decided:
 The Phase 17 re-run for v1 cites GW-EFF-007, 009 and 010 as its measurement against this ADR (same
 bundle, same tooling, 2026-11-17 and 18) instead of profiling again.
 
+**Note (2026-11-18, Phase 22 registration):** the Phase 22 plan ([PHASE_STATUS](../PHASE_STATUS.md),
+Phase 22) turns the decision above into registered work; nothing in it has run. The targets of this
+ADR do not change, and no phone target is set yet.
+- The phones are a Samsung Galaxy M52 5G, then a Moto G35 5G. Each device's SoC, RAM and Android build
+  are read from it and registered before it is measured (GW-EFF-015).
+- Whether the stock Android runtime holds the `com.microsoft.MultiHeadAttention` kernel is checked
+  first, on a phone, before any candidate work. If it does not, the candidate's test evaluation stops
+  and the reason is recorded.
+- `fused-attention` stays the default candidate. Fused attention with the INT8 recognizer, and a rule
+  of one recognizer run per line, are measured on validation as two further arms. The second is not
+  named in this ADR; the owner approved it for Phase 22. Either one replaces the default only under
+  the selection rule written with H11 (`research/hypotheses.md`, GW-EFF-013).
+- The candidate is a new version, not v1. It is compared with v1 under H11, and its results sit beside
+  v1's.
+
 ## Revisit if
 - The exported v0.1 misses the target by a wide margin and the trade-off needs an owner decision.
 - BookWorm's target hardware turns out to be different (for example phones rather than laptops).

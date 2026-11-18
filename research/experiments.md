@@ -108,6 +108,22 @@ Rows link to a full entry below. Numbers are copied from generated reports only,
 | [GW-EFF-010](#gw-eff-010) | 2026-11-17 | 16 | H1′'s ONNX latency: a fresh GW-BASE-002 profile and the v1 ONNX bundle in one sitting | done | 9,623.6 against 3,086.0 ms per page, +6,537.6 [+5,383.7, +7,806.3] ms: H1′ ONNX not met (bundle `875357a6…`) | `reports/efficiency/phase16/` |
 | [GW-EFF-011](#gw-eff-011) | 2026-11-17 | 16 | H6′'s latency: CRNN GW-REC-003 against SVTR GW-REC-020 in ONNX, per line | done | SVTR 32.01 against CRNN 10.16 ms per line, +16.78 [+12.02, +22.04] ms: H6′ not met | `reports/efficiency/phase16/` |
 | [GW-EFF-012](#gw-eff-012) | 2026-11-18 | 17 (v1) | The v1 bundle on the PyTorch backend against the Phase 16 PyTorch v1 references (the shipped path) | done | all four tolerances pass with no difference: map and logits 0.0, 5,000 of 5,000 lines identical, page CER 24.32% on both | `reports/export/GW-EFF-012/` |
+| [GW-E2E-013](#gw-e2e-013) | 2026-11-18 | 22 | Clean-machine-style walkthrough: the installed package on the v1 bundle against GW-E2E-006 | planned | — | — |
+| [GW-E2E-014](#gw-e2e-014) | 2026-11-18 | 22 | v1 re-run rehearsal on HierText validation pages | planned | — | — |
+| [GW-E2E-015](#gw-e2e-015) | 2026-11-18 | 22 | Pass A: re-score the saved Phase 14 files with the unchanged scorer | planned | — | — |
+| [GW-E2E-016](#gw-e2e-016) | 2026-11-18 | 22 | v1 re-run on the test pages | planned | — | — |
+| [GW-E2E-017](#gw-e2e-017) | 2026-11-18 | 22 | v1 re-run of the oracle on GDC and GDC-scan | planned | — | — |
+| [GW-E2E-018](#gw-e2e-018) | 2026-11-18 | 22 | Pass B: score the v1 re-run; the 0.05-point tolerance verdict | planned | — | — |
+| [GW-E2E-019](#gw-e2e-019) | 2026-11-18 | 22 | Phone candidate: validation gate on pages, against GW-E2E-006 | planned | — | — |
+| [GW-E2E-020](#gw-e2e-020) | 2026-11-18 | 22 | Phone candidate on the test pages | planned | — | — |
+| [GW-E2E-021](#gw-e2e-021) | 2026-11-18 | 22 | Phone candidate: the scoring pass and H11 | planned | — | — |
+| [GW-REC-042](#gw-rec-042) | 2026-11-18 | 22 | v1 re-run rehearsal on HierText validation crops | planned | — | — |
+| [GW-REC-043](#gw-rec-043) | 2026-11-18 | 22 | v1 re-run on the test crops | planned | — | — |
+| [GW-REC-044](#gw-rec-044) | 2026-11-18 | 22 | Phone candidate: validation gate on crops, against GW-REC-038 | planned | — | — |
+| [GW-REC-045](#gw-rec-045) | 2026-11-18 | 22 | Phone candidate on the test crops | planned | — | — |
+| [GW-EFF-013](#gw-eff-013) | 2026-11-18 | 22 | Phone candidate selection: `fused`, `fused-int8`, `fused-single-line` | planned | — | — |
+| [GW-EFF-014](#gw-eff-014) | 2026-11-18 | 22 | Phone candidate bundle and its equivalence check | planned | — | — |
+| [GW-EFF-015](#gw-eff-015) | 2026-11-18 | 22 | Android operator check, then the phone measurement on named devices | planned | — | — |
 
 ### <a id="gw-base-001"></a>GW-BASE-001 — Tesseract 5 (LSTM, eng): recognition and end to end
 
@@ -2033,6 +2049,278 @@ Rows link to a full entry below. Numbers are copied from generated reports only,
 - **Interpretation:** the typed errors hold on the v1 bundle itself, on both backends, not only on the tiny models the tests use. The Phase 20 gate's failure-path and fuzz-lite criteria hold for v1.
 - **Limitations:** seeded, small case set; no latency.
 - **Next experiment:** Phase 21
+
+### <a id="gw-e2e-013"></a>GW-E2E-013 — Clean-machine-style walkthrough: the installed package on the v1 bundle
+
+- **Date allocated / run:** 2026-11-18 / —
+- **Phase:** 22
+- **Git commit:** a fresh public clone at `420e095`; fixes recorded in `docs/FINAL_VALIDATION.md`   **Config:** `configs/det/gw-det-001.yaml`, the v1 bundle   **Seed(s):** none
+- **Dataset version(s):** HierText, MobileNetV3 weights, FUNSD and IIIT5K downloaded again and checked against the committed manifests; reference `hiertext_val.jsonl` from GW-E2E-006, SHA-256 `c8520576…`
+- **Hardware:** this laptop, CPU, 10 threads, in a clean folder outside the worktrees
+- **Research question:** can the project be installed, its data fetched and prepared, the v1 bundle loaded and validation pages evaluated from a fresh clone, and which steps need a hand?
+- **Hypothesis (written before the run):** none; the pass rule is in `docs/PHASE_STATUS.md`, Phase 22, item 4.
+- **Method:** the commands of item 4, then `scripts/package_check.py --v1 --backend torch` on the 400 Phase 5 validation pages; the report goes to `reports/package/GW-E2E-013.json`, and every retry, deviation and hand action to `docs/FINAL_VALIDATION.md`.
+- **Variables:** none
+- **Control:** GW-E2E-006 (the frozen pipeline on the same pages)
+- **Result:** — (planned)
+- **Interpretation:** —
+- **Limitations:** same OS, driver, base Python and git config as the original work; the weights come by hand, so their download path is untested until Phase 23; GDC and GDC-scan cannot be fetched by a stranger.
+- **Next experiment:** GW-REC-042 and GW-E2E-014
+
+### <a id="gw-e2e-014"></a>GW-E2E-014 — v1 re-run rehearsal on validation pages
+
+- **Date allocated / run:** 2026-11-18 / —
+- **Phase:** 22
+- **Git commit:** the `phase14-eval` code, with the wrapper at tag `phase22-repro`   **Config:** `configs/final/glypharis_v1.yaml`   **Seed(s):** none
+- **Dataset version(s):** HierText validation, 1,715 pages (`data/manifests/processed/hiertext.json`)
+- **Hardware:** RTX 4050 Laptop 6 GB, strict fp32, as Phase 14
+- **Research question:** does the frozen pipeline, run through the Phase 22 wrapper, reproduce its own validation run before any test file is read?
+- **Hypothesis (written before the run):** none; pass rule in `docs/PHASE_STATUS.md`, Phase 22, item 8: every point value within 0.0005.
+- **Method:** `scripts/phase22_v1_repro.py rerun e2e` in a detached `phase14-eval` worktree, folder `GW-E2E-006` under a separate data root; `scripts/phase22_v1_compare.py rehearsal` checks Phase 14's file against its recorded hash, scores the output and compares every point value with Phase 14's entry, `time_ms` ignored, every differing line counted.
+- **Variables:** none
+- **Control:** GW-E2E-006
+- **Result:** — (planned)
+- **Interpretation:** —
+- **Limitations:** validation only; the GPU driver may differ from Phase 14's, which its run metadata does not record.
+- **Next experiment:** GW-E2E-015
+
+### <a id="gw-e2e-015"></a>GW-E2E-015 — Pass A: re-score the saved Phase 14 files
+
+- **Date allocated / run:** 2026-11-18 / —
+- **Phase:** 22
+- **Git commit:** tag `phase22-repro`, with the scorer unedited   **Config:** `scripts/phase14_score.py` as it stands   **Seed(s):** bootstrap 20261010
+- **Dataset version(s):** the Phase 14 prediction files (`data/manifests/processed/phase14_outputs.json`) and the baseline files, in a separate root
+- **Hardware:** laptop CPU
+- **Research question:** does the unchanged scorer give the numbers of `reports/external/results.json` again from the saved files?
+- **Hypothesis (written before the run):** none; Phase 14 item 6 fixed the rule: re-scoring gives identical numbers.
+- **Method:** `scripts/phase22_v1_repro.py rescore check`, then `rescore score`, with the official evaluators; every number outside provenance and path strings is compared exactly, and OmniDocBench's fallback page lists separately. Reports go to `reports/final_validation/GW-E2E-015/`.
+- **Variables:** none
+- **Control:** GW-E2E-009
+- **Result:** — (planned)
+- **Interpretation:** —
+- **Limitations:** OmniDocBench's wall-clock limit can change which pages fall back; if the number and those pages differ, "identical" is recorded as failed, with the cause. Logged test access, 70 scoring rows; not a new evaluation (EXPERIMENT_PROTOCOL §9).
+- **Next experiment:** GW-REC-043, GW-E2E-016 and GW-E2E-017
+
+### <a id="gw-e2e-016"></a>GW-E2E-016 — v1 re-run on the test pages
+
+- **Date allocated / run:** 2026-11-18 / —
+- **Phase:** 22
+- **Git commit:** the `phase14-eval` code, with the wrapper at tag `phase22-repro`   **Config:** `configs/final/glypharis_v1.yaml`   **Seed(s):** none
+- **Dataset version(s):** HierText test, GDC, GDC-scan, FUNSD, OmniDocBench (English), each matching its recorded hash
+- **Hardware:** RTX 4050 Laptop 6 GB, strict fp32, batch 256, as Phase 14
+- **Research question:** does a re-run of the frozen pipeline reproduce GW-E2E-007 within the tolerance?
+- **Hypothesis (written before the run):** none; the tolerance is Phase 14 item 6's.
+- **Method:** `scripts/phase22_v1_repro.py rerun e2e`, Phase 14's order, folder `GW-E2E-007` under a separate data root; one logged access per set; scored by GW-E2E-018.
+- **Variables:** none
+- **Control:** GW-E2E-007
+- **Result:** — (planned)
+- **Interpretation:** —
+- **Limitations:** does not replace GW-E2E-007; no latency claim; GDC-scan numbers only. Done once per set: a resume only finishes a crashed run, and any further attempt needs a new registered ID.
+- **Next experiment:** GW-E2E-018
+
+### <a id="gw-e2e-017"></a>GW-E2E-017 — v1 re-run of the oracle on GDC and GDC-scan
+
+- **Date allocated / run:** 2026-11-18 / —
+- **Phase:** 22
+- **Git commit:** the `phase14-eval` code, with the wrapper at tag `phase22-repro`   **Config:** `configs/final/glypharis_v1.yaml`   **Seed(s):** none
+- **Dataset version(s):** GDC v1.1, GDC-scan v1, each matching its recorded hash
+- **Hardware:** RTX 4050 Laptop 6 GB, strict fp32, batch 256, as Phase 14
+- **Research question:** does a re-run of the oracle reproduce GW-E2E-008 within the tolerance?
+- **Hypothesis (written before the run):** none; the tolerance is Phase 14 item 6's.
+- **Method:** `scripts/phase22_v1_repro.py rerun oracle`, folder `GW-E2E-008` under a separate data root; one logged access per set; scored by GW-E2E-018.
+- **Variables:** none
+- **Control:** GW-E2E-008
+- **Result:** — (planned)
+- **Interpretation:** —
+- **Limitations:** does not replace GW-E2E-008; GDC-scan numbers only. Done once per set: a resume only finishes a crashed run, and any further attempt needs a new registered ID.
+- **Next experiment:** GW-E2E-018
+
+### <a id="gw-e2e-018"></a>GW-E2E-018 — Pass B: score the v1 re-run; the tolerance verdict
+
+- **Date allocated / run:** 2026-11-18 / —
+- **Phase:** 22
+- **Git commit:** tag `phase22-repro`, with the scorer unedited   **Config:** `scripts/phase14_score.py` as it stands   **Seed(s):** bootstrap 20261010
+- **Dataset version(s):** the outputs of GW-REC-043, GW-E2E-016 and GW-E2E-017, and the baseline files
+- **Hardware:** laptop CPU
+- **Research question:** is every aggregate metric of the re-run within 0.05 points of Phase 14's?
+- **Hypothesis (written before the run):** none; the tolerance is Phase 14 item 6's. Every point value in the GLYPHARIS blocks, including small slices, calibration and official scores, is judged at 0.0005 as a fraction; counts must be equal; confidence bounds are shown and not judged.
+- **Method:** the same scorer on the re-run root with all official evaluators, then `scripts/phase22_v1_compare.py` over `reports/final_validation/metric_inventory.json`. It also counts how many crops and pages differ between the re-run and Phase 14, with no text output, after checking Phase 14's files against their recorded hashes. Reports: `reports/final_validation/GW-E2E-018/`, `reports/final_validation/v1_reproduction.json` and `.md`. The raw scorer files keep the folder IDs, so they carry an `id_map` block and a header saying these are re-run values (GW-REC-039 = GW-REC-043, GW-E2E-007 = GW-E2E-016, GW-E2E-008 = GW-E2E-017); documents cite only `v1_reproduction`.
+- **Variables:** none
+- **Control:** GW-E2E-009
+- **Result:** — (planned)
+- **Interpretation:** —
+- **Limitations:** a failure is reported beside Phase 14's results, which stay as recorded, and leaves the phase open for the owner. The candidate work does not depend on this verdict. Logged access: 70 scoring rows and 12 comparison rows.
+- **Next experiment:** GW-EFF-013
+
+### <a id="gw-e2e-019"></a>GW-E2E-019 — Phone candidate: validation gate on pages
+
+- **Date allocated / run:** 2026-11-18 / —
+- **Phase:** 22
+- **Git commit:** tag `phase22-candidate-eval`   **Config:** the GW-EFF-014 bundle   **Seed(s):** bootstrap 20261010
+- **Dataset version(s):** HierText validation, 1,715 pages
+- **Hardware:** laptop CPU, 10 threads
+- **Research question:** is the candidate non-inferior to v1 on the full validation pages?
+- **Hypothesis (written before the run):** the validation gate of [H11](hypotheses.md#h11--the-phone-candidate-is-non-inferior-to-v1-rq7).
+- **Method:** `scripts/phase22_eval.py`, then `scripts/phase22_score.py`: H11's bag-of-lines page CER and E2E F1 tests, paired by page. Reports go to `reports/final_validation/candidate/`, the gate's verdict to `validation_gate.json` there.
+- **Variables:** build (candidate, v1)
+- **Control:** GW-E2E-006
+- **Result:** — (planned)
+- **Interpretation:** —
+- **Limitations:** validation only. Not run if the operator check or the bundle check fails. If a test is not met, no test set is opened, no other arm is tried, and the later IDs and H11 close as `not run`.
+- **Next experiment:** GW-E2E-020, if the gate is met
+
+### <a id="gw-e2e-020"></a>GW-E2E-020 — Phone candidate on the test pages
+
+- **Date allocated / run:** 2026-11-18 / —
+- **Phase:** 22
+- **Git commit:** tag `phase22-candidate-eval`   **Config:** the GW-EFF-014 bundle   **Seed(s):** none
+- **Dataset version(s):** HierText test, GDC, GDC-scan, FUNSD, OmniDocBench (English, all 755 pages)
+- **Hardware:** laptop CPU, 10 threads
+- **Research question:** how does the candidate read the test pages? This is the single prediction pass per set.
+- **Hypothesis (written before the run):** [H11](hypotheses.md#h11--the-phone-candidate-is-non-inferior-to-v1-rq7), scored by GW-E2E-021.
+- **Method:** `scripts/phase22_eval.py`, which refuses to start without a `go` operator check and a met validation gate for this bundle and tag, and refuses a second pass over a set; one logged access per set before its images are read; predictions only, to `data/processed/phase22/GW-E2E-020/`, with their hashes in `reports/final_validation/candidate/prediction_hashes.json`. No oracle run.
+- **Variables:** none
+- **Control:** GW-E2E-007
+- **Result:** — (planned)
+- **Interpretation:** —
+- **Limitations:** a new version, not v1. No latency claim comes from this run. GDC-scan numbers only. Not run if the operator check, the bundle check or the validation gate fails.
+- **Next experiment:** GW-E2E-021
+
+### <a id="gw-e2e-021"></a>GW-E2E-021 — Phone candidate: the scoring pass and H11
+
+- **Date allocated / run:** 2026-11-18 / —
+- **Phase:** 22
+- **Git commit:** tag `phase22-candidate-eval`   **Config:** `scripts/phase22_score.py`, reusing the Phase 14 scorer unedited   **Seed(s):** bootstrap 20261010
+- **Dataset version(s):** the 10 outputs of GW-REC-045 and GW-E2E-020; v1's GW-REC-039 and GW-E2E-007 on HierText test and GDC (4 files), checked against `phase14_outputs.json`
+- **Hardware:** laptop CPU
+- **Research question:** is the candidate non-inferior to v1 on HierText test and GDC, and how does it score on every Phase 14 set?
+- **Hypothesis (written before the run):** [H11](hypotheses.md#h11--the-phone-candidate-is-non-inferior-to-v1-rq7): six tests, all required, the three on GDC also checked with source documents as the unit.
+- **Method:** both tracks, the charset ceiling, the Phase 14 metrics for each set, official HierText and OmniDocBench scores for the candidate only, calibration at T = 2.35 unchanged. The 4 v1 files are scored in a second `Scorer`, so each is logged and none reaches the official evaluators; v1's other figures are copied from `reports/external/results.json`, and its other test files are not read. Work files go to `data/processed/phase22/GW-E2E-021/`, reports to `reports/final_validation/candidate/`.
+- **Variables:** build (candidate, v1)
+- **Control:** GW-E2E-009
+- **Result:** — (planned)
+- **Interpretation:** —
+- **Limitations:** every set and metric outside H11's six tests is descriptive; the results sit beside v1's and replace none of them; one scoring pass, enforced by its `pass.json`. Logged access: 14 scoring rows (10 candidate, 4 v1).
+- **Next experiment:** Phase 22 closure
+
+### <a id="gw-rec-042"></a>GW-REC-042 — v1 re-run rehearsal on validation crops
+
+- **Date allocated / run:** 2026-11-18 / —
+- **Phase:** 22
+- **Git commit:** the `phase14-eval` code, with the wrapper at tag `phase22-repro`   **Config:** `configs/final/glypharis_v1.yaml`   **Seed(s):** none
+- **Dataset version(s):** HierText validation evaluation pack, 74,500 crops (`data/manifests/processed/eval_crops.json`)
+- **Hardware:** RTX 4050 Laptop 6 GB, strict fp32, as Phase 14
+- **Research question:** does the frozen recognizer, run through the Phase 22 wrapper, reproduce its own validation run before any test file is read?
+- **Hypothesis (written before the run):** none; pass rule in `docs/PHASE_STATUS.md`, Phase 22, item 8: every point value within 0.0005.
+- **Method:** `scripts/phase22_v1_repro.py rerun rec` in a detached `phase14-eval` worktree, folder `GW-REC-038` under a separate data root; `scripts/phase22_v1_compare.py rehearsal` checks Phase 14's file against its recorded hash, scores the output and compares every point value with Phase 14's entry, `time_ms` ignored, every differing line counted.
+- **Variables:** none
+- **Control:** GW-REC-038
+- **Result:** — (planned)
+- **Interpretation:** —
+- **Limitations:** validation only.
+- **Next experiment:** GW-E2E-014
+
+### <a id="gw-rec-043"></a>GW-REC-043 — v1 re-run on the test crops
+
+- **Date allocated / run:** 2026-11-18 / —
+- **Phase:** 22
+- **Git commit:** the `phase14-eval` code, with the wrapper at tag `phase22-repro`   **Config:** `configs/final/glypharis_v1.yaml`   **Seed(s):** none
+- **Dataset version(s):** HierText test, GDC, GDC-scan, FUNSD and IIIT5K crop packs, each matching its recorded hash
+- **Hardware:** RTX 4050 Laptop 6 GB, strict fp32, batch 256, as Phase 14
+- **Research question:** does a re-run of the frozen recognizer reproduce GW-REC-039 within the tolerance?
+- **Hypothesis (written before the run):** none; the tolerance is Phase 14 item 6's.
+- **Method:** `scripts/phase22_v1_repro.py rerun rec`, Phase 14's order, folder `GW-REC-039` under a separate data root; one logged access per set; scored by GW-E2E-018.
+- **Variables:** none
+- **Control:** GW-REC-039
+- **Result:** — (planned)
+- **Interpretation:** —
+- **Limitations:** does not replace GW-REC-039; GDC-scan numbers only. Done once per set: a resume only finishes a crashed run, and any further attempt needs a new registered ID.
+- **Next experiment:** GW-E2E-018
+
+### <a id="gw-rec-044"></a>GW-REC-044 — Phone candidate: validation gate on crops
+
+- **Date allocated / run:** 2026-11-18 / —
+- **Phase:** 22
+- **Git commit:** tag `phase22-candidate-eval`   **Config:** the GW-EFF-014 bundle   **Seed(s):** bootstrap 20261010
+- **Dataset version(s):** HierText validation evaluation pack, 74,500 crops
+- **Hardware:** laptop CPU, 10 threads
+- **Research question:** is the candidate's recognizer non-inferior to v1's on the full validation crops?
+- **Hypothesis (written before the run):** the validation gate of [H11](hypotheses.md#h11--the-phone-candidate-is-non-inferior-to-v1-rq7).
+- **Method:** `scripts/phase22_eval.py`, with crops read under the bundle's batching rule, then `scripts/phase22_score.py`: H11's line CER test, paired by line. Reports go to `reports/final_validation/candidate/`, the gate's verdict to `validation_gate.json` there.
+- **Variables:** build (candidate, v1)
+- **Control:** GW-REC-038
+- **Result:** — (planned)
+- **Interpretation:** —
+- **Limitations:** validation only. Not run if the operator check or the bundle check fails. If the test is not met, no test set is opened, no other arm is tried, and the later IDs and H11 close as `not run`.
+- **Next experiment:** GW-REC-045, if the gate is met
+
+### <a id="gw-rec-045"></a>GW-REC-045 — Phone candidate on the test crops
+
+- **Date allocated / run:** 2026-11-18 / —
+- **Phase:** 22
+- **Git commit:** tag `phase22-candidate-eval`   **Config:** the GW-EFF-014 bundle   **Seed(s):** none
+- **Dataset version(s):** HierText test, GDC, GDC-scan, FUNSD and IIIT5K crop packs
+- **Hardware:** laptop CPU, 10 threads
+- **Research question:** how does the candidate's recognizer read the test crops? This is the single prediction pass per set.
+- **Hypothesis (written before the run):** [H11](hypotheses.md#h11--the-phone-candidate-is-non-inferior-to-v1-rq7), scored by GW-E2E-021.
+- **Method:** `scripts/phase22_eval.py`, which refuses to start without a `go` operator check and a met validation gate for this bundle and tag, and refuses a second pass over a set; crops read under the bundle's batching rule; one logged access per set before its crops are read; predictions only, to `data/processed/phase22/GW-REC-045/`, with their hashes in `reports/final_validation/candidate/prediction_hashes.json`.
+- **Variables:** none
+- **Control:** GW-REC-039
+- **Result:** — (planned)
+- **Interpretation:** —
+- **Limitations:** a new version, not v1. No latency claim comes from this run. GDC-scan numbers only. Not run if the operator check, the bundle check or the validation gate fails.
+- **Next experiment:** GW-E2E-021
+
+### <a id="gw-eff-013"></a>GW-EFF-013 — Phone candidate selection
+
+- **Date allocated / run:** 2026-11-18 / —
+- **Phase:** 22
+- **Git commit:** recorded in the report   **Config:** `glypharis/efficiency/candidate.py`, `scripts/phase22_candidate.py` (to be written)   **Seed(s):** Phase 16's line sample; bootstrap 20261010
+- **Dataset version(s):** HierText validation: the 400 Phase 5 pages, the 5,000 seeded lines, and the Phase 5 profile pages (10 warm-up, 100 timed)
+- **Hardware:** laptop CPU, 10 threads, Phase 16 conditions, then the phone registered under GW-EFF-015
+- **Research question:** does fused attention with INT8, or one recognizer run per line, beat the default `fused` build on a phone without losing accuracy or using more memory?
+- **Hypothesis (written before the run):** none; the selection rule is written with [H11](hypotheses.md#h11--the-phone-candidate-is-non-inferior-to-v1-rq7).
+- **Method:** accuracy of the three arms on the laptop, each reading the 5,000 lines under the batching rule its bundle would ship; the arms that pass go to the phone, in mirrored order, in the sitting of GW-EFF-015, where the speed condition must hold over both runs and on each run alone. The rule leaves exactly one candidate. Reports go to `reports/final_validation/GW-EFF-013/`.
+- **Variables:** independent: arm (`fused`, `fused-int8`, `fused-single-line`); controlled: pages, lines, thread count, order, device
+- **Control:** the `fused` arm (GW-EFF-009's `fused-attention`)
+- **Result:** — (planned)
+- **Interpretation:** —
+- **Limitations:** phone times are network time only; validation data; a new version, not v1. Not started if the operator check of GW-EFF-015 fails. If `fused` fails the phone's logit and text check, no other arm can be selected and `fused` stays the candidate for the laptop evaluation.
+- **Next experiment:** GW-EFF-014
+
+### <a id="gw-eff-014"></a>GW-EFF-014 — Phone candidate bundle and its equivalence check
+
+- **Date allocated / run:** 2026-11-18 / —
+- **Phase:** 22
+- **Git commit:** recorded in the report   **Config:** format `glypharis-phone-bundle-1`   **Seed(s):** Phase 16's line sample
+- **Dataset version(s):** the GW-EFF-006 reference outputs (`reports/efficiency/phase16/reference_manifest.json`)
+- **Hardware:** laptop CPU, 10 threads
+- **Research question:** is the frozen candidate bundle the selected build, within Phase 17's tolerances?
+- **Hypothesis (written before the run):** none; pass rule in `docs/PHASE_STATUS.md`, Phase 22, item 16.
+- **Method:** build the bundle (v1's `detector.onnx` byte for byte, the chosen recognizer, `charset.json`, a manifest of hashes and settings, session options included) and check it against the references: map difference at most 1e-4, logits at most 1e-3, text identical except near ties on at most 0.1% of lines, page CER within 0.05 points. Reports go to `reports/final_validation/GW-EFF-014/`.
+- **Variables:** none
+- **Control:** GW-EFF-006
+- **Result:** — (planned)
+- **Interpretation:** —
+- **Limitations:** if `fused-int8` was selected, the logit and text checks are reported and the selection margin decides. The bundle is a new version, not v1. If a tolerance fails, no other arm is tried, and the later IDs and H11 close as `not run`.
+- **Next experiment:** GW-REC-044 and GW-E2E-019
+
+### <a id="gw-eff-015"></a>GW-EFF-015 — Android operator check and phone measurement
+
+- **Date allocated / run:** 2026-11-18 / —
+- **Phase:** 22
+- **Git commit:** recorded in the report   **Config:** `mobile/android-bench` (to be written), `onnxruntime-android:1.31.1`   **Seed(s):** Phase 16's line sample
+- **Dataset version(s):** validation network inputs only: one tensor for part a; 10 plus 100 Phase 5 profile pages and 1,000 seeded lines for part b
+- **Hardware:** Samsung Galaxy M52 5G, then Moto G35 5G; each device's SoC, RAM and Android build read from it and registered in `docs/FINAL_VALIDATION.md` before measuring
+- **Research question:** a: does the stock Android package run the candidate's `com.microsoft.MultiHeadAttention` nodes? b: what network time and peak memory does the candidate have on a named phone?
+- **Hypothesis (written before the run):** none; pass rules in `docs/PHASE_STATUS.md`, Phase 22, items 3 and 15.
+- **Method:** part a, before any candidate work: a session on `recognizer.fused.onnx` and one tensor, on each phone. Part b: the laptop's exact inputs replayed under the session options of `ort_session`, each arm and run in a new app process, with mean and p95 network time, peak `VmHWM`, each run's mean time and thermal state at its start and end; logits and greedy text are compared with the laptop's in a separate pass that gives no time or memory figure. On the first phone, every arm that passed selection's accuracy condition; on the second, the selected candidate. Reports go to `reports/final_validation/GW-EFF-015/`.
+- **Variables:** device; arm on the first phone; controlled: inputs, package, session options, thread count, spinning, charge state, airplane mode, screen and foreground state, all registered first
+- **Control:** the laptop's outputs for the same arm and inputs
+- **Result:** — (planned)
+- **Interpretation:** —
+- **Limitations:** network time and memory only; decoding, post-processing, cropping and reading order are not ported. Validation data only; no test set and no GDC-scan content goes on a phone. If the operator check fails or no phone can be used, part b is recorded as not run and R-23 stays open. If `fused` fails the phone's logit and text check, part b is recorded as failed and R-23 stays open.
+- **Next experiment:** part a: GW-E2E-013; part b: GW-EFF-014
 
 ---
 

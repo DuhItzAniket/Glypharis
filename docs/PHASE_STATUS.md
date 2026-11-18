@@ -32,7 +32,7 @@ Phases run in the order set by [ADR-0008](decisions/ADR-0008-usable-engine-first
 | 19 | Optional HTTP API | **COMPLETE** | `phase-19` |
 | 20 | Production engineering | **COMPLETE** | `phase-20`, `v0.1` |
 | 21 | Research package | **COMPLETE** | `phase-21` |
-| 22 | Final validation | not started | — |
+| 22 | Final validation | in progress (plan registered) | — |
 | 23 | Release v1.0 | not started | — |
 
 ---
@@ -3763,3 +3763,697 @@ the three generated-file checks and `scripts/validate_configs.py`.
 tag `phase-21` (merge re-created with the noreply identity; same tree and parents).
 
 **CI status:** green on the branch, the pull request and `main` (run 44343507005).
+
+---
+
+## Phase 22 — Final validation
+
+**Status:** in progress (plan registered 2026-11-18). Nothing in this plan has been run: no test file
+has been read for Phase 22, nothing has been downloaded and no number below is a Phase 22 result.
+Opened on `phase/22-final-validation` from `e8e0b55`, the Phase 21 completion record on top of `main`
+at `420e095`. New scripts and flags named here are proposals and do not exist yet.
+
+**Objective:** close the four tasks of `docs/IMPLEMENTATION_PLAN.md`, Phase 22, without changing any
+v1 record:
+
+1. a clean-machine-style walkthrough, with every manual step recorded in `docs/FINAL_VALIDATION.md`;
+2. a reproduction of v1 at the tolerance fixed before Phase 14 (Phase 14 item 6): re-scoring the saved
+   files gives identical numbers, and a re-run of the frozen model gives every aggregate metric within
+   0.05 points;
+3. one evaluation per test set of the fused-attention phone candidate, as a new version under its own
+   IDs, with its results beside v1's and replacing none of them;
+4. the phone measurement on a named device, or a record that the gap stays open.
+
+**Known when this was written.** v1's Phase 14 results on every test set (GW-REC-039, GW-E2E-007,
+GW-E2E-009). For the fused-attention build, the validation and laptop results of GW-EFF-009 only
+(`reports/efficiency/phase16/pareto.md`). No candidate build has read a test set, no phone has been
+measured, and whether the stock Android runtime holds the `com.microsoft.MultiHeadAttention` kernel
+has not been checked.
+
+**Owner decisions (2026-11-18).** All as the plan recommended.
+
+| # | Decision |
+|---|---|
+| 1 | The walkthrough downloads are approved: HierText 3.72 GiB, MobileNetV3 weights 31 MiB, FUNSD 16 MiB, IIIT5K 101 MiB, packages 2.60 GiB, the clone 39 MiB. For Android, the `onnxruntime-android` package and the build tools. The other registered datasets are not fetched. |
+| 2 | Downloading, hashing and converting test files in the walkthrough is preprocessing, written into EXPERIMENT_PROTOCOL §9 first. |
+| 3 | v1 is backed up: a verified private backup exists. |
+| 4 | v1 is reproduced through a detached `phase14-eval` worktree and an external wrapper. |
+| 5 | "Every aggregate metric" means all point values in the GLYPHARIS blocks, including small slices, calibration and official scores. Confidence bounds are shown but not judged. |
+| 6 | If OmniDocBench's official number and its timeout-fallback pages differ, "identical" is recorded as failed, with the cause. The evaluator is not changed. |
+| 7 | Pass B covers all official evaluators. |
+| 8 | Two phones are available: Samsung Galaxy M52 5G first, Moto G35 5G second. Each device's SoC, RAM and Android build are read from the device and registered before measuring. The owner enables USB debugging when asked. Validation tensors may be stored on the phone temporarily. |
+| 9 | The Android operator check runs early, on a phone rather than an emulator, before the candidate's selection and evaluation work. |
+| 10 | If the stock Android package lacks the `MultiHeadAttention` kernel, the candidate's test evaluation stops and the reason is recorded. |
+| 11 | Fused attention with the INT8 recognizer is measured on validation, and adopted only under the selection rule. |
+| 12 | The one-line-at-a-time batching arm is included, and adopted only under the selection rule. |
+| 13 | H11 is accepted: six tests, all required, margin 0.05 points (0.5 points only for an INT8 candidate). |
+| 14 | Candidate test scope: all Phase 14 sets, all 755 OmniDocBench pages, no oracle. |
+| 15 | Order: the operator check early, then sittings S1, S2, S3 and onward. Every long sitting waits for the owner's go-ahead and a PC restart. |
+
+**Owner confirmation (2026-11-18), after the review of this plan and before it was committed:** the
+owner kept H11's source-document check on GDC and the 0.05-point margin, knowing that margin is about
+four lines there. The candidate work continues whichever way the v1 reproduction goes. If `fused` fails
+the phone's logit or text check, part b is recorded as failed, no other arm is selected, `fused` stays
+the laptop candidate and the phone gap stays open. If the operator check fails, items 14 to 20 stay
+unstarted and their IDs and H11 close as `not run`.
+
+**Rules added while reviewing this plan (2026-11-18); the owner confirmed those above.** Each applies unless the
+owner changes it before the step it governs: a failed operator check closes items 14 to 20 (item 3);
+the candidate work does not depend on the reproduction verdicts (item 13); if `fused` fails the phone
+check it stays the laptop candidate and no other arm can be selected (item 15); H11's GDC tests also
+carry the source-document check of H1′ and H5′ (`research/hypotheses.md`).
+
+**Fixed rules**
+
+- Test data is read only through logged paths. Reasons and IDs are written before the first read.
+- The shipped v1 bundle is **not** run on test data. Test results stay the GPU strict-fp32 results, and
+  bundle equality stays validation-only (`docs/IMPLEMENTATION_PLAN.md`, Phase 22 task 2).
+- No edits to `glypharis/eval/`, `scripts/ext_eval.py`, `scripts/phase14_*.py`,
+  `scripts/evaluate_baselines.py`, `scripts/official_*.py`, `scripts/hiertext_eval_launch.py`,
+  `scripts/run_baselines.py`, or the `V1_PATHS` of `glypharis/efficiency/v1.py`.
+- No per-line test text is viewed or written to a tracked file. GDC-scan contributes numbers only.
+- No test set and no GDC-scan content goes on a phone.
+- No latency claim comes from a test run.
+- A failed check is reported as failed. No threshold, setting or metric changes after a result is seen.
+- No personal paths, names or emails in tracked files. Phone records hold the model and build, never a
+  serial number or account.
+- Commits follow `docs/WORKFLOW.md` §2: the owner's identity, no tool or co-author trailers. The owner
+  merges the pull request.
+
+**Experiments** (full entries in `research/experiments.md`, all `planned`), in the order of work. The
+v1 re-run keeps the old folder names because the scorer hard-codes them. Log rows, run metadata and
+`v1_reproduction.*` carry the new IDs. Pass B's raw scorer report keeps the folder IDs and says so
+(item 6), and documents cite only the mapped report.
+
+| ID | What | Data | Test access |
+|---|---|---|---|
+| GW-EFF-015 | Part a: Android operator check on the phones. Part b: phone measurement (`not run` if impossible) | validation tensors | no |
+| GW-E2E-013 | Walkthrough: the installed package on the v1 bundle against GW-E2E-006 | 400 validation pages | no |
+| GW-REC-042 | v1 re-run, rehearsal (folder `GW-REC-038`) | HierText validation crops | no |
+| GW-E2E-014 | v1 re-run, rehearsal (folder `GW-E2E-006`) | HierText validation pages | no |
+| GW-E2E-015 | Pass A: re-score the saved Phase 14 files | all Phase 14 files | scoring rows |
+| GW-REC-043 | v1 re-run on test crops (folder `GW-REC-039`) | HierText test, GDC, GDC-scan, FUNSD, IIIT5K | yes |
+| GW-E2E-016 | v1 re-run on test pages (folder `GW-E2E-007`) | HierText test, GDC, GDC-scan, FUNSD, OmniDocBench | yes |
+| GW-E2E-017 | v1 re-run, oracle (folder `GW-E2E-008`) | GDC, GDC-scan | yes |
+| GW-E2E-018 | Pass B: score the re-run; tolerance verdict | the re-run and the baselines | scoring rows |
+| GW-EFF-013 | Candidate selection | validation, laptop and first phone | no |
+| GW-EFF-014 | Candidate bundle and equivalence | validation | no |
+| GW-REC-044 | Candidate validation gate, crops | 74,500 crops | no |
+| GW-E2E-019 | Candidate validation gate, pages | 1,715 pages | no |
+| GW-REC-045 | Candidate test crops | HierText test, GDC, GDC-scan, FUNSD, IIIT5K | yes |
+| GW-E2E-020 | Candidate test pages | HierText test, GDC, GDC-scan, FUNSD, OmniDocBench | yes |
+| GW-E2E-021 | Candidate scoring pass, H11 | candidate and v1 files | scoring rows |
+
+**Work items**
+
+**A. Protect and register**
+
+**1. Backup of v1.** A verified private backup exists. No worktree is removed.
+
+**2. Register this plan (this commit).**
+- this section and the status row;
+- `research/experiments.md`: index rows and entries for every ID above;
+- `research/hypotheses.md`: H11 and the selection rule for the arms;
+- `docs/EXPERIMENT_PROTOCOL.md` §9 and §11: the reproduction re-reads test files but is not a new
+  evaluation and cannot change v1; walkthrough downloading, hashing and converting of test files is
+  preprocessing; the test re-run is done once per set; the candidate gets one prediction pass and one
+  scoring pass; the count-only line comparison of item 12; preflight checks and hash lists add no row;
+- a dated note in ADR-0011, and the `docs/FINAL_VALIDATION.md` skeleton;
+- `EXPERIMENTS.md`, the experiment summary and the number trace regenerated.
+
+*Pass rule:* `experiment_summary.py --check`, `experiment_comparison.py --check` and
+`trace_numbers.py --check` pass; pushed; CI green.
+*Stop if:* any of these fails. Nothing below starts until they pass.
+
+**B. Android operator check (early, before any candidate work)**
+
+**3. Android operator go/no-go, GW-EFF-015 part a (about 4 h of session work).** Build
+`mobile/android-bench` (Kotlin, `onnxruntime-android:1.31.1`, the version in `requirements/lock.txt`).
+
+Before the first build:
+- commit `mobile/android-bench/.gitignore` covering `.gradle/`, `.kotlin/`, `.idea/`, `build/`,
+  `captures/`, `local.properties`, `*.apk`, `*.aab` and any tensor or model file, because untracked
+  build files would make `pinned_code_check` refuse the later runs;
+- give the JDK and SDK through `JAVA_HOME` (JDK 21) and `ANDROID_HOME`, set for the build command only,
+  and use a pinned Gradle wrapper. The JDK, Gradle and Android Gradle Plugin versions go in
+  `docs/FINAL_VALIDATION.md`. No machine path is committed;
+- confirm that `adb devices` lists each phone as authorized. If the Moto is not listed, the owner decides
+  whether to install its driver; until then it is recorded as not connected and the M52 work continues.
+
+On the Samsung Galaxy M52 5G first and then the Moto G35 5G, with USB debugging enabled by the owner
+when asked:
+- read the SoC, RAM, Android build and ABI from the device and register them in
+  `docs/FINAL_VALIDATION.md`, with the package's SHA-256, before the check;
+- create a session on `recognizer.fused.onnx` (GW-EFF-009, SHA-256 `b0e2a510…`, 31,810,737 bytes, 9
+  `com.microsoft.MultiHeadAttention` nodes), with item 15's session options, and run one validation
+  tensor.
+
+No emulator is used. No model or data file enters the repository, and tensors are deleted from the
+phone when the phone work ends. The result goes to
+`reports/final_validation/GW-EFF-015/operator_check.json`.
+
+*Pass rule (go):* `git status --porcelain --untracked-files=all` is empty straight after the build, and
+on the phone the session is created and the tensor returns finite logits of the shape the laptop gives.
+The largest logit difference from the laptop is recorded here and judged in item 15. If it exceeds
+`1e-3`, or the greedy text differs, the owner is told before S4 starts; the formal verdict stays in item
+15 and no threshold changes.
+*Stop if (no-go):* the kernel is missing on the stock package. The candidate's test evaluation stops
+and the reason is recorded (owner decision 10). Because this check comes first, items 14 to 20 have not
+started; they stay unstarted, and their IDs and H11 are closed as `not run` with that reason, unless
+the owner decides otherwise. A custom runtime build would be a different build, needing its own
+registration. Items 4 to 13 go on, and the phone gap is recorded as still open.
+If the first phone cannot be used for a reason other than the kernel, the second takes its place, and
+that is recorded.
+
+**C. Task 1: walkthrough**
+
+**4. Run from a fresh public clone at `420e095` (sitting S1).** `$CLEAN` is a clean folder outside the
+worktrees, with no links to existing data; `$REPO_URL` is the public repository.
+
+```bash
+mkdir -p $CLEAN/models $CLEAN/ref $CLEAN/evidence $CLEAN/out
+git clone $REPO_URL $CLEAN/repo; cd $CLEAN/repo
+git checkout --detach 420e095
+unset PYTHONPATH; export PIP_NO_CACHE_DIR=1; py -3.11 -m venv .venv; P=.venv/Scripts/python
+$P -m pip install --upgrade pip
+$P -m pip install torch==2.14.1 torchvision==0.29.1 --index-url https://download.pytorch.org/whl/cu126
+$P -m pip install -r requirements/lock.txt; $P -m pip install -e . --no-deps; $P -m pip check
+$P scripts/env_report.py --out "$(cygpath -m $CLEAN/evidence/env)"
+$P -m pytest -q; $P scripts/validate_configs.py
+
+$P scripts/download_datasets.py --dataset hiertext --dataset imagenet_backbones --dataset funsd --dataset iiit5k --dry-run
+$P scripts/download_datasets.py --dataset hiertext --parallel 3
+$P scripts/download_datasets.py --dataset imagenet_backbones --dataset funsd --dataset iiit5k
+# keep the diff of the four raw manifests: only downloaded_utc may change
+git checkout -- data/manifests data/DATASET_MANIFEST.yaml
+$P scripts/download_datasets.py --dataset hiertext --dataset imagenet_backbones --dataset funsd --dataset iiit5k --verify
+
+$P scripts/prepare_hiertext.py --workers 12 --reports "$(cygpath -m $CLEAN/evidence/reports)"
+git diff --exit-code -- data/manifests/processed/hiertext.json
+$P scripts/build_eval_crops.py --eval-set hiertext_val --expect-count 74500
+$P scripts/prepare_benchmarks.py funsd; $P scripts/prepare_benchmarks.py iiit5k
+$P scripts/build_eval_crops.py --eval-set funsd_test --expect-count 2647
+git diff --exit-code -- data/manifests/processed/benchmarks.json data/manifests/processed/eval_crops.json
+```
+
+Then, as logged manual steps, copy the bundle to `$CLEAN/models/` and
+`data/processed/phase14/GW-E2E-006/hiertext_val.jsonl` (SHA-256 `c8520576…`) to `$CLEAN/ref/`. Set
+`GLYPHARIS_MODELS`, run `glypharis-ocr` on one validation page with both backends from outside the
+repository, and evaluate:
+
+```bash
+$P scripts/package_check.py --config configs/det/gw-det-001.yaml --model glypharis-v1 \
+  --backend torch --threads 10 --v1 --phase10 "$(cygpath -m $CLEAN/ref/hiertext_val.jsonl)" \
+  --reference-sha256 c8520576f44f8b2ee436f9103556556b2f5e6685379b95bee3ef2403eb73eb4b \
+  --expect-manifest-sha256 875357a6346e8b1f989005fa96c557b00bf687461043368dc5e3dc532839f037 \
+  --experiment GW-E2E-013 --out reports/package/GW-E2E-013.json
+```
+
+*Pass rule:* all of these hold: every raw file matches its committed hash; no derived manifest
+differs, apart from the expected `iiit5k_test` line below, which item 5 clears; `package_check` exits 0
+(page CER difference at most 0.05 points, manifest hash matched, `--v1` check passed).
+*Stop if:* an upstream hash differs. That is a finding and the manifest is not updated. Any retry,
+deviation or hand action becomes a row in `docs/FINAL_VALIDATION.md`.
+*Expected findings:*
+- `pytest` in this clone will fail at the scorer test fixture, because `hash-phase5` refuses once the
+  `phase14-eval` tag exists. Phase 14 recorded this as a known issue. The failing test names are
+  recorded.
+- `prepare_benchmarks.py iiit5k` does not write `index_sha256`, so `benchmarks.json` will differ by that
+  one line. The failing diff is recorded, and the steps after it go on.
+
+**5. Fix what the walkthrough finds (about 1 h).**
+- Add one document giving the order clone, install, download, prepare, obtain model, infer, evaluate.
+  No current document gives it.
+- Patch `tag_exists` in the scorer test helper; the scorer itself stays unedited. Add a test.
+- Make `prepare_iiit5k` in `scripts/prepare_benchmarks.py` return `index_sha256` (the SHA-256 of
+  `words_test.index.jsonl`) directly after `bin_sha256`. Add a test.
+- Fetch the fixed commit into the clean clone and re-run only the affected steps, including
+  `prepare_benchmarks.py iiit5k` followed by
+  `git diff --exit-code -- data/manifests/processed/benchmarks.json`.
+
+Write up the walkthrough; the clean folder is deleted only with the owner's agreement. The write-up
+says that this is clean-machine-style, with the same OS, driver, base Python and git config, and that
+the weights came by hand, so the weight download path is untested until Phase 23.
+
+*Pass rule:* the affected steps pass in the clone, and the write-up is committed.
+*Stop if:* a fix would need a change under the paths the Fixed rules protect.
+
+**D. Task 2: reproduce v1**
+
+**6. Wrapper, comparer and tests (about 3 h).** Add `scripts/phase22_v1_repro.py` and
+`scripts/phase22_v1_compare.py`, and generate `reports/final_validation/metric_inventory.json` from
+`reports/external/results.json` before any re-run.
+
+*`rerun` mode* (working directory in the tag worktree, code imported from there):
+- assert that `ext_eval` and `glypharis` import from the tag worktree;
+- set `ext_eval.PHASE14_BRANCH = "HEAD"` and an absolute `ext_eval.ACCESS_LOG`;
+- wrap `ext_eval.open_test_access` to write phase 22 and the new ID;
+- wrap `ext_eval._write_json` so metadata says phase 22 and records the wrapper commit;
+- refuse a test set if the access log already holds a prediction row for that benchmark, split and ID,
+  unless the set's output exists and is incomplete (a resume), because `ext_eval` starts afresh once an
+  output has been moved aside;
+- leave `pinned_code_check` active.
+
+*`rescore` mode* (working directory in the Phase 22 worktree):
+- set `ps.PHASE14_BRANCH`, `ps.EXPERIMENT`, `ps.REASON`;
+- replace `ps.Scorer` with a subclass that sets only `ctx.phase` and `gctx.phase` to 22 (`ps.PHASE`
+  stays 14 because it routes baseline paths);
+- in Pass B only, wrap `eb.open_test_access` to map GW-REC-039 to 043, GW-E2E-007 to 016 and GW-E2E-008
+  to 017;
+- require `pinned_code_check("phase22-repro", root=worktree)` before scoring;
+- `check` also asserts that every pack and page file the Phase 5 re-score needs exists, including
+  `processed/glyphsynth/lines_val`;
+- after Pass B's scoring, add to its `results.json` and each Markdown report an `id_map` block and a
+  header line saying these are re-run values: GW-REC-039 = GW-REC-043, GW-E2E-007 = GW-E2E-016,
+  GW-E2E-008 = GW-E2E-017. The unchanged scorer labels them with the folder IDs.
+
+*`phase22_v1_compare.py`:*
+- verifies the Phase 14 files against `data/manifests/processed/phase14_outputs.json` before it reads
+  them, and stops on any difference;
+- `rehearsal` scores only GW-REC-038 and GW-E2E-006 under `$ROOTS/rerun`, with
+  `eb.score_file(path, ps.FullContext(data, log, 22, reason), meta=ps.glypharis_meta(job))`, writes no
+  log row because the split is validation, and compares every point value with the same two entries in
+  `reports/external/results.json` at 0.0005. The scorer's own preflight cannot do this, because it
+  requires every test prediction file.
+
+From the `phase22-repro` tag until Pass B has finished, only `RUN_RECORDS` may change. Rehearsal
+results, Pass A verdicts and any owner ruling on a disclosed difference go under
+`reports/final_validation/`; `docs/` and `research/experiments.md` are updated after Pass B. A code fix
+needs a new tag and a recorded reason.
+
+*Pass rule:* tests on made-up data show that rows say phase 22 with the right IDs; nothing is written
+under the Phase 14 paths; imports outside the tag worktree are refused; a second attempt at a test set
+is refused and a resume is allowed; a Phase 14 file that differs from its recorded hash stops the
+comparer; `rehearsal` scores the two validation entries and logs nothing; Pass B's files carry the ID
+map and header; a 0.0004 change passes and a 0.0006 change fails; a missing metric fails; provenance is
+ignored; a planted GDC-scan marker reaches no tracked output. Commit, push, CI green, then tag
+`phase22-repro`.
+*Stop if:* the wrapper cannot work without editing a protected file.
+
+**7. Isolated roots (about 15 min).** `$TAG_WT` is a detached worktree beside the others, and `$ROOTS`
+a folder outside every worktree.
+
+```bash
+git worktree add --detach $TAG_WT phase14-eval
+# copy the two checkpoints to their recorded paths in that worktree
+```
+
+Under `$ROOTS/rescore` and `$ROOTS/rerun`:
+- `manifests/` is copied from the Phase 22 worktree. `git diff phase14-eval HEAD -- data/manifests`
+  lists only `phase14_outputs.json`.
+- In `rescore`, drop the hand-off entries from `phase14_outputs.json`. In `rerun`, drop every
+  `data/processed/phase14/**` entry, so baseline hashes are still checked.
+- Junctions: `raw` and `processed/{hiertext,gdc,gdc_scan,funsd,iiit5k,omnidocbench,glyphsynth,baselines,baselines_phase14}`.
+- `rescore` also gets junctions for
+  `processed/phase14/{GW-REC-038,GW-REC-039,GW-E2E-006,GW-E2E-007,GW-E2E-008}` inside a real
+  `processed/phase14`.
+- `rerun` gets an empty real `processed/phase14`.
+
+*Pass rule:* the manifest difference is as stated, and the first hash list under "How v1's records stay
+untouched" has been taken, written to `reports/final_validation/v1_files_before.json` and committed
+before item 8, after a check that its paths identify no GDC-scan content.
+*Stop if:* `processed/phase14` itself, `handoff`, `official` or `GW-E2E-009` would be junctioned:
+`score --resume` runs `shutil.rmtree` on hand-off and official folders under its data root.
+
+**8. Validation rehearsal on the GPU, GW-REC-042 and GW-E2E-014 (sitting S2).** `$PY` is the project
+environment's interpreter and `$P22` the Phase 22 worktree.
+
+```bash
+cd $TAG_WT
+PYTHONPATH='.;scripts' $PY -P $P22/scripts/phase22_v1_repro.py \
+  rerun rec --set hiertext_val --folder-id GW-REC-038 --experiment GW-REC-042 \
+  --reason "Phase 22 v1 re-run rehearsal (GW-REC-042)" --data-root $ROOTS/rerun
+# then: rerun e2e --set hiertext_val --folder-id GW-E2E-006 --experiment GW-E2E-014 ...
+```
+
+Verify the Phase 14 validation files against `data/manifests/processed/phase14_outputs.json`; the
+comparison stops on any difference. Then run `phase22_v1_compare.py rehearsal` (item 6), ignoring
+`time_ms`, and record every differing line count. No log rows, because this is validation.
+*Pass rule:* every point value is within 0.0005 of Phase 14's.
+*Stop if:* any value differs by more. No test file is read.
+
+**9. Pass A, GW-E2E-015 (sitting S2).**
+
+```bash
+cd $P22
+PYTHONPATH='.;scripts' $PY -P scripts/phase22_v1_repro.py \
+  rescore check --data-root $ROOTS/rescore
+# then: rescore score --experiment GW-E2E-015 --out reports/final_validation/GW-E2E-015 ...
+```
+
+`rescore check` hashes files, reads keys and converts predictions without ground truth. It adds no log
+row (see the log plan).
+*Pass rule:* `rescore check` passes before `score` starts, and the pass finishes with its rows logged.
+*Stop if:* a check fails. A stopped pass resumes as the same evaluation, its rows marked `(resumed)`.
+
+**10. Pass A verdict.** Compare the output with `reports/external/results.json`, and the OmniDocBench
+fallback page lists separately. Commit the log and the report.
+*Pass rule:* every number outside provenance and path strings is exactly equal.
+*Stop if:* a difference is unexplained. If OmniDocBench's official number differs and its fallback
+pages differ too, "identical" is recorded as failed with that cause, and the evaluator is not changed
+(owner decision 6). The re-run waits for the owner's ruling on any disclosed difference.
+
+**11. Test re-run on the GPU, GW-REC-043, GW-E2E-016, GW-E2E-017 (sitting S3).** Twelve runs in Phase
+14's order: rec on `hiertext_test`, `gdc_test`, `gdc_scan_test`, `funsd_test`, `iiit5k_test`; oracle on
+`gdc_test`, `gdc_scan_test`; e2e on `hiertext_test`, `gdc_test`, `gdc_scan_test`, `funsd_test`,
+`omnidocbench_test`. Same device, batch 256, same tag. Commit the log after the batch.
+
+The test re-run is done once per set. A resume only finishes a crashed run. A failed tolerance is not
+answered by running again; any further attempt needs a new registered ID, written before it starts, and
+is reported beside the first.
+
+*Pass rule:* all 12 outputs are complete and their hashes are in a tracked report.
+*Stop if:* a guard refuses (branch, tag, pinned code, input hash, image size). A crash resumes with a
+logged resume row.
+
+**12. Pass B, GW-E2E-018 (sitting S3).** The same unchanged scorer on the re-run root, with all
+official evaluators and `--id-map rerun`. Then a count-only comparison of re-run and Phase 14
+predictions: how many crops and pages differ, with no text output. The Phase 14 files are first verified
+against `data/manifests/processed/phase14_outputs.json`, and the comparison stops on any difference.
+*Pass rule:* the pass finishes, every row carries a re-run or baseline ID, Pass B's files carry the ID
+map, and the comparison writes counts only.
+*Stop if:* scoring would overlap a GPU run: `open_test_access` rewrites the whole log file.
+
+**13. Tolerance verdict.** Judge every path in the metric inventory. Write
+`reports/final_validation/v1_reproduction.json` and `.md`, listing the largest differences and any
+changed verdict.
+*Pass rule:* every point value in the GLYPHARIS blocks, including small slices, calibration and official
+scores, differs by at most `0.0005` as a fraction, and counts are equal. Confidence bounds are shown
+and not judged.
+*If it fails:* it is reported as failed, beside Phase 14's results, which stay as recorded. The exit
+criterion is then unmet and the phase stays open for the owner.
+
+Items 14 to 20 do not depend on the verdicts of items 10 and 13. H11 reads the Phase 14 files, which item
+20 checks by hash, so the candidate work continues whichever way those verdicts go, and neither verdict
+can add, remove or reorder a candidate step.
+
+**E. Tasks 3 and 4: phone candidate**
+
+**14. Candidate code and selection, GW-EFF-013 (sitting S4, closed by the phone part of S5).** New
+`glypharis/efficiency/candidate.py` and `scripts/phase22_candidate.py`, outside `V1_PATHS`. No arm is
+added to `VARIANTS`, because `SITTINGS` derives from it and Phase 16's records depend on it.
+
+Arms:
+- `fused`, the default: GW-EFF-009's `fused-attention`;
+- `fused-int8`: the fused recognizer with H7′'s dynamic INT8 settings;
+- `fused-single-line`: the fused recognizer, one line per recognizer run.
+
+On the laptop, accuracy on the 400 Phase 5 pages and the 5,000 seeded lines, then latency and RAM on 10
+warm-up plus 100 items, mirrored order, one sitting, Phase 16 conditions. Each arm reads the 5,000 lines
+under the batching rule its bundle would ship: `fused` and `fused-int8` through the recognizer's
+width-sorted batches with 256 crops per call, `fused-single-line` one line per recognizer run. (Phase
+16's evaluator reads every line at batch 1, where `fused-single-line` would equal `fused` by
+construction.) The laptop's latency and RAM are recorded and decide nothing while a phone can be used.
+
+*Selection rule, fixed now* (exact statistics in `research/hypotheses.md`, under H11). Stay with `fused`
+unless another arm meets all three conditions:
+- accuracy: non-inferior to `fused` on line CER, page CER and E2E F1, with margin 0.005 for
+  `fused-int8` and 0.0005 for `fused-single-line`;
+- speed: the CI of `mean(t_arm - 0.9 * t_fused)` per page lies below 0 on the first phone, over both
+  runs and on each arm's first and second runs taken alone;
+- memory: peak RAM not higher, on the same phone, with each arm and run in a new process.
+
+An arm that fails the accuracy condition does not go to the phone. If two arms qualify, the one with the
+larger page-time saving is taken. Exactly one candidate leaves this item, and only after the phone part
+of item 15.
+*Stop if:* `recognizer.fused.onnx` differs from the hash GW-EFF-009 recorded. The laptop times serve for
+the speed and memory conditions only if neither phone can be used, which is recorded.
+
+**15. Phone measurement, GW-EFF-015 part b (sitting S5; length unknown, planned as up to 6 h for the
+first phone).** Register in `docs/FINAL_VALIDATION.md`, and commit, before the first timed run: model,
+SoC, RAM, Android build, package hash, ABI, session options, thread count, spinning setting, charge
+state, starting battery temperature, airplane mode, screen and foreground state.
+
+Session options are those of `ort_session` (`glypharis/efficiency/threads.py`), so that phone figures
+describe the configuration measured on the laptop: sequential execution, all graph optimisations, CPU
+arena off, memory patterns off, and the registered intra-op thread count and spinning value, read back
+or logged by the app.
+
+Replay the laptop's exact validation network inputs: 10 plus 100 Phase 5 profile pages, then 1,000
+seeded lines at batch 1. Each arm and run is a new app process, force-stopped between runs. A timing run
+loads one input tensor at a time, times only `session.run`, reads `VmHWM` immediately after the last
+timed item and holds no reference logits. The logit and greedy-text check is a separate pass in its own
+process and contributes no time or memory figure. Report mean and p95 network time, peak `VmHWM`, each
+run's mean time, and thermal state at start and end of each run.
+
+- *Samsung Galaxy M52 5G:* `fused` and every arm that passed item 14's accuracy condition, in mirrored
+  order. These runs decide item 14's speed and memory conditions.
+- *Moto G35 5G:* the selected candidate, after selection. This is a second named device and changes no
+  decision.
+
+*Pass rule:* for each arm measured, the session loads, logits are within `1e-3` of the laptop's for the
+same arm, and greedy text is identical. An INT8 arm's differences are reported, and the selection margin
+decides.
+*Stop if:* `fused` fails the logit or text check. Part b is then recorded as failed, its phone times are
+not reported as the candidate's, no other arm can be selected, `fused` remains the candidate for the
+laptop evaluation, and the phone gap stays open. Another arm that fails to load or fails the check drops
+out.
+
+The report says plainly that this is network time and memory only: decoding, post-processing, cropping
+and reading order are not ported. Tensors are deleted from the phones afterwards.
+
+**16. Freeze the bundle, GW-EFF-014 (about 2 h).** New format `glypharis-phone-bundle-1`: `detector.onnx`
+byte-identical to v1's, the chosen recognizer, `charset.json`, and a manifest of hashes and every
+setting the loader needs (detector spec, height 48, maximum width 1536, stride 4, class count,
+recognizer arch, T = 2.35, opset, ONNX Runtime version, session options as in item 15, batching rule, v1
+manifest hash, and a version label saying not v1). The loader lives outside `from_pretrained`. `load_bundle_onnx` cannot be reused,
+because it needs the `.pt` files. A test asserts that `load_bundle` refuses this format.
+
+*Pass rule:* Phase 17's tolerances against the GW-EFF-006 references: map difference at most `1e-4`,
+logits at most `1e-3`, text identical except near ties on at most 0.1% of lines, page CER within 0.05
+points. If `fused-int8` was selected, the logit and text checks are reported and the selection margin
+decides.
+*Stop if:* a tolerance fails. The bundle is not changed to pass, no validation gate runs and no other
+arm is tried. The IDs of the steps not reached, and H11, close as `not run` with the reason.
+
+**17. Runner, scorer and tag (about 8 h).**
+
+*`scripts/phase22_eval.py`:*
+- guarded to the phase branch; `pinned_code_check("phase22-candidate-eval")`, `assert_v1_code`, bundle
+  hash, `check_inputs`, `image_sizes_match`;
+- before logging a test access, reads `reports/final_validation/GW-EFF-015/operator_check.json` and
+  `reports/final_validation/candidate/validation_gate.json`, and refuses unless the check is `go`, all
+  three gate tests are `met`, and the gate's bundle hash and tag commit equal this run's;
+- refuses a test set if the access log already holds a prediction row for that benchmark, split and ID,
+  unless the set's output exists, is incomplete and has the same identity (a resume). Moving or deleting
+  an output cannot start a second pass;
+- `open_test_access(..., 22, ...)` before reading; reuses `ext_eval.set_records`, `_rec_records` and
+  `_page_records` through a small adapter exposing `.ocr` and `.recognizer`, with crops read under the
+  bundle's batching rule; resumable; writes predictions only, to `data/processed/phase22/<ID>/`.
+
+*`scripts/phase22_score.py`:*
+- verifies v1's files against `phase14_outputs.json` first; reuses `ps.Scorer.score_phase14`,
+  `official_hiertext`, `official_omnidocbench`, `rec_units` and `page_units`, with every `Scorer` logging
+  phase 22;
+- keeps `data/processed/phase22/GW-E2E-021/pass.json` under the rules of `ps.start_pass`: a finished pass
+  or an existing `results.json` is refused, and a started pass needs `--resume`;
+- scores the candidate's 10 files in one `Scorer`, with `ps.GLYPHARIS_VERSION` set to the bundle's not-v1
+  label, so that no candidate entry says v1. The official methods only process files scored in that
+  instance, so neither v1 nor the baselines reach the official evaluators;
+- puts the 4 v1 files H11 needs (GW-REC-039 and GW-E2E-007 on HierText test and GDC) through
+  `eb.score_file` in a second `Scorer`, under v1's own label, so each is logged. v1's other figures are
+  copied from `reports/external/results.json`, and its other test files are not read.
+
+*Isolation.* Candidate work files go under `data/processed/phase22/GW-E2E-021/`. The runner and scorer do
+not call `ext_eval.record_output`, `ps.run_score`, `ps.preflight`, `ps.dry_convert`, `ps.record_outputs`
+or `ps.drop_handoff_outputs`. The SHA-256 and line counts of the 10 prediction files and their metadata
+go to `reports/final_validation/candidate/prediction_hashes.json`, committed before scoring.
+
+After the tag, only `RUN_RECORDS` may change, and of those Phase 22 uses the access log,
+`research/failures.md` and `reports/`. The shared check also allows `phase14_outputs.json`; that allowance
+is not used, and the file is not written in Phase 22. Results are written into `docs/` after scoring.
+
+*Pass rule:* tests pass, H11 and the set list are committed, CI is green, and the commit is tagged
+`phase22-candidate-eval`. The tests show each refusal above: a no-go operator check, an unmet or
+mismatched gate, a second prediction pass after an output is moved or deleted, a second scoring pass and
+an unmarked resume. On made-up data they also show that nothing changes under `processed/phase14`, the
+baseline folders or `phase14_outputs.json`; that no candidate entry or report says v1; and that a marker
+planted in made-up GDC-scan references, predictions and file names appears in no report, log row, console
+output or other tracked file written by `phase22_eval.py` or `phase22_score.py`.
+*Stop if:* the runner or scorer would need a change to a protected file.
+
+**18. Full validation gate, GW-REC-044 and GW-E2E-019 (sitting S6).** The same runner and scorer at the
+tag, paired against GW-REC-038 and GW-E2E-006, using H11's rules on line CER, bag-of-lines page CER and
+E2E F1 on HierText validation. The result, with the bundle hash and tag commit, goes to
+`reports/final_validation/candidate/validation_gate.json`.
+*Pass rule:* all three are `met`.
+*Stop if:* any is not met. No test set is opened and no other arm is tried. The IDs of the steps not
+reached, and H11, close as `not run` with the reason.
+
+**19. Test evaluation, GW-REC-045 and GW-E2E-020 (sitting S7).** One pass per set, 10 threads, on the
+CPU: crops on HierText test, GDC, GDC-scan, FUNSD and IIIT5K; pages on HierText test, GDC, GDC-scan,
+FUNSD and all 755 OmniDocBench pages. The oracle is not run for the candidate, since it served only H4.
+Commit the log after each batch.
+*Pass rule:* all 10 prediction files are complete, and the SHA-256 and line counts of each file and its
+metadata are in `reports/final_validation/candidate/prediction_hashes.json`.
+*Stop if:* a guard refuses. A crash resumes and logs a resume row. Nothing is changed and re-run after a
+test file has been read.
+
+**20. One scoring pass, GW-E2E-021 (sitting S8).** Both tracks, charset ceiling, the Phase 14 metrics
+for each set, official HierText and OmniDocBench scores for the candidate only, calibration at T = 2.35
+unchanged, and H11, including its source-document check on GDC. Fourteen logged rows: the candidate's 10
+files and v1's 4 (item 17). Reports go under `reports/final_validation/candidate/`, beside v1's.
+*Rule:* H11 as registered in `research/hypotheses.md`: six tests, all required. Every other set and
+metric is descriptive. If H11 does not hold, the candidate is not shown non-inferior; a fix would be
+another new version and is outside this phase.
+*Stop if:* v1's files do not match `phase14_outputs.json`.
+
+**F. Close**
+
+**21. Records and gate (about 3 h).**
+- Check the records of v1 (below).
+- `docs/FINAL_VALIDATION.md`, `MODEL_CARD.md` "Not v1", README and paper status sentences, ROADMAP
+  "Reproducible final experiment", ADR-0011, R-23, `research/failures.md` and the session log, all from
+  generated reports, with `trace_numbers.py --check` passing.
+- WORKFLOW's ten-step gate, a push, the owner's merge, then tag `phase-22`.
+- Junctions are removed with `cmd //c rmdir` before any root or the tag worktree is deleted.
+
+**Order of work**
+
+| Step | Items | Sitting |
+|---|---|---|
+| 1 | 1, 2: backup, registration, CI green | session work |
+| 2 | 3: Android operator check on the phones | session work, phones attached |
+| 3 | 4, 5: walkthrough and its fixes | S1, then session work |
+| 4 | 6, 7: v1 tooling, tag, isolated roots | session work |
+| 5 | 8, 9, 10: rehearsal, Pass A, verdict | S2 |
+| 6 | 11, 12, 13: test re-run, Pass B, tolerance verdict | S3 |
+| 7 | 14: candidate code, laptop part of selection | session work, S4 |
+| 8 | 15: phones; selection closes | S5 |
+| 9 | 16, 17: bundle, runner, scorer, tag | session work |
+| 10 | 18: validation gate | S6 |
+| 11 | 19: candidate test runs | S7 |
+| 12 | 20: candidate scoring | S8 |
+| 13 | 21: records and gate | session work |
+
+**What must be committed first**
+
+| Before | Must be committed, pushed and passed |
+|---|---|
+| Android operator check | Item 2; CI green; `mobile/android-bench/.gitignore`; USB debugging enabled by the owner |
+| Walkthrough downloads | Item 2; operator check recorded; PC restart |
+| First logged test access in the phase (Pass A) | Walkthrough write-up; wrapper, comparer, metric inventory and tests; CI green; tag `phase22-repro`; `v1_files_before.json`; rehearsal passed; `rescore check` passed; owner go; restart |
+| v1 test re-run | Pass A report and access log committed; exact check passed, or the owner has ruled on a disclosed difference |
+| Pass B | All 12 re-run outputs complete; hashes in a tracked report; log committed |
+| Candidate selection | Operator check `go` recorded; H11 and the selection rule committed. The verdicts of items 10 and 13 are not a condition, whichever way they went |
+| Phone timing runs | Device records, session options and process rule committed for that phone |
+| Candidate validation gate | Selection report, including the phone part; bundle built, hashed and checked; runner and scorer tested; CI green; tag `phase22-candidate-eval` |
+| Candidate test runs | `validation_gate.json` with all three tests met; phone work finished wherever it could change the candidate; owner go; restart |
+| Candidate scoring | All 10 prediction files complete; `prediction_hashes.json` and the log committed |
+
+Scoring and GPU runs never overlap, because `open_test_access` rewrites the whole log file.
+
+**Test-access log plan** (`research/test_access_log.md`)
+
+| When | ID in the row | Rows | Phase | Reason text |
+|---|---|---|---|---|
+| Android check and phone runs | none (no test data) | 0 | — | — |
+| Walkthrough download and conversion | none (preprocessing, EXPERIMENT_PROTOCOL §9) | 0 | — | — |
+| Validation runs and gates | none (`open_test_access` logs test splits only) | 0 | — | — |
+| Preflight checks and the v1 hash lists | none: they hash files, read keys, or convert predictions without ground truth; no model runs, no score is computed and no text is shown, as in Phase 14 | 0 | — | — |
+| Pass A | the producing IDs | 70 | 22 | `Phase 22 v1 re-score (GW-E2E-015)` |
+| v1 test re-run | GW-REC-043, GW-E2E-016, GW-E2E-017 | 12 | 22 | one reason per run, before the images are read |
+| Pass B | re-run IDs and baseline IDs | 70 | 22 | `Phase 22 v1 re-run scoring (GW-E2E-018)` |
+| Count-only comparison | GW-E2E-018 | 12 | 22 | `Phase 22 v1 line comparison, counts only (GW-E2E-018)` |
+| Candidate test runs | GW-REC-045, GW-E2E-020 | 10 | 22 | one per set |
+| Candidate scoring | GW-REC-045, GW-E2E-020 (10 rows); GW-REC-039 and GW-E2E-007 on HierText test and GDC (4 rows) | 14 | 22 | `Phase 22 candidate scoring (GW-E2E-021)` |
+
+188 rows in total, plus any `(resumed)` rows. The log is committed after each batch.
+
+**Cost by step (estimates).** Every figure here is a planning estimate, not a result. Those for Pass A,
+Pass B and the re-run are based on Phase 14's recorded durations, and those for the candidate on
+GW-EFF-009's validation runs; OmniDocBench is the weakest of them, and the phone's run time is unknown.
+
+| Items | CPU | GPU | Network | Session work | Download | Disk |
+|---|---|---|---|---|---|---|
+| 1–2 Backup, registration | — | — | — | 3 h | — | — |
+| 3 Android check | — | — | setup | 4 h | package 55,138,794 bytes; the existing Android SDK is reused, and only missing Gradle or Maven artifacts are fetched | a few GB |
+| 4 Walkthrough | about 1.2 h | smoke checks only | about 2.6 h | 2 to 3 h | 3.87 GiB data, 2.60 GiB packages, 39 MiB clone | about 15.5 GiB, temporary |
+| 5 Fixes | 0.5 h | — | — | 1 h | — | — |
+| 6–7 v1 tooling, roots | tests | — | — | 3.3 h | — | about 155 MB |
+| 8 Rehearsal | — | 0.35 h | — | check | — | about 55 MB |
+| 9–10 Pass A | 4.3 h | — | — | check | — | about 290 MB |
+| 11 Test re-run | — | 0.9 h | — | check | — | about 105 MB |
+| 12–13 Pass B and verdict | about 4.5 h | — | — | check | — | about 290 MB |
+| 14 Selection | 2 to 3 h | — | — | 5 h | — | under 100 MB |
+| 15 Phones | laptop packing | — | — | up to 6 h for the first phone; the second is not estimated | — | about 1 GB on laptop and phone |
+| 16 Bundle | about 1 h | — | — | 2 h | — | 45 MB |
+| 17 Runner, scorer | tests | — | — | 8 h | — | — |
+| 18 Validation gate | about 3 h | — | — | check | — | about 55 MB |
+| 19 Candidate test | 7 to 11 h | — | — | check | — | about 100 MB |
+| 20 Scoring | 1.5 to 3 h | — | — | 1 h | — | tens of MB, plus official work files up to about 150 MB |
+| 21 Close | checks | — | — | 3 h | — | frees temporaries if approved |
+| **Total** | **about 25 to 32 h** | **about 1.3 h** | **about 2.6 h** | **about 40 h** | **about 6.5 GiB, plus Android** | well within the free disk |
+
+**Long sittings.** Each one waits for the owner's go-ahead and a PC restart, and needs mains power, no
+sleep and other applications closed. Phase 14 lost runs to a power-cut sleep and to the commit limit.
+
+| Sitting | Contents | Length (estimate) |
+|---|---|---|
+| S1 | Walkthrough | about 5 h, about 2 h of it unattended download |
+| S2 | Rehearsal, Pass A | about 4.7 h |
+| S3 | v1 test re-run, Pass B | about 5.3 h |
+| S4 | Candidate selection, laptop part | 2 to 3 h |
+| S5 | Phones: the first with every remaining arm, the second with the selected candidate | up to 6 h for the first phone, attended; the second not estimated |
+| S6 | Candidate validation gate | about 3 h |
+| S7 | Candidate test runs | 7 to 11 h, overnight |
+| S8 | Candidate scoring | 1.5 to 3 h |
+
+S2 and S3 are not chained. S3 starts only after the Pass A verdict and log are committed, the owner has
+given the go-ahead, and the PC has been restarted.
+
+**How v1's records stay untouched**
+
+- All re-run and re-score writes go to the two separate roots and to new folders under
+  `reports/final_validation/`. The one exception is the OmniDocBench evaluator, which writes temporarily
+  in its own `result/` folder under the shared raw store before its files are moved out. That folder's
+  file list must be the same before and after each pass, candidate scoring included.
+- Candidate writes go under `data/processed/phase22/` and `reports/final_validation/candidate/` only.
+- Before the first run and at closure, hash every file under `data/processed/phase14`, `baselines` and
+  `baselines_phase14`. `official/` and `logs/` are not covered by `phase14_outputs.json`, so the
+  manifest alone is not enough. The first list is committed as
+  `reports/final_validation/v1_files_before.json` (item 7), and the two lists must match.
+- At closure, verify the Phase 14 outputs against `phase14_outputs.json`, and check that the access log
+  at the start of Phase 22 is an exact prefix of the current log.
+- `git diff --exit-code phase-21 HEAD --` must be empty for `reports/external`,
+  `data/manifests/processed/phase14_outputs.json`, `data/manifests/processed/phase5_baseline_files.json`,
+  `configs`, `glypharis/eval`, `glypharis/pipeline`, `glypharis/models`, `glypharis/export`,
+  `glypharis/data`, and the pinned scripts of the Fixed rules.
+- Candidate results never overwrite or edit a v1 number. A failed reproduction is reported beside Phase
+  14's results, which stay as recorded.
+
+**Exit criteria** (`docs/IMPLEMENTATION_PLAN.md`, Phase 22)
+
+| Criterion | Items | Note |
+|---|---|---|
+| Walkthrough log in `docs/FINAL_VALIDATION.md`, every manual step recorded | 4, 5 | "Evaluate" is the validation package check; it is not a second machine |
+| Re-scoring gives identical numbers with the scorer as it stands | 6, 7, 9, 10 | OmniDocBench's wall-clock limits can break exact equality (owner decision 6) |
+| Re-run within 0.05 points, from hash-matching files with the same flags | 8, 11, 12, 13 | Passing is not guaranteed. If it fails, this criterion is unmet and the phase stays open for the owner |
+| Candidate fixed from validation; bundle built and hashed; own IDs; sets, metrics and rules registered | 2, 3, 14, 16, 17, 18 | |
+| Candidate results under its own IDs, once per test set, logged, beside v1's; or the reason it was not evaluated | 3, 19, 20 | |
+| Phone gap recorded as measured on a named device or as still open | 3, 15 | Device, operating system, runtime build, threads, thermal and power conditions registered first |
+
+**Still unverified**
+
+- That the Android package contains the `MultiHeadAttention` CPU kernel. Only a session on an Android
+  build settles this (item 3).
+- That logits on an ARM phone agree with the laptop's within `1e-3`. That limit has only been used
+  between runtimes on one x86 machine (items 3 and 15).
+- That the Moto G35 5G appears in `adb` on this laptop without a further USB driver (item 3).
+- That `quant_pre_process` succeeds on the fused graph, which `fused-int8` needs (item 14).
+- The wrapper design. Its first real proof is the tests and the rehearsal.
+- That every point value in the metric inventory is stored as a fraction, which the 0.0005 limit
+  assumes. Item 6 checks each value's scale when it generates the inventory, before any re-run.
+- Install and test-suite durations, phone run time and candidate test times.
+- Whether fused attention with INT8, or one line per run, helps on the real model.
+- Whether a re-run on the present GPU driver reproduces Phase 14's lines. The driver has changed since
+  the environment report, and Phase 14's run metadata records none, so a driver effect could not be
+  ruled out.
+
+**Limits this plan cannot remove**
+
+- GDC, GDC-scan and the weights cannot be re-downloaded by a stranger.
+- The walkthrough shares the OS, driver and base Python with the original work.
+- Phone pages stay validation-only, while document pages hold about twice as many lines.
+- Phone figures are network time and memory, not a full page on the phone.
+- ADR-0014's ImageNet exception was written for v1 and does not automatically cover a released candidate.

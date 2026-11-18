@@ -236,6 +236,26 @@ GPU-hours. Numbers in docs are copied from these reports together with the exper
   set. A model changed after seeing test results is a new model version and is disclosed as such.
 - Looking at individual test errors is allowed only in Phase 15 (error analysis), after the model is
   frozen; findings from it go into the paper, not back into that model.
+- **Phase 22** (`docs/PHASE_STATUS.md`, Phase 22):
+  - *Reproducing v1.* Re-scoring the saved Phase 14 files and re-running the frozen model read test
+    files again. Every read is logged under Phase 22 and its own ID, but this is a check of the
+    Phase 14 evaluation, not a new one, and it cannot change v1: Phase 14's results stay v1's results
+    whatever it finds, and a failed reproduction is reported beside them. The test re-run is done once
+    per set. A resume only finishes a crashed run. A failed tolerance is not answered by running again;
+    any further attempt needs a new registered ID, written before it starts, and is reported beside the
+    first.
+  - *Walkthrough preprocessing.* Downloading, hashing and converting test files in the clean-machine
+    walkthrough, and cutting their crop packs, are preprocessing, not test access. No model reads
+    them and nothing is scored there, so they add no log row. The walkthrough evaluates on validation
+    pages only.
+  - *The phone candidate.* It is a new version, evaluated once: one prediction pass and one scoring
+    pass per set and task, which its runner and scorer enforce. A resume continues the same evaluation
+    and is logged as `(resumed)`.
+  - *Count-only comparison.* Comparing the v1 re-run's predictions with Phase 14's is a logged access
+    under GW-E2E-018. It outputs how many crops and pages differ, and never any text.
+  - *Preflight checks and the v1 hash lists.* They add no log row. They hash files, read keys, or
+    convert predictions without ground truth; no model runs, no score is computed and no text is shown,
+    as in Phase 14.
 
 ## 10. Baselines
 
@@ -279,3 +299,9 @@ choice; no per-benchmark tuning.
 | 2026-11-17 | §3 and §4 for Phase 16: GPU clocks and temperature are recorded at the start and end of every profile, CPU runs included; compared arms run in one sitting in mirrored order, one process per run; the seed rule does not apply to comparisons between fixed builds of the one frozen model (Phase 14's single-model exception, extended); exactly four confirmatory tests (H7′ latency and accuracy, H6′, H1′ ONNX) | Thermal drift within a sitting; the frozen model is one model by design | Phase 16 |
 | 2026-11-17 | Baselines for Phase 16: `scripts/run_baselines.py --phase 16` allows one validation profile of GW-BASE-002 for H1′'s ONNX verdict, with every settings field asserted equal to the Phase 14 profile's; no test set, no new baseline run otherwise | H1′'s rule needs a fresh baseline profile in the same sitting | GW-BASE-002, GW-EFF-010 |
 | 2026-11-18 | §9: the v1 code check moves from `phase14-eval` to `v1-code`. `phase14-eval` stays the code Phase 14 evaluated; `v1-code` is that code with docstrings and comments corrected and the default bundle name of `from_pretrained` changed, shown by `scripts/v1_code_diff.py` (`reports/export/v1-code/code_diff.json`). This is not a new version: the weights, the settings and every code path that produces a reading are unchanged | The owner's decision to end the freeze after the Phase 20 re-run; the stale docstrings and default name could not change while the check was byte for byte | `assert_v1_code` and every later v1 run |
+| 2026-11-18 | §9 for Phase 22: the reproduction of v1 re-reads test files, each read logged under Phase 22 and a new ID. It is not a new evaluation and cannot change any v1 record | Phase 14 item 6 fixed the tolerance, and checking it needs those files; §9's one-evaluation rule would otherwise read as forbidding the check | GW-E2E-015 to 018, GW-REC-043 |
+| 2026-11-18 | §9 for Phase 22: downloading, hashing and converting test files in the walkthrough, and cutting their crop packs, are preprocessing and add no log row. Owner decision of 2026-11-18 | `prepare_hiertext.py` needs HierText's test ground truth to convert it, and a clean clone must rebuild these files; no model reads them and nothing is scored | GW-E2E-013 |
+| 2026-11-18 | §9 for Phase 22: the phone candidate is a new version with one prediction pass and one scoring pass per set and task, resumes logged as such. H11 and the selection rule are written before it is selected (`research/hypotheses.md`). The seed rule does not apply, as for Phase 16's fixed builds of the one frozen model | Phase 14's rule makes any change after test a new version, and ADR-0011 names this build for Phase 22 | GW-REC-045, GW-E2E-020, GW-E2E-021 |
+| 2026-11-18 | §9 for Phase 22: the comparison of the v1 re-run's predictions with Phase 14's is logged under GW-E2E-018 and outputs counts of differing crops and pages only | It explains a tolerance result without exposing any test line | GW-E2E-018 |
+| 2026-11-18 | §9 for Phase 22: the v1 test re-run is done once per set; any further attempt needs a new registered ID, written first, and is reported beside the first | The re-run is exempt from the one-evaluation rule, so without this limit a failed tolerance could be followed by repeated test passes | GW-REC-043, GW-E2E-016, GW-E2E-017 |
+| 2026-11-18 | §9 for Phase 22: preflight checks and the v1 hash lists add no log row | They hash files, read keys or convert predictions without ground truth; no model runs and no score is computed, as in Phase 14 | GW-E2E-015, GW-E2E-018, GW-E2E-021 |

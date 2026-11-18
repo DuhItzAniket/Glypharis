@@ -424,8 +424,8 @@ Phases 0 to 20 have passed their gates, including the re-runs of 17, 18 and 20 o
 - **Effort:** 2–3 S.
 
 ### Phase 22 — Final validation
-- **Status:** not started. Final validation (Phase 22) has not been run. Its plan is registered in
-  [PHASE_STATUS](PHASE_STATUS.md) before anything runs.
+- **Status:** in progress, plan registered 2026-11-18. Final validation (Phase 22) has not been run. Its plan is in
+  [PHASE_STATUS](PHASE_STATUS.md), Phase 22, and nothing in it has run.
 - **Tasks:**
   1. Clean-machine-style run: fresh clone → install → download → prepare → load model → infer → evaluate;
      record every manual step.
