@@ -149,3 +149,43 @@ disappointing experiment here, including bugs that invalidated a run.
 - **Lesson / implication for the paper:** none for the numbers (the evaluator's code, flags and
   output are unchanged). An evaluator's own environment can change how it runs; a run on a
   full-size validation split before the test pass would have shown this.
+
+### 2026-11-17 — GW-EFF-007 — the GPU page profile stops on its own stage-sum check
+
+- **What we tried:** step 10 of the Phase 16 chain (94 steps run as one detached chain, the
+  compared arms of GW-EFF-008, 009 and 011 in mirrored order, 2026-11-17T13:44:59Z to
+  2026-11-18T05:36:52Z): GW-EFF-007's PyTorch GPU page profile, which splits each page's time
+  into the nine stages and checks that they sum to the time of a second clock around the call
+  within 1%.
+- **What happened:** the step stopped at 2026-11-17T15:40:20Z, after 110 s, on that check, on a
+  short page: "the stages sum to 75.922 ms, the call took 78.329 ms". The failed attempt wrote no
+  output. The nine earlier steps had finished and were kept.
+- **Root cause:** on CUDA every stage boundary adds a synchronisation, so a fixed 1% is too tight
+  on short pages: here the two clocks differed by about 2.4 ms, about 3% of the page time.
+- **What we changed:** the check allows the larger of 1% of the page time and 5 ms
+  (`scripts/e2e_profile.py` and its test, a8e8bb6). The step was run again from its start and
+  finished in 134 s. The nine earlier steps' reports record git commit 6950a5a and all later ones
+  a8e8bb6; that tolerance is the only code difference between the two.
+- **Lesson / implication for the paper:** none for the numbers: the check only guards the stage
+  split, and no reported number depends on its tolerance. A relative tolerance on a timer needs an
+  absolute floor when the thing timed is short and timing it adds a fixed cost.
+
+### 2026-11-18 — GW-EFF-009 — variant reports recorded the checkpoint's local path
+
+- **What we tried:** scoring Phase 16 (`scripts/phase16_score.py`) and a privacy scan of the
+  reports before committing them.
+- **What happened:** 19 variant reports under `reports/efficiency/phase16/variants/`
+  (`det-GW-DET-003` and the `rec-GW-REC-*` variants) recorded the training checkpoint's full local
+  path, user folder included. None had been committed.
+- **Root cause:** the variant reports copied the build record as it was, and these variants load
+  a checkpoint given by path, so the record held the path as it was on this machine. The work
+  folder's record needs the full path, since the later steps read it; a committed report does not.
+- **What we changed:** reports record a checkpoint path from its `checkpoints` folder on
+  (`report_record` and `portable_path` in `glypharis/efficiency/variants.py`, with tests, 1253dfe);
+  the work folder's records keep the full path, and the SHA-256 still names the file. The 19 files
+  had exactly that one line rewritten to `checkpoints/<ID>/best.pt`; the originals are kept outside
+  the repository. Scoring was run again at 1253dfe: in `results.json` only those 19 input hashes and
+  the scorer commit changed, and every number is the same.
+- **Lesson / implication for the paper:** none for the results. A record written for the machine
+  and a record written for the repository are different things; a report should be built for the
+  repository from the start, not cleaned afterwards.

@@ -8,7 +8,7 @@ Rows link to a full entry below. Numbers are copied from generated reports only,
 | ID | Date allocated | Phase | Question / hypothesis | Status | Key result | Report |
 |---|---|---|---|---|---|---|
 | [GW-BASE-001](#gw-base-001) | 2026-10-21 | 05 | Tesseract 5 (LSTM, eng): recognition and end to end | done (Phase 14 amendment run) | lines 24.35% CER (HierText val); 0.43 s per page | `reports/baselines/` |
-| [GW-BASE-002](#gw-base-002) | 2026-10-21 | 05 | PaddleOCR PP-OCRv5 mobile (det + English rec): recognition and end to end | done (Phase 14 amendment run) | lines 9.27% CER (HierText val); 3.4 s per page | `reports/baselines/` |
+| [GW-BASE-002](#gw-base-002) | 2026-10-21 | 05 | PaddleOCR PP-OCRv5 mobile (det + English rec): recognition and end to end | done (Phase 14 and Phase 16 amendments run) | lines 9.27% CER (HierText val); 3.4 s per page | `reports/baselines/` |
 | [GW-BASE-003](#gw-base-003) | 2026-10-21 | 05 | PaddleOCR PP-OCRv5 server (det + rec): recognition and end to end | done (Phase 14 amendment run) | lines 14.65% CER (HierText val); 80.9 s per page; GDC pages not runnable | `reports/baselines/` |
 | [GW-BASE-004](#gw-base-004) | 2026-10-21 | 05 | TrOCR-small-printed: recognition only | done (Phase 14 amendment run) | lines 62.58% strict / 19.14% normalised CER (HierText val); 133 ms per line | `reports/baselines/` |
 | [GW-BASE-005](#gw-base-005) | 2026-10-21 | 05 | PaddleOCR PP-OCRv6 tiny (det + rec): recognition and end to end | done (Phase 14 amendment run) | lines 11.10% CER (HierText val); 21.6 ms per line, 1.7 s per page | `reports/baselines/` |
@@ -99,12 +99,12 @@ Rows link to a full entry below. Numbers are copied from generated reports only,
 | [GW-REC-040](#gw-rec-040) | 2026-11-17 | 15 | Recognition errors of the frozen recognizer on the Phase 14 hand-off (RQ5) | done | GDC: deletions 3.19 of 4.17% CER, full stops 44.176% deleted, the 20 worst lines dot leaders; HierText test: rotation ≥ 5° 34.92% of errors | `reports/error_cases/phase15/`, `reports/confusion_analysis/GW-REC-040/` |
 | [GW-E2E-010](#gw-e2e-010) | 2026-11-17 | 15 | Pipeline errors: page error budget, detection, reading order, the oracle share (RQ5, H4) | done | missed lines 49.45% of HierText test and 45.32% of GDC page error; GDC oracle share 18.66% (clean 32.70%); H4 not supported on GDC (post hoc) | `reports/error_cases/phase15/` |
 | [GW-REC-041](#gw-rec-041) | 2026-11-17 | 15 | The frozen recognizer on GlyphSynth validation, sliced by font and capture labels | done | CER 0.71% [0.63, 0.79]; ink spread 1.41% against 0.58% without | `reports/error_cases/phase15/` |
-| [GW-EFF-006](#gw-eff-006) | 2026-11-17 | 16 | Reference outputs of PyTorch v1 on the CPU; the v1 fp32 ONNX bundle from the freeze record, checked against them | planned | — | `reports/efficiency/phase16/` |
-| [GW-EFF-007](#gw-eff-007) | 2026-11-17 | 16 | The v1 cost table: parameters, sizes, CPU and GPU latency, throughput, memory, page-time split | planned | — | `reports/efficiency/phase16/` |
-| [GW-EFF-008](#gw-eff-008) | 2026-11-17 | 16 | Dynamic INT8 of the v1 ONNX recognizer (H7′) | planned | — | `reports/efficiency/phase16/` |
-| [GW-EFF-009](#gw-eff-009) | 2026-11-17 | 16 | Pareto points: input sizes, INT8, mixed backends, fused attention, other model sizes (new versions) | planned | — | `reports/efficiency/phase16/` |
-| [GW-EFF-010](#gw-eff-010) | 2026-11-17 | 16 | H1′'s ONNX latency: a fresh GW-BASE-002 profile and the v1 ONNX bundle in one sitting | planned | — | `reports/efficiency/phase16/` |
-| [GW-EFF-011](#gw-eff-011) | 2026-11-17 | 16 | H6′'s latency: CRNN GW-REC-003 against SVTR GW-REC-020 in ONNX, per line | planned | — | `reports/efficiency/phase16/` |
+| [GW-EFF-006](#gw-eff-006) | 2026-11-17 | 16 | Reference outputs of PyTorch v1 on the CPU; the v1 fp32 ONNX bundle from the freeze record, checked against them | done | Phase 17's four checks pass: maps 7.33e-6, logits 3.09e-4, text identical, page CER within 1.49e-5; bundle `875357a6…` | `reports/efficiency/phase16/` |
+| [GW-EFF-007](#gw-eff-007) | 2026-11-17 | 16 | The v1 cost table: parameters, sizes, CPU and GPU latency, throughput, memory, page-time split | done | 11,116,044 parameters; CPU pages at 10 threads: PyTorch 2,566 ms, 1,641.8 MiB; fp32 ONNX 8,574 ms, 6,529.6 MiB (recognizer network 95%); GPU 1,049 ms | `reports/efficiency/phase16/`, `reports/benchmark_results/efficiency_comparison.md` |
+| [GW-EFF-008](#gw-eff-008) | 2026-11-17 | 16 | Dynamic INT8 of the v1 ONNX recognizer (H7′) | done | 61.84 against 95.78 ms per line, −10.00 [−12.79, −7.37]; CER 6.208 against 6.221%, −0.512 [−0.541, −0.484]; H7′ holds | `reports/efficiency/phase16/` |
+| [GW-EFF-009](#gw-eff-009) | 2026-11-17 | 16 | Pareto points: input sizes, INT8, mixed backends, fused attention, other model sizes (new versions) | done | lowest mean page time at v1's accuracy: ONNX detector with PyTorch recognizer, 2,579.1 ms per page; fused attention 4,020.8 against 9,739.4 ms; detector size moves CER, ONNX page time by at most about 13% | `reports/efficiency/phase16/` |
+| [GW-EFF-010](#gw-eff-010) | 2026-11-17 | 16 | H1′'s ONNX latency: a fresh GW-BASE-002 profile and the v1 ONNX bundle in one sitting | done | 9,623.6 against 3,086.0 ms per page, +6,537.6 [+5,383.7, +7,806.3] ms: H1′ ONNX not met (bundle `875357a6…`) | `reports/efficiency/phase16/` |
+| [GW-EFF-011](#gw-eff-011) | 2026-11-17 | 16 | H6′'s latency: CRNN GW-REC-003 against SVTR GW-REC-020 in ONNX, per line | done | SVTR 32.01 against CRNN 10.16 ms per line, +16.78 [+12.02, +22.04] ms: H6′ not met | `reports/efficiency/phase16/` |
 
 ### GW-BASE-001 — Tesseract 5 (LSTM, eng): recognition and end to end
 
@@ -151,6 +151,8 @@ Rows link to a full entry below. Numbers are copied from generated reports only,
 - **Result (Phase 14, 2026-11-17, GW-E2E-009):** strict track, `reports/external/`. IIIT5K 94.93% words; FUNSD crops 18.34%, GDC-scan crops 1.41%; pages: FUNSD E2E F1 62.65%, GDC-scan bag-of-lines CER 12.94%, OmniDocBench order-aware 60.52% (text-block edit distance 0.4217). Fresh 10-thread profile for H1′: 2,954.8 ms per page (GW-EFF-005).
 
 - **Amendment (2026-11-17, Phase 16, before the run):** one fresh validation profile for H1′'s ONNX verdict (GW-EFF-010), with the same runner, settings and profiling path as the Phase 14 profile (every settings field asserted equal), through `scripts/run_baselines.py --phase 16` in `.venv-baselines`; output `data/processed/baselines_phase16/GW-BASE-002/`. No test data.
+- **Result (Phase 16, 2026-11-18, GW-EFF-010):** fresh 10-thread validation profile, the sitting's first (2026-11-17, 16:40:45 to 16:46:30Z), mains, Balanced plan, power mode "best performance" at start and end, every settings field equal to the Phase 14 profile's: 3,086.0 ms per page mean (`reports/efficiency/phase16/verdicts.md`, with the sitting times). The profile itself (`data/processed/baselines_phase16/GW-BASE-002/profile_ppocr_mobile_e2e_hiertext_val.json`) is not committed; its SHA-256 is in `reports/efficiency/phase16/results.json`.
+
 ### GW-BASE-003 — PaddleOCR PP-OCRv5 server (det + rec): recognition and end to end
 
 - **System:** PaddleOCR 3.7 with PP-OCRv5_server_det and PP-OCRv5_server_rec (no English-only server recognizer exists), CPU, same pipeline settings as GW-BASE-002. **Reduced scope:** the server recognizer needs about 1–3 s per line on this CPU, so it runs on GDC test (recognition and end to end) and HierText validation (recognition) only. HierText test and GlyphSynth val would add roughly 45 CPU-hours and are recorded as not run.
@@ -1869,9 +1871,9 @@ Rows link to a full entry below. Numbers are copied from generated reports only,
 
 ### GW-EFF-006 — Reference outputs and the v1 fp32 ONNX bundle
 
-- **Date allocated / run:** 2026-11-17 / —
+- **Date allocated / run:** 2026-11-17 / 2026-11-17
 - **Phase:** 16
-- **Git commit:** recorded in each profile   **Config:** `configs/final/glypharis_v1.yaml`   **Seed(s):** none (no training); bootstrap 20261010
+- **Git commit:** `9f58c4b` with the fixes `6950a5a`, `a8e8bb6` and `1253dfe`; the references, the bundle and the check record `6950a5a` (reports `e04f54e`, scored at `1253dfe`)   **Config:** `configs/final/glypharis_v1.yaml`   **Seed(s):** none (no training); bootstrap 20261010
 - **Dataset version(s):** HierText validation: the Phase 5 profile pages and 400-page sample, `rec_samples`, the 5,000 lines seeded 20261028 from `processed/hiertext/lines_validation`
 - **Hardware:** laptop CPU (and the RTX 4050 for GW-EFF-007's GPU rows); mains, Balanced plan, power mode recorded
 - **Research question:** is the plain fp32 ONNX export of v1 the same model (RQ7)?
@@ -1879,16 +1881,16 @@ Rows link to a full entry below. Numbers are copied from generated reports only,
 - **Method:** write detector maps (110 profile pages), recognizer logits (5,000 lines) and page predictions (400 pages) from PyTorch v1 on the CPU, hash them; build the bundle from the freeze record; check it against the saved outputs.
 - **Variables:** see `docs/PHASE_STATUS.md`, Phase 16 plan
 - **Control:** the saved PyTorch v1 outputs
-- **Result:** —
-- **Interpretation:** —
+- **Result:** the first steps of the Phase 16 chain (94 steps in one detached chain, 2026-11-17T13:44:59Z to 2026-11-18T05:36:52Z). References written once from PyTorch v1 on the CPU, their SHA-256 in `reference_manifest.json` (SHA-256 `4ff7f155…`). Bundle `runs/release/glypharis-v1`, built from the freeze record (record SHA-256 `0aa61f9e…`, that of `configs/final/glypharis_v1.yaml`), manifest SHA-256 `875357a6346e8b1f989005fa96c557b00bf687461043368dc5e3dc532839f037`, named at 13:45:10Z before any timed run. Phase 17's four checks against the references (14:22:06 to 15:31:40Z), limit and measured: detector map max abs difference 1e-4, 7.33e-6 on 110 pages; recognizer logits 1e-3, 3.09e-4 on 5,000 lines; greedy text, no differences except near ties (top-2 gap < 1e-3) on at most 0.1% of lines, 0 other differences and 0 near ties; page CER within 0.05 points (5e-4), 24.32% on both backends, difference 1.49e-5, on 400 pages. All four pass (`reports/efficiency/phase16/README.md`, `reference_check.json`, `v1_bundle.json`).
+- **Interpretation:** by Phase 17's registered tolerances the plain fp32 ONNX export (TorchScript exporter) is the same model as PyTorch v1, so its timings in GW-EFF-007 to 010 are v1's in ONNX Runtime, not a variant's. This is the bundle the Phase 17 re-run cites, and the H1′ ONNX verdict (GW-EFF-010) applies to its hash only. Finding F34.
 - **Limitations:** TorchScript exporter only (as Phase 17).
 - **Next experiment:** Phase 17 re-run (the v1 bundle)
 
 ### GW-EFF-007 — The v1 cost table
 
-- **Date allocated / run:** 2026-11-17 / —
+- **Date allocated / run:** 2026-11-17 / 2026-11-17
 - **Phase:** 16
-- **Git commit:** recorded in each profile   **Config:** `configs/final/glypharis_v1.yaml`   **Seed(s):** none (no training); bootstrap 20261010
+- **Git commit:** `9f58c4b` with the fixes `6950a5a`, `a8e8bb6` and `1253dfe` (reports `e04f54e`, scored at `1253dfe`); the five line profiles and the PyTorch CPU page profile record `6950a5a`, the GPU page profile and the two ONNX page profiles `a8e8bb6` (their bundle `6950a5a`)   **Config:** `configs/final/glypharis_v1.yaml`   **Seed(s):** none (no training); bootstrap 20261010
 - **Dataset version(s):** HierText validation: the Phase 5 profile pages and 400-page sample, `rec_samples`, the 5,000 lines seeded 20261028 from `processed/hiertext/lines_validation`
 - **Hardware:** laptop CPU (and the RTX 4050 for GW-EFF-007's GPU rows); mains, Balanced plan, power mode recorded
 - **Research question:** what does v1 cost on this laptop (RQ7, RQ4)?
@@ -1896,16 +1898,16 @@ Rows link to a full entry below. Numbers are copied from generated reports only,
 - **Method:** profiles of PyTorch v1 and the GW-EFF-006 bundle at 10 threads (ONNX also at the default), GPU PyTorch rows, the page-time split and the lines-per-page slope; mirrored run order in one sitting.
 - **Variables:** see `docs/PHASE_STATUS.md`, Phase 16 plan
 - **Control:** —
-- **Result:** —
-- **Interpretation:** —
-- **Limitations:** one laptop; HierText validation pages.
+- **Result:** one sitting, 2026-11-17, 15:31:49 to 16:20:07Z, each row one run; mains, Balanced plan and power mode "best performance" at the start and end of every profile, no sitting void. Parameters: detector 3,187,209, recognizer 7,928,835, total 11,116,044; files: detector 12.44 MiB as release .pt and 12.15 MiB as fp32 ONNX, recognizer 30.31 and 30.40 MiB (the INT8 recognizer 9.82 MiB, GW-EFF-008). Lines, batch 1 (mean, p95, peak RAM): PyTorch CPU 10 threads 33.90 [29.92, 38.13] ms, 77.60 ms, 825.7 MiB; fp32 ONNX 10 threads 92.25 [70.69, 116.28] ms, 304.39 ms, 1,028.0 MiB; fp32 ONNX default threads 104.73 [79.87, 132.05] ms, 392.09 ms, 1,043.6 MiB; PyTorch GPU 12.22 [11.24, 13.33] ms, 19.01 ms, 81.8 lines/s, torch peak VRAM 77.3 MiB; GPU batch 32 199.89 [187.57, 213.04] ms per batch, 160.1 lines/s, 282.2 MiB. Pages (110 profile pages, 40.9 lines per page): PyTorch CPU 2,566 [2,327, 2,829] ms, p95 5,127 ms, 1,641.8 MiB; fp32 ONNX 10 threads 8,574 [7,516, 9,766] ms, p95 19,011 ms, 6,529.6 MiB; fp32 ONNX default threads 9,925 [8,744, 11,261] ms, p95 22,072 ms, 6,541.5 MiB; PyTorch GPU 1,049 [825, 1,300] ms, p95 3,288 ms, 2,450.0 MiB RAM, torch peak VRAM 432.4 MiB (whole GPU 1,335 MiB at the end, display included; nvidia-smi gives no per-process figure under the Windows driver). Stage split, mean ms per page: PyTorch CPU detector network 296.4 (12%), recognizer network 2,148.2 (84%), detector post-processing 43.6, cropping 38.8; fp32 ONNX 10 threads detector network 297.5 (3%), recognizer network 8,167.7 (95%); at default threads 484.3 (5%) and 9,289.5 (94%); PyTorch GPU detector network 694.5 (66%), recognizer network 261.0 (25%); every other stage under 60 ms on every build. Page time against lines per page (least squares, page bootstrap): 28.6 [19.2, 42.9] ms per line for PyTorch CPU, 72.6 [32.9, 142.7] for fp32 ONNX at 10 threads, 85.5 [41.6, 165.1] at default threads, 4.8 [−1.4, 16.7] on the GPU. ADR-0011's targets: every CPU build is over on line mean and p95 and page mean and p95; PyTorch's page RAM (1,641.8 MiB) is within, fp32 ONNX's is over (`reports/efficiency/phase16/cost_table.md`, `README.md`; beside the Phase 5 baselines, different sittings, in `reports/benchmark_results/efficiency_comparison.md`). The GPU page profile stopped once on the profiler's own stage-sum check and was run again from its start after `a8e8bb6` (`research/failures.md`); no reported number depends on that tolerance.
+- **Interpretation:** exported as it is, v1 is slower in ONNX Runtime than in PyTorch on this CPU: about 2.7 times per line and about 3.3 times per page. The detector network takes the same time on both (297.5 against 296.4 ms per page), so F13's "twice as fast" exported detector, an arena-on side test, does not hold with the arena off, as the backends run; the recognizer network is the whole difference (8,167.7 against 2,148.2 ms). At ONNX Runtime's default threads its means are higher (104.73 ms per line, 9,925 ms per page; one run each, not compared in a mirrored order). No CPU build of v1 meets ADR-0011's latency targets. On the GPU the detector network takes longer per page than on the CPU (694.5 against 296.4 ms); this is not explained here. Findings F34 and F38.
+- **Limitations:** one laptop; HierText validation pages. Each row is one run, in chain order rather than the mirrored order the Method names (a deviation, `docs/PHASE_STATUS.md`), so the builds are not compared here in a mirrored order (GW-EFF-009's sittings do that for v1's two CPU builds); the GPU rows are PyTorch only.
 - **Next experiment:** Phase 17 re-run (the v1 bundle)
 
 ### GW-EFF-008 — Dynamic INT8 of the v1 ONNX recognizer
 
-- **Date allocated / run:** 2026-11-17 / —
+- **Date allocated / run:** 2026-11-17 / 2026-11-17
 - **Phase:** 16
-- **Git commit:** recorded in each profile   **Config:** `configs/final/glypharis_v1.yaml`   **Seed(s):** none (no training); bootstrap 20261010
+- **Git commit:** `9f58c4b` with the fixes `6950a5a`, `a8e8bb6` and `1253dfe`; every run records `a8e8bb6` (reports `e04f54e`, scored at `1253dfe`)   **Config:** `configs/final/glypharis_v1.yaml`   **Seed(s):** none (no training); bootstrap 20261010
 - **Dataset version(s):** HierText validation: the Phase 5 profile pages and 400-page sample, `rec_samples`, the 5,000 lines seeded 20261028 from `processed/hiertext/lines_validation`
 - **Hardware:** laptop CPU (and the RTX 4050 for GW-EFF-007's GPU rows); mains, Balanced plan, power mode recorded
 - **Research question:** does dynamic INT8 make the recognizer faster at little cost (RQ7)?
@@ -1913,16 +1915,16 @@ Rows link to a full entry below. Numbers are copied from generated reports only,
 - **Method:** the registered quantisation recipe; latency on `rec_samples` (batch 1, 10 threads, order fp32, INT8, INT8, fp32); CER on the 5,000 lines, strict.
 - **Variables:** see `docs/PHASE_STATUS.md`, Phase 16 plan
 - **Control:** the GW-EFF-006 fp32 recognizer
-- **Result:** —
-- **Interpretation:** —
+- **Result:** the registered recipe (onnxruntime 1.31.1, onnx 1.23.2) turns 49 of the 67 fp32 MatMuls into MatMulInteger with 49 DynamicQuantizeLinear nodes; 18 MatMuls, the attention products among them, stay fp32; file 30.40 → 9.82 MiB (SHA-256 `e7a4ee3b…`). Latency sitting, 2026-11-17, 16:38:41 to 16:39:58Z, order fp32, INT8, INT8, fp32: fp32 95.78 ms per line mean (runs 96.61 and 94.95), p95 346.50 ms; INT8 61.84 ms (63.21 and 60.46), p95 232.02 ms; t_INT8 − 0.75 × t_fp32 = −10.00 [−12.79, −7.37] ms: **met**. Accuracy on the 5,000 lines, strict, greedy: line CER 6.221% fp32, 6.208% INT8; the registered margin test −0.512 [−0.541, −0.484] points: **met**. **H7′ holds.** On the pages (GW-EFF-009, descriptive), INT8 minus v1's fp32 ONNX build: page time −2,848.5 [−3,233.6, −2,505.1] ms (6,890.9 against 9,739.4 ms), page CER +0.00 [−0.02, +0.02] points, peak RAM 6,896.5 against 6,525.5 MiB (`reports/efficiency/phase16/int8.md`, `verdicts.md`, `pareto.md`).
+- **Interpretation:** dynamic INT8 of the constant-weight MatMuls takes about a third off the recognizer's line time, at a line CER of 6.208% against 6.221%, and shrinks the file to about a third. The attention products stay fp32, and on pages it removes less time than fusing the attention (GW-EFF-009: 6,890.9 against 4,020.8 ms per page). The INT8 recognizer is a new version, not v1, measured on validation only; it does not replace v1, and shipping it is the owner's decision (ADR-0011), with a Phase 22 evaluation if it ships. Finding F36.
 - **Limitations:** the attention products stay fp32; an INT8 bundle is a new version.
 - **Next experiment:** Phase 17 re-run (the v1 bundle)
 
 ### GW-EFF-009 — Pareto points (new versions)
 
-- **Date allocated / run:** 2026-11-17 / —
+- **Date allocated / run:** 2026-11-17 / 2026-11-17 to 2026-11-18
 - **Phase:** 16
-- **Git commit:** recorded in each profile   **Config:** `configs/final/glypharis_v1.yaml`   **Seed(s):** none (no training); bootstrap 20261010
+- **Git commit:** `9f58c4b` with the fixes `6950a5a`, `a8e8bb6` and `1253dfe`; every run records `a8e8bb6`; `1253dfe` changed only how the 19 variant reports of `det-GW-DET-003` and the `rec-GW-REC-*` points record their checkpoint (`checkpoints/<ID>/best.pt`), and the re-scoring changed no number (`research/failures.md`) (reports `e04f54e`, scored at `1253dfe`)   **Config:** `configs/final/glypharis_v1.yaml`   **Seed(s):** none (no training); bootstrap 20261010
 - **Dataset version(s):** HierText validation: the Phase 5 profile pages and 400-page sample, `rec_samples`, the 5,000 lines seeded 20261028 from `processed/hiertext/lines_validation`
 - **Hardware:** laptop CPU (and the RTX 4050 for GW-EFF-007's GPU rows); mains, Balanced plan, power mode recorded
 - **Research question:** where do the variants sit on accuracy against latency (RQ7)?
@@ -1930,16 +1932,16 @@ Rows link to a full entry below. Numbers are copied from generated reports only,
 - **Method:** each variant built by overriding one named setting; page CER and E2E F1 on the 400 pages (CPU), latency and peak RAM on the 110 profile pages; recognizer variants by line CER and line latency.
 - **Variables:** see `docs/PHASE_STATUS.md`, Phase 16 plan
 - **Control:** v1 (GW-EFF-006, GW-EFF-007)
-- **Result:** —
-- **Interpretation:** —
+- **Result:** accuracy runs 2026-11-17, 16:20:50Z to 2026-11-18, 00:59:49Z; page sitting 00:59:56 to 05:29:38Z and line sitting 05:29:50 to 05:34:57Z (2026-11-18), each in the mirrored order, each item the mean of its two runs; no sitting void, every variant run (the cut line was not needed). Every point but v1 is a new version, not v1; intervals are descriptive, differences are the point minus v1's fp32 ONNX build. Pages (page CER and E2E F1 on the 400 pages, strict; mean, p95 and peak RAM on the 110 profile pages): v1 PyTorch 24.32% [20.87, 28.15], 60.50%, 2,637.3 [2,395.4, 2,909.1] ms, 5,327.7 ms, 1,665.0 MiB; v1 fp32 ONNX 24.32%, 60.50%, 9,739.4 [8,510.8, 11,113.1] ms, 22,474.1 ms, 6,525.5 MiB; detector long side 1024 31.62%, 55.95%, 8,491.3 ms (+7.29 [+5.55, +9.51] points, −1,248.1 [−1,761.3, −734.3] ms); 1280 26.63%, 58.98%, 9,537.2 ms (+2.31 [+1.66, +2.98], −202.2 [−451.2, +32.6]); 1792 24.21%, 60.67%, 10,168.1 ms (−0.11 [−0.93, +0.92], +428.7 [+230.7, +647.8]); 2048 23.75%, 61.10%, 10,400.0 ms (−0.57 [−1.80, +0.83], +660.6 [+393.3, +949.6]); ONNX detector with the PyTorch recognizer 24.32%, 60.50%, 2,579.1 [2,340.0, 2,844.7] ms, p95 5,186.9 ms, 1,550.0 MiB (+0.00 [+0.00, +0.00], −7,160.4 [−8,258.3, −6,171.7]); INT8 recognizer 24.32%, 60.46%, 6,890.9 ms, 6,896.5 MiB (+0.00 [−0.02, +0.02], −2,848.5 [−3,233.6, −2,505.1]); fused attention (each global mixer exported as one `com.microsoft.MultiHeadAttention` node) 24.32%, 60.50%, 4,020.8 [3,604.2, 4,479.8] ms, p95 8,267.1 ms, 2,393.0 MiB (+0.00 [+0.00, +0.00], −5,718.6 [−6,630.9, −4,883.7]); detector GW-DET-003 27.33%, 57.75%, 9,065.7 ms (+3.00 [+1.52, +4.33], −673.7 [−888.5, −443.8]). Lines (line CER on the 5,000 lines, strict, greedy; mean and p95 on 100 `rec_samples` lines): v1 PyTorch 6.22% [5.73, 6.71], 35.55 [31.32, 40.10] ms, 80.82 ms; v1 fp32 ONNX 6.22%, 95.59 [73.55, 120.41] ms, 340.04 ms; INT8 6.21%, 63.35 ms (−0.01 [−0.04, +0.02] points, −32.24 [−39.97, −24.87] ms); fused attention 6.22%, 39.53 [32.12, 47.52] ms, 112.10 ms (−56.06 [−72.68, −41.23] ms); GW-REC-003 8.34%, 9.07 ms (+2.12 [+1.82, +2.40] points); GW-REC-006 7.85%, 16.67 ms (+1.63 [+1.39, +1.87]); GW-REC-020 8.21%, 29.03 ms (+1.99 [+1.72, +2.23]); GW-REC-022 7.57%, 100.57 ms (+1.35 [+1.13, +1.55] points, +4.98 [+3.12, +6.86] ms). (`reports/efficiency/phase16/pareto.md`, `pareto.png`; the options table for the owner in `README.md`.)
+- **Interpretation:** the recognizer sets the page time. Fusing the attention keeps v1's page CER, E2E F1 and line CER and takes the ONNX page time from 9,739.4 to 4,020.8 ms and peak RAM from 6,525.5 to 2,393.0 MiB, so the plain export's attention is where the ONNX build loses most of its time; it is still slower than PyTorch (2,637.3 ms per page, 35.55 ms per line in the same sittings). Among the points at v1's accuracy, the ONNX detector with the PyTorch recognizer has the lowest mean page time (2,579.1 ms mean, 5,186.9 ms p95, 1,550.0 MiB; about 58 ms below v1-torch's 2,637.3 ms in the same sittings, and no interval for that difference is reported), still over both of ADR-0011's page time targets (within the RAM target). Detector input size and the smaller detector move page accuracy but change the ONNX page time by at most about 13%: 1024 costs +7.29 points for −1,248.1 ms, and GW-DET-003 +3.00 points for −673.7 ms. Every other recognizer reads with a higher line CER than v1's; GW-REC-003 has the lowest mean line time (9.07 ms) at +2.12 points. These are new versions on validation; none replaces v1, and choosing a default backend or shipping a variant is the owner's decision (ADR-0011); Phase 16 changes no default. Findings F35, F37 and F38.
 - **Limitations:** variants are new versions on validation only; the size points differ in recipe and budget.
 - **Next experiment:** Phase 17 re-run (the v1 bundle)
 
 ### GW-EFF-010 — H1′'s ONNX latency verdict
 
-- **Date allocated / run:** 2026-11-17 / —
+- **Date allocated / run:** 2026-11-17 / 2026-11-17
 - **Phase:** 16
-- **Git commit:** recorded in each profile   **Config:** `configs/final/glypharis_v1.yaml`   **Seed(s):** none (no training); bootstrap 20261010
+- **Git commit:** `9f58c4b` with the fixes `6950a5a`, `a8e8bb6` and `1253dfe`; both profiles record `a8e8bb6` (the bundle `6950a5a`) (reports `e04f54e`, scored at `1253dfe`)   **Config:** `configs/final/glypharis_v1.yaml`   **Seed(s):** none (no training); bootstrap 20261010
 - **Dataset version(s):** HierText validation: the Phase 5 profile pages and 400-page sample, `rec_samples`, the 5,000 lines seeded 20261028 from `processed/hiertext/lines_validation`
 - **Hardware:** laptop CPU; mains, Balanced plan, power mode recorded
 - **Research question:** is the v1 ONNX build faster per page than PP-OCRv5 mobile on the CPU (RQ1)?
@@ -1947,16 +1949,16 @@ Rows link to a full entry below. Numbers are copied from generated reports only,
 - **Method:** Phase 14's rule (items 5 and 10) with the GW-EFF-006 bundle named by its SHA-256 before the sitting.
 - **Variables:** see `docs/PHASE_STATUS.md`, Phase 16 plan
 - **Control:** a fresh GW-BASE-002 profile in the same sitting (amendment to GW-BASE-002)
-- **Result:** —
-- **Interpretation:** —
+- **Result:** bundle named before the sitting (2026-11-17T13:45:10Z), manifest SHA-256 `875357a6346e8b1f989005fa96c557b00bf687461043368dc5e3dc532839f037`. One sitting, 2026-11-17: GW-BASE-002 16:40:45 to 16:46:30Z, then the v1 fp32 ONNX bundle 16:46:42 to 17:04:02Z, both at 10 threads, power mode "best performance" for both. Mean 9,623.6 ms per page for the bundle against 3,086.0 ms for PP-OCRv5 mobile, difference +6,537.6 [+5,383.7, +7,806.3] ms: **not met** (`reports/efficiency/phase16/verdicts.md`; the bundle's per-page times in `reports/efficiency/phase16/profiles/pages_onnx_cpu_10t_GW-EFF-010.json`, the baseline profile's SHA-256 in `results.json`).
+- **Interpretation:** H1′'s ONNX verdict is not met: v1's plain fp32 ONNX build, in this bundle, is slower per page than PP-OCRv5 mobile on this CPU, by about 3.1 times. It applies to this bundle hash only; if the Phase 17 re-run ships another bundle, the verdict does not carry over. H1′ itself still holds from Phase 14, its latency half judged on the PyTorch build (GW-EFF-005). The same bundle's page means in other sittings, as information: 8,573.7 ms (GW-EFF-007) and 9,739.4 ms (GW-EFF-009). Finding F40.
 - **Limitations:** HierText validation pages.
 - **Next experiment:** Phase 17 re-run (the v1 bundle)
 
 ### GW-EFF-011 — H6′'s latency: SVTR against CRNN in ONNX
 
-- **Date allocated / run:** 2026-11-17 / —
+- **Date allocated / run:** 2026-11-17 / 2026-11-18
 - **Phase:** 16
-- **Git commit:** recorded in each profile   **Config:** `configs/final/glypharis_v1.yaml`   **Seed(s):** none (no training); bootstrap 20261010
+- **Git commit:** `9f58c4b` with the fixes `6950a5a`, `a8e8bb6` and `1253dfe`; every run records `a8e8bb6` (reports `e04f54e`, scored at `1253dfe`)   **Config:** `configs/final/glypharis_v1.yaml`   **Seed(s):** none (no training); bootstrap 20261010
 - **Dataset version(s):** HierText validation: the Phase 5 profile pages and 400-page sample, `rec_samples`, the 5,000 lines seeded 20261028 from `processed/hiertext/lines_validation`
 - **Hardware:** laptop CPU; mains, Balanced plan, power mode recorded
 - **Research question:** is the SVTR-style recognizer within 1.5 times the CRNN's CPU latency (RQ7)?
@@ -1964,8 +1966,8 @@ Rows link to a full entry below. Numbers are copied from generated reports only,
 - **Method:** GW-REC-003 and GW-REC-020 exported to fp32 ONNX, each checked against its own PyTorch outputs; `rec_samples`, batch 1, 10 threads, order CRNN, SVTR, SVTR, CRNN.
 - **Variables:** see `docs/PHASE_STATUS.md`, Phase 16 plan
 - **Control:** GW-REC-003
-- **Result:** —
-- **Interpretation:** —
+- **Result:** export checks on the 5,000 lines, height 32: GW-REC-003 max logit difference 1.56e-04, text identical on 5,000 lines, 0 near ties; GW-REC-020 2.89e-04, 5,000, 0; both pass. Sitting 2026-11-18, 05:35:10 to 05:36:07Z, order CRNN, SVTR, SVTR, CRNN: CRNN 10.16 ms per line mean (runs 10.83 and 9.48), SVTR 32.01 ms (31.23 and 32.80); t_SVTR − 1.5 × t_CRNN = +16.78 [+12.02, +22.04] ms: **not met**. PyTorch at 10 threads, information: GW-REC-003 13.00 ms (p95 27.52), GW-REC-020 15.70 ms (p95 32.40) (`reports/efficiency/phase16/verdicts.md`).
+- **Interpretation:** H6′ is not met: in fp32 ONNX the SVTR-style recognizer takes about 3.2 times the CRNN's time per line, against about 1.2 times in PyTorch at 10 threads, which matches Phase 7's 16-thread timings (SVTR slower than CRNN by less than 1.5 times; information, not a test). The plain export's unfused attention (F35) is the likely reason the ONNX gap is wider than PyTorch's; a fused export of GW-REC-020 was not measured. H6′, which supersedes H6's latency half, is not met (2026-11-18, GW-EFF-011); with its CER half exploratory, H6 as a whole stays at most inconclusive, as registered. Finding F39.
 - **Limitations:** height 32 pair (H6's matched budget); v1 is height 48.
 - **Next experiment:** Phase 17 re-run (the v1 bundle)
 

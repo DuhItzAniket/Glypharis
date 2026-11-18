@@ -2479,6 +2479,956 @@
    "end": "2026-11-14 19:21:19",
    "hours": 0.29333333333333333,
    "outcome": "done"
+  },
+  {
+   "device": "cpu",
+   "experiment": "GW-EFF-006",
+   "kind": "efficiency",
+   "detail": "eff006_bundle",
+   "start": "2026-11-17T13:44:59Z",
+   "end": "2026-11-17T13:45:11Z",
+   "hours": 0.0033333333333333335,
+   "outcome": "done"
+  },
+  {
+   "device": "cpu",
+   "experiment": "GW-EFF-006",
+   "kind": "efficiency",
+   "detail": "eff006_ref_write",
+   "start": "2026-11-17T13:45:11Z",
+   "end": "2026-11-17T14:21:58Z",
+   "hours": 0.6130555555555556,
+   "outcome": "done"
+  },
+  {
+   "device": "cpu",
+   "experiment": "GW-EFF-006",
+   "kind": "efficiency",
+   "detail": "eff006_ref_check",
+   "start": "2026-11-17T14:21:59Z",
+   "end": "2026-11-17T15:31:42Z",
+   "hours": 1.1619444444444444,
+   "outcome": "done"
+  },
+  {
+   "device": "cpu",
+   "experiment": "GW-EFF-007",
+   "kind": "efficiency",
+   "detail": "eff007_l_torch",
+   "start": "2026-11-17T15:31:42Z",
+   "end": "2026-11-17T15:31:58Z",
+   "hours": 0.0044444444444444444,
+   "outcome": "done"
+  },
+  {
+   "device": "cpu",
+   "experiment": "GW-EFF-007",
+   "kind": "efficiency",
+   "detail": "eff007_l_onnx",
+   "start": "2026-11-17T15:31:58Z",
+   "end": "2026-11-17T15:32:20Z",
+   "hours": 0.006111111111111111,
+   "outcome": "done"
+  },
+  {
+   "device": "cpu",
+   "experiment": "GW-EFF-007",
+   "kind": "efficiency",
+   "detail": "eff007_l_onnx_def",
+   "start": "2026-11-17T15:32:20Z",
+   "end": "2026-11-17T15:32:42Z",
+   "hours": 0.006111111111111111,
+   "outcome": "done"
+  },
+  {
+   "device": "gpu",
+   "experiment": "GW-EFF-007",
+   "kind": "efficiency",
+   "detail": "eff007_l_cuda_b1",
+   "start": "2026-11-17T15:32:43Z",
+   "end": "2026-11-17T15:32:56Z",
+   "hours": 0.003611111111111111,
+   "outcome": "done"
+  },
+  {
+   "device": "gpu",
+   "experiment": "GW-EFF-007",
+   "kind": "efficiency",
+   "detail": "eff007_l_cuda_b32",
+   "start": "2026-11-17T15:32:56Z",
+   "end": "2026-11-17T15:33:31Z",
+   "hours": 0.009722222222222222,
+   "outcome": "done"
+  },
+  {
+   "device": "cpu",
+   "experiment": "GW-EFF-007",
+   "kind": "efficiency",
+   "detail": "eff007_p_torch",
+   "start": "2026-11-17T15:33:31Z",
+   "end": "2026-11-17T15:38:30Z",
+   "hours": 0.08305555555555555,
+   "outcome": "done"
+  },
+  {
+   "device": "gpu",
+   "experiment": "GW-EFF-007",
+   "kind": "efficiency",
+   "detail": "eff007_p_cuda",
+   "start": "2026-11-17T15:38:30Z",
+   "end": "2026-11-17T15:40:20Z",
+   "hours": 0.030555555555555555,
+   "outcome": "failed (exit 1)"
+  },
+  {
+   "device": "gpu",
+   "experiment": "GW-EFF-007",
+   "kind": "efficiency",
+   "detail": "eff007_p_cuda",
+   "start": "2026-11-17T15:44:00Z",
+   "end": "2026-11-17T15:46:14Z",
+   "hours": 0.03722222222222222,
+   "outcome": "done"
+  },
+  {
+   "device": "cpu",
+   "experiment": "GW-EFF-007",
+   "kind": "efficiency",
+   "detail": "eff007_p_onnx",
+   "start": "2026-11-17T15:46:14Z",
+   "end": "2026-11-17T16:02:08Z",
+   "hours": 0.265,
+   "outcome": "done"
+  },
+  {
+   "device": "cpu",
+   "experiment": "GW-EFF-007",
+   "kind": "efficiency",
+   "detail": "eff007_p_onnx_def",
+   "start": "2026-11-17T16:02:08Z",
+   "end": "2026-11-17T16:20:27Z",
+   "hours": 0.30527777777777776,
+   "outcome": "done"
+  },
+  {
+   "device": "cpu",
+   "experiment": "GW-EFF-008",
+   "kind": "efficiency",
+   "detail": "eff008_build_v1-onnx",
+   "start": "2026-11-17T16:20:27Z",
+   "end": "2026-11-17T16:20:34Z",
+   "hours": 0.0019444444444444444,
+   "outcome": "done"
+  },
+  {
+   "device": "cpu",
+   "experiment": "GW-EFF-008",
+   "kind": "efficiency",
+   "detail": "eff008_build_int8-recognizer",
+   "start": "2026-11-17T16:20:34Z",
+   "end": "2026-11-17T16:20:44Z",
+   "hours": 0.002777777777777778,
+   "outcome": "done"
+  },
+  {
+   "device": "cpu",
+   "experiment": "GW-EFF-008",
+   "kind": "efficiency",
+   "detail": "eff008_eval_v1-onnx",
+   "start": "2026-11-17T16:20:44Z",
+   "end": "2026-11-17T16:32:46Z",
+   "hours": 0.20055555555555554,
+   "outcome": "done"
+  },
+  {
+   "device": "cpu",
+   "experiment": "GW-EFF-008",
+   "kind": "efficiency",
+   "detail": "eff008_eval_int8-recognizer",
+   "start": "2026-11-17T16:32:46Z",
+   "end": "2026-11-17T16:38:34Z",
+   "hours": 0.09666666666666666,
+   "outcome": "done"
+  },
+  {
+   "device": "cpu",
+   "experiment": "GW-EFF-008",
+   "kind": "efficiency",
+   "detail": "eff008_time_v1-onnx_1",
+   "start": "2026-11-17T16:38:34Z",
+   "end": "2026-11-17T16:38:59Z",
+   "hours": 0.006944444444444444,
+   "outcome": "done"
+  },
+  {
+   "device": "cpu",
+   "experiment": "GW-EFF-008",
+   "kind": "efficiency",
+   "detail": "eff008_time_int8-recognizer_1",
+   "start": "2026-11-17T16:38:59Z",
+   "end": "2026-11-17T16:39:20Z",
+   "hours": 0.005833333333333334,
+   "outcome": "done"
+  },
+  {
+   "device": "cpu",
+   "experiment": "GW-EFF-008",
+   "kind": "efficiency",
+   "detail": "eff008_time_int8-recognizer_2",
+   "start": "2026-11-17T16:39:20Z",
+   "end": "2026-11-17T16:39:41Z",
+   "hours": 0.005833333333333334,
+   "outcome": "done"
+  },
+  {
+   "device": "cpu",
+   "experiment": "GW-EFF-008",
+   "kind": "efficiency",
+   "detail": "eff008_time_v1-onnx_2",
+   "start": "2026-11-17T16:39:41Z",
+   "end": "2026-11-17T16:40:05Z",
+   "hours": 0.006666666666666667,
+   "outcome": "done"
+  },
+  {
+   "device": "cpu",
+   "experiment": "GW-BASE-002",
+   "kind": "baseline",
+   "detail": "eff010_baseline",
+   "start": "2026-11-17T16:40:05Z",
+   "end": "2026-11-17T16:46:35Z",
+   "hours": 0.10833333333333334,
+   "outcome": "done"
+  },
+  {
+   "device": "cpu",
+   "experiment": "GW-EFF-010",
+   "kind": "efficiency",
+   "detail": "eff010_glypharis",
+   "start": "2026-11-17T16:46:35Z",
+   "end": "2026-11-17T17:04:22Z",
+   "hours": 0.29638888888888887,
+   "outcome": "done"
+  },
+  {
+   "device": "cpu",
+   "experiment": "GW-EFF-009",
+   "kind": "efficiency",
+   "detail": "eff009_build_v1-torch",
+   "start": "2026-11-17T17:04:22Z",
+   "end": "2026-11-17T17:04:27Z",
+   "hours": 0.001388888888888889,
+   "outcome": "done"
+  },
+  {
+   "device": "cpu",
+   "experiment": "GW-EFF-009",
+   "kind": "efficiency",
+   "detail": "eff009_build_det-long-side-1024",
+   "start": "2026-11-17T17:04:27Z",
+   "end": "2026-11-17T17:04:33Z",
+   "hours": 0.0016666666666666668,
+   "outcome": "done"
+  },
+  {
+   "device": "cpu",
+   "experiment": "GW-EFF-009",
+   "kind": "efficiency",
+   "detail": "eff009_build_det-long-side-1280",
+   "start": "2026-11-17T17:04:33Z",
+   "end": "2026-11-17T17:04:41Z",
+   "hours": 0.0022222222222222222,
+   "outcome": "done"
+  },
+  {
+   "device": "cpu",
+   "experiment": "GW-EFF-009",
+   "kind": "efficiency",
+   "detail": "eff009_build_det-long-side-1792",
+   "start": "2026-11-17T17:04:41Z",
+   "end": "2026-11-17T17:04:47Z",
+   "hours": 0.0016666666666666668,
+   "outcome": "done"
+  },
+  {
+   "device": "cpu",
+   "experiment": "GW-EFF-009",
+   "kind": "efficiency",
+   "detail": "eff009_build_det-long-side-2048",
+   "start": "2026-11-17T17:04:47Z",
+   "end": "2026-11-17T17:04:54Z",
+   "hours": 0.0019444444444444444,
+   "outcome": "done"
+  },
+  {
+   "device": "cpu",
+   "experiment": "GW-EFF-009",
+   "kind": "efficiency",
+   "detail": "eff009_build_onnx-det-torch-rec",
+   "start": "2026-11-17T17:04:54Z",
+   "end": "2026-11-17T17:05:00Z",
+   "hours": 0.0016666666666666668,
+   "outcome": "done"
+  },
+  {
+   "device": "cpu",
+   "experiment": "GW-EFF-009",
+   "kind": "efficiency",
+   "detail": "eff009_build_fused-attention",
+   "start": "2026-11-17T17:05:00Z",
+   "end": "2026-11-17T17:05:09Z",
+   "hours": 0.0025,
+   "outcome": "done"
+  },
+  {
+   "device": "cpu",
+   "experiment": "GW-EFF-009",
+   "kind": "efficiency",
+   "detail": "eff009_build_det-GW-DET-003",
+   "start": "2026-11-17T17:05:09Z",
+   "end": "2026-11-17T17:05:17Z",
+   "hours": 0.0022222222222222222,
+   "outcome": "done"
+  },
+  {
+   "device": "cpu",
+   "experiment": "GW-EFF-009",
+   "kind": "efficiency",
+   "detail": "eff009_build_rec-GW-REC-003",
+   "start": "2026-11-17T17:05:17Z",
+   "end": "2026-11-17T17:05:25Z",
+   "hours": 0.0022222222222222222,
+   "outcome": "done"
+  },
+  {
+   "device": "cpu",
+   "experiment": "GW-EFF-009",
+   "kind": "efficiency",
+   "detail": "eff009_build_rec-GW-REC-006",
+   "start": "2026-11-17T17:05:25Z",
+   "end": "2026-11-17T17:05:33Z",
+   "hours": 0.0022222222222222222,
+   "outcome": "done"
+  },
+  {
+   "device": "cpu",
+   "experiment": "GW-EFF-009",
+   "kind": "efficiency",
+   "detail": "eff009_build_rec-GW-REC-020",
+   "start": "2026-11-17T17:05:33Z",
+   "end": "2026-11-17T17:05:41Z",
+   "hours": 0.0022222222222222222,
+   "outcome": "done"
+  },
+  {
+   "device": "cpu",
+   "experiment": "GW-EFF-009",
+   "kind": "efficiency",
+   "detail": "eff009_build_rec-GW-REC-022",
+   "start": "2026-11-17T17:05:41Z",
+   "end": "2026-11-17T17:05:51Z",
+   "hours": 0.002777777777777778,
+   "outcome": "done"
+  },
+  {
+   "device": "cpu",
+   "experiment": "GW-EFF-009",
+   "kind": "efficiency",
+   "detail": "eff009_eval_pages_v1-torch",
+   "start": "2026-11-17T17:05:51Z",
+   "end": "2026-11-17T17:22:06Z",
+   "hours": 0.2708333333333333,
+   "outcome": "done"
+  },
+  {
+   "device": "cpu",
+   "experiment": "GW-EFF-009",
+   "kind": "efficiency",
+   "detail": "eff009_eval_pages_v1-onnx",
+   "start": "2026-11-17T17:22:06Z",
+   "end": "2026-11-17T18:18:46Z",
+   "hours": 0.9444444444444444,
+   "outcome": "done"
+  },
+  {
+   "device": "cpu",
+   "experiment": "GW-EFF-009",
+   "kind": "efficiency",
+   "detail": "eff009_eval_pages_det-long-side-1024",
+   "start": "2026-11-17T18:18:46Z",
+   "end": "2026-11-17T19:10:00Z",
+   "hours": 0.8538888888888889,
+   "outcome": "done"
+  },
+  {
+   "device": "cpu",
+   "experiment": "GW-EFF-009",
+   "kind": "efficiency",
+   "detail": "eff009_eval_pages_det-long-side-1280",
+   "start": "2026-11-17T19:10:00Z",
+   "end": "2026-11-17T20:11:24Z",
+   "hours": 1.0233333333333334,
+   "outcome": "done"
+  },
+  {
+   "device": "cpu",
+   "experiment": "GW-EFF-009",
+   "kind": "efficiency",
+   "detail": "eff009_eval_pages_det-long-side-1792",
+   "start": "2026-11-17T20:11:24Z",
+   "end": "2026-11-17T21:09:47Z",
+   "hours": 0.9730555555555556,
+   "outcome": "done"
+  },
+  {
+   "device": "cpu",
+   "experiment": "GW-EFF-009",
+   "kind": "efficiency",
+   "detail": "eff009_eval_pages_det-long-side-2048",
+   "start": "2026-11-17T21:09:47Z",
+   "end": "2026-11-17T22:09:59Z",
+   "hours": 1.0033333333333334,
+   "outcome": "done"
+  },
+  {
+   "device": "cpu",
+   "experiment": "GW-EFF-009",
+   "kind": "efficiency",
+   "detail": "eff009_eval_pages_onnx-det-torch-rec",
+   "start": "2026-11-17T22:09:59Z",
+   "end": "2026-11-17T22:26:24Z",
+   "hours": 0.27361111111111114,
+   "outcome": "done"
+  },
+  {
+   "device": "cpu",
+   "experiment": "GW-EFF-009",
+   "kind": "efficiency",
+   "detail": "eff009_eval_pages_int8-recognizer",
+   "start": "2026-11-17T22:26:24Z",
+   "end": "2026-11-17T23:07:09Z",
+   "hours": 0.6791666666666667,
+   "outcome": "done"
+  },
+  {
+   "device": "cpu",
+   "experiment": "GW-EFF-009",
+   "kind": "efficiency",
+   "detail": "eff009_eval_pages_fused-attention",
+   "start": "2026-11-17T23:07:10Z",
+   "end": "2026-11-17T23:32:16Z",
+   "hours": 0.41833333333333333,
+   "outcome": "done"
+  },
+  {
+   "device": "cpu",
+   "experiment": "GW-EFF-009",
+   "kind": "efficiency",
+   "detail": "eff009_eval_pages_det-GW-DET-003",
+   "start": "2026-11-17T23:32:16Z",
+   "end": "2026-11-18T00:25:59Z",
+   "hours": 0.8952777777777777,
+   "outcome": "done"
+  },
+  {
+   "device": "cpu",
+   "experiment": "GW-EFF-009",
+   "kind": "efficiency",
+   "detail": "eff009_eval_lines_v1-torch",
+   "start": "2026-11-18T00:25:59Z",
+   "end": "2026-11-18T00:29:07Z",
+   "hours": 0.052222222222222225,
+   "outcome": "done"
+  },
+  {
+   "device": "cpu",
+   "experiment": "GW-EFF-009",
+   "kind": "efficiency",
+   "detail": "eff009_eval_lines_fused-attention",
+   "start": "2026-11-18T00:29:07Z",
+   "end": "2026-11-18T00:36:50Z",
+   "hours": 0.12861111111111112,
+   "outcome": "done"
+  },
+  {
+   "device": "cpu",
+   "experiment": "GW-EFF-009",
+   "kind": "efficiency",
+   "detail": "eff009_eval_lines_rec-GW-REC-003",
+   "start": "2026-11-18T00:36:50Z",
+   "end": "2026-11-18T00:39:08Z",
+   "hours": 0.03833333333333333,
+   "outcome": "done"
+  },
+  {
+   "device": "cpu",
+   "experiment": "GW-EFF-009",
+   "kind": "efficiency",
+   "detail": "eff009_eval_lines_rec-GW-REC-006",
+   "start": "2026-11-18T00:39:08Z",
+   "end": "2026-11-18T00:42:57Z",
+   "hours": 0.0636111111111111,
+   "outcome": "done"
+  },
+  {
+   "device": "cpu",
+   "experiment": "GW-EFF-009",
+   "kind": "efficiency",
+   "detail": "eff009_eval_lines_rec-GW-REC-020",
+   "start": "2026-11-18T00:42:57Z",
+   "end": "2026-11-18T00:47:33Z",
+   "hours": 0.07666666666666666,
+   "outcome": "done"
+  },
+  {
+   "device": "cpu",
+   "experiment": "GW-EFF-009",
+   "kind": "efficiency",
+   "detail": "eff009_eval_lines_rec-GW-REC-022",
+   "start": "2026-11-18T00:47:33Z",
+   "end": "2026-11-18T00:59:50Z",
+   "hours": 0.20472222222222222,
+   "outcome": "done"
+  },
+  {
+   "device": "cpu",
+   "experiment": "GW-EFF-009",
+   "kind": "efficiency",
+   "detail": "eff009_time_pages_v1-torch_1",
+   "start": "2026-11-18T00:59:50Z",
+   "end": "2026-11-18T01:04:54Z",
+   "hours": 0.08444444444444445,
+   "outcome": "done"
+  },
+  {
+   "device": "cpu",
+   "experiment": "GW-EFF-009",
+   "kind": "efficiency",
+   "detail": "eff009_time_pages_v1-onnx_1",
+   "start": "2026-11-18T01:04:54Z",
+   "end": "2026-11-18T01:22:47Z",
+   "hours": 0.2980555555555556,
+   "outcome": "done"
+  },
+  {
+   "device": "cpu",
+   "experiment": "GW-EFF-009",
+   "kind": "efficiency",
+   "detail": "eff009_time_pages_det-long-side-1024_1",
+   "start": "2026-11-18T01:22:47Z",
+   "end": "2026-11-18T01:38:41Z",
+   "hours": 0.265,
+   "outcome": "done"
+  },
+  {
+   "device": "cpu",
+   "experiment": "GW-EFF-009",
+   "kind": "efficiency",
+   "detail": "eff009_time_pages_det-long-side-1280_1",
+   "start": "2026-11-18T01:38:41Z",
+   "end": "2026-11-18T01:56:02Z",
+   "hours": 0.2891666666666667,
+   "outcome": "done"
+  },
+  {
+   "device": "cpu",
+   "experiment": "GW-EFF-009",
+   "kind": "efficiency",
+   "detail": "eff009_time_pages_det-long-side-1792_1",
+   "start": "2026-11-18T01:56:02Z",
+   "end": "2026-11-18T02:14:43Z",
+   "hours": 0.3113888888888889,
+   "outcome": "done"
+  },
+  {
+   "device": "cpu",
+   "experiment": "GW-EFF-009",
+   "kind": "efficiency",
+   "detail": "eff009_time_pages_det-long-side-2048_1",
+   "start": "2026-11-18T02:14:43Z",
+   "end": "2026-11-18T02:33:50Z",
+   "hours": 0.3186111111111111,
+   "outcome": "done"
+  },
+  {
+   "device": "cpu",
+   "experiment": "GW-EFF-009",
+   "kind": "efficiency",
+   "detail": "eff009_time_pages_onnx-det-torch-rec_1",
+   "start": "2026-11-18T02:33:50Z",
+   "end": "2026-11-18T02:38:46Z",
+   "hours": 0.08222222222222222,
+   "outcome": "done"
+  },
+  {
+   "device": "cpu",
+   "experiment": "GW-EFF-009",
+   "kind": "efficiency",
+   "detail": "eff009_time_pages_int8-recognizer_1",
+   "start": "2026-11-18T02:38:46Z",
+   "end": "2026-11-18T02:51:26Z",
+   "hours": 0.2111111111111111,
+   "outcome": "done"
+  },
+  {
+   "device": "cpu",
+   "experiment": "GW-EFF-009",
+   "kind": "efficiency",
+   "detail": "eff009_time_pages_fused-attention_1",
+   "start": "2026-11-18T02:51:26Z",
+   "end": "2026-11-18T02:59:01Z",
+   "hours": 0.12638888888888888,
+   "outcome": "done"
+  },
+  {
+   "device": "cpu",
+   "experiment": "GW-EFF-009",
+   "kind": "efficiency",
+   "detail": "eff009_time_pages_det-GW-DET-003_1",
+   "start": "2026-11-18T02:59:01Z",
+   "end": "2026-11-18T03:15:30Z",
+   "hours": 0.2747222222222222,
+   "outcome": "done"
+  },
+  {
+   "device": "cpu",
+   "experiment": "GW-EFF-009",
+   "kind": "efficiency",
+   "detail": "eff009_time_pages_det-GW-DET-003_2",
+   "start": "2026-11-18T03:15:30Z",
+   "end": "2026-11-18T03:32:03Z",
+   "hours": 0.2758333333333333,
+   "outcome": "done"
+  },
+  {
+   "device": "cpu",
+   "experiment": "GW-EFF-009",
+   "kind": "efficiency",
+   "detail": "eff009_time_pages_fused-attention_2",
+   "start": "2026-11-18T03:32:03Z",
+   "end": "2026-11-18T03:39:35Z",
+   "hours": 0.12555555555555556,
+   "outcome": "done"
+  },
+  {
+   "device": "cpu",
+   "experiment": "GW-EFF-009",
+   "kind": "efficiency",
+   "detail": "eff009_time_pages_int8-recognizer_2",
+   "start": "2026-11-18T03:39:35Z",
+   "end": "2026-11-18T03:52:12Z",
+   "hours": 0.21027777777777779,
+   "outcome": "done"
+  },
+  {
+   "device": "cpu",
+   "experiment": "GW-EFF-009",
+   "kind": "efficiency",
+   "detail": "eff009_time_pages_onnx-det-torch-rec_2",
+   "start": "2026-11-18T03:52:12Z",
+   "end": "2026-11-18T03:57:10Z",
+   "hours": 0.08277777777777778,
+   "outcome": "done"
+  },
+  {
+   "device": "cpu",
+   "experiment": "GW-EFF-009",
+   "kind": "efficiency",
+   "detail": "eff009_time_pages_det-long-side-2048_2",
+   "start": "2026-11-18T03:57:10Z",
+   "end": "2026-11-18T04:16:06Z",
+   "hours": 0.31555555555555553,
+   "outcome": "done"
+  },
+  {
+   "device": "cpu",
+   "experiment": "GW-EFF-009",
+   "kind": "efficiency",
+   "detail": "eff009_time_pages_det-long-side-1792_2",
+   "start": "2026-11-18T04:16:06Z",
+   "end": "2026-11-18T04:34:32Z",
+   "hours": 0.30722222222222223,
+   "outcome": "done"
+  },
+  {
+   "device": "cpu",
+   "experiment": "GW-EFF-009",
+   "kind": "efficiency",
+   "detail": "eff009_time_pages_det-long-side-1280_2",
+   "start": "2026-11-18T04:34:33Z",
+   "end": "2026-11-18T04:51:56Z",
+   "hours": 0.2897222222222222,
+   "outcome": "done"
+  },
+  {
+   "device": "cpu",
+   "experiment": "GW-EFF-009",
+   "kind": "efficiency",
+   "detail": "eff009_time_pages_det-long-side-1024_2",
+   "start": "2026-11-18T04:51:56Z",
+   "end": "2026-11-18T05:07:06Z",
+   "hours": 0.25277777777777777,
+   "outcome": "done"
+  },
+  {
+   "device": "cpu",
+   "experiment": "GW-EFF-009",
+   "kind": "efficiency",
+   "detail": "eff009_time_pages_v1-onnx_2",
+   "start": "2026-11-18T05:07:06Z",
+   "end": "2026-11-18T05:24:46Z",
+   "hours": 0.29444444444444445,
+   "outcome": "done"
+  },
+  {
+   "device": "cpu",
+   "experiment": "GW-EFF-009",
+   "kind": "efficiency",
+   "detail": "eff009_time_pages_v1-torch_2",
+   "start": "2026-11-18T05:24:47Z",
+   "end": "2026-11-18T05:29:43Z",
+   "hours": 0.08222222222222222,
+   "outcome": "done"
+  },
+  {
+   "device": "cpu",
+   "experiment": "GW-EFF-009",
+   "kind": "efficiency",
+   "detail": "eff009_time_lines_v1-torch_1",
+   "start": "2026-11-18T05:29:43Z",
+   "end": "2026-11-18T05:29:59Z",
+   "hours": 0.0044444444444444444,
+   "outcome": "done"
+  },
+  {
+   "device": "cpu",
+   "experiment": "GW-EFF-009",
+   "kind": "efficiency",
+   "detail": "eff009_time_lines_v1-onnx_1",
+   "start": "2026-11-18T05:29:59Z",
+   "end": "2026-11-18T05:30:23Z",
+   "hours": 0.006666666666666667,
+   "outcome": "done"
+  },
+  {
+   "device": "cpu",
+   "experiment": "GW-EFF-009",
+   "kind": "efficiency",
+   "detail": "eff009_time_lines_int8-recognizer_1",
+   "start": "2026-11-18T05:30:23Z",
+   "end": "2026-11-18T05:30:44Z",
+   "hours": 0.005833333333333334,
+   "outcome": "done"
+  },
+  {
+   "device": "cpu",
+   "experiment": "GW-EFF-009",
+   "kind": "efficiency",
+   "detail": "eff009_time_lines_fused-attention_1",
+   "start": "2026-11-18T05:30:44Z",
+   "end": "2026-11-18T05:31:03Z",
+   "hours": 0.005277777777777778,
+   "outcome": "done"
+  },
+  {
+   "device": "cpu",
+   "experiment": "GW-EFF-009",
+   "kind": "efficiency",
+   "detail": "eff009_time_lines_rec-GW-REC-003_1",
+   "start": "2026-11-18T05:31:03Z",
+   "end": "2026-11-18T05:31:19Z",
+   "hours": 0.0044444444444444444,
+   "outcome": "done"
+  },
+  {
+   "device": "cpu",
+   "experiment": "GW-EFF-009",
+   "kind": "efficiency",
+   "detail": "eff009_time_lines_rec-GW-REC-006_1",
+   "start": "2026-11-18T05:31:19Z",
+   "end": "2026-11-18T05:31:36Z",
+   "hours": 0.004722222222222222,
+   "outcome": "done"
+  },
+  {
+   "device": "cpu",
+   "experiment": "GW-EFF-009",
+   "kind": "efficiency",
+   "detail": "eff009_time_lines_rec-GW-REC-020_1",
+   "start": "2026-11-18T05:31:36Z",
+   "end": "2026-11-18T05:31:56Z",
+   "hours": 0.005555555555555556,
+   "outcome": "done"
+  },
+  {
+   "device": "cpu",
+   "experiment": "GW-EFF-009",
+   "kind": "efficiency",
+   "detail": "eff009_time_lines_rec-GW-REC-022_1",
+   "start": "2026-11-18T05:31:56Z",
+   "end": "2026-11-18T05:32:22Z",
+   "hours": 0.007222222222222222,
+   "outcome": "done"
+  },
+  {
+   "device": "cpu",
+   "experiment": "GW-EFF-009",
+   "kind": "efficiency",
+   "detail": "eff009_time_lines_rec-GW-REC-022_2",
+   "start": "2026-11-18T05:32:22Z",
+   "end": "2026-11-18T05:32:49Z",
+   "hours": 0.0075,
+   "outcome": "done"
+  },
+  {
+   "device": "cpu",
+   "experiment": "GW-EFF-009",
+   "kind": "efficiency",
+   "detail": "eff009_time_lines_rec-GW-REC-020_2",
+   "start": "2026-11-18T05:32:49Z",
+   "end": "2026-11-18T05:33:09Z",
+   "hours": 0.005555555555555556,
+   "outcome": "done"
+  },
+  {
+   "device": "cpu",
+   "experiment": "GW-EFF-009",
+   "kind": "efficiency",
+   "detail": "eff009_time_lines_rec-GW-REC-006_2",
+   "start": "2026-11-18T05:33:09Z",
+   "end": "2026-11-18T05:33:25Z",
+   "hours": 0.0044444444444444444,
+   "outcome": "done"
+  },
+  {
+   "device": "cpu",
+   "experiment": "GW-EFF-009",
+   "kind": "efficiency",
+   "detail": "eff009_time_lines_rec-GW-REC-003_2",
+   "start": "2026-11-18T05:33:26Z",
+   "end": "2026-11-18T05:33:41Z",
+   "hours": 0.004166666666666667,
+   "outcome": "done"
+  },
+  {
+   "device": "cpu",
+   "experiment": "GW-EFF-009",
+   "kind": "efficiency",
+   "detail": "eff009_time_lines_fused-attention_2",
+   "start": "2026-11-18T05:33:42Z",
+   "end": "2026-11-18T05:34:00Z",
+   "hours": 0.005,
+   "outcome": "done"
+  },
+  {
+   "device": "cpu",
+   "experiment": "GW-EFF-009",
+   "kind": "efficiency",
+   "detail": "eff009_time_lines_int8-recognizer_2",
+   "start": "2026-11-18T05:34:00Z",
+   "end": "2026-11-18T05:34:21Z",
+   "hours": 0.005833333333333334,
+   "outcome": "done"
+  },
+  {
+   "device": "cpu",
+   "experiment": "GW-EFF-009",
+   "kind": "efficiency",
+   "detail": "eff009_time_lines_v1-onnx_2",
+   "start": "2026-11-18T05:34:21Z",
+   "end": "2026-11-18T05:34:46Z",
+   "hours": 0.006944444444444444,
+   "outcome": "done"
+  },
+  {
+   "device": "cpu",
+   "experiment": "GW-EFF-009",
+   "kind": "efficiency",
+   "detail": "eff009_time_lines_v1-torch_2",
+   "start": "2026-11-18T05:34:46Z",
+   "end": "2026-11-18T05:35:02Z",
+   "hours": 0.0044444444444444444,
+   "outcome": "done"
+  },
+  {
+   "device": "cpu",
+   "experiment": "GW-EFF-011",
+   "kind": "efficiency",
+   "detail": "eff011_time_rec-GW-REC-003_1",
+   "start": "2026-11-18T05:35:02Z",
+   "end": "2026-11-18T05:35:19Z",
+   "hours": 0.004722222222222222,
+   "outcome": "done"
+  },
+  {
+   "device": "cpu",
+   "experiment": "GW-EFF-011",
+   "kind": "efficiency",
+   "detail": "eff011_time_rec-GW-REC-020_1",
+   "start": "2026-11-18T05:35:19Z",
+   "end": "2026-11-18T05:35:38Z",
+   "hours": 0.005277777777777778,
+   "outcome": "done"
+  },
+  {
+   "device": "cpu",
+   "experiment": "GW-EFF-011",
+   "kind": "efficiency",
+   "detail": "eff011_time_rec-GW-REC-020_2",
+   "start": "2026-11-18T05:35:38Z",
+   "end": "2026-11-18T05:35:58Z",
+   "hours": 0.005555555555555556,
+   "outcome": "done"
+  },
+  {
+   "device": "cpu",
+   "experiment": "GW-EFF-011",
+   "kind": "efficiency",
+   "detail": "eff011_time_rec-GW-REC-003_2",
+   "start": "2026-11-18T05:35:58Z",
+   "end": "2026-11-18T05:36:14Z",
+   "hours": 0.0044444444444444444,
+   "outcome": "done"
+  },
+  {
+   "device": "cpu",
+   "experiment": "GW-EFF-011",
+   "kind": "efficiency",
+   "detail": "eff011_torch_GW-REC-003",
+   "start": "2026-11-18T05:36:14Z",
+   "end": "2026-11-18T05:36:27Z",
+   "hours": 0.003611111111111111,
+   "outcome": "done"
+  },
+  {
+   "device": "cpu",
+   "experiment": "GW-EFF-011",
+   "kind": "efficiency",
+   "detail": "eff011_torch_GW-REC-020",
+   "start": "2026-11-18T05:36:27Z",
+   "end": "2026-11-18T05:36:40Z",
+   "hours": 0.003611111111111111,
+   "outcome": "done"
+  },
+  {
+   "device": "cpu",
+   "experiment": "Phase 16 scoring",
+   "kind": "score",
+   "detail": "score_check",
+   "start": "2026-11-18T05:36:40Z",
+   "end": "2026-11-18T05:36:45Z",
+   "hours": 0.001388888888888889,
+   "outcome": "done"
+  },
+  {
+   "device": "cpu",
+   "experiment": "Phase 16 scoring",
+   "kind": "score",
+   "detail": "score",
+   "start": "2026-11-18T05:36:46Z",
+   "end": "2026-11-18T05:36:52Z",
+   "hours": 0.0016666666666666668,
+   "outcome": "done"
   }
  ],
  "experiments": {
@@ -3017,12 +3967,84 @@
    "failed_jobs": 1,
    "wall_h": 20.628888888888888,
    "train_h": 19.37324229919443
+  },
+  "GW-EFF-006": {
+   "device": "cpu",
+   "phase": "16",
+   "jobs": 3,
+   "failed_jobs": 0,
+   "wall_h": 1.7783333333333333,
+   "train_h": null
+  },
+  "GW-EFF-007": {
+   "device": "cpu",
+   "phase": "16",
+   "jobs": 6,
+   "failed_jobs": 0,
+   "wall_h": 0.6699999999999999,
+   "train_h": null
+  },
+  "GW-EFF-007 (GPU jobs)": {
+   "device": "gpu",
+   "phase": "16",
+   "jobs": 4,
+   "failed_jobs": 1,
+   "wall_h": 0.0811111111111111,
+   "train_h": null
+  },
+  "GW-EFF-008": {
+   "device": "cpu",
+   "phase": "16",
+   "jobs": 8,
+   "failed_jobs": 0,
+   "wall_h": 0.3272222222222222,
+   "train_h": null
+  },
+  "GW-BASE-002 (Phase 16 amendment)": {
+   "device": "cpu",
+   "phase": "16",
+   "jobs": 1,
+   "failed_jobs": 0,
+   "wall_h": 0.10833333333333334,
+   "train_h": null
+  },
+  "GW-EFF-010": {
+   "device": "cpu",
+   "phase": "16",
+   "jobs": 1,
+   "failed_jobs": 0,
+   "wall_h": 0.29638888888888887,
+   "train_h": null
+  },
+  "GW-EFF-009": {
+   "device": "cpu",
+   "phase": "16",
+   "jobs": 64,
+   "failed_jobs": 0,
+   "wall_h": 12.509722222222223,
+   "train_h": null
+  },
+  "GW-EFF-011": {
+   "device": "cpu",
+   "phase": "16",
+   "jobs": 6,
+   "failed_jobs": 0,
+   "wall_h": 0.02722222222222222,
+   "train_h": null
+  },
+  "Phase 16 scoring": {
+   "device": "cpu",
+   "phase": "16",
+   "jobs": 2,
+   "failed_jobs": 0,
+   "wall_h": 0.0030555555555555557,
+   "train_h": null
   }
  },
  "totals": {
-  "gpu_h": 217.1638888888889,
-  "gpu_failed_h": 75.52277777777778,
-  "cpu_h": 45.94888888888887,
+  "gpu_h": 217.245,
+  "gpu_failed_h": 75.55333333333333,
+  "cpu_h": 61.66916666666665,
   "cpu_failed_h": 1.932222222222222
  }
 }

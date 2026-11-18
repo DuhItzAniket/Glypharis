@@ -17,7 +17,8 @@ by hand has no end line; its duration is unknown and adds nothing to the hours.
 | 11 | 9.5 | 1.3 | 0.0 | 0.0 |
 | 12 | 17.1 | 0.3 | 0.0 | 0.0 |
 | 13 | 107.6 | 51.3 | 0.0 | 0.0 |
-| all | 217.2 | 75.5 | 45.9 | 1.9 |
+| 16 | 0.1 | 0.0 | 15.7 | 0.0 |
+| all | 217.2 | 75.6 | 61.7 | 1.9 |
 
 ## By experiment
 
@@ -25,6 +26,7 @@ by hand has no end line; its duration is unknown and adds nothing to the hours.
 |---|---|---|---|---|---|---|
 | GW-BASE-001 | 05 | CPU | 16 | 0 | 1.20 |  |
 | GW-BASE-002 | 05 | CPU | 26 | 4 | 3.13 |  |
+| GW-BASE-002 (Phase 16 amendment) | 16 | CPU | 1 | 0 | 0.11 |  |
 | GW-BASE-003 | 05 | CPU | 6 | 2 | 19.22 |  |
 | GW-BASE-004 | 05 | CPU | 10 | 1 | 3.56 |  |
 | GW-BASE-005 | 05 | CPU | 16 | 0 | 2.51 |  |
@@ -56,6 +58,13 @@ by hand has no end line; its duration is unknown and adds nothing to the hours.
 | GW-DET-002 | 08 | GPU | 2 | 1 | 5.42 | 4.72 |
 | GW-DET-003 | 08 | GPU | 2 | 1 | 5.02 | 4.33 |
 | GW-DET-007 | 13 | GPU | 3 | 0 | 8.18 | 7.51 |
+| GW-EFF-006 | 16 | CPU | 3 | 0 | 1.78 |  |
+| GW-EFF-007 | 16 | CPU | 6 | 0 | 0.67 |  |
+| GW-EFF-007 (GPU jobs) | 16 | GPU | 4 | 1 | 0.08 |  |
+| GW-EFF-008 | 16 | CPU | 8 | 0 | 0.33 |  |
+| GW-EFF-009 | 16 | CPU | 64 | 0 | 12.51 |  |
+| GW-EFF-010 | 16 | CPU | 1 | 0 | 0.30 |  |
+| GW-EFF-011 | 16 | CPU | 6 | 0 | 0.03 |  |
 | GW-REC-001 | 06 | GPU | 3 | 2 | 5.62 | 4.71 |
 | GW-REC-002 | 06 | GPU | 2 | 1 | 5.92 | 5.32 |
 | GW-REC-003 | 07 | GPU | 1 | 0 | 1.53 | 1.34 |
@@ -90,10 +99,17 @@ by hand has no end line; its duration is unknown and adds nothing to the hours.
 | GW-REC-035 | 13 | GPU | 3 | 2 | 20.38 | 19.09 |
 | GW-REC-036 | 13 | GPU | 2 | 1 | 20.63 | 19.37 |
 | GW-REC-037 | 13 | GPU | 16 | 1 | 3.41 |  |
+| Phase 16 scoring | 16 | CPU | 2 | 0 | 0.00 |  |
 
 ## Not in these logs
 
 Jobs run by hand outside a queue: the Phase 6 sanity sequence (its own report gives the
 durations), the redesigned GPU resume check, the exit-crash probes, the GW-REC-001/002
-re-scores, the Phase 8 training-crop preview and CPU label-ceiling check, and all test
-runs. They are short next to the totals above but not counted.
+re-scores, the Phase 8 training-crop preview and CPU label-ceiling check, the Phase 16
+re-score after the report-path fix, and all test runs. They are short next to the totals
+above but not counted.
+
+Phases 9, 10, 14 and 15 are not counted either: Phase 9's chain log is not read here,
+Phase 10's lines in `runs/phase_progress.log` are skipped, and Phase 14's and Phase 15's
+runs were recorded per run (logs and run metadata), not in a queue log. Each phase's
+record in `docs/PHASE_STATUS.md` gives its compute.
