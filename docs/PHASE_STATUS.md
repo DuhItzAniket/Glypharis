@@ -4457,3 +4457,8 @@ given the go-ahead, and the PC has been restarted.
 - Phone pages stay validation-only, while document pages hold about twice as many lines.
 - Phone figures are network time and memory, not a full page on the phone.
 - ADR-0014's ImageNet exception was written for v1 and does not automatically cover a released candidate.
+
+**Progress (2026-11-18 UTC): item 3 passed.** The Android operator check is go on both phones
+(GW-EFF-015 part a, `reports/final_validation/GW-EFF-015/operator_check.json`), so the candidate work
+stays open. It covers one validation line and says nothing about speed or memory.
+

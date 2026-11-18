@@ -105,7 +105,7 @@ account is recorded.
 | Process rule (a new app process per arm and run, force-stopped between runs) | not confirmed | not confirmed |
 | Charge state, starting battery temperature | not recorded | not recorded |
 | Airplane mode, screen and foreground state | not recorded | not recorded |
-| Operator check | not run | not run |
+| Operator check | go (`reports/final_validation/GW-EFF-015/operator_check.json`) | go (same report) |
 | Mean and p95 network time, peak `VmHWM` | not run | not run |
 | Each run's mean time | not run | not run |
 | Thermal state, start and end of each run | not run | not run |

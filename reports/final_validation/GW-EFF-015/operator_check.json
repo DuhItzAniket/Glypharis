@@ -1,0 +1,191 @@
+{
+ "experiment": "GW-EFF-015",
+ "part": "a: Android operator check",
+ "generated_utc": "2026-11-18T19:19:03+00:00",
+ "git_commit": "42ee18bde22c515e2e0ea208f55949662361132d",
+ "data": "one validation line's network input; no test data",
+ "verdict": "go",
+ "rule": "go: the tree was clean straight after the build, and on every phone listed the session was created and the tensor gave finite logits of the laptop's shape. A session error is no-go.",
+ "no_go_reasons": [],
+ "tell_owner_before_s4": false,
+ "logit_notice_threshold": 0.001,
+ "package": {
+  "name": "com.microsoft.onnxruntime:onnxruntime-android",
+  "version": "1.31.1",
+  "aar_sha256": "d4d50660300ed2c4f38ffdfd5ab5bfa3a22f995f282dda24f42ea3ea55467b49",
+  "merged_manifest": "the package's files are unchanged; its INTERNET and ACCESS_NETWORK_STATE permissions and telemetry provider are removed at manifest merge"
+ },
+ "build_tools": {
+  "gradle": "8.14.7",
+  "android_gradle_plugin": "8.13.2",
+  "kotlin": "2.3.21",
+  "jdk_major": 21,
+  "compile_sdk": 35,
+  "target_sdk": 35,
+  "min_sdk": 26
+ },
+ "model": {
+  "file": "recognizer.fused.onnx",
+  "sha256": "b0e2a5100cb465f72d2abca97fc30a47892c75d069e556791021b7b74dfc172c",
+  "bytes": 31810737,
+  "source": "GW-EFF-009 fused-attention",
+  "fused_nodes": "com.microsoft.MultiHeadAttention, 9"
+ },
+ "line": {
+  "index": 32,
+  "key": "002a72617c3b1335/p31/l0",
+  "split": "validation",
+  "pack": "processed/hiertext/lines_validation"
+ },
+ "laptop": {
+  "onnxruntime": "1.31.1",
+  "threads": 4,
+  "session_options": {
+   "onnxruntime": "1.31.1",
+   "providers": [
+    "CPUExecutionProvider"
+   ],
+   "intra_op_num_threads": 4,
+   "inter_op_num_threads": 0,
+   "execution_mode": "ORT_SEQUENTIAL",
+   "graph_optimization_level": "ORT_ENABLE_ALL",
+   "enable_cpu_mem_arena": false,
+   "enable_mem_pattern": false,
+   "allow_spinning": "default"
+  },
+  "input_images_shape": [
+   1,
+   1,
+   48,
+   288
+  ],
+  "input_widths": [
+   194
+  ],
+  "input_sha256": "ec180660e6f561135713cb4d025683f93acee430a886ac6a0aec277441f941ce",
+  "logits_shape": [
+   72,
+   1,
+   275
+  ],
+  "logits_sha256": "9c14a67ef2e072af622a36f548a612f5216444a52006f9490d6b2f3ad7e0fd2f",
+  "frames": 48,
+  "text_sha256": "1a3ec037790c19902a4ac043fee7c56176e24f3c6be9f5a527f5db5c9f22c9c3"
+ },
+ "devices": [
+  {
+   "slug": "moto-g35-5g",
+   "device": {
+    "manufacturer": "motorola",
+    "model": "moto g35 5G",
+    "soc_manufacturer": "Spreadtrum",
+    "soc_model": "UMS9620",
+    "board_platform": "ums9620",
+    "android_release": "15",
+    "sdk": "35",
+    "build": "",
+    "abi": "arm64-v8a",
+    "abi_list": "arm64-v8a,armeabi-v7a,armeabi",
+    "ram_total_kb": 3464688
+   },
+   "apk_sha256": "dededf549f227bd163dec94150641dec6fb0cb172fcbcb6c163c5490269bce02",
+   "apk_bytes": 35305810,
+   "git_commit": "42ee18bde22c515e2e0ea208f55949662361132d",
+   "build_record_matches": true,
+   "tree_clean_after_build": true,
+   "tree_clean_at_run": true,
+   "apk_permissions": [],
+   "phone_hash_check": "sha256sum",
+   "app_model_sha256": "b0e2a5100cb465f72d2abca97fc30a47892c75d069e556791021b7b74dfc172c",
+   "app_input_sha256": "ec180660e6f561135713cb4d025683f93acee430a886ac6a0aec277441f941ce",
+   "status": "ok",
+   "onnxruntime_version": "1.31.1",
+   "session_created": true,
+   "session_error": null,
+   "run_error": null,
+   "session_options": {
+    "providers": [
+     "CPUExecutionProvider"
+    ],
+    "intra_op_num_threads": 4,
+    "execution_mode": "ORT_SEQUENTIAL",
+    "graph_optimization_level": "ORT_ENABLE_ALL",
+    "enable_cpu_mem_arena": false,
+    "enable_mem_pattern": false,
+    "allow_spinning": "default"
+   },
+   "output_shape": [
+    72,
+    1,
+    275
+   ],
+   "shape_equal": true,
+   "logits_finite": true,
+   "logit_max_abs_diff": 1.1444091796875e-05,
+   "logit_max_abs_diff_with_padding": 1.1444091796875e-05,
+   "greedy_text_equal": true,
+   "phone_text_sha256": "1a3ec037790c19902a4ac043fee7c56176e24f3c6be9f5a527f5db5c9f22c9c3",
+   "tell_owner_before_s4": false,
+   "verdict": "go",
+   "reasons": []
+  },
+  {
+   "slug": "sm-m526b",
+   "device": {
+    "manufacturer": "samsung",
+    "model": "SM-M526B",
+    "soc_manufacturer": "QTI",
+    "soc_model": "SM7325",
+    "board_platform": "lahaina",
+    "android_release": "13",
+    "sdk": "33",
+    "build": "",
+    "abi": "arm64-v8a",
+    "abi_list": "arm64-v8a,armeabi-v7a,armeabi",
+    "ram_total_kb": 5500000
+   },
+   "apk_sha256": "dededf549f227bd163dec94150641dec6fb0cb172fcbcb6c163c5490269bce02",
+   "apk_bytes": 35305810,
+   "git_commit": "5764c3aec341d8bd0bd33babf19710c2f52c1998",
+   "build_record_matches": true,
+   "tree_clean_after_build": true,
+   "tree_clean_at_run": true,
+   "apk_permissions": [],
+   "phone_hash_check": "sha256sum",
+   "app_model_sha256": "b0e2a5100cb465f72d2abca97fc30a47892c75d069e556791021b7b74dfc172c",
+   "app_input_sha256": "ec180660e6f561135713cb4d025683f93acee430a886ac6a0aec277441f941ce",
+   "status": "ok",
+   "onnxruntime_version": "1.31.1",
+   "session_created": true,
+   "session_error": null,
+   "run_error": null,
+   "session_options": {
+    "providers": [
+     "CPUExecutionProvider"
+    ],
+    "intra_op_num_threads": 4,
+    "execution_mode": "ORT_SEQUENTIAL",
+    "graph_optimization_level": "ORT_ENABLE_ALL",
+    "enable_cpu_mem_arena": false,
+    "enable_mem_pattern": false,
+    "allow_spinning": "default"
+   },
+   "output_shape": [
+    72,
+    1,
+    275
+   ],
+   "shape_equal": true,
+   "logits_finite": true,
+   "logit_max_abs_diff": 1.1444091796875e-05,
+   "logit_max_abs_diff_with_padding": 1.1444091796875e-05,
+   "greedy_text_equal": true,
+   "phone_text_sha256": "1a3ec037790c19902a4ac043fee7c56176e24f3c6be9f5a527f5db5c9f22c9c3",
+   "tell_owner_before_s4": false,
+   "verdict": "go",
+   "reasons": []
+  }
+ ],
+ "unavailable": [],
+ "not_measured": "no time or memory figure comes from this check (part b measures them)"
+}
