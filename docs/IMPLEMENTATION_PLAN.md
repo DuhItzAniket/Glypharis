@@ -2,15 +2,19 @@
 
 | | |
 |---|---|
-| Version | 1.1 (Phase 0; execution order revised by ADR-0008) |
-| Date | 2026-10-10 |
-| Status | Approved for Phase 1 start |
-| Companion docs | [ROADMAP](ROADMAP.md) · [ARCHITECTURE](ARCHITECTURE.md) · [EXPERIMENT_PROTOCOL](EXPERIMENT_PROTOCOL.md) · [RISK_REGISTER](RISK_REGISTER.md) · [DATASETS](../DATASETS.md) · [WORKFLOW](WORKFLOW.md) · [decisions/](decisions/) |
+| Version | 1.2 (Phase 21: Phase 22 scope and §8 deviations added; execution order revised by ADR-0008) |
+| Date | 2026-11-18 (first version 2026-10-10) |
+| Status | Phases 0 to 20 complete; Phase 21 in progress; Phases 22 and 23 not started ([PHASE_STATUS](PHASE_STATUS.md)) |
+| Companion docs | [ROADMAP](ROADMAP.md) · [ARCHITECTURE](ARCHITECTURE.md) · [EXPERIMENT_PROTOCOL](EXPERIMENT_PROTOCOL.md) · [RISK_REGISTER](RISK_REGISTER.md) · [DATASETS](../DATASETS.md) · [MODEL_CARD](../MODEL_CARD.md) · [EXPERIMENTS](../EXPERIMENTS.md) · [WORKFLOW](WORKFLOW.md) · [decisions/](decisions/) |
 
 This is the working plan for building GLYPHARIS: a lightweight document OCR engine (text-line detector +
 CTC line recognizer) trained and evaluated entirely on one laptop (RTX 4050 Laptop, 6 GB VRAM, 16 GB RAM).
 It turns the original project brief into phases with concrete tasks, deliverables, and **measurable exit
 criteria**. Phase numbering follows the brief (0–23) so requirements stay traceable (see §8).
+
+The phase text below is the plan as written before each phase ran, apart from Phases 21 to 23, which are
+still ahead or open. What was built instead of the plan is listed in §8; what was built is described in
+[ARCHITECTURE](ARCHITECTURE.md).
 
 The research background behind these choices is in [`research/approach_survey.md`](../research/approach_survey.md).
 
@@ -58,6 +62,8 @@ The brief's RQ1–RQ7 are kept, sharpened where the survey showed a gap.
 | RQ7 | What is the accuracy / latency / memory trade-off for local deployment? | Pareto table across model sizes, input resolutions, precision, and ONNX/quantised variants | 16, 17 |
 | RQ8 (new) | Is the raw CTC confidence calibrated, and does temperature scaling fix it? | ECE and reliability diagrams on validation and external data | 10, 14 |
 
+The answers, with their evidence, are in [`research/paper/results.md`](../research/paper/results.md).
+
 ## 4. Data strategy (summary)
 
 Full provenance, licences, and citations are in [DATASETS.md](../DATASETS.md). Roles are fixed in
@@ -83,6 +89,9 @@ ground truth also comes from the source's text layer where the source exists. So
 documents for GDC go on an exclusion list so they never appear in any training corpus. Built in Phase 4,
 frozen before Phase 5.
 
+As built, the delivered models train on HierText alone: GlyphSynth was studied in Phases 7, 12 and 13 and
+not kept (§8). SROIE was not used (§8).
+
 ## 5. Compute budget
 
 Order-of-magnitude **estimates**. They will be replaced with measured throughput after Phase 6 and Phase 8,
@@ -102,6 +111,11 @@ and the plan re-budgeted if they are off by more than 2×.
 Rules: every long run is preceded by a ≤10-minute dry run that records peak VRAM and throughput.
 Runs are resumable, so laptop sleep or reboots cost minutes, not days. Thermals (GPU temperature and clocks)
 are logged so slowdowns can be attributed.
+
+Measured compute is in [`reports/compute/ledger.md`](../reports/compute/ledger.md): 217.2 GPU-hours and 61.7
+CPU-hours in the queue logs, of which 75.6 GPU-hours and 1.9 CPU-hours went to jobs that did not finish.
+The ledger leaves out jobs run by hand and Phases 9, 10, 14 and 15, so these are lower bounds. Each of
+those phases gives its compute in [PHASE_STATUS](PHASE_STATUS.md).
 
 ## 6. Experiment design defaults
 
@@ -131,6 +145,9 @@ order but run as `0–10 → 17 → 18 → 20` (= v0.1, a usable engine), then `
 Phase 8 detector, is evaluated on validation data only, and trains on HierText + GlyphSynth
 ([ADR-0009](decisions/ADR-0009-no-synthtext.md)). Inference is CPU-first: CPU latency through ONNX Runtime is the primary efficiency number,
 with a concrete target set from the Phase 5 baseline measurements.
+
+Phases 0 to 20 have passed their gates, including the re-runs of 17, 18 and 20 on v1 (tags in
+[PHASE_STATUS](PHASE_STATUS.md)). Phase 19 ran after Phase 11 rather than after the re-runs (§8).
 
 ### Phase 0 — Repository discovery and planning ✅
 - **Objective:** understand the environment and the problem; produce the plan.
@@ -397,16 +414,48 @@ with a concrete target set from the Phase 5 baseline measurements.
 
 ### Phase 21 — Research package
 - **Tasks:** finalise `MODEL_CARD.md`, `DATASETS.md`, `EXPERIMENTS.md` (generated summary), and the
-  `research/paper/*` sections from recorded evidence; `references.bib` complete.
+  `research/paper/*` sections from recorded evidence; `references.bib` complete; bring `docs/` and
+  `research/` up to the as-built state. No training, evaluation or test-data access. The work items are in
+  [PHASE_STATUS](PHASE_STATUS.md), Phase 21.
 - **Exit criteria:** every number in the paper notes traces to an experiment ID and report file.
+  `scripts/trace_numbers.py` checks this, and the same check covers `MODEL_CARD.md` and `DATASETS.md`
+  (§8).
 - **Effort:** 2–3 S.
 
 ### Phase 22 — Final validation
-- **Tasks:** clean-machine-style run: fresh clone → install → download → prepare → load model → infer →
-  evaluate; record every manual step.
+- **Status:** not started. Final validation (Phase 22) has not been run. Its plan is registered in
+  [PHASE_STATUS](PHASE_STATUS.md) before anything runs.
+- **Tasks:**
+  1. Clean-machine-style run: fresh clone → install → download → prepare → load model → infer → evaluate;
+     record every manual step.
+  2. Reproduction of v1. Test results come from the GPU strict-fp32 evaluation; equality with the bundle
+     is shown on validation only. Phase 22 checks reproduction within the 0.05-point tolerance. Tolerance
+     as fixed before Phase 14 (PHASE_STATUS, Phase 14 item 6): re-scoring the saved files gives identical
+     numbers, and a re-run of the frozen model from the prepared files, each matching its recorded hash and
+     with the same flags, gives every aggregate metric within 0.05 percentage points. The re-scoring uses
+     `glypharis/eval/` and `scripts/phase14_score.py` as they stand.
+  3. Evaluation of the fused-attention build, the phone candidate ([ADR-0011](decisions/ADR-0011-cpu-latency-target.md),
+     owner decision of 2026-11-18; `fused-attention` in GW-EFF-009). A new version, not v1; validation and
+     laptop figures only; to be evaluated in Phase 22. Before any test set is opened:
+     - the candidate is fixed from validation data. Fused attention combined with the INT8 recognizer was
+       not measured in Phase 16 and may be measured on validation first (ADR-0011);
+     - its bundle is built and hashed, and it gets its own experiment IDs and registry entries;
+     - the sets, metrics and decision rules are registered.
+
+     It is then evaluated once per test set under EXPERIMENT_PROTOCOL §9, with every access in
+     `research/test_access_log.md`. Its results are reported beside v1's and do not replace them, and v1's
+     records stay as they are.
+  4. The phone measurement. Phones are the target hardware; no phone has been measured, and this laptop
+     cannot give that measurement (ADR-0011, R-23). If a phone is available, register the device, operating
+     system, runtime build, thread count, and thermal and power conditions before measuring. Check first
+     that the runtime build includes the `com.microsoft.MultiHeadAttention` operator the candidate depends
+     on, which has not been checked. If no phone is available, the gap stays open: the final documents keep
+     the sentence above, R-23 stays open, and laptop figures are used only to rank candidates.
 - **Exit criteria:** walkthrough log in `docs/FINAL_VALIDATION.md`; reproduced metrics within stated
-  tolerance of the reported ones.
-- **Effort:** 1–2 S.
+  tolerance of the reported ones; the fused-attention build's results recorded under its own IDs, or the
+  reason it was not evaluated; the phone gap recorded as measured on a named device or as still open.
+- **Effort:** 1–2 S for the walkthrough; the evaluation of the new version is estimated when it is
+  registered.
 
 ### Phase 23 — Release v1.0
 - **Preconditions:** tests and CI pass; training pipeline, inference and export verified; docs complete;
@@ -414,6 +463,14 @@ with a concrete target set from the Phase 5 baseline measurements.
 - **Tasks:** release notes, version bump, tagged GitHub release with the model artifact (or download script
   if the artifact is too large for a release asset), with licence terms that respect the training data
   (see DATASETS.md §Licensing implications).
+- **Status of the licence questions:** No weights are distributed; release is Phase 23. ADR-0014 records
+  the terms, and both positions below are defaults awaiting the owner's answer:
+  - GW-DET-001, initialised from ImageNet weights, stays v1's detector as a disclosed exception to
+    ADR-0009's commercial-use rule;
+  - the weights' terms are CC BY-SA 4.0 with HierText and Open Images attribution, given HierText's
+    share-alike licence. Intended terms under ADR-0014, effective only if released.
+
+  The code licence, PyPI package, Zenodo DOI and `CITATION.cff`: To be settled in Phase 23.
 - **Publishing** (added 2026-10-31 at the owner's request):
   - a `LICENSE` for the code and a `CITATION.cff`. The owner leans towards Apache-2.0; the choice is
     settled before release, after the owner has taken advice on any patent filing, because Apache-2.0
@@ -446,6 +503,29 @@ with a concrete target set from the Phase 5 baseline measurements.
 | SynthText dropped; synthetic data only from GlyphSynth; RQ2 reframed; delivered models train only on commercially usable data | SynthText licence is non-commercial, 12-month, links withdrawn | ADR-0009 |
 | GDC-scan built from one owner document's text layer instead of a hand-transcribed set of old scans | The born-digital source of the owner's document exists, so its text is exact; old scans remain a gap in GDC | ADR-0013 |
 | CLEval-style detection metrics descoped from Phase 8 | The Phase 8 task names "CLEval-style metrics per protocol", but EXPERIMENT_PROTOCOL §3 never defined one, so none was pre-registered. What CLEval measures, whether merges, splits and partial lines hide real detection quality, is answered in Phase 9 from merge and split counts, and a metric defined after the detector exists would be chosen after the fact. Signed off by the owner at the Phase 8 gate (2026-10-27) | EXPERIMENT_PROTOCOL §11 (2026-10-25) |
+| External test sets downloaded in Phase 14 and GlyphSynth inputs registered in Phase 4, not in Phase 2 | Each is fetched when it is first used | PHASE_STATUS, Phase 2 |
+| GDC capture and freeze ran as their own track; Phase 4 closed when the print pack was ready | Printing and capture took days of calendar time and would otherwise have held up every later phase. GDC was frozen before any model was evaluated on it | ADR-0010 |
+| Baselines widened to PP-OCRv6 tiny, small and medium; TrOCR-small-printed reads crops only; PP-OCRv5 server and PP-OCRv6 medium ran at reduced scope | PaddleOCR 3.7 provides PP-OCRv6, and medium is its English default. TrOCR has no detector. The two large models take about 1–3 s per line on this CPU | GW-BASE-003 to GW-BASE-007, `reports/baselines/README.md` |
+| On out-of-memory the trainer saves `oom.pt`, writes the report and exits with code 3; it does not halve the batch | The plan allowed either path, and this is the one implemented | PHASE_STATUS, Phase 6 |
+| One detector seed; v0.1's recognizer has one seed at the full budget | §6 asks for 3 seeds in main tables. GW-REC-024 used one to stay within the Phase 7 budget, and GW-DET-001 was trained once. v1's recognizer recipe has three seeds (GW-REC-034 to 036), so GW-REC-032 and 033 were not run. Phase 14's intervals leave out training variance | PHASE_STATUS, Phases 7, 13, 14; `reports/ablation/phase13_final.md` |
+| v1's detector outputs rotated rectangles (`quad`), not polygons | The planned comparison could not decide: HierText validation has no curved care lines | GW-DET-006, `reports/error_cases/detector/GW-DET-006/` |
+| Delivered models train on HierText only, not on HierText + GlyphSynth (§4, §7) | 25,000 GlyphSynth lines made no clear difference on HierText validation CER at a fixed step budget, −0.02 [−0.05, +0.01] points (three seeds, paired over pages), so ladder row L2 was not kept; from 50K lines they hurt on the document slice (F16) | GW-REC-037, `reports/ablation/phase13_ladder.md`, `configs/final/glypharis_v1.yaml` |
+| Phase 12 arms did not take exactly equal steps (up to 2.7% more for synthetic arms) | Batches are capped by padded width and GlyphSynth lines are wider. This favours the synthetic arms, so their losses are if anything understated | PHASE_STATUS, Phase 12 |
+| The Phase 13 ladder is recognizer-only, at the short budget, with input height as the preprocessing row (L3) and an added rotation row (L5). Detector changes were measured separately | Only the final configuration is trained at full length. L4 changes the encoder together with weight decay, learning rate and micro-batching, so it is not a test of the encoder alone | GW-REC-037, `reports/ablation/phase13_ladder.md`; GW-DET-002 to GW-DET-005, GW-DET-007 |
+| Phase 14 not run: SROIE, HierText's word-level official score, OmniDocBench's Overall score, PP-OCRv5 server end to end on GDC-scan and beyond 100 OmniDocBench pages | SROIE needs an ICDAR account and its licence is not public (owner, 2026-10-29). No system outputs words. Overall needs tables and formulas. PP-OCRv5 server failed on photos of that size in Phase 5, and its page cost is about 81 s | PHASE_STATUS, Phase 14 item 9 |
+| Phase 15 left out: GW-DET-007's small and rotated lines, a new v1 detector-against-recognizer split on HierText, and touching or broken characters, background noise and fonts on the real test sets | GW-DET-007 was not adopted; a new oracle would not pair with GW-E2E-006; the real sets have no such labels, so GW-REC-041 and GLYPH-C stand in | PHASE_STATUS, Phase 15 item 7 |
+| Phase 16 ran no CPU batch-size sweep | Lines are timed at batch 1 on the CPU and pages with the pipeline's own batching | PHASE_STATUS, Phase 16 |
+| v1's default backend is PyTorch on the CPU, not ONNX Runtime (§7) | For this recognizer the plain ONNX export is slower on the CPU than PyTorch (F34). Owner decision of 2026-11-18 | ADR-0011, GW-EFF-007, GW-EFF-009 |
+| ADR-0011's laptop targets are recorded as missed for v1, and the target hardware is now lightweight devices such as phones | No CPU build of v1 meets the line or page time targets (F38). Phones are the target hardware; no phone has been measured | ADR-0011, R-23, `reports/efficiency/phase16/README.md` |
+| Phase 19 ran after Phase 11, on the v0.1 bundle, not after the re-runs | Done at the owner's request while Phase 12 waited; it uses no model results. The endpoint was exercised on the v1 bundle in the Phase 20 re-run | PHASE_STATUS, Phase 19; GW-E2E-012 |
+| Only `v0.1` was tagged as a version; the roadmap's 0.5, 0.6 and 0.9 were not tagged, and the package stays `0.1.0.dev0` | The version for v1.0 is set in Phase 23 | ROADMAP §1, `pyproject.toml` |
+| v1's code changed once after evaluation: tag `v1-code` | Docstrings, comments and the default bundle name only, compared as syntax trees against `phase14-eval`, so it is not a new model version. The bundle was not rebuilt | `reports/export/v1-code/code_diff.json`, EXPERIMENT_PROTOCOL §11 (2026-11-18) |
+| Output has `seconds` per step instead of `processing_time_ms`, and no `page_number`; `det_score`, `quad`, `width` and `height` were added | The result object was built this way in Phases 10 and 18; no separate decision was recorded. The engine reads one image at a time and is not told a page number | ARCHITECTURE §6, §10 |
+| The `GLYPHARISOCR` alias is not exported | ADR-0004 and the row above name it, but the package exports only `GlypharisOCR`. Recorded here; nothing depends on the alias | `glypharis/__init__.py`, ARCHITECTURE §10 |
+| `data/DATASET_MANIFEST.yaml` is not regenerated in Phase 21 | The per-dataset manifests under `data/manifests/` hold the current values; `DATASETS.md` maps each required field to the manifest that holds it | PHASE_STATUS, Phase 21 |
+| The Phase 21 number check also covers `MODEL_CARD.md` and `DATASETS.md` | WORKFLOW §6 applies to every document | PHASE_STATUS, Phase 21 |
+| Phase 22 also evaluates the fused-attention build and records the phone-measurement gap | Owner decision of 2026-11-18. A new version, not v1; validation and laptop figures only; to be evaluated in Phase 22 | ADR-0011, Phase 22 above |
+| v1's detector is initialised from ImageNet weights although ADR-0009 asks that sources allow commercial use | Default position, awaiting the owner: a disclosed exception. Intended terms under ADR-0014, effective only if released | Phase 23 above, `DATASETS.md`, ADR-0007, ADR-0009 |
 
 ## 9. Traceability (brief section → where it is handled)
 
@@ -465,9 +545,10 @@ with a concrete target set from the Phase 5 baseline measurements.
 | 36–38 | Integration, reading order, confidence | Phase 10 |
 | 39–40 | Document test set, leakage | Phase 4 (GDC), WORKFLOW §5 |
 | 41–45 | Tracking, research log, paper docs, RQs, ablations | research/, Phase 13, 21 |
-| 47–53 | Benchmarking, export, CLI, API, versioning, model card | Phase 16–21 |
+| 47–53 | Benchmarking, export, CLI, API, versioning, model card | Phase 16–21; MODEL_CARD.md |
+| 54 | Dataset cards and provenance | Phase 2, 21; DATASETS.md |
 | 55–60 | CI/CD, branches, phase gate, commits, phase docs | WORKFLOW.md, Phase 1 |
 | 61 | Phase list | §7 |
-| 62–65 | Auto reports, comparison table, final experiment, integrity | Phase 6+ report generator, Phase 13, WORKFLOW §6 |
+| 62–65 | Auto reports, comparison table, final experiment, integrity | Phase 6+ report generator, Phase 13, 21, WORKFLOW §6; EXPERIMENTS.md, `reports/experiment_summary.md`, `reports/benchmark_results/comparison_table.md`, `configs/final/glypharis_v1.yaml` |
 | 66 | Consumer integration contract | ARCHITECTURE §1, §6 |
 | 67 | Success criteria | ROADMAP §4 |
