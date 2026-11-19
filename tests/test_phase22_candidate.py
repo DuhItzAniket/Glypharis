@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import json
 from pathlib import Path
 from typing import Any
 
@@ -170,3 +171,51 @@ def test_select() -> None:
         cand.select(acc, {})
     with pytest.raises(CandidateError):
         cand.select({"fused-int8": _acc(True)}, None)
+
+
+def _profile(arm: str, run: int, start: str, sizes: list[list[int]]) -> dict[str, Any]:
+    return {
+        "experiment": cand.EXPERIMENT,
+        "arm": arm,
+        "run": run,
+        "smoke": False,
+        "git_dirty": False,
+        "started_utc": start,
+        "input_sizes": sizes,
+        "times_ms": [1000.0, 1100.0],
+        "mean_ms": 1050.0,
+        "p95_ms": 1095.0,
+        "peak_mem_mib": 900.0,
+        "build": {"recognizer_sha256": "0" * 64},
+    }
+
+
+def _write_sitting(root: Path, swap: bool = False, other_pages: bool = False) -> None:
+    order = cand.sitting_order()
+    if swap:
+        order[0], order[1] = order[1], order[0]
+    for k, (arm, run) in enumerate(order):
+        sizes = [[640, 480], [800, 600]]
+        if other_pages and arm == "fused-int8":
+            sizes = [[640, 480], [800, 601]]
+        doc = _profile(arm, run, f"2026-11-19T20:{k:02d}:00+00:00", sizes)
+        path = root / cand.EXPERIMENT / arm / f"profile_pages_t10_run{run}.json"
+        path.parent.mkdir(parents=True, exist_ok=True)
+        path.write_text(json.dumps(doc), encoding="utf-8")
+
+
+def test_read_profiles_checks_order_and_pages(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    import phase22_candidate as pc
+
+    monkeypatch.setattr(pc, "REPORTS", tmp_path)
+    _write_sitting(tmp_path)
+    got = pc.read_profiles()
+    assert set(got) == set(cand.ARMS) and all(len(r) == 2 for r in got.values())
+    _write_sitting(tmp_path, swap=True)
+    with pytest.raises(SystemExit, match="mirrored order"):
+        pc.read_profiles()
+    _write_sitting(tmp_path, other_pages=True)
+    with pytest.raises(SystemExit, match="other pages"):
+        pc.read_profiles()
