@@ -4507,3 +4507,9 @@ The v1 files are unchanged (8,062 of 8,062). Both failures are in `research/fail
 `docs/FINAL_VALIDATION.md`, section 2. The exit criterion for the reproduction stays unmet until the
 owner rules; items 14 to 20 go ahead, as they do not depend on it.
 
+
+**Progress (2026-11-19 UTC): item 14, laptop part (GW-EFF-013).** Both `fused-int8` and
+`fused-single-line` met all three accuracy tests against `fused`, so all three arms go to the phone
+(`reports/final_validation/candidate/GW-EFF-013/accuracy.md`). The laptop sitting's times and peaks are
+recorded as information (`laptop.md` in the same folder). The phone part of item 14 and item 15 come
+next: the timing build of the Android app is not written yet.
