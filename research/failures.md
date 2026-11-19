@@ -229,3 +229,23 @@ disappointing experiment here, including bugs that invalidated a run.
   run. Its pass rule is mechanical and was registered first, and nothing about the candidate was chosen
   from this run.
 
+### 2026-11-19 — GW-E2E-015 — the re-score of v1's saved files is not identical
+
+- **What we tried:** Pass A of the v1 reproduction: Phase 14's unchanged scorer on Phase 14's saved
+  prediction files, from the `phase22-repro` wrapper, then the exact comparison with
+  `reports/external/results.json` (`scripts/phase22_v1_compare.py pass-a`).
+- **What happened:** 40 values differ, and all of them are official OmniDocBench scores of two systems,
+  Tesseract (GW-BASE-001) and GLYPHARIS (GW-E2E-007): the comparer found no unexplained difference
+  (`reports/final_validation/GW-E2E-015/verdict.json`). In both, more pages reached the evaluator's
+  per-page time limit and used its fallback than in Phase 14, and the page lists differ. Every other
+  value is identical. The validation rehearsal before it reproduced Phase 14 with no difference, and all
+  8,062 of v1's Phase 14 files still match their recorded hashes.
+- **Root cause:** the official OmniDocBench evaluator limits how long its text matching may take on a
+  page and switches to a fallback when that time runs out, so which pages fall back depends on how fast
+  the machine is at that moment. The files being scored and the evaluator are the same as in Phase 14.
+- **What we changed:** nothing in the evaluator or the rules. As registered (owner decision 6),
+  "identical" is recorded as failed with this cause. The owner ruled on 2026-11-19 to continue with the
+  test re-run and Pass B under the registered rule unchanged, and to decide on acceptance at the end.
+- **Lesson / implication for the paper:** official scores from an evaluator with wall-clock limits are
+  not exactly reproducible on the same machine, and the paper says so wherever it cites them.
+
