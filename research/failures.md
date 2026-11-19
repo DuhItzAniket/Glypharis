@@ -249,3 +249,26 @@ disappointing experiment here, including bugs that invalidated a run.
 - **Lesson / implication for the paper:** official scores from an evaluator with wall-clock limits are
   not exactly reproducible on the same machine, and the paper says so wherever it cites them.
 
+### 2026-11-19 — GW-E2E-018 — the v1 re-run misses the tolerance on 16 official OmniDocBench scores
+
+- **What we tried:** the v1 test re-run from the `phase14-eval` code (GW-REC-043, GW-E2E-016,
+  GW-E2E-017), scored by Phase 14's unchanged scorer with all official evaluators (Pass B), then every
+  path of the metric inventory judged at 0.0005 (`scripts/phase22_v1_compare.py verdict`).
+- **What happened:** the re-run's predictions are the same as Phase 14's: all 12 files compared, with no
+  crop or page whose record differs outside the timings (`reports/final_validation/GW-E2E-018/line_comparison.json`).
+  Of the 1,381 point values, 1,365 are within the tolerance, no count, flag or verdict changed, and no run
+  identity differs. The 16 that fail are all GLYPHARIS's official OmniDocBench scores (text block and
+  reading order), the largest 0.0208 on the three-column slice
+  (`reports/final_validation/v1_reproduction.json`). All 8,062 v1 files still match
+  `reports/final_validation/v1_files_before.json`.
+- **Root cause:** the same as in GW-E2E-015. One more page reached the evaluator's quick-match time limit
+  and was scored by its fallback than in Phase 14; Pass A and Pass B fell back on exactly the same pages,
+  so on this machine today the result is stable, but it is not Phase 14's. The predictions themselves did
+  not change. Two baseline values of the official HierText evaluator also moved, by about 1e-8 (float32
+  rounding); baselines are not judged.
+- **What we changed:** nothing in the evaluator, the rule or Phase 14's results, which stay as recorded.
+  As item 13 says, the verdict is reported as failed and the exit criterion stays unmet until the owner
+  rules at the end of the phase. The candidate work does not depend on this verdict.
+- **Lesson / implication for the paper:** the model reproduces line for line; scores from an evaluator
+  with wall-clock limits do not, and the paper reports them with that caveat and the pages involved.
+

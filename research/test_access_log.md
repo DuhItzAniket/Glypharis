@@ -351,3 +351,85 @@ Any other access must be justified in the "Reason" column and discussed in the p
 | 2026-11-19 | gdc test | GW-E2E-016 | glypharis (e2e) | 22 | Phase 22 v1 re-run (GW-E2E-016, gdc_test) |
 | 2026-11-19 | omnidocbench test | GW-E2E-016 | glypharis (e2e) | 22 | Phase 22 v1 re-run (GW-E2E-016, omnidocbench_test) |
 | 2026-11-19 | hiertext test | GW-E2E-016 | glypharis (e2e) | 22 | Phase 22 v1 re-run (GW-E2E-016, hiertext_test) |
+| 2026-11-19 | gdc test | GW-BASE-001 | tesseract (e2e), scoring | 22 | Phase 22 v1 re-run scoring (GW-E2E-018) |
+| 2026-11-19 | hiertext test | GW-BASE-001 | tesseract (e2e), scoring | 22 | Phase 22 v1 re-run scoring (GW-E2E-018) |
+| 2026-11-19 | gdc test | GW-BASE-001 | tesseract (rec), scoring | 22 | Phase 22 v1 re-run scoring (GW-E2E-018) |
+| 2026-11-19 | hiertext test | GW-BASE-001 | tesseract (rec), scoring | 22 | Phase 22 v1 re-run scoring (GW-E2E-018) |
+| 2026-11-19 | gdc test | GW-BASE-002 | ppocr_mobile (e2e), scoring | 22 | Phase 22 v1 re-run scoring (GW-E2E-018) |
+| 2026-11-19 | hiertext test | GW-BASE-002 | ppocr_mobile (e2e), scoring | 22 | Phase 22 v1 re-run scoring (GW-E2E-018) |
+| 2026-11-19 | gdc test | GW-BASE-002 | ppocr_mobile (rec), scoring | 22 | Phase 22 v1 re-run scoring (GW-E2E-018) |
+| 2026-11-19 | hiertext test | GW-BASE-002 | ppocr_mobile (rec), scoring | 22 | Phase 22 v1 re-run scoring (GW-E2E-018) |
+| 2026-11-19 | gdc test | GW-BASE-003 | ppocr_server (rec), scoring | 22 | Phase 22 v1 re-run scoring (GW-E2E-018) |
+| 2026-11-19 | gdc test | GW-BASE-004 | trocr (rec), scoring | 22 | Phase 22 v1 re-run scoring (GW-E2E-018) |
+| 2026-11-19 | hiertext test | GW-BASE-004 | trocr (rec), scoring | 22 | Phase 22 v1 re-run scoring (GW-E2E-018) |
+| 2026-11-19 | gdc test | GW-BASE-005 | ppocr6_tiny (e2e), scoring | 22 | Phase 22 v1 re-run scoring (GW-E2E-018) |
+| 2026-11-19 | hiertext test | GW-BASE-005 | ppocr6_tiny (e2e), scoring | 22 | Phase 22 v1 re-run scoring (GW-E2E-018) |
+| 2026-11-19 | gdc test | GW-BASE-005 | ppocr6_tiny (rec), scoring | 22 | Phase 22 v1 re-run scoring (GW-E2E-018) |
+| 2026-11-19 | hiertext test | GW-BASE-005 | ppocr6_tiny (rec), scoring | 22 | Phase 22 v1 re-run scoring (GW-E2E-018) |
+| 2026-11-19 | gdc test | GW-BASE-006 | ppocr6_small (e2e), scoring | 22 | Phase 22 v1 re-run scoring (GW-E2E-018) |
+| 2026-11-19 | hiertext test | GW-BASE-006 | ppocr6_small (e2e), scoring | 22 | Phase 22 v1 re-run scoring (GW-E2E-018) |
+| 2026-11-19 | gdc test | GW-BASE-006 | ppocr6_small (rec), scoring | 22 | Phase 22 v1 re-run scoring (GW-E2E-018) |
+| 2026-11-19 | hiertext test | GW-BASE-006 | ppocr6_small (rec), scoring | 22 | Phase 22 v1 re-run scoring (GW-E2E-018) |
+| 2026-11-19 | gdc test | GW-BASE-007 | ppocr6_medium (e2e), scoring | 22 | Phase 22 v1 re-run scoring (GW-E2E-018) |
+| 2026-11-19 | gdc test | GW-BASE-007 | ppocr6_medium (rec), scoring | 22 | Phase 22 v1 re-run scoring (GW-E2E-018) |
+| 2026-11-19 | funsd test | GW-BASE-007 | ppocr6_medium (e2e), scoring | 22 | Phase 22 v1 re-run scoring (GW-E2E-018) |
+| 2026-11-19 | gdc_scan test | GW-BASE-007 | ppocr6_medium (e2e), scoring | 22 | Phase 22 v1 re-run scoring (GW-E2E-018) |
+| 2026-11-19 | omnidocbench test | GW-BASE-007 | ppocr6_medium (e2e), scoring | 22 | Phase 22 v1 re-run scoring (GW-E2E-018) |
+| 2026-11-19 | funsd test | GW-BASE-007 | ppocr6_medium (rec), scoring | 22 | Phase 22 v1 re-run scoring (GW-E2E-018) |
+| 2026-11-19 | gdc_scan test | GW-BASE-007 | ppocr6_medium (rec), scoring | 22 | Phase 22 v1 re-run scoring (GW-E2E-018) |
+| 2026-11-19 | iiit5k test | GW-BASE-007 | ppocr6_medium (rec), scoring | 22 | Phase 22 v1 re-run scoring (GW-E2E-018) |
+| 2026-11-19 | funsd test | GW-BASE-006 | ppocr6_small (e2e), scoring | 22 | Phase 22 v1 re-run scoring (GW-E2E-018) |
+| 2026-11-19 | gdc_scan test | GW-BASE-006 | ppocr6_small (e2e), scoring | 22 | Phase 22 v1 re-run scoring (GW-E2E-018) |
+| 2026-11-19 | omnidocbench test | GW-BASE-006 | ppocr6_small (e2e), scoring | 22 | Phase 22 v1 re-run scoring (GW-E2E-018) |
+| 2026-11-19 | funsd test | GW-BASE-006 | ppocr6_small (rec), scoring | 22 | Phase 22 v1 re-run scoring (GW-E2E-018) |
+| 2026-11-19 | gdc_scan test | GW-BASE-006 | ppocr6_small (rec), scoring | 22 | Phase 22 v1 re-run scoring (GW-E2E-018) |
+| 2026-11-19 | iiit5k test | GW-BASE-006 | ppocr6_small (rec), scoring | 22 | Phase 22 v1 re-run scoring (GW-E2E-018) |
+| 2026-11-19 | funsd test | GW-BASE-005 | ppocr6_tiny (e2e), scoring | 22 | Phase 22 v1 re-run scoring (GW-E2E-018) |
+| 2026-11-19 | gdc_scan test | GW-BASE-005 | ppocr6_tiny (e2e), scoring | 22 | Phase 22 v1 re-run scoring (GW-E2E-018) |
+| 2026-11-19 | omnidocbench test | GW-BASE-005 | ppocr6_tiny (e2e), scoring | 22 | Phase 22 v1 re-run scoring (GW-E2E-018) |
+| 2026-11-19 | funsd test | GW-BASE-005 | ppocr6_tiny (rec), scoring | 22 | Phase 22 v1 re-run scoring (GW-E2E-018) |
+| 2026-11-19 | gdc_scan test | GW-BASE-005 | ppocr6_tiny (rec), scoring | 22 | Phase 22 v1 re-run scoring (GW-E2E-018) |
+| 2026-11-19 | iiit5k test | GW-BASE-005 | ppocr6_tiny (rec), scoring | 22 | Phase 22 v1 re-run scoring (GW-E2E-018) |
+| 2026-11-19 | funsd test | GW-BASE-002 | ppocr_mobile (e2e), scoring | 22 | Phase 22 v1 re-run scoring (GW-E2E-018) |
+| 2026-11-19 | gdc_scan test | GW-BASE-002 | ppocr_mobile (e2e), scoring | 22 | Phase 22 v1 re-run scoring (GW-E2E-018) |
+| 2026-11-19 | omnidocbench test | GW-BASE-002 | ppocr_mobile (e2e), scoring | 22 | Phase 22 v1 re-run scoring (GW-E2E-018) |
+| 2026-11-19 | funsd test | GW-BASE-002 | ppocr_mobile (rec), scoring | 22 | Phase 22 v1 re-run scoring (GW-E2E-018) |
+| 2026-11-19 | gdc_scan test | GW-BASE-002 | ppocr_mobile (rec), scoring | 22 | Phase 22 v1 re-run scoring (GW-E2E-018) |
+| 2026-11-19 | iiit5k test | GW-BASE-002 | ppocr_mobile (rec), scoring | 22 | Phase 22 v1 re-run scoring (GW-E2E-018) |
+| 2026-11-19 | funsd test | GW-BASE-003 | ppocr_server (e2e), scoring | 22 | Phase 22 v1 re-run scoring (GW-E2E-018) |
+| 2026-11-19 | funsd test | GW-BASE-003 | ppocr_server (rec), scoring | 22 | Phase 22 v1 re-run scoring (GW-E2E-018) |
+| 2026-11-19 | gdc_scan test | GW-BASE-003 | ppocr_server (rec), scoring | 22 | Phase 22 v1 re-run scoring (GW-E2E-018) |
+| 2026-11-19 | iiit5k test | GW-BASE-003 | ppocr_server (rec), scoring | 22 | Phase 22 v1 re-run scoring (GW-E2E-018) |
+| 2026-11-19 | funsd test | GW-BASE-001 | tesseract (e2e), scoring | 22 | Phase 22 v1 re-run scoring (GW-E2E-018) |
+| 2026-11-19 | gdc_scan test | GW-BASE-001 | tesseract (e2e), scoring | 22 | Phase 22 v1 re-run scoring (GW-E2E-018) |
+| 2026-11-19 | omnidocbench test | GW-BASE-001 | tesseract (e2e), scoring | 22 | Phase 22 v1 re-run scoring (GW-E2E-018) |
+| 2026-11-19 | funsd test | GW-BASE-001 | tesseract (rec), scoring | 22 | Phase 22 v1 re-run scoring (GW-E2E-018) |
+| 2026-11-19 | gdc_scan test | GW-BASE-001 | tesseract (rec), scoring | 22 | Phase 22 v1 re-run scoring (GW-E2E-018) |
+| 2026-11-19 | iiit5k test | GW-BASE-001 | tesseract (rec), scoring | 22 | Phase 22 v1 re-run scoring (GW-E2E-018) |
+| 2026-11-19 | funsd test | GW-BASE-004 | trocr (rec), scoring | 22 | Phase 22 v1 re-run scoring (GW-E2E-018) |
+| 2026-11-19 | gdc_scan test | GW-BASE-004 | trocr (rec), scoring | 22 | Phase 22 v1 re-run scoring (GW-E2E-018) |
+| 2026-11-19 | iiit5k test | GW-BASE-004 | trocr (rec), scoring | 22 | Phase 22 v1 re-run scoring (GW-E2E-018) |
+| 2026-11-19 | hiertext test | GW-REC-043 | glypharis (rec), scoring | 22 | Phase 22 v1 re-run scoring (GW-E2E-018) |
+| 2026-11-19 | gdc test | GW-REC-043 | glypharis (rec), scoring | 22 | Phase 22 v1 re-run scoring (GW-E2E-018) |
+| 2026-11-19 | gdc_scan test | GW-REC-043 | glypharis (rec), scoring | 22 | Phase 22 v1 re-run scoring (GW-E2E-018) |
+| 2026-11-19 | funsd test | GW-REC-043 | glypharis (rec), scoring | 22 | Phase 22 v1 re-run scoring (GW-E2E-018) |
+| 2026-11-19 | iiit5k test | GW-REC-043 | glypharis (rec), scoring | 22 | Phase 22 v1 re-run scoring (GW-E2E-018) |
+| 2026-11-19 | hiertext test | GW-E2E-016 | glypharis (e2e), scoring | 22 | Phase 22 v1 re-run scoring (GW-E2E-018) |
+| 2026-11-19 | gdc test | GW-E2E-016 | glypharis (e2e), scoring | 22 | Phase 22 v1 re-run scoring (GW-E2E-018) |
+| 2026-11-19 | gdc_scan test | GW-E2E-016 | glypharis (e2e), scoring | 22 | Phase 22 v1 re-run scoring (GW-E2E-018) |
+| 2026-11-19 | funsd test | GW-E2E-016 | glypharis (e2e), scoring | 22 | Phase 22 v1 re-run scoring (GW-E2E-018) |
+| 2026-11-19 | omnidocbench test | GW-E2E-016 | glypharis (e2e), scoring | 22 | Phase 22 v1 re-run scoring (GW-E2E-018) |
+| 2026-11-19 | gdc test | GW-E2E-017 | glypharis (oracle), scoring | 22 | Phase 22 v1 re-run scoring (GW-E2E-018) |
+| 2026-11-19 | gdc_scan test | GW-E2E-017 | glypharis (oracle), scoring | 22 | Phase 22 v1 re-run scoring (GW-E2E-018) |
+| 2026-11-19 | hiertext test | GW-E2E-018 | glypharis (rec), line comparison | 22 | Phase 22 v1 line comparison, counts only (GW-E2E-018) |
+| 2026-11-19 | gdc test | GW-E2E-018 | glypharis (rec), line comparison | 22 | Phase 22 v1 line comparison, counts only (GW-E2E-018) |
+| 2026-11-19 | gdc_scan test | GW-E2E-018 | glypharis (rec), line comparison | 22 | Phase 22 v1 line comparison, counts only (GW-E2E-018) |
+| 2026-11-19 | funsd test | GW-E2E-018 | glypharis (rec), line comparison | 22 | Phase 22 v1 line comparison, counts only (GW-E2E-018) |
+| 2026-11-19 | iiit5k test | GW-E2E-018 | glypharis (rec), line comparison | 22 | Phase 22 v1 line comparison, counts only (GW-E2E-018) |
+| 2026-11-19 | gdc test | GW-E2E-018 | glypharis (oracle), line comparison | 22 | Phase 22 v1 line comparison, counts only (GW-E2E-018) |
+| 2026-11-19 | gdc_scan test | GW-E2E-018 | glypharis (oracle), line comparison | 22 | Phase 22 v1 line comparison, counts only (GW-E2E-018) |
+| 2026-11-19 | gdc_scan test | GW-E2E-018 | glypharis (e2e), line comparison | 22 | Phase 22 v1 line comparison, counts only (GW-E2E-018) |
+| 2026-11-19 | funsd test | GW-E2E-018 | glypharis (e2e), line comparison | 22 | Phase 22 v1 line comparison, counts only (GW-E2E-018) |
+| 2026-11-19 | gdc test | GW-E2E-018 | glypharis (e2e), line comparison | 22 | Phase 22 v1 line comparison, counts only (GW-E2E-018) |
+| 2026-11-19 | omnidocbench test | GW-E2E-018 | glypharis (e2e), line comparison | 22 | Phase 22 v1 line comparison, counts only (GW-E2E-018) |
+| 2026-11-19 | hiertext test | GW-E2E-018 | glypharis (e2e), line comparison | 22 | Phase 22 v1 line comparison, counts only (GW-E2E-018) |
