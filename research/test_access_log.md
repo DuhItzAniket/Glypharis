@@ -339,3 +339,15 @@ Any other access must be justified in the "Reason" column and discussed in the p
 | 2026-11-18 | omnidocbench test | GW-E2E-007 | glypharis (e2e), scoring | 22 | Phase 22 v1 re-score (GW-E2E-015) |
 | 2026-11-18 | gdc test | GW-E2E-008 | glypharis (oracle), scoring | 22 | Phase 22 v1 re-score (GW-E2E-015) |
 | 2026-11-18 | gdc_scan test | GW-E2E-008 | glypharis (oracle), scoring | 22 | Phase 22 v1 re-score (GW-E2E-015) |
+| 2026-11-19 | hiertext test | GW-REC-043 | glypharis (rec) | 22 | Phase 22 v1 re-run (GW-REC-043, hiertext_test) |
+| 2026-11-19 | gdc test | GW-REC-043 | glypharis (rec) | 22 | Phase 22 v1 re-run (GW-REC-043, gdc_test) |
+| 2026-11-19 | gdc_scan test | GW-REC-043 | glypharis (rec) | 22 | Phase 22 v1 re-run (GW-REC-043, gdc_scan_test) |
+| 2026-11-19 | funsd test | GW-REC-043 | glypharis (rec) | 22 | Phase 22 v1 re-run (GW-REC-043, funsd_test) |
+| 2026-11-19 | iiit5k test | GW-REC-043 | glypharis (rec) | 22 | Phase 22 v1 re-run (GW-REC-043, iiit5k_test) |
+| 2026-11-19 | gdc test | GW-E2E-017 | glypharis (oracle) | 22 | Phase 22 v1 re-run (GW-E2E-017, gdc_test) |
+| 2026-11-19 | gdc_scan test | GW-E2E-017 | glypharis (oracle) | 22 | Phase 22 v1 re-run (GW-E2E-017, gdc_scan_test) |
+| 2026-11-19 | gdc_scan test | GW-E2E-016 | glypharis (e2e) | 22 | Phase 22 v1 re-run (GW-E2E-016, gdc_scan_test) |
+| 2026-11-19 | funsd test | GW-E2E-016 | glypharis (e2e) | 22 | Phase 22 v1 re-run (GW-E2E-016, funsd_test) |
+| 2026-11-19 | gdc test | GW-E2E-016 | glypharis (e2e) | 22 | Phase 22 v1 re-run (GW-E2E-016, gdc_test) |
+| 2026-11-19 | omnidocbench test | GW-E2E-016 | glypharis (e2e) | 22 | Phase 22 v1 re-run (GW-E2E-016, omnidocbench_test) |
+| 2026-11-19 | hiertext test | GW-E2E-016 | glypharis (e2e) | 22 | Phase 22 v1 re-run (GW-E2E-016, hiertext_test) |
