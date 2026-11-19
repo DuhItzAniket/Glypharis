@@ -109,16 +109,16 @@ Rows link to a full entry below. Numbers are copied from generated reports only,
 | [GW-EFF-011](#gw-eff-011) | 2026-11-17 | 16 | H6′'s latency: CRNN GW-REC-003 against SVTR GW-REC-020 in ONNX, per line | done | SVTR 32.01 against CRNN 10.16 ms per line, +16.78 [+12.02, +22.04] ms: H6′ not met | `reports/efficiency/phase16/` |
 | [GW-EFF-012](#gw-eff-012) | 2026-11-18 | 17 (v1) | The v1 bundle on the PyTorch backend against the Phase 16 PyTorch v1 references (the shipped path) | done | all four tolerances pass with no difference: map and logits 0.0, 5,000 of 5,000 lines identical, page CER 24.32% on both | `reports/export/GW-EFF-012/` |
 | [GW-E2E-013](#gw-e2e-013) | 2026-11-18 | 22 | Clean-machine-style walkthrough: the installed package on the v1 bundle against GW-E2E-006 | done | passes: page CER 24.32% on both, difference 0.0 points; 16,835 of 16,835 lines identical | `reports/package/GW-E2E-013.json` |
-| [GW-E2E-014](#gw-e2e-014) | 2026-11-18 | 22 | v1 re-run rehearsal on HierText validation pages | planned | — | — |
-| [GW-E2E-015](#gw-e2e-015) | 2026-11-18 | 22 | Pass A: re-score the saved Phase 14 files with the unchanged scorer | planned | — | — |
-| [GW-E2E-016](#gw-e2e-016) | 2026-11-18 | 22 | v1 re-run on the test pages | planned | — | — |
-| [GW-E2E-017](#gw-e2e-017) | 2026-11-18 | 22 | v1 re-run of the oracle on GDC and GDC-scan | planned | — | — |
-| [GW-E2E-018](#gw-e2e-018) | 2026-11-18 | 22 | Pass B: score the v1 re-run; the 0.05-point tolerance verdict | planned | — | — |
+| [GW-E2E-014](#gw-e2e-014) | 2026-11-18 | 22 | v1 re-run rehearsal on HierText validation pages | done | passes: 13 point values, largest difference 0.0; 1,715 of 1,715 pages identical | `reports/final_validation/rehearsal.json` |
+| [GW-E2E-015](#gw-e2e-015) | 2026-11-18 | 22 | Pass A: re-score the saved Phase 14 files with the unchanged scorer | done | not identical: 40 values differ, all official OmniDocBench scores of Tesseract and GLYPHARIS (more pages hit the evaluator's time limit); 0 unexplained | `reports/final_validation/GW-E2E-015/` |
+| [GW-E2E-016](#gw-e2e-016) | 2026-11-18 | 22 | v1 re-run on the test pages | done | predictions identical to GW-E2E-007 in all 5 sets; scored by GW-E2E-018 | `reports/final_validation/v1_rerun_outputs.json`, `reports/final_validation/GW-E2E-018/line_comparison.json` |
+| [GW-E2E-017](#gw-e2e-017) | 2026-11-18 | 22 | v1 re-run of the oracle on GDC and GDC-scan | done | predictions identical to GW-E2E-008 on GDC and GDC-scan; scored by GW-E2E-018 | `reports/final_validation/v1_rerun_outputs.json`, `reports/final_validation/GW-E2E-018/line_comparison.json` |
+| [GW-E2E-018](#gw-e2e-018) | 2026-11-18 | 22 | Pass B: score the v1 re-run; the 0.05-point tolerance verdict | done | tolerance verdict failed: 16 of 1,381 point values outside 0.0005, all GLYPHARIS's official OmniDocBench scores (largest 0.0208, three-column slice); no count, flag or verdict changed | `reports/final_validation/v1_reproduction.md`, `reports/final_validation/GW-E2E-018/` |
 | [GW-E2E-019](#gw-e2e-019) | 2026-11-18 | 22 | Phone candidate: validation gate on pages, against GW-E2E-006 | planned | — | — |
 | [GW-E2E-020](#gw-e2e-020) | 2026-11-18 | 22 | Phone candidate on the test pages | planned | — | — |
 | [GW-E2E-021](#gw-e2e-021) | 2026-11-18 | 22 | Phone candidate: the scoring pass and H11 | planned | — | — |
-| [GW-REC-042](#gw-rec-042) | 2026-11-18 | 22 | v1 re-run rehearsal on HierText validation crops | planned | — | — |
-| [GW-REC-043](#gw-rec-043) | 2026-11-18 | 22 | v1 re-run on the test crops | planned | — | — |
+| [GW-REC-042](#gw-rec-042) | 2026-11-18 | 22 | v1 re-run rehearsal on HierText validation crops | done | passes: 10 point values, largest difference 0.0; 74,500 of 74,500 crops identical | `reports/final_validation/rehearsal.json` |
+| [GW-REC-043](#gw-rec-043) | 2026-11-18 | 22 | v1 re-run on the test crops | done | predictions identical to GW-REC-039 in all 5 sets; scored by GW-E2E-018 | `reports/final_validation/v1_rerun_outputs.json`, `reports/final_validation/GW-E2E-018/line_comparison.json` |
 | [GW-REC-044](#gw-rec-044) | 2026-11-18 | 22 | Phone candidate: validation gate on crops, against GW-REC-038 | planned | — | — |
 | [GW-REC-045](#gw-rec-045) | 2026-11-18 | 22 | Phone candidate on the test crops | planned | — | — |
 | [GW-EFF-013](#gw-eff-013) | 2026-11-18 | 22 | Phone candidate selection: `fused`, `fused-int8`, `fused-single-line` | planned | — | — |
@@ -2069,7 +2069,7 @@ Rows link to a full entry below. Numbers are copied from generated reports only,
 
 ### <a id="gw-e2e-014"></a>GW-E2E-014 — v1 re-run rehearsal on validation pages
 
-- **Date allocated / run:** 2026-11-18 / —
+- **Date allocated / run:** 2026-11-18 / 2026-11-18
 - **Phase:** 22
 - **Git commit:** the `phase14-eval` code, with the wrapper at tag `phase22-repro`   **Config:** `configs/final/glypharis_v1.yaml`   **Seed(s):** none
 - **Dataset version(s):** HierText validation, 1,715 pages (`data/manifests/processed/hiertext.json`)
@@ -2079,14 +2079,14 @@ Rows link to a full entry below. Numbers are copied from generated reports only,
 - **Method:** `scripts/phase22_v1_repro.py rerun e2e` in a detached `phase14-eval` worktree, folder `GW-E2E-006` under a separate data root; `scripts/phase22_v1_compare.py rehearsal` checks Phase 14's file against its recorded hash, scores the output and compares every point value with Phase 14's entry, `time_ms` ignored, every differing line counted.
 - **Variables:** none
 - **Control:** GW-E2E-006
-- **Result:** — (planned)
-- **Interpretation:** —
+- **Result:** pass (`reports/final_validation/rehearsal.json`). All 13 point values, 6 counts and 2 flags equal Phase 14's (largest difference 0.0), no run identity differs, and 1,715 of 1,715 page records are identical outside `time_ms` and `seg`. Run time 799 s.
+- **Interpretation:** the frozen pipeline reproduces itself exactly on validation pages through the wrapper.
 - **Limitations:** validation only; the GPU driver may differ from Phase 14's, which its run metadata does not record.
 - **Next experiment:** GW-E2E-015
 
 ### <a id="gw-e2e-015"></a>GW-E2E-015 — Pass A: re-score the saved Phase 14 files
 
-- **Date allocated / run:** 2026-11-18 / —
+- **Date allocated / run:** 2026-11-18 / 2026-11-18 to 2026-11-19
 - **Phase:** 22
 - **Git commit:** tag `phase22-repro`, with the scorer unedited   **Config:** `scripts/phase14_score.py` as it stands   **Seed(s):** bootstrap 20261010
 - **Dataset version(s):** the Phase 14 prediction files (`data/manifests/processed/phase14_outputs.json`) and the baseline files, in a separate root
@@ -2096,14 +2096,14 @@ Rows link to a full entry below. Numbers are copied from generated reports only,
 - **Method:** `scripts/phase22_v1_repro.py rescore check`, then `rescore score`, with the official evaluators; every number outside provenance and path strings is compared exactly, and OmniDocBench's fallback page lists separately. Reports go to `reports/final_validation/GW-E2E-015/`.
 - **Variables:** none
 - **Control:** GW-E2E-009
-- **Result:** — (planned)
-- **Interpretation:** —
+- **Result:** not identical (`reports/final_validation/GW-E2E-015/verdict.json`). 40 values differ and the comparer explains all of them: they are the official OmniDocBench scores of Tesseract (GW-BASE-001) and GLYPHARIS (GW-E2E-007), where more pages reached the evaluator's quick-match time limit and were scored by its fallback (Tesseract 1 page in Phase 14, 4 now; GLYPHARIS 1, now 2). Every other number is identical, and all 8,062 v1 files still match `reports/final_validation/v1_files_before.json`. Recorded in `research/failures.md`; the owner ruled on 2026-11-19 to continue under the rule unchanged and decide on acceptance at the end. Scoring time 14,976 s.
+- **Interpretation:** the scorer and the saved files reproduce Phase 14; only the official OmniDocBench evaluator does not, because its fallback depends on the wall clock.
 - **Limitations:** OmniDocBench's wall-clock limit can change which pages fall back; if the number and those pages differ, "identical" is recorded as failed, with the cause. Logged test access, 70 scoring rows; not a new evaluation (EXPERIMENT_PROTOCOL §9).
 - **Next experiment:** GW-REC-043, GW-E2E-016 and GW-E2E-017
 
 ### <a id="gw-e2e-016"></a>GW-E2E-016 — v1 re-run on the test pages
 
-- **Date allocated / run:** 2026-11-18 / —
+- **Date allocated / run:** 2026-11-18 / 2026-11-19
 - **Phase:** 22
 - **Git commit:** the `phase14-eval` code, with the wrapper at tag `phase22-repro`   **Config:** `configs/final/glypharis_v1.yaml`   **Seed(s):** none
 - **Dataset version(s):** HierText test, GDC, GDC-scan, FUNSD, OmniDocBench (English), each matching its recorded hash
@@ -2113,14 +2113,14 @@ Rows link to a full entry below. Numbers are copied from generated reports only,
 - **Method:** `scripts/phase22_v1_repro.py rerun e2e`, Phase 14's order, folder `GW-E2E-007` under a separate data root; one logged access per set; scored by GW-E2E-018.
 - **Variables:** none
 - **Control:** GW-E2E-007
-- **Result:** — (planned)
-- **Interpretation:** —
+- **Result:** done in Phase 14's order, 1,943 s in all, one logged access per set; output hashes in `reports/final_validation/v1_rerun_outputs.json`. Every page record equals Phase 14's outside `time_ms` and `seg`: GDC-scan 28, FUNSD 50, GDC 106, OmniDocBench 755, HierText test 1,634 (`reports/final_validation/GW-E2E-018/line_comparison.json`). The scores are GW-E2E-018's.
+- **Interpretation:** the frozen pipeline is deterministic on this machine, detector included.
 - **Limitations:** does not replace GW-E2E-007; no latency claim; GDC-scan numbers only. Done once per set: a resume only finishes a crashed run, and any further attempt needs a new registered ID.
 - **Next experiment:** GW-E2E-018
 
 ### <a id="gw-e2e-017"></a>GW-E2E-017 — v1 re-run of the oracle on GDC and GDC-scan
 
-- **Date allocated / run:** 2026-11-18 / —
+- **Date allocated / run:** 2026-11-18 / 2026-11-19
 - **Phase:** 22
 - **Git commit:** the `phase14-eval` code, with the wrapper at tag `phase22-repro`   **Config:** `configs/final/glypharis_v1.yaml`   **Seed(s):** none
 - **Dataset version(s):** GDC v1.1, GDC-scan v1, each matching its recorded hash
@@ -2130,14 +2130,14 @@ Rows link to a full entry below. Numbers are copied from generated reports only,
 - **Method:** `scripts/phase22_v1_repro.py rerun oracle`, folder `GW-E2E-008` under a separate data root; one logged access per set; scored by GW-E2E-018.
 - **Variables:** none
 - **Control:** GW-E2E-008
-- **Result:** — (planned)
-- **Interpretation:** —
+- **Result:** done, 140 s in all, one logged access per set; output hashes in `reports/final_validation/v1_rerun_outputs.json`. Every page record equals Phase 14's outside `time_ms` and `seg`: GDC 106, GDC-scan 28 (`reports/final_validation/GW-E2E-018/line_comparison.json`). The scores are GW-E2E-018's.
+- **Interpretation:** the oracle path reproduces exactly.
 - **Limitations:** does not replace GW-E2E-008; GDC-scan numbers only. Done once per set: a resume only finishes a crashed run, and any further attempt needs a new registered ID.
 - **Next experiment:** GW-E2E-018
 
 ### <a id="gw-e2e-018"></a>GW-E2E-018 — Pass B: score the v1 re-run; the tolerance verdict
 
-- **Date allocated / run:** 2026-11-18 / —
+- **Date allocated / run:** 2026-11-18 / 2026-11-19
 - **Phase:** 22
 - **Git commit:** tag `phase22-repro`, with the scorer unedited   **Config:** `scripts/phase14_score.py` as it stands   **Seed(s):** bootstrap 20261010
 - **Dataset version(s):** the outputs of GW-REC-043, GW-E2E-016 and GW-E2E-017, and the baseline files
@@ -2147,8 +2147,8 @@ Rows link to a full entry below. Numbers are copied from generated reports only,
 - **Method:** the same scorer on the re-run root with all official evaluators, then `scripts/phase22_v1_compare.py` over `reports/final_validation/metric_inventory.json`. It also counts how many crops and pages differ between the re-run and Phase 14, with no text output, after checking Phase 14's files against their recorded hashes. Reports: `reports/final_validation/GW-E2E-018/`, `reports/final_validation/v1_reproduction.json` and `.md`. The raw scorer files keep the folder IDs, so they carry an `id_map` block and a header saying these are re-run values (GW-REC-039 = GW-REC-043, GW-E2E-007 = GW-E2E-016, GW-E2E-008 = GW-E2E-017); documents cite only `v1_reproduction`.
 - **Variables:** none
 - **Control:** GW-E2E-009
-- **Result:** — (planned)
-- **Interpretation:** —
+- **Result:** failed (`reports/final_validation/v1_reproduction.json` and `.md`). Of the 1,381 point values, 1,365 are within 0.0005 (largest 0.00034); all 413 counts, 22 flags and 16 verdicts are unchanged, and no run identity differs. The 16 failures are GLYPHARIS's official OmniDocBench text-block and reading-order scores, the largest 0.0208 on the three-column slice and 0.0013 on the overall reading-order average. The predictions are identical to Phase 14's in all 12 files (`reports/final_validation/GW-E2E-018/line_comparison.json`), and one more page reached the evaluator's quick-match time limit than in Phase 14: the same page as in GW-E2E-015, whose fallback lists Pass B repeats exactly. All 8,062 v1 files still match `reports/final_validation/v1_files_before.json`. Recorded in `research/failures.md`; Phase 14's results stay as recorded. Scoring time 16,004 s.
+- **Interpretation:** v1 reproduces line for line and every scorer number but the official OmniDocBench scores is within the tolerance; those depend on the evaluator's wall-clock limit, not on the model. Under the registered rule the verdict fails, and the exit criterion stays unmet until the owner rules at the end of the phase.
 - **Limitations:** a failure is reported beside Phase 14's results, which stay as recorded, and leaves the phase open for the owner. The candidate work does not depend on this verdict. Logged access: 70 scoring rows and 12 comparison rows.
 - **Next experiment:** GW-EFF-013
 
@@ -2205,7 +2205,7 @@ Rows link to a full entry below. Numbers are copied from generated reports only,
 
 ### <a id="gw-rec-042"></a>GW-REC-042 — v1 re-run rehearsal on validation crops
 
-- **Date allocated / run:** 2026-11-18 / —
+- **Date allocated / run:** 2026-11-18 / 2026-11-18
 - **Phase:** 22
 - **Git commit:** the `phase14-eval` code, with the wrapper at tag `phase22-repro`   **Config:** `configs/final/glypharis_v1.yaml`   **Seed(s):** none
 - **Dataset version(s):** HierText validation evaluation pack, 74,500 crops (`data/manifests/processed/eval_crops.json`)
@@ -2215,14 +2215,14 @@ Rows link to a full entry below. Numbers are copied from generated reports only,
 - **Method:** `scripts/phase22_v1_repro.py rerun rec` in a detached `phase14-eval` worktree, folder `GW-REC-038` under a separate data root; `scripts/phase22_v1_compare.py rehearsal` checks Phase 14's file against its recorded hash, scores the output and compares every point value with Phase 14's entry, `time_ms` ignored, every differing line counted.
 - **Variables:** none
 - **Control:** GW-REC-038
-- **Result:** — (planned)
-- **Interpretation:** —
+- **Result:** pass (`reports/final_validation/rehearsal.json`). All 10 point values and 6 counts equal Phase 14's (largest difference 0.0), no run identity differs, and 74,500 of 74,500 crop records are identical outside `time_ms` and `seg`. The test-access log was unchanged by the rehearsal. Run time 303 s.
+- **Interpretation:** the wrapper and the tag worktree reproduce the frozen recognizer exactly on validation data, so the test re-run could start.
 - **Limitations:** validation only.
 - **Next experiment:** GW-E2E-014
 
 ### <a id="gw-rec-043"></a>GW-REC-043 — v1 re-run on the test crops
 
-- **Date allocated / run:** 2026-11-18 / —
+- **Date allocated / run:** 2026-11-18 / 2026-11-19
 - **Phase:** 22
 - **Git commit:** the `phase14-eval` code, with the wrapper at tag `phase22-repro`   **Config:** `configs/final/glypharis_v1.yaml`   **Seed(s):** none
 - **Dataset version(s):** HierText test, GDC, GDC-scan, FUNSD and IIIT5K crop packs, each matching its recorded hash
@@ -2232,8 +2232,8 @@ Rows link to a full entry below. Numbers are copied from generated reports only,
 - **Method:** `scripts/phase22_v1_repro.py rerun rec`, Phase 14's order, folder `GW-REC-039` under a separate data root; one logged access per set; scored by GW-E2E-018.
 - **Variables:** none
 - **Control:** GW-REC-039
-- **Result:** — (planned)
-- **Interpretation:** —
+- **Result:** done in Phase 14's order, 477 s in all, one logged access per set; output hashes in `reports/final_validation/v1_rerun_outputs.json`. Every crop record equals Phase 14's outside `time_ms` and `seg`: HierText test 67,574, GDC 8,372, GDC-scan 776, FUNSD 2,647, IIIT5K 3,000 (`reports/final_validation/GW-E2E-018/line_comparison.json`). The scores are GW-E2E-018's.
+- **Interpretation:** the frozen recognizer is deterministic on this machine: the re-run reads every test crop as Phase 14 did.
 - **Limitations:** does not replace GW-REC-039; GDC-scan numbers only. Done once per set: a resume only finishes a crashed run, and any further attempt needs a new registered ID.
 - **Next experiment:** GW-E2E-018
 

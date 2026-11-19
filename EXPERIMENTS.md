@@ -9,12 +9,12 @@ Each ID links to its full entry. Key results are copied from the registry. The g
 | Prefix | Registered | done | failed | abandoned | not run | planned | running |
 |---|---|---|---|---|---|---|---|
 | GW-BASE | 7 | 7 | 0 | 0 | 0 | 0 | 0 |
-| GW-REC | 45 | 37 | 1 | 1 | 2 | 4 | 0 |
+| GW-REC | 45 | 39 | 1 | 1 | 2 | 2 | 0 |
 | GW-DET | 7 | 7 | 0 | 0 | 0 | 0 | 0 |
-| GW-E2E | 21 | 13 | 0 | 0 | 0 | 8 | 0 |
+| GW-E2E | 21 | 18 | 0 | 0 | 0 | 3 | 0 |
 | GW-DATA | 22 | 22 | 0 | 0 | 0 | 0 | 0 |
 | GW-EFF | 15 | 12 | 0 | 0 | 0 | 3 | 0 |
-| all | 117 | 98 | 1 | 1 | 2 | 15 | 0 |
+| all | 117 | 105 | 1 | 1 | 2 | 8 | 0 |
 
 ## Scope
 
@@ -34,9 +34,9 @@ Not attributed to one experiment: Phase 16 scoring, 0.00 CPU-hours over 2 jobs.
 
 44 registered experiments have no ledger row:
 
-- Abandoned or not run (18): GW-REC-023, GW-REC-032, GW-REC-033, GW-REC-042, GW-REC-043, GW-REC-044, GW-REC-045, GW-E2E-014, GW-E2E-015, GW-E2E-016, GW-E2E-017, GW-E2E-018, GW-E2E-019, GW-E2E-020, GW-E2E-021, GW-EFF-013, GW-EFF-014, GW-EFF-015
+- Abandoned or not run (11): GW-REC-023, GW-REC-032, GW-REC-033, GW-REC-044, GW-REC-045, GW-E2E-019, GW-E2E-020, GW-E2E-021, GW-EFF-013, GW-EFF-014, GW-EFF-015
 - In phases the ledger says it does not count (9, 10, 14, 15) (18): GW-REC-038, GW-REC-039, GW-REC-040, GW-REC-041, GW-DET-004, GW-DET-005, GW-DET-006, GW-E2E-001, GW-E2E-002, GW-E2E-003, GW-E2E-006, GW-E2E-007, GW-E2E-008, GW-E2E-009, GW-E2E-010, GW-EFF-001, GW-EFF-002, GW-EFF-005
-- Ran, with no ledger row; its note names neither them nor their phase (8): GW-E2E-004, GW-E2E-005, GW-E2E-011, GW-E2E-012, GW-E2E-013, GW-EFF-003, GW-EFF-004, GW-EFF-012
+- Ran, with no ledger row; its note names neither them nor their phase (15): GW-REC-042, GW-REC-043, GW-E2E-004, GW-E2E-005, GW-E2E-011, GW-E2E-012, GW-E2E-013, GW-E2E-014, GW-E2E-015, GW-E2E-016, GW-E2E-017, GW-E2E-018, GW-EFF-003, GW-EFF-004, GW-EFF-012
 
 ## Flags
 
@@ -49,13 +49,13 @@ Not attributed to one experiment: Phase 16 scoring, 0.00 CPU-hours over 2 jobs.
 
 | ID | Question | Status | Key result | Reports | GPU-h | CPU-h | Flags |
 |---|---|---|---|---|---|---|---|
-| [GW-BASE-001](research/experiments.md#gw-base-001) | Tesseract 5 (LSTM, eng): recognition and end to end | done (Phase 14 amendment run) | lines 24.35% CER (HierText val); 0.43 s per page | [`reports/baselines/`](reports/baselines/) | — | 1.20 | test log: 38 |
-| [GW-BASE-002](research/experiments.md#gw-base-002) | PaddleOCR PP-OCRv5 mobile (det + English rec): recognition and end to end | done (Phase 14 and Phase 16 amendments run) | lines 9.27% CER (HierText val); 3.4 s per page | [`reports/baselines/`](reports/baselines/) | — | 3.23 | test log: 42 |
-| [GW-BASE-003](research/experiments.md#gw-base-003) | PaddleOCR PP-OCRv5 server (det + rec): recognition and end to end | done (Phase 14 amendment run) | lines 14.65% CER (HierText val); 80.9 s per page; GDC pages not runnable | [`reports/baselines/`](reports/baselines/) | — | 19.22 | test log: 22; failure note |
-| [GW-BASE-004](research/experiments.md#gw-base-004) | TrOCR-small-printed: recognition only | done (Phase 14 amendment run) | lines 62.58% strict / 19.14% normalised CER (HierText val); 133 ms per line | [`reports/baselines/`](reports/baselines/) | — | 3.56 | test log: 20 |
-| [GW-BASE-005](research/experiments.md#gw-base-005) | PaddleOCR PP-OCRv6 tiny (det + rec): recognition and end to end | done (Phase 14 amendment run) | lines 11.10% CER (HierText val); 21.6 ms per line, 1.7 s per page | [`reports/baselines/`](reports/baselines/) | — | 2.51 | test log: 38 |
-| [GW-BASE-006](research/experiments.md#gw-base-006) | PaddleOCR PP-OCRv6 small (det + rec): recognition and end to end | done (Phase 14 amendment run) | lines 7.53% CER (HierText val); 46 ms per line, 3.7 s per page | [`reports/baselines/`](reports/baselines/) | — | 5.37 | test log: 38 |
-| [GW-BASE-007](research/experiments.md#gw-base-007) | PaddleOCR PP-OCRv6 medium (PaddleOCR 3.7's English default): reduced scope | done (Phase 14 amendment run) | lines 7.54% CER (HierText val); 553 ms per line, 32.5 s per page | [`reports/baselines/`](reports/baselines/) | — | 10.96 | test log: 29 |
+| [GW-BASE-001](research/experiments.md#gw-base-001) | Tesseract 5 (LSTM, eng): recognition and end to end | done (Phase 14 amendment run) | lines 24.35% CER (HierText val); 0.43 s per page | [`reports/baselines/`](reports/baselines/) | — | 1.20 | test log: 58 |
+| [GW-BASE-002](research/experiments.md#gw-base-002) | PaddleOCR PP-OCRv5 mobile (det + English rec): recognition and end to end | done (Phase 14 and Phase 16 amendments run) | lines 9.27% CER (HierText val); 3.4 s per page | [`reports/baselines/`](reports/baselines/) | — | 3.23 | test log: 62 |
+| [GW-BASE-003](research/experiments.md#gw-base-003) | PaddleOCR PP-OCRv5 server (det + rec): recognition and end to end | done (Phase 14 amendment run) | lines 14.65% CER (HierText val); 80.9 s per page; GDC pages not runnable | [`reports/baselines/`](reports/baselines/) | — | 19.22 | test log: 32; failure note |
+| [GW-BASE-004](research/experiments.md#gw-base-004) | TrOCR-small-printed: recognition only | done (Phase 14 amendment run) | lines 62.58% strict / 19.14% normalised CER (HierText val); 133 ms per line | [`reports/baselines/`](reports/baselines/) | — | 3.56 | test log: 30 |
+| [GW-BASE-005](research/experiments.md#gw-base-005) | PaddleOCR PP-OCRv6 tiny (det + rec): recognition and end to end | done (Phase 14 amendment run) | lines 11.10% CER (HierText val); 21.6 ms per line, 1.7 s per page | [`reports/baselines/`](reports/baselines/) | — | 2.51 | test log: 58 |
+| [GW-BASE-006](research/experiments.md#gw-base-006) | PaddleOCR PP-OCRv6 small (det + rec): recognition and end to end | done (Phase 14 amendment run) | lines 7.53% CER (HierText val); 46 ms per line, 3.7 s per page | [`reports/baselines/`](reports/baselines/) | — | 5.37 | test log: 58 |
+| [GW-BASE-007](research/experiments.md#gw-base-007) | PaddleOCR PP-OCRv6 medium (PaddleOCR 3.7's English default): reduced scope | done (Phase 14 amendment run) | lines 7.54% CER (HierText val); 553 ms per line, 32.5 s per page | [`reports/baselines/`](reports/baselines/) | — | 10.96 | test log: 45 |
 
 ## Phase 06
 
@@ -174,10 +174,10 @@ Not attributed to one experiment: Phase 16 scoring, 0.00 CPU-hours over 2 jobs.
 | ID | Question | Status | Key result | Reports | GPU-h | CPU-h | Flags |
 |---|---|---|---|---|---|---|---|
 | [GW-REC-038](research/experiments.md#gw-rec-038) | The frozen recognizer on the HierText validation evaluation crops (H5′'s reference) | done | 6.51% CER strict, 74,500 crops | [`reports/external/`](reports/external/) | — | — | — |
-| [GW-REC-039](research/experiments.md#gw-rec-039) | The frozen recognizer on the test crop packs (H5′, H8′) | done | CER 6.03% HierText test, 4.17% GDC, 7.03% FUNSD; IIIT5K 91.47% words | [`reports/external/`](reports/external/) | — | — | test log: 15 |
+| [GW-REC-039](research/experiments.md#gw-rec-039) | The frozen recognizer on the test crop packs (H5′, H8′) | done | CER 6.03% HierText test, 4.17% GDC, 7.03% FUNSD; IIIT5K 91.47% words | [`reports/external/`](reports/external/) | — | — | test log: 20 |
 | [GW-E2E-006](research/experiments.md#gw-e2e-006) | The frozen v1 pipeline on HierText validation: Phase 14's reference | done | bag-of-lines page CER 27.57%, E2E F1 58.24% (all 1,715 validation pages) | [`reports/external/`](reports/external/) | — | — | — |
-| [GW-E2E-007](research/experiments.md#gw-e2e-007) | The frozen pipeline end to end on the test pages (H1′ CER) | done | bag-of-lines page CER 25.16% HierText test, 22.35% GDC | [`reports/external/`](reports/external/) | — | — | test log: 15 |
-| [GW-E2E-008](research/experiments.md#gw-e2e-008) | Oracle run on GDC and GDC-scan, for H4 in Phase 15 | done | GDC bag-of-lines page CER 4.17% from ground-truth boxes | [`reports/external/`](reports/external/) | — | — | test log: 6 |
+| [GW-E2E-007](research/experiments.md#gw-e2e-007) | The frozen pipeline end to end on the test pages (H1′ CER) | done | bag-of-lines page CER 25.16% HierText test, 22.35% GDC | [`reports/external/`](reports/external/) | — | — | test log: 20 |
+| [GW-E2E-008](research/experiments.md#gw-e2e-008) | Oracle run on GDC and GDC-scan, for H4 in Phase 15 | done | GDC bag-of-lines page CER 4.17% from ground-truth boxes | [`reports/external/`](reports/external/) | — | — | test log: 8 |
 | [GW-E2E-009](research/experiments.md#gw-e2e-009) | Phase 14 scoring, comparisons and hypothesis verdicts | done | H1′ holds; H5′ not met; H8′ transfers met, by half not shown | [`reports/external/`](reports/external/) | — | — | failure note |
 | [GW-EFF-005](research/experiments.md#gw-eff-005) | v1 CPU page latency against PP-OCRv5 mobile in one sitting (H1′ latency) | done | 2,446.7 against 2,954.8 ms per page, −508.1 [−737.7, −256.5] ms | [`reports/external/GW-EFF-005/`](reports/external/GW-EFF-005/), [`reports/external/results.json`](reports/external/results.json) | — | — | — |
 
@@ -235,16 +235,16 @@ Not attributed to one experiment: Phase 16 scoring, 0.00 CPU-hours over 2 jobs.
 
 | ID | Question | Status | Key result | Reports | GPU-h | CPU-h | Flags |
 |---|---|---|---|---|---|---|---|
-| [GW-REC-042](research/experiments.md#gw-rec-042) | v1 re-run rehearsal on HierText validation crops | planned | — | — | — | — | — |
-| [GW-REC-043](research/experiments.md#gw-rec-043) | v1 re-run on the test crops | planned | — | — | — | — | — |
+| [GW-REC-042](research/experiments.md#gw-rec-042) | v1 re-run rehearsal on HierText validation crops | done | passes: 10 point values, largest difference 0.0; 74,500 of 74,500 crops identical | [`reports/final_validation/rehearsal.json`](reports/final_validation/rehearsal.json) | — | — | — |
+| [GW-REC-043](research/experiments.md#gw-rec-043) | v1 re-run on the test crops | done | predictions identical to GW-REC-039 in all 5 sets; scored by GW-E2E-018 | [`reports/final_validation/v1_rerun_outputs.json`](reports/final_validation/v1_rerun_outputs.json), [`reports/final_validation/GW-E2E-018/line_comparison.json`](reports/final_validation/GW-E2E-018/line_comparison.json) | — | — | test log: 10 |
 | [GW-REC-044](research/experiments.md#gw-rec-044) | Phone candidate: validation gate on crops, against GW-REC-038 | planned | — | — | — | — | — |
 | [GW-REC-045](research/experiments.md#gw-rec-045) | Phone candidate on the test crops | planned | — | — | — | — | — |
 | [GW-E2E-013](research/experiments.md#gw-e2e-013) | Clean-machine-style walkthrough: the installed package on the v1 bundle against GW-E2E-006 | done | passes: page CER 24.32% on both, difference 0.0 points; 16,835 of 16,835 lines identical | [`reports/package/GW-E2E-013.json`](reports/package/GW-E2E-013.json) | — | — | — |
-| [GW-E2E-014](research/experiments.md#gw-e2e-014) | v1 re-run rehearsal on HierText validation pages | planned | — | — | — | — | — |
-| [GW-E2E-015](research/experiments.md#gw-e2e-015) | Pass A: re-score the saved Phase 14 files with the unchanged scorer | planned | — | — | — | — | — |
-| [GW-E2E-016](research/experiments.md#gw-e2e-016) | v1 re-run on the test pages | planned | — | — | — | — | — |
-| [GW-E2E-017](research/experiments.md#gw-e2e-017) | v1 re-run of the oracle on GDC and GDC-scan | planned | — | — | — | — | — |
-| [GW-E2E-018](research/experiments.md#gw-e2e-018) | Pass B: score the v1 re-run; the 0.05-point tolerance verdict | planned | — | — | — | — | — |
+| [GW-E2E-014](research/experiments.md#gw-e2e-014) | v1 re-run rehearsal on HierText validation pages | done | passes: 13 point values, largest difference 0.0; 1,715 of 1,715 pages identical | [`reports/final_validation/rehearsal.json`](reports/final_validation/rehearsal.json) | — | — | — |
+| [GW-E2E-015](research/experiments.md#gw-e2e-015) | Pass A: re-score the saved Phase 14 files with the unchanged scorer | done | not identical: 40 values differ, all official OmniDocBench scores of Tesseract and GLYPHARIS (more pages hit the evaluator's time limit); 0 unexplained | [`reports/final_validation/GW-E2E-015/`](reports/final_validation/GW-E2E-015/) | — | — | failure note |
+| [GW-E2E-016](research/experiments.md#gw-e2e-016) | v1 re-run on the test pages | done | predictions identical to GW-E2E-007 in all 5 sets; scored by GW-E2E-018 | [`reports/final_validation/v1_rerun_outputs.json`](reports/final_validation/v1_rerun_outputs.json), [`reports/final_validation/GW-E2E-018/line_comparison.json`](reports/final_validation/GW-E2E-018/line_comparison.json) | — | — | test log: 10 |
+| [GW-E2E-017](research/experiments.md#gw-e2e-017) | v1 re-run of the oracle on GDC and GDC-scan | done | predictions identical to GW-E2E-008 on GDC and GDC-scan; scored by GW-E2E-018 | [`reports/final_validation/v1_rerun_outputs.json`](reports/final_validation/v1_rerun_outputs.json), [`reports/final_validation/GW-E2E-018/line_comparison.json`](reports/final_validation/GW-E2E-018/line_comparison.json) | — | — | test log: 4 |
+| [GW-E2E-018](research/experiments.md#gw-e2e-018) | Pass B: score the v1 re-run; the 0.05-point tolerance verdict | done | tolerance verdict failed: 16 of 1,381 point values outside 0.0005, all GLYPHARIS's official OmniDocBench scores (largest 0.0208, three-column slice); no count, flag or verdict changed | [`reports/final_validation/v1_reproduction.md`](reports/final_validation/v1_reproduction.md), [`reports/final_validation/GW-E2E-018/`](reports/final_validation/GW-E2E-018/) | — | — | test log: 12; failure note |
 | [GW-E2E-019](research/experiments.md#gw-e2e-019) | Phone candidate: validation gate on pages, against GW-E2E-006 | planned | — | — | — | — | — |
 | [GW-E2E-020](research/experiments.md#gw-e2e-020) | Phone candidate on the test pages | planned | — | — | — | — | — |
 | [GW-E2E-021](research/experiments.md#gw-e2e-021) | Phone candidate: the scoring pass and H11 | planned | — | — | — | — | — |

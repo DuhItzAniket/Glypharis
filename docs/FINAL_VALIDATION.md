@@ -66,17 +66,41 @@ until Phase 23. GDC and GDC-scan cannot be fetched by anyone else. The evaluatio
 
 | Check | ID | Rule | Result | Report |
 |---|---|---|---|---|
-| Rehearsal, validation crops | GW-REC-042 | every point value within 0.0005 | not run | |
-| Rehearsal, validation pages | GW-E2E-014 | every point value within 0.0005 | not run | |
-| Pass A, re-score of the saved files | GW-E2E-015 | identical numbers | not run | |
-| Re-run, test crops | GW-REC-043 | once per set; outputs complete and hashed | not run | |
-| Re-run, test pages | GW-E2E-016 | once per set; outputs complete and hashed | not run | |
-| Re-run, oracle | GW-E2E-017 | once per set; outputs complete and hashed | not run | |
-| Pass B and tolerance verdict | GW-E2E-018 | every point value within 0.05 points, counts equal | not run | |
+| Rehearsal, validation crops | GW-REC-042 | every point value within 0.0005 | passed: largest difference 0.0; 74,500 of 74,500 crops identical | `reports/final_validation/rehearsal.json` |
+| Rehearsal, validation pages | GW-E2E-014 | every point value within 0.0005 | passed: largest difference 0.0; 1,715 of 1,715 pages identical | `reports/final_validation/rehearsal.json` |
+| Pass A, re-score of the saved files | GW-E2E-015 | identical numbers | failed: 40 official OmniDocBench values differ, 0 unexplained | `reports/final_validation/GW-E2E-015/verdict.json` |
+| Re-run, test crops | GW-REC-043 | once per set; outputs complete and hashed | passed: 5 sets, one access each | `reports/final_validation/v1_rerun_outputs.json` |
+| Re-run, test pages | GW-E2E-016 | once per set; outputs complete and hashed | passed: 5 sets, one access each | `reports/final_validation/v1_rerun_outputs.json` |
+| Re-run, oracle | GW-E2E-017 | once per set; outputs complete and hashed | passed: 2 sets, one access each | `reports/final_validation/v1_rerun_outputs.json` |
+| Pass B and tolerance verdict | GW-E2E-018 | every point value within 0.05 points, counts equal | failed: 16 of 1,381 point values outside, all official OmniDocBench | `reports/final_validation/v1_reproduction.md` |
+
+The re-run's predictions are the same as Phase 14's in all 12 test files: no crop or page record
+differs outside its timings (`reports/final_validation/GW-E2E-018/line_comparison.json`). No count,
+flag or hypothesis verdict changed, and no run differs from Phase 14's recorded identity (model hashes,
+settings, batch, inputs, tag, torch, CUDA and cuDNN). After both passes, all 8,062 v1 files still match
+`reports/final_validation/v1_files_before.json` byte for byte, and the OmniDocBench evaluator's
+`result/` folder held the same files before and after each pass.
 
 ### 2.1 Differences found
 
-Not run.
+Every difference is in the official OmniDocBench evaluator. It gives each page a time limit for its
+quick text matching and scores the page with a fallback when the time runs out, so which pages fall back
+depends on the machine's speed at that moment.
+
+- *Pass A (GW-E2E-015).* On the same saved files, Tesseract fell back on 4 pages against Phase 14's 1,
+  and GLYPHARIS on 2 against 1. The 40 differing values are those two systems' official OmniDocBench
+  scores; every other number is identical. Recorded in `research/failures.md`. The owner ruled on
+  2026-11-19 to keep the rule unchanged, continue, and decide on acceptance at the end of the phase.
+- *Pass B (GW-E2E-018).* The 16 values outside the tolerance are GLYPHARIS's official OmniDocBench
+  text-block and reading-order scores. The largest is 0.0208, on the three-column slice; on the overall
+  reading-order average it is 0.0013. The pages that fell back are exactly Pass A's, one more than in
+  Phase 14, and the predictions did not change. Recorded in `research/failures.md`.
+- *HierText official evaluator.* Two baseline values (Tesseract E2E-PQ, PP-OCRv6 small Det-PQ) moved
+  by about 1e-8 between the passes, float32 rounding. Baselines are not judged.
+
+**Status.** Under the registered rule the reproduction is reported as failed, beside Phase 14's results,
+which stay as recorded. The exit criterion is unmet until the owner rules at the end of the phase. The
+candidate work does not depend on this verdict.
 
 ## 3. Phone candidate
 

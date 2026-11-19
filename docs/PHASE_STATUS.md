@@ -4488,3 +4488,22 @@ result existed).** The review of the reproduction tools settled these points:
   re-run files, and a stopped pass resumes only as itself.
 - *After the tag,* only the run records listed in `RUN_RECORDS` may change until Pass B has finished, so
   this section is not edited again before then.
+
+**Progress (2026-11-19 UTC): items 6 to 13 done; the reproduction verdict failed.**
+
+- *Item 8 passed (GW-REC-042, GW-E2E-014).* The rehearsal reproduced both validation runs exactly:
+  largest difference 0.0, every crop and page record identical (`reports/final_validation/rehearsal.json`).
+- *Item 10 failed (GW-E2E-015).* Pass A is not identical: 40 official OmniDocBench values of Tesseract
+  and GLYPHARIS differ, because more pages reached the evaluator's time limit, and none is unexplained.
+  The owner ruled to continue under the rule unchanged and decide on acceptance at the end.
+- *Item 11 passed (GW-REC-043, GW-E2E-016, GW-E2E-017).* All 12 test runs finished once, in Phase 14's
+  order; their hashes and the access log were committed before scoring.
+- *Items 12 and 13 (GW-E2E-018).* The predictions are identical to Phase 14's in all 12 files. The
+  tolerance verdict failed on 16 of 1,381 point values, all of them GLYPHARIS's official OmniDocBench
+  scores, from one more fallback page than in Phase 14 (the same page as in Pass A); no count, flag or
+  verdict changed (`reports/final_validation/v1_reproduction.md`).
+
+The v1 files are unchanged (8,062 of 8,062). Both failures are in `research/failures.md` and in
+`docs/FINAL_VALIDATION.md`, section 2. The exit criterion for the reproduction stays unmet until the
+owner rules; items 14 to 20 go ahead, as they do not depend on it.
+
