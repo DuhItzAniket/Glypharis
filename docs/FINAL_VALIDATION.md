@@ -119,10 +119,11 @@ A new version, not v1. Its results sit beside v1's and replace none of them.
 
 On the laptop, `fused-single-line` gave `fused`'s text on all 5,000 lines (its `lines.json`) and
 `fused`'s page CER and E2E F1 on the 400 pages, and `fused-int8` stayed within its margin on all three
-tests. The laptop sitting's page times and peaks are recorded in `reports/final_validation/candidate/GW-
-EFF-013/laptop.md` as information: the selection rule judges speed and memory on the phone. The pages
-and profile reports carry the recognizer's batching label; on a page the pipeline hands the recognizer
-all of that page's crops in one call, and the 256 crops per call apply to the line evaluation only.
+tests. The laptop sitting's page times and peaks are recorded in
+`reports/final_validation/candidate/GW-EFF-013/laptop.md` as information: the selection rule judges
+speed and memory on the phone. The pages and profile reports carry the recognizer's batching label; on a
+page the pipeline hands the recognizer all of that page's crops in one call, and the 256 crops per call
+apply to the line evaluation only.
 
 ## 4. Phone measurement (GW-EFF-015)
 
