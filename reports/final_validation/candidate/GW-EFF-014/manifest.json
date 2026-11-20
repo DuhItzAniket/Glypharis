@@ -1,0 +1,152 @@
+{
+ "format": "glypharis-phone-bundle-1",
+ "version": "glypharis_phone_candidate",
+ "version_label": "phone candidate (new version, not v1)",
+ "arm": "fused-single-line",
+ "batching": "one line per recognizer run",
+ "files": {
+  "detector.onnx": "378c1feda480c1bb1dde838dd4a5f4579a904710a7f7b222d978c583b5bddcb7",
+  "recognizer.fused.onnx": "b0e2a5100cb465f72d2abca97fc30a47892c75d069e556791021b7b74dfc172c",
+  "charset.json": "d8d0477211d5e140a295b24a309efff6e0e29f5e4c2582af3c56ce133e034c6b"
+ },
+ "recognizer_file": "recognizer.fused.onnx",
+ "detector": {
+  "spec": {
+   "model": {
+    "backbone": "mobilenet_v3_large",
+    "init": "imagenet",
+    "weights": "raw/imagenet_backbones/mobilenet_v3_large-8738ca79.pth",
+    "weights_sha256": "8738ca797c879b547d18bbd15da5736ff2557b2036a9af72225393ca61759a04",
+    "inner_channels": 96,
+    "channels_last": true
+   },
+   "labels": {
+    "shrink_ratio": 0.4,
+    "thresh_min": 0.3,
+    "thresh_max": 0.7,
+    "min_text_size": 6.0
+   },
+   "infer": {
+    "long_side": 1536
+   },
+   "post": {
+    "bin_thresh": 0.3,
+    "box_thresh": 0.5,
+    "min_component_area": 1,
+    "min_box_side": 3.0,
+    "max_candidates": 5000,
+    "box_type": "quad",
+    "operating_points": [
+     {
+      "name": "inverse09",
+      "unclip_mode": "inverse",
+      "unclip_ratio": 0.9
+     }
+    ]
+   },
+   "operating_point": "inverse09",
+   "label_version": 1
+  }
+ },
+ "recognizer": {
+  "height": 48,
+  "max_width": 1536,
+  "stride": 4,
+  "classes": 275,
+  "arch": {
+   "model_name": "svtr",
+   "model": {
+    "cnn_channels": [
+     64,
+     128,
+     256,
+     256,
+     512,
+     512
+    ],
+    "lstm_hidden": 256,
+    "lstm_layers": 2,
+    "dropout": 0.1,
+    "frame_stride": 4,
+    "svtr": {
+     "dims": [
+      96,
+      192,
+      256
+     ],
+     "local_blocks": [
+      3,
+      3,
+      0
+     ],
+     "global_blocks": [
+      0,
+      3,
+      6
+     ],
+     "heads": [
+      3,
+      6,
+      8
+     ],
+     "mlp_ratio": 4.0,
+     "local_kernel": [
+      3,
+      7
+     ]
+    }
+   }
+  },
+  "temperature": 2.35
+ },
+ "pipeline": {
+  "crop": {
+   "height": 64,
+   "margin": 0.15,
+   "max_aspect": 64.0,
+   "jpeg_quality": 95
+  },
+  "reading_order": true,
+  "max_pixels": 64000000
+ },
+ "onnx_opset": 17,
+ "onnxruntime": "1.31.1",
+ "session_options": {
+  "providers": [
+   "CPUExecutionProvider"
+  ],
+  "execution_mode": "ORT_SEQUENTIAL",
+  "graph_optimization_level": "ORT_ENABLE_ALL",
+  "enable_cpu_mem_arena": false,
+  "enable_mem_pattern": false,
+  "allow_spinning": "default",
+  "intra_op_num_threads": "the caller's thread count"
+ },
+ "v1": {
+  "manifest_sha256": "875357a6346e8b1f989005fa96c557b00bf687461043368dc5e3dc532839f037",
+  "version": "glypharis_v1",
+  "note": "the detector is v1's; the recognizer and its batching are not"
+ },
+ "sources": {
+  "experiment": "GW-EFF-014",
+  "selection": {
+   "file": "reports/final_validation/candidate/GW-EFF-013/selection.json",
+   "sha256": "ef1ce069f9510bbca61c04094eb0b09266fc938f9d33881f7fa83236142220f8",
+   "selected": "fused-single-line"
+  },
+  "recognizer": {
+   "path": "data/processed/phase16/variants/fused-attention/recognizer.fused.onnx",
+   "sha256": "b0e2a5100cb465f72d2abca97fc30a47892c75d069e556791021b7b74dfc172c",
+   "experiment": "GW-EFF-009 (fused-attention)"
+  },
+  "detector": {
+   "from": "runs/release/glypharis-v1/detector.onnx",
+   "same_bytes": true
+  },
+  "v1_code": "equal",
+  "threads": 10,
+  "created_utc": "2026-11-20T19:03:32+00:00",
+  "git_commit": "5a259e36f67178dbc6377d70027bf49b9b0e0d92",
+  "git_dirty": false
+ }
+}
