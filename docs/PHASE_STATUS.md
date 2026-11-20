@@ -4513,3 +4513,15 @@ owner rules; items 14 to 20 go ahead, as they do not depend on it.
 (`reports/final_validation/candidate/GW-EFF-013/accuracy.md`). The laptop sitting's times and peaks are
 recorded as information (`laptop.md` in the same folder). The phone part of item 14 and item 15 come
 next: the timing build of the Android app is not written yet.
+
+**Owner ruling (2026-11-21) on items 10 and 13.** The v1 reproduction is accepted as an explained
+limitation of the official OmniDocBench evaluator, disclosed. Both strict verdicts stay as recorded
+(`reports/final_validation/GW-E2E-015/verdict.json`, `reports/final_validation/v1_reproduction.md`), and
+`docs/FINAL_VALIDATION.md`, section 2, carries the ruling. The reproduction exit criterion is closed by it.
+
+**Progress (2026-11-20 UTC): items 14 and 15 done (GW-EFF-013, GW-EFF-015 part b).** On the Samsung
+Galaxy M52 5G, `fused-single-line` met all three conditions and is the candidate; `fused-int8` met speed
+but peaked above `fused` (`reports/final_validation/GW-EFF-015/phone_sm-m526b.md`,
+`reports/final_validation/candidate/GW-EFF-013/selection.md`). Part b passed on both phones; the Moto
+G35 5G timed the selected arm and decides nothing (`phone_moto-g35-5g.md`). Both phones were cleaned.
+

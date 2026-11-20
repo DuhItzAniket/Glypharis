@@ -99,8 +99,12 @@ depends on the machine's speed at that moment.
   by about 1e-8 between the passes, float32 rounding. Baselines are not judged.
 
 **Status.** Under the registered rule the reproduction is reported as failed, beside Phase 14's results,
-which stay as recorded. The exit criterion is unmet until the owner rules at the end of the phase. The
-candidate work does not depend on this verdict.
+which stay as recorded. The candidate work does not depend on this verdict.
+
+**Owner ruling (2026-11-21).** The owner accepts the reproduction as an explained limitation of the
+official OmniDocBench evaluator, disclosed: the strict verdicts above stay as written, the paper reports
+them with their cause wherever it cites official OmniDocBench scores, and the reproduction exit criterion
+is closed by this ruling. Nothing in the rule, the evaluator or Phase 14's results was changed.
 
 ## 3. Phone candidate
 

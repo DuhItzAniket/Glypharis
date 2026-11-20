@@ -268,7 +268,9 @@ disappointing experiment here, including bugs that invalidated a run.
   rounding); baselines are not judged.
 - **What we changed:** nothing in the evaluator, the rule or Phase 14's results, which stay as recorded.
   As item 13 says, the verdict is reported as failed and the exit criterion stays unmet until the owner
-  rules at the end of the phase. The candidate work does not depend on this verdict.
+  rules at the end of the phase. The candidate work does not depend on this verdict. On 2026-11-21 the
+  owner accepted the reproduction as an explained evaluator limitation, disclosed; the verdict stays as
+  recorded.
 - **Lesson / implication for the paper:** the model reproduces line for line; scores from an evaluator
   with wall-clock limits do not, and the paper reports them with that caveat and the pages involved.
 
