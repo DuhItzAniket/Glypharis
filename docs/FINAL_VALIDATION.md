@@ -139,11 +139,11 @@ account is recorded.
 | Listed by `adb devices` as authorized | yes | yes, with no extra driver |
 | `onnxruntime-android` package and SHA-256 | 1.31.1, `d4d50660300ed2c4f38ffdfd5ab5bfa3a22f995f282dda24f42ea3ea55467b49` | same package |
 | JDK, Gradle and Android Gradle Plugin versions | Temurin 21.0.12.1, Gradle 8.14.7, plugin 8.13.2 (Kotlin 2.3.21) | same build |
-| Session options (sequential execution, all graph optimisations, CPU arena off, memory patterns off) | not set | not set |
-| Thread count, spinning setting | not set | not set |
-| Process rule (a new app process per arm and run, force-stopped between runs) | not confirmed | not confirmed |
-| Charge state, starting battery temperature | not recorded | not recorded |
-| Airplane mode, screen and foreground state | not recorded | not recorded |
+| Session options (sequential execution, all graph optimisations, CPU arena off, memory patterns off) | set as `glypharis.efficiency.threads.ort_session` sets them (`BenchSession.options`), recorded by the app in every result and checked by `phone-report` | same |
+| Thread count, spinning setting | 4 intra-op threads; spinning at ONNX Runtime's default, as on the laptop | same |
+| Process rule (a new app process per arm and run, force-stopped between runs) | confirmed in the tool: `am force-stop` before and after every pass, one pass per process (`BenchSession.claimProcess`), a reused `pid` refused | same |
+| Charge state, starting battery temperature | 91%, charging over USB from the laptop; battery 39.1 °C, processor sensor 46.1 °C, thermal status none (read 2026-11-20 15:04 UTC, `conditions --label registration`) | not recorded |
+| Airplane mode, screen and foreground state | airplane mode on; screen on and unlocked (wakefulness Awake), the home screen in front; the bench app keeps the screen on during its passes. Each run's state before and after is recorded with it | not recorded |
 | Operator check | go (`reports/final_validation/GW-EFF-015/operator_check.json`) | go (same report) |
 | Mean and p95 network time, peak `VmHWM` | not run | not run |
 | Each run's mean time | not run | not run |
