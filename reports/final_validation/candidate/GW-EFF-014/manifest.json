@@ -7,7 +7,7 @@
  "files": {
   "detector.onnx": "378c1feda480c1bb1dde838dd4a5f4579a904710a7f7b222d978c583b5bddcb7",
   "recognizer.fused.onnx": "b0e2a5100cb465f72d2abca97fc30a47892c75d069e556791021b7b74dfc172c",
-  "charset.json": "d8d0477211d5e140a295b24a309efff6e0e29f5e4c2582af3c56ce133e034c6b"
+  "charset.json": "68ac2429ee49909ef57f4524599913db7e43daabbe18f3effd610fe1f482d20f"
  },
  "recognizer_file": "recognizer.fused.onnx",
  "detector": {
@@ -145,8 +145,8 @@
   },
   "v1_code": "equal",
   "threads": 10,
-  "created_utc": "2026-11-20T19:03:32+00:00",
-  "git_commit": "5a259e36f67178dbc6377d70027bf49b9b0e0d92",
-  "git_dirty": false
+  "created_utc": "2026-11-20T19:04:40+00:00",
+  "git_commit": "11757482025932e31e99d3370e62da640627794e",
+  "git_dirty": true
  }
 }
