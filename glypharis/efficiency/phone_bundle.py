@@ -82,7 +82,9 @@ def write_phone_bundle(
         shutil.copyfile(v1_bundle / DETECTOR_FILE, out / DETECTOR_FILE)
         shutil.copyfile(recognizer, out / recognizer.name)
         (out / CHARSET_FILE).write_text(
-            json.dumps(rec.charset.characters, ensure_ascii=False) + "\n", encoding="utf-8"
+            json.dumps(rec.charset.characters, ensure_ascii=False) + "\n",
+            encoding="utf-8",
+            newline="\n",  # the same bytes on every system
         )
         files = {n: sha256_file(out / n) for n in (DETECTOR_FILE, recognizer.name, CHARSET_FILE)}
         if files[DETECTOR_FILE] != v1["files"][DETECTOR_FILE]:
@@ -122,7 +124,9 @@ def write_phone_bundle(
             "sources": _plain(dict(extra or {})),
         }
         (out / MANIFEST).write_text(
-            json.dumps(manifest, indent=1, ensure_ascii=False) + "\n", encoding="utf-8"
+            json.dumps(manifest, indent=1, ensure_ascii=False) + "\n",
+            encoding="utf-8",
+            newline="\n",
         )
     except BaseException:
         shutil.rmtree(out, ignore_errors=True)  # only the directory this call created
