@@ -10,9 +10,9 @@ import org.json.JSONObject
 
 /**
  * The bench's one screen, started by adb (README.md). `mode` picks the work: `ready` creates the
- * app's external files folder and marks it, `operator_check` is GW-EFF-015 part a. A later mode is
- * one more branch in `dispatch`. The work runs on a worker thread and the activity closes itself
- * when it is done.
+ * app's external files folder and marks it, `operator_check` is GW-EFF-015 part a, and `timing`
+ * and `check` are part b's timing run and output check. A later mode is one more branch in
+ * `dispatch`. The work runs on a worker thread and the activity closes itself when it is done.
  */
 class BenchActivity : Activity() {
     private lateinit var label: TextView
@@ -49,6 +49,8 @@ class BenchActivity : Activity() {
         val result = try {
             when (mode) {
                 OperatorCheck.MODE -> OperatorCheck.run(folder, operatorRequest())
+                Timing.MODE -> Timing.run(applicationContext, folder, timingRequest())
+                Check.MODE -> Check.run(folder, checkRequest())
                 else -> failure(mode, "unknown mode: $mode")
             }
         } catch (e: Exception) {
@@ -68,6 +70,17 @@ class BenchActivity : Activity() {
         model = required(EXTRA_MODEL),
         input = required(EXTRA_INPUT),
         output = required(EXTRA_OUTPUT),
+        threads = intent.getIntExtra(EXTRA_THREADS, 0),
+    )
+
+    private fun timingRequest() = TimingRequest(
+        plan = required(EXTRA_PLAN),
+        threads = intent.getIntExtra(EXTRA_THREADS, 0),
+        run = intent.getIntExtra(EXTRA_RUN, 0),
+    )
+
+    private fun checkRequest() = CheckRequest(
+        plan = required(EXTRA_PLAN),
         threads = intent.getIntExtra(EXTRA_THREADS, 0),
     )
 
@@ -98,5 +111,7 @@ class BenchActivity : Activity() {
         private const val EXTRA_OUTPUT = "output"
         private const val EXTRA_RESULT = "result"
         private const val EXTRA_THREADS = "threads"
+        private const val EXTRA_PLAN = "plan"
+        private const val EXTRA_RUN = "run"
     }
 }

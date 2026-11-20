@@ -2,11 +2,8 @@ package org.glypharis.bench
 
 import ai.onnxruntime.OnnxTensor
 import ai.onnxruntime.OrtEnvironment
-import ai.onnxruntime.OrtException
 import ai.onnxruntime.OrtSession
 import java.io.File
-import java.nio.ByteBuffer
-import java.nio.ByteOrder
 import org.json.JSONArray
 import org.json.JSONObject
 
@@ -37,21 +34,21 @@ internal object OperatorCheck {
             .put("request_error", JSONObject.NULL)
             .put("output_shape", JSONObject.NULL)
             .put("logits_finite", JSONObject.NULL)
-            .put("session_options", sessionOptionsRecord(request.threads))
+            .put("session_options", BenchSession.optionsRecord(request.threads))
 
         val modelFile: File
         val outputFile: File
         val inputs: List<NamedTensor>
         try {
             require(request.threads >= 1) { "threads must be positive, got ${request.threads}" }
-            modelFile = readable(folder, request.model)
-            val inputFile = readable(folder, request.input)
+            modelFile = BenchFiles.readable(folder, request.model)
+            val inputFile = BenchFiles.readable(folder, request.input)
             outputFile = BenchFiles.resolve(folder, request.output)
             result.put("model_sha256", BenchFiles.sha256(modelFile))
             result.put("input_sha256", BenchFiles.sha256(inputFile))
             inputs = TensorFile.read(inputFile)
         } catch (e: Exception) {
-            return result.put("request_error", describe(e, folder))
+            return result.put("request_error", BenchSession.describe(e, folder))
         }
 
         val env: OrtEnvironment
@@ -60,14 +57,18 @@ internal object OperatorCheck {
             env.setTelemetry(false)
             result.put("onnxruntime_version", env.version)
         } catch (e: Throwable) {
-            return result.put("status", "runtime_failed").put("session_error", describe(e, folder))
+            return result.put("status", "runtime_failed")
+                .put("session_error", BenchSession.describe(e, folder))
         }
 
         val session: OrtSession
         try {
-            session = sessionOptions(request.threads).use { env.createSession(modelFile.path, it) }
+            session = BenchSession.options(request.threads).use {
+                env.createSession(modelFile.path, it)
+            }
         } catch (e: Throwable) {
-            return result.put("status", "session_failed").put("session_error", describe(e, folder))
+            return result.put("status", "session_failed")
+                .put("session_error", BenchSession.describe(e, folder))
         }
         result.put("session_created", true)
 
@@ -78,40 +79,12 @@ internal object OperatorCheck {
                 runOnce(env, it, inputs, outputFile, result)
                 result.put("status", "ok")
             } catch (e: Throwable) {
-                result.put("status", "run_failed").put("run_error", describe(e, folder))
+                result.put("status", "run_failed")
+                    .put("run_error", BenchSession.describe(e, folder))
             }
         }
         return result
     }
-
-    private fun readable(folder: File, name: String): File {
-        val file = BenchFiles.resolve(folder, name)
-        require(file.isFile && file.canRead() && file.length() > 0) {
-            "$name is missing or cannot be read"
-        }
-        return file
-    }
-
-    /** The options of `glypharis.efficiency.threads.ort_session`; spinning stays at the default. */
-    private fun sessionOptions(threads: Int): OrtSession.SessionOptions =
-        OrtSession.SessionOptions().apply {
-            setExecutionMode(OrtSession.SessionOptions.ExecutionMode.SEQUENTIAL)
-            setOptimizationLevel(OrtSession.SessionOptions.OptLevel.ALL_OPT)
-            setCPUArenaAllocator(false)
-            setMemoryPatternOptimization(false)
-            setIntraOpNumThreads(threads)
-        }
-
-    /** What `sessionOptions` sets, in the names `threads.session_options` reports. */
-    private fun sessionOptionsRecord(threads: Int): JSONObject =
-        JSONObject()
-            .put("providers", JSONArray(listOf("CPUExecutionProvider")))
-            .put("intra_op_num_threads", threads)
-            .put("execution_mode", "ORT_SEQUENTIAL")
-            .put("graph_optimization_level", "ORT_ENABLE_ALL")
-            .put("enable_cpu_mem_arena", false)
-            .put("enable_mem_pattern", false)
-            .put("allow_spinning", "default")
 
     private fun runOnce(
         env: OrtEnvironment,
@@ -122,20 +95,11 @@ internal object OperatorCheck {
     ) {
         val tensors = LinkedHashMap<String, OnnxTensor>()
         try {
-            for (t in inputs) tensors[t.name] = onnxTensor(env, t)
+            for (t in inputs) tensors[t.name] = BenchSession.tensor(env, t)
             session.run(tensors, setOf(LOGITS)).use { outputs ->
                 val logits = outputs.get(LOGITS).get() as OnnxTensor
                 val shape = logits.info.shape
-                val values = logits.floatBuffer
-                val bytes = ByteBuffer.allocateDirect(values.remaining() * Float.SIZE_BYTES)
-                    .order(ByteOrder.LITTLE_ENDIAN)
-                var finite = true
-                while (values.hasRemaining()) {
-                    val v = values.get()
-                    if (v.isNaN() || v.isInfinite()) finite = false
-                    bytes.putFloat(v)
-                }
-                bytes.flip()
+                val (bytes, finite) = BenchSession.floatBytes(logits)
                 TensorFile.write(
                     outputFile,
                     listOf(NamedTensor(LOGITS, ElementType.FLOAT32, shape, bytes)),
@@ -146,20 +110,5 @@ internal object OperatorCheck {
         } finally {
             tensors.values.forEach { it.close() }
         }
-    }
-
-    private fun onnxTensor(env: OrtEnvironment, t: NamedTensor): OnnxTensor =
-        when (t.type) {
-            ElementType.FLOAT32 -> OnnxTensor.createTensor(env, t.data.asFloatBuffer(), t.shape)
-            ElementType.INT64 -> OnnxTensor.createTensor(env, t.data.asLongBuffer(), t.shape)
-        }
-
-    /** The error as a record. ONNX Runtime's messages name the model's path; it is cut out. */
-    private fun describe(e: Throwable, folder: File): JSONObject {
-        val out = JSONObject()
-            .put("type", e.javaClass.name)
-            .put("message", e.message?.replace(folder.path, "<app files>") ?: JSONObject.NULL)
-        if (e is OrtException) out.put("code", e.code.name)
-        return out
     }
 }
