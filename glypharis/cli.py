@@ -5,8 +5,11 @@
 
 Each image gets ``<output>/<name>.json`` (`OCRResult.to_dict`) and/or ``<output>/<name>.txt`` (the
 text in reading order). Images that cannot be read are reported and skipped; the exit code is 1 if
-any image failed, 2 for a usage error, 0 otherwise. The model is a bundle by name or path
-(`GlypharisOCR.from_pretrained`); nothing is downloaded.
+any image failed, 2 for a usage error or a model that cannot be loaded, 0 otherwise. The model is
+a bundle by name or path (`GlypharisOCR.from_pretrained`). A registered name (`glypharis.hub`) that
+no models folder holds is downloaded and verified first (`glypharis.download_model`), unless
+``--no-download`` is given or ``GLYPHARIS_OFFLINE`` is set; a path or any other name is never
+downloaded.
 """
 
 from __future__ import annotations
@@ -42,6 +45,11 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--output", type=Path, default=Path("results"))
     parser.add_argument("--format", nargs="+", choices=["json", "txt"], default=["json", "txt"])
     parser.add_argument("--model", default="glypharis-v1", help="bundle name or directory")
+    parser.add_argument(
+        "--no-download",
+        action="store_true",
+        help="never fetch a registered model that is not installed",
+    )
     parser.add_argument("--backend", choices=["torch", "onnx"], default="torch")
     parser.add_argument("--threads", type=int, default=None)
     parser.add_argument("--version", action="store_true", help="print versions and exit")
@@ -64,10 +72,16 @@ def main(argv: list[str] | None = None) -> int:
         return 1
 
     from glypharis.errors import GlypharisError
+    from glypharis.hub import can_fetch, download_model, needs_download
     from glypharis.pipeline.ocr import GlypharisOCR
 
     try:
-        ocr = GlypharisOCR.from_pretrained(args.model, args.backend, args.threads)
+        model: str | Path = args.model
+        if not args.no_download and needs_download(args.model):
+            if can_fetch(args.model):
+                print(f"model {args.model} is not installed; downloading it", file=sys.stderr)
+            model = download_model(args.model)
+        ocr = GlypharisOCR.from_pretrained(model, args.backend, args.threads)
     except GlypharisError as exc:
         print(f"cannot load the model: {exc}", file=sys.stderr)
         return 2

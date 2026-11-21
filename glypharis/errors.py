@@ -33,3 +33,11 @@ class ModelLoadError(GlypharisError, RuntimeError):
     """A model bundle that is missing, incomplete, damaged or of an unknown format."""
 
     code = "model_load_error"
+
+
+class ModelDownloadError(ModelLoadError):
+    """A registered model that cannot be downloaded or installed: unknown name, offline, not yet
+    published, a failed transfer, a size or hash that does not match its pin, or a folder in the
+    way (`glypharis.hub.download_model`)."""
+
+    code = "model_download_error"
