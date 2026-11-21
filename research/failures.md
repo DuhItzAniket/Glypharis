@@ -274,3 +274,26 @@ disappointing experiment here, including bugs that invalidated a run.
 - **Lesson / implication for the paper:** the model reproduces line for line; scores from an evaluator
   with wall-clock limits do not, and the paper reports them with that caveat and the pages involved.
 
+### 2026-11-20 — GW-EFF-014 — the first bundle freeze wrote its manifest with Windows line endings
+
+- **What we tried:** freezing the phone bundle with `scripts/phase22_bundle.py freeze`.
+- **What happened:** `manifest.json` and the other text files were written with CRLF line endings, so
+  their hashes depended on the platform that wrote them. Found before the equivalence check ran.
+- **Root cause (if known):** text written without `newline="\n"`.
+- **What we changed:** `glypharis/efficiency/phone_bundle.py` writes text files with LF; the first
+  bundle was set aside unused and the bundle frozen again. The check, the gate and every test run used
+  only the second bundle, manifest SHA-256 `97a41168…`.
+- **Lesson / implication for the paper:** none for the results; a hash recorded on one platform must
+  not depend on its line endings.
+
+### 2026-11-20 — GW-EFF-013 — the INT8 recognizer was faster on the phone but used more memory
+
+- **What we tried:** fused attention with the dynamic INT8 recognizer (`fused-int8`) as a phone arm.
+- **What happened:** on the SM-M526B it took 8,522.2 ms per page against `fused`'s 12,824.4 ms and met
+  the speed condition, but its peak `VmHWM` was 1,814.9 MiB against 1,645.3, so it failed the memory
+  condition (`reports/final_validation/GW-EFF-015/phone_sm-m526b.md`). Its greedy text matched the
+  laptop's on 1,444 of 1,488 lines (reported, not judged).
+- **Root cause (if known):** not established; the INT8 graph was not profiled for memory.
+- **What we changed:** nothing; the rule selected `fused-single-line`.
+- **Lesson / implication for the paper:** INT8 alone is not the lighter phone build here; one recognizer
+  run per line kept v1's text and used the least memory of the three.

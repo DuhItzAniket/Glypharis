@@ -32,7 +32,7 @@ Phases run in the order set by [ADR-0008](decisions/ADR-0008-usable-engine-first
 | 19 | Optional HTTP API | **COMPLETE** | `phase-19` |
 | 20 | Production engineering | **COMPLETE** | `phase-20`, `v0.1` |
 | 21 | Research package | **COMPLETE** | `phase-21` |
-| 22 | Final validation | in progress (plan registered) | — |
+| 22 | Final validation | **IN PROGRESS** (gate: push, CI, merge) | — |
 | 23 | Release v1.0 | not started | — |
 
 ---
@@ -3768,10 +3768,11 @@ tag `phase-21` (merge re-created with the noreply identity; same tree and parent
 
 ## Phase 22 — Final validation
 
-**Status:** in progress (plan registered 2026-11-18). Nothing in this plan has been run: no test file
-has been read for Phase 22, nothing has been downloaded and no number below is a Phase 22 result.
-Opened on `phase/22-final-validation` from `e8e0b55`, the Phase 21 completion record on top of `main`
-at `420e095`. New scripts and flags named here are proposals and do not exist yet.
+**Status:** results written (2026-11-21). Gate open: push, pull request, CI and the owner's merge.
+The plan below was registered on 2026-11-18, before any Phase 22 step ran, and is kept as written;
+the progress notes and the closure at the end record what happened. Opened on
+`phase/22-final-validation` from `e8e0b55`, the Phase 21 completion record on top of `main` at
+`420e095`. The record of every step is `docs/FINAL_VALIDATION.md`.
 
 **Objective:** close the four tasks of `docs/IMPLEMENTATION_PLAN.md`, Phase 22, without changing any
 v1 record:
@@ -4524,4 +4525,74 @@ Galaxy M52 5G, `fused-single-line` met all three conditions and is the candidate
 but peaked above `fused` (`reports/final_validation/GW-EFF-015/phone_sm-m526b.md`,
 `reports/final_validation/candidate/GW-EFF-013/selection.md`). Part b passed on both phones; the Moto
 G35 5G timed the selected arm and decides nothing (`phone_moto-g35-5g.md`). Both phones were cleaned.
+
+**Progress (2026-11-20 UTC): items 16 and 17 done (GW-EFF-014).** The phone bundle
+(`glypharis-phone-bundle-1`, manifest SHA-256 `97a41168…`) passed Phase 17's tolerances against the
+GW-EFF-006 references: map 7.33e-06, logits 2.78e-04, 5,000 of 5,000 lines identical, page CER
+24.321% against 24.320% (`reports/final_validation/candidate/GW-EFF-014/equivalence.json`). The
+runner and scorer were reviewed, their findings fixed with tests, CI was green, and
+`phase22-candidate-eval` was tagged at `dc6511f`.
+
+**Progress (2026-11-21 UTC): items 18 to 20 done.** The validation gate met all three tests
+(GW-REC-044, GW-E2E-019; `reports/final_validation/candidate/validation_gate.json`). The 10 test runs
+finished once each with no resume, and their hashes and the log were committed before scoring
+(GW-REC-045, GW-E2E-020; `prediction_hashes.json`). The one scoring pass (GW-E2E-021) found **H11 met**
+on all six tests, the three on GDC also by source document; on each the candidate's value equals
+v1's at the printed precision (`reports/final_validation/candidate/h11.md`).
+
+**Closure (item 21)**
+
+- *v1's records:* all five checks passed (`reports/final_validation/closure.md`): 8,062 of 8,062 v1
+  files unchanged, the OmniDocBench evaluator's `result/` folder as it was before each pass, 68 of 68
+  Phase 14 outputs matching `phase14_outputs.json`, the access log at `phase-21` an exact prefix of the
+  current one with the 188 rows the plan expected, and no difference from `phase-21` under the
+  protected paths.
+- *Documents:* `docs/FINAL_VALIDATION.md`, the registry entries, `MODEL_CARD.md`, `README.md`, the
+  paper's status sentences, ROADMAP, ADR-0011, R-23 and `research/failures.md` now say what Phase 22
+  found. The document lint treats only Phase 23 as a later phase.
+- *The "Still unverified" list above:* the Android package holds the `MultiHeadAttention` kernel
+  (item 3); phone logits agree with the laptop's within `1e-3` for the judged arms (item 15); the Moto
+  G35 5G was listed by `adb` with no extra driver; `quant_pre_process` worked on the fused graph
+  (`fused-int8` was built and measured); one line per run helps on the phones and keeps v1's
+  accuracy, fused attention with INT8 does not pass the memory condition; and the re-run on the
+  present GPU driver reproduced Phase 14's predictions in every file. Install and run durations are in
+  the reports and run metadata.
+
+**Exit criteria check** (IMPLEMENTATION_PLAN Phase 22)
+
+| Criterion | Status | Evidence |
+|---|---|---|
+| Walkthrough log in `docs/FINAL_VALIDATION.md`, every manual step recorded | pass | `docs/FINAL_VALIDATION.md` section 1, `reports/package/GW-E2E-013.json` |
+| Re-scoring gives identical numbers with the scorer as it stands | fail under the rule (40 official OmniDocBench values); closed by the owner's ruling of 2026-11-21, disclosed | `reports/final_validation/GW-E2E-015/verdict.json` |
+| Re-run within 0.05 points, from hash-matching files with the same flags | fail under the rule (16 of 1,381 point values, all official OmniDocBench); predictions identical in all 12 files; closed by the same ruling | `reports/final_validation/v1_reproduction.md` |
+| Candidate fixed from validation; bundle built and hashed; own IDs; sets, metrics and rules registered | pass | GW-EFF-013, GW-EFF-014, `validation_gate.json`, `research/hypotheses.md` H11 |
+| Candidate results under its own IDs, once per test set, logged, beside v1's | pass: H11 met | GW-REC-045, GW-E2E-020, GW-E2E-021; `reports/final_validation/candidate/` |
+| Phone gap recorded as measured on a named device or as still open | pass: the candidate's networks measured on the Samsung Galaxy M52 5G and the Moto G35 5G, conditions registered first | GW-EFF-015; `docs/FINAL_VALIDATION.md` section 4 |
+| v1's records unchanged | pass | `reports/final_validation/closure.md` |
+| CI green | pending (after the push) | — |
+
+**Tests:** the CPU suite passes (2,504 passed, 1 skipped, 1 failed at `f951788`; the failure was the GPU timing test `test_the_v1_profile_on_cuda_synchronises_and_records_vram`, whose stage-sum check tripped by 52 ms while other jobs shared the machine, and its file passed 55 of 55 twice when run alone), with the three generated-file checks.
+
+**Compute:** GPU for the v1 re-run (sittings S2 and S3); laptop CPU for the candidate work, the phones
+for part b. Durations are in each run's metadata and reports; the queue ledger does not cover these
+sittings.
+
+**Known issues**
+- The strict reproduction verdicts failed on official OmniDocBench scores, because the evaluator's
+  per-page time limit depends on the machine's speed at the moment. The predictions did not change.
+  The owner accepted this, disclosed; the paper reports it wherever it cites official OmniDocBench
+  scores.
+- The phone figures are network time and memory only. Decoding, post-processing, cropping and
+  reading order were not ported, so a full page on a phone is not measured, and no phone target is
+  set.
+- The candidate is a new version, not v1. H11 shows non-inferiority on HierText test and GDC; it does
+  not show line-for-line equality on test data, which was not compared.
+- ADR-0014's ImageNet exception was written for v1 and does not by itself cover a released candidate.
+- GDC, GDC-scan and the weights cannot be re-downloaded by a stranger; the walkthrough shares the OS,
+  driver and base Python with the original work.
+
+**Git:** branch `phase/22-final-validation`; tags `phase22-repro` and `phase22-candidate-eval` mark the
+code each set of runs was pinned to.
+
+**CI status:** pending (after the push).
 
