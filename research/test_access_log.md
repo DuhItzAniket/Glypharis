@@ -443,3 +443,17 @@ Any other access must be justified in the "Reason" column and discussed in the p
 | 2026-11-20 | gdc test | GW-E2E-020 | glypharis_phone_candidate (e2e) | 22 | Phase 22 candidate test run (GW-E2E-020) |
 | 2026-11-20 | omnidocbench test | GW-E2E-020 | glypharis_phone_candidate (e2e) | 22 | Phase 22 candidate test run (GW-E2E-020) |
 | 2026-11-21 | hiertext test | GW-E2E-020 | glypharis_phone_candidate (e2e) | 22 | Phase 22 candidate test run (GW-E2E-020) |
+| 2026-11-21 | hiertext test | GW-REC-045 | glypharis (rec), scoring | 22 | Phase 22 candidate scoring (GW-E2E-021) |
+| 2026-11-21 | gdc test | GW-REC-045 | glypharis (rec), scoring | 22 | Phase 22 candidate scoring (GW-E2E-021) |
+| 2026-11-21 | gdc_scan test | GW-REC-045 | glypharis (rec), scoring | 22 | Phase 22 candidate scoring (GW-E2E-021) |
+| 2026-11-21 | funsd test | GW-REC-045 | glypharis (rec), scoring | 22 | Phase 22 candidate scoring (GW-E2E-021) |
+| 2026-11-21 | iiit5k test | GW-REC-045 | glypharis (rec), scoring | 22 | Phase 22 candidate scoring (GW-E2E-021) |
+| 2026-11-21 | hiertext test | GW-E2E-020 | glypharis (e2e), scoring | 22 | Phase 22 candidate scoring (GW-E2E-021) |
+| 2026-11-21 | gdc test | GW-E2E-020 | glypharis (e2e), scoring | 22 | Phase 22 candidate scoring (GW-E2E-021) |
+| 2026-11-21 | gdc_scan test | GW-E2E-020 | glypharis (e2e), scoring | 22 | Phase 22 candidate scoring (GW-E2E-021) |
+| 2026-11-21 | funsd test | GW-E2E-020 | glypharis (e2e), scoring | 22 | Phase 22 candidate scoring (GW-E2E-021) |
+| 2026-11-21 | omnidocbench test | GW-E2E-020 | glypharis (e2e), scoring | 22 | Phase 22 candidate scoring (GW-E2E-021) |
+| 2026-11-21 | hiertext test | GW-REC-039 | glypharis (rec), scoring | 22 | Phase 22 candidate scoring (GW-E2E-021) |
+| 2026-11-21 | gdc test | GW-REC-039 | glypharis (rec), scoring | 22 | Phase 22 candidate scoring (GW-E2E-021) |
+| 2026-11-21 | hiertext test | GW-E2E-007 | glypharis (e2e), scoring | 22 | Phase 22 candidate scoring (GW-E2E-021) |
+| 2026-11-21 | gdc test | GW-E2E-007 | glypharis (e2e), scoring | 22 | Phase 22 candidate scoring (GW-E2E-021) |
