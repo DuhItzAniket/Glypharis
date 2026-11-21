@@ -1,9 +1,12 @@
 # Final Validation
 
-**Status: skeleton, written when the Phase 22 plan was registered (2026-11-18). Nothing recorded here
-has been done yet.** Every row says `not run` until the step it describes has happened, and each result
-is then copied from a generated report with its experiment ID. The plan, with every pass rule, is in
-[PHASE_STATUS](PHASE_STATUS.md), Phase 22.
+**Status: results written (2026-11-21).** Every step of the Phase 22 plan has run, and each result
+below is copied from a generated report with its experiment ID. The plan, with every pass rule, is in
+[PHASE_STATUS](PHASE_STATUS.md), Phase 22. In short: the walkthrough passed; the v1 re-run gave Phase
+14's predictions in every test file, and the strict reproduction verdict failed only on official
+OmniDocBench scores, which the owner accepted as a disclosed limitation (section 2); the phone
+candidate met H11 against v1 (section 3); its networks were measured on two named phones (section 4);
+and v1's records are unchanged (section 5).
 
 ## 1. Walkthrough (GW-E2E-013)
 
@@ -113,13 +116,13 @@ A new version, not v1. Its results sit beside v1's and replace none of them.
 | Step | ID | Rule | Result | Report |
 |---|---|---|---|---|
 | Android operator check | GW-EFF-015, part a | session and one tensor on the phone | go on both phones | `reports/final_validation/GW-EFF-015/operator_check.json` |
-| Selection | GW-EFF-013 | selection rule in `research/hypotheses.md` | accuracy part done: `fused-int8` and `fused-single-line` both met all three tests, so all three arms go to the phone; the phone part is due | `reports/final_validation/candidate/GW-EFF-013/accuracy.md` |
-| Bundle and equivalence | GW-EFF-014 | Phase 17's tolerances | not run | |
-| Validation gate, crops | GW-REC-044 | H11's test met | not run | |
-| Validation gate, pages | GW-E2E-019 | H11's two tests met | not run | |
-| Test crops | GW-REC-045 | once per set, logged | not run | |
-| Test pages | GW-E2E-020 | once per set, logged | not run | |
-| Scoring and H11 | GW-E2E-021 | six tests, all required; the three on GDC also by source document | not run | |
+| Selection | GW-EFF-013 | selection rule in `research/hypotheses.md` | `fused-single-line` selected, the only arm to meet all three conditions: on the SM-M526B 8,111.9 ms per page and 919.9 MiB peak against `fused`'s 12,824.4 ms and 1,645.3 MiB; `fused-int8` met speed (8,522.2 ms) but not memory (1,814.9 MiB) | `reports/final_validation/candidate/GW-EFF-013/selection.md`, `accuracy.md` |
+| Bundle and equivalence | GW-EFF-014 | Phase 17's tolerances | passed: map 7.33e-06, logits 2.78e-04, 5,000 of 5,000 lines identical, page CER 24.321% against 24.320%; manifest SHA-256 `97a41168…` | `reports/final_validation/candidate/GW-EFF-014/equivalence.json` |
+| Validation gate, crops | GW-REC-044 | H11's test met | met: line CER 6.507% for the candidate and for v1 on 74,500 lines | `reports/final_validation/candidate/validation_gate.json` |
+| Validation gate, pages | GW-E2E-019 | H11's two tests met | met: page CER 27.575% and E2E F1 0.5824 for both on 1,715 pages | `reports/final_validation/candidate/validation_gate.json` |
+| Test crops | GW-REC-045 | once per set, logged | done: 5 sets, one logged access each, no resume; hashes committed before scoring | `reports/final_validation/candidate/prediction_hashes.json` |
+| Test pages | GW-E2E-020 | once per set, logged | done: 5 sets, one logged access each, no resume; hashes committed before scoring | `reports/final_validation/candidate/prediction_hashes.json` |
+| Scoring and H11 | GW-E2E-021 | six tests, all required; the three on GDC also by source document | **met**, six of six, and the GDC source-document check | `reports/final_validation/candidate/h11.md` |
 
 On the laptop, `fused-single-line` gave `fused`'s text on all 5,000 lines (its `lines.json`) and
 `fused`'s page CER and E2E F1 on the 400 pages, and `fused-int8` stayed within its margin on all three
@@ -128,6 +131,49 @@ tests. The laptop sitting's page times and peaks are recorded in
 speed and memory on the phone. The pages and profile reports carry the recognizer's batching label; on a
 page the pipeline hands the recognizer all of that page's crops in one call, and the 256 crops per call
 apply to the line evaluation only.
+
+### 3.1 H11 (GW-E2E-021)
+
+From `reports/final_validation/candidate/h11.md`. Margin 0.05 points (`fused-single-line` is not an
+INT8 arm), strict track. The interval is in points, for the candidate less the margin against v1;
+CER tests are met below 0 and E2E F1 above 0.
+
+| Set | Test | Units | Candidate | v1 | Interval (points) | Verdict |
+|---|---|---|---|---|---|---|
+| HierText test | line CER | 67,574 lines | 0.0603 | 0.0603 | -0.050 [-0.050, -0.050] | met |
+| HierText test | page CER | 1,634 pages | 0.2516 | 0.2516 | -0.049 [-0.050, -0.048] | met |
+| HierText test | E2E F1 | 1,634 pages | 0.6018 | 0.6018 | +0.050 [+0.048, +0.050] | met |
+| GDC | line CER | 8,372 lines | 0.0417 | 0.0417 | -0.050 [-0.050, -0.050]; by document the same | met |
+| GDC | page CER | 106 pages | 0.2235 | 0.2235 | -0.050 [-0.050, -0.050]; by document the same | met |
+| GDC | E2E F1 | 106 pages | 0.6936 | 0.6936 | +0.050 [+0.050, +0.050]; by document the same | met |
+
+On all six the candidate's value equals v1's at the printed precision. H11 is a non-inferiority rule:
+it does not say the two builds give the same text on every line, and that was not compared on test
+data.
+
+### 3.2 The candidate on every test set (GW-REC-045, GW-E2E-020)
+
+From `reports/final_validation/candidate/results.md`, strict track, 95% bootstrap intervals. Every
+figure here is descriptive; only the six tests above decide. v1's figures stay in
+`reports/external/` and are not repeated here.
+
+| Set | Units | Line CER % | Bag-of-lines page CER % | Order-aware page CER % | E2E F1 % |
+|---|---|---|---|---|---|
+| HierText test | 67,574 lines, 1,634 pages | 6.03 [5.89, 6.18] | 25.16 [23.44, 26.79] | n/a | 60.18 [58.71, 61.72] |
+| GDC | 8,372 lines, 106 pages | 4.17 [3.72, 4.67] | 22.35 [15.87, 30.11] | 25.37 [20.00, 30.80] | 69.36 [60.69, 77.48] |
+| FUNSD | 2,647 lines, 50 pages | 7.03 [5.71, 8.66] | 32.05 [24.28, 39.85] | n/a | 62.81 [59.06, 66.48] |
+| GDC-scan | 776 lines, 28 pages | 1.02 [0.85, 1.20] | 4.60 [2.10, 8.21] | 11.34 [7.10, 16.70] | 89.84 [85.88, 93.62] |
+| OmniDocBench | 755 pages | n/a | n/a | 27.28 [23.95, 30.57] | n/a |
+
+IIIT5K: strict CER 44.27 [42.46, 46.16]% on 3,000 words and alphanumeric word accuracy 91.47 [90.43,
+92.47]%. Official scores for the candidate only: HierText line level Det-Fscore 0.7837 and E2E-Fscore
+0.5038 on 1,634 pages; OmniDocBench text-block edit distance over the whole set 0.1892 on 755 pages.
+That OmniDocBench figure is not compared with v1's: the evaluator's time limit sent 2 of the
+candidate's pages to its fallback scoring (`results.json`, `match_debug`), against 1 of v1's in Phase
+14, the cause described in section 2.1. `results.md` also prints other official OmniDocBench fields
+than Phase 14's `official.md` does (its page average is `edit_sample_avg`, and its reading-order
+column is the whole-set edit); `results.json` holds every field. Calibration at T = 2.35, unchanged:
+HierText test ECE 0.0920 against 0.2231 at T = 1. GDC-scan contributes numbers only.
 
 ## 4. Phone measurement (GW-EFF-015)
 
@@ -149,15 +195,25 @@ account is recorded.
 | Charge state, starting battery temperature | 91%, charging over USB from the laptop; battery 39.1 °C, processor sensor 46.1 °C, thermal status none (read 2026-11-20 15:04 UTC, `conditions --label registration`) | 74%, charging (the phone reports AC power over the laptop's USB port; at the first reading it was not charging, and the cable was reseated); battery 29.2 °C, SoC sensor 38.6 °C, thermal status light (read 2026-11-20 17:48 UTC) |
 | Airplane mode, screen and foreground state | airplane mode on; screen on and unlocked (wakefulness Awake), the home screen in front; the bench app keeps the screen on during its passes. Each run's state before and after is recorded with it. Developer option Stay awake was turned on around the start of the first timed run (the screen timeout was 30 minutes) | airplane mode on; screen on (wakefulness Awake), Stay awake on; the settings screen in front |
 | Operator check | go (`reports/final_validation/GW-EFF-015/operator_check.json`) | go (same report) |
-| Mean and p95 network time, peak `VmHWM` | not run | not run |
-| Each run's mean time | not run | not run |
-| Thermal state, start and end of each run | not run | not run |
-| Logits and greedy text against the laptop (separate pass) | not run | not run |
+| Mean and p95 network time per page over both runs, peak `VmHWM` | `fused` 12,824.4 ms (p95 25,756.3), 1,645.3 MiB; `fused-int8` 8,522.2 ms (17,568.2), 1,814.9 MiB; `fused-single-line` 8,111.9 ms (18,298.9), 919.9 MiB | `fused-single-line` 10,987.5 ms (p95 23,283.8), 409.0 MiB |
+| Each run's mean time per page, runs 1 and 2 | `fused` 13,515.6 and 12,133.2 ms; `fused-int8` 8,395.7 and 8,648.7; `fused-single-line` 8,236.9 and 7,986.8 | 10,474.4 and 11,500.6 ms |
+| Thermal state, start and end of each run | none to none in every run | light to moderate in run 1, moderate to moderate in run 2 |
+| Logits and greedy text against the laptop (separate pass, 1,488 lines) | `fused` 1.28e-04, 1,488 of 1,488 identical; `fused-single-line` 1.03e-04, 1,488 of 1,488; `fused-int8` 5.27e+00, 1,444 of 1,488, reported and not judged | `fused-single-line` 1.18e-04, 1,488 of 1,488 |
+| Part b | passed; these runs decided the selection | passed; a second named device, it changes no decision |
+| Report | `reports/final_validation/GW-EFF-015/phone_sm-m526b.md` | `reports/final_validation/GW-EFF-015/phone_moto-g35-5g.md` |
 
 The phone app uses the stock `onnxruntime-android` package, unchanged and checked by its SHA-256. The
 package's network permissions and its telemetry start-up provider are removed at manifest merge, and
 the app turns telemetry off, so the APK asks for no permissions. `scripts/phase22_android.py run`
 refuses an APK that asks for any.
+
+**What the phone figures are.** Network time and memory only: a page's time is the sum of its
+`session.run` calls over 100 timed validation pages per run, and the memory is the app's `VmHWM`.
+Decoding, post-processing, cropping and reading order were not ported, so a full page on a phone takes
+longer than these figures, by an amount not measured. The 1,000 seeded lines at batch 1 are in the JSON
+reports. Laptop figures were used only to rank the arms (`reports/final_validation/candidate/GW-EFF-013/laptop.md`).
+The validation tensors were deleted from both phones after the runs. No phone target is set:
+ADR-0011's targets are for the laptop CPU and stay missed for v1.
 
 **Unplanned run before registration (2026-11-19).** While the check's code was being tested, a test run
 reached the M52, which had just been connected, although the tester expected no phone. It installed
@@ -168,10 +224,22 @@ fixed before it and is not changed. See `research/failures.md`.
 
 ## 5. Closure checks
 
+From `reports/final_validation/closure.md` (`scripts/phase22_closure.py`), after every pass of the
+phase. All five passed.
+
 | Check | Result |
 |---|---|
-| Hash lists of the Phase 14 and baseline folders match, before (`reports/final_validation/v1_files_before.json`) and after | not run |
-| OmniDocBench evaluator's `result/` file list unchanged across each pass | not run |
-| Phase 14 outputs match `phase14_outputs.json` | not run |
-| The access log at the start of Phase 22 is an exact prefix of the current log | not run |
-| No difference from `phase-21` under the protected paths | not run |
+| Hash lists of the Phase 14 and baseline folders match, before (`reports/final_validation/v1_files_before.json`) and after | passed: 8,062 of 8,062 files, none missing, changed or added |
+| OmniDocBench evaluator's `result/` file list unchanged across each pass | passed: the same 15 file names as in the lists taken before Pass A and Pass B, after the candidate's scoring too |
+| Phase 14 outputs match `phase14_outputs.json` | passed: 68 of 68 entries, 14 of them with a run-metadata hash |
+| The access log at the start of Phase 22 is an exact prefix of the current log | passed: 263 rows at `phase-21`, 188 added in Phase 22 with no resumed row, the number the plan expected |
+| No difference from `phase-21` under the protected paths | passed: `git diff --exit-code` exit code 0 |
+
+## 6. Exit criteria
+
+| Criterion (IMPLEMENTATION_PLAN, Phase 22) | Status | Where |
+|---|---|---|
+| Walkthrough log, every manual step recorded | met | section 1 |
+| Reproduced metrics within the stated tolerance of the reported ones | not met under the strict rule (official OmniDocBench only); closed by the owner's ruling of 2026-11-21, disclosed | section 2 |
+| The fused-attention build's results under its own IDs | met: GW-EFF-013 to 015, GW-REC-044 and 045, GW-E2E-019 to 021 | sections 3, 4 |
+| The phone gap recorded as measured on a named device or as still open | measured for the candidate's networks on the Samsung Galaxy M52 5G and the Moto G35 5G; the full page on a phone is not measured | section 4 |
