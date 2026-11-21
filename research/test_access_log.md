@@ -438,3 +438,8 @@ Any other access must be justified in the "Reason" column and discussed in the p
 | 2026-11-20 | gdc_scan test | GW-REC-045 | glypharis_phone_candidate (rec) | 22 | Phase 22 candidate test run (GW-REC-045) |
 | 2026-11-20 | funsd test | GW-REC-045 | glypharis_phone_candidate (rec) | 22 | Phase 22 candidate test run (GW-REC-045) |
 | 2026-11-20 | iiit5k test | GW-REC-045 | glypharis_phone_candidate (rec) | 22 | Phase 22 candidate test run (GW-REC-045) |
+| 2026-11-20 | gdc_scan test | GW-E2E-020 | glypharis_phone_candidate (e2e) | 22 | Phase 22 candidate test run (GW-E2E-020) |
+| 2026-11-20 | funsd test | GW-E2E-020 | glypharis_phone_candidate (e2e) | 22 | Phase 22 candidate test run (GW-E2E-020) |
+| 2026-11-20 | gdc test | GW-E2E-020 | glypharis_phone_candidate (e2e) | 22 | Phase 22 candidate test run (GW-E2E-020) |
+| 2026-11-20 | omnidocbench test | GW-E2E-020 | glypharis_phone_candidate (e2e) | 22 | Phase 22 candidate test run (GW-E2E-020) |
+| 2026-11-21 | hiertext test | GW-E2E-020 | glypharis_phone_candidate (e2e) | 22 | Phase 22 candidate test run (GW-E2E-020) |
