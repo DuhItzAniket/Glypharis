@@ -479,3 +479,19 @@ the bottom. Experiments get their full record in `experiments.md`; this log is t
   measurement, which stays an open gap if no phone is available. Phase 23 has not run: no weights are
   distributed, and the code licence, PyPI, the Zenodo DOI and `CITATION.cff` are to be settled there.
 
+### 2026-11-21 — Phase 22: final validation
+
+- From a fresh clone the documented steps rebuild the environment, the data and the evaluation, and
+  the installed package reads 400 validation pages with v1's page CER (GW-E2E-013). The walkthrough
+  found three gaps, all fixed.
+- A re-run of the frozen v1 gives Phase 14's predictions in every test file (GW-E2E-018). The strict
+  reproduction verdicts still failed, on official OmniDocBench scores only: that evaluator gives each
+  page a time limit, so which pages fall back to its slower scoring depends on the machine's speed at
+  the moment. The owner accepted this as a disclosed limitation; the strict verdicts stay as recorded.
+- The phone candidate is the fused-attention build with one recognizer run per line, chosen on the
+  first phone because it was both faster and lighter than the batched build (GW-EFF-013, GW-EFF-015,
+  F42). Its bundle passed Phase 17's tolerances (GW-EFF-014), it passed the validation gate, and after
+  one logged pass per test set it met H11 against v1 on all six tests (GW-E2E-021, F41).
+- The phone figures are network time and memory only, on two named phones. A full page on a phone,
+  with decoding and post-processing, has still not been timed, and no phone target is set (ADR-0011).
+- v1's records were checked at the end and are unchanged (`reports/final_validation/closure.md`).

@@ -312,7 +312,9 @@ GW-E2E-009), and the fused-attention build's validation results on this laptop (
   GW-REC-044 against GW-REC-038 (`"lines"`) and GW-E2E-019 against GW-E2E-006 (`"pages"`), unit
   intervals only. All three must be met, or no test set is opened.
 - **Test:** Phase 22 (verdict in GW-E2E-021).
-- **Status:** registered 2026-11-18; not tested.
+- **Status:** holds (2026-11-21, GW-E2E-021): all six tests met, the three on GDC also with source
+  documents as the unit (`reports/final_validation/candidate/h11.md`). The validation gate was met
+  first (GW-REC-044, GW-E2E-019). The selected candidate is `fused-single-line` (GW-EFF-013).
 
 **Selection rule for the arms (GW-EFF-013), fixed with H11.** The arms are `fused` (GW-EFF-009's
 `fused-attention`, the default), `fused-int8` and `fused-single-line`. Exactly one leaves as the
