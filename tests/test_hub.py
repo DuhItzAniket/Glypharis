@@ -203,7 +203,12 @@ def test_the_shipped_entry_is_v1_and_not_yet_published(places, monkeypatch):
     assert entry.manifest_sha256 == (
         "875357a6346e8b1f989005fa96c557b00bf687461043368dc5e3dc532839f037"
     )
-    assert entry.published is False and entry.bytes is None and entry.archive_sha256 is None
+    # The archive packed by scripts/pack_release.py (Phase 23, item 7); not yet published.
+    assert entry.bytes == 82975077
+    assert entry.archive_sha256 == (
+        "3b90c1c74147747d7474a86b550e198f0df83d447961bd6aec88d4c24846541d"
+    )
+    assert entry.published is False
     assert not hub.can_fetch("glypharis-v1", offline=False)
 
     def no_network(*args: object, **kw: object) -> None:
@@ -213,7 +218,11 @@ def test_the_shipped_entry_is_v1_and_not_yet_published(places, monkeypatch):
     with pytest.raises(ModelDownloadError, match="not yet published"):
         glypharis.download_model()
     # With an address but no archive pins there is still nothing to verify against.
-    with pytest.raises(ModelDownloadError, match="no pinned archive"):
+    unpinned = dataclasses.replace(entry, bytes=None, archive_sha256=None)
+    with (
+        hub.override_registry(unpinned),
+        pytest.raises(ModelDownloadError, match="no pinned archive"),
+    ):
         glypharis.download_model("glypharis-v1", url="http://127.0.0.1:9/x.tar.gz")
     assert _downloads(places["models"]) == []
 
