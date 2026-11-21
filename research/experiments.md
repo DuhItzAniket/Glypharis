@@ -114,16 +114,16 @@ Rows link to a full entry below. Numbers are copied from generated reports only,
 | [GW-E2E-016](#gw-e2e-016) | 2026-11-18 | 22 | v1 re-run on the test pages | done | predictions identical to GW-E2E-007 in all 5 sets; scored by GW-E2E-018 | `reports/final_validation/v1_rerun_outputs.json`, `reports/final_validation/GW-E2E-018/line_comparison.json` |
 | [GW-E2E-017](#gw-e2e-017) | 2026-11-18 | 22 | v1 re-run of the oracle on GDC and GDC-scan | done | predictions identical to GW-E2E-008 on GDC and GDC-scan; scored by GW-E2E-018 | `reports/final_validation/v1_rerun_outputs.json`, `reports/final_validation/GW-E2E-018/line_comparison.json` |
 | [GW-E2E-018](#gw-e2e-018) | 2026-11-18 | 22 | Pass B: score the v1 re-run; the 0.05-point tolerance verdict | done | tolerance verdict failed: 16 of 1,381 point values outside 0.0005, all GLYPHARIS's official OmniDocBench scores (largest 0.0208, three-column slice); no count, flag or verdict changed | `reports/final_validation/v1_reproduction.md`, `reports/final_validation/GW-E2E-018/` |
-| [GW-E2E-019](#gw-e2e-019) | 2026-11-18 | 22 | Phone candidate: validation gate on pages, against GW-E2E-006 | planned | — | — |
-| [GW-E2E-020](#gw-e2e-020) | 2026-11-18 | 22 | Phone candidate on the test pages | planned | — | — |
-| [GW-E2E-021](#gw-e2e-021) | 2026-11-18 | 22 | Phone candidate: the scoring pass and H11 | planned | — | — |
+| [GW-E2E-019](#gw-e2e-019) | 2026-11-18 | 22 | Phone candidate: validation gate on pages, against GW-E2E-006 | done | met: page CER 27.575% and E2E F1 0.5824 for the candidate and for v1 on 1,715 pages | `reports/final_validation/candidate/validation_gate.json` |
+| [GW-E2E-020](#gw-e2e-020) | 2026-11-18 | 22 | Phone candidate on the test pages | done | one logged pass per set; HierText test page CER 25.16%, E2E F1 60.18%; GDC 22.35%, 69.36%; OmniDocBench order-aware CER 27.28% | `reports/final_validation/candidate/results.md`, `reports/final_validation/candidate/prediction_hashes.json` |
+| [GW-E2E-021](#gw-e2e-021) | 2026-11-18 | 22 | Phone candidate: the scoring pass and H11 | done | H11 met, six of six: on HierText test and GDC the candidate's line CER, page CER and E2E F1 equal v1's at the reported precision (GDC 4.17%, 22.35%, 69.36%); the source-document check met | `reports/final_validation/candidate/h11.md`, `reports/final_validation/candidate/results.md` |
 | [GW-REC-042](#gw-rec-042) | 2026-11-18 | 22 | v1 re-run rehearsal on HierText validation crops | done | passes: 10 point values, largest difference 0.0; 74,500 of 74,500 crops identical | `reports/final_validation/rehearsal.json` |
 | [GW-REC-043](#gw-rec-043) | 2026-11-18 | 22 | v1 re-run on the test crops | done | predictions identical to GW-REC-039 in all 5 sets; scored by GW-E2E-018 | `reports/final_validation/v1_rerun_outputs.json`, `reports/final_validation/GW-E2E-018/line_comparison.json` |
-| [GW-REC-044](#gw-rec-044) | 2026-11-18 | 22 | Phone candidate: validation gate on crops, against GW-REC-038 | planned | — | — |
-| [GW-REC-045](#gw-rec-045) | 2026-11-18 | 22 | Phone candidate on the test crops | planned | — | — |
-| [GW-EFF-013](#gw-eff-013) | 2026-11-18 | 22 | Phone candidate selection: `fused`, `fused-int8`, `fused-single-line` | planned | — | — |
-| [GW-EFF-014](#gw-eff-014) | 2026-11-18 | 22 | Phone candidate bundle and its equivalence check | planned | — | — |
-| [GW-EFF-015](#gw-eff-015) | 2026-11-18 | 22 | Android operator check, then the phone measurement on named devices | planned | — | — |
+| [GW-REC-044](#gw-rec-044) | 2026-11-18 | 22 | Phone candidate: validation gate on crops, against GW-REC-038 | done | met: line CER 6.507% for the candidate and for v1 on 74,500 lines | `reports/final_validation/candidate/validation_gate.json` |
+| [GW-REC-045](#gw-rec-045) | 2026-11-18 | 22 | Phone candidate on the test crops | done | one logged pass per set; strict CER HierText test 6.03%, GDC 4.17%, FUNSD 7.03%, GDC-scan 1.02%; IIIT5K alphanumeric word accuracy 91.47% | `reports/final_validation/candidate/results.md`, `reports/final_validation/candidate/prediction_hashes.json` |
+| [GW-EFF-013](#gw-eff-013) | 2026-11-18 | 22 | Phone candidate selection: `fused`, `fused-int8`, `fused-single-line` | done | selected `fused-single-line`: on the SM-M526B 8,111.9 ms per page and 919.9 MiB peak against `fused` 12,824.4 ms and 1,645.3 MiB; `fused-int8` met speed (8,522.2 ms) but peaked at 1,814.9 MiB | `reports/final_validation/candidate/GW-EFF-013/`, `reports/final_validation/GW-EFF-015/phone_sm-m526b.md` |
+| [GW-EFF-014](#gw-eff-014) | 2026-11-18 | 22 | Phone candidate bundle and its equivalence check | done | passes Phase 17's tolerances: map 7.33e-06, logits 2.78e-04, 5,000 of 5,000 lines identical, page CER 24.321% against 24.320% | `reports/final_validation/candidate/GW-EFF-014/` |
+| [GW-EFF-015](#gw-eff-015) | 2026-11-18 | 22 | Android operator check, then the phone measurement on named devices | done | part a go on both phones; part b passed on both: SM-M526B `fused-single-line` 8,111.9 ms per page, 919.9 MiB; Moto G35 5G 10,987.5 ms, 409.0 MiB; network time only | `reports/final_validation/GW-EFF-015/` |
 
 ### <a id="gw-base-001"></a>GW-BASE-001 — Tesseract 5 (LSTM, eng): recognition and end to end
 
@@ -2154,7 +2154,7 @@ Rows link to a full entry below. Numbers are copied from generated reports only,
 
 ### <a id="gw-e2e-019"></a>GW-E2E-019 — Phone candidate: validation gate on pages
 
-- **Date allocated / run:** 2026-11-18 / —
+- **Date allocated / run:** 2026-11-18 / 2026-11-20
 - **Phase:** 22
 - **Git commit:** tag `phase22-candidate-eval`   **Config:** the GW-EFF-014 bundle   **Seed(s):** bootstrap 20261010
 - **Dataset version(s):** HierText validation, 1,715 pages
@@ -2164,14 +2164,14 @@ Rows link to a full entry below. Numbers are copied from generated reports only,
 - **Method:** `scripts/phase22_eval.py`, then `scripts/phase22_score.py`: H11's bag-of-lines page CER and E2E F1 tests, paired by page. Reports go to `reports/final_validation/candidate/`, the gate's verdict to `validation_gate.json` there.
 - **Variables:** build (candidate, v1)
 - **Control:** GW-E2E-006
-- **Result:** — (planned)
-- **Interpretation:** —
+- **Result:** met (`reports/final_validation/candidate/validation_gate.json`). Over 1,715 pages, bag-of-lines page CER 27.575% for the candidate and for GW-E2E-006, interval −0.000500 [−0.000507, −0.000492]; E2E F1 0.5824 for both, interval +0.0005 [+0.0005, +0.0005]. With GW-REC-044 all three gate tests were met for bundle `97a41168…` at the tag commit `dc6511f`.
+- **Interpretation:** the candidate is non-inferior to v1 on the full validation pages, which opened the test sets.
 - **Limitations:** validation only. Not run if the operator check or the bundle check fails. If a test is not met, no test set is opened, no other arm is tried, and the later IDs and H11 close as `not run`.
 - **Next experiment:** GW-E2E-020, if the gate is met
 
 ### <a id="gw-e2e-020"></a>GW-E2E-020 — Phone candidate on the test pages
 
-- **Date allocated / run:** 2026-11-18 / —
+- **Date allocated / run:** 2026-11-18 / 2026-11-20
 - **Phase:** 22
 - **Git commit:** tag `phase22-candidate-eval`   **Config:** the GW-EFF-014 bundle   **Seed(s):** none
 - **Dataset version(s):** HierText test, GDC, GDC-scan, FUNSD, OmniDocBench (English, all 755 pages)
@@ -2181,14 +2181,14 @@ Rows link to a full entry below. Numbers are copied from generated reports only,
 - **Method:** `scripts/phase22_eval.py`, which refuses to start without a `go` operator check and a met validation gate for this bundle and tag, and refuses a second pass over a set; one logged access per set before its images are read; predictions only, to `data/processed/phase22/GW-E2E-020/`, with their hashes in `reports/final_validation/candidate/prediction_hashes.json`. No oracle run.
 - **Variables:** none
 - **Control:** GW-E2E-007
-- **Result:** — (planned)
-- **Interpretation:** —
+- **Result:** done in the order GDC-scan, FUNSD, GDC, OmniDocBench, HierText test: one logged pass per set, no resume, with the hashes of the 5 files in `reports/final_validation/candidate/prediction_hashes.json`, committed before scoring. Scored by GW-E2E-021 (`reports/final_validation/candidate/results.md`), strict track: HierText test bag-of-lines page CER 25.16 [23.44, 26.79]% and E2E F1 60.18 [58.71, 61.72]% on 1,634 pages; GDC 22.35 [15.87, 30.11]% and 69.36 [60.69, 77.48]% on 106; FUNSD 32.05% and 62.81% on 50; GDC-scan 4.60% and 89.84% on 28; OmniDocBench order-aware CER 27.28 [23.95, 30.57]% on 755 pages, official text-block edit distance 0.1892 and reading-order edit 0.3195; official HierText line-level E2E F-score 0.5038.
+- **Interpretation:** the candidate's page results sit beside GW-E2E-007's and GW-E2E-009's and replace none of them.
 - **Limitations:** a new version, not v1. No latency claim comes from this run. GDC-scan numbers only. Not run if the operator check, the bundle check or the validation gate fails.
 - **Next experiment:** GW-E2E-021
 
 ### <a id="gw-e2e-021"></a>GW-E2E-021 — Phone candidate: the scoring pass and H11
 
-- **Date allocated / run:** 2026-11-18 / —
+- **Date allocated / run:** 2026-11-18 / 2026-11-21
 - **Phase:** 22
 - **Git commit:** tag `phase22-candidate-eval`   **Config:** `scripts/phase22_score.py`, reusing the Phase 14 scorer unedited   **Seed(s):** bootstrap 20261010
 - **Dataset version(s):** the 10 outputs of GW-REC-045 and GW-E2E-020; v1's GW-REC-039 and GW-E2E-007 on HierText test and GDC (4 files), checked against `phase14_outputs.json`
@@ -2198,10 +2198,10 @@ Rows link to a full entry below. Numbers are copied from generated reports only,
 - **Method:** both tracks, the charset ceiling, the Phase 14 metrics for each set, official HierText and OmniDocBench scores for the candidate only, calibration at T = 2.35 unchanged. The 4 v1 files are scored in a second `Scorer`, so each is logged and none reaches the official evaluators; v1's other figures are copied from `reports/external/results.json`, and its other test files are not read. Work files go to `data/processed/phase22/GW-E2E-021/`, reports to `reports/final_validation/candidate/`.
 - **Variables:** build (candidate, v1)
 - **Control:** GW-E2E-009
-- **Result:** — (planned)
-- **Interpretation:** —
+- **Result:** H11 met, all six tests (`reports/final_validation/candidate/h11.md`; full results in `results.md` and `results.json` there). The 4 v1 files matched `phase14_outputs.json` before they were read. HierText test, candidate and v1: line CER 0.0603 on 67,574 lines, page CER 0.2516 and E2E F1 0.6018 on 1,634 pages. GDC: 0.0417 on 8,372 lines, 0.2235 and 0.6936 on 106 pages, each also met with source documents as the unit. Each interval, in points of the candidate less the margin against v1, lies below 0 for the CER tests and above 0 for E2E F1; the widest is HierText test page CER, −0.049 [−0.050, −0.048]. One pass, 14 logged scoring rows; calibration at T = 2.35: HierText test ECE 0.0920 against 0.2231 at T = 1.
+- **Interpretation:** the phone candidate is non-inferior to v1 on HierText test and GDC under the registered rule; its six tested values equal v1's at the reported precision. This shows non-inferiority, not that the two builds give the same output on every line: the line-level comparison was not part of the rule.
 - **Limitations:** every set and metric outside H11's six tests is descriptive; the results sit beside v1's and replace none of them; one scoring pass, enforced by its `pass.json`. Logged access: 14 scoring rows (10 candidate, 4 v1).
-- **Next experiment:** Phase 22 closure
+- **Next experiment:** none in Phase 22; release is Phase 23
 
 ### <a id="gw-rec-042"></a>GW-REC-042 — v1 re-run rehearsal on validation crops
 
@@ -2239,7 +2239,7 @@ Rows link to a full entry below. Numbers are copied from generated reports only,
 
 ### <a id="gw-rec-044"></a>GW-REC-044 — Phone candidate: validation gate on crops
 
-- **Date allocated / run:** 2026-11-18 / —
+- **Date allocated / run:** 2026-11-18 / 2026-11-20
 - **Phase:** 22
 - **Git commit:** tag `phase22-candidate-eval`   **Config:** the GW-EFF-014 bundle   **Seed(s):** bootstrap 20261010
 - **Dataset version(s):** HierText validation evaluation pack, 74,500 crops
@@ -2249,14 +2249,14 @@ Rows link to a full entry below. Numbers are copied from generated reports only,
 - **Method:** `scripts/phase22_eval.py`, with crops read under the bundle's batching rule, then `scripts/phase22_score.py`: H11's line CER test, paired by line. Reports go to `reports/final_validation/candidate/`, the gate's verdict to `validation_gate.json` there.
 - **Variables:** build (candidate, v1)
 - **Control:** GW-REC-038
-- **Result:** — (planned)
-- **Interpretation:** —
+- **Result:** met (`reports/final_validation/candidate/validation_gate.json`). Line CER 6.507% for the candidate and for GW-REC-038 over 74,500 lines; the paired interval of the candidate's errors less the margin, against v1's, is −0.0005 [−0.0005, −0.0005], below 0.
+- **Interpretation:** the candidate's recognizer reads the validation crops as well as v1's, so the test sets could be opened.
 - **Limitations:** validation only. Not run if the operator check or the bundle check fails. If the test is not met, no test set is opened, no other arm is tried, and the later IDs and H11 close as `not run`.
 - **Next experiment:** GW-REC-045, if the gate is met
 
 ### <a id="gw-rec-045"></a>GW-REC-045 — Phone candidate on the test crops
 
-- **Date allocated / run:** 2026-11-18 / —
+- **Date allocated / run:** 2026-11-18 / 2026-11-20
 - **Phase:** 22
 - **Git commit:** tag `phase22-candidate-eval`   **Config:** the GW-EFF-014 bundle   **Seed(s):** none
 - **Dataset version(s):** HierText test, GDC, GDC-scan, FUNSD and IIIT5K crop packs
@@ -2266,16 +2266,16 @@ Rows link to a full entry below. Numbers are copied from generated reports only,
 - **Method:** `scripts/phase22_eval.py`, which refuses to start without a `go` operator check and a met validation gate for this bundle and tag, and refuses a second pass over a set; crops read under the bundle's batching rule; one logged access per set before its crops are read; predictions only, to `data/processed/phase22/GW-REC-045/`, with their hashes in `reports/final_validation/candidate/prediction_hashes.json`.
 - **Variables:** none
 - **Control:** GW-REC-039
-- **Result:** — (planned)
-- **Interpretation:** —
+- **Result:** done: one logged pass per set, no resume (`research/test_access_log.md`), with the hashes of the 5 files in `reports/final_validation/candidate/prediction_hashes.json`, committed before scoring. Scored by GW-E2E-021 (`reports/final_validation/candidate/results.md`), strict CER with 95% CI by line: HierText test 6.03 [5.89, 6.18]% on 67,574 lines, GDC 4.17 [3.72, 4.67]% on 8,372, FUNSD 7.03 [5.71, 8.66]% on 2,647, GDC-scan 1.02 [0.85, 1.20]% on 776; IIIT5K strict CER 44.27% on 3,000 words, and alphanumeric word accuracy 91.47 [90.43, 92.47]%.
+- **Interpretation:** the candidate's crop results sit beside GW-REC-039's and replace none of them.
 - **Limitations:** a new version, not v1. No latency claim comes from this run. GDC-scan numbers only. Not run if the operator check, the bundle check or the validation gate fails.
 - **Next experiment:** GW-E2E-021
 
 ### <a id="gw-eff-013"></a>GW-EFF-013 — Phone candidate selection
 
-- **Date allocated / run:** 2026-11-18 / —
+- **Date allocated / run:** 2026-11-18 / 2026-11-19
 - **Phase:** 22
-- **Git commit:** recorded in the report   **Config:** `glypharis/efficiency/candidate.py`, `scripts/phase22_candidate.py` (to be written)   **Seed(s):** Phase 16's line sample; bootstrap 20261010
+- **Git commit:** recorded in the report   **Config:** `glypharis/efficiency/candidate.py`, `scripts/phase22_candidate.py`, `scripts/phase22_android.py select`   **Seed(s):** Phase 16's line sample; bootstrap 20261010
 - **Dataset version(s):** HierText validation: the 400 Phase 5 pages, the 5,000 seeded lines, and the Phase 5 profile pages (10 warm-up, 100 timed)
 - **Hardware:** laptop CPU, 10 threads, Phase 16 conditions, then the phone registered under GW-EFF-015
 - **Research question:** does fused attention with INT8, or one recognizer run per line, beat the default `fused` build on a phone without losing accuracy or using more memory?
@@ -2283,14 +2283,14 @@ Rows link to a full entry below. Numbers are copied from generated reports only,
 - **Method:** accuracy of the three arms on the laptop, each reading the 5,000 lines under the batching rule its bundle would ship; the arms that pass go to the phone, in mirrored order, in the sitting of GW-EFF-015, where the speed condition must hold over both runs and on each run alone. The rule leaves exactly one candidate. Reports go to `reports/final_validation/GW-EFF-013/`.
 - **Variables:** independent: arm (`fused`, `fused-int8`, `fused-single-line`); controlled: pages, lines, thread count, order, device
 - **Control:** the `fused` arm (GW-EFF-009's `fused-attention`)
-- **Result:** — (planned)
-- **Interpretation:** —
+- **Result:** selected `fused-single-line`, which met all three conditions (`reports/final_validation/candidate/GW-EFF-013/selection.md`). Laptop accuracy against `fused`, strict track (`accuracy.md` there): `fused-int8` read line CER 6.242% against 6.221%, page CER 24.326% against 24.321% and E2E F1 0.6046 against 0.6050, all three met at its 0.005 margin; `fused-single-line` gave `fused`'s values, 6.221%, 24.321% and 0.6050, all three met at 0.0005. Both went to the phone with `fused`. On the SM-M526B (GW-EFF-015 part b), mean network time per page over both runs was 12,824.4 ms for `fused`, 8,522.2 ms for `fused-int8` and 8,111.9 ms for `fused-single-line`, with peak `VmHWM` 1,645.3, 1,814.9 and 919.9 MiB. The speed condition held for both arms over both runs and on each run alone (`fused-single-line` −3,430.1 [−3,782.5, −3,078.0] ms, `fused-int8` −3,019.8 [−3,380.0, −2,667.9] ms); the memory condition held only for `fused-single-line`. On the laptop, as information (`laptop.md`): `fused-single-line` took 3,217.4 and 3,168.2 ms per page in its two runs against `fused`'s 4,228.7 and 4,343.3, with peak RAM 1,124.3 against 2,397.1 MiB.
+- **Interpretation:** on the first phone, one recognizer run per line was both faster than `fused` and lighter, and read the same text; the INT8 recognizer was fast but used more memory than `fused`, so the rule left exactly one candidate. The decision rests on one phone; the second changes nothing.
 - **Limitations:** phone times are network time only; validation data; a new version, not v1. Not started if the operator check of GW-EFF-015 fails. If `fused` fails the phone's logit and text check, no other arm can be selected and `fused` stays the candidate for the laptop evaluation.
 - **Next experiment:** GW-EFF-014
 
 ### <a id="gw-eff-014"></a>GW-EFF-014 — Phone candidate bundle and its equivalence check
 
-- **Date allocated / run:** 2026-11-18 / —
+- **Date allocated / run:** 2026-11-18 / 2026-11-20
 - **Phase:** 22
 - **Git commit:** recorded in the report   **Config:** format `glypharis-phone-bundle-1`   **Seed(s):** Phase 16's line sample
 - **Dataset version(s):** the GW-EFF-006 reference outputs (`reports/efficiency/phase16/reference_manifest.json`)
@@ -2300,16 +2300,16 @@ Rows link to a full entry below. Numbers are copied from generated reports only,
 - **Method:** build the bundle (v1's `detector.onnx` byte for byte, the chosen recognizer, `charset.json`, a manifest of hashes and settings, session options included) and check it against the references: map difference at most 1e-4, logits at most 1e-3, text identical except near ties on at most 0.1% of lines, page CER within 0.05 points. Reports go to `reports/final_validation/GW-EFF-014/`.
 - **Variables:** none
 - **Control:** GW-EFF-006
-- **Result:** — (planned)
-- **Interpretation:** —
+- **Result:** pass (`reports/final_validation/candidate/GW-EFF-014/equivalence.json`). The bundle is format `glypharis-phone-bundle-1` with manifest SHA-256 `97a4116884f93d0d0293d0910e37dee4dbd0aacfb249c3f2c3819e289ee06e2e` (`manifest.json` there), arm `fused-single-line`, labelled as a new version, not v1; `detector.onnx` is v1's byte for byte and the shared settings equal v1's. Against the GW-EFF-006 references: map difference 7.33e-06 over 110 pages (limit 1e-4); logit difference 2.78e-04 over 5,000 lines (limit 1e-3), with 5,000 of 5,000 texts identical and no near-tie difference; page CER 24.321% against 24.320% on 400 pages, a difference of 0.0015 points (limit 0.05).
+- **Interpretation:** the frozen bundle reproduces the selected build within Phase 17's tolerances, so the validation gate could run on it.
 - **Limitations:** if `fused-int8` was selected, the logit and text checks are reported and the selection margin decides. The bundle is a new version, not v1. If a tolerance fails, no other arm is tried, and the later IDs and H11 close as `not run`.
 - **Next experiment:** GW-REC-044 and GW-E2E-019
 
 ### <a id="gw-eff-015"></a>GW-EFF-015 — Android operator check and phone measurement
 
-- **Date allocated / run:** 2026-11-18 / —
+- **Date allocated / run:** 2026-11-18 / 2026-11-18
 - **Phase:** 22
-- **Git commit:** recorded in the report   **Config:** `mobile/android-bench` (to be written), `onnxruntime-android:1.31.1`   **Seed(s):** Phase 16's line sample
+- **Git commit:** recorded in the report   **Config:** `mobile/android-bench`, `onnxruntime-android:1.31.1`   **Seed(s):** Phase 16's line sample
 - **Dataset version(s):** validation network inputs only: one tensor for part a; 10 plus 100 Phase 5 profile pages and 1,000 seeded lines for part b
 - **Hardware:** Samsung Galaxy M52 5G, then Moto G35 5G; each device's SoC, RAM and Android build read from it and registered in `docs/FINAL_VALIDATION.md` before measuring
 - **Research question:** a: does the stock Android package run the candidate's `com.microsoft.MultiHeadAttention` nodes? b: what network time and peak memory does the candidate have on a named phone?
@@ -2318,8 +2318,8 @@ Rows link to a full entry below. Numbers are copied from generated reports only,
 - **Variables:** device; arm on the first phone; controlled: inputs, package, session options, thread count, spinning, charge state, airplane mode, screen and foreground state, all registered first
 - **Control:** the laptop's outputs for the same arm and inputs
 - **Part a result (2026-11-18 UTC):** go on both phones (`reports/final_validation/GW-EFF-015/operator_check.json`). On the Samsung Galaxy M52 5G and the Moto G35 5G the stock `onnxruntime-android` 1.31.1 created a session on the fused recognizer, with its 9 `com.microsoft.MultiHeadAttention` nodes, at 4 threads. One validation line gave finite logits of the laptop's shape [72, 1, 275], the largest difference from the laptop over the line's 48 frames was 1.14e-05, and the greedy text was the same. No time or memory figure comes from this check. An earlier accidental run is in `research/failures.md`.
-- **Result:** — (planned)
-- **Interpretation:** —
+- **Result:** part b passed on both phones (`reports/final_validation/GW-EFF-015/phone_sm-m526b.md`, `phone_moto-g35-5g.md`), run on 2026-11-20 after each device was registered in `docs/FINAL_VALIDATION.md`, section 4. *SM-M526B* (first phone, all three arms, two runs each in mirrored order, 100 timed pages per run, 4 threads): mean network time per page over both runs, with p95, `fused` 12,824.4 ms (25,756.3), `fused-int8` 8,522.2 ms (17,568.2), `fused-single-line` 8,111.9 ms (18,298.9); peak `VmHWM` 1,645.3, 1,814.9 and 919.9 MiB; thermal status none at the start and end of every run. On the 1,000 seeded lines at batch 1 the means were 155.4, 98.5 and 142.7 ms (`phone_sm-m526b.json`). The check against the laptop over 1,488 lines: `fused` largest logit difference 1.28e-04 with 1,488 of 1,488 texts identical, `fused-single-line` 1.03e-04 with 1,488 of 1,488; `fused-int8` 5.27e+00 with 1,444 of 1,488, reported and not judged. *Moto G35 5G* (second phone, `fused-single-line` only): 10,474.4 and 11,500.6 ms per page in its two runs, 10,987.5 ms over both (p95 23,283.8), 203.2 ms per line, peak `VmHWM` 409.0 MiB; thermal status light to moderate in the first run and moderate throughout the second; check 1.18e-04 with 1,488 of 1,488 identical. The tensors were deleted from both phones afterwards.
+- **Interpretation:** the stock Android runtime runs the candidate's networks on both phones and gives the laptop's text. These are network figures only: a page on a phone also needs decoding, post-processing, cropping and reading order, which were not ported, so the full page time on a phone is still unknown. The Moto G35 5G warmed during its runs, and its two run means differ by about a second.
 - **Limitations:** network time and memory only; decoding, post-processing, cropping and reading order are not ported. Validation data only; no test set and no GDC-scan content goes on a phone. If the operator check fails or no phone can be used, part b is recorded as not run and R-23 stays open. If `fused` fails the phone's logit and text check, part b is recorded as failed and R-23 stays open.
 - **Next experiment:** part a: GW-E2E-013; part b: GW-EFF-014
 

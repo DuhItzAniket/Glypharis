@@ -9,20 +9,20 @@ Each ID links to its full entry. Key results are copied from the registry. The g
 | Prefix | Registered | done | failed | abandoned | not run | planned | running |
 |---|---|---|---|---|---|---|---|
 | GW-BASE | 7 | 7 | 0 | 0 | 0 | 0 | 0 |
-| GW-REC | 45 | 39 | 1 | 1 | 2 | 2 | 0 |
+| GW-REC | 45 | 41 | 1 | 1 | 2 | 0 | 0 |
 | GW-DET | 7 | 7 | 0 | 0 | 0 | 0 | 0 |
-| GW-E2E | 21 | 18 | 0 | 0 | 0 | 3 | 0 |
+| GW-E2E | 21 | 21 | 0 | 0 | 0 | 0 | 0 |
 | GW-DATA | 22 | 22 | 0 | 0 | 0 | 0 | 0 |
-| GW-EFF | 15 | 12 | 0 | 0 | 0 | 3 | 0 |
-| all | 117 | 105 | 1 | 1 | 2 | 8 | 0 |
+| GW-EFF | 15 | 15 | 0 | 0 | 0 | 0 | 0 |
+| all | 117 | 113 | 1 | 1 | 2 | 0 | 0 |
 
 ## Scope
 
 - v1 is GW-REC-034 with GW-DET-001, and it keeps PyTorch as its default backend.
 - The laptop CPU latency targets of ADR-0011 are recorded as missed for v1.
-- Phones are the target hardware; no phone has been measured.
-- The all-ONNX build with fused attention is a new version, not v1, to be evaluated in Phase 22.
-- Final validation (Phase 22) has not been run.
+- Phones are the target hardware. Only the phone candidate's networks have been measured on phones (GW-EFF-015), without decoding or post-processing; v1 has not.
+- The phone candidate, the all-ONNX build with fused attention and one recognizer run per line, is a new version, not v1. Phase 22 evaluated it once per test set, and it met H11 against v1 (GW-E2E-021).
+- Final validation (Phase 22) has been run; its record is `docs/FINAL_VALIDATION.md`.
 - No weights are distributed; release is Phase 23.
 - Dataset licences and attribution are in [DATASETS.md](DATASETS.md).
 
@@ -34,9 +34,9 @@ Not attributed to one experiment: Phase 16 scoring, 0.00 CPU-hours over 2 jobs.
 
 44 registered experiments have no ledger row:
 
-- Abandoned or not run (11): GW-REC-023, GW-REC-032, GW-REC-033, GW-REC-044, GW-REC-045, GW-E2E-019, GW-E2E-020, GW-E2E-021, GW-EFF-013, GW-EFF-014, GW-EFF-015
+- Abandoned or not run (3): GW-REC-023, GW-REC-032, GW-REC-033
 - In phases the ledger says it does not count (9, 10, 14, 15) (18): GW-REC-038, GW-REC-039, GW-REC-040, GW-REC-041, GW-DET-004, GW-DET-005, GW-DET-006, GW-E2E-001, GW-E2E-002, GW-E2E-003, GW-E2E-006, GW-E2E-007, GW-E2E-008, GW-E2E-009, GW-E2E-010, GW-EFF-001, GW-EFF-002, GW-EFF-005
-- Ran, with no ledger row; its note names neither them nor their phase (15): GW-REC-042, GW-REC-043, GW-E2E-004, GW-E2E-005, GW-E2E-011, GW-E2E-012, GW-E2E-013, GW-E2E-014, GW-E2E-015, GW-E2E-016, GW-E2E-017, GW-E2E-018, GW-EFF-003, GW-EFF-004, GW-EFF-012
+- Ran, with no ledger row; its note names neither them nor their phase (23): GW-REC-042, GW-REC-043, GW-REC-044, GW-REC-045, GW-E2E-004, GW-E2E-005, GW-E2E-011, GW-E2E-012, GW-E2E-013, GW-E2E-014, GW-E2E-015, GW-E2E-016, GW-E2E-017, GW-E2E-018, GW-E2E-019, GW-E2E-020, GW-E2E-021, GW-EFF-003, GW-EFF-004, GW-EFF-012, GW-EFF-013, GW-EFF-014, GW-EFF-015
 
 ## Flags
 
@@ -174,9 +174,9 @@ Not attributed to one experiment: Phase 16 scoring, 0.00 CPU-hours over 2 jobs.
 | ID | Question | Status | Key result | Reports | GPU-h | CPU-h | Flags |
 |---|---|---|---|---|---|---|---|
 | [GW-REC-038](research/experiments.md#gw-rec-038) | The frozen recognizer on the HierText validation evaluation crops (H5′'s reference) | done | 6.51% CER strict, 74,500 crops | [`reports/external/`](reports/external/) | — | — | — |
-| [GW-REC-039](research/experiments.md#gw-rec-039) | The frozen recognizer on the test crop packs (H5′, H8′) | done | CER 6.03% HierText test, 4.17% GDC, 7.03% FUNSD; IIIT5K 91.47% words | [`reports/external/`](reports/external/) | — | — | test log: 20 |
+| [GW-REC-039](research/experiments.md#gw-rec-039) | The frozen recognizer on the test crop packs (H5′, H8′) | done | CER 6.03% HierText test, 4.17% GDC, 7.03% FUNSD; IIIT5K 91.47% words | [`reports/external/`](reports/external/) | — | — | test log: 22 |
 | [GW-E2E-006](research/experiments.md#gw-e2e-006) | The frozen v1 pipeline on HierText validation: Phase 14's reference | done | bag-of-lines page CER 27.57%, E2E F1 58.24% (all 1,715 validation pages) | [`reports/external/`](reports/external/) | — | — | — |
-| [GW-E2E-007](research/experiments.md#gw-e2e-007) | The frozen pipeline end to end on the test pages (H1′ CER) | done | bag-of-lines page CER 25.16% HierText test, 22.35% GDC | [`reports/external/`](reports/external/) | — | — | test log: 20 |
+| [GW-E2E-007](research/experiments.md#gw-e2e-007) | The frozen pipeline end to end on the test pages (H1′ CER) | done | bag-of-lines page CER 25.16% HierText test, 22.35% GDC | [`reports/external/`](reports/external/) | — | — | test log: 22 |
 | [GW-E2E-008](research/experiments.md#gw-e2e-008) | Oracle run on GDC and GDC-scan, for H4 in Phase 15 | done | GDC bag-of-lines page CER 4.17% from ground-truth boxes | [`reports/external/`](reports/external/) | — | — | test log: 8 |
 | [GW-E2E-009](research/experiments.md#gw-e2e-009) | Phase 14 scoring, comparisons and hypothesis verdicts | done | H1′ holds; H5′ not met; H8′ transfers met, by half not shown | [`reports/external/`](reports/external/) | — | — | failure note |
 | [GW-EFF-005](research/experiments.md#gw-eff-005) | v1 CPU page latency against PP-OCRv5 mobile in one sitting (H1′ latency) | done | 2,446.7 against 2,954.8 ms per page, −508.1 [−737.7, −256.5] ms | [`reports/external/GW-EFF-005/`](reports/external/GW-EFF-005/), [`reports/external/results.json`](reports/external/results.json) | — | — | — |
@@ -237,20 +237,20 @@ Not attributed to one experiment: Phase 16 scoring, 0.00 CPU-hours over 2 jobs.
 |---|---|---|---|---|---|---|---|
 | [GW-REC-042](research/experiments.md#gw-rec-042) | v1 re-run rehearsal on HierText validation crops | done | passes: 10 point values, largest difference 0.0; 74,500 of 74,500 crops identical | [`reports/final_validation/rehearsal.json`](reports/final_validation/rehearsal.json) | — | — | — |
 | [GW-REC-043](research/experiments.md#gw-rec-043) | v1 re-run on the test crops | done | predictions identical to GW-REC-039 in all 5 sets; scored by GW-E2E-018 | [`reports/final_validation/v1_rerun_outputs.json`](reports/final_validation/v1_rerun_outputs.json), [`reports/final_validation/GW-E2E-018/line_comparison.json`](reports/final_validation/GW-E2E-018/line_comparison.json) | — | — | test log: 10 |
-| [GW-REC-044](research/experiments.md#gw-rec-044) | Phone candidate: validation gate on crops, against GW-REC-038 | planned | — | — | — | — | — |
-| [GW-REC-045](research/experiments.md#gw-rec-045) | Phone candidate on the test crops | planned | — | — | — | — | — |
+| [GW-REC-044](research/experiments.md#gw-rec-044) | Phone candidate: validation gate on crops, against GW-REC-038 | done | met: line CER 6.507% for the candidate and for v1 on 74,500 lines | [`reports/final_validation/candidate/validation_gate.json`](reports/final_validation/candidate/validation_gate.json) | — | — | — |
+| [GW-REC-045](research/experiments.md#gw-rec-045) | Phone candidate on the test crops | done | one logged pass per set; strict CER HierText test 6.03%, GDC 4.17%, FUNSD 7.03%, GDC-scan 1.02%; IIIT5K alphanumeric word accuracy 91.47% | [`reports/final_validation/candidate/results.md`](reports/final_validation/candidate/results.md), [`reports/final_validation/candidate/prediction_hashes.json`](reports/final_validation/candidate/prediction_hashes.json) | — | — | test log: 10 |
 | [GW-E2E-013](research/experiments.md#gw-e2e-013) | Clean-machine-style walkthrough: the installed package on the v1 bundle against GW-E2E-006 | done | passes: page CER 24.32% on both, difference 0.0 points; 16,835 of 16,835 lines identical | [`reports/package/GW-E2E-013.json`](reports/package/GW-E2E-013.json) | — | — | — |
 | [GW-E2E-014](research/experiments.md#gw-e2e-014) | v1 re-run rehearsal on HierText validation pages | done | passes: 13 point values, largest difference 0.0; 1,715 of 1,715 pages identical | [`reports/final_validation/rehearsal.json`](reports/final_validation/rehearsal.json) | — | — | — |
 | [GW-E2E-015](research/experiments.md#gw-e2e-015) | Pass A: re-score the saved Phase 14 files with the unchanged scorer | done | not identical: 40 values differ, all official OmniDocBench scores of Tesseract and GLYPHARIS (more pages hit the evaluator's time limit); 0 unexplained | [`reports/final_validation/GW-E2E-015/`](reports/final_validation/GW-E2E-015/) | — | — | failure note |
 | [GW-E2E-016](research/experiments.md#gw-e2e-016) | v1 re-run on the test pages | done | predictions identical to GW-E2E-007 in all 5 sets; scored by GW-E2E-018 | [`reports/final_validation/v1_rerun_outputs.json`](reports/final_validation/v1_rerun_outputs.json), [`reports/final_validation/GW-E2E-018/line_comparison.json`](reports/final_validation/GW-E2E-018/line_comparison.json) | — | — | test log: 10 |
 | [GW-E2E-017](research/experiments.md#gw-e2e-017) | v1 re-run of the oracle on GDC and GDC-scan | done | predictions identical to GW-E2E-008 on GDC and GDC-scan; scored by GW-E2E-018 | [`reports/final_validation/v1_rerun_outputs.json`](reports/final_validation/v1_rerun_outputs.json), [`reports/final_validation/GW-E2E-018/line_comparison.json`](reports/final_validation/GW-E2E-018/line_comparison.json) | — | — | test log: 4 |
 | [GW-E2E-018](research/experiments.md#gw-e2e-018) | Pass B: score the v1 re-run; the 0.05-point tolerance verdict | done | tolerance verdict failed: 16 of 1,381 point values outside 0.0005, all GLYPHARIS's official OmniDocBench scores (largest 0.0208, three-column slice); no count, flag or verdict changed | [`reports/final_validation/v1_reproduction.md`](reports/final_validation/v1_reproduction.md), [`reports/final_validation/GW-E2E-018/`](reports/final_validation/GW-E2E-018/) | — | — | test log: 12; failure note |
-| [GW-E2E-019](research/experiments.md#gw-e2e-019) | Phone candidate: validation gate on pages, against GW-E2E-006 | planned | — | — | — | — | — |
-| [GW-E2E-020](research/experiments.md#gw-e2e-020) | Phone candidate on the test pages | planned | — | — | — | — | — |
-| [GW-E2E-021](research/experiments.md#gw-e2e-021) | Phone candidate: the scoring pass and H11 | planned | — | — | — | — | — |
-| [GW-EFF-013](research/experiments.md#gw-eff-013) | Phone candidate selection: `fused`, `fused-int8`, `fused-single-line` | planned | — | — | — | — | — |
-| [GW-EFF-014](research/experiments.md#gw-eff-014) | Phone candidate bundle and its equivalence check | planned | — | — | — | — | — |
-| [GW-EFF-015](research/experiments.md#gw-eff-015) | Android operator check, then the phone measurement on named devices | planned | — | — | — | — | failure note |
+| [GW-E2E-019](research/experiments.md#gw-e2e-019) | Phone candidate: validation gate on pages, against GW-E2E-006 | done | met: page CER 27.575% and E2E F1 0.5824 for the candidate and for v1 on 1,715 pages | [`reports/final_validation/candidate/validation_gate.json`](reports/final_validation/candidate/validation_gate.json) | — | — | — |
+| [GW-E2E-020](research/experiments.md#gw-e2e-020) | Phone candidate on the test pages | done | one logged pass per set; HierText test page CER 25.16%, E2E F1 60.18%; GDC 22.35%, 69.36%; OmniDocBench order-aware CER 27.28% | [`reports/final_validation/candidate/results.md`](reports/final_validation/candidate/results.md), [`reports/final_validation/candidate/prediction_hashes.json`](reports/final_validation/candidate/prediction_hashes.json) | — | — | test log: 10 |
+| [GW-E2E-021](research/experiments.md#gw-e2e-021) | Phone candidate: the scoring pass and H11 | done | H11 met, six of six: on HierText test and GDC the candidate's line CER, page CER and E2E F1 equal v1's at the reported precision (GDC 4.17%, 22.35%, 69.36%); the source-document check met | [`reports/final_validation/candidate/h11.md`](reports/final_validation/candidate/h11.md), [`reports/final_validation/candidate/results.md`](reports/final_validation/candidate/results.md) | — | — | — |
+| [GW-EFF-013](research/experiments.md#gw-eff-013) | Phone candidate selection: `fused`, `fused-int8`, `fused-single-line` | done | selected `fused-single-line`: on the SM-M526B 8,111.9 ms per page and 919.9 MiB peak against `fused` 12,824.4 ms and 1,645.3 MiB; `fused-int8` met speed (8,522.2 ms) but peaked at 1,814.9 MiB | [`reports/final_validation/candidate/GW-EFF-013/`](reports/final_validation/candidate/GW-EFF-013/), [`reports/final_validation/GW-EFF-015/phone_sm-m526b.md`](reports/final_validation/GW-EFF-015/phone_sm-m526b.md) | — | — | — |
+| [GW-EFF-014](research/experiments.md#gw-eff-014) | Phone candidate bundle and its equivalence check | done | passes Phase 17's tolerances: map 7.33e-06, logits 2.78e-04, 5,000 of 5,000 lines identical, page CER 24.321% against 24.320% | [`reports/final_validation/candidate/GW-EFF-014/`](reports/final_validation/candidate/GW-EFF-014/) | — | — | — |
+| [GW-EFF-015](research/experiments.md#gw-eff-015) | Android operator check, then the phone measurement on named devices | done | part a go on both phones; part b passed on both: SM-M526B `fused-single-line` 8,111.9 ms per page, 919.9 MiB; Moto G35 5G 10,987.5 ms, 409.0 MiB; network time only | [`reports/final_validation/GW-EFF-015/`](reports/final_validation/GW-EFF-015/) | — | — | failure note |
 
 ## Superseded results
 
