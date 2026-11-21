@@ -87,7 +87,7 @@ Rows link to a full entry below. Numbers are copied from generated reports only,
 | [GW-REC-035](#gw-rec-035) | 2026-10-30 | 13 | Phase 13 final, option B, seed 2024: GW-REC-024 with L5's rotation (trained only for option B) | done | val CER 6.28% [6.15, 6.42]; GLYPH-C mCE 3.53% | `reports/training/GW-REC-035/`, `reports/robustness/GW-REC-035.json` |
 | [GW-REC-036](#gw-rec-036) | 2026-10-30 | 13 | Phase 13 final, option B, seed 7: GW-REC-024 with L5's rotation (trained only for option B) | done | val CER 6.30% [6.17, 6.44]; GLYPH-C mCE 3.53% | `reports/training/GW-REC-036/`, `reports/robustness/GW-REC-036.json` |
 | [GW-DET-007](#gw-det-007) | 2026-10-30 | 13 | GW-DET-001 with labels for smaller text (min_text_size 3) and training rotation up to 30° (Phase 9's deferred fixes) | done | F1@0.5 0.7668 vs 0.7779 (−0.0111 [−0.0146, −0.0075]): not adopted | `reports/training/GW-DET-007/`, `reports/error_cases/detector/GW-DET-007/pair.json` |
-| [GW-DET-008](#gw-det-008) | 2026-11-22 | 23 | Detector smoke run from a clean clone on GW-DET-001's config | planned | — | — |
+| [GW-DET-008](#gw-det-008) | 2026-11-22 | 23 | Detector smoke run from a clean clone on GW-DET-001's config | done | passes: from a clean clone at `a457ad5`, 300 optimizer steps, resumed once from `last.pt` at step 150, all 6 logged losses finite, no diagnostic flag | `reports/training/GW-DET-008/`, `reports/training/smoke/phase23_smoke.md` |
 | [GW-REC-037](#gw-rec-037) | 2026-10-30 | 13 | Phase 13 ablation ladder (L0 to L5) and the final recognizer at the full budget | done | ladder L0 to L5 8.66 to 7.45%, L2 not kept; option B; final 6.29% vs 7.53% (−1.24 [−1.40, −1.11]) | `reports/ablation/` |
 | [GW-E2E-005](#gw-e2e-005) | 2026-11-14 | 13 | Line-confidence calibration of the frozen recognizer GW-REC-034, as GW-E2E-003 | done | ECE half B 0.214 → 0.089 at T = 2.35 (−0.125 [−0.130, −0.122]): adopted | `reports/calibration/GW-E2E-005/` |
 | [GW-E2E-006](#gw-e2e-006) | 2026-11-15 | 14 | The frozen v1 pipeline on HierText validation: Phase 14's reference | done | bag-of-lines page CER 27.57%, E2E F1 58.24% (all 1,715 validation pages) | `reports/external/` |
@@ -124,7 +124,7 @@ Rows link to a full entry below. Numbers are copied from generated reports only,
 | [GW-REC-043](#gw-rec-043) | 2026-11-18 | 22 | v1 re-run on the test crops | done | predictions identical to GW-REC-039 in all 5 sets; scored by GW-E2E-018 | `reports/final_validation/v1_rerun_outputs.json`, `reports/final_validation/GW-E2E-018/line_comparison.json` |
 | [GW-REC-044](#gw-rec-044) | 2026-11-18 | 22 | Phone candidate: validation gate on crops, against GW-REC-038 | done | met: line CER 6.507% for the candidate and for v1 on 74,500 lines | `reports/final_validation/candidate/validation_gate.json` |
 | [GW-REC-045](#gw-rec-045) | 2026-11-18 | 22 | Phone candidate on the test crops | done | one logged pass per set; strict CER HierText test 6.03%, GDC 4.17%, FUNSD 7.03%, GDC-scan 1.02%; IIIT5K alphanumeric word accuracy 91.47% | `reports/final_validation/candidate/results.md`, `reports/final_validation/candidate/prediction_hashes.json` |
-| [GW-REC-046](#gw-rec-046) | 2026-11-22 | 23 | Recognizer smoke run from a clean clone on GW-REC-034's config | planned | — | — |
+| [GW-REC-046](#gw-rec-046) | 2026-11-22 | 23 | Recognizer smoke run from a clean clone on GW-REC-034's config | done | passes: from a clean clone at `a457ad5`, 400 optimizer steps, resumed once from `last.pt` at step 200, all 8 logged losses finite, no diagnostic flag | `reports/training/GW-REC-046/`, `reports/training/smoke/phase23_smoke.md` |
 | [GW-EFF-013](#gw-eff-013) | 2026-11-18 | 22 | Phone candidate selection: `fused`, `fused-int8`, `fused-single-line` | done | selected `fused-single-line`: on the SM-M526B 8,111.9 ms per page and 919.9 MiB peak against `fused` 12,824.4 ms and 1,645.3 MiB; `fused-int8` met speed (8,522.2 ms) but peaked at 1,814.9 MiB | `reports/final_validation/candidate/GW-EFF-013/`, `reports/final_validation/GW-EFF-015/phone_sm-m526b.md` |
 | [GW-EFF-014](#gw-eff-014) | 2026-11-18 | 22 | Phone candidate bundle and its equivalence check | done | passes Phase 17's tolerances: map 7.33e-06, logits 2.78e-04, 5,000 of 5,000 lines identical, page CER 24.321% against 24.320% | `reports/final_validation/candidate/GW-EFF-014/` |
 | [GW-EFF-015](#gw-eff-015) | 2026-11-18 | 22 | Android operator check, then the phone measurement on named devices | done | part a go on both phones; part b passed on both: SM-M526B `fused-single-line` 8,111.9 ms per page, 919.9 MiB; Moto G35 5G 10,987.5 ms, 409.0 MiB; network time only | `reports/final_validation/GW-EFF-015/` |
@@ -1697,7 +1697,7 @@ Rows link to a full entry below. Numbers are copied from generated reports only,
 
 ### <a id="gw-det-008"></a>GW-DET-008 — Detector smoke run from a clean clone
 
-- **Date allocated / run:** 2026-11-22 / —
+- **Date allocated / run:** 2026-11-22 / 2026-11-22
 - **Phase:** 23
 - **Git commit:** the Phase 23 branch, in a clean clone   **Config:** GW-DET-001's config with a small `train.max_steps`   **Seed(s):** as GW-DET-001
 - **Dataset version(s):** as GW-DET-001
@@ -1707,8 +1707,8 @@ Rows link to a full entry below. Numbers are copied from generated reports only,
 - **Method:** in a clean clone with the main checkout's prepared data, `python train.py --config configs/det/gw-det-001.yaml --set experiment_id=GW-DET-008 --set train.max_steps=<N> --set paths.data_root=<data>`, then the same with `--resume checkpoints/GW-DET-008/last.pt` and a larger `train.max_steps`. Nothing is written under GW-DET-001's report folder; the run's report is copied to `reports/training/GW-DET-008/`.
 - **Variables:** none
 - **Control:** none
-- **Result:** — (planned)
-- **Interpretation:** —
+- **Result:** pass (`reports/training/smoke/phase23_smoke.md`, `reports/training/GW-DET-008/report.md`). In the same clean clone, `train.py` ran GW-DET-001's config under this ID to `train.max_steps` 150, which wrote `last.pt`, then resumed from it at step 150 and stopped at step 300 of the 98,544 the full schedule has. All 6 logged training losses are finite, falling from 7.6567 to 3.7686; no diagnostic flag was raised, and nothing was written under GW-DET-001's report folder. The full-validation pass on `last.pt` gives F1@0.5 0.0000 at 300 steps, as expected so early.
+- **Interpretation:** the detector's training pipeline starts, trains, checkpoints, resumes and reports from a clean clone, with the frozen v1 configuration and the ImageNet backbone from the data root. It says nothing about v1's accuracy, which came from the full budget.
 - **Limitations:** a few hundred steps: it shows the pipeline runs, not that it reproduces v1's training or accuracy.
 - **Next experiment:** none
 
@@ -2328,7 +2328,7 @@ Rows link to a full entry below. Numbers are copied from generated reports only,
 
 ### <a id="gw-rec-046"></a>GW-REC-046 — Recognizer smoke run from a clean clone
 
-- **Date allocated / run:** 2026-11-22 / —
+- **Date allocated / run:** 2026-11-22 / 2026-11-22
 - **Phase:** 23
 - **Git commit:** the Phase 23 branch, in a clean clone   **Config:** GW-REC-034's config with a small `train.max_steps`   **Seed(s):** as GW-REC-034
 - **Dataset version(s):** as GW-REC-034
@@ -2338,8 +2338,8 @@ Rows link to a full entry below. Numbers are copied from generated reports only,
 - **Method:** in a clean clone with the main checkout's prepared data, `python train.py --config configs/rec/gw-rec-034.yaml --set experiment_id=GW-REC-046 --set train.max_steps=<N> --set paths.data_root=<data>`, then the same with `--resume checkpoints/GW-REC-046/last.pt` and a larger `train.max_steps`. Nothing is written under GW-REC-034's report folder; the run's report is copied to `reports/training/GW-REC-046/`.
 - **Variables:** none
 - **Control:** none
-- **Result:** — (planned)
-- **Interpretation:** —
+- **Result:** pass (`reports/training/smoke/phase23_smoke.md`, `reports/training/GW-REC-046/report.md`). In a clean clone of the branch at `a457ad5` (clean tree), with the main checkout's prepared data, `train.py` ran GW-REC-034's config under this ID to `train.max_steps` 200, which wrote `last.pt`, then resumed from it at step 200 and stopped at step 400. All 8 logged training losses are finite, falling from 16.8869 to 7.3231; no diagnostic flag was raised, and nothing was written under GW-REC-034's report folder. No validation epoch was reached, so the report has no validation figures.
+- **Interpretation:** the recognizer's training pipeline starts, trains, checkpoints, resumes and reports from a clean clone, with the frozen v1 configuration. It says nothing about v1's accuracy, which came from the full budget.
 - **Limitations:** a few hundred steps: it shows the pipeline runs, not that it reproduces v1's training or accuracy.
 - **Next experiment:** GW-DET-008
 
