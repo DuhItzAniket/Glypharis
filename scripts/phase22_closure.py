@@ -116,7 +116,8 @@ def check_result_folder(folder: Path, lists: list[Path]) -> dict[str, Any]:
 
 
 def check_phase14_outputs(data: Path) -> dict[str, Any]:
-    entries = ps._read_outputs(data)["outputs"]
+    manifest = data / ps.OUTPUTS
+    entries = ps._read_outputs(data)["outputs"] if manifest.is_file() else []
     missing = []
     present = []
     for e in entries:
@@ -139,7 +140,7 @@ def check_phase14_outputs(data: Path) -> dict[str, Any]:
         "missing": missing,
         "unrecorded": len(unrecorded),
         "problem": problem,
-        "passed": not missing and not unrecorded and problem is None,
+        "passed": bool(entries) and not missing and not unrecorded and problem is None,
     }
 
 

@@ -295,7 +295,9 @@ _SOTA: Final = re.compile(
 )
 _BEST: Final = re.compile(r"\bbest\b", re.I)
 # Phase 22 has run (2026-11-21); only the release phase is still ahead.
-_LATER_PHASE: Final = re.compile(r"\bPhases?\s+(?:\d+\s*(?:,|and|or|to|-)\s*)*23\b")
+_LATER_PHASE: Final = re.compile(
+    r"\bPhases?\s+(?:\d+\s*(?:,\s*(?:and|or)?|and|or|to|through|&|/|-|\u2013|\u2014)\s*)*23\b"
+)
 _DONE: Final = re.compile(
     r"\b(?:passed|completed?|finished|confirmed|validated|verified|reproduced|released|published"
     r"|showed|shown|demonstrated|succeeded|ran|(?:was|were|been|has|have)\s+(?:run|done)"

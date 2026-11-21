@@ -161,3 +161,12 @@ def test_render_marks_a_failed_check() -> None:
     text = cl.render({"head": "abc", "date": "2026-11-21", "passed": False, "checks": checks})
     assert "**All checks: FAILED.**" in text
     assert "changed 1" in text and "| 22 | Phase 22 candidate test run | 1 |" in text
+
+
+def test_phase14_outputs_fail_without_a_manifest_or_entries(tmp_path: Path) -> None:
+    data = tmp_path / "data"
+    data.mkdir()
+    assert not cl.check_phase14_outputs(data)["passed"]
+    _manifest(data, [])
+    got = cl.check_phase14_outputs(data)
+    assert not got["passed"] and got["entries"] == 0
