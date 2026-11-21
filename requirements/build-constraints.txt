@@ -1,0 +1,7 @@
+# Build and check tools for the package job in CI and the release workflow (Phase 23).
+# Used as `pip install -c requirements/build-constraints.txt build twine` and as PIP_CONSTRAINT for
+# `python -m build`, so the isolated build environment gets the same setuptools.
+build==1.2.2.post1
+setuptools==84.2.1
+twine==6.2.0
+wheel==0.48.0

@@ -64,6 +64,9 @@ jobs:
       - name: Paper numbers trace to reports
         run: python scripts/trace_numbers.py --check
 
+      - name: Citation file is valid
+        run: python scripts/check_citation.py
+
       - name: Installed command (fresh environment)
         run: |
           glypharis-ocr --help
@@ -80,3 +83,78 @@ jobs:
           name: env-report-ci
           path: ci-env-report/
           if-no-files-found: ignore
+
+  package:
+    # Phase 23, items 3 and 5: build from a clean checkout, check what goes into the sdist and wheel,
+    # install the wheel with its dependencies in a fresh environment outside the checkout, and check
+    # what `git archive` (the Zenodo deposit) leaves out. Nothing is uploaded.
+    name: package build, clean-wheel install, git archive
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install the build tools (pinned)
+        run: |
+          python -m pip install --upgrade pip
+          pip install -c requirements/build-constraints.txt build twine
+
+      - name: Build the sdist and wheel from the clean checkout
+        env:
+          # The isolated build environment gets the pinned setuptools too.
+          PIP_CONSTRAINT: ${{ github.workspace }}/requirements/build-constraints.txt
+        run: |
+          test -z "$(git status --porcelain)"
+          python -m build --outdir dist/ .
+          ls -l dist/
+
+      - name: Twine check
+        run: twine check --strict dist/*
+
+      - name: Contents and metadata (no weights, no weight notices, the tree it was built from)
+        run: python scripts/check_wheel.py dist/*.whl dist/*.tar.gz
+
+      - name: git archive leaves out reports and the evaluation records
+        run: python scripts/check_git_archive.py --commit HEAD
+
+      - name: Install the wheel with its dependencies in a fresh environment
+        run: |
+          python -m venv "$RUNNER_TEMP/venv"
+          PY="$RUNNER_TEMP/venv/bin/python"
+          "$PY" -m pip install --upgrade pip
+          "$PY" -m pip install "torch==${TORCH_VERSION}" "torchvision==${TORCHVISION_VERSION}" \
+            --index-url https://download.pytorch.org/whl/cpu
+          "$PY" -m pip install dist/*.whl
+          "$PY" -m pip check
+
+      - name: Commands and a tiny-bundle read, from outside the checkout
+        working-directory: ${{ runner.temp }}
+        env:
+          GLYPHARIS_MODELS: ${{ runner.temp }}/models
+        run: |
+          BIN="$RUNNER_TEMP/venv/bin"
+          mkdir tiny && cd tiny
+          cp "$GITHUB_WORKSPACE/scripts/tiny_bundle_check.py" .
+          "$BIN/glypharis-ocr" --help
+          "$BIN/glypharis-serve" --help
+          "$BIN/python" -c "import glypharis, importlib.metadata as m; \
+            assert m.version('glypharis') == glypharis.__version__; \
+            print(glypharis.__version__, glypharis.__file__)"
+          # The core install holds none of the extras.
+          "$BIN/python" -c "import importlib.util as u; \
+            extra = [m for m in ('matplotlib', 'fontTools', 'pypdfium2', 'psutil', 'pynvml', 'onnx') \
+                     if u.find_spec(m)]; \
+            assert not extra, extra"
+          # Writing a bundle exports ONNX files, which needs the export extra; reading does not.
+          WHEEL="$(ls "$GITHUB_WORKSPACE"/dist/*.whl)"
+          "$BIN/python" -m pip install "${WHEEL}[export]"
+          "$BIN/python" tiny_bundle_check.py --out bundle --build-only --require-installed
+          "$BIN/python" tiny_bundle_check.py --bundle bundle/tiny-check --require-installed \
+            --block matplotlib fontTools pypdfium2 psutil pynvml onnx
