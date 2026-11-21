@@ -106,6 +106,8 @@ image ─▶ preprocessing ─▶ GLYPHARIS-Det (line detector) ─▶ crop + re
 | [Implementation plan](docs/IMPLEMENTATION_PLAN.md) | 24 phases with tasks, deliverables, exit criteria and deviations |
 | [Roadmap](docs/ROADMAP.md) | Milestones, versions, dependency graph, success criteria |
 | [Architecture](docs/ARCHITECTURE.md) | The system as built, and its public interface |
+| [Integration guide](docs/INTEGRATION.md) | Embedding GLYPHARIS in an application: install, model lookup, threads, server, errors |
+| [Release evidence](docs/RELEASE_EVIDENCE.md) | Each v1.0 release precondition mapped to its evidence, and the gaps still open |
 | [Experiment protocol](docs/EXPERIMENT_PROTOCOL.md) | Metrics, splits, statistics, diagnostics, leakage rules |
 | [Approach survey](research/approach_survey.md) | Alternatives considered and why this design was chosen |
 | [Risk register](docs/RISK_REGISTER.md) | Known risks and mitigations |
