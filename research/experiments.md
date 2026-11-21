@@ -118,7 +118,7 @@ Rows link to a full entry below. Numbers are copied from generated reports only,
 | [GW-E2E-019](#gw-e2e-019) | 2026-11-18 | 22 | Phone candidate: validation gate on pages, against GW-E2E-006 | done | met: page CER 27.575% and E2E F1 0.5824 for the candidate and for v1 on 1,715 pages | `reports/final_validation/candidate/validation_gate.json` |
 | [GW-E2E-020](#gw-e2e-020) | 2026-11-18 | 22 | Phone candidate on the test pages | done | one logged pass per set; HierText test page CER 25.16%, E2E F1 60.18%; GDC 22.35%, 69.36%; OmniDocBench order-aware CER 27.28% | `reports/final_validation/candidate/results.md`, `reports/final_validation/candidate/prediction_hashes.json` |
 | [GW-E2E-021](#gw-e2e-021) | 2026-11-18 | 22 | Phone candidate: the scoring pass and H11 | done | H11 met, six of six: on HierText test and GDC the candidate's line CER, page CER and E2E F1 equal v1's at the reported precision (GDC 4.17%, 22.35%, 69.36%); the source-document check met | `reports/final_validation/candidate/h11.md`, `reports/final_validation/candidate/results.md` |
-| [GW-E2E-022](#gw-e2e-022) | 2026-11-22 | 23 | Release rehearsal: the built wheel in a clean environment, the packed archive fetched from a local server, the package check against GW-E2E-006 | planned | — | — |
+| [GW-E2E-022](#gw-e2e-022) | 2026-11-22 | 23 | Release rehearsal: the built wheel in a clean environment, the packed archive fetched from a local server, the package check against GW-E2E-006 | done | passes: the archive (82,975,077 bytes) fetched into an empty folder; page CER 24.32% on both, difference 0.0 points; 16,835 of 16,835 lines identical; glypharis-check passed | `reports/package/GW-E2E-022.json`, `reports/package/GW-E2E-022_fetch.json` |
 | [GW-E2E-023](#gw-e2e-023) | 2026-11-22 | 23 | Verification of the published v1.0 release from a clean environment | planned | — | — |
 | [GW-REC-042](#gw-rec-042) | 2026-11-18 | 22 | v1 re-run rehearsal on HierText validation crops | done | passes: 10 point values, largest difference 0.0; 74,500 of 74,500 crops identical | `reports/final_validation/rehearsal.json` |
 | [GW-REC-043](#gw-rec-043) | 2026-11-18 | 22 | v1 re-run on the test crops | done | predictions identical to GW-REC-039 in all 5 sets; scored by GW-E2E-018 | `reports/final_validation/v1_rerun_outputs.json`, `reports/final_validation/GW-E2E-018/line_comparison.json` |
@@ -2226,7 +2226,7 @@ Rows link to a full entry below. Numbers are copied from generated reports only,
 
 ### <a id="gw-e2e-022"></a>GW-E2E-022 — Release rehearsal
 
-- **Date allocated / run:** 2026-11-22 / —
+- **Date allocated / run:** 2026-11-22 / 2026-11-22
 - **Phase:** 23
 - **Git commit:** the release-candidate commit   **Config:** `configs/final/glypharis_v1.yaml`   **Seed(s):** none
 - **Dataset version(s):** HierText validation, the 400 Phase 5 pages
@@ -2236,8 +2236,8 @@ Rows link to a full entry below. Numbers are copied from generated reports only,
 - **Method:** a fresh environment with the built wheel, every models folder, home and working directory new and temporary; the archive served by a local HTTP server and fetched with `glypharis.download_model(..., url=<local>)`, which still enforces the pinned size and hashes; then, from the checkout at the release-candidate commit, `scripts/package_check.py --config configs/det/gw-det-001.yaml --model <fetched bundle> --backend torch --threads 10 --v1 --expect-manifest-sha256 875357a6… --phase10 <GW-E2E-006's hiertext_val.jsonl> --reference-sha256 c8520576… --experiment GW-E2E-022 --out reports/package/GW-E2E-022.json`.
 - **Variables:** none
 - **Control:** GW-E2E-006
-- **Result:** — (planned)
-- **Interpretation:** —
+- **Result:** pass (`reports/package/GW-E2E-022.json`, `reports/package/GW-E2E-022_fetch.json`). The wheel built from the clean tree at `7a11267` (SHA-256 `a886499b…`) was installed in a new environment holding only it, with the locked third-party packages reused (PHASE_STATUS, Phase 23, amendments). `download_model` fetched the archive (82,975,077 bytes, SHA-256 `3b90c1c7…`) over HTTP from a local server into an empty models folder, with home folders empty, and its record shows the network fetch. `glypharis-check` passed: every model file matches the manifest, the manifest hash and the download record match the registry, and the sample page's 8 lines are read as expected. The package check (torch, 10 threads, `--v1`, v1 code equal to `v1-code`) gives page CER 24.32% for the package and for GW-E2E-006 on the 400 pages, difference 0.0 points, and 16,835 of 16,835 lines with the same text and box.
+- **Interpretation:** the packed archive, fetched and installed by the package as a user would get it, is the evaluated v1: it reads the validation pages line for line as the frozen pipeline did. What is left untested is the shipped address itself, which GW-E2E-023 uses after publication.
 - **Limitations:** validation pages only; one machine; the archive is served locally, so the shipped asset URL is first used in GW-E2E-023.
 - **Next experiment:** GW-E2E-023, after publication
 

@@ -11,10 +11,10 @@ Each ID links to its full entry. Key results are copied from the registry. The g
 | GW-BASE | 7 | 7 | 0 | 0 | 0 | 0 | 0 |
 | GW-REC | 46 | 41 | 1 | 1 | 2 | 1 | 0 |
 | GW-DET | 8 | 7 | 0 | 0 | 0 | 1 | 0 |
-| GW-E2E | 23 | 21 | 0 | 0 | 0 | 2 | 0 |
+| GW-E2E | 23 | 22 | 0 | 0 | 0 | 1 | 0 |
 | GW-DATA | 22 | 22 | 0 | 0 | 0 | 0 | 0 |
 | GW-EFF | 15 | 15 | 0 | 0 | 0 | 0 | 0 |
-| all | 121 | 113 | 1 | 1 | 2 | 4 | 0 |
+| all | 121 | 114 | 1 | 1 | 2 | 3 | 0 |
 
 ## Scope
 
@@ -34,9 +34,9 @@ Not attributed to one experiment: Phase 16 scoring, 0.00 CPU-hours over 2 jobs.
 
 48 registered experiments have no ledger row:
 
-- Abandoned, not run or planned (7): GW-REC-023, GW-REC-032, GW-REC-033, GW-REC-046, GW-DET-008, GW-E2E-022, GW-E2E-023
+- Abandoned, not run or planned (6): GW-REC-023, GW-REC-032, GW-REC-033, GW-REC-046, GW-DET-008, GW-E2E-023
 - In phases the ledger says it does not count (9, 10, 14, 15) (18): GW-REC-038, GW-REC-039, GW-REC-040, GW-REC-041, GW-DET-004, GW-DET-005, GW-DET-006, GW-E2E-001, GW-E2E-002, GW-E2E-003, GW-E2E-006, GW-E2E-007, GW-E2E-008, GW-E2E-009, GW-E2E-010, GW-EFF-001, GW-EFF-002, GW-EFF-005
-- Ran, with no ledger row; its note names neither them nor their phase (23): GW-REC-042, GW-REC-043, GW-REC-044, GW-REC-045, GW-E2E-004, GW-E2E-005, GW-E2E-011, GW-E2E-012, GW-E2E-013, GW-E2E-014, GW-E2E-015, GW-E2E-016, GW-E2E-017, GW-E2E-018, GW-E2E-019, GW-E2E-020, GW-E2E-021, GW-EFF-003, GW-EFF-004, GW-EFF-012, GW-EFF-013, GW-EFF-014, GW-EFF-015
+- Ran, with no ledger row; its note names neither them nor their phase (24): GW-REC-042, GW-REC-043, GW-REC-044, GW-REC-045, GW-E2E-004, GW-E2E-005, GW-E2E-011, GW-E2E-012, GW-E2E-013, GW-E2E-014, GW-E2E-015, GW-E2E-016, GW-E2E-017, GW-E2E-018, GW-E2E-019, GW-E2E-020, GW-E2E-021, GW-E2E-022, GW-EFF-003, GW-EFF-004, GW-EFF-012, GW-EFF-013, GW-EFF-014, GW-EFF-015
 
 ## Flags
 
@@ -258,7 +258,7 @@ Not attributed to one experiment: Phase 16 scoring, 0.00 CPU-hours over 2 jobs.
 |---|---|---|---|---|---|---|---|
 | [GW-REC-046](research/experiments.md#gw-rec-046) | Recognizer smoke run from a clean clone on GW-REC-034's config | planned | — | — | — | — | — |
 | [GW-DET-008](research/experiments.md#gw-det-008) | Detector smoke run from a clean clone on GW-DET-001's config | planned | — | — | — | — | — |
-| [GW-E2E-022](research/experiments.md#gw-e2e-022) | Release rehearsal: the built wheel in a clean environment, the packed archive fetched from a local server, the package check against GW-E2E-006 | planned | — | — | — | — | — |
+| [GW-E2E-022](research/experiments.md#gw-e2e-022) | Release rehearsal: the built wheel in a clean environment, the packed archive fetched from a local server, the package check against GW-E2E-006 | done | passes: the archive (82,975,077 bytes) fetched into an empty folder; page CER 24.32% on both, difference 0.0 points; 16,835 of 16,835 lines identical; glypharis-check passed | [`reports/package/GW-E2E-022.json`](reports/package/GW-E2E-022.json), [`reports/package/GW-E2E-022_fetch.json`](reports/package/GW-E2E-022_fetch.json) | — | — | — |
 | [GW-E2E-023](research/experiments.md#gw-e2e-023) | Verification of the published v1.0 release from a clean environment | planned | — | — | — | — | — |
 
 ## Superseded results
