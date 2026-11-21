@@ -8765,10 +8765,10 @@
      "directive": 5
     },
     "substitutions": 400,
-    "substitutions_escaped": 4,
-    "substitution_escape_rate": "1.0%",
+    "substitutions_escaped": 5,
+    "substitution_escape_rate": "1.2%",
     "substitutions_escaped_by_kind": {
-     "number": 4
+     "number": 5
     }
    }
   },

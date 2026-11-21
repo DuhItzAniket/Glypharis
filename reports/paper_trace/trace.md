@@ -11,7 +11,7 @@ Numbers copied from reports keep the licence terms of the data those reports des
 |---|---|---|---|---|---|---|---|---|---|
 | `research/paper/abstract_notes.md` | 100 | constant 4, derived 94, report 2 | directive 96, trace file 4 | 400 | 0 | 0.0% | 140 | 0 | 0.0% |
 | `research/paper/conclusion_notes.md` | 79 | constant 3, derived 74, report 2 | block 2, directive 74, trace file 3 | 400 | 0 | 0.0% | 99 | 0 | 0.0% |
-| `research/paper/efficiency.md` | 440 | constant 35, derived 60, label 9, manifest 1, report 24, table 311 | block 2, directive 403, trace file 35 | 400 | 5 | 1.2% | 400 | 4 | 1.0% |
+| `research/paper/efficiency.md` | 440 | constant 35, derived 60, label 9, manifest 1, report 24, table 311 | block 2, directive 403, trace file 35 | 400 | 5 | 1.2% | 400 | 5 | 1.2% |
 | `research/paper/error_analysis.md` | 1044 | constant 16, derived 125, interval 3, manifest 2, report 20, table 878 | block 1, directive 1027, trace file 16 | 400 | 3 | 0.8% | 400 | 0 | 0.0% |
 | `research/paper/experiments.md` | 398 | constant 21, derived 96, interval 12, label 2, manifest 7, report 43, table 217 | block 2, directive 374, section 1, trace file 21 | 400 | 3 | 0.8% | 400 | 0 | 0.0% |
 | `research/paper/introduction_notes.md` | 0 |  |  | 0 | 0 | 0.0% | 0 | 0 | 0.0% |

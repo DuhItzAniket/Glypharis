@@ -42,6 +42,12 @@ CC BY 2.0.
 - Phase 23 returns to this ADR before any weights are published.
 - ADR-0009's rule still governs training data for any new version.
 
+## Phase 23 registration (2026-11-22)
+Phase 23 returns to this ADR as its Consequences ask. The owner decided that the weights are
+packed and verified with the notices this ADR describes but are published only after the qualified
+advice named under Revisit if below, and that v1.0 is held until then rather than released without a model (PHASE_STATUS,
+Phase 23, D4). No weight file leaves this machine before then. Nothing in the terms above changes, and only `glypharis-v1` would ship (D7).
+
 ## Revisit if
 - The consumer application is to be sold, or the weights are to be published: take qualified advice on
   both points first.

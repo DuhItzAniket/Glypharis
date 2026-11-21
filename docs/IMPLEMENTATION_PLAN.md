@@ -2,9 +2,9 @@
 
 | | |
 |---|---|
-| Version | 1.2 (Phase 21: Phase 22 scope and §8 deviations added; execution order revised by ADR-0008) |
+| Version | 1.3 (Phase 23 registration, 2026-11-22: Phase 23 status, effort and three §8 deviations; 1.2 added the Phase 22 scope) |
 | Date | 2026-11-18 (first version 2026-10-10) |
-| Status | Phases 0 to 22 complete; Phase 23 not started ([PHASE_STATUS](PHASE_STATUS.md)) |
+| Status | Phases 0 to 22 complete; Phase 23 in progress (plan registered) ([PHASE_STATUS](PHASE_STATUS.md)) |
 | Companion docs | [ROADMAP](ROADMAP.md) · [ARCHITECTURE](ARCHITECTURE.md) · [EXPERIMENT_PROTOCOL](EXPERIMENT_PROTOCOL.md) · [RISK_REGISTER](RISK_REGISTER.md) · [DATASETS](../DATASETS.md) · [MODEL_CARD](../MODEL_CARD.md) · [EXPERIMENTS](../EXPERIMENTS.md) · [WORKFLOW](WORKFLOW.md) · [decisions/](decisions/) |
 
 This is the working plan for building GLYPHARIS: a lightweight document OCR engine (text-line detector +
@@ -459,6 +459,8 @@ Phases 0 to 21 have passed their gates, including the re-runs of 17, 18 and 20 o
   registered.
 
 ### Phase 23 — Release v1.0
+- **Status:** in progress, plan registered 2026-11-22. The plan, with the owner's decisions of
+  2026-11-22, is in [PHASE_STATUS](PHASE_STATUS.md), Phase 23.
 - **Preconditions:** tests and CI pass; training pipeline, inference and export verified; docs complete;
   model artifact verified (hash + equivalence).
 - **Tasks:** release notes, version bump, tagged GitHub release with the model artifact (or download script
@@ -485,7 +487,8 @@ Phases 0 to 21 have passed their gates, including the re-runs of 17, 18 and 20 o
     and documentation only: no datasets and nothing from the evaluation-only sets.
   - the owner creates the PyPI and Zenodo accounts and chooses the creator name shown on Zenodo,
     which is permanent.
-- **Effort:** 1 S.
+- **Effort:** 1 S as first planned; re-estimated at registration as about 66 h of session work plus
+  about 2 h of GPU, not counting the adviser, accounts and approvals (PHASE_STATUS, Phase 23).
 
 ---
 
@@ -493,6 +496,9 @@ Phases 0 to 21 have passed their gates, including the re-runs of 17, 18 and 20 o
 
 | Change | Why | Record |
 |---|---|---|
+| The code licence (Apache-2.0) is chosen in Phase 23 without waiting for patent advice | Owner decision of 2026-11-22: the repository has been public since 2026-10-09 | PHASE_STATUS Phase 23, D2 |
+| "Fetched on first use" is an explicit `glypharis.download_model` and a fetch by the two commands; `from_pretrained` never reaches the network | `from_pretrained` is a frozen v1 path, and a library should not make network calls inside a host application unasked | PHASE_STATUS Phase 23, D6 |
+| v1.0 is held until the weights can be published; no code-only release without a new owner decision | Owner decision of 2026-11-22: the weights wait for qualified advice (ADR-0014) | PHASE_STATUS Phase 23, D4 |
 | Added **GlyphSynth** (document-style synthetic data) next to SynthText | HierText and SynthText are scene-text-oriented; the target is document pages. Makes RQ2 a domain-vs-scale study. | ADR-0003 |
 | Recognizer works on **lines**, not words | Document text is line-structured; CTC handles long lines | ADR-0002 |
 | DocVQA demoted to reference-only | Its OCR transcriptions are machine-generated, not human ground truth | ADR-0005, DATASETS.md |

@@ -33,7 +33,7 @@ Phases run in the order set by [ADR-0008](decisions/ADR-0008-usable-engine-first
 | 20 | Production engineering | **COMPLETE** | `phase-20`, `v0.1` |
 | 21 | Research package | **COMPLETE** | `phase-21` |
 | 22 | Final validation | **COMPLETE** | `phase-22` |
-| 23 | Release v1.0 | not started | — |
+| 23 | Release v1.0 | in progress (plan registered) | — |
 
 ---
 
@@ -4609,3 +4609,287 @@ tag `phase-22` (merge re-created with the noreply identity; same tree and parent
 
 **CI status:** green on the branch, the pull request and `main` (run 44869669353).
 
+---
+
+## Phase 23 — Release v1.0
+
+**Status:** in progress (plan registered 2026-11-22). Nothing in this plan has been run, built or
+published yet. Opened on `phase/23-release` from `97f6cde`, the Phase 22 completion record on top of
+`main` at `b6f14a2` (tag `phase-22`). New modules, scripts and flags named here are proposals and do
+not exist yet.
+
+**Objective:** make v1 releasable and, only with the owner's go for each step, release it
+(`docs/IMPLEMENTATION_PLAN.md`, Phase 23):
+
+1. the code under a licence, packaged for PyPI as version 1.0.0, with release notes, a changelog and
+   a citation file;
+2. the v1 bundle packed into a verified release archive that the package fetches on first use, with
+   the notices its training data needs;
+3. a release workflow that builds, checks and drafts a release but cannot publish by itself;
+4. after the qualified advice, the wording changed to say what v1.0 distributes, then the release on
+   each channel the owner approves;
+5. the published release verified from a clean environment.
+
+**Known when this was written.** v1 is GW-REC-034 with GW-DET-001, frozen in the bundle
+`glypharis-v1` (manifest SHA-256 `875357a6…`, five files, about 85 MiB, git-ignored under
+`runs/release/`; its manifest's `version` is `glypharis_v1`). Phase 22 is complete: the walkthrough
+passed (GW-E2E-013), the v1 re-run gave Phase 14's predictions in every test file with the strict
+OmniDocBench verdict accepted as a disclosed limitation, and the phone candidate met H11 (GW-E2E-021).
+The repository has been public since 2026-10-09 with no licence. `pyproject.toml` (version
+`0.1.0.dev0`, Python `>=3.11,<3.12`) has no licence, author, URL or classifier fields and no lower bounds
+on its dependencies; CI never builds or installs a wheel; nothing downloads a GLYPHARIS bundle. ADR-0014 fixes the
+weights' intended terms (CC BY-SA 4.0, HierText and Open Images attribution, the ImageNet-initialised
+detector as a disclosed exception) and asks for qualified advice before the weights are published.
+
+**Owner decisions (2026-11-22).**
+
+| # | Decision |
+|---|---|
+| D1 | Phase 23 opens now on `phase/23-release`; the draft preparation plan is superseded by this one. |
+| D2 | **Code licence: Apache-2.0 now.** The owner chose not to wait for patent advice (the repository has been public since 2026-10-09). This changes the Phase 23 rule that the choice follows patent advice; recorded in IMPLEMENTATION_PLAN §8. |
+| D3 | Apache-2.0 covers the code and the project's own text. `NOTICE` names what it does not cover: HierText-derived images and tables in `reports/`, `MODEL_CARD.md` and `research/paper/` (CC BY-SA 4.0), the quoted GDC lines and word pairs (their sources' licences), the Gradle wrapper (third-party Apache-2.0), data records under `data/manifests`, and the weights. Datasets, evaluators, fonts and GDC-scan are not in the repository. |
+| D4 | **Weights: packed and verified now, published only after qualified advice** (ADR-0014). No weight file leaves this machine, not even to a draft release, until the owner confirms the advice and gives the go for the weights upload. v1.0 is held until then rather than released without a model; a code-only release would need a new owner decision. |
+| D5 | Zenodo receives code and documentation only: `reports/` and the evaluation manifests under `data/manifests` are excluded through `export-ignore`, checked with `git archive` before any deposit. Numbers in documents stay; the README says the full trace needs the tagged repository. |
+| D6 | "Fetched on first use" means an explicit `glypharis.download_model(name)` and a fetch by `glypharis-ocr` and `glypharis-serve` for registered names only. `from_pretrained` is not changed and never reaches the network. Recorded as a deviation. |
+| D7 | **Only `glypharis-v1` ships.** The phone candidate stays a documented result; no phone asset. |
+| D8 | **Channels: GitHub release with the archive, PyPI through Trusted Publishing, Zenodo DOI, each with its own go.** The owner creates the accounts, the protected GitHub environment `pypi` and the PyPI pending publisher, checks that the name `glypharis` is free, and chooses the creator name Zenodo shows (permanent, no email). Package `1.0.0`, tag `v1.0`; the workflow compares them as parsed versions. `model_version` stays `glypharis_v1`. |
+| D9 | Attribution is at dataset level; per-image credit is a question for the adviser, and no extra metadata is downloaded unless the advice requires it and the owner approves. |
+| D10 | No new prediction files are published. Outsiders get a small public check (item 9) with a plain statement of what it does not prove. |
+| D11 | Training-pipeline evidence: the existing tests and training reports, plus a short smoke run of each trainer from a clean clone (GW-REC-046, GW-DET-008), with their limits stated. |
+| D12 | The completion record goes on a small `phase/23-closeout` branch and pull request after publication, or after the owner records a deferral; it also carries the DOI if there is one and ticks the remaining ROADMAP criteria. |
+| D13 | Python is raised from `>=3.11,<3.12` to `>=3.11.4,<3.12` for v1.0: 3.11 is the only tested version, and safe tar extraction needs 3.11.4. Wider support is later work. |
+
+D1, D3, D5, D6 and D9 to D13 are the recommended defaults the owner accepted; D2, D4, D7 and D8 are
+the owner's answers of 2026-11-22.
+
+**Fixed rules**
+
+- **Nothing is published or uploaded without the owner's explicit go for that item:** the weights
+  asset (even to a draft release), GitHub releases, PyPI and TestPyPI uploads, Zenodo deposits, any
+  mirror. One approval does not extend to another; publishing the GitHub release is not the Zenodo
+  go. PyPI versions and Zenodo records are permanent, and no asset is replaced once published.
+- `assert_v1_code` must pass: nothing under `glypharis/pipeline`, `glypharis/models`,
+  `glypharis/export`, `glypharis/data` or `configs` changes, and no new file goes there. `from_pretrained`
+  and `find_bundle` stay as they are. The bundle files stay byte-identical (`875357a6…`).
+- No test set is read. Phase 23 is not a test phase; every check uses validation data or the sample
+  page of item 9.
+- No new metric value enters a document; release notes cite existing reports by experiment ID.
+- Download tests never touch the real `~/.glypharis/models` or `./models`: home, working directory
+  and `GLYPHARIS_MODELS` are all redirected to a temporary folder.
+- No personal paths, names or emails in tracked files, except the creator name the owner chooses for
+  `CITATION.cff` (D8) if the owner approves that one field. GDC-scan contributes nothing.
+- Commits follow `docs/WORKFLOW.md` §2. The owner merges every pull request.
+
+**Experiments** (entries in `research/experiments.md`, all `planned`)
+
+| ID | What | Data | Test access |
+|---|---|---|---|
+| GW-REC-046 | Recognizer smoke run from a clean clone on GW-REC-034's config, under its own ID | HierText train and validation | no |
+| GW-DET-008 | Detector smoke run from a clean clone on GW-DET-001's config, under its own ID | HierText train and validation | no |
+| GW-E2E-022 | Release rehearsal: the built wheel in a clean environment, the packed archive fetched from a local server, then the package check on the fetched bundle against GW-E2E-006 | 400 validation pages | no |
+| GW-E2E-023 | Verification of the published release from a clean environment (only after publication) | the same 400 validation pages | no |
+
+**Work items**
+
+*Part 1 — release-ready, on `phase/23-release` (pull request A). Nothing is published.*
+
+**1. Register this plan (this commit, about 2 h).** The plan, the experiment entries, the
+IMPLEMENTATION_PLAN status and §8 deviations (D2, D4, D6), and a note in ADR-0014 that Phase 23 has
+returned to it. *Pass rule:* CI green.
+
+**2. Model download, `glypharis/hub.py` (about 10 h).** A registry of name, URL, archive file name,
+bytes, archive SHA-256, manifest SHA-256, top-level folder and a `published` flag, which stays off
+until pull request B: while it is off, `download_model` refuses with "not yet published" before any
+network call, unless `url=` is given. `download_model(name, *,
+models_dir=None, offline=None, force=False, url=None)`. A name already found by `find_bundle` with the
+pinned manifest hash is returned with no network call, and one with another hash is refused, never
+overwritten. Offline (`GLYPHARIS_OFFLINE` or the argument) refuses before any network call. Otherwise,
+under a lock file: `download_file` to `<models_dir>/.downloads/<name>-<sha12>-<archive file name>` (it
+keeps its own `.part` while it resumes), the archive hash checked on the finished file (deleted on a
+mismatch), `extract_archive` into a staging folder on the same disk, `read_manifest` and the manifest
+pin checked, then one rename into place, with a small record of the verified archive hash and source
+beside the bundle; a process that loses the race checks the winner's bundle and discards its own. `url=` replaces only the address, for tests and the rehearsal; the size and both
+hashes are still enforced, so it cannot install unpinned bytes. Errors are a new `ModelDownloadError`
+under `ModelLoadError`. `glypharis/data/download.py` is reused, not edited. `glypharis-ocr` and
+`glypharis-serve` fetch a registered name that is missing unless `--no-download` or offline is set.
+*Pass rule:* local-server tests for truncated, corrupted, resumed, wrong-hash, wrong-manifest,
+shadowed-name, offline, URL-override and two-process cases pass, with home, working directory and
+`GLYPHARIS_MODELS` redirected.
+
+**3. Packaging and version 1.0.0 (about 7 h).** `pyproject.toml`: version `1.0.0` read from
+`glypharis.__version__` (`dynamic`), with a test that the installed metadata equals it;
+`requires-python = ">=3.11.4,<3.12"` (D13); SPDX `license = "Apache-2.0"` with explicit
+`license-files` (`LICENSE`, `NOTICE`), so no weight notice can enter the code packages; authors (the
+GitHub handle only; item 14 changes it to the creator name of D8 if the owner chooses another), URLs, classifiers, keywords; the
+setuptools floor PEP 639 needs; lower bounds on dependencies. The dependencies the frozen v1 import
+chain needs at import time stay core; only those it does not need (plotting, font, PDF, monitoring and
+ONNX-export tooling) move to extras, checked by a test that reads a page with core dependencies only.
+README: absolute links pinned to the tag, an install section, and the note on the full trace (D5).
+`MODEL_CARD.md`'s package-version row and the other `0.1.0.dev0` strings follow. A CI job builds the
+sdist and wheel from a clean checkout, runs `twine check --strict`, checks the contents (no weights, no
+weight notices, no stray files) and the metadata (`Requires-Python`, licence), and installs the wheel
+with its dependencies in a fresh environment outside the repository, where `glypharis-ocr --help` and a
+tiny-bundle read run. *Pass rule:* that job is green, and the wheel's `glypharis/` equals the tree it
+was built from.
+
+**4. Licence and project files (about 5 h).** `LICENSE` (Apache-2.0), `NOTICE` (D3), `CITATION.cff`
+(validated in CI; its author is the GitHub handle until item 14 sets the creator name the owner
+approves),
+`CHANGELOG.md` from the tags and phase records, and a release-notes draft under `docs/`, with results
+cited by experiment ID and no new numbers. *Pass rule:* the files agree with MODEL_CARD, DATASETS and
+ADR-0014, and `trace_numbers --check` passes.
+
+**5. Zenodo exclusion (about 2 h).** `export-ignore` in `.gitattributes` for `reports/` and the
+evaluation manifests under `data/manifests`, and a CI check that `git archive` of the commit leaves them
+out and keeps the code and documents. *Pass rule:* the check is green.
+
+**6. Release workflow, `.github/workflows/release.yml` (about 6 h).** Triggered only by manual dispatch
+(stage 1) and by a published release (stage 2); a tag push never publishes. Stage 1, with inputs
+`dry_run` (default on) and `tag` (required off dry run; on a dry run it is the would-be tag): all
+checks, the tag (without its `v`) equal to the package version as parsed versions, build from a clean checkout, `twine check`, the clean-wheel test, the `git archive`
+check; off dry run, it creates a **draft** GitHub release holding the code artefacts and their `SHA256SUMS`
+only. The model archive never comes from the runner. Stage 2, when the owner publishes the release by
+hand: the PyPI job, in the protected environment `pypi` with the owner as required reviewer, downloads
+the release's code artefacts, checks them against `SHA256SUMS` and uploads exactly those, through
+Trusted Publishing with no stored token; nothing is rebuilt. Actions pinned by commit SHA, `persist-credentials: false`,
+the least permissions per job, build tools pinned by a constraints file. *Pass rule:* `actionlint` and
+a unit test of the tag-version comparison pass on the branch; after merge A, a dry-run dispatch on
+`main` with the would-be tag `v1.0` builds and checks and creates nothing (item 13).
+
+**7. Packer and weight notices (about 7 h).** `scripts/pack_release.py` writes, outside every worktree,
+`glypharis-v1.tar.gz` with one top folder `glypharis-v1/`: the five bundle files byte for byte,
+`LICENSE-WEIGHTS` (CC BY-SA 4.0), `NOTICE.md` (ADR-0014's attribution, the changes made, the ImageNet
+disclosure, no warranty, never called cleared for commercial use) and `model_info.json` (training data,
+config, commit, metrics with experiment IDs, and a link to the model card at the tag). The archive holds
+no copy of the model card, so its hash does not depend on later document edits. Regular files only,
+fixed member order and timestamps, so the archive is reproducible; `glypharis-v1.tar.gz.sha256` beside it. The asset
+URL is fixed from the repository and the tag `v1.0`, and the archive's size and hash and the manifest
+hash go into the registry. If the advice changes the notices, the archive is packed again and the pin
+changed in pull request B. *Pass rule:* two packs give the same bytes; the archive extracts with
+`extract_archive` and passes `read_manifest` and the manifest pin.
+
+**8. Rehearsal, GW-E2E-022 (about 3 h).** In a fresh environment with the built wheel, with
+`models_dir`, `GLYPHARIS_MODELS`, home and working directory all pointed at new temporary folders: the
+archive served by a local HTTP server and fetched with `download_model(..., url=<local>)`, then from the
+checkout at the release-candidate commit (`--v1` checks it against `v1-code`):
+`scripts/package_check.py --config configs/det/gw-det-001.yaml --model <fetched bundle> --backend torch
+--threads 10 --v1 --expect-manifest-sha256 875357a6… --phase10 <GW-E2E-006's hiertext_val.jsonl>
+--reference-sha256 c8520576… --experiment GW-E2E-022 --out reports/package/GW-E2E-022.json`.
+*Pass rule:* as GW-E2E-011 and GW-E2E-013: page CER within 0.05 points, every line's text and box
+identical. The shipped URL itself is first used in item 16.
+
+**9. Outsider check (about 2 h).** One page the project renders itself from its own text in a font whose
+licence allows redistribution (named in `NOTICE`), with its expected output, shipped in the wheel, and `glypharis-check`: it checks the bundle's manifest hash and its download record against the
+registry and reads the page, printing that this shows the
+installed engine and weights are the released ones and says nothing about accuracy. *Pass rule:* it
+passes in the clean-wheel job on a tiny bundle through a test registry, and in the rehearsal on the
+real one.
+
+**10. Adviser brief (about 4 h).** From ADR-0014, for the owner to give to a qualified adviser: are the
+weights adapted material of HierText (CC BY-SA 4.0) and Open Images; how CC BY-SA 4.0 sits with the
+ImageNet-initialised detector and how to disclose it without adding a restriction; dataset-level or
+per-image credit (D9); whether Apache-2.0 for the code and CC BY-SA 4.0 for the weights sit together as
+D3 says. It also reconciles DATASETS ("the same terms would apply" to the fused build) with the Phase 22
+note that the exception does not automatically cover a released candidate. Kept under `docs/`. *Pass
+rule:* the owner has it.
+
+**11. Training smoke runs, GW-REC-046 and GW-DET-008 (about 1 h of session work and 2 h of GPU, on the
+owner's go for a GPU sitting).** In a clean clone, with the prepared data of the main checkout:
+`python train.py --config configs/rec/gw-rec-034.yaml --set experiment_id=GW-REC-046 --set
+train.max_steps=<N> --set paths.data_root=<data>`, then the same with `--resume
+checkpoints/GW-REC-046/last.pt` and a larger `train.max_steps`; the same for the detector on
+`configs/det/gw-det-001.yaml` as GW-DET-008. Nothing is written under the GW-REC-034 or GW-DET-001
+report folders; the runs' reports are copied into `reports/training/` under their own IDs. *Pass rule:*
+each run starts, trains, checkpoints, resumes once and writes its report with finite losses. It shows
+that the pipeline runs, not that it reproduces v1's training.
+
+**12. Evidence table and integration guide (about 6 h).** `docs/RELEASE_EVIDENCE.md`: every
+precondition of IMPLEMENTATION_PLAN Phase 23 and of the brief mapped to a report or a named gap. An
+integration guide with no application-specific code: upright page images, printed English text, CPU,
+the process-wide thread setting, the one-request server, the error codes, `download_model` and offline
+use, and storing `model_version` (`glypharis_v1`) with the manifest hash. Phone use is stated as not
+yet available. *Pass rule:* every row has evidence or a named gap.
+
+**13. Gate and merge A.** WORKFLOW's ten steps for this part, a push, CI green including the
+clean-wheel and `git archive` jobs, the owner's merge, then the dry-run dispatch of item 6 on `main`. No tag is set: `main` is release-ready, still
+says no weights are distributed, and publishes nothing.
+
+*Part 2 — the release, after the qualified advice, on `phase/23-release-final` (pull request B).*
+
+**14. Release wording (about 4 h).** Once the owner confirms the advice: ADR-0014's outcome recorded;
+the notices and archive packed again if the advice changed them (item 7); and the sentences that encode
+the pre-release state (about 21 tracked files: README, MODEL_CARD, DATASETS, ARCHITECTURE,
+IMPLEMENTATION_PLAN, ROADMAP, REPRODUCING, FINAL_VALIDATION, ADR-0009, ADR-0014, the paper notes,
+`research/experiments.md`), `scripts/experiment_summary.py`'s scope lines and the `trace_numbers`
+release lint and its tests changed together, to state what v1.0 distributes and under which terms; the
+registry's `published` flag is switched on. `research/research_log.md` is append-only. If the owner
+then defers the release, item 17 restores the pre-release wording and the flag. The owner approves `CITATION.cff`'s creator name. *Pass
+rule:* the three generated-file checks pass, no stale phrase is left, and CI is green. The owner merges
+B, and `v1.0` goes on that merge commit and is never moved.
+
+**15. Publish, each step on the owner's go (about 3 h).** (a) Stage 1 off dry run creates the draft
+release from the tag. (b) On the owner's go for the weights, `glypharis-v1.tar.gz` and
+`glypharis-v1.tar.gz.sha256` are uploaded to the draft from this machine (`gh release upload`, no
+overwrite), downloaded again with `gh release download` (a draft's assets are not public) and checked
+against the registry; this is the first time a weight file leaves the machine. (c) Zenodo: the
+owner switches the repository's Zenodo integration on only with a separate Zenodo go, after the
+`git archive` check has passed on `v1.0`; otherwise it stays off and any later deposit is made by hand.
+(d) The owner publishes the draft, which starts the PyPI job, approved again in the environment.
+*Stop if:* any check fails. No asset is replaced after publication.
+
+**16. Verify, GW-E2E-023 (about 2 h).** From a clean environment, with every models folder, home and
+working directory new and empty: `pip install glypharis==1.0.0`, `download_model` from the real asset
+(its download record must show a network fetch from the shipped URL), `glypharis-check`, and the package check as item 8. The Zenodo
+record, if made, is checked against the exclusion list. *Pass rule:* as item 8.
+
+**17. Close-out (about 2 h, D12).** `phase/23-closeout`: the completion record, the DOI in README and
+`CITATION.cff` if there is one, the ROADMAP criteria, and `phase-23` on its merge commit. If the owner
+defers the release, the close-out records which channels were deferred and why, and GW-E2E-023 closes as
+`not run`.
+
+**Order of work**
+
+| Step | Items | Waits for |
+|---|---|---|
+| 1 | 1 | — |
+| 2 | 2, 3, 4, 5, 10 | item 1 |
+| 3 | 6, 7, 8, 9 | items 2 to 5 (item 6 uses the checks of items 3 and 5; item 9 the registry of item 2) |
+| 4 | 11 | the owner's go for a GPU sitting |
+| 5 | 12, 13 | items 2 to 11; CI green; the owner's merge |
+| 6 | 14 | merge A, the qualified advice and the owner's go |
+| 7 | 15, 16 | merge B and the owner's go for each step |
+| 8 | 17 | publication, or the owner's recorded deferral |
+
+**Exit criteria** (IMPLEMENTATION_PLAN Phase 23)
+
+*Release-ready (merge A), publishing nothing:*
+
+1. Tests and CI green on the merge commit, including the clean-wheel and `git archive` jobs, and the
+   release workflow's dry run on `main` creates nothing.
+2. The evidence table covers training, inference, export and documentation, every number traced to an
+   experiment ID.
+3. The v1 bundle is byte-identical, `assert_v1_code` passes, and the packed archive passes its hash,
+   manifest and equivalence checks after a local fetch (GW-E2E-022).
+4. LICENSE, NOTICE, CITATION, CHANGELOG, release notes, version 1.0.0 and the model card agree, and
+   `trace_numbers --check` passes.
+5. D1 to D13 recorded, and the adviser brief with the owner.
+
+*Released (merge B and after), only with the owner's go for each item:*
+
+6. ADR-0014 revisited and its outcome recorded, or the owner's deferral recorded.
+7. `v1.0` published on each approved channel and verified from a clean environment (GW-E2E-023), or
+   recorded by the owner as deferred with the reason.
+8. The Zenodo archive, if made, matches the exclusion list, and the DOI is added afterwards.
+9. The completion record and the ROADMAP criteria (D12).
+
+**Effort (estimates).** About 66 h of session work (items 1 to 17 as listed) plus about 2 h of GPU for
+item 11. Not included: the adviser's answers, account setup and approval waits, which set the calendar.
+
+**Limits this plan cannot remove**
+
+- GDC, GDC-scan and the training data cannot be re-downloaded from the release; the weights carry
+  their training data's terms.
+- The weights wait for advice the project cannot produce itself.
+- Only Python 3.11 on the tested platforms; the package installs the default PyTorch build for the
+  platform, which may differ from the one v1 was evaluated with.
+- The phone candidate is not released, and no on-device reader exists.

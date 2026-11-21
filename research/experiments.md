@@ -87,6 +87,7 @@ Rows link to a full entry below. Numbers are copied from generated reports only,
 | [GW-REC-035](#gw-rec-035) | 2026-10-30 | 13 | Phase 13 final, option B, seed 2024: GW-REC-024 with L5's rotation (trained only for option B) | done | val CER 6.28% [6.15, 6.42]; GLYPH-C mCE 3.53% | `reports/training/GW-REC-035/`, `reports/robustness/GW-REC-035.json` |
 | [GW-REC-036](#gw-rec-036) | 2026-10-30 | 13 | Phase 13 final, option B, seed 7: GW-REC-024 with L5's rotation (trained only for option B) | done | val CER 6.30% [6.17, 6.44]; GLYPH-C mCE 3.53% | `reports/training/GW-REC-036/`, `reports/robustness/GW-REC-036.json` |
 | [GW-DET-007](#gw-det-007) | 2026-10-30 | 13 | GW-DET-001 with labels for smaller text (min_text_size 3) and training rotation up to 30° (Phase 9's deferred fixes) | done | F1@0.5 0.7668 vs 0.7779 (−0.0111 [−0.0146, −0.0075]): not adopted | `reports/training/GW-DET-007/`, `reports/error_cases/detector/GW-DET-007/pair.json` |
+| [GW-DET-008](#gw-det-008) | 2026-11-22 | 23 | Detector smoke run from a clean clone on GW-DET-001's config | planned | — | — |
 | [GW-REC-037](#gw-rec-037) | 2026-10-30 | 13 | Phase 13 ablation ladder (L0 to L5) and the final recognizer at the full budget | done | ladder L0 to L5 8.66 to 7.45%, L2 not kept; option B; final 6.29% vs 7.53% (−1.24 [−1.40, −1.11]) | `reports/ablation/` |
 | [GW-E2E-005](#gw-e2e-005) | 2026-11-14 | 13 | Line-confidence calibration of the frozen recognizer GW-REC-034, as GW-E2E-003 | done | ECE half B 0.214 → 0.089 at T = 2.35 (−0.125 [−0.130, −0.122]): adopted | `reports/calibration/GW-E2E-005/` |
 | [GW-E2E-006](#gw-e2e-006) | 2026-11-15 | 14 | The frozen v1 pipeline on HierText validation: Phase 14's reference | done | bag-of-lines page CER 27.57%, E2E F1 58.24% (all 1,715 validation pages) | `reports/external/` |
@@ -117,10 +118,13 @@ Rows link to a full entry below. Numbers are copied from generated reports only,
 | [GW-E2E-019](#gw-e2e-019) | 2026-11-18 | 22 | Phone candidate: validation gate on pages, against GW-E2E-006 | done | met: page CER 27.575% and E2E F1 0.5824 for the candidate and for v1 on 1,715 pages | `reports/final_validation/candidate/validation_gate.json` |
 | [GW-E2E-020](#gw-e2e-020) | 2026-11-18 | 22 | Phone candidate on the test pages | done | one logged pass per set; HierText test page CER 25.16%, E2E F1 60.18%; GDC 22.35%, 69.36%; OmniDocBench order-aware CER 27.28% | `reports/final_validation/candidate/results.md`, `reports/final_validation/candidate/prediction_hashes.json` |
 | [GW-E2E-021](#gw-e2e-021) | 2026-11-18 | 22 | Phone candidate: the scoring pass and H11 | done | H11 met, six of six: on HierText test and GDC the candidate's line CER, page CER and E2E F1 equal v1's at the reported precision (GDC 4.17%, 22.35%, 69.36%); the source-document check met | `reports/final_validation/candidate/h11.md`, `reports/final_validation/candidate/results.md` |
+| [GW-E2E-022](#gw-e2e-022) | 2026-11-22 | 23 | Release rehearsal: the built wheel in a clean environment, the packed archive fetched from a local server, the package check against GW-E2E-006 | planned | — | — |
+| [GW-E2E-023](#gw-e2e-023) | 2026-11-22 | 23 | Verification of the published v1.0 release from a clean environment | planned | — | — |
 | [GW-REC-042](#gw-rec-042) | 2026-11-18 | 22 | v1 re-run rehearsal on HierText validation crops | done | passes: 10 point values, largest difference 0.0; 74,500 of 74,500 crops identical | `reports/final_validation/rehearsal.json` |
 | [GW-REC-043](#gw-rec-043) | 2026-11-18 | 22 | v1 re-run on the test crops | done | predictions identical to GW-REC-039 in all 5 sets; scored by GW-E2E-018 | `reports/final_validation/v1_rerun_outputs.json`, `reports/final_validation/GW-E2E-018/line_comparison.json` |
 | [GW-REC-044](#gw-rec-044) | 2026-11-18 | 22 | Phone candidate: validation gate on crops, against GW-REC-038 | done | met: line CER 6.507% for the candidate and for v1 on 74,500 lines | `reports/final_validation/candidate/validation_gate.json` |
 | [GW-REC-045](#gw-rec-045) | 2026-11-18 | 22 | Phone candidate on the test crops | done | one logged pass per set; strict CER HierText test 6.03%, GDC 4.17%, FUNSD 7.03%, GDC-scan 1.02%; IIIT5K alphanumeric word accuracy 91.47% | `reports/final_validation/candidate/results.md`, `reports/final_validation/candidate/prediction_hashes.json` |
+| [GW-REC-046](#gw-rec-046) | 2026-11-22 | 23 | Recognizer smoke run from a clean clone on GW-REC-034's config | planned | — | — |
 | [GW-EFF-013](#gw-eff-013) | 2026-11-18 | 22 | Phone candidate selection: `fused`, `fused-int8`, `fused-single-line` | done | selected `fused-single-line`: on the SM-M526B 8,111.9 ms per page and 919.9 MiB peak against `fused` 12,824.4 ms and 1,645.3 MiB; `fused-int8` met speed (8,522.2 ms) but peaked at 1,814.9 MiB | `reports/final_validation/candidate/GW-EFF-013/`, `reports/final_validation/GW-EFF-015/phone_sm-m526b.md` |
 | [GW-EFF-014](#gw-eff-014) | 2026-11-18 | 22 | Phone candidate bundle and its equivalence check | done | passes Phase 17's tolerances: map 7.33e-06, logits 2.78e-04, 5,000 of 5,000 lines identical, page CER 24.321% against 24.320% | `reports/final_validation/candidate/GW-EFF-014/` |
 | [GW-EFF-015](#gw-eff-015) | 2026-11-18 | 22 | Android operator check, then the phone measurement on named devices | done | part a go on both phones; part b passed on both: SM-M526B `fused-single-line` 8,111.9 ms per page, 919.9 MiB; Moto G35 5G 10,987.5 ms, 409.0 MiB; network time only | `reports/final_validation/GW-EFF-015/` |
@@ -1691,6 +1695,23 @@ Rows link to a full entry below. Numbers are copied from generated reports only,
 - **Next experiment:** the frozen configuration
 - **Training time:** 7.51 GPU-hours (RTX 4050 Laptop)
 
+### <a id="gw-det-008"></a>GW-DET-008 — Detector smoke run from a clean clone
+
+- **Date allocated / run:** 2026-11-22 / —
+- **Phase:** 23
+- **Git commit:** the Phase 23 branch, in a clean clone   **Config:** GW-DET-001's config with a small `train.max_steps`   **Seed(s):** as GW-DET-001
+- **Dataset version(s):** as GW-DET-001
+- **Hardware:** RTX 4050 Laptop 6 GB
+- **Research question:** does the detector's training pipeline run from a clean clone: start, train, checkpoint, resume and report?
+- **Hypothesis (written before the run):** none; pass rule in `docs/PHASE_STATUS.md`, Phase 23, item 11.
+- **Method:** in a clean clone with the main checkout's prepared data, `python train.py --config configs/det/gw-det-001.yaml --set experiment_id=GW-DET-008 --set train.max_steps=<N> --set paths.data_root=<data>`, then the same with `--resume checkpoints/GW-DET-008/last.pt` and a larger `train.max_steps`. Nothing is written under GW-DET-001's report folder; the run's report is copied to `reports/training/GW-DET-008/`.
+- **Variables:** none
+- **Control:** none
+- **Result:** — (planned)
+- **Interpretation:** —
+- **Limitations:** a few hundred steps: it shows the pipeline runs, not that it reproduces v1's training or accuracy.
+- **Next experiment:** none
+
 ### <a id="gw-rec-037"></a>GW-REC-037 — Phase 13: ablation ladder and final recognizer
 
 - **Date allocated / run:** 2026-10-30 / 2026-11-14
@@ -2203,6 +2224,40 @@ Rows link to a full entry below. Numbers are copied from generated reports only,
 - **Limitations:** every set and metric outside H11's six tests is descriptive; the results sit beside v1's and replace none of them; one scoring pass, enforced by its `pass.json`. Logged access: 14 scoring rows (10 candidate, 4 v1).
 - **Next experiment:** none in Phase 22; release is Phase 23
 
+### <a id="gw-e2e-022"></a>GW-E2E-022 — Release rehearsal
+
+- **Date allocated / run:** 2026-11-22 / —
+- **Phase:** 23
+- **Git commit:** the release-candidate commit   **Config:** `configs/final/glypharis_v1.yaml`   **Seed(s):** none
+- **Dataset version(s):** HierText validation, the 400 Phase 5 pages
+- **Hardware:** laptop CPU
+- **Research question:** does the package installed from its wheel, with the bundle fetched from the packed release archive, read the pages exactly as the evaluated v1 did?
+- **Hypothesis (written before the run):** none; pass rule in `docs/PHASE_STATUS.md`, Phase 23, item 8.
+- **Method:** a fresh environment with the built wheel, every models folder, home and working directory new and temporary; the archive served by a local HTTP server and fetched with `glypharis.download_model(..., url=<local>)`, which still enforces the pinned size and hashes; then, from the checkout at the release-candidate commit, `scripts/package_check.py --config configs/det/gw-det-001.yaml --model <fetched bundle> --backend torch --threads 10 --v1 --expect-manifest-sha256 875357a6… --phase10 <GW-E2E-006's hiertext_val.jsonl> --reference-sha256 c8520576… --experiment GW-E2E-022 --out reports/package/GW-E2E-022.json`.
+- **Variables:** none
+- **Control:** GW-E2E-006
+- **Result:** — (planned)
+- **Interpretation:** —
+- **Limitations:** validation pages only; one machine; the archive is served locally, so the shipped asset URL is first used in GW-E2E-023.
+- **Next experiment:** GW-E2E-023, after publication
+
+### <a id="gw-e2e-023"></a>GW-E2E-023 — Verification of the published release
+
+- **Date allocated / run:** 2026-11-22 / —
+- **Phase:** 23
+- **Git commit:** tag `v1.0`   **Config:** `configs/final/glypharis_v1.yaml`   **Seed(s):** none
+- **Dataset version(s):** HierText validation, the 400 Phase 5 pages
+- **Hardware:** laptop CPU
+- **Research question:** does the published package, with the bundle fetched from the published asset, read the pages exactly as the evaluated v1 did?
+- **Hypothesis (written before the run):** none; pass rule in `docs/PHASE_STATUS.md`, Phase 23, item 16.
+- **Method:** `pip install glypharis==1.0.0` in a fresh environment with every models folder, home and working directory new and empty, `glypharis.download_model("glypharis-v1")` from the release asset (its download record must show a network fetch from the shipped URL), the archive and manifest hashes, `glypharis-check`, then the package check as GW-E2E-022.
+- **Variables:** none
+- **Control:** GW-E2E-006
+- **Result:** — (planned)
+- **Interpretation:** —
+- **Limitations:** run only after the owner publishes; validation pages only. If the owner defers the release, it closes as `not run` with the reason.
+- **Next experiment:** none
+
 ### <a id="gw-rec-042"></a>GW-REC-042 — v1 re-run rehearsal on validation crops
 
 - **Date allocated / run:** 2026-11-18 / 2026-11-18
@@ -2270,6 +2325,23 @@ Rows link to a full entry below. Numbers are copied from generated reports only,
 - **Interpretation:** the candidate's crop results sit beside GW-REC-039's and replace none of them.
 - **Limitations:** a new version, not v1. No latency claim comes from this run. GDC-scan numbers only. Not run if the operator check, the bundle check or the validation gate fails.
 - **Next experiment:** GW-E2E-021
+
+### <a id="gw-rec-046"></a>GW-REC-046 — Recognizer smoke run from a clean clone
+
+- **Date allocated / run:** 2026-11-22 / —
+- **Phase:** 23
+- **Git commit:** the Phase 23 branch, in a clean clone   **Config:** GW-REC-034's config with a small `train.max_steps`   **Seed(s):** as GW-REC-034
+- **Dataset version(s):** as GW-REC-034
+- **Hardware:** RTX 4050 Laptop 6 GB
+- **Research question:** does the recognizer's training pipeline run from a clean clone: start, train, checkpoint, resume and report?
+- **Hypothesis (written before the run):** none; pass rule in `docs/PHASE_STATUS.md`, Phase 23, item 11.
+- **Method:** in a clean clone with the main checkout's prepared data, `python train.py --config configs/rec/gw-rec-034.yaml --set experiment_id=GW-REC-046 --set train.max_steps=<N> --set paths.data_root=<data>`, then the same with `--resume checkpoints/GW-REC-046/last.pt` and a larger `train.max_steps`. Nothing is written under GW-REC-034's report folder; the run's report is copied to `reports/training/GW-REC-046/`.
+- **Variables:** none
+- **Control:** none
+- **Result:** — (planned)
+- **Interpretation:** —
+- **Limitations:** a few hundred steps: it shows the pipeline runs, not that it reproduces v1's training or accuracy.
+- **Next experiment:** GW-DET-008
 
 ### <a id="gw-eff-013"></a>GW-EFF-013 — Phone candidate selection
 
