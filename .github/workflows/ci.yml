@@ -158,3 +158,11 @@ jobs:
           "$BIN/python" tiny_bundle_check.py --out bundle --build-only --require-installed
           "$BIN/python" tiny_bundle_check.py --bundle bundle/tiny-check --require-installed \
             --block matplotlib fontTools pypdfium2 psutil pynvml onnx
+          # The outsider check's plumbing on the tiny bundle (it reads no line of the page).
+          cp "$GITHUB_WORKSPACE/scripts/make_sample_page.py" .
+          PAGE="$("$BIN/python" -c 'import glypharis.check as c; print(c.SAMPLE_PAGE)')"
+          "$BIN/python" make_sample_page.py expected --model bundle/tiny-check --name tiny-check \
+            --threads 1 --page "$PAGE" --out expected.json
+          "$BIN/python" make_sample_page.py registry --model bundle/tiny-check --out registry.json
+          "$BIN/glypharis-check" --model tiny-check --models-dir bundle --threads 1 \
+            --registry registry.json --expected expected.json

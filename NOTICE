@@ -59,6 +59,7 @@ Not in this repository
   released.
 - Datasets, the official evaluators, fonts and the GDC-scan document are not in the repository.
   Their sources and terms are recorded in DATASETS.md.
+- glypharis/sample/page.png is set in Open Sans (SIL OFL 1.1); the font file is not included.
 
 DATASETS.md, MODEL_CARD.md and ADR-0014 record what the publishers state and how the project
 handled it. They are not legal advice.

@@ -4885,6 +4885,18 @@ defers the release, the close-out records which channels were deferred and why, 
 **Effort (estimates).** About 66 h of session work (items 1 to 17 as listed) plus about 2 h of GPU for
 item 11. Not included: the adviser's answers, account setup and approval waits, which set the calendar.
 
+**Amendments (2026-11-22, before any rehearsal result).**
+
+- *Item 7:* `model_info.json` holds no metric values. It names the experiment IDs and links the model
+  card at the tag, which holds the metrics, so the archive's hash does not depend on document edits and
+  the two can never disagree.
+- *Item 8:* the rehearsal environment holds only the built wheel and reuses the locked third-party
+  packages already on this machine instead of downloading them again (about 2.6 GiB). A clean install
+  with the dependencies resolved from the indexes is what the CI job `package` does on every push.
+- *Items 8 and 16:* both run through `scripts/release_rehearsal.py`, which refuses unless `glypharis` is
+  imported from outside the checkout and the models and home folders are empty, records the installed
+  package's RECORD hash, and runs the installed `glypharis-check` and then `scripts/package_check.py`.
+
 **Limits this plan cannot remove**
 
 - GDC, GDC-scan and the training data cannot be re-downloaded from the release; the weights carry

@@ -15,8 +15,9 @@ For a wheel:
 - every member matches its line in ``RECORD``;
 - the metadata: ``Name`` glypharis, ``Version`` equal to ``glypharis/__init__.py`` (or
   ``--version``), ``Requires-Python`` ``>=3.11.4,<3.12``, ``License-Expression`` ``Apache-2.0``
-  with ``License-File`` LICENSE and NOTICE, no ``License ::`` classifier, and both commands in
-  ``entry_points.txt``.
+  with ``License-File`` LICENSE and NOTICE, no ``License ::`` classifier, and the commands in
+  ``entry_points.txt`` (``glypharis-check``, with its sample page and expected output under
+  ``glypharis/sample/``, whenever ``glypharis/check.py`` is in the wheel).
 
 For an sdist (``.tar.gz``): one top folder ``glypharis-<version>/``, regular files only, no weight
 file or weight notice, ``PKG-INFO`` with the same metadata rules, ``LICENSE``, ``NOTICE`` and
@@ -46,7 +47,11 @@ NAME = "glypharis"
 REQUIRES_PYTHON = frozenset({">=3.11.4", "<3.12"})
 LICENSE_EXPRESSION = "Apache-2.0"
 LICENSE_FILES = frozenset({"LICENSE", "NOTICE"})
-COMMANDS = ("glypharis-ocr", "glypharis-serve")
+COMMANDS = ("glypharis-ocr", "glypharis-serve", "glypharis-check")
+# glypharis-check and the package data it reads are required once its module is in the package.
+CHECK_COMMAND = "glypharis-check"
+CHECK_MODULE = f"{NAME}/check.py"
+SAMPLE_FILES = (f"{NAME}/sample/page.png", f"{NAME}/sample/expected.json")
 # Nothing with these suffixes or names may enter a code package.
 FORBIDDEN_SUFFIXES = frozenset(
     {".pt", ".pth", ".ckpt", ".onnx", ".safetensors", ".npz", ".lmdb", ".pyc", ".pyo"}
@@ -146,6 +151,16 @@ def _record_hash(data: bytes) -> str:
     return "sha256=" + digest.decode("ascii")
 
 
+def _missing_sample(files: dict[str, bytes], label: str) -> list[str]:
+    """The sample files glypharis-check reads, when its module is among ``files`` but they are
+    not."""
+    if CHECK_MODULE not in files:
+        return []
+    return [
+        f"{label}: has {CHECK_MODULE} but no {name}" for name in SAMPLE_FILES if name not in files
+    ]
+
+
 def check_wheel(path: Path, version: str, tree: dict[str, bytes] | None) -> list[str]:
     label = path.name
     want_name = f"{NAME}-{version}-py3-none-any.whl"
@@ -171,9 +186,13 @@ def check_wheel(path: Path, version: str, tree: dict[str, bytes] | None) -> list
         meta = email.parser.BytesParser().parsebytes(info["METADATA"])
         problems += check_metadata(meta, version, label)
     entry_points = info.get("entry_points.txt", b"").decode("utf-8")
+    has_check = CHECK_MODULE in package
     for command in COMMANDS:
+        if command == CHECK_COMMAND and not has_check:
+            continue
         if not re.search(rf"^{re.escape(command)}\s*=", entry_points, re.M):
             problems.append(f"{label}: entry_points.txt has no {command}")
+    problems += _missing_sample(package, label)
     if "RECORD" in info:
         rows = {r[0]: r[1] for r in csv.reader(io.StringIO(info["RECORD"].decode("utf-8"))) if r}
         for name, content in data.items():
@@ -212,6 +231,7 @@ def check_sdist(path: Path, version: str, tree: dict[str, bytes] | None) -> list
     for name in ("PKG-INFO", "pyproject.toml", *sorted(LICENSE_FILES)):
         if name not in files:
             problems.append(f"{label}: has no {name}")
+    problems += _missing_sample(files, label)
     if "PKG-INFO" in files:
         meta = email.parser.BytesParser().parsebytes(files["PKG-INFO"])
         problems += check_metadata(meta, version, label)

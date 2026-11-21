@@ -84,12 +84,17 @@ Changelog = "https://github.com/DuhItzAniket/Glypharis/blob/main/CHANGELOG.md"
 [project.scripts]
 glypharis-ocr = "glypharis.cli:main"
 glypharis-serve = "glypharis.server:main"
+glypharis-check = "glypharis.check:main"
 
 [tool.setuptools.dynamic]
 version = { attr = "glypharis.__version__" }
 
 [tool.setuptools.packages.find]
 include = ["glypharis*"]
+
+[tool.setuptools.package-data]
+# The sample page and its expected output that glypharis-check reads (Phase 23, item 9).
+glypharis = ["sample/page.png", "sample/expected.json", "sample/README.md"]
 
 [tool.ruff]
 line-length = 100
