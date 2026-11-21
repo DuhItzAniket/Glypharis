@@ -4,7 +4,7 @@
 |---|---|
 | Version | 1.2 (Phase 21: Phase 22 scope and §8 deviations added; execution order revised by ADR-0008) |
 | Date | 2026-11-18 (first version 2026-10-10) |
-| Status | Phases 0 to 21 complete; Phase 22 results written, gate open (push, CI, the owner's merge); Phase 23 not started ([PHASE_STATUS](PHASE_STATUS.md)) |
+| Status | Phases 0 to 22 complete; Phase 23 not started ([PHASE_STATUS](PHASE_STATUS.md)) |
 | Companion docs | [ROADMAP](ROADMAP.md) · [ARCHITECTURE](ARCHITECTURE.md) · [EXPERIMENT_PROTOCOL](EXPERIMENT_PROTOCOL.md) · [RISK_REGISTER](RISK_REGISTER.md) · [DATASETS](../DATASETS.md) · [MODEL_CARD](../MODEL_CARD.md) · [EXPERIMENTS](../EXPERIMENTS.md) · [WORKFLOW](WORKFLOW.md) · [decisions/](decisions/) |
 
 This is the working plan for building GLYPHARIS: a lightweight document OCR engine (text-line detector +
@@ -424,9 +424,8 @@ Phases 0 to 21 have passed their gates, including the re-runs of 17, 18 and 20 o
 - **Effort:** 2–3 S.
 
 ### Phase 22 — Final validation
-- **Status:** results written 2026-11-21; gate open (push, CI, the owner's merge). Final validation
-  (Phase 22) has been run; the record is [FINAL_VALIDATION](FINAL_VALIDATION.md) and the plan and
-  closure are in [PHASE_STATUS](PHASE_STATUS.md), Phase 22.
+- **Status:** COMPLETE 2026-11-21 (tag `phase-22`). The record is [FINAL_VALIDATION](FINAL_VALIDATION.md)
+  and the plan and closure are in [PHASE_STATUS](PHASE_STATUS.md), Phase 22.
 - **Tasks:**
   1. Clean-machine-style run: fresh clone → install → download → prepare → load model → infer → evaluate;
      record every manual step.

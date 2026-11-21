@@ -8,8 +8,8 @@ recognizer GW-REC-034, detector GW-DET-001, read from the model bundle with mani
 evaluated is tag `phase14-eval`; tag `v1-code` differs from it only in docstrings, comments and the
 default bundle name (`reports/export/v1-code/code_diff.json`).
 
-Final validation (Phase 22) has been run; its record is `docs/FINAL_VALIDATION.md`. Its phase gate is
-still open. No weights are distributed; release is Phase 23.
+Final validation (Phase 22) is complete (tag `phase-22`); its record is `docs/FINAL_VALIDATION.md`.
+No weights are distributed; release is Phase 23.
 
 Settings below come from the freeze record and the configs it names. Measured values carry their
 experiment ID and report. Results on the evaluation sets are in [MODEL_CARD.md](../MODEL_CARD.md) and

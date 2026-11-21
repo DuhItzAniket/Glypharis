@@ -10,8 +10,8 @@ traces back to a generated report.
 
 > **Status: v1 evaluated and packaged, not released.** Phases 0 to 21 are complete, including the export,
 > package and hardening re-runs on the final model and the research package (Phase 21).
-> Final validation (Phase 22) has been run; its record is `docs/FINAL_VALIDATION.md`. Its phase gate is
-> still open. No weights are distributed; release is Phase 23.
+> Final validation (Phase 22) is complete (tag `phase-22`); its record is `docs/FINAL_VALIDATION.md`.
+> No weights are distributed; release is Phase 23.
 > `v0.1` is the earlier usable engine ([ADR-0008](docs/decisions/ADR-0008-usable-engine-first.md)).
 > See [docs/PHASE_STATUS.md](docs/PHASE_STATUS.md) for what is done and every number behind it, and
 > [MODEL_CARD.md](MODEL_CARD.md) for what v1 is, how it measured and where it fails.

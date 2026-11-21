@@ -91,8 +91,8 @@ Checks before committing: `ruff check .`, `ruff format --check .`, `mypy`, `pyte
 `python scripts/validate_configs.py`. CI runs the same steps on Linux with the CPU build of the same torch
 version (`.github/workflows/ci.yml`). The clean-environment install of the package was checked in the
 Phase 18 re-run (`docs/PHASE_STATUS.md`). The walkthrough from a fresh clone passed in Phase 22
-(GW-E2E-013, [FINAL_VALIDATION](FINAL_VALIDATION.md) section 1). Final validation (Phase 22) has been
-run; its gate (push, CI, the owner's merge) is still open.
+(GW-E2E-013, [FINAL_VALIDATION](FINAL_VALIDATION.md) section 1). Final validation (Phase 22) is
+complete (tag `phase-22`).
 
 ### PyTorch build decision
 

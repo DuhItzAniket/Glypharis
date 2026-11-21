@@ -32,7 +32,7 @@ Phases run in the order set by [ADR-0008](decisions/ADR-0008-usable-engine-first
 | 19 | Optional HTTP API | **COMPLETE** | `phase-19` |
 | 20 | Production engineering | **COMPLETE** | `phase-20`, `v0.1` |
 | 21 | Research package | **COMPLETE** | `phase-21` |
-| 22 | Final validation | **IN PROGRESS** (gate: push, CI, merge) | — |
+| 22 | Final validation | **COMPLETE** | `phase-22` |
 | 23 | Release v1.0 | not started | — |
 
 ---
@@ -3768,7 +3768,7 @@ tag `phase-21` (merge re-created with the noreply identity; same tree and parent
 
 ## Phase 22 — Final validation
 
-**Status:** results written (2026-11-21). Gate open: push, pull request, CI and the owner's merge.
+**Status:** COMPLETE (2026-11-21).
 The plan below was registered on 2026-11-18, before any Phase 22 step ran, and is kept as written;
 the progress notes and the closure at the end record what happened. Opened on
 `phase/22-final-validation` from `e8e0b55`, the Phase 21 completion record on top of `main` at
@@ -4576,7 +4576,7 @@ v1's at the printed precision (`reports/final_validation/candidate/h11.md`).
 | Candidate results under its own IDs, once per test set, logged, beside v1's | pass: H11 met | GW-REC-045, GW-E2E-020, GW-E2E-021; `reports/final_validation/candidate/` |
 | Phone gap recorded as measured on a named device or as still open | pass: the candidate's networks measured on the Samsung Galaxy M52 5G and the Moto G35 5G, conditions registered first | GW-EFF-015; `docs/FINAL_VALIDATION.md` section 4 |
 | v1's records unchanged | pass | `reports/final_validation/closure.md` |
-| CI green | pending (after the push) | — |
+| CI green | pass | runs 44868326573 (branch), 44868358128 (pull request), 44869669353 (`main`) |
 
 **Tests:** the full local suite at `f951788`: 2,504 passed, 1 skipped, 1 failed. The failure was the GPU timing test `test_the_v1_profile_on_cuda_synchronises_and_records_vram`, whose stage-sum check tripped by 52 ms while other jobs shared the machine, and its file passed 55 of 55 twice when run alone. The three generated-file checks pass.
 
@@ -4598,8 +4598,14 @@ sittings.
 - GDC, GDC-scan and the weights cannot be re-downloaded by a stranger; the walkthrough shares the OS,
   driver and base Python with the original work.
 
-**Git:** branch `phase/22-final-validation`; tags `phase22-repro` and `phase22-candidate-eval` mark the
-code each set of runs was pinned to.
+- CI failed on three of the overnight chain's run-record commits (`35fbefd`, `955ec3c`, `1116a4d`):
+  each added access-log rows, so the generated experiment summary was out of date until the registry
+  was filled and the summary regenerated (`f951788`). The chain could not regenerate it, because only
+  run records may change after `phase22-candidate-eval`. Every commit from `f951788` on is green.
 
-**CI status:** pending (after the push).
+**Git:** branch `phase/22-final-validation`, merged through pull request #28. Merge commit `b6f14a2`,
+tag `phase-22` (merge re-created with the noreply identity; same tree and parents). Tags
+`phase22-repro` and `phase22-candidate-eval` mark the code each set of runs was pinned to.
+
+**CI status:** green on the branch, the pull request and `main` (run 44869669353).
 

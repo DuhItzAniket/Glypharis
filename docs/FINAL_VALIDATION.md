@@ -1,6 +1,6 @@
 # Final Validation
 
-**Status: results written (2026-11-21).** Every step of the Phase 22 plan has run, and each result
+**Status: complete (2026-11-21, tag `phase-22`).** Every step of the Phase 22 plan has run, and each result
 below is copied from a generated report with its experiment ID. The plan, with every pass rule, is in
 [PHASE_STATUS](PHASE_STATUS.md), Phase 22. In short: the walkthrough passed; the v1 re-run gave Phase
 14's predictions in every test file, and the strict reproduction verdict failed only on official
