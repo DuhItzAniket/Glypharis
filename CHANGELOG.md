@@ -33,8 +33,13 @@ qualified advice that ADR-0014 asks for (Phase 23, D4).
   and Python >=3.11.4. `.gitattributes` leaves `reports/` and the records of the evaluation-only
   sets out of `git archive` (export-ignore), and `scripts/check_git_archive.py` checks that
   exclusion.
-- **Phase 23, planned.** The release workflow, the release archive packer, the outsider check, the
-  release rehearsal (GW-E2E-022) and the smoke runs.
+- **Phase 23, release tooling.** `.github/workflows/release.yml`, which checks, builds and drafts a
+  release holding the code files only, and uploads to PyPI only after the owner publishes the
+  draft; `scripts/pack_release.py`, which packs the v1 bundle and its weight notices
+  (`release/weights/`) into a reproducible archive; the `glypharis-check` command with its sample
+  page; and `scripts/release_rehearsal.py`. The release rehearsal (GW-E2E-022) and the clean-clone
+  training smoke runs (GW-REC-046, GW-DET-008) passed. The verification of the published release
+  (GW-E2E-023) is planned.
 - **Phase 22, final validation.** A walkthrough from a fresh clone (GW-E2E-013), re-scoring of the
   saved Phase 14 files (GW-E2E-015) and a re-run of the frozen v1 on every test set (GW-REC-043,
   GW-E2E-016, GW-E2E-017, scored in GW-E2E-018); record in `docs/FINAL_VALIDATION.md`. The re-run

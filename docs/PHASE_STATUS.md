@@ -33,7 +33,7 @@ Phases run in the order set by [ADR-0008](decisions/ADR-0008-usable-engine-first
 | 20 | Production engineering | **COMPLETE** | `phase-20`, `v0.1` |
 | 21 | Research package | **COMPLETE** | `phase-21` |
 | 22 | Final validation | **COMPLETE** | `phase-22` |
-| 23 | Release v1.0 | in progress (plan registered) | — |
+| 23 | Release v1.0 | **IN PROGRESS** (Part 1 ready; gate: CI, merge A) | — |
 
 ---
 
@@ -4613,10 +4613,11 @@ tag `phase-22` (merge re-created with the noreply identity; same tree and parent
 
 ## Phase 23 — Release v1.0
 
-**Status:** in progress (plan registered 2026-11-22). Nothing in this plan has been run, built or
-published yet. Opened on `phase/23-release` from `97f6cde`, the Phase 22 completion record on top of
-`main` at `b6f14a2` (tag `phase-22`). New modules, scripts and flags named here are proposals and do
-not exist yet.
+**Status:** in progress. Part 1 (items 1 to 12) is done on `phase/23-release`, and its gate (item 13:
+push, CI, the owner's merge A) is open. Nothing is published or uploaded, and the weights have not left
+this machine. Opened on `phase/23-release` from `97f6cde`, the Phase 22 completion record on top of
+`main` at `b6f14a2` (tag `phase-22`). The plan below was registered on 2026-11-22 and is kept as
+written; the amendments and the progress record at the end say what changed and what happened.
 
 **Objective:** make v1 releasable and, only with the owner's go for each step, release it
 (`docs/IMPLEMENTATION_PLAN.md`, Phase 23):
@@ -4680,7 +4681,7 @@ the owner's answers of 2026-11-22.
   `CITATION.cff` (D8) if the owner approves that one field. GDC-scan contributes nothing.
 - Commits follow `docs/WORKFLOW.md` §2. The owner merges every pull request.
 
-**Experiments** (entries in `research/experiments.md`, all `planned`)
+**Experiments** (entries in `research/experiments.md`; registered as `planned`, status in the progress record below)
 
 | ID | What | Data | Test access |
 |---|---|---|---|
@@ -4893,9 +4894,46 @@ item 11. Not included: the adviser's answers, account setup and approval waits, 
 - *Item 8:* the rehearsal environment holds only the built wheel and reuses the locked third-party
   packages already on this machine instead of downloading them again (about 2.6 GiB). A clean install
   with the dependencies resolved from the indexes is what the CI job `package` does on every push.
+- *Item 6:* `actionlint` is not run, since it would need a download; the structural checks of
+  `tests/test_release_workflow.py` (triggers, permissions, pinned actions, the guards against the model
+  archive) stand in for it, and GitHub validates the file on the first dispatch.
 - *Items 8 and 16:* both run through `scripts/release_rehearsal.py`, which refuses unless `glypharis` is
   imported from outside the checkout and the models and home folders are empty, records the installed
   package's RECORD hash, and runs the installed `glypharis-check` and then `scripts/package_check.py`.
+
+**Progress (2026-11-22): Part 1, items 1 to 12 done.** Every result below is in its report; nothing is
+published.
+
+| Item | What | Commit | Evidence |
+|---|---|---|---|
+| 1 | Plan registered, reviewed twice before commit | `5e5c84f` | CI green |
+| 2 | `glypharis.download_model` and the registry (entry unpublished) | `0e76af9` | `tests/test_hub.py` |
+| 3, 5 | Packaging as 1.0.0, CI job `package`, the `git archive` exclusion | `b941922` | CI job `package` |
+| 4, 10 | LICENSE, NOTICE, CITATION.cff, CHANGELOG, release-notes draft, adviser brief | `c23286f` | `scripts/check_citation.py` in CI |
+| 6 | Release workflow, drafting only | `6c5e3ce` | `tests/test_release_workflow.py` |
+| 7 | Reproducible archive packed outside the repository; size and hash pinned | `3b61b74` | `tests/test_pack_release.py`; GW-E2E-022 |
+| 8 | Rehearsal, GW-E2E-022: passed | `a457ad5` | `reports/package/GW-E2E-022.json`, `GW-E2E-022_fetch.json` |
+| 9 | `glypharis-check` and its sample page | `7a11267` | `tests/test_check.py`; GW-E2E-022 |
+| 11 | Smoke runs GW-REC-046 and GW-DET-008: passed | `baf104b` | `reports/training/smoke/phase23_smoke.md` |
+| 12 | Integration guide and release evidence table | `7eb93a7` | `docs/INTEGRATION.md`, `docs/RELEASE_EVIDENCE.md` |
+
+Each step was reviewed before its commit, and the review findings were fixed with tests; a final review
+of the whole of Part 1 found only stale wording, now corrected. GW-E2E-023 stays `planned` until
+publication.
+
+**Gate for Part 1** (WORKFLOW §3)
+
+| Step | Result |
+|---|---|
+| Implementation | items 1 to 12 done; item 13 is this gate |
+| Testing | the full local suite at `baf104b`: 2,670 passed, 2 skipped (no symbolic links on this machine; the installed-metadata test, which runs in CI); ruff, mypy and the three generated-file checks pass |
+| Review | per step and for the whole of Part 1; no leakage, local path or personal data found |
+| Diagnostics | GW-E2E-022, GW-REC-046, GW-DET-008 reports; the three generated-file checks pass |
+| Documentation | this record, `research/experiments.md`, the release documents |
+| Git diff inspection | no data, weights, checkpoints or secrets; the v1 paths equal `v1-code` |
+| Commit, push | on `phase/23-release` |
+| CI | pending on the pull request |
+| Merge A and the dry run on `main` | the owner's merge; then the release workflow's dry run |
 
 **Limits this plan cannot remove**
 

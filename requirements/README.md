@@ -21,7 +21,7 @@ splits them by what needs them:
 
 | Group | Packages | Needed by |
 |---|---|---|
-| core | torch, torchvision, numpy, pyyaml, pillow, opencv-contrib-python-headless, rapidfuzz, shapely, scipy, onnxruntime | importing the package, reading pages with either backend, both commands |
+| core | torch, torchvision, numpy, pyyaml, pillow, opencv-contrib-python-headless, rapidfuzz, shapely, scipy, onnxruntime | importing the package, reading pages with either backend, all three commands (`glypharis-ocr`, `glypharis-serve`, `glypharis-check`) |
 | `train` | matplotlib, fonttools, pypdfium2, psutil, nvidia-ml-py | training, data preparation, reports |
 | `export` | onnx | writing bundles and ONNX files, quantisation |
 | `dev` | pytest, ruff, mypy, type stubs | tests and checks |

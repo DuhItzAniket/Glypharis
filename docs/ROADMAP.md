@@ -22,7 +22,7 @@ so the brief stays traceable; only the order differs.
 | **M8 Studies** | 11–13 | Robustness, synthetic-data and ablation studies; final config frozen | 0.5 (label) | Ablation tables with CIs | passed (`phase-11` to `phase-13`) |
 | **M9 Evaluation** | 14–15 | External benchmarks + error analysis | 0.6 (label) | Test access log closed | passed (`phase-14`, `phase-15`) |
 | **M10 Final engineering** | 16, 19, re-run of 17 / 18 / 20 | Efficiency study, final export and package, optional API | 0.9 (label) | Equivalence tests, API tests | passed (`phase-16`, `phase-19`, `phase-17-v1`, `phase-18-v1`, `phase-20-v1`, `v1-code`) |
-| **M11 Release** | 21–23 | Paper-ready research package, clean-machine validation, evaluation of the fused-attention build as a new version | **1.0** | Every criterion in §4 ticked | open: Phase 21 in progress |
+| **M11 Release** | 21–23 | Paper-ready research package, clean-machine validation, evaluation of the fused-attention build as a new version | **1.0** | Every criterion in §4 ticked | open: Phases 21 and 22 passed (`phase-21`, `phase-22`); Phase 23 in progress |
 
 `v0.1` is the only version tag so far. The 0.5, 0.6 and 0.9 entries were planning labels: no such tag
 exists. The package version is `1.0.0` from Phase 23 (`glypharis.__version__`); the tag `v1.0` is

@@ -229,6 +229,11 @@ Command line: `glypharis-ocr --image x.png` or `--input-dir ./images` (`python i
 writes `results/<name>.json` and `results/<name>.txt`. Exit code 1 means an image failed and 2 a usage
 error.
 
+`glypharis-check` checks an installed bundle against the registry and reads the bundled sample page
+with it. `glypharis-ocr` and `glypharis-serve` fetch a missing registered model through
+`glypharis.download_model` unless `--no-download` or `GLYPHARIS_OFFLINE` is set
+([INTEGRATION](INTEGRATION.md)).
+
 HTTP (optional, Phase 19): `glypharis-serve` offers `POST /ocr` (the image file as the request body) and
 `GET /health`. It uses the standard library, one process and one request at a time, listens on
 127.0.0.1 by default and has no authentication or TLS (`glypharis/server.py`). It is an integration
@@ -249,7 +254,8 @@ glypharis/                 # importable package
   export/                  # release files, ONNX export, the model bundle
   efficiency/              # Phase 16 tooling: thread control, variants, fused attention, v1 code check
   utils/                   # seeding, logging, device and VRAM monitoring, git information
-  cli.py  server.py  errors.py
+  cli.py  server.py  errors.py  hub.py  check.py
+  sample/                  # the sample page and expected output glypharis-check reads
 configs/                   # hyperparameters; configs/final/glypharis_v1.yaml is the freeze record
 scripts/                   # data preparation, evaluation, reports, checks
 tests/                     # pytest suite; tiny fixtures and tiny models only

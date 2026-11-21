@@ -135,8 +135,11 @@ sha256sum glypharis-v1/manifest.json
 
 Loading the bundle (`GlypharisOCR.from_pretrained`) then checks each file against the manifest and
 refuses one that does not match. `download_model` checks the archive's size and SHA-256 and the
-manifest hash before it puts the bundle in place. The archive's own hash is published beside it as
-`glypharis-v1.tar.gz.sha256`, and will be added to these notes when the archive is packed.
+manifest hash before it puts the bundle in place. The archive `glypharis-v1.tar.gz` is 82,975,077 bytes with
+SHA-256 `3b90c1c74147747d7474a86b550e198f0df83d447961bd6aec88d4c24846541d` (GW-E2E-022,
+`reports/package/GW-E2E-022_fetch.json`), and that hash is published beside it as
+`glypharis-v1.tar.gz.sha256`. If the qualified advice changes the weight notices, the archive is
+packed again and this pin changes (Phase 23, item 14).
 
 ## Citing
 
