@@ -1,0 +1,12 @@
+diff --git a/data/manifests/processed/benchmarks.json b/data/manifests/processed/benchmarks.json
+index 5191e50..11a068f 100644
+--- a/data/manifests/processed/benchmarks.json
++++ b/data/manifests/processed/benchmarks.json
+@@ -11,7 +11,6 @@
+   "pack": "processed/iiit5k/words_test",
+   "count": 3000,
+   "bin_sha256": "d70318becd73324cf3a9fdade341bcf7d065bd452ac74db34d6a107973ca6ba2",
+-  "index_sha256": "8902105f178cff67f459726bec3fd5a98051a72aa62654422f07781599345c21",
+   "source": "testdata.mat",
+   "source_sha256": "4136ab14e502a9ede65f25cf5639d0d027a10c7d5baddabafb953ec09d77bf45"
+  },

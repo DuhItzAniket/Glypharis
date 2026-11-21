@@ -1,7 +1,7 @@
 # Conclusion notes
 
-Final validation (Phase 22) has not been run, so everything below is a statement about the evidence
-recorded so far. No weights are distributed; release is Phase 23.
+Final validation (Phase 22) has been run; its record is `docs/FINAL_VALIDATION.md`. Everything below
+is a statement about the evidence recorded so far. No weights are distributed; release is Phase 23.
 
 HierText is released under CC BY-SA 4.0; its images come from Open Images, which lists them as
 CC BY 2.0. Figures derived from HierText are shared alike. Tracks are strict unless stated.
@@ -11,7 +11,10 @@ CC BY 2.0. Figures derived from HierText are shared alike. Tracks are strict unl
 GLYPHARIS v1 is a two-stage OCR engine for English printed text in page images: a DBNet-style line
 detector, an SVTR-style CTC recognizer and a heuristic reading order. It was trained on one laptop
 GPU on HierText only, frozen from validation data, and evaluated once on each held-out set.
-Configuration frozen and recorded; reproduction pending Phase 22.
+Configuration frozen and recorded. Phase 22 re-ran it: the predictions equal Phase 14's in every
+test file, and the strict verdict failed only on official OmniDocBench scores, through the
+evaluator's time limit; the owner accepted this as a disclosed limitation
+(`reports/final_validation/v1_reproduction.md`).
 
 ## What the evidence shows
 
@@ -81,12 +84,18 @@ in `limitations.md` with their conditions.
 
 ## What remains open
 
-- Final validation (Phase 22) has not been run. Test results come from the GPU strict-fp32
-evaluation; equality with the bundle is shown on validation only. Phase 22 checks reproduction
-within the 0.05-point tolerance.
-- Phones are the target hardware; no phone has been measured.
-- The all-ONNX fused-attention build is the phone candidate. A new version, not v1; validation and
-laptop figures only; to be evaluated in Phase 22.
+- Final validation (Phase 22) has been run; its record is `docs/FINAL_VALIDATION.md`. Test results
+come from the GPU strict-fp32 evaluation; equality with the bundle is shown on validation only.
+Phase 22 checked reproduction at the 0.05-point tolerance (`reports/final_validation/v1_reproduction.md`):
+every prediction was the same, and it found 16 failures among the 1,381 point values checked, all
+of them official OmniDocBench scores. The owner accepted this as a disclosed limitation of the official evaluator.
+- Phones are the target hardware. Phase 22 measured the phone candidate's networks on two phones
+(GW-EFF-015): network time and memory only, without decoding, post-processing, cropping or reading
+order; v1 itself was not measured on a phone. A full page on a phone remains unmeasured.
+- The phone candidate is the all-ONNX build with fused attention, reading one line per recognizer run
+(`fused-single-line`, GW-EFF-013). A new version, not v1. Phase 22 evaluated it once per test set,
+and it met H11's six non-inferiority tests against v1 (GW-E2E-021,
+`reports/final_validation/candidate/h11.md`); its results sit beside v1's and replace none of them.
 - Page orientation, small text and steep lines are the failures the error analysis points to first.
 - The cause of the PaddleOCR reading-order error on OmniDocBench remains unmeasured (F26, F33).
 - Weights: intended terms under ADR-0014, effective only if released: CC BY-SA 4.0 with attribution to

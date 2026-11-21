@@ -1,7 +1,8 @@
 # Model card: GLYPHARIS v1
 
-Status: evaluated and packaged. Final validation (Phase 22) has not been run. No weights are
-distributed; release is Phase 23.
+Status: evaluated and packaged. Final validation (Phase 22) has been run; its record is
+[`docs/FINAL_VALIDATION.md`](docs/FINAL_VALIDATION.md). No weights are distributed; release is
+Phase 23.
 
 This card describes `glypharis_v1`, a line-based OCR model for English printed text in document
 images. It is written for someone deciding whether the model suits their use, and it gives the
@@ -64,12 +65,20 @@ excludes zero. On FUNSD the PaddleOCR systems have higher detection F1 point val
 stated. See [comparison with baselines](#comparison-with-baselines). Every line and page latency
 target of ADR-0011 was missed.
 
+Final validation (Phase 22) has been run; its record is
+[`docs/FINAL_VALIDATION.md`](docs/FINAL_VALIDATION.md). A re-run of the frozen v1 gave the same
+predictions as Phase 14 in every test file. The strict reproduction verdict failed only on official
+OmniDocBench scores, through that evaluator's per-page time limit, and the owner accepted this as a
+disclosed limitation (GW-E2E-018,
+[`reports/final_validation/v1_reproduction.md`](reports/final_validation/v1_reproduction.md)).
+
 Not done yet:
 
-- Final validation (Phase 22) has not been run.
 - No weights are distributed; release is Phase 23. Code licence and citation: to be settled in
   Phase 23.
-- Phones are the target hardware; no phone has been measured.
+- Phones are the target hardware, and no full page has been timed on a phone. Phase 22 measured
+  only the networks of the phone candidate, a new version, on two phones (GW-EFF-015, see
+  [not v1](#not-v1)); v1 itself was not measured on a phone.
 - No set of old scans was evaluated ([limitations](#limitations)).
 
 ## How to read the numbers
@@ -169,8 +178,10 @@ recognizer GW-REC-024. Its numbers are not v1's and are not used here.
 - Use where the output is searched, indexed or read by a person who can tolerate errors. The page
   error rates under [metrics](#metrics) show how many errors to expect.
 
-Phones are the target hardware; no phone has been measured. The laptop figures in this card rank
-builds on that laptop and say nothing about phone speed
+Phones are the target hardware. Phase 22 measured the phone candidate's networks on two phones
+(GW-EFF-015): network time and memory only, without decoding, post-processing, cropping or reading
+order; v1 itself was not measured on a phone ([not v1](#not-v1)). The laptop figures in this card
+rank builds on that laptop and say nothing about phone speed
 ([ADR-0011](docs/decisions/ADR-0011-cpu-latency-target.md)).
 
 ## Not intended use
@@ -189,7 +200,7 @@ Source: as named in each row. Intervals by page.
 | Curved pages, such as an open book | GDC's 8 curved pages have a bag-of-lines CER of 64.60 [47.03, 82.96] %. Capture conditions are confounded with documents, so this is not a contrast with other conditions | GW-E2E-007, `reports/external/end_to_end.md` |
 | Vertical text | On GDC's 32 vertical lines, recall @0.5 is 18.75 [5.26, 40.00] % | GW-E2E-007, `reports/external/end_to_end.md` |
 | Tables, formulas and layout analysis | The model returns text lines only. Formula and table metrics were off, so OmniDocBench's overall score could not be computed | GW-E2E-009, `reports/external/official.md` |
-| On-device use on phones | No phone has been measured, and v1 keeps PyTorch as its default backend | ADR-0011 |
+| On-device use on phones | v1 itself was not measured on a phone, and v1 keeps PyTorch as its default backend. Only the networks of the phone candidate, a new version, were measured on phones, without decoding, post-processing, cropping or reading order ([not v1](#not-v1)) | ADR-0011, GW-EFF-015 |
 | A service open to a network | The optional HTTP server is for local use and has no authentication or TLS | `README.md` |
 | Unreviewed transcription where errors matter | On the 1,634 HierText test pages, page CER is 25.16 [23.44, 26.79] % | GW-E2E-007, `reports/external/end_to_end.md` |
 
@@ -389,7 +400,12 @@ tree because it reads the git state after writing its own access-log rows; see t
 [`docs/PHASE_STATUS.md`](docs/PHASE_STATUS.md).
 
 Test results come from the GPU strict-fp32 evaluation; equality with the bundle is shown on
-validation only. Phase 22 checks reproduction within the 0.05-point tolerance. The tolerance is
+validation only. Phase 22 checked reproduction at the 0.05-point tolerance (GW-E2E-018,
+[`reports/final_validation/v1_reproduction.md`](reports/final_validation/v1_reproduction.md)): every
+prediction was the same, and the check found 16 failures among the 1,381 point values checked, all of
+them official OmniDocBench scores. The cause is the official evaluator's per-page time limit, which sent one more page to its
+fallback scoring than in Phase 14; no count, flag or hypothesis verdict changed, and the owner
+accepted the result as a disclosed limitation. Phase 14's results stay as recorded. The tolerance is
 defined under Phase 22 in [`docs/IMPLEMENTATION_PLAN.md`](docs/IMPLEMENTATION_PLAN.md).
 
 ## Metrics
@@ -501,6 +517,14 @@ computed. No difference is stated, because the evaluator gives no interval.
 | GLYPHARIS v1, all pages | 755 | 0.1007 | 0.1859 | 0.2443 |
 | GLYPHARIS v1, 100-page subset | 100 | 0.1063 | 0.1881 | 0.2523 |
 | Tesseract, all pages | 755 | 0.0966 | 0.0847 | 0.2352 |
+
+These official OmniDocBench scores are Phase 14's and stay as recorded. In Phase 22 the strict
+reproduction verdict failed on GLYPHARIS's official OmniDocBench scores, and re-scoring the saved
+Phase 14 files (GW-E2E-015) changed official OmniDocBench scores of Tesseract and GLYPHARIS, both
+times because the evaluator's per-page time limit sent more pages to its fallback scoring than in
+Phase 14. The
+owner accepted this as a disclosed limitation of the official evaluator (GW-E2E-018,
+[`reports/final_validation/v1_reproduction.md`](reports/final_validation/v1_reproduction.md)).
 
 ### Comparison with baselines
 
@@ -747,7 +771,11 @@ Sources for the counts below: GW-E2E-007 [`end_to_end.md`](reports/external/end_
   validation CER was close (see [selection evidence](#selection-evidence)); the detector has none
   beyond GW-DET-001.
 - Test results come from the GPU strict-fp32 evaluation; equality with the bundle is shown on
-  validation only. Phase 22 checks reproduction within the 0.05-point tolerance.
+  validation only. Phase 22 checked reproduction at the 0.05-point tolerance (GW-E2E-018,
+  [`reports/final_validation/v1_reproduction.md`](reports/final_validation/v1_reproduction.md)):
+  every prediction was the same, and the check found 16 failures among the 1,381 point values
+  checked, all of them official OmniDocBench scores, through the evaluator's per-page time limit. The owner accepted this as a
+  disclosed limitation.
 - Latency was measured on HierText validation pages, on one laptop, with a mean of <!-- derived: lines_per_page --> 40.9
   lines per page. Page latency on other document pages was not measured.
 - GDC has <!-- derived: n_gdc_docs --> 21 source documents and <!-- derived: n_gdc_pages --> 106
@@ -886,9 +914,11 @@ On GlyphSynth validation, lines with touching characters from ink spread have a 
 
 ## Hardware
 
-Training ran on an NVIDIA GeForce RTX 4050 Laptop GPU. All latency numbers were
+Training ran on an NVIDIA GeForce RTX 4050 Laptop GPU. All of v1's latency numbers were
 measured on an Intel Core i7-14650HX laptop under Windows on mains power, with the Balanced power
-plan and power mode "best performance". No phone, ARM device or second machine was measured.
+plan and power mode "best performance". v1 was not measured on a phone, an ARM device or a second
+machine. In Phase 22 the networks of the phone candidate, a new version, were measured on two
+phones (GW-EFF-015, see [not v1](#not-v1)).
 
 Source: [`reports/environment/env_report.md`](reports/environment/env_report.md) and GW-EFF-007
 [`pages_torch_cpu_10t.json`](reports/efficiency/phase16/profiles/pages_torch_cpu_10t.json) (conditions block).
@@ -946,7 +976,10 @@ The methods and data behind the model are cited with these keys of
 
 ## Final configuration record
 
-Configuration frozen and recorded; reproduction pending Phase 22. The record is
+Configuration frozen and recorded. Phase 22 re-ran it: the predictions equal Phase 14's in every
+test file, and the strict verdict failed only on official OmniDocBench scores, through the
+evaluator's time limit; the owner accepted this as a disclosed limitation
+(`reports/final_validation/v1_reproduction.md`). The record is
 [`configs/final/glypharis_v1.yaml`](configs/final/glypharis_v1.yaml), and this table says where each
 part of it is described.
 
@@ -965,14 +998,71 @@ part of it is described.
 
 ## Not v1
 
-A new version, not v1; validation and laptop figures only; to be evaluated in Phase 22.
+A new version, not v1. Phase 22 evaluated it once per test set, and it met H11's six non-inferiority
+tests against v1 (GW-E2E-021); its results sit beside v1's and replace none of them. Its figures
+must not be read as v1's.
 
-The phone candidate named in ADR-0011 is the all-ONNX build with fused attention: the same weights,
-exported with each global mixer as one attention operator. On the validation samples below its CER
-equals v1's to two decimals, and its pages and lines take less time than v1's ONNX bundle in the
-same sittings. No difference against v1 on PyTorch is stated, because the report has no paired
-interval for it. It has no test-set evaluation, and its figures must not be read as v1's. Phones are
-the target hardware; no phone has been measured.
+The phone candidate is the all-ONNX build with fused attention, reading one line per recognizer run
+(`fused-single-line`, GW-EFF-013,
+[`selection.md`](reports/final_validation/candidate/GW-EFF-013/selection.md)): v1's weights, with
+each global mixer of the recognizer exported as one attention operator. It is frozen as bundle
+format `glypharis-phone-bundle-1` with manifest SHA-256
+`97a4116884f93d0d0293d0910e37dee4dbd0aacfb249c3f2c3819e289ee06e2e`, and the bundle passed Phase 17's
+tolerances (GW-EFF-014,
+[`equivalence.json`](reports/final_validation/candidate/GW-EFF-014/equivalence.json)). Its
+validation gate (GW-REC-044, GW-E2E-019,
+[`validation_gate.json`](reports/final_validation/candidate/validation_gate.json)) was met before
+any test set was opened.
+
+H11 ([`research/hypotheses.md`](research/hypotheses.md)) was met on all six tests. The values below
+are fractions, as the report prints them; strict track. On GDC the three tests were also met with
+source documents as the unit. H11 is a non-inferiority test: equal values at this precision do not
+show that the candidate reads every test line as v1 does.
+
+Source: GW-E2E-021 [`reports/final_validation/candidate/h11.md`](reports/final_validation/candidate/h11.md).
+
+<!-- trace-table: GW-E2E-021 reports/final_validation/candidate/h11.md HierText test;line CER=hiertext_test;line_cer|HierText test;page CER, bag of lines=hiertext_test;page_cer|HierText test;E2E F1=hiertext_test;e2e_f1|GDC;line CER=gdc_test;line_cer|GDC;page CER, bag of lines=gdc_test;page_cer|GDC;E2E F1=gdc_test;e2e_f1 -->
+| Set | Measure | Units | Candidate | v1 | Verdict |
+|---|---|---|---|---|---|
+| HierText test | line CER | 67,574 | 0.0603 | 0.0603 | met |
+| HierText test | page CER, bag of lines | 1,634 | 0.2516 | 0.2516 | met |
+| HierText test | E2E F1 | 1,634 | 0.6018 | 0.6018 | met |
+| GDC | line CER | 8,372 | 0.0417 | 0.0417 | met |
+| GDC | page CER, bag of lines | 106 | 0.2235 | 0.2235 | met |
+| GDC | E2E F1 | 106 | 0.6936 | 0.6936 | met |
+
+The candidate's other test figures are descriptive and are in
+[`reports/final_validation/candidate/results.md`](reports/final_validation/candidate/results.md).
+Its official OmniDocBench scores are not comparable with v1's, because the evaluator's time limit
+sent more of the candidate's pages to its fallback scoring than of v1's in Phase 14; they are not
+compared here.
+
+Phone measurement, GW-EFF-015
+([`phone_sm-m526b.md`](reports/final_validation/GW-EFF-015/phone_sm-m526b.md),
+[`phone_moto-g35-5g.md`](reports/final_validation/GW-EFF-015/phone_moto-g35-5g.md)): network time
+and memory only. Decoding, post-processing, cropping and reading order were not ported, so the time
+of a full page on a phone was not measured. Each run timed 100 validation pages with 4 intra-op
+threads, and each arm ran twice; times are the mean network time per page over both runs, and
+memory is the app's peak `VmHWM`. The Samsung Galaxy M52 5G (SM-M526B) was the first phone and decided the
+selection; the Moto G35 5G is a second named device and changes no decision. On both phones the
+judged arms' logits were within 1e-3 of the laptop's and their greedy text was identical. v1 itself
+(PyTorch) was not measured on a phone. No phone target is set, and ADR-0011's laptop CPU targets
+stay recorded as missed for v1.
+
+<!-- trace-table: GW-EFF-015 reports/final_validation/GW-EFF-015/phone_sm-m526b.md SM-M526B;fused-single-line=L9|SM-M526B;fused (not selected)=L7|SM-M526B;fused-int8 (not selected)=L8 -->
+<!-- trace-table: GW-EFF-015 reports/final_validation/GW-EFF-015/phone_moto-g35-5g.md Moto G35 5G;fused-single-line=L7 -->
+| Phone | Arm | Mean ms, both runs | p95 ms, both runs | Peak VmHWM MiB |
+|---|---|---|---|---|
+| SM-M526B | fused-single-line | 8,111.9 | 18,298.9 | 919.9 |
+| SM-M526B | fused (not selected) | 12,824.4 | 25,756.3 | 1,645.3 |
+| SM-M526B | fused-int8 (not selected) | 8,522.2 | 17,568.2 | 1,814.9 |
+| Moto G35 5G | fused-single-line | 10,987.5 | 23,283.8 | 409.0 |
+
+The figures below are Phase 16's, on validation data and on the laptop, for the `fused` build, from
+which the candidate differs in reading one line per recognizer run. On these samples its CER equals
+v1's to two decimals, and its pages and lines take less time than v1's ONNX bundle in the same
+sittings. No difference against v1 on PyTorch is stated, because the report has no paired interval
+for it.
 
 <!-- trace: GW-EFF-009 reports/efficiency/phase16/pareto.md -->
 Source: GW-EFF-009 [`reports/efficiency/phase16/pareto.md`](reports/efficiency/phase16/pareto.md).
@@ -999,6 +1089,8 @@ same sittings.
 | INT8 recognizer (not v1) | 6.21 [5.73, 6.69] | 63.35 [48.10, 80.25] | 220.31 | 1,097.4 | -0.01 [-0.04, +0.02] | -32.24 [-39.97, -24.87] |
 
 The fused build is within none of ADR-0011's page targets on this laptop. Combining it with the INT8
-recognizer was not measured in Phase 16. The INT8 recognizer is also a new version; its confirmatory
+recognizer was not measured in Phase 16. Phase 22 measured it (`fused-int8`, GW-EFF-013 and
+GW-EFF-015): on the first phone it met the speed condition but used more memory than `fused`, so it
+was not selected. The INT8 recognizer is also a new version; its confirmatory
 test H7′, which limits its latency and its CER cost against the fp32 recognizer, holds
 ([`reports/efficiency/phase16/int8.md`](reports/efficiency/phase16/int8.md)).

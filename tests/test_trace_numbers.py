@@ -899,13 +899,16 @@ def test_ordinary_paths_pass() -> None:
 @pytest.mark.parametrize(
     "line",
     [
-        "Phase 22 passed.",
-        "Phase 22 passed with no failures.",
-        "It was validated after Phase 22.",
-        "Phase 22 confirmed the result.",
-        "The result was reproduced in Phase 22.",
+        "Phase 23 passed.",
+        "Phase 23 passed with no failures.",
+        "It was validated after Phase 23.",
+        "Phase 23 confirmed the result.",
+        "The result was reproduced in Phase 23.",
         "Phase 23 released the weights.",
         "Phases 22 and 23 are done.",
+        "Phases 21, 22, and 23 are done.",
+        "Phases 22\u201323 are done.",
+        "Phases 22/23 are done.",
         "The weights are now publicly released.",
         "The model is available on Zenodo today.",
         "Install it from version v1.0 today.",
@@ -921,6 +924,8 @@ def test_claims_about_later_phases_fail(line: str) -> None:
     "line",
     [
         "Final validation (Phase 22) has not been run.",
+        "Final validation (Phase 22) has been run.",
+        "Phase 22 passed.",
         "Phase 22 checks reproduction within the 0.05-point tolerance.",
         "A new version, not v1; validation and laptop figures only; to be evaluated in Phase 22.",
         "No weights are distributed; release is Phase 23.",
@@ -952,7 +957,7 @@ def test_sota_wording_is_found_across_a_line_break(text: str) -> None:
 @pytest.mark.parametrize(
     "line",
     [
-        "Phase 22 passed before the release.",
+        "Phase 23 passed before the release.",
         "Phase 23 published the weights once Phase 22 passed.",
         "The v1 weights were released when Phase 21 ended.",
     ],
@@ -1400,7 +1405,7 @@ def test_a_missing_document_fails_the_full_run(root: Path) -> None:
 
 
 def test_lint_failure_stops_the_run(root: Path, capsys: pytest.CaptureFixture[str]) -> None:
-    write(root, DOC, GOOD + "\nPhase 22 passed.\n")
+    write(root, DOC, GOOD + "\nPhase 23 passed.\n")
     assert main(root) == 1
     assert "lint" in capsys.readouterr().out
 

@@ -220,6 +220,17 @@ def _profile(path, times, sizes, threads_field, **extra):
     path.write_text(json.dumps(doc), encoding="utf-8")
 
 
+@pytest.fixture(autouse=True)
+def no_phase14_tag(monkeypatch):
+    """These tests build their own repository layout, so whether this clone has the real
+    ``phase14-eval`` tag must not decide them (a fresh clone has it, CI's does not)."""
+    monkeypatch.setattr(ps, "tag_exists", lambda *a, **k: False)
+
+
+def test_the_real_tag_does_not_reach_these_tests():
+    assert ps.tag_exists() is False
+
+
 @pytest.fixture
 def layout(tmp_path, monkeypatch):
     """A repository layout with every set, the Phase 5 baseline files and their report, the

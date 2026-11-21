@@ -1,0 +1,284 @@
+{
+ "experiment": "GW-EFF-014",
+ "what": "the phone candidate's bundle against the PyTorch v1 references (GW-EFF-006), Phase 17's tolerances",
+ "version_label": "phone candidate (new version, not v1)",
+ "arm": "fused-single-line",
+ "batching": "one line per recognizer run",
+ "selection_experiment": "GW-EFF-013",
+ "bundle": "runs/release/glypharis-phone-candidate",
+ "bundle_manifest_sha256": "97a4116884f93d0d0293d0910e37dee4dbd0aacfb249c3f2c3819e289ee06e2e",
+ "bundle_files": {
+  "detector.onnx": "378c1feda480c1bb1dde838dd4a5f4579a904710a7f7b222d978c583b5bddcb7",
+  "recognizer.fused.onnx": "b0e2a5100cb465f72d2abca97fc30a47892c75d069e556791021b7b74dfc172c",
+  "charset.json": "68ac2429ee49909ef57f4524599913db7e43daabbe18f3effd610fe1f482d20f"
+ },
+ "shared_settings_equal_v1": true,
+ "shared_settings": [
+  "crop",
+  "detector.spec",
+  "max_pixels",
+  "reading_order",
+  "recognizer.arch",
+  "recognizer.charset_sha256",
+  "recognizer.classes",
+  "recognizer.input",
+  "recognizer.temperature"
+ ],
+ "reference": "data/processed/phase16/reference",
+ "reference_manifest_sha256": "4ff7f155f96f68ec95a1f1166c8caa21410a940aeaff30f4bcc5528e0cbbad22",
+ "complete": true,
+ "backend": "onnxruntime (CPU)",
+ "started_utc": "2026-11-20T19:04:56+00:00",
+ "ended_utc": "2026-11-20T19:27:44+00:00",
+ "threads": {
+  "requested": 10,
+  "intra_op": 10,
+  "inter_op": 10,
+  "env": {
+   "OMP_NUM_THREADS": "10",
+   "OMP_THREAD_LIMIT": "10",
+   "MKL_NUM_THREADS": "10"
+  },
+  "env_before_torch_import": true,
+  "preloaded": []
+ },
+ "threads_checked": {
+  "before": {
+   "intra_op": 10,
+   "inter_op": 10,
+   "env": {
+    "OMP_NUM_THREADS": "10",
+    "OMP_THREAD_LIMIT": "10",
+    "MKL_NUM_THREADS": "10"
+   }
+  },
+  "after": {
+   "intra_op": 10,
+   "inter_op": 10,
+   "env": {
+    "OMP_NUM_THREADS": "10",
+    "OMP_THREAD_LIMIT": "10",
+    "MKL_NUM_THREADS": "10"
+   }
+  }
+ },
+ "session_options": {
+  "detector": {
+   "onnxruntime": "1.31.1",
+   "providers": [
+    "CPUExecutionProvider"
+   ],
+   "intra_op_num_threads": 10,
+   "inter_op_num_threads": 0,
+   "execution_mode": "ORT_SEQUENTIAL",
+   "graph_optimization_level": "ORT_ENABLE_ALL",
+   "enable_cpu_mem_arena": false,
+   "enable_mem_pattern": false,
+   "allow_spinning": "default"
+  },
+  "recognizer": {
+   "onnxruntime": "1.31.1",
+   "providers": [
+    "CPUExecutionProvider"
+   ],
+   "intra_op_num_threads": 10,
+   "inter_op_num_threads": 0,
+   "execution_mode": "ORT_SEQUENTIAL",
+   "graph_optimization_level": "ORT_ENABLE_ALL",
+   "enable_cpu_mem_arena": false,
+   "enable_mem_pattern": false,
+   "allow_spinning": "default"
+  }
+ },
+ "v1_code": {
+  "tag": "v1-code",
+  "tag_commit": "efb197a5cd17570d810d39fe88a6895e20c4c639",
+  "head": "52ba5b0b638856e08dfc690cf2943603a5b9f070",
+  "paths": [
+   "glypharis/pipeline",
+   "glypharis/models",
+   "glypharis/export",
+   "glypharis/data",
+   "configs"
+  ],
+  "v1_code": "equal"
+ },
+ "git_commit": "52ba5b0b638856e08dfc690cf2943603a5b9f070",
+ "git_dirty": false,
+ "detector": {
+  "pages": 110,
+  "prob_max_abs_diff": 7.331371307373047e-06,
+  "per_page_max_abs_diff": [
+   2.5033950805664062e-06,
+   3.337860107421875e-06,
+   2.205371856689453e-06,
+   3.5762786865234375e-06,
+   3.069639205932617e-06,
+   3.933906555175781e-06,
+   2.682209014892578e-06,
+   2.8014183044433594e-06,
+   2.5033950805664062e-06,
+   4.202127456665039e-06,
+   4.798173904418945e-06,
+   2.8908252716064453e-06,
+   2.8014183044433594e-06,
+   5.066394805908203e-06,
+   3.904104232788086e-06,
+   2.682209014892578e-06,
+   2.648681402206421e-06,
+   3.039836883544922e-06,
+   2.682209014892578e-06,
+   6.645917892456055e-06,
+   2.175569534301758e-06,
+   2.7418136596679688e-06,
+   2.8312206268310547e-06,
+   2.3543834686279297e-06,
+   2.652406692504883e-06,
+   2.771615982055664e-06,
+   5.036592483520508e-06,
+   2.8908252716064453e-06,
+   3.3974647521972656e-06,
+   1.6689300537109375e-06,
+   3.4570693969726562e-06,
+   3.9637088775634766e-06,
+   2.5331974029541016e-06,
+   4.082918167114258e-06,
+   2.5331974029541016e-06,
+   2.6226043701171875e-06,
+   3.129243850708008e-06,
+   2.8014183044433594e-06,
+   2.6226043701171875e-06,
+   2.5033950805664062e-06,
+   3.4570693969726562e-06,
+   2.8312206268310547e-06,
+   6.616115570068359e-06,
+   3.129243850708008e-06,
+   2.652406692504883e-06,
+   2.175569534301758e-06,
+   2.7418136596679688e-06,
+   3.516674041748047e-06,
+   2.8014183044433594e-06,
+   7.331371307373047e-06,
+   2.682209014892578e-06,
+   2.3245811462402344e-06,
+   3.3676624298095703e-06,
+   2.950429916381836e-06,
+   3.0100345611572266e-06,
+   1.3709068298339844e-06,
+   3.5762786865234375e-06,
+   4.291534423828125e-06,
+   2.384185791015625e-06,
+   1.817941665649414e-06,
+   6.616115570068359e-06,
+   2.562999725341797e-06,
+   2.682209014892578e-06,
+   2.682209014892578e-06,
+   3.6656856536865234e-06,
+   2.86102294921875e-06,
+   4.1425228118896484e-06,
+   2.7418136596679688e-06,
+   2.3245811462402344e-06,
+   3.337860107421875e-06,
+   2.8312206268310547e-06,
+   1.9818544387817383e-06,
+   2.384185791015625e-06,
+   2.682209014892578e-06,
+   2.294778823852539e-06,
+   3.7848949432373047e-06,
+   4.887580871582031e-06,
+   5.453824996948242e-06,
+   2.6226043701171875e-06,
+   5.5730342864990234e-06,
+   2.9802322387695312e-06,
+   3.3918768167495728e-06,
+   2.7418136596679688e-06,
+   2.1457672119140625e-06,
+   5.3942203521728516e-06,
+   3.6954879760742188e-06,
+   4.4405460357666016e-06,
+   2.175569534301758e-06,
+   3.546476364135742e-06,
+   3.516674041748047e-06,
+   3.874301910400391e-06,
+   2.5331974029541016e-06,
+   2.175569534301758e-06,
+   2.8312206268310547e-06,
+   2.6226043701171875e-06,
+   3.039836883544922e-06,
+   3.866851329803467e-06,
+   4.202127456665039e-06,
+   3.814697265625e-06,
+   2.86102294921875e-06,
+   2.562999725341797e-06,
+   2.473592758178711e-06,
+   3.1888484954833984e-06,
+   2.8908252716064453e-06,
+   4.172325134277344e-06,
+   2.4437904357910156e-06,
+   3.606081008911133e-06,
+   2.8312206268310547e-06,
+   2.2649765014648438e-06,
+   2.8014183044433594e-06
+  ],
+  "shape_differences": [],
+  "tolerance": 0.0001,
+  "pass": true
+ },
+ "recognizer": {
+  "lines": 5000,
+  "logit_max_abs_diff": 0.000278472900390625,
+  "lines_above_logit_tolerance": 0,
+  "logit_tolerance": 0.001,
+  "logit_pass": true,
+  "identical_text": 5000,
+  "near_tie_differences": 0,
+  "near_tie_share": 0.0,
+  "near_tie_gap": 0.001,
+  "near_tie_share_allowed": 0.001,
+  "other_differences": [],
+  "reference_text_mismatches": 0,
+  "text_pass": true,
+  "pass": true
+ },
+ "end_to_end": {
+  "pages": 400,
+  "track": "strict",
+  "page_cer_torch": 0.24319528973296592,
+  "page_cer_onnx": 0.24321015800011894,
+  "difference": 1.486826715302314e-05,
+  "pages_with_identical_text": 399,
+  "tolerance": 0.0005,
+  "pass": true
+ },
+ "tolerances": {
+  "map_max_abs": {
+   "limit": 0.0001,
+   "measured": 7.331371307373047e-06,
+   "pass": true
+  },
+  "logits_max_abs": {
+   "limit": 0.001,
+   "measured": 0.000278472900390625,
+   "pass": true
+  },
+  "text": {
+   "limit": "other differences 0, near ties (gap < 0.001) at most 0.1% of lines",
+   "measured": {
+    "near_ties": 0,
+    "other": 0
+   },
+   "pass": true
+  },
+  "page_cer": {
+   "limit": 0.0005,
+   "measured": 1.486826715302314e-05,
+   "pass": true
+  }
+ },
+ "pass": true,
+ "seconds": {
+  "detector": 40.5,
+  "recognizer": 218.5,
+  "end_to_end": 1109.0
+ }
+}

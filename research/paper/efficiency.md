@@ -6,8 +6,8 @@ checks), GW-EFF-007 (what v1 costs), GW-EFF-008 (INT8, H7′), GW-EFF-009 (accur
 GW-EFF-010 (H1′ ONNX, with the Phase 16 amendment to GW-BASE-002), GW-EFF-011 (H6′), and the three
 re-runs on the v1 bundle: GW-EFF-012, GW-E2E-011 and GW-E2E-012. Reports are in
 `reports/efficiency/phase16/`, written by `scripts/phase16_score.py` at `1253dfe`, with the baseline
-table in `reports/benchmark_results/efficiency_comparison.md`. Final validation (Phase 22) has not
-been run.
+table in `reports/benchmark_results/efficiency_comparison.md`. Final validation (Phase 22) has been
+run; its record is `docs/FINAL_VALIDATION.md`.
 
 <!-- trace: GW-EFF-007 reports/efficiency/phase16/README.md#verdicts -->
 
@@ -301,11 +301,31 @@ in <!-- derived: gpu_page_ms --> 1,049 ms on average.
 
 The owner decided on 2026-11-18 (ADR-0011) that v1 keeps PyTorch as its default backend and that
 ADR-0011's laptop targets are recorded as missed for v1, not restated. The target hardware is
-lightweight devices such as phones. Phones are the target hardware; no phone has been measured. The
-laptop figures here therefore only rank candidate builds. The all-ONNX build with fused attention
-(section 3: 4,020.8 ms mean per page and 2,393.0 MiB on this laptop, at v1's page CER and F1 on
-validation) is the phone candidate. A new version, not v1; validation and laptop figures only; to be
-evaluated in Phase 22. Fused attention combined with the INT8 recognizer was not measured.
+lightweight devices such as phones. Phones are the target hardware. Phase 22 measured the phone
+candidate's networks on two phones (GW-EFF-015): network time and memory only, without decoding,
+post-processing, cropping or reading order; v1 itself was not measured on a phone. The laptop
+figures here therefore only rank candidate builds. The all-ONNX build with fused attention (section
+3: 4,020.8 ms mean per page and 2,393.0 MiB on this laptop, at v1's page CER and F1 on validation)
+was the starting point. Phase 22 selected the all-ONNX build with fused attention, reading one line
+per recognizer run (`fused-single-line`, GW-EFF-013), as the phone candidate. A new version, not v1.
+Phase 22 evaluated it once per test set, and it met H11's six non-inferiority tests against v1
+(GW-E2E-021, `reports/final_validation/candidate/h11.md`); its results sit beside v1's and replace
+none of them.
+
+On the first phone (`SM-M526B`), the network time per timed validation page, over two runs per arm,
+and the peak memory were as below (GW-EFF-015, `reports/final_validation/GW-EFF-015/phone_sm-m526b.md`).
+Fused attention combined with the INT8 recognizer (`fused-int8`) was measured there too: it met the
+speed condition but used more memory than `fused`, so it was not selected (GW-EFF-013,
+`reports/final_validation/candidate/GW-EFF-013/selection.md`). These are network times, not page
+times, and no phone target is set; the second phone
+(`reports/final_validation/GW-EFF-015/phone_moto-g35-5g.md`) changes no decision.
+
+<!-- trace-table: GW-EFF-015 reports/final_validation/GW-EFF-015/phone_sm-m526b.md fused-single-line=L9|fused=L7|fused-int8=L8 -->
+| Arm | Mean ms, both runs | p95 ms, both runs | Peak VmHWM MiB |
+|---|---|---|---|
+| fused-single-line | 8,111.9 | 18,298.9 | 919.9 |
+| fused | 12,824.4 | 25,756.3 | 1,645.3 |
+| fused-int8 | 8,522.2 | 17,568.2 | 1,814.9 |
 
 For context only, the Phase 5 baselines' page times on the same pages are in
 `reports/benchmark_results/efficiency_comparison.md`. They were measured in different sittings and
@@ -350,19 +370,23 @@ damaged-bundle case behaved as registered (`reports/hardening/GW-E2E-012.json`).
 <!-- trace: GW-E2E-011 reports/package/GW-E2E-011.json -->
 
 These checks use validation data. Test results come from the GPU strict-fp32 evaluation; equality with
-the bundle is shown on validation only. Phase 22 checks reproduction within the 0.05-point tolerance.
+the bundle is shown on validation only. Phase 22 checked reproduction at the 0.05-point tolerance
+(`reports/final_validation/v1_reproduction.md`): every prediction was the same, and it found 16
+failures among the 1,381 point values checked, all of them official OmniDocBench scores.
 
 ## 9. Limits
 
 <!-- trace: configs/final/glypharis_v1.yaml configs/final/glypharis_v1.yaml#recognizer/input -->
 <!-- trace: GW-EFF-007 reports/efficiency/phase16/cost_table.md#pages -->
 
-- One laptop, one CPU and one GPU, one version of each runtime; the numbers may not transfer, and
-  no phone has been measured.
+- One laptop, one CPU and one GPU, one version of each runtime; the numbers may not transfer. The
+  only phone figures are the phone candidate's network time and memory (GW-EFF-015); v1 was not
+  measured on a phone, and a full page on a phone was not measured.
 - Latency was measured on HierText validation pages, not documents, on 100 timed pages (of the
   110 profile pages, after 10 warm-up) and 100 timed lines per profile.
-- Every variant is a new version, measured on validation only; none replaces v1. The recognizer and
-  detector size points differ in recipe and budget, not only in size.
+- Every variant is a new version, measured on validation only apart from the phone candidate's
+  Phase 22 evaluation (GW-E2E-021); none replaces v1. The recognizer and detector size points differ
+  in recipe and budget, not only in size.
 - Thermal drift within a sitting is limited by the mirrored run order where arms are compared
   (GW-EFF-008, 009, 011), not removed; GW-EFF-010 and GW-EFF-007's rows are one run each.
 - The fused attention was measured for v1's recognizer only, so its effect on GW-REC-020's ONNX

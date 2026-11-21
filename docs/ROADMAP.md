@@ -118,9 +118,9 @@ stays open until the last of them has passed.
 | Git history | all | ☐ | Kept through Phase 20; open until Phase 23 |
 | Phase documentation | all | ☐ | `docs/PHASE_STATUS.md`, through Phase 20; open until Phase 23 |
 | Research documentation | all | ☐ | `research/`; open until Phase 23 |
-| Model card | 21 | ☐ | `MODEL_CARD.md`, under review in the Phase 21 gate |
-| Dataset documentation | 2, 21 | ☐ | `DATASETS.md`, under review in the Phase 21 gate |
-| Reproducible final experiment | 13, 22 | ☐ | Configuration frozen and recorded; reproduction pending Phase 22. `configs/final/glypharis_v1.yaml` |
+| Model card | 21 | ☑ | `MODEL_CARD.md`, tag `phase-21` |
+| Dataset documentation | 2, 21 | ☑ | `DATASETS.md`, tag `phase-21` |
+| Reproducible final experiment | 13, 22 | ☐ | Configuration frozen and recorded. Phase 22 re-ran it: the predictions equal Phase 14's in every test file, and the strict verdict failed only on official OmniDocBench scores, through the evaluator's time limit; the owner accepted this as a disclosed limitation (GW-E2E-018, `reports/final_validation/v1_reproduction.md`). Accepted with a disclosed evaluator limitation; ticked when the Phase 22 gate passes. `configs/final/glypharis_v1.yaml` |
 
 ## 5. Beyond v1.0 (not scheduled)
 
@@ -134,9 +134,18 @@ Ideas that are deliberately out of scope until v1.0 ships:
 
 ## 6. Carried into Phase 22
 
-Phase 22 carries two items beyond the clean-machine run ([ADR-0011](decisions/ADR-0011-cpu-latency-target.md),
-IMPLEMENTATION_PLAN Phase 22):
+Phase 22 carried two items beyond the clean-machine run ([ADR-0011](decisions/ADR-0011-cpu-latency-target.md),
+IMPLEMENTATION_PLAN Phase 22). What it did with each is recorded in
+[FINAL_VALIDATION](FINAL_VALIDATION.md):
 
-- The all-ONNX fused-attention build, the phone candidate. A new version, not v1; validation and laptop
-  figures only; to be evaluated in Phase 22.
-- The phone measurement. Phones are the target hardware; no phone has been measured.
+- The phone candidate. Of the three arms measured, the selection rule chose the all-ONNX build with
+  fused attention, reading one line per recognizer run (`fused-single-line`, GW-EFF-013,
+  `reports/final_validation/candidate/GW-EFF-013/selection.md`), frozen as bundle format
+  `glypharis-phone-bundle-1` (GW-EFF-014). A new version, not v1. Phase 22 evaluated it once per test
+  set, and it met H11's six non-inferiority tests against v1 (GW-E2E-021,
+  `reports/final_validation/candidate/h11.md`); its results sit beside v1's and replace none of them.
+- The phone measurement. Phones are the target hardware. Phase 22 measured the phone candidate's
+  networks on two phones, a Samsung Galaxy M52 5G and a Moto G35 5G (GW-EFF-015,
+  `reports/final_validation/GW-EFF-015/`): network time and memory only, without decoding,
+  post-processing, cropping or reading order; v1 itself was not measured on a phone. No phone target is
+  set.

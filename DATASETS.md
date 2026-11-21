@@ -628,21 +628,22 @@ Every test or external access is logged in `research/test_access_log.md`. Phase 
 GW-E2E-010) read Phase 14's saved outputs with no model run, as its plan set out, and used GDC-scan for
 numbers only; those reads are recorded in `reports/error_cases/phase15/results.json`, not in the access
 log. The v1 re-runs of Phases 16, 17, 18 and 20 used validation data only. Final validation (Phase 22)
-has not been run.
+has been run; its record is `docs/FINAL_VALIDATION.md`, and its test reads are listed in
+`research/test_access_log.md`.
 
 | Dataset and split | Training | Validation use | Test or external evaluation |
 |---|---|---|---|
 | HierText train | the recognizer training runs (those of GW-REC-001 to GW-REC-036 that ran, GW-DATA-001 to GW-DATA-021); detector runs GW-DET-001, GW-DET-002, GW-DET-003, GW-DET-007 | none | none |
 | HierText validation | none | checkpoint selection for every run; GW-DET-004 to GW-DET-006; GW-E2E-001 to GW-E2E-006, GW-E2E-011; GW-REC-038; GW-EFF-001 to GW-EFF-012 | none |
-| HierText test | none | none | Phase 5: GW-BASE-001, 002, 004, 005, 006. Phase 14: the same baselines, GW-REC-039, GW-E2E-007 |
+| HierText test | none | none | Phase 5: GW-BASE-001, 002, 004, 005, 006. Phase 14: the same baselines, GW-REC-039, GW-E2E-007. Phase 22: GW-E2E-015, GW-REC-043, GW-E2E-016, GW-E2E-018, GW-REC-045, GW-E2E-020, GW-E2E-021 |
 | GlyphSynth train and variants | research runs GW-REC-002, GW-DATA-010 to GW-DATA-021, ladder row L2 of GW-REC-037; no delivered model | none | none |
 | GlyphSynth validation | none | GW-DATA-022, GW-REC-037, GW-REC-041, and the Phase 5 baselines on `glyphsynth_val` | none |
 | GLYPH-C v1 | none | GW-DATA-009, GW-REC-037 | none |
-| GDC v1.1 | none | none | Phase 5: GW-BASE-001 to GW-BASE-007. Phase 14: GW-BASE-001 to GW-BASE-007, GW-REC-039, GW-E2E-007, GW-E2E-008 |
-| GDC-scan v1 | none | none | Phase 14: GW-BASE-001 to GW-BASE-007, GW-REC-039, GW-E2E-007, GW-E2E-008 |
-| FUNSD test | none | none | Phase 14: GW-BASE-001 to GW-BASE-007, GW-REC-039, GW-E2E-007 |
-| IIIT5K test | none | none | Phase 14: GW-BASE-001 to GW-BASE-007, GW-REC-039 |
-| OmniDocBench English | none | none | Phase 14: GW-BASE-001, 002, 003, 005, 006, 007, GW-E2E-007 |
+| GDC v1.1 | none | none | Phase 5: GW-BASE-001 to GW-BASE-007. Phase 14: GW-BASE-001 to GW-BASE-007, GW-REC-039, GW-E2E-007, GW-E2E-008. Phase 22: GW-E2E-015, GW-REC-043, GW-E2E-016, GW-E2E-017, GW-E2E-018, GW-REC-045, GW-E2E-020, GW-E2E-021 |
+| GDC-scan v1 | none | none | Phase 14: GW-BASE-001 to GW-BASE-007, GW-REC-039, GW-E2E-007, GW-E2E-008. Phase 22: GW-E2E-015, GW-REC-043, GW-E2E-016, GW-E2E-017, GW-E2E-018, GW-REC-045, GW-E2E-020, GW-E2E-021 |
+| FUNSD test | none | none | Phase 14: GW-BASE-001 to GW-BASE-007, GW-REC-039, GW-E2E-007. Phase 22: GW-E2E-015, GW-REC-043, GW-E2E-016, GW-E2E-018, GW-REC-045, GW-E2E-020, GW-E2E-021 |
+| IIIT5K test | none | none | Phase 14: GW-BASE-001 to GW-BASE-007, GW-REC-039. Phase 22: GW-E2E-015, GW-REC-043, GW-E2E-018, GW-REC-045, GW-E2E-021 |
+| OmniDocBench English | none | none | Phase 14: GW-BASE-001, 002, 003, 005, 006, 007, GW-E2E-007. Phase 22: GW-E2E-015, GW-E2E-016, GW-E2E-018, GW-E2E-020, GW-E2E-021 |
 
 ## Redistribution
 
@@ -686,7 +687,8 @@ The repository does not contain:
 - Evaluation-only datasets (IIIT5K, FUNSD, OmniDocBench, GDC, GDC-scan) never entered training, augmentation
   or tuning.
 - The all-ONNX fused-attention build exports the same weights, so the same terms would apply to it. A new
-  version, not v1; validation and laptop figures only; to be evaluated in Phase 22.
+  version, not v1. It was evaluated once on each test set in Phase 22 (test runs GW-REC-045 and
+  GW-E2E-020, scored in GW-E2E-021; `reports/final_validation/candidate/h11.md`).
 - Code licence and project citation: To be settled in Phase 23.
 
 ## Licence checks

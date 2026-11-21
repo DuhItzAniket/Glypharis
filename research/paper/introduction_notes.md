@@ -1,7 +1,7 @@
 # Introduction notes
 
-Status: Final validation (Phase 22) has not been run. No weights are distributed; release is
-Phase 23.
+Status: Final validation (Phase 22) has been run; its record is `docs/FINAL_VALIDATION.md`. No
+weights are distributed; release is Phase 23.
 
 HierText is released under CC BY-SA 4.0; its images come from Open Images, which lists them as
 CC BY 2.0. Figures derived from HierText are shared alike.
@@ -29,13 +29,18 @@ Handwriting, other scripts, tables, formulas and layout analysis are outside the
 
 ## Decisions that shape the claims
 
-The owner made these decisions on 2026-11-18, after the efficiency measurements (ADR-0011):
+The owner made these decisions on 2026-11-18, after the efficiency measurements (ADR-0011); the
+last two items also say what Phase 22 then found:
 
 - v1 keeps PyTorch as its default backend, as it was evaluated in Phase 14.
 - The laptop targets of ADR-0011 are recorded as missed for v1. They are not restated.
-- Phones are the target hardware; no phone has been measured.
-- The all-ONNX build with fused attention is the phone candidate. A new version, not v1; validation
-  and laptop figures only; to be evaluated in Phase 22.
+- Phones are the target hardware. Phase 22 measured the phone candidate's networks on two phones
+  (GW-EFF-015): network time and memory only, without decoding, post-processing, cropping or reading
+  order; v1 itself was not measured on a phone.
+- The phone candidate is the all-ONNX build with fused attention, reading one line per recognizer
+  run (`fused-single-line`, GW-EFF-013). A new version, not v1. Phase 22 evaluated it once per test
+  set, and it met H11's six non-inferiority tests against v1 (GW-E2E-021); its results sit beside
+  v1's and replace none of them.
 
 ## Research questions
 

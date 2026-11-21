@@ -717,10 +717,12 @@ def render_root(sources: Sources) -> str:
         "",
         "- v1 is GW-REC-034 with GW-DET-001, and it keeps PyTorch as its default backend.",
         "- The laptop CPU latency targets of ADR-0011 are recorded as missed for v1.",
-        "- Phones are the target hardware; no phone has been measured.",
-        "- The all-ONNX build with fused attention is a new version, not v1, to be evaluated in "
-        "Phase 22.",
-        "- Final validation (Phase 22) has not been run.",
+        "- Phones are the target hardware. Only the phone candidate's networks have been "
+        "measured on phones (GW-EFF-015), without decoding or post-processing; v1 has not.",
+        "- The phone candidate, the all-ONNX build with fused attention and one recognizer run per "
+        "line, is a new version, not v1. Phase 22 evaluated it once per test set, and it met H11 "
+        "against v1 (GW-E2E-021).",
+        "- Final validation (Phase 22) has been run; its record is `docs/FINAL_VALIDATION.md`.",
         "- No weights are distributed; release is Phase 23.",
         "- Dataset licences and attribution are in [DATASETS.md](DATASETS.md).",
         "",

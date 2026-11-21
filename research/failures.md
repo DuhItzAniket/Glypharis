@@ -212,3 +212,88 @@ disappointing experiment here, including bugs that invalidated a run.
 - **Lesson / implication for the paper:** none for the results. A record written for the machine
   and a record written for the repository are different things; a report should be built for the
   repository from the start, not cleaned afterwards.
+
+### 2026-11-19 — GW-EFF-015 — a code test reached the owner's phone before the registered run
+
+- **What we tried:** testing the `build` and `run` commands of `scripts/phase22_android.py` from a
+  throwaway repository, expecting `run` to stop with "no authorized device".
+- **What happened:** the owner had connected the Samsung M52 for the coming check while the test was
+  under way, so `run` went through: it installed the app, copied the fused recognizer and one
+  validation tensor to the phone, ran them and fetched the result. No test data or GDC-scan content
+  was involved. The session was created and the logits had the expected shape.
+- **Root cause:** the test relied on no phone being attached instead of faking the device.
+- **What we changed:** the app and its files were removed from the phone straight away, and the
+  run's files were kept out of the official record. The official run is made from the committed build.
+  Tests of this script use a fake `adb`.
+- **Lesson / implication for the paper:** the operator check's outcome was seen once before the official
+  run. Its pass rule is mechanical and was registered first, and nothing about the candidate was chosen
+  from this run.
+
+### 2026-11-19 — GW-E2E-015 — the re-score of v1's saved files is not identical
+
+- **What we tried:** Pass A of the v1 reproduction: Phase 14's unchanged scorer on Phase 14's saved
+  prediction files, from the `phase22-repro` wrapper, then the exact comparison with
+  `reports/external/results.json` (`scripts/phase22_v1_compare.py pass-a`).
+- **What happened:** 40 values differ, and all of them are official OmniDocBench scores of two systems,
+  Tesseract (GW-BASE-001) and GLYPHARIS (GW-E2E-007): the comparer found no unexplained difference
+  (`reports/final_validation/GW-E2E-015/verdict.json`). In both, more pages reached the evaluator's
+  per-page time limit and used its fallback than in Phase 14, and the page lists differ. Every other
+  value is identical. The validation rehearsal before it reproduced Phase 14 with no difference, and all
+  8,062 of v1's Phase 14 files still match their recorded hashes.
+- **Root cause:** the official OmniDocBench evaluator limits how long its text matching may take on a
+  page and switches to a fallback when that time runs out, so which pages fall back depends on how fast
+  the machine is at that moment. The files being scored and the evaluator are the same as in Phase 14.
+- **What we changed:** nothing in the evaluator or the rules. As registered (owner decision 6),
+  "identical" is recorded as failed with this cause. The owner ruled on 2026-11-19 to continue with the
+  test re-run and Pass B under the registered rule unchanged, and to decide on acceptance at the end.
+- **Lesson / implication for the paper:** official scores from an evaluator with wall-clock limits are
+  not exactly reproducible on the same machine, and the paper says so wherever it cites them.
+
+### 2026-11-19 — GW-E2E-018 — the v1 re-run misses the tolerance on 16 official OmniDocBench scores
+
+- **What we tried:** the v1 test re-run from the `phase14-eval` code (GW-REC-043, GW-E2E-016,
+  GW-E2E-017), scored by Phase 14's unchanged scorer with all official evaluators (Pass B), then every
+  path of the metric inventory judged at 0.0005 (`scripts/phase22_v1_compare.py verdict`).
+- **What happened:** the re-run's predictions are the same as Phase 14's: all 12 files compared, with no
+  crop or page whose record differs outside the timings (`reports/final_validation/GW-E2E-018/line_comparison.json`).
+  Of the 1,381 point values, 1,365 are within the tolerance, no count, flag or verdict changed, and no run
+  identity differs. The 16 that fail are all GLYPHARIS's official OmniDocBench scores (text block and
+  reading order), the largest 0.0208 on the three-column slice
+  (`reports/final_validation/v1_reproduction.json`). All 8,062 v1 files still match
+  `reports/final_validation/v1_files_before.json`.
+- **Root cause:** the same as in GW-E2E-015. One more page reached the evaluator's quick-match time limit
+  and was scored by its fallback than in Phase 14; Pass A and Pass B fell back on exactly the same pages,
+  so on this machine today the result is stable, but it is not Phase 14's. The predictions themselves did
+  not change. Two baseline values of the official HierText evaluator also moved, by about 1e-8 (float32
+  rounding); baselines are not judged.
+- **What we changed:** nothing in the evaluator, the rule or Phase 14's results, which stay as recorded.
+  As item 13 says, the verdict is reported as failed and the exit criterion stays unmet until the owner
+  rules at the end of the phase. The candidate work does not depend on this verdict. On 2026-11-21 the
+  owner accepted the reproduction as an explained evaluator limitation, disclosed; the verdict stays as
+  recorded.
+- **Lesson / implication for the paper:** the model reproduces line for line; scores from an evaluator
+  with wall-clock limits do not, and the paper reports them with that caveat and the pages involved.
+
+### 2026-11-20 — GW-EFF-014 — the first bundle freeze wrote its manifest with Windows line endings
+
+- **What we tried:** freezing the phone bundle with `scripts/phase22_bundle.py freeze`.
+- **What happened:** `manifest.json` and the other text files were written with CRLF line endings, so
+  their hashes depended on the platform that wrote them. Found before the equivalence check ran.
+- **Root cause (if known):** text written without `newline="\n"`.
+- **What we changed:** `glypharis/efficiency/phone_bundle.py` writes text files with LF; the first
+  bundle was set aside unused and the bundle frozen again. The check, the gate and every test run used
+  only the second bundle, manifest SHA-256 `97a41168…`.
+- **Lesson / implication for the paper:** none for the results; a hash recorded on one platform must
+  not depend on its line endings.
+
+### 2026-11-20 — GW-EFF-013 — the INT8 recognizer was faster on the phone but used more memory
+
+- **What we tried:** fused attention with the dynamic INT8 recognizer (`fused-int8`) as a phone arm.
+- **What happened:** on the SM-M526B it took 8,522.2 ms per page against `fused`'s 12,824.4 ms and met
+  the speed condition, but its peak `VmHWM` was 1,814.9 MiB against 1,645.3, so it failed the memory
+  condition (`reports/final_validation/GW-EFF-015/phone_sm-m526b.md`). Its greedy text matched the
+  laptop's on 1,444 of 1,488 lines (reported, not judged).
+- **Root cause (if known):** not established; the INT8 graph was not profiled for memory.
+- **What we changed:** nothing; the rule selected `fused-single-line`.
+- **Lesson / implication for the paper:** INT8 alone is not the lighter phone build here; one recognizer
+  run per line kept v1's text and used the least memory of the three.

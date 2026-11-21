@@ -8,7 +8,8 @@ recognizer GW-REC-034, detector GW-DET-001, read from the model bundle with mani
 evaluated is tag `phase14-eval`; tag `v1-code` differs from it only in docstrings, comments and the
 default bundle name (`reports/export/v1-code/code_diff.json`).
 
-Final validation (Phase 22) has not been run. No weights are distributed; release is Phase 23.
+Final validation (Phase 22) has been run; its record is `docs/FINAL_VALIDATION.md`. Its phase gate is
+still open. No weights are distributed; release is Phase 23.
 
 Settings below come from the freeze record and the configs it names. Measured values carry their
 experiment ID and report. Results on the evaluation sets are in [MODEL_CARD.md](../MODEL_CARD.md) and
@@ -303,15 +304,18 @@ are the Phase 5 subset; on all 1,715 validation pages the frozen pipeline's page
 27.57% [25.11, 30.36], with a 95% page-bootstrap interval (GW-E2E-006, `reports/external/end_to_end.md`).
 
 Test results come from the GPU strict-fp32 evaluation; equality with the bundle is shown on validation
-only. Phase 22 checks reproduction within the 0.05-point tolerance.
+only. Phase 22 checked reproduction at the 0.05-point tolerance (`reports/final_validation/v1_reproduction.md`):
+every prediction was the same, and 16 of 1,381 point values, all official OmniDocBench scores, fell outside it.
 
 ## 9. Efficiency and target hardware
 
 All figures in this section are from one laptop (`reports/environment/env_report.md`) on HierText
 validation data.
 
-Phones are the target hardware; no phone has been measured. The laptop figures only rank candidate
-builds (ADR-0011, owner decision of 2026-11-18).
+Phones are the target hardware. Phase 22 measured only the phone candidate's networks on two phones
+(GW-EFF-015, `docs/FINAL_VALIDATION.md` section 4): network time and memory only, without decoding or
+post-processing. v1 was not measured on a phone. The laptop figures only rank candidate builds
+(ADR-0011, owner decision of 2026-11-18).
 
 ADR-0011's laptop targets are recorded as missed for v1. Its limits and v1's values at 10 CPU threads
 (GW-EFF-007, `reports/efficiency/phase16/README.md`):
@@ -339,9 +343,11 @@ The `fused-attention` build is the phone candidate (ADR-0011). It exports each o
 global mixers as one `com.microsoft.MultiHeadAttention` node (`glypharis/efficiency/fused_attention.py`).
 Against `v1-onnx` its page time differs by −5,718.6 [−6,630.9, −4,883.7] ms. On 5,000 validation lines
 its logits are within 3.01e-04 of PyTorch's and its text is identical
-(`reports/efficiency/phase16/variants/fused-attention/lines.json`). Whether phone builds of ONNX Runtime
-include this operator has not been checked. A new version, not v1; validation and laptop figures only; to
-be evaluated in Phase 22.
+(`reports/efficiency/phase16/variants/fused-attention/lines.json`). The Android operator check loaded
+this export with the stock `onnxruntime-android` package and was go on both phones (GW-EFF-015 part a,
+`reports/final_validation/GW-EFF-015/operator_check.json`). A new version, not v1. Phase 22 evaluated it
+(`docs/FINAL_VALIDATION.md` section 3): the candidate `fused-single-line` (GW-EFF-013) met H11 against
+v1 (GW-E2E-021, `reports/final_validation/candidate/h11.md`).
 
 Two confirmatory latency tests were not met (`reports/efficiency/phase16/verdicts.md`):
 

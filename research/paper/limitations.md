@@ -6,12 +6,31 @@ appears as numbers only.
 
 ## Status of the evidence
 
-Final validation (Phase 22) has not been run. Configuration frozen and recorded; reproduction
-pending Phase 22. No weights are distributed; release is Phase 23.
+Final validation (Phase 22) has been run; its record is `docs/FINAL_VALIDATION.md`. Configuration
+frozen and recorded. Phase 22 re-ran it: the predictions equal Phase 14's in every test file, and the
+strict verdict failed only on official OmniDocBench scores, through the evaluator's time limit; the
+owner accepted this as a disclosed limitation (`reports/final_validation/v1_reproduction.md`). No
+weights are distributed; release is Phase 23.
+
+<!-- trace: GW-E2E-018 reports/final_validation/v1_reproduction.md -->
+- Reproduction of the official OmniDocBench scores. The strict reproduction verdict (GW-E2E-018,
+  `reports/final_validation/v1_reproduction.md`), which judged GLYPHARIS v1's values only, found 16
+  failures among the 1,381 point values checked, all of them GLYPHARIS's official OmniDocBench
+  scores. The predictions were identical to Phase 14's; the official evaluator gives up on a page
+  after a time limit and scores it by a fallback, and how many pages hit that limit depends on
+  machine speed. Re-scoring the same saved Phase 14 files (GW-E2E-015,
+  `reports/final_validation/GW-E2E-015/verdict.json`) also changed Tesseract 5's official
+  OmniDocBench scores, through the same time-limit fallback, so the official GLYPHARIS-versus-Tesseract
+  comparison and ranking on these scores carry the same limitation. The owner accepted this as a
+  disclosed limitation; the strict verdict stays as recorded, and so do Phase 14's results. Any
+  official OmniDocBench score in this package carries this limitation.
+- Phone figures are network-only. The phone measurement (GW-EFF-015) covers the phone candidate's
+  network time and memory; decoding, post-processing, cropping and reading order were not ported, so
+  a full page on a phone was not measured, and v1 itself was not measured on a phone.
 
 <!-- trace: GW-E2E-011 reports/package/GW-E2E-011.json -->
 Test results come from the GPU strict-fp32 evaluation; equality with the bundle is shown on
-validation only. Phase 22 checks reproduction within the 0.05-point tolerance. The check on
+validation only. Phase 22 checked reproduction at the 0.05-point tolerance (see above). The check on
 validation covered <!-- derived: pkg_pages --> 400 HierText pages through the bundle's PyTorch
 backend: all <!-- derived: pkg_lines --> 16,835 lines kept their text and box (GW-E2E-011). The same
 bundle's agreement with the PyTorch references is recorded in GW-EFF-012, and the ONNX export's in
@@ -127,7 +146,13 @@ project's metric, not the official protocol. The official text-block edit distan
 better and no interval exists, was <!-- derived: off_glyph_whole --> 0.1859 for GLYPHARIS
 against <!-- derived: off_tess_whole --> 0.0847 for Tesseract 5 over the whole set,
 and <!-- derived: off_glyph_page --> 0.1007 against <!-- derived: off_tess_page --> 0.0966 as a page
-average; no difference is stated.
+average; no difference is stated. In Phase 22 these official scores of GLYPHARIS did not pass the
+strict reproduction verdict, which judged GLYPHARIS v1's values only, although the predictions were
+identical, because the evaluator's per-page time limit depends on machine speed (GW-E2E-018,
+`reports/final_validation/v1_reproduction.md`). Re-scoring the same saved Phase 14 files (GW-E2E-015,
+`reports/final_validation/GW-E2E-015/verdict.json`) also changed Tesseract 5's official scores,
+through the same time-limit fallback, so this comparison and its ranking carry the same limitation.
+The owner accepted this as a disclosed limitation (see the status section above).
 
 <!-- trace: GW-E2E-009 reports/external/end_to_end.md#detection -->
 FUNSD detection F1 at IoU 0.5 was <!-- derived: funsd_glyph --> 79.07%
@@ -177,7 +202,9 @@ not met for it. H1′ holds for the PyTorch build only.
 <!-- trace: GW-EFF-007 reports/efficiency/phase16/cost_table.md#pages -->
 All latencies come from one laptop (Intel Core i7-14650HX, 10 threads) on
 HierText validation pages, which average <!-- derived: lines_per_page --> 40.9 lines, and not on
-document pages. Phones are the target hardware; no phone has been measured.
+document pages. Phones are the target hardware. Phase 22 measured the phone candidate's networks on
+two phones (GW-EFF-015): network time and memory only, without decoding, post-processing, cropping
+or reading order; v1 itself was not measured on a phone.
 
 <!-- trace: GW-E2E-009 reports/external/README.md#confirmatory-tests -->
 <!-- trace: GW-EFF-007 reports/benchmark_results/efficiency_comparison.md#pages -->
@@ -191,8 +218,14 @@ not removed.
 
 <!-- trace: GW-EFF-009 reports/efficiency/phase16/pareto.md#pages -->
 The fused-attention build took <!-- derived: fused_ms --> 4,020.8 ms [3,604.2, 4,479.8] per page on
-the laptop with <!-- derived: fused_ram --> 2,393.0 MiB at peak. A new version, not v1; validation
-and laptop figures only; to be evaluated in Phase 22.
+the laptop with <!-- derived: fused_ram --> 2,393.0 MiB at peak. The phone candidate chosen in
+Phase 22 is the all-ONNX build with fused attention, reading one line per recognizer run
+(`fused-single-line`, GW-EFF-013). A new version, not v1. Phase 22 evaluated it once per test set,
+and it met H11's six non-inferiority tests against v1 (GW-E2E-021); its results sit beside v1's and
+replace none of them. H11 is a non-inferiority test and does not show line-for-line equality on test
+data. Its official OmniDocBench scores are not comparable with v1's, because the evaluator's time
+limit sent a different number of pages to fallback scoring
+(`reports/final_validation/candidate/results.json`, `match_debug`).
 
 The compute ledger counts only queue-logged jobs. Experiments it does not cover are listed by ID in
 `reports/experiment_summary.md`, so its totals are not the total compute of the project.

@@ -11,8 +11,11 @@ is named where it is used. Every interval is a 95% percentile bootstrap interval
 whether lines, pages or documents were resampled. Every number comes from a generated report, a
 manifest or a configuration file, and carries its experiment ID where a run produced it.
 
-Final validation (Phase 22) has not been run. Configuration frozen and recorded; reproduction
-pending Phase 22. No weights are distributed; release is Phase 23.
+Final validation (Phase 22) has been run; its record is `docs/FINAL_VALIDATION.md`. Configuration
+frozen and recorded. Phase 22 re-ran it: the predictions equal Phase 14's in every test file, and the
+strict verdict failed only on official OmniDocBench scores, through the evaluator's time limit; the
+owner accepted this as a disclosed limitation (`reports/final_validation/v1_reproduction.md`). No
+weights are distributed; release is Phase 23.
 
 HierText is released under CC BY-SA 4.0; its images come from Open Images, which lists them as
 CC BY 2.0 (`long2022hiertext`, `kuznetsova2020openimages`). Tables derived from HierText are shared
@@ -41,11 +44,15 @@ GW-DET-001 (3,187,209 parameters at inference) at the post-processing and resolu
 Phase 9, and the confidence temperature 2.35 from GW-E2E-005. The parameter total of the two
 networks is 11,116,044. The configuration was frozen by GW-REC-037 from validation data only, before
 any GLYPHARIS model read a test set. Anything else measured in this project, such as an INT8
-recognizer, is a variant and not v1. The export with fused attention is the candidate for phones. A
-new version, not v1; validation and laptop figures only; to be evaluated in Phase 22.
+recognizer, is a variant and not v1. The candidate for phones is the all-ONNX build with fused
+attention, reading one line per recognizer run (`fused-single-line`, GW-EFF-013). A new version, not
+v1. Phase 22 evaluated it once per test set, and it met H11's six non-inferiority tests against v1
+(GW-E2E-021); its results sit beside v1's and replace none of them.
 
-Phones are the target hardware; no phone has been measured. Every latency in this package was
-measured on one laptop.
+Phones are the target hardware. Phase 22 measured the phone candidate's networks on two phones
+(GW-EFF-015): network time and memory only, without decoding, post-processing, cropping or reading
+order; v1 itself was not measured on a phone. Every other latency in this package was measured on
+one laptop.
 
 Code: `glypharis/pipeline/ocr.py` (`GlypharisOCR`), `glypharis/pipeline/frozen.py` (builds v1 from
 the freeze record). Configuration: `configs/final/glypharis_v1.yaml`.
@@ -57,9 +64,10 @@ the freeze record). Configuration: `configs/final/glypharis_v1.yaml`.
 Dataset roles were fixed before training (ADR-0005). Training data gave gradients, the character
 set and augmentation statistics. Validation data was used for early stopping, checkpoint selection,
 tuning, calibration and any error analysis that fed back into design. Test data has been read only
-in Phases 5 and 14, once per frozen system and set, and every read went through a guard that writes
-a row to `research/test_access_log.md` before it returns data. Phase 22 is the remaining test
-phase.
+in Phases 5, 14 and 22, and every read went through a guard that writes a row to
+`research/test_access_log.md` before it returns data. Phases 5 and 14 read each set once per frozen
+system. Phase 22 re-ran v1 on each set to check its reproduction, and the phone candidate read each
+set once, after its validation gate was met (GW-REC-044, GW-E2E-019).
 
 The unit of splitting is the source document, or the source image for scene datasets, so all lines
 of a document stay in one split. Official splits were kept. Duplicates across splits were searched
@@ -529,7 +537,10 @@ Code: `glypharis/diagnostics/__init__.py`, `glypharis/diagnostics/det.py`,
 
 One configuration was identified as final, and `configs/final/glypharis_v1.yaml` was generated from
 run summaries, checkpoints and reports by `scripts/freeze_final.py`. Table 3 is its record, field by
-field. Configuration frozen and recorded; reproduction pending Phase 22.
+field. Configuration frozen and recorded. Phase 22 re-ran it: the predictions equal Phase 14's in
+every test file, and the strict verdict failed only on official OmniDocBench scores, through the
+evaluator's time limit; the owner accepted this as a disclosed limitation
+(`reports/final_validation/v1_reproduction.md`).
 
 <!-- trace: configs/final/glypharis_v1.yaml configs/final/glypharis_v1.yaml#recognizer/parameters -->
 <!-- trace: configs/final/glypharis_v1.yaml configs/final/glypharis_v1.yaml#detector/parameters -->
