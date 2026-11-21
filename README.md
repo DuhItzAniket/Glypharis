@@ -8,9 +8,10 @@ GLYPHARIS is built as a research project. Every model is trained and evaluated o
 (see [Hardware](#hardware)), every experiment is registered before it runs, and every reported number
 traces back to a generated report.
 
-> **Status: v1 evaluated and packaged, not released.** Phases 0 to 20 are complete, including the export,
-> package and hardening re-runs on the final model. The research package (Phase 21) is in progress.
-> Final validation (Phase 22) has not been run. No weights are distributed; release is Phase 23.
+> **Status: v1 evaluated and packaged, not released.** Phases 0 to 21 are complete, including the export,
+> package and hardening re-runs on the final model and the research package (Phase 21).
+> Final validation (Phase 22) has been run; its record is `docs/FINAL_VALIDATION.md`. Its phase gate is
+> still open. No weights are distributed; release is Phase 23.
 > `v0.1` is the earlier usable engine ([ADR-0008](docs/decisions/ADR-0008-usable-engine-first.md)).
 > See [docs/PHASE_STATUS.md](docs/PHASE_STATUS.md) for what is done and every number behind it, and
 > [MODEL_CARD.md](MODEL_CARD.md) for what v1 is, how it measured and where it fails.
@@ -127,11 +128,16 @@ Development and training machine, from the generated
 Training supports CUDA with automatic CPU fallback, mixed precision (bf16/fp16), gradient accumulation,
 checkpoint resume and VRAM monitoring.
 
-Phones are the target hardware; no phone has been measured. The laptop's figures only rank candidate
-builds, and v1 misses the laptop CPU latency targets of
+Phones are the target hardware. Phase 22 measured the phone candidate's networks on two phones
+(GW-EFF-015, `reports/final_validation/GW-EFF-015/`): network time and memory only, without decoding,
+post-processing, cropping or reading order; v1 itself was not measured on a phone. The laptop's figures
+only rank candidate builds, and v1 misses the laptop CPU latency targets of
 [ADR-0011](docs/decisions/ADR-0011-cpu-latency-target.md) (GW-EFF-007,
-`reports/efficiency/phase16/README.md`). The phone candidate is the all-ONNX build with fused attention
-(GW-EFF-009). A new version, not v1; validation and laptop figures only; to be evaluated in Phase 22.
+`reports/efficiency/phase16/README.md`). No phone target is set. The phone candidate is the all-ONNX
+build with fused attention, reading one line per recognizer run (`fused-single-line`, GW-EFF-013). A new
+version, not v1. Phase 22 evaluated it once per test set, and it met H11's six non-inferiority tests
+against v1 (GW-E2E-021, `reports/final_validation/candidate/h11.md`); its results sit beside v1's and
+replace none of them.
 
 ## Licence
 

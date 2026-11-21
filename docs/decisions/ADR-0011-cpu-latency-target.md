@@ -1,6 +1,6 @@
 # ADR-0011: CPU latency target for GLYPHARIS v0.1
 
-- **Status:** Accepted for v1 as a missed target; revisit triggered again by a change of target hardware (owner decision 2026-11-18, see below) (2026-10-25, Phase 5; approved by the owner)
+- **Status:** Accepted for v1 as a missed target; revisit triggered again by a change of target hardware (owner decision 2026-11-18, see below); the phone candidate's networks measured on two phones in Phase 22, no phone target set (see below) (2026-10-25, Phase 5; approved by the owner)
 
 ## Context
 ADR-0008 makes CPU latency the primary efficiency number and leaves the target to be set from
@@ -144,6 +144,41 @@ ADR do not change, and no phone target is set yet.
   the selection rule written with H11 (`research/hypotheses.md`, GW-EFF-013).
 - The candidate is a new version, not v1. It is compared with v1 under H11, and its results sit beside
   v1's.
+
+Phase 22 carried this out; see below.
+
+## Phase 22 measurement (2026-11-20 and 21)
+The record is [FINAL_VALIDATION](../FINAL_VALIDATION.md), section 4.
+
+- **Operator check.** The stock Android runtime loaded the fused recognizer, with its
+  `com.microsoft.MultiHeadAttention` nodes, and gave finite logits of the laptop's shape: go on both
+  phones (GW-EFF-015 part a, `reports/final_validation/GW-EFF-015/operator_check.json`).
+- **Selection.** Of the three arms taken to the phone, only `fused-single-line` (fused attention,
+  one line per recognizer run) met all three conditions of the selection rule written with H11, and it
+  is the phone candidate (GW-EFF-013, `reports/final_validation/candidate/GW-EFF-013/selection.md`). On
+  the Samsung Galaxy M52 5G (SM-M526B), with 4 threads and 100 timed validation pages per run, two runs
+  per arm (GW-EFF-015, `reports/final_validation/GW-EFF-015/phone_sm-m526b.md`):
+
+  | Arm | Mean network ms per page, both runs | p95 ms, both runs | Peak VmHWM MiB | Speed met | Memory met |
+  |---|---|---|---|---|---|
+  | fused | 12824.4 | 25756.3 | 1645.3 | (reference) | (reference) |
+  | fused-int8 | 8522.2 | 17568.2 | 1814.9 | yes | no |
+  | fused-single-line | 8111.9 | 18298.9 | 919.9 | yes | yes |
+
+  Fused attention with the INT8 recognizer met the speed condition but used more memory than
+  `fused`, so it was not selected. For `fused` and `fused-single-line` the logits were within 1e-3 of
+  the laptop's and the greedy text was identical on every line checked; the INT8 arm's differences are
+  reported, not judged.
+- **Second phone.** On the Moto G35 5G `fused-single-line` took 10987.5 ms mean network time per page
+  (p95 23283.8 ms) with a peak VmHWM of 409.0 MiB, and passed the same check
+  (`reports/final_validation/GW-EFF-015/phone_moto-g35-5g.md`). It is a second named device and changes
+  no decision.
+- **What these figures are.** Network time and memory only: a page's time is the sum of its
+  `session.run` calls. Decoding, post-processing, cropping and reading order were not ported, so a
+  full page on a phone was not measured. v1 itself (PyTorch) was not measured on a phone.
+
+The laptop targets of this ADR are unchanged and stay recorded as missed for v1. No phone target is
+set: a phone target needs a full-page measurement on a phone, which was not made.
 
 ## Revisit if
 - The exported v0.1 misses the target by a wide margin and the trade-off needs an owner decision.
