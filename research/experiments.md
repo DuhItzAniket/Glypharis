@@ -2171,7 +2171,7 @@ Rows link to a full entry below. Numbers are copied from generated reports only,
 
 ### <a id="gw-e2e-020"></a>GW-E2E-020 — Phone candidate on the test pages
 
-- **Date allocated / run:** 2026-11-18 / 2026-11-20
+- **Date allocated / run:** 2026-11-18 / 2026-11-20 to 2026-11-21
 - **Phase:** 22
 - **Git commit:** tag `phase22-candidate-eval`   **Config:** the GW-EFF-014 bundle   **Seed(s):** none
 - **Dataset version(s):** HierText test, GDC, GDC-scan, FUNSD, OmniDocBench (English, all 755 pages)
@@ -2273,7 +2273,7 @@ Rows link to a full entry below. Numbers are copied from generated reports only,
 
 ### <a id="gw-eff-013"></a>GW-EFF-013 — Phone candidate selection
 
-- **Date allocated / run:** 2026-11-18 / 2026-11-19
+- **Date allocated / run:** 2026-11-18 / 2026-11-19 to 2026-11-20
 - **Phase:** 22
 - **Git commit:** recorded in the report   **Config:** `glypharis/efficiency/candidate.py`, `scripts/phase22_candidate.py`, `scripts/phase22_android.py select`   **Seed(s):** Phase 16's line sample; bootstrap 20261010
 - **Dataset version(s):** HierText validation: the 400 Phase 5 pages, the 5,000 seeded lines, and the Phase 5 profile pages (10 warm-up, 100 timed)
@@ -2283,7 +2283,7 @@ Rows link to a full entry below. Numbers are copied from generated reports only,
 - **Method:** accuracy of the three arms on the laptop, each reading the 5,000 lines under the batching rule its bundle would ship; the arms that pass go to the phone, in mirrored order, in the sitting of GW-EFF-015, where the speed condition must hold over both runs and on each run alone. The rule leaves exactly one candidate. Reports go to `reports/final_validation/GW-EFF-013/`.
 - **Variables:** independent: arm (`fused`, `fused-int8`, `fused-single-line`); controlled: pages, lines, thread count, order, device
 - **Control:** the `fused` arm (GW-EFF-009's `fused-attention`)
-- **Result:** selected `fused-single-line`, which met all three conditions (`reports/final_validation/candidate/GW-EFF-013/selection.md`). Laptop accuracy against `fused`, strict track (`accuracy.md` there): `fused-int8` read line CER 6.242% against 6.221%, page CER 24.326% against 24.321% and E2E F1 0.6046 against 0.6050, all three met at its 0.005 margin; `fused-single-line` gave `fused`'s values, 6.221%, 24.321% and 0.6050, all three met at 0.0005. Both went to the phone with `fused`. On the SM-M526B (GW-EFF-015 part b), mean network time per page over both runs was 12,824.4 ms for `fused`, 8,522.2 ms for `fused-int8` and 8,111.9 ms for `fused-single-line`, with peak `VmHWM` 1,645.3, 1,814.9 and 919.9 MiB. The speed condition held for both arms over both runs and on each run alone (`fused-single-line` −3,430.1 [−3,782.5, −3,078.0] ms, `fused-int8` −3,019.8 [−3,380.0, −2,667.9] ms); the memory condition held only for `fused-single-line`. On the laptop, as information (`laptop.md`): `fused-single-line` took 3,217.4 and 3,168.2 ms per page in its two runs against `fused`'s 4,228.7 and 4,343.3, with peak RAM 1,124.3 against 2,397.1 MiB.
+- **Result:** (the reports are under `reports/final_validation/candidate/GW-EFF-013/`, not the folder the Method names) selected `fused-single-line`, which met all three conditions (`reports/final_validation/candidate/GW-EFF-013/selection.md`). Laptop accuracy against `fused`, strict track (`accuracy.md` there): `fused-int8` read line CER 6.242% against 6.221%, page CER 24.326% against 24.321% and E2E F1 0.6046 against 0.6050, all three met at its 0.005 margin; `fused-single-line` gave `fused`'s values, 6.221%, 24.321% and 0.6050, all three met at 0.0005. Both went to the phone with `fused`. On the SM-M526B (GW-EFF-015 part b), mean network time per page over both runs was 12,824.4 ms for `fused`, 8,522.2 ms for `fused-int8` and 8,111.9 ms for `fused-single-line`, with peak `VmHWM` 1,645.3, 1,814.9 and 919.9 MiB. The speed condition held for both arms over both runs and on each run alone (`fused-single-line` −3,430.1 [−3,782.5, −3,078.0] ms, `fused-int8` −3,019.8 [−3,380.0, −2,667.9] ms); the memory condition held only for `fused-single-line`. On the laptop, as information (`laptop.md`): `fused-single-line` took 3,217.4 and 3,168.2 ms per page in its two runs against `fused`'s 4,228.7 and 4,343.3, with peak RAM 1,124.3 against 2,397.1 MiB.
 - **Interpretation:** on the first phone, one recognizer run per line was both faster than `fused` and lighter, and read the same text; the INT8 recognizer was fast but used more memory than `fused`, so the rule left exactly one candidate. The decision rests on one phone; the second changes nothing.
 - **Limitations:** phone times are network time only; validation data; a new version, not v1. Not started if the operator check of GW-EFF-015 fails. If `fused` fails the phone's logit and text check, no other arm can be selected and `fused` stays the candidate for the laptop evaluation.
 - **Next experiment:** GW-EFF-014
@@ -2300,14 +2300,14 @@ Rows link to a full entry below. Numbers are copied from generated reports only,
 - **Method:** build the bundle (v1's `detector.onnx` byte for byte, the chosen recognizer, `charset.json`, a manifest of hashes and settings, session options included) and check it against the references: map difference at most 1e-4, logits at most 1e-3, text identical except near ties on at most 0.1% of lines, page CER within 0.05 points. Reports go to `reports/final_validation/GW-EFF-014/`.
 - **Variables:** none
 - **Control:** GW-EFF-006
-- **Result:** pass (`reports/final_validation/candidate/GW-EFF-014/equivalence.json`). The bundle is format `glypharis-phone-bundle-1` with manifest SHA-256 `97a4116884f93d0d0293d0910e37dee4dbd0aacfb249c3f2c3819e289ee06e2e` (`manifest.json` there), arm `fused-single-line`, labelled as a new version, not v1; `detector.onnx` is v1's byte for byte and the shared settings equal v1's. Against the GW-EFF-006 references: map difference 7.33e-06 over 110 pages (limit 1e-4); logit difference 2.78e-04 over 5,000 lines (limit 1e-3), with 5,000 of 5,000 texts identical and no near-tie difference; page CER 24.321% against 24.320% on 400 pages, a difference of 0.0015 points (limit 0.05).
+- **Result:** (the reports are under `reports/final_validation/candidate/GW-EFF-014/`, not the folder the Method names) pass (`reports/final_validation/candidate/GW-EFF-014/equivalence.json`). The bundle is format `glypharis-phone-bundle-1` with manifest SHA-256 `97a4116884f93d0d0293d0910e37dee4dbd0aacfb249c3f2c3819e289ee06e2e` (`manifest.json` there), arm `fused-single-line`, labelled as a new version, not v1; `detector.onnx` is v1's byte for byte and the shared settings equal v1's. Against the GW-EFF-006 references: map difference 7.33e-06 over 110 pages (limit 1e-4); logit difference 2.78e-04 over 5,000 lines (limit 1e-3), with 5,000 of 5,000 texts identical and no near-tie difference; page CER 24.321% against 24.320% on 400 pages, a difference of 0.0015 points (limit 0.05).
 - **Interpretation:** the frozen bundle reproduces the selected build within Phase 17's tolerances, so the validation gate could run on it.
 - **Limitations:** if `fused-int8` was selected, the logit and text checks are reported and the selection margin decides. The bundle is a new version, not v1. If a tolerance fails, no other arm is tried, and the later IDs and H11 close as `not run`.
 - **Next experiment:** GW-REC-044 and GW-E2E-019
 
 ### <a id="gw-eff-015"></a>GW-EFF-015 — Android operator check and phone measurement
 
-- **Date allocated / run:** 2026-11-18 / 2026-11-18
+- **Date allocated / run:** 2026-11-18 / 2026-11-18 to 2026-11-20
 - **Phase:** 22
 - **Git commit:** recorded in the report   **Config:** `mobile/android-bench`, `onnxruntime-android:1.31.1`   **Seed(s):** Phase 16's line sample
 - **Dataset version(s):** validation network inputs only: one tensor for part a; 10 plus 100 Phase 5 profile pages and 1,000 seeded lines for part b

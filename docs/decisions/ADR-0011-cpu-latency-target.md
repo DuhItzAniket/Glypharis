@@ -147,7 +147,7 @@ ADR do not change, and no phone target is set yet.
 
 Phase 22 carried this out; see below.
 
-## Phase 22 measurement (2026-11-20 and 21)
+## Phase 22 measurement (2026-11-18 to 20, recorded 2026-11-21)
 The record is [FINAL_VALIDATION](../FINAL_VALIDATION.md), section 4.
 
 - **Operator check.** The stock Android runtime loaded the fused recognizer, with its

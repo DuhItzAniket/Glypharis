@@ -4543,7 +4543,9 @@ v1's at the printed precision (`reports/final_validation/candidate/h11.md`).
 **Closure (item 21)**
 
 - *v1's records:* all five checks passed (`reports/final_validation/closure.md`): 8,062 of 8,062 v1
-  files unchanged, the OmniDocBench evaluator's `result/` folder as it was before each pass, 68 of 68
+  files unchanged, the OmniDocBench evaluator's `result/` folder holding the same 15 file names as the lists
+  taken before Pass A and Pass B, checked after the candidate's scoring (no list was taken before
+  the scoring itself), 68 of 68
   Phase 14 outputs matching `phase14_outputs.json`, the access log at `phase-21` an exact prefix of the
   current one with the 188 rows the plan expected, and no difference from `phase-21` under the
   protected paths.
@@ -4555,8 +4557,13 @@ v1's at the printed precision (`reports/final_validation/candidate/h11.md`).
   G35 5G was listed by `adb` with no extra driver; `quant_pre_process` worked on the fused graph
   (`fused-int8` was built and measured); one line per run helps on the phones and keeps v1's
   accuracy, fused attention with INT8 does not pass the memory condition; and the re-run on the
-  present GPU driver reproduced Phase 14's predictions in every file. Install and run durations are in
-  the reports and run metadata.
+  present GPU driver reproduced Phase 14's predictions in every file. The wrapper design was proved
+  by its tests and the rehearsal (item 8, GW-REC-042, GW-E2E-014, `reports/final_validation/rehearsal.json`).
+  The scale check (`reports/final_validation/metric_inventory.json`, `scale`) found 4 point values
+  stored as ratios rather than fractions (H5′'s `cer_ratio`) and 11 point patterns with values above 1
+  (H1′'s latency in ms and its curved-page CER); the 0.0005 limit was applied to them unchanged, so
+  for those it is an absolute limit on their own scale. Install and run durations are in the reports
+  and run metadata.
 
 **Exit criteria check** (IMPLEMENTATION_PLAN Phase 22)
 
@@ -4571,7 +4578,7 @@ v1's at the printed precision (`reports/final_validation/candidate/h11.md`).
 | v1's records unchanged | pass | `reports/final_validation/closure.md` |
 | CI green | pending (after the push) | — |
 
-**Tests:** the CPU suite passes (2,504 passed, 1 skipped, 1 failed at `f951788`; the failure was the GPU timing test `test_the_v1_profile_on_cuda_synchronises_and_records_vram`, whose stage-sum check tripped by 52 ms while other jobs shared the machine, and its file passed 55 of 55 twice when run alone), with the three generated-file checks.
+**Tests:** the full local suite at `f951788`: 2,504 passed, 1 skipped, 1 failed. The failure was the GPU timing test `test_the_v1_profile_on_cuda_synchronises_and_records_vram`, whose stage-sum check tripped by 52 ms while other jobs shared the machine, and its file passed 55 of 55 twice when run alone. The three generated-file checks pass.
 
 **Compute:** GPU for the v1 re-run (sittings S2 and S3); laptop CPU for the candidate work, the phones
 for part b. Durations are in each run's metadata and reports; the queue ledger does not cover these
