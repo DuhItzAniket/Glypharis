@@ -4,7 +4,7 @@
 |---|---|
 | Version | 1.2 (Phase 21: Phase 22 scope and §8 deviations added; execution order revised by ADR-0008) |
 | Date | 2026-11-18 (first version 2026-10-10) |
-| Status | Phases 0 to 20 complete; Phase 21 in progress; Phases 22 and 23 not started ([PHASE_STATUS](PHASE_STATUS.md)) |
+| Status | Phases 0 to 21 complete; Phase 22 results written, gate open (push, CI, the owner's merge); Phase 23 not started ([PHASE_STATUS](PHASE_STATUS.md)) |
 | Companion docs | [ROADMAP](ROADMAP.md) · [ARCHITECTURE](ARCHITECTURE.md) · [EXPERIMENT_PROTOCOL](EXPERIMENT_PROTOCOL.md) · [RISK_REGISTER](RISK_REGISTER.md) · [DATASETS](../DATASETS.md) · [MODEL_CARD](../MODEL_CARD.md) · [EXPERIMENTS](../EXPERIMENTS.md) · [WORKFLOW](WORKFLOW.md) · [decisions/](decisions/) |
 
 This is the working plan for building GLYPHARIS: a lightweight document OCR engine (text-line detector +
@@ -147,7 +147,7 @@ Phase 8 detector, is evaluated on validation data only, and trains on HierText +
 ([ADR-0009](decisions/ADR-0009-no-synthtext.md)). Inference is CPU-first: CPU latency through ONNX Runtime is the primary efficiency number,
 with a concrete target set from the Phase 5 baseline measurements.
 
-Phases 0 to 20 have passed their gates, including the re-runs of 17, 18 and 20 on v1 (tags in
+Phases 0 to 21 have passed their gates, including the re-runs of 17, 18 and 20 on v1 (tags in
 [PHASE_STATUS](PHASE_STATUS.md)). Phase 19 ran after Phase 11 rather than after the re-runs (§8).
 
 ### Phase 0 — Repository discovery and planning ✅
@@ -520,7 +520,7 @@ Phases 0 to 20 have passed their gates, including the re-runs of 17, 18 and 20 o
 | Phase 15 left out: GW-DET-007's small and rotated lines, a new v1 detector-against-recognizer split on HierText, and touching or broken characters, background noise and fonts on the real test sets | GW-DET-007 was not adopted; a new oracle would not pair with GW-E2E-006; the real sets have no such labels, so GW-REC-041 and GLYPH-C stand in | PHASE_STATUS, Phase 15 item 7 |
 | Phase 16 ran no CPU batch-size sweep | Lines are timed at batch 1 on the CPU and pages with the pipeline's own batching | PHASE_STATUS, Phase 16 |
 | v1's default backend is PyTorch on the CPU, not ONNX Runtime (§7) | For this recognizer the plain ONNX export is slower on the CPU than PyTorch (F34). Owner decision of 2026-11-18 | ADR-0011, GW-EFF-007, GW-EFF-009 |
-| ADR-0011's laptop targets are recorded as missed for v1, and the target hardware is now lightweight devices such as phones | No CPU build of v1 meets the line or page time targets (F38). Phones are the target hardware; no phone has been measured | ADR-0011, R-23, `reports/efficiency/phase16/README.md` |
+| ADR-0011's laptop targets are recorded as missed for v1, and the target hardware is now lightweight devices such as phones | No CPU build of v1 meets the line or page time targets (F38). Phones are the target hardware. The phone candidate's networks (not v1, not a full page) were measured on two phones in Phase 22 (GW-EFF-015); v1 was not measured on a phone and no phone target is set; R-23 is closed | ADR-0011, R-23, `reports/efficiency/phase16/README.md` |
 | Phase 19 ran after Phase 11, on the v0.1 bundle, not after the re-runs | Done at the owner's request while Phase 12 waited; it uses no model results. The endpoint was exercised on the v1 bundle in the Phase 20 re-run | PHASE_STATUS, Phase 19; GW-E2E-012 |
 | Only `v0.1` was tagged as a version; the roadmap's 0.5, 0.6 and 0.9 were not tagged, and the package stays `0.1.0.dev0` | The version for v1.0 is set in Phase 23 | ROADMAP §1, `pyproject.toml` |
 | v1's code changed once after evaluation: tag `v1-code` | Docstrings, comments and the default bundle name only, compared as syntax trees against `phase14-eval`, so it is not a new model version. The bundle was not rebuilt | `reports/export/v1-code/code_diff.json`, EXPERIMENT_PROTOCOL §11 (2026-11-18) |
@@ -528,7 +528,7 @@ Phases 0 to 20 have passed their gates, including the re-runs of 17, 18 and 20 o
 | The `GLYPHARISOCR` alias is not exported | ADR-0004 and the row above name it, but the package exports only `GlypharisOCR`. Recorded here; nothing depends on the alias | `glypharis/__init__.py`, ARCHITECTURE §10 |
 | `data/DATASET_MANIFEST.yaml` is not regenerated in Phase 21 | The per-dataset manifests under `data/manifests/` hold the current values; `DATASETS.md` maps each required field to the manifest that holds it | PHASE_STATUS, Phase 21 |
 | The Phase 21 number check also covers `MODEL_CARD.md` and `DATASETS.md` | WORKFLOW §6 applies to every document | PHASE_STATUS, Phase 21 |
-| Phase 22 also evaluates the fused-attention build and records the phone-measurement gap | Owner decision of 2026-11-18. A new version, not v1; validation and laptop figures only; to be evaluated in Phase 22 | ADR-0011, Phase 22 above |
+| Phase 22 also evaluates the fused-attention build and records the phone-measurement gap | Owner decision of 2026-11-18. A new version, not v1. Evaluated in Phase 22: the candidate `fused-single-line` (GW-EFF-013) met H11 (GW-E2E-021); its networks were measured on two phones (GW-EFF-015) | ADR-0011, Phase 22 above, [FINAL_VALIDATION](FINAL_VALIDATION.md) |
 | v1's detector is initialised from ImageNet weights although ADR-0009 asks that sources allow commercial use | Owner decision of 2026-11-18: a disclosed exception, not a legal conclusion. Intended terms under ADR-0014, effective only if released | [ADR-0014](decisions/ADR-0014-weights-and-backbone-terms.md), Phase 23 above, `DATASETS.md`, ADR-0007, ADR-0009 |
 | `git grep "before v0.1"` still finds the old licence note in `data/sources.yaml`, `data/manifests/imagenet_backbones.json` and `data/DATASET_MANIFEST.yaml` | They record the note as written at download, and the number trace cites `imagenet_backbones.json` by hash, so Phase 21 leaves them alone. ADR-0014 and `DATASETS.md` carry the current statement; a later data pass may regenerate them | ADR-0014, PHASE_STATUS Phase 21 item 2 |
 

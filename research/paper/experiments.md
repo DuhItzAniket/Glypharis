@@ -453,11 +453,14 @@ and 0.0847 for Tesseract 5 (lower is better).
 
 <!-- trace: GW-E2E-018 reports/final_validation/v1_reproduction.md -->
 These official OmniDocBench scores did not reproduce exactly in Phase 22. A re-run of v1 gave the
-same predictions, but the strict reproduction verdict found 16 failures among the 1,381 point values
-checked, all of them GLYPHARIS's official OmniDocBench scores, because the evaluator's per-page time
-limit depends on machine speed. The owner accepted this as a disclosed limitation of the official
-evaluator (GW-E2E-018, `reports/final_validation/v1_reproduction.md`); Phase 14's scores stay as
-recorded.
+same predictions, but the strict reproduction verdict, which judged GLYPHARIS v1's values only, found
+16 failures among the 1,381 point values checked, all of them GLYPHARIS's official OmniDocBench
+scores, because the evaluator's per-page time limit depends on machine speed (GW-E2E-018,
+`reports/final_validation/v1_reproduction.md`). Re-scoring the same saved Phase 14 files (GW-E2E-015,
+`reports/final_validation/GW-E2E-015/verdict.json`) also changed Tesseract 5's official OmniDocBench
+scores, through the same time-limit fallback, so the official GLYPHARIS-versus-Tesseract comparison
+and ranking on these scores carry the same limitation. The owner accepted this as a disclosed
+limitation of the official evaluator; Phase 14's scores stay as recorded.
 
 Code: `scripts/phase14_score.py`, `scripts/official_omnidocbench.py`. Configuration:
 `data/manifests/evaluators.json`.

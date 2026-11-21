@@ -18,8 +18,9 @@ The committed report was generated once, at the start of the project (commit `a6
 not regenerate it. To refresh it, run `python scripts/env_report.py`.
 
 This is the development and training machine. It is not the target hardware. Phones are the target
-hardware; no phone has been measured ([ADR-0011](decisions/ADR-0011-cpu-latency-target.md), owner decision
-of 2026-11-18).
+hardware ([ADR-0011](decisions/ADR-0011-cpu-latency-target.md), owner decision of 2026-11-18). In
+Phase 22 the phone candidate's networks, a new version and not v1, were measured on two phones
+(GW-EFF-015, [FINAL_VALIDATION](FINAL_VALIDATION.md) section 4). v1 was not measured on a phone.
 
 ## Hardware, as recorded in Phase 0
 
@@ -89,8 +90,9 @@ py -3.11 -m venv .venv
 Checks before committing: `ruff check .`, `ruff format --check .`, `mypy`, `pytest`,
 `python scripts/validate_configs.py`. CI runs the same steps on Linux with the CPU build of the same torch
 version (`.github/workflows/ci.yml`). The clean-environment install of the package was checked in the
-Phase 18 re-run (`docs/PHASE_STATUS.md`). The walkthrough from a fresh clone belongs to Phase 22. Final
-validation (Phase 22) has not been run.
+Phase 18 re-run (`docs/PHASE_STATUS.md`). The walkthrough from a fresh clone passed in Phase 22
+(GW-E2E-013, [FINAL_VALIDATION](FINAL_VALIDATION.md) section 1). Final validation (Phase 22) has been
+run; its gate (push, CI, the owner's merge) is still open.
 
 ### PyTorch build decision
 

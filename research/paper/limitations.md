@@ -14,10 +14,14 @@ weights are distributed; release is Phase 23.
 
 <!-- trace: GW-E2E-018 reports/final_validation/v1_reproduction.md -->
 - Reproduction of the official OmniDocBench scores. The strict reproduction verdict (GW-E2E-018,
-  `reports/final_validation/v1_reproduction.md`) found 16 failures among the 1,381 point values
-  checked, all of them GLYPHARIS's official OmniDocBench scores. The predictions were identical to
-  Phase 14's; the official evaluator gives up on a page after a time limit and scores it by a
-  fallback, and how many pages hit that limit depends on machine speed. The owner accepted this as a
+  `reports/final_validation/v1_reproduction.md`), which judged GLYPHARIS v1's values only, found 16
+  failures among the 1,381 point values checked, all of them GLYPHARIS's official OmniDocBench
+  scores. The predictions were identical to Phase 14's; the official evaluator gives up on a page
+  after a time limit and scores it by a fallback, and how many pages hit that limit depends on
+  machine speed. Re-scoring the same saved Phase 14 files (GW-E2E-015,
+  `reports/final_validation/GW-E2E-015/verdict.json`) also changed Tesseract 5's official
+  OmniDocBench scores, through the same time-limit fallback, so the official GLYPHARIS-versus-Tesseract
+  comparison and ranking on these scores carry the same limitation. The owner accepted this as a
   disclosed limitation; the strict verdict stays as recorded, and so do Phase 14's results. Any
   official OmniDocBench score in this package carries this limitation.
 - Phone figures are network-only. The phone measurement (GW-EFF-015) covers the phone candidate's
@@ -143,9 +147,12 @@ better and no interval exists, was <!-- derived: off_glyph_whole --> 0.1859 for 
 against <!-- derived: off_tess_whole --> 0.0847 for Tesseract 5 over the whole set,
 and <!-- derived: off_glyph_page --> 0.1007 against <!-- derived: off_tess_page --> 0.0966 as a page
 average; no difference is stated. In Phase 22 these official scores of GLYPHARIS did not pass the
-strict reproduction verdict, although the predictions were identical, because the evaluator's
-per-page time limit depends on machine speed; the owner accepted this as a disclosed limitation
-(GW-E2E-018, `reports/final_validation/v1_reproduction.md`; see the status section above).
+strict reproduction verdict, which judged GLYPHARIS v1's values only, although the predictions were
+identical, because the evaluator's per-page time limit depends on machine speed (GW-E2E-018,
+`reports/final_validation/v1_reproduction.md`). Re-scoring the same saved Phase 14 files (GW-E2E-015,
+`reports/final_validation/GW-E2E-015/verdict.json`) also changed Tesseract 5's official scores,
+through the same time-limit fallback, so this comparison and its ranking carry the same limitation.
+The owner accepted this as a disclosed limitation (see the status section above).
 
 <!-- trace: GW-E2E-009 reports/external/end_to_end.md#detection -->
 FUNSD detection F1 at IoU 0.5 was <!-- derived: funsd_glyph --> 79.07%
