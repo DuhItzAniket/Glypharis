@@ -6,7 +6,8 @@ and GW-REC-041 (GlyphSynth validation), computed from the files Phase 14 saved f
 system (GW-REC-039 crops, GW-E2E-007 pipeline, GW-E2E-008 oracle; GW-REC-038 on validation). Reports
 are in `reports/error_cases/phase15/` and `reports/confusion_analysis/GW-REC-040/`. Phase 9's
 validation detector categories come from `reports/error_cases/detector/phase09_adopted/analysis.md`,
-GLYPH-C from `reports/robustness/GW-REC-034.json`. Final validation (Phase 22) has not been run.
+GLYPH-C from `reports/robustness/GW-REC-034.json`. Final validation (Phase 22) has been run; its
+record is `docs/FINAL_VALIDATION.md`.
 
 <!-- trace: GW-REC-040 reports/error_cases/phase15/results.json#intervals_printed -->
 

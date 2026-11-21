@@ -16,9 +16,11 @@ data and ablations follow, and the last sections summarise `efficiency.md` and `
 Every number comes from a generated report and carries its experiment ID. Writing this section
 needed no new run and no new access to test data.
 
-Final validation (Phase 22) has not been run. No weights are distributed; release is Phase 23. Test
-results come from the GPU strict-fp32 evaluation; equality with the bundle is shown on validation
-only. Phase 22 checks reproduction within the 0.05-point tolerance.
+Final validation (Phase 22) has been run; its record is `docs/FINAL_VALIDATION.md`. No weights are
+distributed; release is Phase 23. Test results come from the GPU strict-fp32 evaluation; equality
+with the bundle is shown on validation only. Phase 22 checked reproduction at the 0.05-point
+tolerance (`reports/final_validation/v1_reproduction.md`): every prediction was the same, and it
+found 16 failures among the 1,381 point values checked, all of them official OmniDocBench scores.
 
 Conventions used throughout:
 
@@ -80,7 +82,7 @@ given in the cell.
 | RQ4 | How does GLYPHARIS compare with Tesseract, PaddleOCR and TrOCR-Small? | It depends on the set: its CER was lower than each baseline's on HierText test, higher than PP-OCRv6 medium's on GDC crops and higher than Tesseract's on OmniDocBench pages. HierText test crops: −1.03 [−1.14, −0.92] against PP-OCRv6 small and <!-- derived: cmp_v5m_rec_ht_cer --> −3.20 [−3.42, −2.99] against PP-OCRv5 mobile (lines). GDC crops: +0.49 [+0.23, +0.78] against PP-OCRv5 mobile and <!-- derived: cmp_v6m_rec_gdc_cer --> +0.97 [+0.76, +1.20] against PP-OCRv6 medium (lines). HierText test pages: <!-- derived: cmp_v6s_ht_cer --> −17.77 [−19.51, −16.01] against PP-OCRv6 small (pages). OmniDocBench order-aware page CER: <!-- derived: cmp_tess_odb_order --> +11.58 [+8.37, +14.88] against Tesseract and <!-- derived: cmp_v5m_odb_order --> −33.24 [−36.28, −30.01] against PP-OCRv5 mobile (pages). TrOCR-small-printed was run on crops only. Section 4 gives every pair. | H1′ as above. | GW-REC-039, GW-E2E-007, GW-BASE-001 to GW-BASE-007, GW-E2E-009 |
 | RQ5 | Which failure modes dominate, and do they come from the detector or the recognizer? | Reference lines that no prediction matched were the largest part of page error on HierText test and had the largest point estimate on GDC, where the interval overlaps that of errors on matched lines. Their share of bag-of-lines page errors was <!-- derived: pipe_ht_missed --> 49.45% [47.47, 51.56] on HierText test, <!-- derived: pipe_gdc_missed --> 45.32% [36.14, 52.80] on GDC and <!-- derived: pipe_funsd_missed --> 40.22% [36.27, 42.88] on FUNSD (pages). From ground-truth boxes the recognizer made <!-- derived: oracle_gdc_all --> 18.66% [11.55, 28.73] as many errors as the whole pipeline on GDC, and 32.70% [16.64, 51.91] on its clean slice (pages). | H4 not supported on GDC, read post hoc; no rule was registered. | GW-E2E-010, GW-E2E-008, GW-REC-040 |
 | RQ6 | How does document performance differ from scene-text performance? | The registered expectation that GDC's crops would be at least 1.5 times as hard as HierText validation's did not hold. Crop CER (lines): GDC <!-- derived: rec_gly_gdc_cer --> 4.17 [3.72, 4.67], FUNSD <!-- derived: rec_gly_funsd_cer --> 7.03 [5.71, 8.66], HierText validation <!-- derived: rec_gly_htval_cer --> 6.51 [6.36, 6.65], HierText test <!-- derived: rec_gly_ht_cer --> 6.03 [5.89, 6.18]. IIIT5K words, alphanumeric track: <!-- derived: rec_gly_iiit_cer --> 2.37 [2.06, 2.70]. No interval was computed for the difference between sets. | H5′ not met: CER_GDC − 1.5 × CER_val = −5.59 [−6.07, −5.01] points (lines), <!-- derived: h5_docs_v --> −5.59 [<!-- derived: h5_docs_lo --> −7.88, <!-- derived: h5_docs_hi --> −2.52] (documents). | GW-REC-038, GW-REC-039, GW-E2E-009 |
-| RQ7 | What is the trade-off between accuracy, latency and memory for local use? | No CPU build of v1 reached ADR-0011's latency targets; they are recorded as missed and v1 keeps PyTorch as its default. v1 pages on the laptop CPU at 10 threads: PyTorch 2,566 [2,327, 2,829] ms, fp32 ONNX <!-- derived: cost_onnx_ms --> 8,574 [7,516, 9,766] ms (pages, one run each, HierText validation). See `efficiency.md`. Phones are the target hardware; no phone has been measured. | H7′ holds for the INT8 recognizer, a new version: <!-- derived: h7_latency_v --> −10.00 [<!-- derived: h7_latency_lo --> −12.79, <!-- derived: h7_latency_hi --> −7.37] ms per line and <!-- derived: h7_accuracy_v --> −0.512 [<!-- derived: h7_accuracy_lo --> −0.541, <!-- derived: h7_accuracy_hi --> −0.484] points. H6′ not met: <!-- derived: h6_v --> +16.78 [<!-- derived: h6_lo --> +12.02, <!-- derived: h6_hi --> +22.04] ms per line. | GW-EFF-006 to GW-EFF-011 |
+| RQ7 | What is the trade-off between accuracy, latency and memory for local use? | No CPU build of v1 reached ADR-0011's latency targets; they are recorded as missed and v1 keeps PyTorch as its default. v1 pages on the laptop CPU at 10 threads: PyTorch 2,566 [2,327, 2,829] ms, fp32 ONNX <!-- derived: cost_onnx_ms --> 8,574 [7,516, 9,766] ms (pages, one run each, HierText validation). See `efficiency.md`. Phones are the target hardware. Phase 22 measured the phone candidate's networks on two phones (GW-EFF-015): network time and memory only, without decoding, post-processing, cropping or reading order; v1 itself was not measured on a phone. | H7′ holds for the INT8 recognizer, a new version: <!-- derived: h7_latency_v --> −10.00 [<!-- derived: h7_latency_lo --> −12.79, <!-- derived: h7_latency_hi --> −7.37] ms per line and <!-- derived: h7_accuracy_v --> −0.512 [<!-- derived: h7_accuracy_lo --> −0.541, <!-- derived: h7_accuracy_hi --> −0.484] points. H6′ not met: <!-- derived: h6_v --> +16.78 [<!-- derived: h6_lo --> +12.02, <!-- derived: h6_hi --> +22.04] ms per line. | GW-EFF-006 to GW-EFF-011 |
 | RQ8 | Is raw CTC confidence calibrated, and does temperature scaling fix it? | No: temperature scaling lowered ECE on HierText and GDC crops and raised it on IIIT5K. ECE of line confidence at T = 1 and T = 2.35: HierText validation crops <!-- derived: cal_htval_ece_t1 --> 0.2278 and <!-- derived: cal_htval_ece_t235 --> 0.0904, GDC crops <!-- derived: cal_gdc_ece_t1 --> 0.2345 and <!-- derived: cal_gdc_ece_t235 --> 0.1092. On IIIT5K words ECE rose from <!-- derived: cal_iiit_ece_t1 --> 0.0546 to <!-- derived: cal_iiit_ece_t235 --> 0.1118, <!-- derived: cal_iiit_ece_diff --> +0.0572 [+0.0431, +0.0716] (words). | H8′ transfers met; transfers by half not shown, so H8 is not supported on GDC. | GW-E2E-005, GW-REC-038, GW-REC-039, GW-E2E-009 |
 
 ### 1.2 Confirmatory tests
@@ -490,6 +492,14 @@ On all <!-- derived: off_all_pages --> 755 pages Tesseract's point values were t
 the subset GLYPHARIS had the lowest point values for the two page averages and Tesseract for
 `text_block whole`. No difference is stated.
 
+<!-- trace: GW-E2E-018 reports/final_validation/v1_reproduction.md -->
+These official OmniDocBench scores carry a disclosed limitation. In Phase 22 a re-run of v1 gave the
+same predictions, but the strict reproduction verdict found 16 failures among the 1,381 point values
+checked, all of them GLYPHARIS's official OmniDocBench scores, because the evaluator's per-page time
+limit depends on machine speed. The owner accepted this as a disclosed limitation of the official
+evaluator (GW-E2E-018, `reports/final_validation/v1_reproduction.md`); the tables above are Phase
+14's and stay as recorded.
+
 ## 6. Confidence calibration
 
 The frozen recognizer's line confidences were scored at T = 1 and at T = 2.35, the temperature
@@ -682,10 +692,15 @@ on one laptop.
   it is over all four latency targets and within the RAM target. Both ONNX builds are over all five.
   These targets are recorded as missed, and v1 keeps PyTorch as its default (ADR-0011, decision of
   2026-11-18).
-- Phones are the target hardware; no phone has been measured.
+- Phones are the target hardware. Phase 22 measured the phone candidate's networks on two phones
+  (GW-EFF-015): network time and memory only, without decoding, post-processing, cropping or reading
+  order; v1 itself was not measured on a phone.
 - The all-ONNX fused-attention build took <!-- derived: pareto_fused_ms --> 4,020.8 [3,604.2, 4,479.8] ms per page in the GW-EFF-009
-  sitting, at v1's page CER of 24.32% on the <!-- derived: phase5_pages --> 400 pages. A new version, not v1; validation and laptop
-  figures only; to be evaluated in Phase 22.
+  sitting, at v1's page CER of 24.32% on the <!-- derived: phase5_pages --> 400 pages. The phone candidate chosen in Phase 22 is
+  the all-ONNX build with fused attention, reading one line per recognizer run (`fused-single-line`,
+  GW-EFF-013). A new version, not v1. Phase 22 evaluated it once per test set, and it met H11's six
+  non-inferiority tests against v1 (GW-E2E-021, `reports/final_validation/candidate/h11.md`); its
+  results sit beside v1's and replace none of them.
 
 ## 11. Error analysis
 
@@ -708,8 +723,11 @@ frozen pipeline:
 <!-- trace: GW-E2E-009 reports/external/README.md#confirmatory-tests-phase-14-plan-item-5 -->
 <!-- trace: GW-E2E-009 reports/external/end_to_end.md#detection -->
 
-Final validation (Phase 22) has not been run. Configuration frozen and recorded; reproduction
-pending Phase 22. The test results describe the frozen model on these sets. Set sizes limit them:
+Final validation (Phase 22) has been run; its record is `docs/FINAL_VALIDATION.md`. Configuration
+frozen and recorded. Phase 22 re-ran it: the predictions equal Phase 14's in every test file, and the
+strict verdict failed only on official OmniDocBench scores, through the evaluator's time limit; the
+owner accepted this as a disclosed limitation (`reports/final_validation/v1_reproduction.md`). The
+test results describe the frozen model on these sets. Set sizes limit them:
 GDC has <!-- derived: det_gly_gdc_pages --> 106 pages from <!-- derived: gdc_documents --> 21 documents, GDC-scan is one document and FUNSD has <!-- derived: funsd_pages --> 50 forms. The baselines
 were run as published with the settings recorded in `reports/baselines/README.md`; they were not
 retrained for these tasks.

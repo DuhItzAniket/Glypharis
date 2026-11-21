@@ -1,7 +1,8 @@
 # Abstract notes
 
-Status: these results predate final validation. Final validation (Phase 22) has not been run. No
-weights are distributed; release is Phase 23.
+Status: these results are Phase 14's, and Phase 22 left them as recorded. Final validation (Phase 22)
+has been run; its record is `docs/FINAL_VALIDATION.md`. No weights are distributed; release is
+Phase 23.
 
 HierText is released under CC BY-SA 4.0; its images come from Open Images, which lists them as
 CC BY 2.0. Figures derived from HierText are shared alike.
@@ -66,6 +67,13 @@ against <!-- derived: off_glyph_page --> 0.1007 as a page average. FUNSD detecti
 estimates of all five PaddleOCR systems, which ran from <!-- derived: funsd_mobile --> 81.81% for
 PP-OCRv5 mobile to <!-- derived: funsd_server --> 85.03% for PP-OCRv5 server.
 
+<!-- trace: GW-E2E-018 reports/final_validation/v1_reproduction.md -->
+In Phase 22 a re-run of v1 gave the same predictions as Phase 14, but the strict reproduction
+verdict found 16 failures among the 1,381 point values checked, all of them GLYPHARIS's official
+OmniDocBench scores, because the evaluator's per-page time limit depends on machine speed. The owner
+accepted this as a disclosed limitation of the official evaluator (GW-E2E-018,
+`reports/final_validation/v1_reproduction.md`).
+
 <!-- trace: GW-E2E-009 reports/external/README.md#confirmatory-tests -->
 <!-- trace: GW-E2E-009 reports/external/results.json#hypotheses -->
 Three hypotheses were registered as tests before the frozen model read any test set. The first, H1′, required v1's
@@ -92,12 +100,13 @@ temperature scaling lowered calibration error there, but the halving H8 predicte
 Missed lines made up <!-- derived: missed_ht --> 49.45% [47.47, 51.56] of the page errors on
 HierText test. In PyTorch on the laptop CPU at 10 threads, v1
 took <!-- derived: cost_page --> 2,566 ms [2,327, 2,829] per HierText validation page, and the project's
-laptop latency targets (ADR-0011) were missed. Phones are the target hardware; no phone has been
-measured.
+laptop latency targets (ADR-0011) were missed. Phones are the target hardware. Phase 22 measured the
+phone candidate's networks on two phones (GW-EFF-015): network time and memory only, without
+decoding, post-processing, cropping or reading order; v1 itself was not measured on a phone.
 
 Test results come from the GPU strict-fp32 evaluation; equality with the bundle is shown on
-validation only. Final validation (Phase 22) has not been run. No weights are distributed; release
-is Phase 23.
+validation only. Final validation (Phase 22) has been run; its record is `docs/FINAL_VALIDATION.md`.
+No weights are distributed; release is Phase 23.
 
 ## What the abstract rests on
 
@@ -105,8 +114,13 @@ is Phase 23.
 - Error analysis: F24, F27, F28, GW-E2E-008, GW-E2E-010.
 - Efficiency and the owner decisions of 2026-11-18: F34, F35, F38, F40, ADR-0011. v1 keeps PyTorch
 as its default backend.
-- The all-ONNX fused-attention build is the phone candidate. A new version, not v1; validation and
-laptop figures only; to be evaluated in Phase 22.
+- The phone candidate is the all-ONNX build with fused attention, reading one line per recognizer run
+(`fused-single-line`, GW-EFF-013). A new version, not v1. Phase 22 evaluated it once per test set,
+and it met H11's six non-inferiority tests against v1 (GW-E2E-021,
+`reports/final_validation/candidate/h11.md`); its results sit beside v1's and replace none of them.
+- Reproduction (GW-E2E-018, `reports/final_validation/v1_reproduction.md`): identical predictions;
+the strict verdict failed only on official OmniDocBench scores, through the evaluator's time limit,
+and the owner accepted this as a disclosed limitation.
 - Registered tests: H1′ (holds for the PyTorch build, not met for the ONNX bundle), H5′ (not met),
 H8′ (H8 not supported on GDC). Exploratory statuses: H4 (not supported on GDC, closed post hoc), H2′
 (not supported on validation).

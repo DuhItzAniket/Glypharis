@@ -8,7 +8,8 @@ they define an experiment or decided what happened next. The registry of every r
 `research/experiments.md`, and the generated summary of it is `EXPERIMENTS.md`.
 
 The strict text track is the default. Every interval is a 95% bootstrap interval, and the text says
-whether lines, pages or documents were resampled. Final validation (Phase 22) has not been run.
+whether lines, pages or documents were resampled. Final validation (Phase 22) has been run; its
+record is `docs/FINAL_VALIDATION.md`.
 
 HierText is released under CC BY-SA 4.0; its images come from Open Images, which lists them as
 CC BY 2.0 (`long2022hiertext`, `kuznetsova2020openimages`). Tables derived from HierText are shared
@@ -450,6 +451,14 @@ On FUNSD, detection by GLYPHARIS v1 has F1 79.07 [75.56, 82.16] (by page) and PP
 On OmniDocBench, the official text-block edit distance over the whole set is 0.1859 for GLYPHARIS v1
 and 0.0847 for Tesseract 5 (lower is better).
 
+<!-- trace: GW-E2E-018 reports/final_validation/v1_reproduction.md -->
+These official OmniDocBench scores did not reproduce exactly in Phase 22. A re-run of v1 gave the
+same predictions, but the strict reproduction verdict found 16 failures among the 1,381 point values
+checked, all of them GLYPHARIS's official OmniDocBench scores, because the evaluator's per-page time
+limit depends on machine speed. The owner accepted this as a disclosed limitation of the official
+evaluator (GW-E2E-018, `reports/final_validation/v1_reproduction.md`); Phase 14's scores stay as
+recorded.
+
 Code: `scripts/phase14_score.py`, `scripts/official_omnidocbench.py`. Configuration:
 `data/manifests/evaluators.json`.
 
@@ -503,9 +512,14 @@ limit.
 v1 misses the line and page targets on this laptop in both builds; the PyTorch build is within the
 memory limit. The project owner decided on 2026-11-18 that v1 keeps PyTorch as its default backend and
 that the targets are recorded as missed, not restated. The owner also set the target hardware to
-lightweight devices such as phones. Phones are the target hardware; no phone has been measured. The
-laptop numbers only rank candidate builds. The candidate for phones is the all-ONNX build with fused
-attention. A new version, not v1; validation and laptop figures only; to be evaluated in Phase 22.
+lightweight devices such as phones. Phones are the target hardware. Phase 22 measured the phone
+candidate's networks on two phones (GW-EFF-015): network time and memory only, without decoding,
+post-processing, cropping or reading order; v1 itself was not measured on a phone. The laptop
+numbers only rank candidate builds. The candidate for phones is the all-ONNX build with fused
+attention, reading one line per recognizer run (`fused-single-line`, GW-EFF-013). A new version, not
+v1. Phase 22 evaluated it once per test set, and it met H11's six non-inferiority tests against v1
+(GW-E2E-021, `reports/final_validation/candidate/h11.md`); its results sit beside v1's and replace
+none of them.
 
 Code: `scripts/phase16_score.py`, `glypharis/efficiency/fused_attention.py`. Configuration:
 `docs/decisions/ADR-0011-cpu-latency-target.md`.
@@ -657,17 +671,22 @@ comments and the default bundle name in `from_pretrained`, as `scripts/v1_code_d
 `reports/export/v1-code/code_diff.json`. All of these re-runs are on validation data or made-up inputs.
 
 Test results come from the GPU strict-fp32 evaluation; equality with the bundle is shown on validation
-only. Phase 22 checks reproduction within the 0.05-point tolerance.
+only. Phase 22 checked reproduction at the 0.05-point tolerance
+(`reports/final_validation/v1_reproduction.md`): every prediction was the same, and it found 16
+failures among the 1,381 point values checked, all of them official OmniDocBench scores.
 
 Code: `scripts/phase17_v1_check.py`, `scripts/package_check.py`, `scripts/hardening_check.py`,
 `scripts/hardening_cases.py`, `scripts/v1_code_diff.py`, `glypharis/export/bundle.py`. Configuration:
 `configs/final/glypharis_v1.yaml`; the plans are in `docs/PHASE_STATUS.md` (the v1 re-run sections of
 Phases 17, 18 and 20).
 
-## 11. What has not been run
+## 11. Final validation and release
 
-Final validation (Phase 22) has not been run. Configuration frozen and recorded; reproduction pending
-Phase 22. No weights are distributed; release is Phase 23.
+Final validation (Phase 22) has been run; its record is `docs/FINAL_VALIDATION.md`. Configuration
+frozen and recorded. Phase 22 re-ran it: the predictions equal Phase 14's in every test file, and the
+strict verdict failed only on official OmniDocBench scores, through the evaluator's time limit; the
+owner accepted this as a disclosed limitation (`reports/final_validation/v1_reproduction.md`). No
+weights are distributed; release is Phase 23.
 
 Intended terms under ADR-0014, effective only if released. The owner decided on 2026-11-18
 ([ADR-0014](../../docs/decisions/ADR-0014-weights-and-backbone-terms.md)) that the intended terms for
