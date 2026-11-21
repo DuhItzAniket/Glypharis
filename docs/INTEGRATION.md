@@ -102,7 +102,8 @@ folder wins.
 ```python
 from glypharis import download_model
 
-path = download_model("glypharis-v1")   # the installed bundle's directory, verified
+# The installed bundle's directory, verified against the registry.
+path = download_model("glypharis-v1")
 ```
 
 Signature: `download_model(name="glypharis-v1", *, models_dir=None, offline=None, force=False, url=None)
@@ -153,13 +154,18 @@ run with `GLYPHARIS_OFFLINE=1` and the bundle installed in advance.
 ```python
 from glypharis import GlypharisOCR
 
-ocr = GlypharisOCR.from_pretrained("glypharis-v1")   # or a bundle path; backend="torch", threads=None
-result = ocr.predict("page.png")                     # path, image file bytes, PIL image or array
+# A name or a bundle path; the defaults are backend="torch" and threads=None.
+ocr = GlypharisOCR.from_pretrained("glypharis-v1")
+# A path, image file bytes, a PIL image or a numpy array.
+result = ocr.predict("page.png")
 
-result.text          # non-empty lines joined with newlines, in reading order
+# The non-empty lines joined with newlines, in reading order.
+result.text
 for line in result.lines:
-    line.text, line.confidence, line.det_score, line.bbox   # bbox: x0, y0, x1, y1 in page pixels
-result.to_dict()     # JSON-serialisable; result.to_json() gives the string
+    # bbox is x0, y0, x1, y1 in page pixels.
+    line.text, line.confidence, line.det_score, line.bbox
+# JSON-serialisable; result.to_json() gives the string.
+result.to_dict()
 ```
 
 `from_pretrained(name_or_path="glypharis-v1", backend="torch", threads=None, cache=True)`. With
@@ -253,12 +259,12 @@ from glypharis.errors import InvalidImageError, ModelLoadError
 
 try:
     ocr = GlypharisOCR.from_pretrained("glypharis-v1")
-except ModelLoadError as exc:            # model_load_error
+except ModelLoadError as exc:  # model_load_error
     raise SystemExit(exc.to_dict())
 
 try:
     result = ocr.predict("page.png")
-except InvalidImageError as exc:         # invalid_image or image_too_large
+except InvalidImageError as exc:  # invalid_image or image_too_large
     print(exc.to_dict())
 ```
 
@@ -285,11 +291,11 @@ from glypharis import GlypharisOCR
 from glypharis.check import manifest_sha256
 from glypharis.export.bundle import find_bundle
 
-bundle = find_bundle("glypharis-v1")      # the directory from_pretrained would load
+bundle = find_bundle("glypharis-v1")  # the directory from_pretrained would load
 ocr = GlypharisOCR.from_pretrained(bundle)
-model_sha = manifest_sha256(bundle)       # once per process
+model_sha = manifest_sha256(bundle)  # once per process
 
-record = ocr.predict("page.png").to_dict()   # holds glypharis_version and model_version
+record = ocr.predict("page.png").to_dict()  # holds glypharis_version and model_version
 record["manifest_sha256"] = model_sha
 ```
 
