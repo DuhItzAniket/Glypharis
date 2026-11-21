@@ -269,7 +269,9 @@ values is refused (GW-E2E-012).
 
 ## Licence and release position
 
-To be settled in Phase 23: the code licence, the project citation and any public package. No weights
+The code and the project's own text are under Apache-2.0 (`LICENSE`, `NOTICE`), with the exceptions
+that `NOTICE` lists, and the licence does not cover the weights. The project citation is in
+`CITATION.cff`; an archive DOI is pending. Any public package: to be settled in Phase 23. No weights
 are distributed; release is Phase 23. Intended terms under ADR-0014, effective only if released. The
 owner decided on 2026-11-18 ([ADR-0014](../../docs/decisions/ADR-0014-weights-and-backbone-terms.md))
 that GW-DET-001, initialised from ImageNet weights, stays v1's detector as a disclosed exception to

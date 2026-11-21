@@ -74,8 +74,10 @@ disclosed limitation (GW-E2E-018,
 
 Not done yet:
 
-- No weights are distributed; release is Phase 23. Code licence and citation: to be settled in
-  Phase 23.
+- No weights are distributed; release is Phase 23. The code and the project's own text are under
+  Apache-2.0 ([`LICENSE`](LICENSE), [`NOTICE`](NOTICE)), with the exceptions that `NOTICE` lists;
+  the weights are not covered by it, and their intended terms are ADR-0014's, effective only if
+  released. Citation: [`CITATION.cff`](CITATION.cff); an archive DOI is pending.
 - Phones are the target hardware, and no full page has been timed on a phone. Phase 22 measured
   only the networks of the phone candidate, a new version, on two phones (GW-EFF-015, see
   [not v1](#not-v1)); v1 itself was not measured on a phone.
@@ -147,12 +149,12 @@ v1 is PyTorch ([ADR-0011](docs/decisions/ADR-0011-cpu-latency-target.md), owner 
 
 Source: GW-EFF-006 [`reports/efficiency/phase16/v1_bundle.json`](reports/efficiency/phase16/v1_bundle.json),
 [`configs/final/glypharis_v1.yaml`](configs/final/glypharis_v1.yaml),
-[`pyproject.toml`](pyproject.toml), [`reports/export/v1-code/code_diff.json`](reports/export/v1-code/code_diff.json).
+[`glypharis/__init__.py`](glypharis/__init__.py), [`reports/export/v1-code/code_diff.json`](reports/export/v1-code/code_diff.json).
 
 | Item | Value |
 |---|---|
 | Model version | `glypharis_v1` |
-| Package version | `0.1.0.dev0` |
+| Package version | `1.0.0` (code; not yet released) |
 | Bundle format | `glypharis-bundle-1`, with ONNX files at opset 17 |
 | Bundle manifest SHA-256 | `875357a6346e8b1f989005fa96c557b00bf687461043368dc5e3dc532839f037` |
 | `detector.pt` SHA-256 | `caafdce9402de07a775102558eeffa6f48d4f54cd370ac63c09ab0be2a929c99` |
@@ -943,7 +945,7 @@ handling, not a legal conclusion, and the v1 weights are not described as cleare
 |---|---|
 | Weights | CC BY-SA 4.0 with attribution to HierText and Open Images, as intended terms that take effect only if the weights are released in Phase 23, and subject to the detector exception below |
 | Detector initialised from ImageNet-1K weights | GW-DET-001 stays v1's detector as a disclosed exception to ADR-0009's commercial-use rule: its backbone was initialised from ImageNet-1K weights, and the ImageNet terms do not clearly allow commercial use |
-| Code | To be settled in Phase 23. |
+| Code | Apache-2.0 for the code and the project's own text ([`LICENSE`](LICENSE), [`NOTICE`](NOTICE)), with the exceptions that `NOTICE` lists, among them the HierText-derived tables in this card; it does not cover the weights, which are not distributed |
 
 Terms of the data and weights that influenced the model:
 
@@ -963,7 +965,7 @@ and attributions are in [`DATASETS.md`](DATASETS.md).
 
 ## Citation information
 
-How to cite GLYPHARIS, `CITATION.cff` and any archive DOI: To be settled in Phase 23.
+How to cite GLYPHARIS: see [`CITATION.cff`](CITATION.cff). An archive DOI is pending.
 
 The methods and data behind the model are cited with these keys of
 [`research/paper/references.bib`](research/paper/references.bib): `graves2006ctc` (CTC),

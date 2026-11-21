@@ -376,7 +376,7 @@ def test_experiments_without_a_ledger_row_are_listed_by_reason(repo):
     assert run(repo) == 0
     text = (repo / es.OUT_ROOT).read_text(encoding="utf-8")
     assert "3 registered experiments have no ledger row" in text
-    assert "- Abandoned or not run (2): GW-REC-003, GW-REC-004" in text
+    assert "- Abandoned, not run or planned (2): GW-REC-003, GW-REC-004" in text
     assert "names neither them nor their phase (1): GW-REC-002" in text
 
 

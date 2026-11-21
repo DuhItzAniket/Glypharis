@@ -1,0 +1,33 @@
+{
+ "format": "glypharis-sample-1",
+ "model": "glypharis-v1",
+ "model_version": "glypharis_v1",
+ "manifest_sha256": "875357a6346e8b1f989005fa96c557b00bf687461043368dc5e3dc532839f037",
+ "backend": "torch",
+ "threads": 4,
+ "page": "page.png",
+ "page_sha256": "4221ebe0bde434e57533e794d3b60773743e40b12160820e1484f3073c88ee43",
+ "width": 1240,
+ "height": 1754,
+ "rendered_lines": [
+  "Optical character recognition turns a picture of text",
+  "into text that a computer can search, copy and edit.",
+  "GLYPHARIS reads a page in two steps. First a detector",
+  "finds each line of print and marks its outline.",
+  "Then a recognizer reads the line from left to right,",
+  "one character at a time, and the lines are put back",
+  "in reading order. This page was rendered by the",
+  "project itself so that anyone can check the engine."
+ ],
+ "lines": [
+  "Optical character recognition turns a picture of text",
+  "into text that a computer can search, copy and edit.",
+  "GLYPHARIS reads a page in two steps. First a detector",
+  "finds each line of print and marks its outline.",
+  "Then a recognizer reads the line from left to right,",
+  "one character at a time, and the lines are put back",
+  "in reading order. This page was rendered by the",
+  "project itself so that anyone can check the engine."
+ ],
+ "text": "Optical character recognition turns a picture of text\ninto text that a computer can search, copy and edit.\nGLYPHARIS reads a page in two steps. First a detector\nfinds each line of print and marks its outline.\nThen a recognizer reads the line from left to right,\none character at a time, and the lines are put back\nin reading order. This page was rendered by the\nproject itself so that anyone can check the engine."
+}

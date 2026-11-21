@@ -1,7 +1,12 @@
 """Optional HTTP API: ``glypharis-serve`` (Phase 19).
 
-    glypharis-serve [--model glypharis-v1] [--host 127.0.0.1] [--port 8080]
+    glypharis-serve [--model glypharis-v1] [--no-download] [--host 127.0.0.1] [--port 8080]
     curl --data-binary @page.jpg http://127.0.0.1:8080/ocr
+
+The model is loaded with `GlypharisOCR.from_pretrained` before the server starts. A registered name
+(`glypharis.hub`) that no models folder holds is downloaded and verified first
+(`glypharis.download_model`), unless ``--no-download`` is given or ``GLYPHARIS_OFFLINE`` is set; a
+path or any other name is never downloaded, and nothing is downloaded once the server is running.
 
 An integration boundary, not a production web service: one process, one request at a time (the
 model is loaded once and is not shared between threads), the standard library's HTTP server, no
@@ -38,6 +43,7 @@ import socket
 import sys
 import time
 from http.server import BaseHTTPRequestHandler, HTTPServer
+from pathlib import Path
 from typing import Any
 
 from glypharis import __version__
@@ -163,6 +169,11 @@ def make_server(
 def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(description="GLYPHARIS HTTP API (one process).")
     parser.add_argument("--model", default="glypharis-v1", help="bundle name or directory")
+    parser.add_argument(
+        "--no-download",
+        action="store_true",
+        help="never fetch a registered model that is not installed",
+    )
     parser.add_argument("--backend", choices=["torch", "onnx"], default="torch")
     parser.add_argument("--threads", type=int, default=None)
     parser.add_argument("--host", default="127.0.0.1")
@@ -172,10 +183,16 @@ def main(argv: list[str] | None = None) -> int:
     args = parser.parse_args(argv)
     logging.basicConfig(level=logging.INFO, format="%(asctime)s %(levelname)-7s %(message)s")
 
+    from glypharis.hub import can_fetch, download_model, needs_download
     from glypharis.pipeline.ocr import GlypharisOCR
 
     try:
-        ocr = GlypharisOCR.from_pretrained(args.model, backend=args.backend, threads=args.threads)
+        model: str | Path = args.model
+        if not args.no_download and needs_download(args.model):
+            if can_fetch(args.model):
+                log.info("model %s is not installed; downloading it", args.model)
+            model = download_model(args.model)
+        ocr = GlypharisOCR.from_pretrained(model, backend=args.backend, threads=args.threads)
     except GlypharisError as exc:
         print(f"error: {exc}", file=sys.stderr)
         return 2

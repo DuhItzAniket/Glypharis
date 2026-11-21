@@ -683,7 +683,7 @@ def compute_gap(rows: list[Row], compute: dict[str, Compute]) -> list[str]:
     ]
     other = [r.id for r in absent if r.id not in never and r.id not in uncounted]
     groups = (
-        ("Abandoned or not run", never),
+        ("Abandoned, not run or planned", never),
         ("In phases the ledger says it does not count (9, 10, 14, 15)", uncounted),
         ("Ran, with no ledger row; its note names neither them nor their phase", other),
     )

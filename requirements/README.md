@@ -15,6 +15,24 @@ pip install -r requirements/lock.txt
 pip install -e . --no-deps
 ```
 
+`lock.txt` holds the development environment: the core dependencies and the extras together. The
+package itself (`pyproject.toml`) declares lower bounds only, at the major.minor of these pins, and
+splits them by what needs them:
+
+| Group | Packages | Needed by |
+|---|---|---|
+| core | torch, torchvision, numpy, pyyaml, pillow, opencv-contrib-python-headless, rapidfuzz, shapely, scipy, onnxruntime | importing the package, reading pages with either backend, all three commands (`glypharis-ocr`, `glypharis-serve`, `glypharis-check`) |
+| `train` | matplotlib, fonttools, pypdfium2, psutil, nvidia-ml-py | training, data preparation, reports |
+| `export` | onnx | writing bundles and ONNX files, quantisation |
+| `dev` | pytest, ruff, mypy, type stubs | tests and checks |
+
+`tests/test_packaging.py` checks the split: the inference modules import none of the extras, a page is
+read with them blocked, and every lower bound follows this file. When a pin changes its major or minor
+version, change the bound in `pyproject.toml` with it.
+
+`build-constraints.txt` pins the tools that build and check the package (build, setuptools, twine,
+wheel) for the package job in CI.
+
 Full setup steps are in [docs/ENVIRONMENT.md](../docs/ENVIRONMENT.md). To change a pin: install the new
 version in `.venv`, run the full test suite and `scripts/env_report.py`, then regenerate the lock with
 

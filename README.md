@@ -10,11 +10,27 @@ traces back to a generated report.
 
 > **Status: v1 evaluated and packaged, not released.** Phases 0 to 21 are complete, including the export,
 > package and hardening re-runs on the final model and the research package (Phase 21).
-> Final validation (Phase 22) has been run; its record is `docs/FINAL_VALIDATION.md`. Its phase gate is
-> still open. No weights are distributed; release is Phase 23.
+> Final validation (Phase 22) is complete (tag `phase-22`); its record is `docs/FINAL_VALIDATION.md`.
+> No weights are distributed; release is Phase 23.
 > `v0.1` is the earlier usable engine ([ADR-0008](docs/decisions/ADR-0008-usable-engine-first.md)).
 > See [docs/PHASE_STATUS.md](docs/PHASE_STATUS.md) for what is done and every number behind it, and
 > [MODEL_CARD.md](MODEL_CARD.md) for what v1 is, how it measured and where it fails.
+
+## Install
+
+The package needs Python 3.11 (3.11.4 or later). It is not on PyPI yet; from a checkout:
+
+```
+pip install torch==2.14.1 torchvision==0.29.1 --index-url https://download.pytorch.org/whl/cpu
+pip install .                # core: reads pages with either backend
+pip install ".[export]"      # adds onnx, for writing bundles and ONNX files
+pip install ".[train]"       # adds plotting, font, PDF and monitoring packages for training
+```
+
+Pick the PyTorch index for your platform (CPU or CUDA; [requirements/README.md](requirements/README.md)).
+For development, install the exact versions instead: `pip install -r requirements/lock.txt`, then
+`pip install -e . --no-deps` ([docs/ENVIRONMENT.md](docs/ENVIRONMENT.md)). The package holds no
+weights.
 
 ## Using it
 
@@ -37,11 +53,12 @@ glypharis-ocr --image page.png --output results
 glypharis-ocr --input-dir scans/ --recursive --format json txt
 ```
 
-Each image gives `results/<name>.json` and `results/<name>.txt`. Model bundles are not downloaded:
-`from_pretrained` looks in `$GLYPHARIS_MODELS`, `~/.glypharis/models` and `./models` (a bundle is a
+Each image gives `results/<name>.json` and `results/<name>.txt`. `from_pretrained` never downloads; it
+looks in `$GLYPHARIS_MODELS`, `~/.glypharis/models` and `./models` (a bundle is a
 directory with `manifest.json`, two release files and two ONNX files; Phase 17). No bundle ships with
 this repository (`runs/` is git-ignored), so `glypharis-v1` resolves only once that directory is in one
-of those places; on the machine that built it, set `GLYPHARIS_MODELS=runs/release` or pass the path
+of those places (`glypharis.download_model` and the two commands fetch a registered bundle once it is
+published, which it is not yet); on the machine that built it, set `GLYPHARIS_MODELS=runs/release` or pass the path
 `runs/release/glypharis-v1`. The default backend is PyTorch on the CPU; `backend="onnx"` uses ONNX
 Runtime, which matches PyTorch within Phase 17's tolerances (GW-EFF-006) but is slower on the CPU (F34).
 
@@ -89,6 +106,8 @@ image ─▶ preprocessing ─▶ GLYPHARIS-Det (line detector) ─▶ crop + re
 | [Implementation plan](docs/IMPLEMENTATION_PLAN.md) | 24 phases with tasks, deliverables, exit criteria and deviations |
 | [Roadmap](docs/ROADMAP.md) | Milestones, versions, dependency graph, success criteria |
 | [Architecture](docs/ARCHITECTURE.md) | The system as built, and its public interface |
+| [Integration guide](docs/INTEGRATION.md) | Embedding GLYPHARIS in an application: install, model lookup, threads, server, errors |
+| [Release evidence](docs/RELEASE_EVIDENCE.md) | Each v1.0 release precondition mapped to its evidence, and the gaps still open |
 | [Experiment protocol](docs/EXPERIMENT_PROTOCOL.md) | Metrics, splits, statistics, diagnostics, leakage rules |
 | [Approach survey](research/approach_survey.md) | Alternatives considered and why this design was chosen |
 | [Risk register](docs/RISK_REGISTER.md) | Known risks and mitigations |
@@ -97,6 +116,13 @@ image ─▶ preprocessing ─▶ GLYPHARIS-Det (line detector) ─▶ crop + re
 | [Environment](docs/ENVIRONMENT.md) | Development machine and where its generated record lives |
 | [Reports](reports/README.md) | What each generated report folder holds |
 | [Research log](research/) | Hypotheses, experiment registry, ablations, failures, findings |
+
+The numbers in these documents trace to the generated reports under `reports/`. An archive of the
+repository made with `git archive`, such as a Zenodo deposit if one is made, holds the code and
+documentation only: `reports/` and the evaluation records under `data/manifests` are left out
+(`export-ignore` in [.gitattributes](.gitattributes), checked by
+[scripts/check_git_archive.py](scripts/check_git_archive.py)). The numbers stay in the documents, so
+tracing every one of them needs the tagged repository on GitHub.
 
 ## Repository layout
 
@@ -141,7 +167,8 @@ replace none of them.
 
 ## Licence
 
-Code licence: to be settled in Phase 23.
+The code and the project's own text are under the Apache License, Version 2.0 ([LICENSE](LICENSE),
+[NOTICE](NOTICE)), with the exceptions that NOTICE lists. The weights are not covered by it.
 
 No weights are distributed; release is Phase 23.
 Intended terms under ADR-0014, effective only if released. They are CC BY-SA 4.0 for the v1 weights,

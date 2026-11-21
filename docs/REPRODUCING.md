@@ -4,7 +4,7 @@ The order of work, from nothing to an evaluated model. Commands are for Git Bash
 macOS use `python3 -m venv` and `.venv/bin/python`. `docs/FINAL_VALIDATION.md` records what happened when
 these steps were followed on a clean folder.
 
-Python 3.11 is required. A CUDA build of PyTorch is shown; for CPU only, use
+Python 3.11, at least 3.11.4, is required (`requires-python = ">=3.11.4,<3.12"`, Phase 23 D13). A CUDA build of PyTorch is shown; for CPU only, use
 `--index-url https://download.pytorch.org/whl/cpu`.
 
 ## 1. Clone and install

@@ -1,0 +1,23 @@
+cff-version: 1.2.0
+message: >-
+  If you use GLYPHARIS in your work, please cite it with the metadata in this file.
+  The model weights are not part of this software; their terms are in MODEL_CARD.md.
+title: GLYPHARIS
+type: software
+authors:
+  - alias: DuhItzAniket
+version: "1.0.0"
+repository-code: https://github.com/DuhItzAniket/Glypharis
+license: Apache-2.0
+abstract: >-
+  A lightweight OCR engine for document images. It recovers readable text from scanned,
+  photographed, degraded, or image-only document pages and returns it as structured output:
+  lines, boxes, confidence, and timing. It is a two-stage pipeline: a text-line detector
+  followed by a CTC line recognizer.
+keywords:
+  - OCR
+  - optical character recognition
+  - document images
+  - text detection
+  - text recognition
+  - CTC

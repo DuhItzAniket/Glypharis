@@ -8,8 +8,8 @@ recognizer GW-REC-034, detector GW-DET-001, read from the model bundle with mani
 evaluated is tag `phase14-eval`; tag `v1-code` differs from it only in docstrings, comments and the
 default bundle name (`reports/export/v1-code/code_diff.json`).
 
-Final validation (Phase 22) has been run; its record is `docs/FINAL_VALIDATION.md`. Its phase gate is
-still open. No weights are distributed; release is Phase 23.
+Final validation (Phase 22) is complete (tag `phase-22`); its record is `docs/FINAL_VALIDATION.md`.
+No weights are distributed; release is Phase 23.
 
 Settings below come from the freeze record and the configs it names. Measured values carry their
 experiment ID and report. Results on the evaluation sets are in [MODEL_CARD.md](../MODEL_CARD.md) and
@@ -191,7 +191,7 @@ Code is in `glypharis/pipeline/`.
 ```python
 from glypharis import GlypharisOCR
 
-# A bundle by name or path; nothing is downloaded.
+# A bundle by name or path; from_pretrained never downloads (see glypharis.download_model).
 ocr = GlypharisOCR.from_pretrained("glypharis-v1")
 # A path, image file bytes, a PIL image or a numpy array.
 result = ocr.predict("page.png")
@@ -205,7 +205,7 @@ Fields of `OCRResult.to_dict` (`glypharis/pipeline/ocr.py`):
 
 | Field | Meaning |
 |---|---|
-| `glypharis_version`, `model_version` | Package version (`0.1.0.dev0` until Phase 23, `pyproject.toml`) and model version (`glypharis_v1`) |
+| `glypharis_version`, `model_version` | Package version (`1.0.0`, `glypharis.__version__`) and model version (`glypharis_v1`) |
 | `width`, `height` | Page size in pixels |
 | `text` | Non-empty lines joined with newlines, in reading order |
 | `lines[].text` | The line's text |
@@ -217,7 +217,9 @@ Fields of `OCRResult.to_dict` (`glypharis/pipeline/ocr.py`):
 | `seconds` | Time per step: `load`, `detect`, `recognise`, `order`, `total` |
 
 Failures a caller can cause or meet are `GlypharisError` subclasses with a stable code (`invalid_image`,
-`image_too_large`, `model_load_error`; `glypharis/errors.py`). The default pixel limit is 64,000,000
+`image_too_large`, `model_load_error`, and `model_download_error`, a subclass of `ModelLoadError` raised
+by `glypharis.download_model` and by `glypharis-ocr` and `glypharis-serve` when they fetch a model;
+`glypharis/errors.py`). The default pixel limit is 64,000,000
 (`glypharis/pipeline/ocr.py`); it is a set value and has not been measured against memory use
 (`docs/PHASE_STATUS.md`, Phase 20 v1 re-run). On the v1 bundle, on both backends, the hardening cases
 ended in a result or a `GlypharisError`, with no other exception (GW-E2E-012,
@@ -226,6 +228,11 @@ ended in a result or a `GlypharisError`, with no other exception (GW-E2E-012,
 Command line: `glypharis-ocr --image x.png` or `--input-dir ./images` (`python infer.py` is the same)
 writes `results/<name>.json` and `results/<name>.txt`. Exit code 1 means an image failed and 2 a usage
 error.
+
+`glypharis-check` checks an installed bundle against the registry and reads the bundled sample page
+with it. `glypharis-ocr` and `glypharis-serve` fetch a missing registered model through
+`glypharis.download_model` unless `--no-download` or `GLYPHARIS_OFFLINE` is set
+([INTEGRATION](INTEGRATION.md)).
 
 HTTP (optional, Phase 19): `glypharis-serve` offers `POST /ocr` (the image file as the request body) and
 `GET /health`. It uses the standard library, one process and one request at a time, listens on
@@ -247,7 +254,8 @@ glypharis/                 # importable package
   export/                  # release files, ONNX export, the model bundle
   efficiency/              # Phase 16 tooling: thread control, variants, fused attention, v1 code check
   utils/                   # seeding, logging, device and VRAM monitoring, git information
-  cli.py  server.py  errors.py
+  cli.py  server.py  errors.py  hub.py  check.py
+  sample/                  # the sample page and expected output glypharis-check reads
 configs/                   # hyperparameters; configs/final/glypharis_v1.yaml is the freeze record
 scripts/                   # data preparation, evaluation, reports, checks
 tests/                     # pytest suite; tiny fixtures and tiny models only

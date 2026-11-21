@@ -2,9 +2,9 @@
 
 | | |
 |---|---|
-| Version | 1.2 (Phase 21: Phase 22 scope and §8 deviations added; execution order revised by ADR-0008) |
+| Version | 1.3 (Phase 23 registration, 2026-11-22: Phase 23 status, effort and three §8 deviations; 1.2 added the Phase 22 scope) |
 | Date | 2026-11-18 (first version 2026-10-10) |
-| Status | Phases 0 to 21 complete; Phase 22 results written, gate open (push, CI, the owner's merge); Phase 23 not started ([PHASE_STATUS](PHASE_STATUS.md)) |
+| Status | Phases 0 to 22 complete; Phase 23 in progress (plan registered) ([PHASE_STATUS](PHASE_STATUS.md)) |
 | Companion docs | [ROADMAP](ROADMAP.md) · [ARCHITECTURE](ARCHITECTURE.md) · [EXPERIMENT_PROTOCOL](EXPERIMENT_PROTOCOL.md) · [RISK_REGISTER](RISK_REGISTER.md) · [DATASETS](../DATASETS.md) · [MODEL_CARD](../MODEL_CARD.md) · [EXPERIMENTS](../EXPERIMENTS.md) · [WORKFLOW](WORKFLOW.md) · [decisions/](decisions/) |
 
 This is the working plan for building GLYPHARIS: a lightweight document OCR engine (text-line detector +
@@ -424,9 +424,8 @@ Phases 0 to 21 have passed their gates, including the re-runs of 17, 18 and 20 o
 - **Effort:** 2–3 S.
 
 ### Phase 22 — Final validation
-- **Status:** results written 2026-11-21; gate open (push, CI, the owner's merge). Final validation
-  (Phase 22) has been run; the record is [FINAL_VALIDATION](FINAL_VALIDATION.md) and the plan and
-  closure are in [PHASE_STATUS](PHASE_STATUS.md), Phase 22.
+- **Status:** COMPLETE 2026-11-21 (tag `phase-22`). The record is [FINAL_VALIDATION](FINAL_VALIDATION.md)
+  and the plan and closure are in [PHASE_STATUS](PHASE_STATUS.md), Phase 22.
 - **Tasks:**
   1. Clean-machine-style run: fresh clone → install → download → prepare → load model → infer → evaluate;
      record every manual step.
@@ -460,6 +459,8 @@ Phases 0 to 21 have passed their gates, including the re-runs of 17, 18 and 20 o
   registered.
 
 ### Phase 23 — Release v1.0
+- **Status:** in progress, plan registered 2026-11-22. The plan, with the owner's decisions of
+  2026-11-22, is in [PHASE_STATUS](PHASE_STATUS.md), Phase 23.
 - **Preconditions:** tests and CI pass; training pipeline, inference and export verified; docs complete;
   model artifact verified (hash + equivalence).
 - **Tasks:** release notes, version bump, tagged GitHub release with the model artifact (or download script
@@ -486,7 +487,8 @@ Phases 0 to 21 have passed their gates, including the re-runs of 17, 18 and 20 o
     and documentation only: no datasets and nothing from the evaluation-only sets.
   - the owner creates the PyPI and Zenodo accounts and chooses the creator name shown on Zenodo,
     which is permanent.
-- **Effort:** 1 S.
+- **Effort:** 1 S as first planned; re-estimated at registration as about 66 h of session work plus
+  about 2 h of GPU, not counting the adviser, accounts and approvals (PHASE_STATUS, Phase 23).
 
 ---
 
@@ -494,6 +496,9 @@ Phases 0 to 21 have passed their gates, including the re-runs of 17, 18 and 20 o
 
 | Change | Why | Record |
 |---|---|---|
+| The code licence (Apache-2.0) is chosen in Phase 23 without waiting for patent advice | Owner decision of 2026-11-22: the repository has been public since 2026-10-09 | PHASE_STATUS Phase 23, D2 |
+| "Fetched on first use" is an explicit `glypharis.download_model` and a fetch by the two commands; `from_pretrained` never reaches the network | `from_pretrained` is a frozen v1 path, and a library should not make network calls inside a host application unasked | PHASE_STATUS Phase 23, D6 |
+| v1.0 is held until the weights can be published; no code-only release without a new owner decision | Owner decision of 2026-11-22: the weights wait for qualified advice (ADR-0014) | PHASE_STATUS Phase 23, D4 |
 | Added **GlyphSynth** (document-style synthetic data) next to SynthText | HierText and SynthText are scene-text-oriented; the target is document pages. Makes RQ2 a domain-vs-scale study. | ADR-0003 |
 | Recognizer works on **lines**, not words | Document text is line-structured; CTC handles long lines | ADR-0002 |
 | DocVQA demoted to reference-only | Its OCR transcriptions are machine-generated, not human ground truth | ADR-0005, DATASETS.md |
@@ -522,7 +527,7 @@ Phases 0 to 21 have passed their gates, including the re-runs of 17, 18 and 20 o
 | v1's default backend is PyTorch on the CPU, not ONNX Runtime (§7) | For this recognizer the plain ONNX export is slower on the CPU than PyTorch (F34). Owner decision of 2026-11-18 | ADR-0011, GW-EFF-007, GW-EFF-009 |
 | ADR-0011's laptop targets are recorded as missed for v1, and the target hardware is now lightweight devices such as phones | No CPU build of v1 meets the line or page time targets (F38). Phones are the target hardware. The phone candidate's networks (not v1, not a full page) were measured on two phones in Phase 22 (GW-EFF-015); v1 was not measured on a phone and no phone target is set; R-23 is closed | ADR-0011, R-23, `reports/efficiency/phase16/README.md` |
 | Phase 19 ran after Phase 11, on the v0.1 bundle, not after the re-runs | Done at the owner's request while Phase 12 waited; it uses no model results. The endpoint was exercised on the v1 bundle in the Phase 20 re-run | PHASE_STATUS, Phase 19; GW-E2E-012 |
-| Only `v0.1` was tagged as a version; the roadmap's 0.5, 0.6 and 0.9 were not tagged, and the package stays `0.1.0.dev0` | The version for v1.0 is set in Phase 23 | ROADMAP §1, `pyproject.toml` |
+| Only `v0.1` was tagged as a version; the roadmap's 0.5, 0.6 and 0.9 were not tagged, and the package stayed `0.1.0.dev0` until Phase 23 | Phase 23 sets the package version to `1.0.0` for the tag `v1.0` | ROADMAP §1, `pyproject.toml` |
 | v1's code changed once after evaluation: tag `v1-code` | Docstrings, comments and the default bundle name only, compared as syntax trees against `phase14-eval`, so it is not a new model version. The bundle was not rebuilt | `reports/export/v1-code/code_diff.json`, EXPERIMENT_PROTOCOL §11 (2026-11-18) |
 | Output has `seconds` per step instead of `processing_time_ms`, and no `page_number`; `det_score`, `quad`, `width` and `height` were added | The result object was built this way in Phases 10 and 18; no separate decision was recorded. The engine reads one image at a time and is not told a page number | ARCHITECTURE §6, §10 |
 | The `GLYPHARISOCR` alias is not exported | ADR-0004 and the row above name it, but the package exports only `GlypharisOCR`. Recorded here; nothing depends on the alias | `glypharis/__init__.py`, ARCHITECTURE §10 |

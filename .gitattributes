@@ -13,3 +13,22 @@
 
 *.bat  text eol=crlf
 *.ps1  text eol=crlf
+
+# Left out of `git archive`, and so of the Zenodo deposit, which receives code and documentation
+# only (PHASE_STATUS Phase 23, D5): the generated reports, and the records of the evaluation-only
+# sets (GDC, GDC-scan, FUNSD, IIIT5K, OmniDocBench) and of evaluation inputs and outputs. The
+# training-side records under data/manifests stay. Kept in step with scripts/check_git_archive.py.
+/reports export-ignore
+/data/manifests/gdc export-ignore
+/data/manifests/gdc_scan export-ignore
+/data/manifests/gdc_sources.json export-ignore
+/data/manifests/funsd.json export-ignore
+/data/manifests/iiit5k.json export-ignore
+/data/manifests/omnidocbench.json export-ignore
+/data/manifests/processed/benchmarks.json export-ignore
+/data/manifests/processed/eval_crops.json export-ignore
+/data/manifests/processed/glyph_c.json export-ignore
+/data/manifests/processed/glyph_c_samples.json export-ignore
+/data/manifests/processed/omnidocbench_subset100.json export-ignore
+/data/manifests/processed/phase14_outputs.json export-ignore
+/data/manifests/processed/phase5_baseline_files.json export-ignore

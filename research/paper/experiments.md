@@ -696,4 +696,7 @@ Intended terms under ADR-0014, effective only if released. The owner decided on 
 the v1 weights are CC BY-SA 4.0 with attribution to HierText and Open Images, and that GW-DET-001 stays
 v1's detector as a disclosed exception to ADR-0009's commercial-use rule. This is the project's chosen
 handling, not a legal conclusion, and the v1 weights are not described as cleared for commercial use.
-For the code licence and the project citation: To be settled in Phase 23.
+The code and the project's own text are under Apache-2.0 (`LICENSE`, `NOTICE`), with the exceptions
+that `NOTICE` lists, among them the HierText-derived tables in these notes; the licence does not cover
+the weights, which are not distributed. The project citation is in `CITATION.cff`; an archive DOI is
+pending.

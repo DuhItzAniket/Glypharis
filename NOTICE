@@ -1,0 +1,65 @@
+GLYPHARIS
+Copyright 2026 DuhItzAniket
+
+This product is licensed under the Apache License, Version 2.0 (see LICENSE). The licence
+covers the source code and the project's own text in this repository, except for the material
+listed below, which keeps its own terms.
+
+Material in this repository that the Apache License does not cover
+-----------------------------------------------------------------
+
+1. HierText and Open Images material (CC BY-SA 4.0)
+
+   The images, crops, quoted lines and word pairs taken from HierText, and the tables derived
+   from it, in reports/, docs/RELEASE_NOTES_v1.0.md, docs/FINAL_VALIDATION.md, MODEL_CARD.md
+   and research/paper/ come from HierText (Long et al.,
+   "Towards End-to-End Unified Scene Text Detection and Layout Analysis", CVPR 2022,
+   https://github.com/google-research-datasets/hiertext). HierText is released under
+   CC BY-SA 4.0 (https://creativecommons.org/licenses/by-sa/4.0/), and this material is shared
+   under the same licence. Its images come from Open Images
+   (https://storage.googleapis.com/openimages/web/index.html), which lists them as CC BY 2.0
+   (https://creativecommons.org/licenses/by/2.0/) and gives no warranty about the licence of
+   any one image. The material was changed: crops were cut from the images, resized and
+   converted to grey scale, and previews show them after the augmentations named there. Author
+   and source are not recorded per image; line keys begin with the HierText image ID.
+
+   This notice is the attribution for that material in full. The list of report files written
+   before they carried their own attribution line is in reports/README.md, "Attribution of
+   HierText and Open Images material". reports/ is in the tagged GitHub repository but is left
+   out of source archives made with git archive and of the Zenodo deposit (.gitattributes,
+   export-ignore); DATASETS.md, which records the licences of every dataset, is in both.
+
+2. Quoted GDC lines and GDC word pairs (their sources' licences)
+
+   reports/error_cases/phase15/ quotes lines from the openly licensed and public-domain source
+   documents of the project's GDC test set, each with its key, URL and licence, and
+   reports/confusion_analysis/GW-REC-040/ holds GDC word-confusion pairs pooled over all of its
+   source documents. These remain under the licences of their sources, which are listed in
+   DATASETS.md, "GDC source documents". Like the rest of reports/, these files are in the tagged
+   GitHub repository only (see item 1).
+
+3. Data records under data/manifests/
+
+   The manifests record identifiers, URLs, sizes and hashes of third-party datasets, weights and
+   evaluators. They are data records about those sources, not code, and the sources themselves
+   keep their own terms (DATASETS.md).
+
+4. Gradle wrapper
+
+   mobile/android-bench/gradle/wrapper/gradle-wrapper.jar, mobile/android-bench/gradlew and
+   mobile/android-bench/gradlew.bat are third-party files by the Gradle authors, distributed
+   under the Apache License, Version 2.0.
+
+Not in this repository
+----------------------
+
+- Model weights. No weights are distributed with this repository, and the Apache License does
+  not cover them. Their intended terms are recorded in
+  docs/decisions/ADR-0014-weights-and-backbone-terms.md and apply only if the weights are
+  released.
+- Datasets, the official evaluators, fonts and the GDC-scan document are not in the repository.
+  Their sources and terms are recorded in DATASETS.md.
+- glypharis/sample/page.png is set in Open Sans (SIL OFL 1.1); the font file is not included.
+
+DATASETS.md, MODEL_CARD.md and ADR-0014 record what the publishers state and how the project
+handled it. They are not legal advice.

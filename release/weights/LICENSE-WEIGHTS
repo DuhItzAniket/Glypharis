@@ -1,0 +1,25 @@
+GLYPHARIS v1 model weights
+Copyright 2026 DuhItzAniket
+
+The model weights in this archive (detector.pt, detector.onnx, recognizer.pt and
+recognizer.onnx, as listed with their SHA-256 in manifest.json) are licensed under the
+Creative Commons Attribution-ShareAlike 4.0 International licence (CC BY-SA 4.0):
+
+    https://creativecommons.org/licenses/by-sa/4.0/legalcode
+
+The full text of the licence is at that address; it is not reproduced in this archive.
+
+The weights were trained on HierText, which is released under CC BY-SA 4.0 and whose images
+come from Open Images. NOTICE.md, beside this file, gives the attribution for that material,
+the changes made, and the exception for the detector, which was initialised from ImageNet-1K
+weights. Read it together with this file.
+
+These terms are the project's chosen handling of its training data's terms. They are not a
+legal conclusion that the weights, or any commercial use of them, are cleared, and the weights
+are never described as cleared for commercial use.
+
+The weights are provided as is, without warranties or conditions of any kind, as section 5 of
+CC BY-SA 4.0 sets out.
+
+The GLYPHARIS source code is licensed separately under the Apache License, Version 2.0; that
+licence does not cover these weights.
