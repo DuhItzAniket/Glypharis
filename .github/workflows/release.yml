@@ -1,0 +1,349 @@
+name: Release
+
+# Phase 23, item 6 (docs/PHASE_STATUS.md). This workflow builds, checks and drafts a release; it
+# cannot publish one by itself.
+#
+# Stage 1, manual dispatch only. With dry_run on (the default) it runs every check on the
+# dispatched commit against the would-be tag and creates nothing. With dry_run off it builds from
+# the tag, runs the same checks, and creates a DRAFT GitHub release holding the sdist, the wheel
+# and their SHA256SUMS only. The model archive never comes from the runner: the owner uploads it to
+# the draft by hand, from the owner's machine, on a separate go (item 15b).
+#
+# Stage 2, when the owner publishes the draft by hand: the pypi job, in the protected environment
+# "pypi" (the owner is its required reviewer), downloads the release's code files, checks them
+# against SHA256SUMS and uploads exactly those through Trusted Publishing. No token is stored and
+# nothing is rebuilt.
+#
+# A tag push never runs this workflow. Zenodo is not driven by it either: the owner switches the
+# repository's Zenodo GitHub integration on only with a separate Zenodo go (item 15c); until then
+# publishing a release deposits nothing there.
+#
+# Every action is pinned by its full commit SHA. The build tools are pinned by
+# requirements/build-constraints.txt. No pip cache is used.
+
+on:
+  workflow_dispatch:
+    inputs:
+      dry_run:
+        description: "Dry run: build and check only, create nothing"
+        type: boolean
+        required: true
+        default: true
+      tag:
+        description: "Release tag (must exist when dry_run is off; the would-be tag on a dry run)"
+        type: string
+        required: true
+        default: "v1.0"
+  release:
+    types: [published]
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event_name }}
+  cancel-in-progress: false
+
+permissions:
+  contents: read
+
+defaults:
+  run:
+    shell: bash
+
+env:
+  TORCH_VERSION: "2.14.1"
+  TORCHVISION_VERSION: "0.29.1"
+
+jobs:
+  check-build:
+    name: build and check (stage 1)
+    if: github.event_name == 'workflow_dispatch'
+    runs-on: ubuntu-latest
+    timeout-minutes: 40
+    permissions:
+      contents: read
+    outputs:
+      commit: ${{ steps.commit.outputs.sha }}
+    steps:
+      - name: Check the inputs
+        env:
+          TAG: ${{ inputs.tag }}
+          DRY_RUN: ${{ inputs.dry_run }}
+        run: |
+          if [ -z "$TAG" ]; then
+            echo "::error::a tag is required"
+            exit 1
+          fi
+          if [ "$DRY_RUN" = "true" ]; then
+            echo "Dry run for the would-be tag $TAG: nothing is created."
+          else
+            echo "Building from the tag $TAG for a draft release."
+          fi
+
+      # A dry run builds the dispatched commit; off dry run, the tag itself (it must exist).
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          ref: ${{ inputs.dry_run && github.sha || format('refs/tags/{0}', inputs.tag) }}
+          fetch-depth: 0
+          persist-credentials: false
+
+      - name: Record the commit
+        id: commit
+        run: |
+          test -z "$(git status --porcelain)"
+          echo "sha=$(git rev-parse HEAD)" >> "$GITHUB_OUTPUT"
+          git log -1 --format='%H %s'
+
+      - uses: actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0 # v7.1.0
+        with:
+          python-version: "3.11"
+
+      - name: Install the build tools (pinned)
+        env:
+          PIP_CONSTRAINT: ${{ github.workspace }}/requirements/build-constraints.txt
+        run: |
+          python -m pip install --upgrade pip
+          pip install -c requirements/build-constraints.txt build twine
+
+      - name: Tag equals the package version
+        env:
+          TAG: ${{ inputs.tag }}
+        run: python scripts/release_version_check.py --tag "$TAG"
+
+      - name: Build the sdist and wheel from the clean checkout
+        env:
+          # The isolated build environment gets the pinned setuptools too.
+          PIP_CONSTRAINT: ${{ github.workspace }}/requirements/build-constraints.txt
+        run: |
+          test -z "$(git status --porcelain)"
+          python -m build --outdir dist/ .
+          ls -l dist/
+
+      - name: Twine check
+        run: twine check --strict dist/*
+
+      - name: Contents and metadata (no weights, no weight notices, the tree it was built from)
+        run: python scripts/check_wheel.py dist/*.whl dist/*.tar.gz
+
+      - name: git archive leaves out reports and the evaluation records
+        run: python scripts/check_git_archive.py --commit HEAD
+
+      - name: Install the wheel with its dependencies in a fresh environment
+        run: |
+          python -m venv "$RUNNER_TEMP/venv"
+          PY="$RUNNER_TEMP/venv/bin/python"
+          "$PY" -m pip install --upgrade pip
+          "$PY" -m pip install "torch==${TORCH_VERSION}" "torchvision==${TORCHVISION_VERSION}" \
+            --index-url https://download.pytorch.org/whl/cpu
+          "$PY" -m pip install dist/*.whl
+          "$PY" -m pip check
+
+      - name: Commands and a tiny-bundle read, from outside the checkout
+        working-directory: ${{ runner.temp }}
+        env:
+          GLYPHARIS_MODELS: ${{ runner.temp }}/models
+        run: |
+          BIN="$RUNNER_TEMP/venv/bin"
+          mkdir tiny && cd tiny
+          cp "$GITHUB_WORKSPACE/scripts/tiny_bundle_check.py" .
+          "$BIN/glypharis-ocr" --help
+          "$BIN/glypharis-serve" --help
+          "$BIN/python" -c "import glypharis, importlib.metadata as m; \
+            assert m.version('glypharis') == glypharis.__version__; \
+            print(glypharis.__version__, glypharis.__file__)"
+          # The core install holds none of the extras.
+          "$BIN/python" -c "import importlib.util as u; \
+            extra = [m for m in ('matplotlib', 'fontTools', 'pypdfium2', 'psutil', 'pynvml', 'onnx') \
+                     if u.find_spec(m)]; \
+            assert not extra, extra"
+          # Writing a bundle exports ONNX files, which needs the export extra; reading does not.
+          WHEEL="$(ls "$GITHUB_WORKSPACE"/dist/*.whl)"
+          "$BIN/python" -m pip install "${WHEEL}[export]"
+          "$BIN/python" tiny_bundle_check.py --out bundle --build-only --require-installed
+          "$BIN/python" tiny_bundle_check.py --bundle bundle/tiny-check --require-installed \
+            --block matplotlib fontTools pypdfium2 psutil pynvml onnx
+          # The outsider check's plumbing on the tiny bundle (it reads no line of the page).
+          cp "$GITHUB_WORKSPACE/scripts/make_sample_page.py" .
+          PAGE="$("$BIN/python" -c 'import glypharis.check as c; print(c.SAMPLE_PAGE)')"
+          "$BIN/python" make_sample_page.py expected --model bundle/tiny-check --name tiny-check \
+            --threads 1 --page "$PAGE" --out expected.json
+          "$BIN/python" make_sample_page.py registry --model bundle/tiny-check --out registry.json
+          "$BIN/glypharis-check" --model tiny-check --models-dir bundle --threads 1 \
+            --registry registry.json --expected expected.json
+
+      - name: Write SHA256SUMS for the code files
+        working-directory: dist
+        run: |
+          sha256sum -- *.whl *.tar.gz > SHA256SUMS
+          cat SHA256SUMS
+
+      - name: "Guard: dist holds one sdist, one wheel and SHA256SUMS, nothing else"
+        working-directory: dist
+        run: |
+          shopt -s nullglob
+          wheels=(*.whl)
+          sdists=(*.tar.gz)
+          all=(*)
+          if [ "${#wheels[@]}" -ne 1 ] || [ "${#sdists[@]}" -ne 1 ] || [ "${#all[@]}" -ne 3 ] \
+            || [ ! -f SHA256SUMS ]; then
+            echo "::error::dist/ must hold exactly one wheel, one sdist and SHA256SUMS: ${all[*]}"
+            exit 1
+          fi
+          sha256sum -c --strict SHA256SUMS
+
+      - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: dist
+          path: dist/
+          if-no-files-found: error
+          retention-days: 14
+
+  draft-release:
+    name: draft GitHub release (stage 1, dry_run off)
+    needs: check-build
+    if: github.event_name == 'workflow_dispatch' && inputs.dry_run == false
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          ref: refs/tags/${{ inputs.tag }}
+          fetch-depth: 0
+          persist-credentials: false
+
+      - name: The tag exists and points at the checked-out, checked commit
+        env:
+          TAG: ${{ inputs.tag }}
+          BUILT: ${{ needs.check-build.outputs.commit }}
+        run: |
+          tagged="$(git rev-parse -q --verify "refs/tags/${TAG}^{commit}")" || {
+            echo "::error::the tag $TAG does not exist"
+            exit 1
+          }
+          head="$(git rev-parse HEAD)"
+          if [ "$tagged" != "$head" ] || [ "$head" != "$BUILT" ]; then
+            echo "::error::tag $TAG is $tagged, checkout is $head, the checked build is $BUILT"
+            exit 1
+          fi
+          echo "Tag $TAG points at $head, the commit check-build built and checked."
+
+      - name: No release exists for the tag yet
+        env:
+          GH_TOKEN: ${{ github.token }}
+          TAG: ${{ inputs.tag }}
+        run: |
+          if gh release view "$TAG" --repo "$GITHUB_REPOSITORY" > /dev/null 2>&1; then
+            echo "::error::a release for $TAG already exists; nothing is replaced"
+            exit 1
+          fi
+
+      - uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333 # v8.0.2
+        with:
+          name: dist
+          path: dist/
+
+      - name: "Guard: only the sdist, the wheel and SHA256SUMS go to the draft (never glypharis-v1.tar.gz)"
+        working-directory: dist
+        run: |
+          shopt -s nullglob
+          all=(*)
+          for f in "${all[@]}"; do
+            case "$f" in
+              glypharis-v1.tar.gz | glypharis-v1.tar.gz.sha256)
+                echo "::error::the model archive never goes up from the runner: $f"
+                exit 1
+                ;;
+              SHA256SUMS | glypharis-*.tar.gz | glypharis-*-py3-none-any.whl) ;;
+              *)
+                echo "::error::unexpected file in dist/: $f"
+                exit 1
+                ;;
+            esac
+          done
+          wheels=(*.whl)
+          sdists=(*.tar.gz)
+          if [ "${#wheels[@]}" -ne 1 ] || [ "${#sdists[@]}" -ne 1 ] || [ "${#all[@]}" -ne 3 ]; then
+            echo "::error::dist/ must hold exactly one wheel, one sdist and SHA256SUMS: ${all[*]}"
+            exit 1
+          fi
+          sha256sum -c --strict SHA256SUMS
+          test "$(wc -l < SHA256SUMS)" -eq 2
+
+      - name: Create the draft release (code files and SHA256SUMS only)
+        env:
+          GH_TOKEN: ${{ github.token }}
+          TAG: ${{ inputs.tag }}
+        run: |
+          gh release create "$TAG" --repo "$GITHUB_REPOSITORY" --draft --verify-tag \
+            --title "GLYPHARIS $TAG" --notes-file docs/RELEASE_NOTES_v1.0.md dist/*
+          echo "Draft release $TAG created; it is not published."
+
+  pypi:
+    name: upload to PyPI (stage 2, after the owner publishes the release)
+    if: github.event_name == 'release'
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    environment:
+      name: pypi
+      url: https://pypi.org/project/glypharis/
+    permissions:
+      id-token: write
+      contents: read
+    steps:
+      # No checkout and no build: only the files stage 1 checked and the owner published go up.
+      - name: Download SHA256SUMS from the release
+        env:
+          GH_TOKEN: ${{ github.token }}
+          TAG: ${{ github.event.release.tag_name }}
+        run: |
+          mkdir release-assets
+          gh release download "$TAG" --repo "$GITHUB_REPOSITORY" --dir release-assets \
+            --pattern SHA256SUMS
+          cat release-assets/SHA256SUMS
+
+      - name: "Guard: SHA256SUMS lists one sdist and one wheel, never glypharis-v1.tar.gz"
+        working-directory: release-assets
+        run: |
+          awk '{ name = $2; sub(/^\*/, "", name); print name }' SHA256SUMS > names.txt
+          wheels=0
+          sdists=0
+          while IFS= read -r name; do
+            case "$name" in
+              glypharis-v1.tar.gz | glypharis-v1.tar.gz.sha256)
+                echo "::error::the model archive is never uploaded to PyPI: $name"
+                exit 1
+                ;;
+            esac
+            if [[ "$name" =~ ^glypharis-[0-9][0-9A-Za-z.]*-py3-none-any\.whl$ ]]; then
+              wheels=$((wheels + 1))
+            elif [[ "$name" =~ ^glypharis-[0-9][0-9A-Za-z.]*\.tar\.gz$ ]]; then
+              sdists=$((sdists + 1))
+            else
+              echo "::error::unexpected file in SHA256SUMS: $name"
+              exit 1
+            fi
+          done < names.txt
+          if [ "$wheels" -ne 1 ] || [ "$sdists" -ne 1 ] || [ "$(wc -l < names.txt)" -ne 2 ]; then
+            echo "::error::SHA256SUMS must list exactly one wheel and one sdist"
+            exit 1
+          fi
+
+      - name: Download the code files SHA256SUMS lists and check them
+        env:
+          GH_TOKEN: ${{ github.token }}
+          TAG: ${{ github.event.release.tag_name }}
+        working-directory: release-assets
+        run: |
+          while IFS= read -r name; do
+            gh release download "$TAG" --repo "$GITHUB_REPOSITORY" --pattern "$name"
+          done < names.txt
+          sha256sum -c --strict SHA256SUMS
+          mkdir ../dist
+          while IFS= read -r name; do
+            cp -- "$name" ../dist/
+          done < names.txt
+          ls -l ../dist/
+
+      - uses: pypa/gh-action-pypi-publish@7245906fb61fa33a13554f9d5fb856fe61758086 # v1.14.3
+        with:
+          packages-dir: dist/
