@@ -689,7 +689,11 @@ The repository does not contain:
 - The all-ONNX fused-attention build exports the same weights, so the same terms would apply to it. A new
   version, not v1. It was evaluated once on each test set in Phase 22 (test runs GW-REC-045 and
   GW-E2E-020, scored in GW-E2E-021; `reports/final_validation/candidate/h11.md`).
-- Code licence and project citation: To be settled in Phase 23.
+- Code: the code and the project's own text are under Apache-2.0 ([`LICENSE`](LICENSE),
+  [`NOTICE`](NOTICE)), with the exceptions that `NOTICE` lists, among them the HierText-derived material
+  (CC BY-SA 4.0). The licence does not cover the weights, which are not distributed; their intended terms
+  are ADR-0014's, effective only if released. Project citation: [`CITATION.cff`](CITATION.cff); an
+  archive DOI is pending.
 
 ## Licence checks
 

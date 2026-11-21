@@ -25,7 +25,8 @@ so the brief stays traceable; only the order differs.
 | **M11 Release** | 21–23 | Paper-ready research package, clean-machine validation, evaluation of the fused-attention build as a new version | **1.0** | Every criterion in §4 ticked | open: Phase 21 in progress |
 
 `v0.1` is the only version tag so far. The 0.5, 0.6 and 0.9 entries were planning labels: no such tag
-exists, and the package version stays `0.1.0.dev0` until Phase 23 (`pyproject.toml`). No weights are
+exists. The package version is `1.0.0` from Phase 23 (`glypharis.__version__`); the tag `v1.0` is
+not set yet. No weights are
 distributed; release is Phase 23.
 
 ## 2. Dependency graph
