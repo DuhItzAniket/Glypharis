@@ -167,11 +167,10 @@ the cell, under the matching rules above.
 Lints and the audit
 ===================
 
-Failures: personal paths and email addresses; sentences saying Phase 22 or 23 happened or that the
-model is released (a hedge cancels the claim only if it comes before it); SOTA wording outside
-quotation marks and block quotes, also across a line break; a line that starts with a comment and
-goes on with text, which Markdown renders as raw HTML. The word ``best`` is listed in ``trace.md``
-for a person to read and does not fail.
+Failures: personal paths and email addresses; SOTA wording outside quotation marks and block
+quotes, also across a line break; a line that starts with a comment and goes on with text, which
+Markdown renders as raw HTML. The word ``best`` is listed in ``trace.md`` for a person to read and
+does not fail.
 
 Two audits run on every full run and with ``--check``. Each works on sampled resolved numbers and
 counts the changes that still resolve. A document above either target fails.
@@ -294,30 +293,6 @@ _SOTA: Final = re.compile(
     re.I,
 )
 _BEST: Final = re.compile(r"\bbest\b", re.I)
-# Phase 22 has run (2026-11-21); only the release phase is still ahead.
-_LATER_PHASE: Final = re.compile(
-    r"\bPhases?\s+(?:\d+\s*(?:,\s*(?:and|or)?|and|or|to|through|&|/|-|\u2013|\u2014)\s*)*23\b"
-)
-_DONE: Final = re.compile(
-    r"\b(?:passed|completed?|finished|confirmed|validated|verified|reproduced|released|published"
-    r"|showed|shown|demonstrated|succeeded|ran|(?:was|were|been|has|have)\s+(?:run|done)"
-    r"|is\s+done|are\s+done)\b",
-    re.I,
-)
-_HEDGE: Final = re.compile(
-    r"\b(?:not|never|pending|until|before|will|would|shall|to\s+be|planned|plans?|future"
-    r"|yet|once|if|when|later|awaits?|awaiting|remains?|cannot|must|should|only\s+after)\b|n't\b",
-    re.I,
-)
-_NEGATED: Final = re.compile(r"\b(?:no|none)\b", re.I)
-_RELEASE_CLAIM: Final = re.compile(
-    r"\b(?:weights?|models?|bundle|GLYPHARIS|v1)\b[^.]{0,60}?\b(?:is|are|was|were|has\s+been"
-    r"|have\s+been)\s+(?:now\s+)?(?:publicly\s+)?(?:released|published|distributed"
-    r"|available\s+(?:for\s+download|on|from))\b"
-    r"|\bv1\.0\b|\b(?:on|to|via)\s+(?:PyPI|Zenodo)\b"
-    r"|\breproduced\s+(?:on|from)\s+a\s+clean\b",
-    re.I,
-)
 
 
 def _is_rate_key(component: str, extra: frozenset[str]) -> bool:
@@ -1607,11 +1582,6 @@ def _starts_with_comment(line: str) -> bool:
     return bool(_COMMENT.sub("", line).strip())
 
 
-def _comes_first(claim: re.Match[str], hedge: re.Match[str] | None) -> bool:
-    """True when no hedge comes before the end of the claim."""
-    return hedge is None or hedge.start() >= claim.end()
-
-
 def lint_document(text: str, path: str = "") -> tuple[list[LintFinding], list[LintFinding]]:
     """(failures, lines for human review) of one document."""
     text = text.replace("\r\n", "\n").replace("\r", "\n")
@@ -1633,15 +1603,6 @@ def lint_document(text: str, path: str = "") -> tuple[list[LintFinding], list[Li
             )
     lines = _prose_lines(text)
     document = nt.parse_document(text, path)
-    for number, sentence in _sentences(document, lines):
-        flat = " ".join(sentence.split())
-        hedge = _HEDGE.search(flat)
-        done = _DONE.search(flat)
-        claim = _RELEASE_CLAIM.search(flat)
-        if _LATER_PHASE.search(flat) and done and _comes_first(done, hedge):
-            failures.append(LintFinding(number, f"reads as if a later phase happened: {flat[:90]}"))
-        elif claim and _comes_first(claim, hedge) and not _NEGATED.search(flat):
-            failures.append(LintFinding(number, f"reads as a release claim: {flat[:90]}"))
     unquoted = ["" if line.lstrip().startswith(">") else line for line in lines]
     for number, sentence in _sentences(document, unquoted):
         match = _SOTA.search(_QUOTED.sub(" ", " ".join(sentence.split())))

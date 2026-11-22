@@ -899,44 +899,36 @@ def test_ordinary_paths_pass() -> None:
 @pytest.mark.parametrize(
     "line",
     [
-        "Phase 23 passed.",
-        "Phase 23 passed with no failures.",
-        "It was validated after Phase 23.",
-        "Phase 23 confirmed the result.",
-        "The result was reproduced in Phase 23.",
-        "Phase 23 released the weights.",
-        "Phases 22 and 23 are done.",
-        "Phases 21, 22, and 23 are done.",
-        "Phases 22\u201323 are done.",
-        "Phases 22/23 are done.",
-        "The weights are now publicly released.",
-        "The model is available on Zenodo today.",
-        "Install it from version v1.0 today.",
-        "It was reproduced from a clean machine.",
-    ],
-)
-def test_claims_about_later_phases_fail(line: str) -> None:
-    messages = lint_messages(f"# D\n\n{line}\n")
-    assert messages and ("later phase" in messages[0] or "release claim" in messages[0])
-
-
-@pytest.mark.parametrize(
-    "line",
-    [
         "Final validation (Phase 22) has not been run.",
         "Final validation (Phase 22) has been run.",
         "Phase 22 passed.",
         "Phase 22 checks reproduction within the 0.05-point tolerance.",
         "A new version, not v1; validation and laptop figures only; to be evaluated in Phase 22.",
-        "No weights are distributed; release is Phase 23.",
-        "To be settled in Phase 23.",
         "Configuration frozen and recorded; reproduction pending Phase 22.",
-        "Intended terms under ADR-0014, effective only if released.",
         "Phases are the target hardware; no phone has been measured.",
         "`Phase 22 passed` is an example in code.",
     ],
 )
 def test_required_wording_passes(line: str) -> None:
+    assert not lint_messages(f"# D\n\n{line}\n")
+
+
+# Phase 23 releases v1.0 and no phase follows it, so the lints that kept release claims and claims
+# about Phase 23 out of the documents before then were retired. Release sentences now pass.
+@pytest.mark.parametrize(
+    "line",
+    [
+        "v1.0 is the release of v1 (GW-REC-034 with GW-DET-001): the code under Apache-2.0, "
+        "published on PyPI as `glypharis` 1.0.0, and the v1 weights as the asset "
+        "`glypharis-v1.tar.gz` of the GitHub release `v1.0`.",
+        "The weights are distributed under CC BY-SA 4.0 with attribution to HierText and Open "
+        "Images (ADR-0014).",
+        "Cite with CITATION.cff; a Zenodo DOI is added after the deposit.",
+        "Phase 23 released the weights.",
+        "The model is available on Zenodo, and it was reproduced from a clean environment.",
+    ],
+)
+def test_release_sentences_pass(line: str) -> None:
     assert not lint_messages(f"# D\n\n{line}\n")
 
 
@@ -952,18 +944,6 @@ def test_sota_wording_fails(line: str) -> None:
 )
 def test_sota_wording_is_found_across_a_line_break(text: str) -> None:
     assert any("SOTA" in m for m in lint_messages(f"# D\n\n{text}\n"))
-
-
-@pytest.mark.parametrize(
-    "line",
-    [
-        "Phase 23 passed before the release.",
-        "Phase 23 published the weights once Phase 22 passed.",
-        "The v1 weights were released when Phase 21 ended.",
-    ],
-)
-def test_a_hedge_after_the_claim_does_not_cancel_it(line: str) -> None:
-    assert lint_messages(f"# D\n\n{line}\n")
 
 
 def test_a_wsl_home_is_a_personal_path() -> None:
@@ -1405,7 +1385,7 @@ def test_a_missing_document_fails_the_full_run(root: Path) -> None:
 
 
 def test_lint_failure_stops_the_run(root: Path, capsys: pytest.CaptureFixture[str]) -> None:
-    write(root, DOC, GOOD + "\nPhase 23 passed.\n")
+    write(root, DOC, GOOD + "\nIt is state of the art.\n")
     assert main(root) == 1
     assert "lint" in capsys.readouterr().out
 

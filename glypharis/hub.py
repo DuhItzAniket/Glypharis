@@ -80,7 +80,9 @@ LOCK_POLL_SECONDS = 0.5
 @dataclass(frozen=True)
 class ModelEntry:
     """One downloadable bundle. ``bytes`` and ``archive_sha256`` stay ``None`` until the release
-    archive is packed; ``published`` stays off until the archive is on the release page."""
+    archive is packed. ``published`` is switched on in the release commit (the one tagged
+    ``v1.0``); until that release is published with its archive, a fetch from ``url`` fails with
+    a download error."""
 
     name: str
     url: str
@@ -101,7 +103,7 @@ REGISTRY: dict[str, ModelEntry] = {
         archive_sha256="3b90c1c74147747d7474a86b550e198f0df83d447961bd6aec88d4c24846541d",
         manifest_sha256="875357a6346e8b1f989005fa96c557b00bf687461043368dc5e3dc532839f037",
         top_folder="glypharis-v1",
-        published=False,
+        published=True,
     ),
 }
 
