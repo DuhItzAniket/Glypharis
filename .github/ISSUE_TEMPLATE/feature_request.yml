@@ -1,0 +1,53 @@
+name: Feature request
+description: Suggest a change or an addition to GLYPHARIS.
+title: "[Feature]: "
+labels: ["enhancement"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thank you for the suggestion. The v1 model and the code that produces its readings are
+        frozen, so a change to what the model reads (its weights, the pipeline, or its settings)
+        belongs to a new model version and is planned separately. Changes to the interface, the
+        commands, the server, the documentation and the tooling can go into a 1.x release.
+  - type: textarea
+    id: problem
+    attributes:
+      label: Problem
+      description: What are you trying to do, and what stops you today?
+    validations:
+      required: true
+  - type: textarea
+    id: proposal
+    attributes:
+      label: Proposed change
+      description: What you would like GLYPHARIS to do.
+    validations:
+      required: true
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: Alternatives considered
+      description: Other ways you tried or considered, including working around it in your application.
+  - type: dropdown
+    id: area
+    attributes:
+      label: Area
+      options:
+        - Python API
+        - Command line (glypharis-ocr, glypharis-check)
+        - Server (glypharis-serve)
+        - Model download and installation
+        - Model accuracy or new model version
+        - Documentation
+        - Training, evaluation or research tooling
+        - Other
+    validations:
+      required: true
+  - type: checkboxes
+    id: checks
+    attributes:
+      label: Checks
+      options:
+        - label: I searched the existing issues and this has not been requested already.
+          required: true

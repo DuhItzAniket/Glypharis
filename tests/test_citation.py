@@ -53,6 +53,18 @@ def test_a_release_date_is_accepted(tmp_path):
     assert check_citation.main(_write(tmp_path, citation)) == 0
 
 
+def test_a_quoted_release_date_is_accepted(tmp_path):
+    citation = GOOD + 'date-released: "2026-12-01"\n'
+    assert check_citation.main(_write(tmp_path, citation)) == 0
+
+
+@pytest.mark.parametrize("value", ['"2026-13-01"', '"20261201"', '"2026-12-01T00:00"'])
+def test_a_quoted_release_date_that_is_not_a_day_fails(tmp_path, capsys, value):
+    citation = GOOD + f"date-released: {value}\n"
+    assert check_citation.main(_write(tmp_path, citation)) == 1
+    assert "date-released" in capsys.readouterr().out
+
+
 def test_an_entity_author_is_accepted(tmp_path):
     citation = GOOD.replace("  - alias: someone\n", "  - name: The Project\n")
     assert check_citation.main(_write(tmp_path, citation)) == 0
@@ -154,12 +166,14 @@ def test_the_version_is_read_without_importing(tmp_path):
 
 
 def test_the_repository_file_is_well_formed():
-    """The tracked CITATION.cff passes every check but the version, which item 3 sets."""
+    """The tracked CITATION.cff passes every check but the version, compared by ``main``."""
     import yaml
 
     citation = yaml.safe_load(check_citation.ROOT.joinpath("CITATION.cff").read_text("utf-8"))
     problems = check_citation.check(citation, citation["version"], None)
     assert problems == []
-    assert "date-released" not in citation
+    # The v1.0 release day and the Zenodo DOI of the release (Phase 23).
+    assert citation["date-released"] == "2026-11-22"
+    assert citation["doi"] == "10.5281/zenodo.24433864"
     # One author, named by the GitHub handle only (Zenodo reads the creator from this file).
     assert citation["authors"] == [{"name": "DuhItzAniket"}]

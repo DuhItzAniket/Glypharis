@@ -99,7 +99,7 @@ is complete (tag `phase-22`).
 
 To use the released package rather than develop it: `pip install glypharis==1.0.0` (Python 3.11.4 or
 later, below 3.12; Phase 23, D13), then `glypharis.download_model("glypharis-v1")`
-([README](../README.md#install)).
+([README](../README.md#quick-start)).
 
 ### PyTorch build decision
 

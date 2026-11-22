@@ -4,7 +4,7 @@
 |---|---|
 | Version | 1.4 (Phase 23, pull request B, 2026-11-22: Phase 23 status, the licence questions and the D4 deviation after the owner's decision to publish the weights; 1.3 registered Phase 23; 1.2 added the Phase 22 scope) |
 | Date | 2026-11-18 (first version 2026-10-10) |
-| Status | Phases 0 to 22 complete; Phase 23 in progress (Part 1 merged; pull request B open) ([PHASE_STATUS](PHASE_STATUS.md)) |
+| Status | Phases 0 to 23 complete; v1.0 released ([PHASE_STATUS](PHASE_STATUS.md)) |
 | Companion docs | [ROADMAP](ROADMAP.md) · [ARCHITECTURE](ARCHITECTURE.md) · [EXPERIMENT_PROTOCOL](EXPERIMENT_PROTOCOL.md) · [RISK_REGISTER](RISK_REGISTER.md) · [DATASETS](../DATASETS.md) · [MODEL_CARD](../MODEL_CARD.md) · [EXPERIMENTS](../EXPERIMENTS.md) · [WORKFLOW](WORKFLOW.md) · [decisions/](decisions/) |
 
 This is the working plan for building GLYPHARIS: a lightweight document OCR engine (text-line detector +
@@ -12,9 +12,9 @@ CTC line recognizer) trained and evaluated entirely on one laptop (RTX 4050 Lapt
 It turns the original project brief into phases with concrete tasks, deliverables, and **measurable exit
 criteria**. Phase numbering follows the brief (0–23) so requirements stay traceable (see §8).
 
-The phase text below is the plan as written before each phase ran, apart from Phases 21 to 23, which are
-still ahead or open. What was built instead of the plan is listed in §8; what was built is described in
-[ARCHITECTURE](ARCHITECTURE.md).
+The phase text below is the plan as written before each phase ran, apart from Phases 21 to 23, which
+were updated while they were open. What was built instead of the plan is listed in §8; what was built
+is described in [ARCHITECTURE](ARCHITECTURE.md).
 
 The research background behind these choices is in [`research/approach_survey.md`](../research/approach_survey.md).
 
@@ -147,7 +147,7 @@ Phase 8 detector, is evaluated on validation data only, and trains on HierText +
 ([ADR-0009](decisions/ADR-0009-no-synthtext.md)). Inference is CPU-first: CPU latency through ONNX Runtime is the primary efficiency number,
 with a concrete target set from the Phase 5 baseline measurements.
 
-Phases 0 to 21 have passed their gates, including the re-runs of 17, 18 and 20 on v1 (tags in
+Phases 0 to 23 have passed their gates, including the re-runs of 17, 18 and 20 on v1 (tags in
 [PHASE_STATUS](PHASE_STATUS.md)). Phase 19 ran after Phase 11 rather than after the re-runs (§8).
 
 ### Phase 0 — Repository discovery and planning ✅
@@ -459,9 +459,11 @@ Phases 0 to 21 have passed their gates, including the re-runs of 17, 18 and 20 o
   registered.
 
 ### Phase 23 — Release v1.0
-- **Status:** in progress (Part 1 merged; pull request B open). The plan, registered on 2026-11-22,
-  and the owner's decisions of 2026-11-22 are in [PHASE_STATUS](PHASE_STATUS.md), Phase 23; the
-  steps of release day are in [RELEASE_RUNBOOK](RELEASE_RUNBOOK.md).
+- **Status:** COMPLETE 2026-11-22 (tags `v1.0` and `phase-23`): v1.0 released on GitHub, PyPI and
+  Zenodo, with a Hugging Face mirror of the weights, and verified from a clean environment
+  (GW-E2E-023). The plan, registered on 2026-11-22, the owner's decisions of 2026-11-22 and the
+  completion record are in [PHASE_STATUS](PHASE_STATUS.md), Phase 23; the steps of release day, as
+  carried out, are in [RELEASE_RUNBOOK](RELEASE_RUNBOOK.md).
 - **Preconditions:** tests and CI pass; training pipeline, inference and export verified; docs complete;
   model artifact verified (hash + equivalence).
 - **Tasks:** release notes, version bump, tagged GitHub release with the model artifact (or download script
@@ -480,8 +482,8 @@ Phases 0 to 21 have passed their gates, including the re-runs of 17, 18 and 20 o
     given HierText's share-alike licence. The owner decided on 2026-11-22 to publish them under
     these terms without the qualified advice ADR-0014 had asked for (ADR-0014, Phase 23 outcome).
 
-  The code licence is Apache-2.0 (PHASE_STATUS Phase 23, D2). Cite with `CITATION.cff`; a Zenodo
-  DOI is added after the deposit. The phone candidate is not released (D7).
+  The code licence is Apache-2.0 (PHASE_STATUS Phase 23, D2). Cite with `CITATION.cff`; the
+  Zenodo DOI is 10.5281/zenodo.24433864. The phone candidate is not released (D7).
 - **Publishing** (added 2026-10-31 at the owner's request):
   - a `LICENSE` for the code and a `CITATION.cff`. The owner leans towards Apache-2.0; the choice is
     settled before release, after the owner has taken advice on any patent filing, because Apache-2.0

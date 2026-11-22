@@ -82,8 +82,8 @@ with attribution to HierText and Open Images (ADR-0014). The detector was initia
 weights, a disclosed exception to the project's commercial-use rule (ADR-0009), and the weights are
 not described as cleared for commercial use. The owner decided on 2026-11-22 to publish them under
 these terms without the qualified advice ADR-0014 had asked for; this is the project's chosen
-handling, not a legal conclusion. Cite with [`CITATION.cff`](CITATION.cff); a Zenodo DOI is added
-after the deposit.
+handling, not a legal conclusion. Cite with [`CITATION.cff`](CITATION.cff) (DOI
+[10.5281/zenodo.24433864](https://doi.org/10.5281/zenodo.24433864)).
 
 Not done yet:
 
@@ -977,7 +977,8 @@ and attributions are in [`DATASETS.md`](DATASETS.md).
 
 ## Citation information
 
-Cite GLYPHARIS with [`CITATION.cff`](CITATION.cff); a Zenodo DOI is added after the deposit.
+Cite GLYPHARIS with [`CITATION.cff`](CITATION.cff) (DOI
+[10.5281/zenodo.24433864](https://doi.org/10.5281/zenodo.24433864)).
 
 The methods and data behind the model are cited with these keys of
 [`research/paper/references.bib`](research/paper/references.bib): `graves2006ctc` (CTC),

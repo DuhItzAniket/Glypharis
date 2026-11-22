@@ -702,4 +702,4 @@ initialised from ImageNet weights, a disclosed exception to the project's commer
 this is the project's chosen handling, not a legal conclusion. The Apache License covers the code
 and the project's own text (`LICENSE`, `NOTICE`), with the exceptions that `NOTICE` lists, among
 them the HierText-derived tables in these notes, and not the weights, which are distributed
-separately. Cite with `CITATION.cff`; a Zenodo DOI is added after the deposit.
+separately. Cite with `CITATION.cff` (DOI 10.5281/zenodo.24433864).

@@ -3,10 +3,27 @@
 The steps of release day for v1.0, in order, with what is clicked or typed at each one, what to check
 afterwards and what to do when a step fails. This is Phase 23, items 14 to 17, of
 [PHASE_STATUS](PHASE_STATUS.md); the evidence for each precondition is in
-[RELEASE_EVIDENCE](RELEASE_EVIDENCE.md). **Step 1 was done by the owner on 2026-11-22; steps 2 to
-8 (and 6b) have not been carried out yet.** Until they are, no tag `v1.0`, GitHub release, PyPI
-file, Zenodo record or Hugging Face mirror of v1.0 exists, and the weights have not left the
-development machine.
+[RELEASE_EVIDENCE](RELEASE_EVIDENCE.md). **Every step, 1 to 8 with the optional 6b, ran on
+2026-11-22, each on the owner's go;** step 8 ends when the owner merges the close-out and
+`phase-23` is set on its merge commit. The steps below are kept as they were written, as the record
+of how v1.0 was released, with a line under each heading saying what happened.
+
+## Release record (2026-11-22)
+
+| Step | Done | Record |
+|---|---|---|
+| 1 | Owner | PyPI pending publisher added; Zenodo GitHub integration on, its `release` webhook active |
+| 2 | Owner | Pull request B (#30) merged after CI green on the branch (run 44986307543) and the pull request (run 44986329398) |
+| 3 | Session | Merge commit re-created with the noreply identity as `231978e`, same tree and parents; CI on `main` green (run 44987276181); annotated tag `v1.0`, noreply tagger, on `231978e` |
+| 4 | Session | Stage 1 off dry run, run 44987750836: draft with `glypharis-1.0.0-py3-none-any.whl` (SHA-256 `0f669557b86d7385a218112a79059ae20109f8ef10a9b13990d131dd30edca05`), `glypharis-1.0.0.tar.gz` (`cdd78d7432b14416cdca4f849e8b0b27563dfd050b93a37d3ae450562d62eb72`) and `SHA256SUMS` |
+| 5 | Session | `glypharis-v1.tar.gz` (82,975,077 bytes, SHA-256 `3b90c1c74147747d7474a86b550e198f0df83d447961bd6aec88d4c24846541d`) and its `.sha256` uploaded to the draft without overwrite, and checked by downloading them again |
+| 6 | Owner | Release published at 2026-11-22T05:21:13Z (<https://github.com/DuhItzAniket/Glypharis/releases/tag/v1.0>); PyPI job, run 44989039235, approved in the environment `pypi`: `glypharis` 1.0.0 on PyPI, Apache-2.0, file hashes equal to `SHA256SUMS`; Zenodo record DOI [10.5281/zenodo.24433864](https://doi.org/10.5281/zenodo.24433864), creator `DuhItzAniket`, version `v1.0` |
+| 6b | Session | <https://huggingface.co/DuhItzAniket/glypharis-v1>: created private, the eight members of the published archive and the card uploaded in commit `0b8c9e8ce8a79c05a8abe8357f83e476ab23264c`, downloaded back with all eight SHA-256 values OK and every file identical, ten files listed, then made public; `manifest.json` without a token matches the `875357a6…` pin; licence `cc-by-sa-4.0` |
+| 7 | Session | GW-E2E-023 passed (`reports/package/GW-E2E-023.json`, `reports/package/GW-E2E-023_fetch.json`); the Zenodo file `DuhItzAniket/Glypharis-v1.0.zip` holds 504 entries, with no `reports/`, no GDC records and no weights |
+| 8 | Session, then Owner | `phase/23-closeout`: the DOI in `README.md` and `CITATION.cff`, the completion record in PHASE_STATUS, the ROADMAP criteria; `phase-23` goes on its merge commit after the identity check |
+
+The full record, with the known issues, is the progress record "the release" in PHASE_STATUS, Phase
+23.
 
 What gets released: v1 (GW-REC-034 with GW-DET-001). The code goes out under Apache-2.0 as the
 package `glypharis` 1.0.0 on PyPI, and the v1 weights go out as the asset `glypharis-v1.tar.gz` of
@@ -143,6 +160,9 @@ close-out records it as deferred (item 17).
 
 ## Step 2 — Merge pull request B (Owner)
 
+Done on 2026-11-22: CI was green on the branch (run 44986307543) and on pull request #30 (run
+44986329398), and the owner merged it.
+
 When CI is green on pull request B, the owner merges it on GitHub with a merge commit, as for the
 earlier phase pull requests.
 
@@ -157,6 +177,11 @@ gh run list --repo DuhItzAniket/Glypharis --branch main --workflow CI --limit 3
 for it.
 
 ## Step 3 — Merge commit identity and the tag `v1.0` (Session)
+
+Done on 2026-11-22: the merge commit was not under the noreply identity, so it was re-created with
+the noreply identity as `231978e`, with the same tree and parents, and `main` was moved to it. CI on
+`main` at `231978e` was green (run 44987276181). The annotated tag `v1.0`, with the noreply tagger,
+is on `231978e`.
 
 Check who the merge commit names. The author and committer are compared in a shell test against the
 noreply identity, and only the answer is printed, so a merge made under another identity does not put
@@ -209,6 +234,10 @@ if it turns out to point at the wrong commit, stop and take it to the owner befo
 
 ## Step 4 — Draft release from the tag (Session, or Owner)
 
+Done on 2026-11-22: run 44987750836 succeeded and created the draft with
+`glypharis-1.0.0-py3-none-any.whl` (SHA-256 `0f669557…`), `glypharis-1.0.0.tar.gz` (`cdd78d74…`) and
+`SHA256SUMS`.
+
 Stage 1 of `.github/workflows/release.yml`, off dry run, builds from the tag, runs every check
 (the tag against the package version, the build from a clean checkout, `twine check`,
 `scripts/check_wheel.py`, `scripts/check_git_archive.py --commit HEAD`, the clean install) and creates
@@ -245,6 +274,10 @@ release for `v1.0` exists).
 
 ## Step 5 — Upload the weights to the draft and check them (Session)
 
+Done on 2026-11-22, on the owner's go for the weights: both files were uploaded from the
+development machine and checked by downloading them again: the size and SHA-256 equal the pin, and
+the downloaded files are identical to the uploaded ones.
+
 This is the first time a weight file leaves the development machine, and it needs the owner's go for
 the weights. First check the local files again (see "Before release day"), then:
 
@@ -278,6 +311,11 @@ without the archive would ship a package that fetches a file that does not exist
 needs a new owner decision (D4).
 
 ## Step 6 — Publish, approve PyPI, Zenodo archives (Owner)
+
+Done on 2026-11-22: the owner published the release at 05:21:13Z; the PyPI job (run 44989039235)
+was approved in the environment `pypi` and uploaded the two code files, whose PyPI hashes equal
+`SHA256SUMS`; Zenodo made the record with DOI 10.5281/zenodo.24433864, creator `DuhItzAniket`,
+version `v1.0`.
 
 1. On GitHub, open **Releases**, the draft `v1.0`, and click **Edit**. Check the five files and the
    notes, then click **Publish release**.
@@ -323,6 +361,11 @@ expected.
 - No published asset is replaced in any of these cases.
 
 ## Step 6b — Hugging Face mirror (Session, on the owner's go)
+
+Done on 2026-11-22, on the owner's go: commit `0b8c9e8ce8a79c05a8abe8357f83e476ab23264c`, checked
+by downloading it back while private (all eight lines `OK`, every file identical, ten files listed),
+then made public; `manifest.json` fetched without a token matches the pin. One line of the upload's
+summary read "0 committed" although the commit landed; the download check is the record.
 
 Optional (PHASE_STATUS, Phase 23, amendment to item 15). The owner asked for a mirror of the v1
 weights on Hugging Face, in the model repository `DuhItzAniket/glypharis-v1`. It holds the eight
@@ -471,6 +514,11 @@ in 200.
 
 ## Step 7 — Verify the published release, GW-E2E-023 (Session)
 
+Done on 2026-11-22: GW-E2E-023 passed (`reports/package/GW-E2E-023.json`,
+`reports/package/GW-E2E-023_fetch.json`), and the Zenodo file `DuhItzAniket/Glypharis-v1.0.zip`
+holds 504 entries, with no `reports/`, no GDC records and no weights. The third-party packages were
+the locked ones already on the machine, as in GW-E2E-022, with `glypharis` 1.0.0 itself from PyPI.
+
 From a clean environment, as GW-E2E-022 was run (item 16), on the owner's go for the downloads
 (PyTorch among the dependencies):
 
@@ -505,6 +553,10 @@ the evaluation records under `data/manifests`) is in it, and that the code and d
 and taken to the owner. No published file is replaced.
 
 ## Step 8 — Close-out (Session, then Owner)
+
+Done on 2026-11-22 up to the owner's merge: `phase/23-closeout` carries the DOI in `README.md` and
+`CITATION.cff`, the completion record, the ROADMAP criteria and the research log entry. The merge,
+the identity check below and `phase-23` follow.
 
 On a new branch `phase/23-closeout` from `main` (D12): the DOI goes into `README.md` and
 `CITATION.cff` if there is one; the completion record goes into PHASE_STATUS with the merge commit,

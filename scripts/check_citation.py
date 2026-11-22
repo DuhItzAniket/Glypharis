@@ -13,7 +13,8 @@ Checks, without a network or the CFF JSON schema:
 - ``version`` equals ``__version__`` in ``glypharis/__init__.py``, read as text so the package is
   not imported;
 - ``license`` equals ``project.license`` in ``pyproject.toml`` when that field is set;
-- ``date-released``, if present, is a date, and ``keywords`` is a list of strings.
+- ``date-released``, if present, is a date (quoted ``YYYY-MM-DD``, as the CFF schema expects, or a
+  YAML date), and ``keywords`` is a list of strings.
 
 Exits 1 and prints each problem when a check fails.
 """
@@ -101,6 +102,20 @@ ENTITY = frozenset(
 )
 VERSION_LINE = re.compile(r"""^__version__\s*=\s*["']([^"']+)["']\s*$""", re.M)
 URL = re.compile(r"^https?://\S+$")
+ISO_DATE = re.compile(r"^\d{4}-\d{2}-\d{2}$")
+
+
+def is_date(value: Any) -> bool:
+    """A YAML date, or a quoted ``YYYY-MM-DD`` string naming a real day (the CFF schema's form)."""
+    if isinstance(value, datetime.date):
+        return True
+    if not isinstance(value, str) or not ISO_DATE.match(value):
+        return False
+    try:
+        datetime.date.fromisoformat(value)
+    except ValueError:
+        return False
+    return True
 
 
 def package_version(init: Path) -> str:
@@ -163,7 +178,7 @@ def check(citation: dict[str, Any] | Any, version: str, license_id: str | None) 
         value = citation.get(key)
         if isinstance(value, str) and not URL.match(value):
             problems.append(f"{key} is not an http(s) URL: {value!r}")
-    if "date-released" in citation and not isinstance(citation["date-released"], datetime.date):
+    if "date-released" in citation and not is_date(citation["date-released"]):
         problems.append(f"date-released is not a YYYY-MM-DD date: {citation['date-released']!r}")
     keywords = citation.get("keywords")
     if "keywords" in citation and (

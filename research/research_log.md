@@ -495,3 +495,25 @@ the bottom. Experiments get their full record in `experiments.md`; this log is t
 - The phone figures are network time and memory only, on two named phones. A full page on a phone,
   with decoding and post-processing, has still not been timed, and no phone target is set (ADR-0011).
 - v1's records were checked at the end and are unchanged (`reports/final_validation/closure.md`).
+
+### 2026-11-22 — Phase 23: v1.0 released
+
+- v1 shipped as v1.0: the code under Apache-2.0 as `glypharis` 1.0.0 on PyPI, the weights as the
+  archive `glypharis-v1.tar.gz` on the GitHub release `v1.0`, and the code and documents on Zenodo
+  (DOI 10.5281/zenodo.24433864). The phone candidate stays a documented result and is not released.
+- The weights went out under the terms ADR-0014 set, CC BY-SA 4.0 with HierText and Open Images
+  attribution and the ImageNet-initialised detector disclosed, without the qualified advice ADR-0014
+  had asked for. That was the owner's decision, the project's chosen handling rather than a legal
+  conclusion, and the advice is still owed before the consumer application is sold.
+- The release was checked the way a stranger would get it: the package installed from PyPI, the
+  archive fetched over the network from the release address into empty folders, and the validation
+  pages read line for line as the frozen pipeline read them (GW-E2E-023, 16,835 of 16,835 lines
+  identical).
+- Every published file was checked after it went up: the archive by downloading it again, the PyPI
+  files against `SHA256SUMS`, and the Zenodo record for the absence of `reports/`, the GDC records
+  and the weights.
+- A Hugging Face mirror, `DuhItzAniket/glypharis-v1`, holds the published archive's eight files and a
+  model card. It was downloaded back and compared before it was made public; the package does not
+  use it.
+- Next is the research paper. The notes in `research/paper/` are already tied to their reports by
+  `scripts/trace_numbers.py`, and the DOI gives the code a citable record.
