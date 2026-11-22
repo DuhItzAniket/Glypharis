@@ -5,12 +5,11 @@ into an image, hands it to GLYPHARIS, and stores the text that comes back. GLYPH
 PDFs, chunking, search or any particular application ([ARCHITECTURE §1](ARCHITECTURE.md#1-scope)), and
 nothing here is specific to one.
 
-**Status.** v1 (`glypharis_v1`) is evaluated and packaged, not released. No weights are distributed,
-the package is not on PyPI yet, and, until the weights are released after the qualified advice of
-ADR-0014, `glypharis.download_model` refuses with "not yet published" whenever the bundle is not
-already installed and no `url=` is given
-([`docs/PHASE_STATUS.md`](PHASE_STATUS.md), Phase 23, D4). Everything below describes the code as it is
-on this branch; where something depends on the release, the text says so.
+**Status.** v1.0 is the release of v1 (GW-REC-034 with GW-DET-001): the code under Apache-2.0,
+published on PyPI as `glypharis` 1.0.0, and the v1 weights as the asset `glypharis-v1.tar.gz` of the
+GitHub release `v1.0`, which `glypharis.download_model` fetches and checks against pinned hashes
+([`docs/PHASE_STATUS.md`](PHASE_STATUS.md), Phase 23). The weights carry their own terms
+([the weights' terms](#the-weights-terms)). Everything below describes v1.0.
 
 Contents: [what it expects](#what-it-expects), [installing](#installing),
 [getting the model](#getting-the-model), [reading pages](#reading-pages),
@@ -62,9 +61,16 @@ in the model card's limitations).
 ## Installing
 
 GLYPHARIS needs Python 3.11, at least 3.11.4 (`requires-python = ">=3.11.4,<3.12"` in
-`pyproject.toml`). Once the package is published it will install with `pip install glypharis`. Until
-then, install from a checkout of the repository, choosing the PyTorch build for your platform first
-([`requirements/README.md`](../requirements/README.md)):
+`pyproject.toml`). Install it from PyPI:
+
+```
+pip install glypharis==1.0.0
+```
+
+pip installs the default PyTorch build for the platform, which may differ from the one v1 was
+evaluated with; for a particular build (CPU only, or a CUDA version), install `torch` and `torchvision`
+from the PyTorch index first ([`requirements/README.md`](../requirements/README.md) has the project's
+pins). From a checkout of the repository:
 
 ```
 pip install torch==2.14.1 torchvision==0.29.1 --index-url https://download.pytorch.org/whl/cpu
@@ -72,7 +78,8 @@ pip install .
 ```
 
 The core install reads pages with either backend. The extras `export` (writing bundles and ONNX
-files) and `train` (training and reports) are not needed to read pages. The package holds no weights.
+files) and `train` (training and reports) are not needed to read pages. The package holds no weights;
+they are fetched separately ([getting the model](#getting-the-model)).
 
 It provides three commands: `glypharis-ocr`, `glypharis-serve` and `glypharis-check`.
 `glypharis.version_info()` (or `glypharis-ocr --version`) gives the versions of GLYPHARIS, Python and
@@ -118,12 +125,13 @@ Signature: `download_model(name="glypharis-v1", *, models_dir=None, offline=None
    it.
 3. **Offline refuses before any network call**: `offline=True`, or `GLYPHARIS_OFFLINE` set to `1`,
    `true`, `yes` or `on`. `offline=False` overrides the variable.
-4. **Not yet published refuses before any network call.** The registry entry is marked unpublished
-   until the weights are released, so today the call fails with `model_download_error` and a message
-   saying the model is not yet published, but only when the bundle is not already installed (rule 2)
-   and `url=` is not given.
-5. **Pinned hashes.** The registry pins the archive's size and SHA-256 and the SHA-256 of the bundle's
-   `manifest.json`. The archive is downloaded (resuming a partial file), its size and hash are checked
+4. **An entry not marked published refuses before any network call**, with `model_download_error`,
+   when the bundle is not already installed (rule 2) and `url=` is not given. `glypharis-v1` is
+   marked published from v1.0, so this rule does not stop it.
+5. **Pinned hashes.** The registry pins the archive's address, its size and SHA-256, and the SHA-256
+   of the bundle's `manifest.json`; for `glypharis-v1` the address is
+   `https://github.com/DuhItzAniket/Glypharis/releases/download/v1.0/glypharis-v1.tar.gz`. The archive
+   is downloaded (resuming a partial file), its size and hash are checked
    (a mismatching file is deleted), it is extracted into a staging folder, every file is checked against
    the manifest and the manifest against the pin, and only then is the folder renamed into place. A
    `download_record.json` is written inside the bundle directory, at
@@ -143,11 +151,27 @@ accepted, and the size and both hashes are still enforced. Every failure is a `M
 path, or a name that is not registered, is never downloaded. `glypharis-serve` downloads nothing once it
 is running.
 
-### Until the weights are released
+### Installing in advance
 
-There is no public source for the bundle yet. An integration can be built and tested against a bundle
-placed by hand in a lookup folder, or passed by path, and should be written so that a deployment can
-run with `GLYPHARIS_OFFLINE=1` and the bundle installed in advance.
+A deployment that must not reach the network can install the bundle beforehand, with `download_model`
+on a machine that can, or by hand: download `glypharis-v1.tar.gz` and `glypharis-v1.tar.gz.sha256`
+from the GitHub release `v1.0`, check them with `sha256sum -c glypharis-v1.tar.gz.sha256`, extract the
+archive (one folder, `glypharis-v1/`) into a lookup folder, and run `glypharis-check` on it. The
+deployment then runs with `GLYPHARIS_OFFLINE=1`. A bundle placed by hand has no download record;
+`glypharis-check` checks its files and its manifest hash instead.
+
+### The weights' terms
+
+The weights are distributed under CC BY-SA 4.0 with attribution to HierText and Open Images
+([ADR-0014](decisions/ADR-0014-weights-and-backbone-terms.md)); the archive carries `LICENSE-WEIGHTS`
+and a `NOTICE.md` with the attribution, the changes made and the disclosure below. The detector was
+initialised from ImageNet weights, a disclosed exception to the project's commercial-use rule
+([ADR-0009](decisions/ADR-0009-no-synthtext.md)), and the weights are not described as cleared for
+commercial use. The owner decided on 2026-11-22 to publish them under these terms without the
+qualified advice ADR-0014 had asked for; this is the project's chosen handling, not a legal
+conclusion. An application that redistributes the weights should keep `LICENSE-WEIGHTS` and
+`NOTICE.md` with them. The code is under Apache-2.0 ([`LICENSE`](../LICENSE),
+[`NOTICE`](../NOTICE)), which does not cover the weights.
 
 ## Reading pages
 
@@ -250,7 +274,7 @@ backend name other than `torch` or `onnx` raises a plain `ValueError` ("backend 
 | `InvalidImageError` | `invalid_image` | `GlypharisError`, `ValueError` | The input is not an image GLYPHARIS can read: wrong type or shape, empty, or undecodable |
 | `ImageTooLargeError` | `image_too_large` | `InvalidImageError` | More pixels than `max_pixels`, or a decompression bomb |
 | `ModelLoadError` | `model_load_error` | `GlypharisError`, `RuntimeError` | A bundle that is missing, incomplete, damaged or of an unknown format |
-| `ModelDownloadError` | `model_download_error` | `ModelLoadError` | A registered model that cannot be downloaded or installed: unknown name, offline, not yet published, a failed transfer, a size or hash that does not match its pin, or a folder in the way |
+| `ModelDownloadError` | `model_download_error` | `ModelLoadError` | A registered model that cannot be downloaded or installed: unknown name, offline, an entry not marked published, a failed transfer, a size or hash that does not match its pin, or a folder in the way |
 | `SampleError` (`glypharis.check`) | `sample_error` | `GlypharisError` | `glypharis-check` only: its expected output or a test registry file is missing or unreadable |
 
 ```python
@@ -321,9 +345,9 @@ glypharis-check [--model glypharis-v1] [--models-dir DIR] [--threads 4] [--downl
 
 Nothing is downloaded unless `--download` is given, and `--offline` or `GLYPHARIS_OFFLINE` still
 forbids the network. Exit code 0 when every check passes, 1 when one does not, 2 when the check cannot
-run (for example, the model is not installed). Passing shows that the engine and weights are the
-pinned ones; while the weights are unpublished it says so. It says nothing about accuracy: the sample
-is one clean page the project rendered itself.
+run (for example, the model is not installed). Passing shows that the installed engine and weights are
+the released ones, the ones the registry pins. It says nothing about accuracy: the sample is one clean
+page the project rendered itself.
 
 ## Phones
 

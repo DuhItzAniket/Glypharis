@@ -44,7 +44,7 @@ One row for every action not done by a listed command, and for every retry or de
 
 | # | Manual step | Why it was needed | Done by | Outcome | Retry or deviation |
 |---|---|---|---|---|---|
-| 1 | Copy the v1 bundle into the clean folder | The weights are not distributed before Phase 23 | script, from the worktree's copy | hash matched | none |
+| 1 | Copy the v1 bundle into the clean folder | The weights were not distributed at the time; v1.0 distributes them as a release asset (Phase 23) | script, from the worktree's copy | hash matched | none |
 | 2 | Copy the GW-E2E-006 reference file (`hiertext_val.jsonl`, SHA-256 `c8520576…`) | It is an evaluation output and is not in git | script | hash matched | none |
 | 3 | Set `GLYPHARIS_MODELS` | The package has to find the copied bundle | script | bundle found by name | none |
 | 4 | Run `glypharis-ocr` on one page with each backend | Smoke check of the installed command | script | pass | none |
@@ -62,8 +62,10 @@ One row for every action not done by a listed command, and for every retry or de
 ### 1.5 What the walkthrough does not show
 
 It is clean-machine-style, not a second machine: it shares the OS, driver, base Python and git config with
-the original work. The weights and the reference file came by hand, so the weight download path is untested
-until Phase 23. GDC and GDC-scan cannot be fetched by anyone else. The evaluation is on validation pages.
+the original work. The weights and the reference file came by hand, so the walkthrough did not test the weight
+download. Phase 23 tested it against a local server in the release rehearsal (GW-E2E-022,
+`reports/package/GW-E2E-022_fetch.json`); the fetch from the published asset is GW-E2E-023, planned
+for after publication. GDC and GDC-scan cannot be fetched by anyone else. The evaluation is on validation pages.
 
 ## 2. Reproduction of v1
 

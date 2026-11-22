@@ -194,7 +194,9 @@ def _assert_installed(path: Path, built: dict[str, Any]) -> None:
 # ------------------------------------------------------------------------- the shipped entry
 
 
-def test_the_shipped_entry_is_v1_and_not_yet_published(places, monkeypatch):
+def test_the_shipped_entry_is_v1_and_published(places, monkeypatch):
+    from glypharis.data.download import DownloadError
+
     entry = hub.REGISTRY["glypharis-v1"]
     assert entry.url == (
         "https://github.com/DuhItzAniket/Glypharis/releases/download/v1.0/glypharis-v1.tar.gz"
@@ -203,20 +205,35 @@ def test_the_shipped_entry_is_v1_and_not_yet_published(places, monkeypatch):
     assert entry.manifest_sha256 == (
         "875357a6346e8b1f989005fa96c557b00bf687461043368dc5e3dc532839f037"
     )
-    # The archive packed by scripts/pack_release.py (Phase 23, item 7); not yet published.
+    # The archive packed by scripts/pack_release.py (Phase 23, item 7), the asset of release v1.0.
     assert entry.bytes == 82975077
     assert entry.archive_sha256 == (
         "3b90c1c74147747d7474a86b550e198f0df83d447961bd6aec88d4c24846541d"
     )
-    assert entry.published is False
-    assert not hub.can_fetch("glypharis-v1", offline=False)
+    assert entry.published is True
+    assert hub.can_fetch("glypharis-v1", offline=False)
+    assert not hub.can_fetch("glypharis-v1", offline=True)
 
-    def no_network(*args: object, **kw: object) -> None:
-        raise AssertionError("download_file was called")
+    requested: list[str] = []
+
+    def no_network(url: str, *args: object, **kw: object) -> None:
+        requested.append(url)
+        raise DownloadError("no network in tests")
 
     monkeypatch.setattr("glypharis.data.download.download_file", no_network)
-    with pytest.raises(ModelDownloadError, match="not yet published"):
+    # Missing and published: the fetch goes to the registered address (and is stopped here).
+    with pytest.raises(ModelDownloadError, match="cannot download 'glypharis-v1'"):
         glypharis.download_model()
+    assert requested == [entry.url]
+    # Offline refuses before any network call.
+    with pytest.raises(ModelDownloadError, match="offline"):
+        glypharis.download_model(offline=True)
+    # An entry that is not published is refused before any network call, unless url= is given.
+    with (
+        hub.override_registry(dataclasses.replace(entry, published=False)),
+        pytest.raises(ModelDownloadError, match="not yet published"),
+    ):
+        glypharis.download_model("glypharis-v1")
     # With an address but no archive pins there is still nothing to verify against.
     unpinned = dataclasses.replace(entry, bytes=None, archive_sha256=None)
     with (
@@ -224,7 +241,9 @@ def test_the_shipped_entry_is_v1_and_not_yet_published(places, monkeypatch):
         pytest.raises(ModelDownloadError, match="no pinned archive"),
     ):
         glypharis.download_model("glypharis-v1", url="http://127.0.0.1:9/x.tar.gz")
+    assert requested == [entry.url]
     assert _downloads(places["models"]) == []
+    assert hub.REGISTRY["glypharis-v1"] is entry  # restored after each override
 
 
 def test_download_model_is_exported_lazily():

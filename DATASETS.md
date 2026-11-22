@@ -647,7 +647,11 @@ has been run; its record is `docs/FINAL_VALIDATION.md`, and its test reads are l
 
 ## Redistribution
 
-The repository is public. No model weights are in it. No weights are distributed; release is Phase 23.
+The repository is public. No model weights are in it. v1.0 is the release of v1 (GW-REC-034 with
+GW-DET-001): the code under Apache-2.0, published on PyPI as `glypharis` 1.0.0, and the v1 weights as the
+asset `glypharis-v1.tar.gz` of the GitHub release `v1.0`, which `glypharis.download_model` fetches and
+checks against pinned hashes. The weights' terms are under
+[Licensing implications for v1](#licensing-implications-for-v1).
 
 The repository contains, and so redistributes:
 
@@ -673,12 +677,14 @@ The repository does not contain:
 
 ## Licensing implications for v1
 
-- The v1 models were trained only on HierText. HierText's share-alike terms therefore bear on any release
+- The v1 models were trained only on HierText. HierText's share-alike terms therefore bear on the release
   of the weights. Whether trained weights are adapted material under CC BY-SA is not settled, so the project
   states a handling and not a legal conclusion.
-- Weights: Intended terms under ADR-0014, effective only if released. The owner decided on 2026-11-18
-  ([ADR-0014](docs/decisions/ADR-0014-weights-and-backbone-terms.md)) that they are CC BY-SA 4.0 with
-  attribution to HierText and Open Images. No weights are distributed; release is Phase 23.
+- Weights: distributed under CC BY-SA 4.0 with attribution to HierText and Open Images
+  ([ADR-0014](docs/decisions/ADR-0014-weights-and-backbone-terms.md)), as the asset `glypharis-v1.tar.gz`
+  of the GitHub release `v1.0`, which carries `LICENSE-WEIGHTS` and `NOTICE.md`. The owner decided these
+  terms on 2026-11-18, and on 2026-11-22 decided to publish the weights under them without the qualified
+  advice ADR-0014 had asked for; this is the project's chosen handling, not a legal conclusion.
 - Detector initialisation: GW-DET-001 starts from MobileNetV3-Large ImageNet-1K weights, and the ImageNet
   terms do not clearly allow commercial use, which sits against the rule in ADR-0009. By the same decision
   GW-DET-001 stays v1's detector as a disclosed exception to that rule, so the v1 weights are not described
@@ -686,14 +692,16 @@ The repository does not contain:
   stays open for commercial use.
 - Evaluation-only datasets (IIIT5K, FUNSD, OmniDocBench, GDC, GDC-scan) never entered training, augmentation
   or tuning.
-- The all-ONNX fused-attention build exports the same weights, so the same terms would apply to it. A new
-  version, not v1. It was evaluated once on each test set in Phase 22 (test runs GW-REC-045 and
-  GW-E2E-020, scored in GW-E2E-021; `reports/final_validation/candidate/h11.md`).
+- The all-ONNX fused-attention build, the phone candidate, exports the same weights, so its data terms would
+  be the same; ADR-0014's ImageNet exception was decided for v1 and does not automatically cover it. A new
+  version, not v1, and not released: v1.0 ships no phone bundle or asset. It was evaluated once on each
+  test set in Phase 22 (test runs GW-REC-045 and GW-E2E-020, scored in GW-E2E-021;
+  `reports/final_validation/candidate/h11.md`).
 - Code: the code and the project's own text are under Apache-2.0 ([`LICENSE`](LICENSE),
   [`NOTICE`](NOTICE)), with the exceptions that `NOTICE` lists, among them the HierText-derived material
-  (CC BY-SA 4.0). The licence does not cover the weights, which are not distributed; their intended terms
-  are ADR-0014's, effective only if released. Project citation: [`CITATION.cff`](CITATION.cff); an
-  archive DOI is pending.
+  (CC BY-SA 4.0), and the code is published on PyPI as `glypharis` 1.0.0. The licence does not cover the
+  weights, which are distributed separately under the terms above. Cite with [`CITATION.cff`](CITATION.cff);
+  a Zenodo DOI is added after the deposit.
 
 ## Licence checks
 

@@ -161,4 +161,5 @@ def test_the_repository_file_is_well_formed():
     problems = check_citation.check(citation, citation["version"], None)
     assert problems == []
     assert "date-released" not in citation
-    assert [a.get("alias") for a in citation["authors"]] == ["DuhItzAniket"]
+    # One author, named by the GitHub handle only (Zenodo reads the creator from this file).
+    assert citation["authors"] == [{"name": "DuhItzAniket"}]

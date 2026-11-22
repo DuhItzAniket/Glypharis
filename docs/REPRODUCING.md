@@ -58,16 +58,30 @@ rewrites its generated reports; add `--reports <folder>` to send them elsewhere.
 
 ## 4. Obtain the model
 
-No weights are distributed yet, so this step cannot be done from the repository alone. A release is
-Phase 23's decision, under the terms in [ADR-0014](decisions/ADR-0014-weights-and-backbone-terms.md). With a
-copy of the bundle, which is a directory holding `manifest.json`, two release files and two ONNX files, put
-it in a model directory:
+The v1 weights are not in the repository. They are the asset `glypharis-v1.tar.gz` of the GitHub
+release `v1.0`, and `glypharis.download_model` fetches it, checks the archive's size and SHA-256 and the
+bundle's manifest SHA-256 against the pins in `glypharis/hub.py`, and installs the bundle (a directory
+holding `manifest.json`, two release files and two ONNX files) in the first `GLYPHARIS_MODELS` entry:
 
 ```bash
 mkdir -p models
-cp -r <path-to>/glypharis-v1 models/
 export GLYPHARIS_MODELS="$PWD/models"
+$P -c "import glypharis; print(glypharis.download_model('glypharis-v1'))"
 ```
+
+`glypharis-ocr` in step 5 would also fetch it by itself, unless `--no-download` is given or
+`GLYPHARIS_OFFLINE` is set. To install it by hand instead, download `glypharis-v1.tar.gz` and
+`glypharis-v1.tar.gz.sha256` from the release page, check them with
+`sha256sum -c glypharis-v1.tar.gz.sha256`, extract the archive into `models/` (it holds the one folder
+`glypharis-v1/`), and check that `sha256sum models/glypharis-v1/manifest.json` gives
+`875357a6346e8b1f989005fa96c557b00bf687461043368dc5e3dc532839f037` (GW-EFF-006). `glypharis-check`
+then checks the installed bundle against the registry and reads its sample page.
+
+The weights are distributed under CC BY-SA 4.0 with attribution to HierText and Open Images
+([ADR-0014](decisions/ADR-0014-weights-and-backbone-terms.md)), with the notices in the archive's
+`LICENSE-WEIGHTS` and `NOTICE.md`. The detector was initialised from ImageNet weights, a disclosed
+exception to the project's commercial-use rule ([ADR-0009](decisions/ADR-0009-no-synthtext.md)), and
+the weights are not described as cleared for commercial use.
 
 ## 5. Read a page
 

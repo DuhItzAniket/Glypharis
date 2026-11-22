@@ -90,9 +90,16 @@ py -3.11 -m venv .venv
 Checks before committing: `ruff check .`, `ruff format --check .`, `mypy`, `pytest`,
 `python scripts/validate_configs.py`. CI runs the same steps on Linux with the CPU build of the same torch
 version (`.github/workflows/ci.yml`). The clean-environment install of the package was checked in the
-Phase 18 re-run (`docs/PHASE_STATUS.md`). The walkthrough from a fresh clone passed in Phase 22
-(GW-E2E-013, [FINAL_VALIDATION](FINAL_VALIDATION.md) section 1). Final validation (Phase 22) is
-complete (tag `phase-22`).
+Phase 18 re-run (`docs/PHASE_STATUS.md`), and since Phase 23 the CI job `package` builds the wheel
+from a clean checkout and installs it with its dependencies in a fresh environment on every push. The
+release rehearsal installed the built wheel and fetched the packed model archive from a local server
+(GW-E2E-022, `reports/package/GW-E2E-022_fetch.json`). The walkthrough from a fresh clone passed in
+Phase 22 (GW-E2E-013, [FINAL_VALIDATION](FINAL_VALIDATION.md) section 1). Final validation (Phase 22)
+is complete (tag `phase-22`).
+
+To use the released package rather than develop it: `pip install glypharis==1.0.0` (Python 3.11.4 or
+later, below 3.12; Phase 23, D13), then `glypharis.download_model("glypharis-v1")`
+([README](../README.md#install)).
 
 ### PyTorch build decision
 

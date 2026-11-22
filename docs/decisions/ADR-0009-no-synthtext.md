@@ -40,8 +40,10 @@ ImageNet-1K initialisation is a disclosed exception to point 2 (ADR-0014).
   GlyphSynth; this is listed in IMPLEMENTATION_PLAN §8.
 - The paper loses a direct comparison with the most common scene-text synthetic set. That limitation is
   stated, with the licence reason.
-- The weights remain releasable under terms compatible with CC BY-SA (to be settled in the model card,
-  Phase 21).
+- The weights remain releasable under terms compatible with CC BY-SA. Their terms are set in
+  [ADR-0014](ADR-0014-weights-and-backbone-terms.md): CC BY-SA 4.0 with attribution to HierText and
+  Open Images, with the v1 detector's ImageNet-1K initialisation as a disclosed exception to point 2,
+  and v1.0 distributes the v1 weights under them.
 
 ## Revisit if
 The owner decides the consumer is strictly non-commercial and wants the SynthText comparison as a

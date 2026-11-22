@@ -11,8 +11,8 @@ Material in this repository that the Apache License does not cover
 1. HierText and Open Images material (CC BY-SA 4.0)
 
    The images, crops, quoted lines and word pairs taken from HierText, and the tables derived
-   from it, in reports/, docs/RELEASE_NOTES_v1.0.md, docs/FINAL_VALIDATION.md, MODEL_CARD.md
-   and research/paper/ come from HierText (Long et al.,
+   from it, in reports/, docs/RELEASE_NOTES_v1.0.md, docs/FINAL_VALIDATION.md, MODEL_CARD.md,
+   release/huggingface/README.md and research/paper/ come from HierText (Long et al.,
    "Towards End-to-End Unified Scene Text Detection and Layout Analysis", CVPR 2022,
    https://github.com/google-research-datasets/hiertext). HierText is released under
    CC BY-SA 4.0 (https://creativecommons.org/licenses/by-sa/4.0/), and this material is shared
@@ -53,10 +53,14 @@ Material in this repository that the Apache License does not cover
 Not in this repository
 ----------------------
 
-- Model weights. No weights are distributed with this repository, and the Apache License does
-  not cover them. Their intended terms are recorded in
-  docs/decisions/ADR-0014-weights-and-backbone-terms.md and apply only if the weights are
-  released.
+- Model weights. The v1 weights are not in this repository or in the code packages, and the
+  Apache License does not cover them. They are distributed separately as the asset
+  glypharis-v1.tar.gz of the GitHub release v1.0, under CC BY-SA 4.0 with attribution to
+  HierText and Open Images; LICENSE-WEIGHTS and NOTICE.md in the archive give the licence and
+  the attribution. The detector was initialised from ImageNet-1K weights, whose terms do not
+  clearly allow commercial use, and is kept as a disclosed exception
+  (docs/decisions/ADR-0014-weights-and-backbone-terms.md, "Phase 23 outcome"). The weights are
+  not described as cleared for commercial use.
 - Datasets, the official evaluators, fonts and the GDC-scan document are not in the repository.
   Their sources and terms are recorded in DATASETS.md.
 - glypharis/sample/page.png is set in Open Sans (SIL OFL 1.1); the font file is not included.

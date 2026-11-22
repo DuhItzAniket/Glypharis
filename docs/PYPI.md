@@ -8,11 +8,14 @@ GLYPHARIS is built as a research project. Every model is trained and evaluated o
 every experiment is registered before it runs, and every reported number traces back to a generated
 report in the [repository](https://github.com/DuhItzAniket/Glypharis/tree/v1.0).
 
-> **The model weights are not yet published.** This package is the code only: it holds no weights.
-> The v1 weights wait for qualified advice on their terms
-> ([ADR-0014](https://github.com/DuhItzAniket/Glypharis/blob/v1.0/docs/decisions/ADR-0014-weights-and-backbone-terms.md)).
-> Until they are published, `glypharis.download_model("glypharis-v1")` refuses with "not yet
-> published" before any network call, and the package reads only bundles you already have.
+v1.0 is the release of v1 (GW-REC-034 with GW-DET-001): the code under Apache-2.0, published here
+as `glypharis` 1.0.0, and the v1 weights as the asset `glypharis-v1.tar.gz` of the
+[GitHub release v1.0](https://github.com/DuhItzAniket/Glypharis/releases/tag/v1.0), which
+`glypharis.download_model` fetches and checks against pinned hashes.
+
+> **The weights are a separate download.** This package is the code only: it holds no weights.
+> `glypharis.download_model("glypharis-v1")` fetches them once; they carry their own terms (see
+> Licence below).
 
 ## Install
 
@@ -40,15 +43,21 @@ A model bundle is a directory with `manifest.json`, two release files and two ON
 
 `glypharis.download_model(name)` fetches a registered model's release archive, checks its size and
 SHA-256 and the bundle's manifest against the pins in `glypharis.hub`, and installs it where
-`from_pretrained` finds it. `glypharis-ocr` and `glypharis-serve` do the same for a registered name
-that is not installed, unless `--no-download` is given or `GLYPHARIS_OFFLINE` is set. Only
-`glypharis-v1` is registered, and it is not yet published (see the note above).
+`from_pretrained` finds it (the first `GLYPHARIS_MODELS` entry, else `~/.glypharis/models`).
+`glypharis-ocr` and `glypharis-serve` do the same for a registered name that is not installed, unless
+`--no-download` is given or `GLYPHARIS_OFFLINE` is set. Only `glypharis-v1` is registered; its
+archive is the asset `glypharis-v1.tar.gz` of the
+[GitHub release v1.0](https://github.com/DuhItzAniket/Glypharis/releases/tag/v1.0), beside
+`glypharis-v1.tar.gz.sha256`. `glypharis-check` checks that an installed bundle is the released one
+and reads a sample page shipped with the package; it says nothing about accuracy.
 
 ## Using it
 
 ```python
+import glypharis
 from glypharis import GlypharisOCR
 
+glypharis.download_model("glypharis-v1")  # once: fetches and checks the release asset
 ocr = GlypharisOCR.from_pretrained("glypharis-v1")  # a model bundle by name or path
 result = ocr.predict("page.png")  # path, image file bytes, PIL image or numpy array
 
@@ -104,16 +113,27 @@ The code is licensed under Apache-2.0
 [NOTICE](https://github.com/DuhItzAniket/Glypharis/blob/v1.0/NOTICE) lists the material in the
 repository that the licence does not cover.
 
-The weights are not part of this package and are not yet published. Their intended terms are
-CC BY-SA 4.0, with attribution to HierText and Open Images, effective only if they are released
-([ADR-0014](https://github.com/DuhItzAniket/Glypharis/blob/v1.0/docs/decisions/ADR-0014-weights-and-backbone-terms.md)).
-The v1 detector's backbone was initialised from ImageNet-1K weights, so the v1 weights are not
-described as cleared for commercial use. The terms of each dataset are in
+The weights are not part of this package. They are distributed under CC BY-SA 4.0 with attribution
+to HierText and Open Images
+([ADR-0014](https://github.com/DuhItzAniket/Glypharis/blob/v1.0/docs/decisions/ADR-0014-weights-and-backbone-terms.md)),
+and their archive carries `LICENSE-WEIGHTS` and a `NOTICE.md` with the attribution. The detector was
+initialised from ImageNet weights, a disclosed exception to the project's commercial-use rule
+([ADR-0009](https://github.com/DuhItzAniket/Glypharis/blob/v1.0/docs/decisions/ADR-0009-no-synthtext.md)),
+and the weights are not described as cleared for commercial use. The owner decided on 2026-11-22 to
+publish them under these terms without the qualified advice ADR-0014 had asked for; this is the
+project's chosen handling, not a legal conclusion. The terms of each dataset are in
 [DATASETS.md](https://github.com/DuhItzAniket/Glypharis/blob/v1.0/DATASETS.md).
+
+## Citing
+
+Cite with [CITATION.cff](https://github.com/DuhItzAniket/Glypharis/blob/v1.0/CITATION.cff); a Zenodo
+DOI is added after the deposit.
 
 ## Links
 
 - [Repository at the tag `v1.0`](https://github.com/DuhItzAniket/Glypharis/tree/v1.0)
+- [Release v1.0, with the weights](https://github.com/DuhItzAniket/Glypharis/releases/tag/v1.0)
+- [Release notes](https://github.com/DuhItzAniket/Glypharis/blob/v1.0/docs/RELEASE_NOTES_v1.0.md)
 - [Model card](https://github.com/DuhItzAniket/Glypharis/blob/v1.0/MODEL_CARD.md)
 - [Changelog](https://github.com/DuhItzAniket/Glypharis/blob/v1.0/CHANGELOG.md)
 - [Issues](https://github.com/DuhItzAniket/Glypharis/issues)

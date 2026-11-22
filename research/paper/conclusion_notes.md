@@ -1,7 +1,10 @@
 # Conclusion notes
 
 Final validation (Phase 22) has been run; its record is `docs/FINAL_VALIDATION.md`. Everything below
-is a statement about the evidence recorded so far. No weights are distributed; release is Phase 23.
+is a statement about the evidence recorded so far. v1.0 is the release of v1 (GW-REC-034 with
+GW-DET-001): the code under Apache-2.0, published on PyPI as `glypharis` 1.0.0, and the v1 weights
+as the asset `glypharis-v1.tar.gz` of the GitHub release `v1.0`, which `glypharis.download_model`
+fetches and checks against pinned hashes.
 
 HierText is released under CC BY-SA 4.0; its images come from Open Images, which lists them as
 CC BY 2.0. Figures derived from HierText are shared alike. Tracks are strict unless stated.
@@ -96,10 +99,14 @@ order; v1 itself was not measured on a phone. A full page on a phone remains unm
 (`fused-single-line`, GW-EFF-013). A new version, not v1. Phase 22 evaluated it once per test set,
 and it met H11's six non-inferiority tests against v1 (GW-E2E-021,
 `reports/final_validation/candidate/h11.md`); its results sit beside v1's and replace none of them.
+It is not released.
 - Page orientation, small text and steep lines are the failures the error analysis points to first.
 - The cause of the PaddleOCR reading-order error on OmniDocBench remains unmeasured (F26, F33).
-- Weights: intended terms under ADR-0014, effective only if released: CC BY-SA 4.0 with attribution to
-HierText and Open Images, with GW-DET-001's ImageNet initialisation kept as a disclosed exception to
-ADR-0009's commercial-use rule ([ADR-0014](../../docs/decisions/ADR-0014-weights-and-backbone-terms.md),
-owner decision of 2026-11-18; not a legal conclusion). Code licence and citation: to be settled in
-Phase 23.
+- Weights: distributed with v1.0 under CC BY-SA 4.0 with attribution to HierText and Open Images,
+with GW-DET-001's ImageNet initialisation kept as a disclosed exception to ADR-0009's commercial-use
+rule, so they are not described as cleared for commercial use
+([ADR-0014](../../docs/decisions/ADR-0014-weights-and-backbone-terms.md)). The owner decided on
+2026-11-22 to publish them under these terms without the qualified advice ADR-0014 had asked for;
+this is the project's chosen handling, not a legal conclusion. The code is under Apache-2.0,
+published on PyPI as `glypharis` 1.0.0. Cite with `CITATION.cff`; a Zenodo DOI is added after the
+deposit.

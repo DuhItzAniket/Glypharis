@@ -8,17 +8,29 @@ GLYPHARIS is built as a research project. Every model is trained and evaluated o
 (see [Hardware](#hardware)), every experiment is registered before it runs, and every reported number
 traces back to a generated report.
 
-> **Status: v1 evaluated and packaged, not released.** Phases 0 to 21 are complete, including the export,
-> package and hardening re-runs on the final model and the research package (Phase 21).
-> Final validation (Phase 22) is complete (tag `phase-22`); its record is `docs/FINAL_VALIDATION.md`.
-> No weights are distributed; release is Phase 23.
+> **Status: v1.0.** v1.0 is the release of v1 (GW-REC-034 with GW-DET-001): the code under
+> Apache-2.0, published on PyPI as `glypharis` 1.0.0, and the v1 weights as the asset
+> `glypharis-v1.tar.gz` of the GitHub release `v1.0`, which `glypharis.download_model` fetches and
+> checks against pinned hashes. Phases 0 to 22 are complete, including the export, package and
+> hardening re-runs on the final model, the research package (Phase 21) and final validation
+> (Phase 22, tag `phase-22`; its record is `docs/FINAL_VALIDATION.md`). Phase 23 is the release.
+> The phone candidate is not released.
 > `v0.1` is the earlier usable engine ([ADR-0008](docs/decisions/ADR-0008-usable-engine-first.md)).
-> See [docs/PHASE_STATUS.md](docs/PHASE_STATUS.md) for what is done and every number behind it, and
-> [MODEL_CARD.md](MODEL_CARD.md) for what v1 is, how it measured and where it fails.
+> See [docs/PHASE_STATUS.md](docs/PHASE_STATUS.md) for what is done and every number behind it,
+> [MODEL_CARD.md](MODEL_CARD.md) for what v1 is, how it measured and where it fails, and
+> [docs/RELEASE_NOTES_v1.0.md](docs/RELEASE_NOTES_v1.0.md) for what v1.0 ships.
 
 ## Install
 
-The package needs Python 3.11 (3.11.4 or later). It is not on PyPI yet; from a checkout:
+The package needs Python 3.11 (3.11.4 or later, below 3.12):
+
+```
+pip install glypharis==1.0.0
+```
+
+pip installs the default PyTorch build for your platform; for a particular build (CPU only, or a CUDA
+version), install `torch` and `torchvision` from the PyTorch index first
+([requirements/README.md](requirements/README.md) has the project's pins). From a checkout:
 
 ```
 pip install torch==2.14.1 torchvision==0.29.1 --index-url https://download.pytorch.org/whl/cpu
@@ -27,16 +39,17 @@ pip install ".[export]"      # adds onnx, for writing bundles and ONNX files
 pip install ".[train]"       # adds plotting, font, PDF and monitoring packages for training
 ```
 
-Pick the PyTorch index for your platform (CPU or CUDA; [requirements/README.md](requirements/README.md)).
 For development, install the exact versions instead: `pip install -r requirements/lock.txt`, then
 `pip install -e . --no-deps` ([docs/ENVIRONMENT.md](docs/ENVIRONMENT.md)). The package holds no
-weights.
+weights; they are fetched separately (next section).
 
 ## Using it
 
 ```python
+import glypharis
 from glypharis import GlypharisOCR
 
+glypharis.download_model("glypharis-v1")  # once: fetches and checks the release asset
 ocr = GlypharisOCR.from_pretrained("glypharis-v1")  # a model bundle by name or path
 result = ocr.predict("page.png")  # path, image file bytes, PIL image or numpy array
 
@@ -46,7 +59,8 @@ for line in result.lines:
 print(result.to_json())  # the same as structured JSON
 ```
 
-From the command line (`pip install -e .` provides `glypharis-ocr`; `python infer.py` is the same):
+From the command line (the install provides `glypharis-ocr`; in a checkout, `python infer.py` is the
+same):
 
 ```
 glypharis-ocr --image page.png --output results
@@ -56,11 +70,15 @@ glypharis-ocr --input-dir scans/ --recursive --format json txt
 Each image gives `results/<name>.json` and `results/<name>.txt`. `from_pretrained` never downloads; it
 looks in `$GLYPHARIS_MODELS`, `~/.glypharis/models` and `./models` (a bundle is a
 directory with `manifest.json`, two release files and two ONNX files; Phase 17). No bundle ships with
-this repository (`runs/` is git-ignored), so `glypharis-v1` resolves only once that directory is in one
-of those places (`glypharis.download_model` and the two commands fetch a registered bundle once it is
-published, which it is not yet); on the machine that built it, set `GLYPHARIS_MODELS=runs/release` or pass the path
-`runs/release/glypharis-v1`. The default backend is PyTorch on the CPU; `backend="onnx"` uses ONNX
-Runtime, which matches PyTorch within Phase 17's tolerances (GW-EFF-006) but is slower on the CPU (F34).
+this repository or the package. `glypharis.download_model("glypharis-v1")` fetches the asset
+`glypharis-v1.tar.gz` of the GitHub release `v1.0`, checks its size and SHA-256 and the bundle's
+manifest hash against the pins in `glypharis/hub.py`, and installs it where `from_pretrained` finds
+it (the first `GLYPHARIS_MODELS` entry, else `~/.glypharis/models`). `glypharis-ocr` and
+`glypharis-serve` do the same for a registered name that is not installed, unless `--no-download` is
+given or `GLYPHARIS_OFFLINE` is set; `glypharis-check` checks an installed bundle against the pins
+([docs/INTEGRATION.md](docs/INTEGRATION.md)). The default backend is PyTorch on the CPU;
+`backend="onnx"` uses ONNX Runtime, which matches PyTorch within Phase 17's tolerances (GW-EFF-006) but
+is slower on the CPU (F34).
 
 Over HTTP (optional, Phase 19; `glypharis-serve`, standard library only, one request at a time):
 
@@ -107,6 +125,9 @@ image ─▶ preprocessing ─▶ GLYPHARIS-Det (line detector) ─▶ crop + re
 | [Roadmap](docs/ROADMAP.md) | Milestones, versions, dependency graph, success criteria |
 | [Architecture](docs/ARCHITECTURE.md) | The system as built, and its public interface |
 | [Integration guide](docs/INTEGRATION.md) | Embedding GLYPHARIS in an application: install, model lookup, threads, server, errors |
+| [Release notes](docs/RELEASE_NOTES_v1.0.md) | What v1.0 ships, its terms, how to install, fetch and verify it |
+| [Changelog](CHANGELOG.md) | Changes by version |
+| [Release runbook](docs/RELEASE_RUNBOOK.md) | The release-day steps, in order, and who does each |
 | [Release evidence](docs/RELEASE_EVIDENCE.md) | Each v1.0 release precondition mapped to its evidence, and the gaps still open |
 | [Experiment protocol](docs/EXPERIMENT_PROTOCOL.md) | Metrics, splits, statistics, diagnostics, leakage rules |
 | [Approach survey](research/approach_survey.md) | Alternatives considered and why this design was chosen |
@@ -118,7 +139,7 @@ image ─▶ preprocessing ─▶ GLYPHARIS-Det (line detector) ─▶ crop + re
 | [Research log](research/) | Hypotheses, experiment registry, ablations, failures, findings |
 
 The numbers in these documents trace to the generated reports under `reports/`. An archive of the
-repository made with `git archive`, such as a Zenodo deposit if one is made, holds the code and
+repository made with `git archive`, such as the Zenodo archive of the release, holds the code and
 documentation only: `reports/` and the evaluation records under `data/manifests` are left out
 (`export-ignore` in [.gitattributes](.gitattributes), checked by
 [scripts/check_git_archive.py](scripts/check_git_archive.py)). The numbers stay in the documents, so
@@ -170,13 +191,19 @@ replace none of them.
 The code and the project's own text are under the Apache License, Version 2.0 ([LICENSE](LICENSE),
 [NOTICE](NOTICE)), with the exceptions that NOTICE lists. The weights are not covered by it.
 
-No weights are distributed; release is Phase 23.
-Intended terms under ADR-0014, effective only if released. They are CC BY-SA 4.0 for the v1 weights,
-with attribution to HierText and Open Images, as the owner decided on 2026-11-18
-([ADR-0014](docs/decisions/ADR-0014-weights-and-backbone-terms.md)).
+The weights are distributed under CC BY-SA 4.0 with attribution to HierText and Open Images
+([ADR-0014](docs/decisions/ADR-0014-weights-and-backbone-terms.md)); the archive
+`glypharis-v1.tar.gz` carries `LICENSE-WEIGHTS` and a `NOTICE.md` with the attribution, the changes
+made and the disclosure below ([release/weights/](release/weights/)). The detector was initialised
+from ImageNet weights, a disclosed exception to the project's commercial-use rule
+([ADR-0009](docs/decisions/ADR-0009-no-synthtext.md)): GW-DET-001's backbone was initialised from
+ImageNet-1K weights, and the ImageNet terms do not clearly allow commercial use. The weights are not
+described as cleared for commercial use. The owner decided on 2026-11-22 to publish them under these
+terms without the qualified advice ADR-0014 had asked for; this is the project's chosen handling, not
+a legal conclusion. The terms of each dataset are in [DATASETS.md](DATASETS.md).
 
-GW-DET-001 stays v1's detector as a disclosed exception to the commercial-use rule of
-[ADR-0009](docs/decisions/ADR-0009-no-synthtext.md): its backbone was initialised from ImageNet-1K
-weights, and the ImageNet terms do not clearly allow commercial use. The v1 weights are therefore not
-described as cleared for commercial use. This is the project's chosen handling, not a legal
-conclusion. The terms of each dataset are in [DATASETS.md](DATASETS.md).
+## Citing
+
+Cite with [CITATION.cff](CITATION.cff); a Zenodo DOI is added after the deposit. The methods and
+datasets behind the model are cited in the model card's
+[citation information](MODEL_CARD.md#citation-information).

@@ -211,6 +211,23 @@ def test_licence_python_and_project_fields():
     assert (ROOT / PROJECT["readme"]).is_file()
 
 
+@pytest.mark.parametrize(
+    "stale",
+    [
+        "intended terms",
+        "only if the weights are released",
+        "not yet published",
+        "No weights are distributed",
+    ],
+)
+def test_notice_has_no_pre_release_wording_about_the_weights(stale):
+    # NOTICE ships in the wheel and the sdist (license-files); from v1.0 it must say the weights
+    # are distributed with the release, not that their terms are intended or pending. Line breaks
+    # and indents are folded so that a phrase wrapped over two lines is still found.
+    text = " ".join((ROOT / "NOTICE").read_text(encoding="utf-8").split())
+    assert stale not in text
+
+
 def test_pypi_description_links_are_absolute_and_pinned_to_the_tag():
     text = (ROOT / PROJECT["readme"]).read_text(encoding="utf-8")
     links = re.findall(r"\]\(([^)\s]+)\)", text)
@@ -224,7 +241,8 @@ def test_pypi_description_links_are_absolute_and_pinned_to_the_tag():
             assert tag == "v1.0", link
             if path and path != "CHANGELOG.md":  # the changelog is item 4's file
                 assert (ROOT / path).exists(), link
-    assert "not yet published" in text and "download_model" in text
+    assert "not yet published" not in text
+    assert "download_model" in text and "glypharis-v1.tar.gz" in text
 
 
 # --------------------------------------------------------------------------- check_wheel
