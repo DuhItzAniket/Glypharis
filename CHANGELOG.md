@@ -8,7 +8,7 @@ Results are not repeated here. Each entry names its experiment IDs; the numbers 
 those IDs point to (`research/experiments.md`) and in [`MODEL_CARD.md`](MODEL_CARD.md). Every phase
 has its full record, gate and known issues in [`docs/PHASE_STATUS.md`](docs/PHASE_STATUS.md).
 
-## [1.0.0] — v1.0
+## [1.0.0] — 2026-11-22
 
 v1.0 is the release of v1 (GW-REC-034 with GW-DET-001): the code under Apache-2.0, published on PyPI
 as `glypharis` 1.0.0, and the v1 weights as the asset `glypharis-v1.tar.gz` of the GitHub release
@@ -30,11 +30,26 @@ Phase 23 decision D4, which held v1.0 until that advice.
   `glypharis-v1.tar.gz.sha256`. The archive is 82,975,077 bytes with SHA-256
   `3b90c1c74147747d7474a86b550e198f0df83d447961bd6aec88d4c24846541d` (GW-E2E-022,
   `reports/package/GW-E2E-022_fetch.json`); it holds the five bundle files byte for byte,
-  `LICENSE-WEIGHTS` (CC BY-SA 4.0), `NOTICE.md` and `model_info.json`. The package goes to PyPI from
-  the published release through Trusted Publishing, in the protected environment `pypi`, and Zenodo
-  archives the release (code and documents, without `reports/` and the evaluation manifests).
-  `docs/RELEASE_NOTES_v1.0.md` is the release's description. The verification of the published
-  release from a clean environment (GW-E2E-023) is planned for after publication.
+  `LICENSE-WEIGHTS` (CC BY-SA 4.0), `NOTICE.md` and `model_info.json`. The release was published on
+  2026-11-22 (<https://github.com/DuhItzAniket/Glypharis/releases/tag/v1.0>), on the tag `v1.0`.
+  `docs/RELEASE_NOTES_v1.0.md` is the release's description.
+- **Phase 23, publication.** The package went to PyPI from the published release through Trusted
+  Publishing, in the protected environment `pypi`, after the owner's approval:
+  [`glypharis` 1.0.0](https://pypi.org/project/glypharis/1.0.0/), the wheel
+  `glypharis-1.0.0-py3-none-any.whl` (SHA-256
+  `0f669557b86d7385a218112a79059ae20109f8ef10a9b13990d131dd30edca05`) and the sdist
+  `glypharis-1.0.0.tar.gz` (SHA-256
+  `cdd78d7432b14416cdca4f849e8b0b27563dfd050b93a37d3ae450562d62eb72`), equal to the release's
+  `SHA256SUMS`. Zenodo archived the release, code and documents without `reports/` and the
+  evaluation manifests: DOI [10.5281/zenodo.24433864](https://doi.org/10.5281/zenodo.24433864). The
+  weights are mirrored on Hugging Face as
+  [`DuhItzAniket/glypharis-v1`](https://huggingface.co/DuhItzAniket/glypharis-v1), the published
+  archive's eight files with a model card; the package does not use the mirror.
+- **Phase 23, verification.** The published release was verified from a clean environment
+  (GW-E2E-023, `reports/package/GW-E2E-023.json`, `reports/package/GW-E2E-023_fetch.json`): the
+  package installed from PyPI, the archive fetched from the release address into an empty folder,
+  `glypharis-check` passed, and the package read the validation pages exactly as the evaluated v1
+  did.
 - **Phase 23, release files.** `LICENSE` (Apache-2.0 for the code and the project's own text),
   `NOTICE` (what that licence does not cover), `CITATION.cff` (creator: the GitHub handle
   DuhItzAniket), this changelog, the release notes (`docs/RELEASE_NOTES_v1.0.md`) and a brief for a

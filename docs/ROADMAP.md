@@ -22,16 +22,19 @@ so the brief stays traceable; only the order differs.
 | **M8 Studies** | 11–13 | Robustness, synthetic-data and ablation studies; final config frozen | 0.5 (label) | Ablation tables with CIs | passed (`phase-11` to `phase-13`) |
 | **M9 Evaluation** | 14–15 | External benchmarks + error analysis | 0.6 (label) | Test access log closed | passed (`phase-14`, `phase-15`) |
 | **M10 Final engineering** | 16, 19, re-run of 17 / 18 / 20 | Efficiency study, final export and package, optional API | 0.9 (label) | Equivalence tests, API tests | passed (`phase-16`, `phase-19`, `phase-17-v1`, `phase-18-v1`, `phase-20-v1`, `v1-code`) |
-| **M11 Release** | 21–23 | Paper-ready research package, clean-machine validation, evaluation of the fused-attention build as a new version | **1.0** | Every criterion in §4 ticked | open: Phases 21 and 22 passed (`phase-21`, `phase-22`); v1.0 release in progress (pull request B) |
+| **M11 Release** | 21–23 | Paper-ready research package, clean-machine validation, evaluation of the fused-attention build as a new version | **1.0** | Every criterion in §4 ticked | passed (`phase-21`, `phase-22`, `phase-23`, `v1.0`): v1.0 released on 2026-11-22 |
 
-`v0.1` is the only version tag so far. The 0.5, 0.6 and 0.9 entries were planning labels: no such tag
-exists. The package version is `1.0.0` from Phase 23 (`glypharis.__version__`); the tag `v1.0` goes
-on the merge commit of the release pull request and is never moved. v1.0 is the release of v1
-(GW-REC-034 with GW-DET-001): the code under Apache-2.0, published on PyPI as `glypharis` 1.0.0, and
+`v0.1` and `v1.0` are the version tags. The 0.5, 0.6 and 0.9 entries were planning labels: no such
+tag exists. The package version is `1.0.0` from Phase 23 (`glypharis.__version__`); the tag `v1.0` is
+on `231978e`, the merge commit of the release pull request, and is never moved. v1.0 is the release
+of v1 (GW-REC-034 with GW-DET-001): the code under Apache-2.0, published on PyPI as `glypharis` 1.0.0, and
 the v1 weights as the asset `glypharis-v1.tar.gz` of the GitHub release `v1.0`, which
 `glypharis.download_model` fetches and checks against pinned hashes. The weights' terms are in
 [ADR-0014](decisions/ADR-0014-weights-and-backbone-terms.md). The phone candidate is not released
-(Phase 23, D7). M11's criteria are ticked in the Phase 23 close-out, after publication.
+(Phase 23, D7). v1.0 was published on 2026-11-22 on GitHub, PyPI and Zenodo (DOI
+[10.5281/zenodo.24433864](https://doi.org/10.5281/zenodo.24433864)), with a Hugging Face mirror of the
+weights, and verified from a clean environment (GW-E2E-023). M11's criteria were ticked in the Phase 23
+close-out, after publication.
 
 ## 2. Dependency graph
 
@@ -119,17 +122,17 @@ stays open until the last of them has passed.
 | Model export | 17 | ☑ | `phase-17`, `phase-17-v1`; GW-EFF-006, GW-EFF-012 |
 | Inference API | 18–19 | ☑ | `phase-18`, `phase-18-v1`, `phase-19`; GW-E2E-011 |
 | Unit tests | 1+ | ☑ | `phase-01` and every gate since; `tests/` |
-| CI/CD | 1 | ☑ | `phase-01`; `.github/workflows/ci.yml`. The release workflow, `.github/workflows/release.yml`, came in Phase 23; its dry run on `main` created nothing (`docs/PHASE_STATUS.md`, Phase 23) |
-| Git history | all | ☐ | Kept through Phase 22 and Part 1 of Phase 23; v1.0 release in progress (pull request B) |
-| Phase documentation | all | ☐ | `docs/PHASE_STATUS.md`, through Phase 22 and Part 1 of Phase 23; v1.0 release in progress (pull request B) |
-| Research documentation | all | ☐ | `research/`; v1.0 release in progress (pull request B) |
+| CI/CD | 1 | ☑ | `phase-01`; `.github/workflows/ci.yml`. The release workflow, `.github/workflows/release.yml`, came in Phase 23: its dry run on `main` created nothing, stage 1 drafted the release and stage 2 uploaded to PyPI (`docs/PHASE_STATUS.md`, Phase 23) |
+| Git history | all | ☑ | `phase-00` to `phase-23`, with `v0.1`, `v1-code` and `v1.0` |
+| Phase documentation | all | ☑ | `phase-23`; `docs/PHASE_STATUS.md`, every phase through Phase 23 with its record |
+| Research documentation | all | ☑ | `phase-23`; `research/`: the registry with no experiment left `planned` or `running`, and the research log through the release |
 | Model card | 21 | ☑ | `MODEL_CARD.md`, tag `phase-21` |
 | Dataset documentation | 2, 21 | ☑ | `DATASETS.md`, tag `phase-21` |
 | Reproducible final experiment | 13, 22 | ☑ | Configuration frozen and recorded. Phase 22 re-ran it: the predictions equal Phase 14's in every test file, and the strict verdict failed only on official OmniDocBench scores, through the evaluator's time limit; the owner accepted this as a disclosed limitation (GW-E2E-018, `reports/final_validation/v1_reproduction.md`). Accepted with a disclosed evaluator limitation; tag `phase-22`. `configs/final/glypharis_v1.yaml` |
 
 ## 5. Beyond v1.0 (not scheduled)
 
-Ideas that are deliberately out of scope until v1.0 ships:
+Ideas that were deliberately kept out of v1.0:
 - Word-level boxes from CTC alignment (`word_boxes` field).
 - Text orientation classifier (0°/180°) and page-level rotation correction. GLYPHARIS has no orientation
   step, and pages photographed sideways are not read correctly (F24).

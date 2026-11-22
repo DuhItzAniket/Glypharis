@@ -33,7 +33,7 @@ Phases run in the order set by [ADR-0008](decisions/ADR-0008-usable-engine-first
 | 20 | Production engineering | **COMPLETE** | `phase-20`, `v0.1` |
 | 21 | Research package | **COMPLETE** | `phase-21` |
 | 22 | Final validation | **COMPLETE** | `phase-22` |
-| 23 | Release v1.0 | **IN PROGRESS** (Part 1 merged; pull request B open) | — |
+| 23 | Release v1.0 | **COMPLETE** | `phase-23`, `v1.0` |
 
 ---
 
@@ -4613,13 +4613,13 @@ tag `phase-22` (merge re-created with the noreply identity; same tree and parent
 
 ## Phase 23 — Release v1.0
 
-**Status:** in progress. Part 1 (items 1 to 13) is merged: pull request #29, merge commit `9005263`,
-CI green on `main`, and the release workflow's dry run on `main` created nothing. Part 2 is on
-`phase/23-release-final` from `9005263`, where item 14 is prepared for pull request B. The owner
-decided on the night of 2026-11-22 to publish the weights under ADR-0014's terms without the qualified
-advice (D4 as changed, below). Nothing is published or uploaded, no tag `v1.0` exists, and the weights
-have not left this machine; that happens only in the release-day steps of
-[RELEASE_RUNBOOK](RELEASE_RUNBOOK.md), each on the owner's go. Opened on `phase/23-release` from
+**Status:** COMPLETE (2026-11-22). v1.0 was released on 2026-11-22, each step on the owner's go:
+the GitHub release `v1.0` with the code files and the model archive, `glypharis` 1.0.0 on PyPI, the
+Zenodo record with DOI [10.5281/zenodo.24433864](https://doi.org/10.5281/zenodo.24433864), and the
+Hugging Face mirror `DuhItzAniket/glypharis-v1`. The published release was verified from a clean
+environment (GW-E2E-023). Part 1 was merged through pull request #29 (merge commit `9005263`) and
+Part 2 through pull request #30 (merge commit `231978e`, tag `v1.0`). This completion record is on
+`phase/23-closeout` (D12), and `phase-23` goes on its merge commit. Opened on `phase/23-release` from
 `97f6cde`, the Phase 22 completion record on top of `main` at `b6f14a2` (tag `phase-22`). The plan
 below was registered on 2026-11-22 and is kept as written; the amendments, the owner decisions and the
 progress records at the end say what changed and what happened.
@@ -5033,3 +5033,78 @@ distributes and under which terms. Nothing is published until the release-day st
 *Note (2026-11-22, night).* The second limit no longer holds for v1.0: the owner decided to publish
 the weights without the advice (D4 as changed). The advice is still missing, and ADR-0014 still asks
 for it before the consumer application is sold.
+
+**Progress (2026-11-22): the release.** Items 14 to 17 ran on release day in the order of
+[RELEASE_RUNBOOK](RELEASE_RUNBOOK.md), each upload and publication on the owner's go for it. No
+published asset was replaced.
+
+| Runbook step | What happened | Evidence |
+|---|---|---|
+| 1 | Done first: the owner added the PyPI pending publisher and switched on the Zenodo GitHub integration (owner decisions of 2026-11-22, night, D8). | the repository's `release` webhook to Zenodo, active |
+| 2 | CI green on pull request B (#30, `phase/23-release-final`, head `9bf2efa`), then the owner merged it. | CI runs 44986307543 (branch), 44986329398 (pull request) |
+| 3 | The merge commit was re-created with the noreply identity as `231978e`, with the same tree and parents, and `main` was moved to it; the CI run on the first merge commit (44987179276) was cancelled when `main` moved. The annotated tag `v1.0`, with the noreply tagger, is on `231978e`. | CI run 44987276181 on `main` at `231978e`, green |
+| 4 | Stage 1 of the release workflow, off dry run, built and checked from `v1.0` (the `git archive` check among the checks) and created the draft release with `glypharis-1.0.0-py3-none-any.whl` (SHA-256 `0f669557b86d7385a218112a79059ae20109f8ef10a9b13990d131dd30edca05`), `glypharis-1.0.0.tar.gz` (SHA-256 `cdd78d7432b14416cdca4f849e8b0b27563dfd050b93a37d3ae450562d62eb72`) and `SHA256SUMS`. | run 44987750836 |
+| 5 | `glypharis-v1.tar.gz` (82,975,077 bytes, SHA-256 `3b90c1c74147747d7474a86b550e198f0df83d447961bd6aec88d4c24846541d`) and `glypharis-v1.tar.gz.sha256` were uploaded to the draft from the development machine, without overwrite, and checked by downloading them again into an empty folder: the size and SHA-256 equal the registry pin, and the files are identical to the uploaded ones. | the registry pin (GW-E2E-022) |
+| 6 | The owner published the release at 2026-11-22T05:21:13Z (<https://github.com/DuhItzAniket/Glypharis/releases/tag/v1.0>). The PyPI job waited for and got the owner's approval in the environment `pypi` and uploaded the two code files: PyPI `glypharis` 1.0.0, licence Apache-2.0, file hashes equal to `SHA256SUMS`. Zenodo archived the release: DOI 10.5281/zenodo.24433864, creator `DuhItzAniket`, version `v1.0`, file `DuhItzAniket/Glypharis-v1.0.zip`. | run 44989039235; the PyPI and Zenodo records |
+| 6b | On the owner's go, the Hugging Face mirror <https://huggingface.co/DuhItzAniket/glypharis-v1> was created private, and the eight members of the published archive and the card `release/huggingface/README.md` were uploaded in commit `0b8c9e8ce8a79c05a8abe8357f83e476ab23264c`. Downloaded back: all eight SHA-256 values OK and every file identical, the card included; ten files listed. It was then made public. `manifest.json`, fetched without a token, matches the `875357a6…` pin, and the card's licence is `cc-by-sa-4.0`. | the mirror's commit |
+| 7 | GW-E2E-023 passed (below). The Zenodo record's file holds 504 entries, with no `reports/`, no GDC records and no weights, as the exclusion list requires. | `reports/package/GW-E2E-023.json`, `reports/package/GW-E2E-023_fetch.json` |
+| 8 | This record, on `phase/23-closeout`, with the DOI in `README.md` and `CITATION.cff` and the ROADMAP criteria ticked. | this branch |
+
+- *GW-E2E-023.* `glypharis` 1.0.0 was installed from PyPI (wheel `0f669557…`) in a new environment
+  holding only it, the archive was fetched over the network from the registry address into empty
+  folders, and `glypharis-check` passed. The package check on the 400 validation pages at the clean
+  `v1.0` tree (`231978e`) gives page CER 24.32% on both, difference 0.0 points, and 16,835 of 16,835
+  lines identical (`reports/package/GW-E2E-023.json`). This meets the pass rule of items 8 and 16.
+- *Repository settings.* Private vulnerability reporting is enabled on the repository, and its
+  description, homepage (the PyPI page) and 15 topics are set.
+- The creator is the GitHub handle `DuhItzAniket` on every channel (`CITATION.cff`, PyPI, Zenodo,
+  the Hugging Face mirror), with no real name and no email.
+
+**Exit criteria check** (the released criteria 6 to 9 above; criteria 1 to 5 were met at merge A,
+progress record "Part 1 merged")
+
+| Criterion | Status | Evidence |
+|---|---|---|
+| 6. ADR-0014 revisited and its outcome recorded, or the owner's deferral recorded | met | ADR-0014, "Phase 23 outcome (2026-11-22)"; D4 as changed; IMPLEMENTATION_PLAN §8 |
+| 7. `v1.0` published on each approved channel and verified from a clean environment | met: no channel deferred | the GitHub release `v1.0` (runs 44987750836, 44989039235), PyPI `glypharis` 1.0.0, Zenodo, and the optional Hugging Face mirror; GW-E2E-023 |
+| 8. The Zenodo archive, if made, matches the exclusion list, and the DOI is added afterwards | met | the record's file checked (step 7 above); the DOI in `README.md` and `CITATION.cff` on `phase/23-closeout` |
+| 9. The completion record and the ROADMAP criteria (D12) | met: this record | ROADMAP §4 (Git history, Phase documentation and Research documentation ticked) and M11 |
+
+**Tests:** the full local suite on pull request B: 2,658 passed, 2 skipped. CI's jobs `test` (ruff,
+mypy, pytest and the generated-file checks) and `package` (the clean build, `twine check`, the wheel
+and `git archive` checks, the clean install) were green on the branch of pull request B (run
+44986307543), on the pull request (run 44986329398) and on `main` at `231978e` (run 44987276181). The
+release workflow's stage 1 (run 44987750836) and stage 2 (run 44989039235) succeeded. CI runs the
+same checks on the close-out branch before `phase-23` is set.
+
+**Compute:** the laptop CPU only on release day; GW-E2E-023 ran from 05:24:56 to 05:43:20 UTC
+(`reports/package/GW-E2E-023_fetch.json`). The only GPU use in Phase 23 was the smoke runs of item
+11 (`reports/training/smoke/phase23_smoke.md`).
+
+**Known issues**
+- The merge commits of pull requests A and B were made under another identity, so each had to be
+  re-created with the noreply identity (`9005263`, `231978e`), with the same tree and parents, which
+  rewrites the head of `main`. The close-out's merge commit gets the same check before `phase-23` is
+  set (RELEASE_RUNBOOK step 8).
+- Between the merge of pull request B and the publication at 05:21:13Z, `main` said that v1.0 was
+  released while its asset was not yet public, so a fetch of `glypharis-v1` from its registered
+  address could only fail with a download error (item 14).
+- The phone candidate is not released (D7): no phone bundle or asset ships, and no on-device reader
+  exists.
+- One summary line of the Hugging Face upload read "0 committed" although the commit `0b8c9e8…`
+  landed. The mirror's record rests on the download check, not on that line.
+- GW-E2E-023 reused the locked third-party packages already on this machine instead of resolving
+  them from the indexes; the CI job `package` covers a clean install with its dependencies.
+- The qualified advice ADR-0014 asked for is still missing (D4 as changed); ADR-0014 still asks for
+  it before the consumer application is sold.
+
+**Git:** branches `phase/23-release` (pull request #29, merge commit `9005263`),
+`phase/23-release-final` (pull request #30, merge commit `231978e`) and `phase/23-closeout` (this
+record). Tags `v1.0` (annotated, on `231978e`, never moved) and `phase-23` (on the close-out's merge
+commit, after the identity check of RELEASE_RUNBOOK step 8). Both merge commits were re-created with
+the noreply identity, with the same tree and parents.
+
+**CI status:** green on the branch of pull request B (run 44986307543), on the pull request (run
+44986329398) and on `main` at `231978e` (run 44987276181); release runs 44987750836 (stage 1, the
+draft) and 44989039235 (stage 2, PyPI) succeeded. The close-out's own runs are checked before
+`phase-23` is set.
