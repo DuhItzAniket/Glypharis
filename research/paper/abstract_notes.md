@@ -1,8 +1,10 @@
 # Abstract notes
 
 Status: these results are Phase 14's, and Phase 22 left them as recorded. Final validation (Phase 22)
-has been run; its record is `docs/FINAL_VALIDATION.md`. No weights are distributed; release is
-Phase 23.
+has been run; its record is `docs/FINAL_VALIDATION.md`. v1.0 is the release of v1 (GW-REC-034 with
+GW-DET-001): the code under Apache-2.0, published on PyPI as `glypharis` 1.0.0, and the v1 weights
+as the asset `glypharis-v1.tar.gz` of the GitHub release `v1.0`, which `glypharis.download_model`
+fetches and checks against pinned hashes.
 
 HierText is released under CC BY-SA 4.0; its images come from Open Images, which lists them as
 CC BY 2.0. Figures derived from HierText are shared alike.
@@ -110,7 +112,8 @@ decoding, post-processing, cropping or reading order; v1 itself was not measured
 
 Test results come from the GPU strict-fp32 evaluation; equality with the bundle is shown on
 validation only. Final validation (Phase 22) has been run; its record is `docs/FINAL_VALIDATION.md`.
-No weights are distributed; release is Phase 23.
+v1.0 releases the code under Apache-2.0 and the v1 weights under CC BY-SA 4.0; the weights are not
+described as cleared for commercial use, and the phone candidate is not released.
 
 ## What the abstract rests on
 

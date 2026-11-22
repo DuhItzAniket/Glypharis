@@ -14,8 +14,10 @@ manifest or a configuration file, and carries its experiment ID where a run prod
 Final validation (Phase 22) has been run; its record is `docs/FINAL_VALIDATION.md`. Configuration
 frozen and recorded. Phase 22 re-ran it: the predictions equal Phase 14's in every test file, and the
 strict verdict failed only on official OmniDocBench scores, through the evaluator's time limit; the
-owner accepted this as a disclosed limitation (`reports/final_validation/v1_reproduction.md`). No
-weights are distributed; release is Phase 23.
+owner accepted this as a disclosed limitation (`reports/final_validation/v1_reproduction.md`). v1.0
+is the release of v1 (GW-REC-034 with GW-DET-001): the code under Apache-2.0, published on PyPI as
+`glypharis` 1.0.0, and the v1 weights as the asset `glypharis-v1.tar.gz` of the GitHub release
+`v1.0`, which `glypharis.download_model` fetches and checks against pinned hashes.
 
 HierText is released under CC BY-SA 4.0; its images come from Open Images, which lists them as
 CC BY 2.0 (`long2022hiertext`, `kuznetsova2020openimages`). Tables derived from HierText are shared
@@ -315,9 +317,11 @@ registered file whose hash is recorded, under the policy of ADR-0007. It is the 
 component of v1; the recognizer was trained from scratch. The owner decided on 2026-11-18
 ([ADR-0014](../../docs/decisions/ADR-0014-weights-and-backbone-terms.md)) that GW-DET-001 stays v1's
 detector as a disclosed exception to ADR-0009's commercial-use rule, because the ImageNet terms do not
-clearly allow commercial use, and that the intended terms for the v1 weights are CC BY-SA 4.0 with
-attribution to HierText and Open Images. Intended terms under ADR-0014, effective only if released.
-This is the project's chosen handling, not a legal conclusion.
+clearly allow commercial use, and that the terms for the v1 weights are CC BY-SA 4.0 with
+attribution to HierText and Open Images. The weights are distributed under these terms with v1.0,
+and they are not described as cleared for commercial use. The owner decided on 2026-11-22 to publish
+them under these terms without the qualified advice ADR-0014 had asked for; this is the project's
+chosen handling, not a legal conclusion.
 
 Targets follow DBNet. Each line polygon is shrunk with shrink ratio 0.4 to give the text kernel, and
 a threshold map from 0.3 to 0.7 is drawn around each line. A line whose short side is under a minimum

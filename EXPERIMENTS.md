@@ -21,9 +21,9 @@ Each ID links to its full entry. Key results are copied from the registry. The g
 - v1 is GW-REC-034 with GW-DET-001, and it keeps PyTorch as its default backend.
 - The laptop CPU latency targets of ADR-0011 are recorded as missed for v1.
 - Phones are the target hardware. Only the phone candidate's networks have been measured on phones (GW-EFF-015), without decoding or post-processing; v1 has not.
-- The phone candidate, the all-ONNX build with fused attention and one recognizer run per line, is a new version, not v1. Phase 22 evaluated it once per test set, and it met H11 against v1 (GW-E2E-021).
-- Final validation (Phase 22) has been run; its record is `docs/FINAL_VALIDATION.md`.
-- No weights are distributed; release is Phase 23.
+- The phone candidate, the all-ONNX build with fused attention and one recognizer run per line, is a new version, not v1. Phase 22 evaluated it once per test set, and it met H11 against v1 (GW-E2E-021). It is not released.
+- Final validation (Phase 22) is complete; its record is `docs/FINAL_VALIDATION.md`.
+- v1.0 is the release of v1: the code under Apache-2.0 on PyPI as `glypharis` 1.0.0, and the weights as the GitHub release asset `glypharis-v1.tar.gz` under CC BY-SA 4.0 (ADR-0014).
 - Dataset licences and attribution are in [DATASETS.md](DATASETS.md).
 
 ## Compute

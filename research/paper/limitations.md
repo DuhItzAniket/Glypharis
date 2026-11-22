@@ -9,8 +9,10 @@ appears as numbers only.
 Final validation (Phase 22) has been run; its record is `docs/FINAL_VALIDATION.md`. Configuration
 frozen and recorded. Phase 22 re-ran it: the predictions equal Phase 14's in every test file, and the
 strict verdict failed only on official OmniDocBench scores, through the evaluator's time limit; the
-owner accepted this as a disclosed limitation (`reports/final_validation/v1_reproduction.md`). No
-weights are distributed; release is Phase 23.
+owner accepted this as a disclosed limitation (`reports/final_validation/v1_reproduction.md`). v1.0
+is the release of v1 (GW-REC-034 with GW-DET-001): the code under Apache-2.0, published on PyPI as
+`glypharis` 1.0.0, and the v1 weights as the asset `glypharis-v1.tar.gz` of the GitHub release
+`v1.0`, which `glypharis.download_model` fetches and checks against pinned hashes.
 
 <!-- trace: GW-E2E-018 reports/final_validation/v1_reproduction.md -->
 - Reproduction of the official OmniDocBench scores. The strict reproduction verdict (GW-E2E-018,
@@ -269,14 +271,18 @@ values is refused (GW-E2E-012).
 
 ## Licence and release position
 
-The code and the project's own text are under Apache-2.0 (`LICENSE`, `NOTICE`), with the exceptions
-that `NOTICE` lists, and the licence does not cover the weights. The project citation is in
-`CITATION.cff`; an archive DOI is pending. Any public package: to be settled in Phase 23. No weights
-are distributed; release is Phase 23. Intended terms under ADR-0014, effective only if released. The
-owner decided on 2026-11-18 ([ADR-0014](../../docs/decisions/ADR-0014-weights-and-backbone-terms.md))
-that GW-DET-001, initialised from ImageNet weights, stays v1's detector as a disclosed exception to
-ADR-0009's commercial-use rule, because the ImageNet terms do not clearly allow commercial use, and
-that the intended terms for the weights are CC BY-SA 4.0 with attribution to HierText and Open Images.
-This is the project's chosen handling, not a legal conclusion, and the v1 weights are not described
-as cleared for commercial use. FUNSD, IIIT5K and OmniDocBench were used for evaluation only, under
+v1.0 is the release of v1 (GW-REC-034 with GW-DET-001): the code under Apache-2.0, published on PyPI
+as `glypharis` 1.0.0, and the v1 weights as the asset `glypharis-v1.tar.gz` of the GitHub release
+`v1.0`, which `glypharis.download_model` fetches and checks against pinned hashes. The Apache
+License covers the code and the project's own text (`LICENSE`, `NOTICE`), with the exceptions that
+`NOTICE` lists, and not the weights.
+
+The weights are distributed under CC BY-SA 4.0 with attribution to HierText and Open Images
+([ADR-0014](../../docs/decisions/ADR-0014-weights-and-backbone-terms.md)). The detector was
+initialised from ImageNet weights, a disclosed exception to the project's commercial-use rule
+(ADR-0009), because the ImageNet terms do not clearly allow commercial use, and the weights are not
+described as cleared for commercial use. The owner decided on 2026-11-22 to publish them under these
+terms without the qualified advice ADR-0014 had asked for; this is the project's chosen handling,
+not a legal conclusion. The phone candidate is not released. Cite with `CITATION.cff`; a Zenodo DOI
+is added after the deposit. FUNSD, IIIT5K and OmniDocBench were used for evaluation only, under
 their own terms (`DATASETS.md`).

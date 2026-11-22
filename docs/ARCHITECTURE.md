@@ -9,7 +9,11 @@ evaluated is tag `phase14-eval`; tag `v1-code` differs from it only in docstring
 default bundle name (`reports/export/v1-code/code_diff.json`).
 
 Final validation (Phase 22) is complete (tag `phase-22`); its record is `docs/FINAL_VALIDATION.md`.
-No weights are distributed; release is Phase 23.
+v1.0 is the release of v1 (GW-REC-034 with GW-DET-001): the code under Apache-2.0, published on PyPI
+as `glypharis` 1.0.0, and the v1 weights as the asset `glypharis-v1.tar.gz` of the GitHub release
+`v1.0`, which `glypharis.download_model` fetches and checks against pinned hashes (§8). The weights
+are distributed under CC BY-SA 4.0 with attribution to HierText and Open Images
+([ADR-0014](decisions/ADR-0014-weights-and-backbone-terms.md)); the phone candidate is not released.
 
 Settings below come from the freeze record and the configs it names. Measured values carry their
 experiment ID and report. Results on the evaluation sets are in [MODEL_CARD.md](../MODEL_CARD.md) and
@@ -281,6 +285,14 @@ A bundle is one directory (`glypharis/export/bundle.py`, format `glypharis-bundl
 file, the detector settings, the recognizer's input settings and temperature, and their provenance.
 `read_manifest` checks every hash before anything loads. `from_pretrained` looks in `$GLYPHARIS_MODELS`,
 `~/.glypharis/models` and `./models`.
+
+The v1 bundle is distributed as `glypharis-v1.tar.gz`, an asset of the GitHub release `v1.0` and not
+part of the package (Phase 23). The archive has one top folder, `glypharis-v1/`, holding the five
+bundle files byte for byte, `LICENSE-WEIGHTS`, `NOTICE.md` and `model_info.json`
+(`scripts/pack_release.py`). `glypharis.download_model` (`glypharis/hub.py`) fetches it from the URL
+its registry pins, checks the archive's size and SHA-256 and the manifest's SHA-256 against the
+registry, and only then renames the extracted folder into a lookup folder. `from_pretrained` itself
+never reaches the network.
 
 | File | Parameters | Release `.pt` (MiB) | fp32 ONNX (MiB) |
 |---|---|---|---|

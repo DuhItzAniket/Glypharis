@@ -16,11 +16,14 @@ data and ablations follow, and the last sections summarise `efficiency.md` and `
 Every number comes from a generated report and carries its experiment ID. Writing this section
 needed no new run and no new access to test data.
 
-Final validation (Phase 22) has been run; its record is `docs/FINAL_VALIDATION.md`. No weights are
-distributed; release is Phase 23. Test results come from the GPU strict-fp32 evaluation; equality
-with the bundle is shown on validation only. Phase 22 checked reproduction at the 0.05-point
-tolerance (`reports/final_validation/v1_reproduction.md`): every prediction was the same, and it
-found 16 failures among the 1,381 point values checked, all of them official OmniDocBench scores.
+Final validation (Phase 22) has been run; its record is `docs/FINAL_VALIDATION.md`. v1.0 is the
+release of v1 (GW-REC-034 with GW-DET-001): the code under Apache-2.0, published on PyPI as
+`glypharis` 1.0.0, and the v1 weights as the asset `glypharis-v1.tar.gz` of the GitHub release
+`v1.0`, which `glypharis.download_model` fetches and checks against pinned hashes. Test results come
+from the GPU strict-fp32 evaluation; equality with the bundle is shown on validation only. Phase 22
+checked reproduction at the 0.05-point tolerance (`reports/final_validation/v1_reproduction.md`):
+every prediction was the same, and it found 16 failures among the 1,381 point values checked, all
+of them official OmniDocBench scores.
 
 Conventions used throughout:
 

@@ -8,26 +8,44 @@ Results are not repeated here. Each entry names its experiment IDs; the numbers 
 those IDs point to (`research/experiments.md`) and in [`MODEL_CARD.md`](MODEL_CARD.md). Every phase
 has its full record, gate and known issues in [`docs/PHASE_STATUS.md`](docs/PHASE_STATUS.md).
 
-## [1.0.0] — unreleased
+## [1.0.0] — v1.0
 
-v1 is the recognizer GW-REC-034 with the detector GW-DET-001, frozen in
+v1.0 is the release of v1 (GW-REC-034 with GW-DET-001): the code under Apache-2.0, published on PyPI
+as `glypharis` 1.0.0, and the v1 weights as the asset `glypharis-v1.tar.gz` of the GitHub release
+`v1.0`, which `glypharis.download_model` fetches and checks against pinned hashes. v1 is frozen in
 `configs/final/glypharis_v1.yaml` and packed as the bundle `glypharis-v1` (model version
-`glypharis_v1`). Nothing in this version has been published. The weights are held until the
-qualified advice that ADR-0014 asks for (Phase 23, D4).
+`glypharis_v1`). The phone candidate is not released (Phase 23, D7).
+
+The weights are distributed under CC BY-SA 4.0 with attribution to HierText and Open Images
+(ADR-0014). The detector was initialised from ImageNet weights, a disclosed exception to the project's
+commercial-use rule (ADR-0009), and the weights are not described as cleared for commercial use. The
+owner decided on 2026-11-22 to publish them under these terms without the qualified advice ADR-0014
+had asked for; this is the project's chosen handling, not a legal conclusion. It replaces the earlier
+Phase 23 decision D4, which held v1.0 until that advice.
 
 ### Added
 
-- **Phase 23, release preparation (in progress).** `LICENSE` (Apache-2.0 for the code and the
-  project's own text), `NOTICE` (what that licence does not cover), `CITATION.cff`, this changelog,
-  a release-notes draft (`docs/RELEASE_NOTES_v1.0.md`) and a brief for a qualified adviser on the
-  weights' terms (`docs/ADVISER_BRIEF.md`). `scripts/check_citation.py` checks `CITATION.cff`
-  against the package version.
+- **Phase 23, release.** The GitHub release `v1.0` holds the code files (the sdist and the wheel of
+  1.0.0, with `SHA256SUMS`) and the model archive `glypharis-v1.tar.gz` with
+  `glypharis-v1.tar.gz.sha256`. The archive is 82,975,077 bytes with SHA-256
+  `3b90c1c74147747d7474a86b550e198f0df83d447961bd6aec88d4c24846541d` (GW-E2E-022,
+  `reports/package/GW-E2E-022_fetch.json`); it holds the five bundle files byte for byte,
+  `LICENSE-WEIGHTS` (CC BY-SA 4.0), `NOTICE.md` and `model_info.json`. The package goes to PyPI from
+  the published release through Trusted Publishing, in the protected environment `pypi`, and Zenodo
+  archives the release (code and documents, without `reports/` and the evaluation manifests).
+  `docs/RELEASE_NOTES_v1.0.md` is the release's description. The verification of the published
+  release from a clean environment (GW-E2E-023) is planned for after publication.
+- **Phase 23, release files.** `LICENSE` (Apache-2.0 for the code and the project's own text),
+  `NOTICE` (what that licence does not cover), `CITATION.cff` (creator: the GitHub handle
+  DuhItzAniket), this changelog, the release notes (`docs/RELEASE_NOTES_v1.0.md`) and a brief for a
+  qualified adviser on the weights' terms (`docs/ADVISER_BRIEF.md`, kept as written).
+  `scripts/check_citation.py` checks `CITATION.cff` against the package version.
 - **Phase 23, model download.** `glypharis.download_model` and `glypharis/hub.py`: a pinned
   registry of bundles, each archive checked for its size and SHA-256 and each bundle's manifest
-  against its pinned SHA-256 before it is put in place. The `glypharis-v1` entry stays unpublished,
-  and so refuses to download, until the weights go out. Failures raise `ModelDownloadError`;
-  `glypharis-ocr --no-download` and the `GLYPHARIS_OFFLINE` environment variable keep it from
-  reaching the network.
+  against its pinned SHA-256 before it is put in place. The `glypharis-v1` entry is marked published
+  and points at the release asset; an entry not marked published refuses to download. Failures raise
+  `ModelDownloadError`; `glypharis-ocr --no-download` and the `GLYPHARIS_OFFLINE` environment
+  variable keep it from reaching the network.
 - **Phase 23, packaging.** The package is version 1.0.0, with the version read dynamically from
   `glypharis.__version__`, an Apache-2.0 SPDX licence with `license-files` (`LICENSE`, `NOTICE`),
   and Python >=3.11.4. `.gitattributes` leaves `reports/` and the records of the evaluation-only
@@ -38,8 +56,7 @@ qualified advice that ADR-0014 asks for (Phase 23, D4).
   draft; `scripts/pack_release.py`, which packs the v1 bundle and its weight notices
   (`release/weights/`) into a reproducible archive; the `glypharis-check` command with its sample
   page; and `scripts/release_rehearsal.py`. The release rehearsal (GW-E2E-022) and the clean-clone
-  training smoke runs (GW-REC-046, GW-DET-008) passed. The verification of the published release
-  (GW-E2E-023) is planned.
+  training smoke runs (GW-REC-046, GW-DET-008) passed.
 - **Phase 22, final validation.** A walkthrough from a fresh clone (GW-E2E-013), re-scoring of the
   saved Phase 14 files (GW-E2E-015) and a re-run of the frozen v1 on every test set (GW-REC-043,
   GW-E2E-016, GW-E2E-017, scored in GW-E2E-018); record in `docs/FINAL_VALIDATION.md`. The re-run
@@ -122,5 +139,5 @@ covering Phases 0 to 10, 17, 18 and 20. Not published as a package; no weights w
 - ONNX export with equivalence checks (GW-EFF-003, GW-EFF-004, Phase 17), the `GlypharisOCR` package
   and `glypharis-ocr` command (GW-E2E-004, Phase 18), and input hardening (Phase 20).
 
-[1.0.0]: https://github.com/DuhItzAniket/Glypharis/compare/v0.1...HEAD
+[1.0.0]: https://github.com/DuhItzAniket/Glypharis/compare/v0.1...v1.0
 [0.1]: https://github.com/DuhItzAniket/Glypharis/releases/tag/v0.1

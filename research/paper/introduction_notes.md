@@ -1,7 +1,9 @@
 # Introduction notes
 
-Status: Final validation (Phase 22) has been run; its record is `docs/FINAL_VALIDATION.md`. No
-weights are distributed; release is Phase 23.
+Status: Final validation (Phase 22) has been run; its record is `docs/FINAL_VALIDATION.md`. v1.0 is
+the release of v1 (GW-REC-034 with GW-DET-001): the code under Apache-2.0, published on PyPI as
+`glypharis` 1.0.0, and the v1 weights as the asset `glypharis-v1.tar.gz` of the GitHub release
+`v1.0`, which `glypharis.download_model` fetches and checks against pinned hashes.
 
 HierText is released under CC BY-SA 4.0; its images come from Open Images, which lists them as
 CC BY 2.0. Figures derived from HierText are shared alike.

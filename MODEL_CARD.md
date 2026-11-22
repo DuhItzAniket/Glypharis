@@ -1,8 +1,11 @@
 # Model card: GLYPHARIS v1
 
 Status: evaluated and packaged. Final validation (Phase 22) has been run; its record is
-[`docs/FINAL_VALIDATION.md`](docs/FINAL_VALIDATION.md). No weights are distributed; release is
-Phase 23.
+[`docs/FINAL_VALIDATION.md`](docs/FINAL_VALIDATION.md). v1.0 is the release of v1 (GW-REC-034 with
+GW-DET-001): the code under Apache-2.0, published on PyPI as `glypharis` 1.0.0, and the v1 weights as
+the asset `glypharis-v1.tar.gz` of the GitHub release `v1.0`, which `glypharis.download_model`
+fetches and checks against pinned hashes. The weights' terms are under
+[licence information](#licence-information). The phone candidate is not released.
 
 This card describes `glypharis_v1`, a line-based OCR model for English printed text in document
 images. It is written for someone deciding whether the model suits their use, and it gives the
@@ -72,12 +75,18 @@ OmniDocBench scores, through that evaluator's per-page time limit, and the owner
 disclosed limitation (GW-E2E-018,
 [`reports/final_validation/v1_reproduction.md`](reports/final_validation/v1_reproduction.md)).
 
+The code and the project's own text are under Apache-2.0 ([`LICENSE`](LICENSE),
+[`NOTICE`](NOTICE)), with the exceptions that `NOTICE` lists; the Apache License does not cover the
+weights, the release asset `glypharis-v1.tar.gz`. The weights are distributed under CC BY-SA 4.0
+with attribution to HierText and Open Images (ADR-0014). The detector was initialised from ImageNet
+weights, a disclosed exception to the project's commercial-use rule (ADR-0009), and the weights are
+not described as cleared for commercial use. The owner decided on 2026-11-22 to publish them under
+these terms without the qualified advice ADR-0014 had asked for; this is the project's chosen
+handling, not a legal conclusion. Cite with [`CITATION.cff`](CITATION.cff); a Zenodo DOI is added
+after the deposit.
+
 Not done yet:
 
-- No weights are distributed; release is Phase 23. The code and the project's own text are under
-  Apache-2.0 ([`LICENSE`](LICENSE), [`NOTICE`](NOTICE)), with the exceptions that `NOTICE` lists;
-  the weights are not covered by it, and their intended terms are ADR-0014's, effective only if
-  released. Citation: [`CITATION.cff`](CITATION.cff); an archive DOI is pending.
 - Phones are the target hardware, and no full page has been timed on a phone. Phase 22 measured
   only the networks of the phone candidate, a new version, on two phones (GW-EFF-015, see
   [not v1](#not-v1)); v1 itself was not measured on a phone.
@@ -154,7 +163,7 @@ Source: GW-EFF-006 [`reports/efficiency/phase16/v1_bundle.json`](reports/efficie
 | Item | Value |
 |---|---|
 | Model version | `glypharis_v1` |
-| Package version | `1.0.0` (code; not yet released) |
+| Package version | `1.0.0` (code, published on PyPI as `glypharis`) |
 | Bundle format | `glypharis-bundle-1`, with ONNX files at opset 17 |
 | Bundle manifest SHA-256 | `875357a6346e8b1f989005fa96c557b00bf687461043368dc5e3dc532839f037` |
 | `detector.pt` SHA-256 | `caafdce9402de07a775102558eeffa6f48d4f54cd370ac63c09ab0be2a929c99` |
@@ -936,16 +945,19 @@ Source: [`reports/environment/env_report.md`](reports/environment/env_report.md)
 
 ## Licence information
 
-Intended terms under ADR-0014, effective only if released. No weights are distributed; release is
-Phase 23. The owner decided the positions below on 2026-11-18
-([ADR-0014](docs/decisions/ADR-0014-weights-and-backbone-terms.md)). They are the project's chosen
-handling, not a legal conclusion, and the v1 weights are not described as cleared for commercial use.
+The weights are distributed under CC BY-SA 4.0 with attribution to HierText and Open Images
+([ADR-0014](docs/decisions/ADR-0014-weights-and-backbone-terms.md)). The detector was initialised
+from ImageNet weights, a disclosed exception to the project's commercial-use rule (ADR-0009), and the
+weights are not described as cleared for commercial use. The owner decided the positions below on
+2026-11-18, and on 2026-11-22 decided to publish the weights under these terms without the qualified
+advice ADR-0014 had asked for; this is the project's chosen handling, not a legal conclusion.
 
 | Part | Position |
 |---|---|
-| Weights | CC BY-SA 4.0 with attribution to HierText and Open Images, as intended terms that take effect only if the weights are released in Phase 23, and subject to the detector exception below |
+| Weights | CC BY-SA 4.0 with attribution to HierText and Open Images, subject to the detector exception below; distributed as the asset `glypharis-v1.tar.gz` of the GitHub release `v1.0`, which carries `LICENSE-WEIGHTS` and `NOTICE.md` |
 | Detector initialised from ImageNet-1K weights | GW-DET-001 stays v1's detector as a disclosed exception to ADR-0009's commercial-use rule: its backbone was initialised from ImageNet-1K weights, and the ImageNet terms do not clearly allow commercial use |
-| Code | Apache-2.0 for the code and the project's own text ([`LICENSE`](LICENSE), [`NOTICE`](NOTICE)), with the exceptions that `NOTICE` lists, among them the HierText-derived tables in this card; it does not cover the weights, which are not distributed |
+| Code | Apache-2.0 for the code and the project's own text ([`LICENSE`](LICENSE), [`NOTICE`](NOTICE)), with the exceptions that `NOTICE` lists, among them the HierText-derived tables in this card; the code is published on PyPI as `glypharis` 1.0.0, and the licence does not cover the weights, which are distributed separately |
+| Phone candidate | not released; v1.0 ships no phone bundle or asset |
 
 Terms of the data and weights that influenced the model:
 
@@ -965,7 +977,7 @@ and attributions are in [`DATASETS.md`](DATASETS.md).
 
 ## Citation information
 
-How to cite GLYPHARIS: see [`CITATION.cff`](CITATION.cff). An archive DOI is pending.
+Cite GLYPHARIS with [`CITATION.cff`](CITATION.cff); a Zenodo DOI is added after the deposit.
 
 The methods and data behind the model are cited with these keys of
 [`research/paper/references.bib`](research/paper/references.bib): `graves2006ctc` (CTC),
@@ -1002,7 +1014,7 @@ part of it is described.
 
 A new version, not v1. Phase 22 evaluated it once per test set, and it met H11's six non-inferiority
 tests against v1 (GW-E2E-021); its results sit beside v1's and replace none of them. Its figures
-must not be read as v1's.
+must not be read as v1's. It is not released: v1.0 ships no phone bundle or asset.
 
 The phone candidate is the all-ONNX build with fused attention, reading one line per recognizer run
 (`fused-single-line`, GW-EFF-013,
