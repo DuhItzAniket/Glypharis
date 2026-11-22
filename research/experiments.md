@@ -119,7 +119,7 @@ Rows link to a full entry below. Numbers are copied from generated reports only,
 | [GW-E2E-020](#gw-e2e-020) | 2026-11-18 | 22 | Phone candidate on the test pages | done | one logged pass per set; HierText test page CER 25.16%, E2E F1 60.18%; GDC 22.35%, 69.36%; OmniDocBench order-aware CER 27.28% | `reports/final_validation/candidate/results.md`, `reports/final_validation/candidate/prediction_hashes.json` |
 | [GW-E2E-021](#gw-e2e-021) | 2026-11-18 | 22 | Phone candidate: the scoring pass and H11 | done | H11 met, six of six: on HierText test and GDC the candidate's line CER, page CER and E2E F1 equal v1's at the reported precision (GDC 4.17%, 22.35%, 69.36%); the source-document check met | `reports/final_validation/candidate/h11.md`, `reports/final_validation/candidate/results.md` |
 | [GW-E2E-022](#gw-e2e-022) | 2026-11-22 | 23 | Release rehearsal: the built wheel in a clean environment, the packed archive fetched from a local server, the package check against GW-E2E-006 | done | passes: the archive (82,975,077 bytes) fetched into an empty folder; page CER 24.32% on both, difference 0.0 points; 16,835 of 16,835 lines identical; glypharis-check passed | `reports/package/GW-E2E-022.json`, `reports/package/GW-E2E-022_fetch.json` |
-| [GW-E2E-023](#gw-e2e-023) | 2026-11-22 | 23 | Verification of the published v1.0 release from a clean environment | planned | — | — |
+| [GW-E2E-023](#gw-e2e-023) | 2026-11-22 | 23 | Verification of the published v1.0 release from a clean environment | done | passes: glypharis 1.0.0 from PyPI, the archive fetched from the release address into an empty folder; page CER 24.32% on both, difference 0.0 points; 16,835 of 16,835 lines identical; glypharis-check passed | `reports/package/GW-E2E-023.json`, `reports/package/GW-E2E-023_fetch.json` |
 | [GW-REC-042](#gw-rec-042) | 2026-11-18 | 22 | v1 re-run rehearsal on HierText validation crops | done | passes: 10 point values, largest difference 0.0; 74,500 of 74,500 crops identical | `reports/final_validation/rehearsal.json` |
 | [GW-REC-043](#gw-rec-043) | 2026-11-18 | 22 | v1 re-run on the test crops | done | predictions identical to GW-REC-039 in all 5 sets; scored by GW-E2E-018 | `reports/final_validation/v1_rerun_outputs.json`, `reports/final_validation/GW-E2E-018/line_comparison.json` |
 | [GW-REC-044](#gw-rec-044) | 2026-11-18 | 22 | Phone candidate: validation gate on crops, against GW-REC-038 | done | met: line CER 6.507% for the candidate and for v1 on 74,500 lines | `reports/final_validation/candidate/validation_gate.json` |
@@ -2243,9 +2243,9 @@ Rows link to a full entry below. Numbers are copied from generated reports only,
 
 ### <a id="gw-e2e-023"></a>GW-E2E-023 — Verification of the published release
 
-- **Date allocated / run:** 2026-11-22 / —
+- **Date allocated / run:** 2026-11-22 / 2026-11-22
 - **Phase:** 23
-- **Git commit:** tag `v1.0`   **Config:** `configs/final/glypharis_v1.yaml`   **Seed(s):** none
+- **Git commit:** tag `v1.0` (`231978e`)   **Config:** `configs/final/glypharis_v1.yaml`   **Seed(s):** none
 - **Dataset version(s):** HierText validation, the 400 Phase 5 pages
 - **Hardware:** laptop CPU
 - **Research question:** does the published package, with the bundle fetched from the published asset, read the pages exactly as the evaluated v1 did?
@@ -2253,9 +2253,9 @@ Rows link to a full entry below. Numbers are copied from generated reports only,
 - **Method:** `pip install glypharis==1.0.0` in a fresh environment with every models folder, home and working directory new and empty, `glypharis.download_model("glypharis-v1")` from the release asset (its download record must show a network fetch from the shipped URL), the archive and manifest hashes, `glypharis-check`, then the package check as GW-E2E-022.
 - **Variables:** none
 - **Control:** GW-E2E-006
-- **Result:** — (planned)
-- **Interpretation:** —
-- **Limitations:** run only after the owner publishes; validation pages only. If the owner defers the release, it closes as `not run` with the reason.
+- **Result:** pass (`reports/package/GW-E2E-023.json`, `reports/package/GW-E2E-023_fetch.json`). The wheel `glypharis-1.0.0-py3-none-any.whl` downloaded from PyPI (SHA-256 `0f669557…`, the value in the release's `SHA256SUMS`) was installed in a new environment holding only it, with the locked third-party packages reused as in GW-E2E-022 (PHASE_STATUS, Phase 23, amendments), and `glypharis` was imported from the installed package, not from the checkout. `download_model` fetched the archive (82,975,077 bytes, SHA-256 `3b90c1c7…`) over the network from the release address `https://github.com/DuhItzAniket/Glypharis/releases/download/v1.0/glypharis-v1.tar.gz` into an empty models folder, with home folders empty, and its record shows the network fetch from that address. `glypharis-check` passed: every model file matches the manifest, the manifest hash and the download record match the registry, and the sample page's 8 lines are read as expected. The package check at the clean `v1.0` tree (`231978e`; torch, 10 threads, `--v1`, v1 code equal to `v1-code`) gives page CER 24.32% for the package and for GW-E2E-006 on the 400 pages, difference 0.0 points, and 16,835 of 16,835 lines with the same text and box. The Zenodo record of the release was checked against the exclusion list: no `reports/`, no GDC records and no weights (PHASE_STATUS, Phase 23, progress record of the release).
+- **Interpretation:** v1.0 as a user gets it, the package from PyPI and the weights from the published release asset, is the evaluated v1: it reads the validation pages line for line as the frozen pipeline did. With GW-E2E-022 this closes the chain from the frozen model to the files that shipped.
+- **Limitations:** validation pages only; one machine; the third-party packages were the locked ones already on this machine, not resolved from the indexes in this run (the CI job `package` installs the wheel with its dependencies resolved from the indexes on every push). The Hugging Face mirror is not used by the package and is not part of this check; it was checked by downloading it again (PHASE_STATUS, Phase 23).
 - **Next experiment:** none
 
 ### <a id="gw-rec-042"></a>GW-REC-042 — v1 re-run rehearsal on validation crops
