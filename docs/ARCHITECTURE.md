@@ -19,6 +19,132 @@ Settings below come from the freeze record and the configs it names. Measured va
 experiment ID and report. Results on the evaluation sets are in [MODEL_CARD.md](../MODEL_CARD.md) and
 `research/paper/results.md`, not here. Unless stated otherwise, CER is on the strict track.
 
+## Model architecture at a glance
+
+GLYPHARIS v1 is two networks and some plain code around them: a DBNet-style line detector
+(GLYPHARIS-Det, GW-DET-001) and an SVTR-style CTC line recognizer (GLYPHARIS-Rec, GW-REC-034). The
+diagrams name the functions and classes as they appear in the code. Shapes and settings come from the
+files cited under each diagram; §3 to §5 give the full detail.
+
+### Full pipeline
+
+```mermaid
+flowchart TD
+    img["Page image: path, file bytes, PIL image or numpy array"]
+    load["load_rgb: decode, EXIF orientation, RGB uint8, pixel limit 64,000,000"]
+    prep["prepare_page: long side 1536, pad right and bottom to multiples of 32"]
+    det["GLYPHARIS-Det, DBNet on MobileNetV3-Large: image (N, 3, H, W) uint8"]
+    prob["Probability map prob (N, 1, H, W), fp32"]
+    post["find_candidates, then boxes_from_candidates: bin_thresh 0.3, box_thresh 0.5, operating point inverse09"]
+    quads["Line polygons and quads in page pixels, with detector scores"]
+    cut["cut_line: perspective warp from the grey page, 15% margin, crop 64 px high"]
+    crop["prepare_crop: grey, height 48, width at most 1536, scaled to [-1, 1]"]
+    rec["GLYPHARIS-Rec, SVTR: images (N, 1, 48, W) and widths (N)"]
+    logits["Logits (T, N, 275), T = W/4"]
+    dec["Greedy CTC decoding, and line confidence at temperature 2.35"]
+    order["reading_order: deskew, recursive XY-cut, rows"]
+    out["OCRResult: lines in reading order, text, confidence, det_score"]
+    img --> load --> prep --> det --> prob --> post --> quads
+    quads --> cut --> crop --> rec --> logits --> dec --> out
+    quads --> order --> out
+```
+
+Sources: `glypharis/pipeline/ocr.py` (steps and the pixel limit), `glypharis/models/det/preprocess.py`
+(padding), `configs/final/glypharis_v1.yaml` (long side, thresholds, operating point, recognizer
+height and width cap, temperature), `glypharis/data/crops.py` (crop height and margin),
+`glypharis/pipeline/recognizer.py` (crop preparation and decoding), `glypharis/export/onnx.py`
+(input and output names) and `reports/charset/charset_report.md` (275 classes: 274 characters and
+the CTC blank). Reading order uses only the quads, so it does not wait for the recognizer's output;
+`predict` runs it after recognition and before it builds the result.
+
+### GLYPHARIS-Det
+
+```mermaid
+flowchart TD
+    inp["image (N, 3, H, W) uint8 RGB, H and W multiples of 32"]
+    norm["ImageNet mean and std normalisation, inside DBNet"]
+    bb["MobileNetV3Features: torchvision MobileNetV3-Large trunk, ImageNet initialisation"]
+    c2["C2: stride 4, 24 channels"]
+    c3["C3: stride 8, 40 channels"]
+    c4["C4: stride 16, 112 channels"]
+    c5["C5: stride 32, 960 channels"]
+    fpn["DBFPN neck: 1x1 laterals to 96 channels, nearest top-down path, 3x3 smoothing to 24 per level, concatenated at H/4 (96 channels)"]
+    ph["prob_head, a DBHead: 3x3 conv, two stride-2 transposed convolutions, last layer in fp32"]
+    th["thresh_head, a DBHead: training only"]
+    sig["sigmoid: probability map (N, 1, H, W)"]
+    tmap["Threshold map logits, used only by the loss"]
+    cand["find_candidates: prob above 0.3, 8-connected components, area at least 1 pixel, at most 5,000 candidates"]
+    boxes["boxes_from_candidates: mean probability at least 0.5, inverse unclip with ratio 0.9, short side at least 3.0"]
+    quad["to_page_coords, clip to the image, quad TL TR BR BL, score"]
+    inp --> norm --> bb
+    bb --> c2
+    bb --> c3
+    bb --> c4
+    bb --> c5
+    c2 --> fpn
+    c3 --> fpn
+    c4 --> fpn
+    c5 --> fpn
+    fpn --> ph --> sig --> cand --> boxes --> quad
+    fpn -.-> th -.-> tmap
+```
+
+Sources: `glypharis/models/det/dbnet.py` (`DBNet`, `DBFPN`, `DBHead`),
+`glypharis/models/det/backbone.py` (`MobileNetV3Features`, taps at strides 4 to 32),
+`configs/det/gw-det-001.yaml` (backbone, initialisation, 96 inner channels) and
+`configs/final/glypharis_v1.yaml` (post-processing). The code reads the tap channel counts from the
+built torchvision modules instead of a table; 24, 40, 112 and 960 are what those modules report. The
+dotted path runs only in training (`DBNet.forward_train`). `DBNet.forward`, and so the ONNX export,
+never runs the threshold head.
+
+### GLYPHARIS-Rec
+
+```mermaid
+flowchart TD
+    crop["Line crop from cut_line, 64 px high"]
+    prep["prepare_crop: grey, height 48 with the aspect ratio kept, width at most 1536, scaled to [-1, 1]"]
+    batch["Batch images (N, 1, 48, W): sorted by width, padded on the right with the median of the last column"]
+    stem["stem: two 3x3 stride-2 convolutions with BatchNorm and GELU, 1 to 48 to 96 channels"]
+    grid["Token grid 12 x W/4, 96 dimensions"]
+    s1["Stage 1: 3 blocks with _LocalMixer, a depthwise 3x7 convolution, 96 dimensions"]
+    m1["_Merge: 3x3 convolution, stride 2 in height, 96 to 192, grid 6 x W/4"]
+    s2["Stage 2: 3 _LocalMixer blocks, then 3 _GlobalMixer blocks with 6 heads, 192 dimensions"]
+    m2["_Merge: 192 to 256, grid 3 x W/4"]
+    s3["Stage 3: 6 _GlobalMixer blocks with 8 heads, 256 dimensions"]
+    head["LayerNorm, mean over the grid height, dropout, linear head to 275 classes"]
+    logits["Logits (T, N, 275), T = W/4"]
+    greedy["Greedy CTC decoding: best class per frame, repeats merged, blanks removed"]
+    conf["Softmax of logits / 2.35: geometric mean of the top probability over emitting frames"]
+    crop --> prep --> batch --> stem --> grid --> s1 --> m1 --> s2 --> m2 --> s3 --> head --> logits
+    logits --> greedy
+    logits --> conf
+```
+
+Sources: `glypharis/models/rec/svtr.py` (`SVTR`, `_Block`, `_LocalMixer`, `_GlobalMixer`, `_Merge`),
+`configs/rec/gw-rec-020.yaml` (stage widths, blocks, heads, kernel, MLP ratio 4),
+`configs/rec/gw-rec-001.yaml` (dropout 0.1), `configs/final/glypharis_v1.yaml` (height 48, width cap
+1536, T = 2.35 from GW-E2E-005) and `glypharis/pipeline/recognizer.py` (preparation, batching,
+decoding, confidence). Every block is a pre-norm residual block: mixer, then an MLP of ratio 4.
+Global mixing attends over all tokens of a line and never to a padded column. Grid heights 12, 6
+and 3 follow from input height 48, the stem's two stride-2 convolutions and the two height-halving
+merges. A line of width w gives w // 4 frames (`LineRecognizer.frames`). Its frames do not depend
+on the rest of its batch for two reasons. The padding mask built from `widths` keeps attention off
+padded columns, and padded tokens leave every block as zeros (`glypharis/models/rec/svtr.py`).
+Near its right edge, where the stem's receptive field reaches into the padding, `TextRecognizer`
+gives every line at least `PAD_MARGIN` padding columns before the edge of the batch tensor, so
+those last frames see the same padding alone or in any batch (`glypharis/pipeline/recognizer.py`).
+
+### The two networks
+
+| Network | Class | Parameters (GW-EFF-007) | Input | Output | Files in the bundle |
+|---|---|---|---|---|---|
+| GLYPHARIS-Det (GW-DET-001) | `DBNet`, `glypharis/models/det/dbnet.py` | 3,187,209 at inference (the threshold head is left out) | `image`: uint8 RGB (N, 3, H, W), long side 1536, H and W multiples of 32 | `prob`: probability map (N, 1, H, W), fp32 | `detector.pt`, `detector.onnx` |
+| GLYPHARIS-Rec (GW-REC-034) | `SVTR`, `glypharis/models/rec/svtr.py` | 7,928,835 | `images`: grey (N, 1, 48, W) in [−1, 1]; `widths`: (N) | `logits`: (T, N, 275), T = W // 4 | `recognizer.pt`, `recognizer.onnx` |
+
+Parameters: GW-EFF-007, `reports/efficiency/phase16/cost_table.md` (11,116,044 in total). Input and
+output names are those of the ONNX export (`glypharis/export/onnx.py`); the networks in the `.pt`
+release files take the same tensors. The bundle's `manifest.json` holds the SHA-256 of all four files (§8).
+
 ## 1. Scope
 
 GLYPHARIS is a standalone OCR engine: image in, structured text out. It knows nothing about PDFs,
@@ -286,6 +412,8 @@ file, the detector settings, the recognizer's input settings and temperature, an
 `read_manifest` checks every hash before anything loads. `from_pretrained` looks in `$GLYPHARIS_MODELS`,
 `~/.glypharis/models` and `./models`.
 
+### Distribution
+
 The v1 bundle is distributed as `glypharis-v1.tar.gz`, an asset of the GitHub release `v1.0` and not
 part of the package (Phase 23). The archive has one top folder, `glypharis-v1/`, holding the five
 bundle files byte for byte, `LICENSE-WEIGHTS`, `NOTICE.md` and `model_info.json`
@@ -293,6 +421,46 @@ bundle files byte for byte, `LICENSE-WEIGHTS`, `NOTICE.md` and `model_info.json`
 its registry pins, checks the archive's size and SHA-256 and the manifest's SHA-256 against the
 registry, and only then renames the extracted folder into a lookup folder. `from_pretrained` itself
 never reaches the network.
+
+What the registry pins for `glypharis-v1` (`REGISTRY` in `glypharis/hub.py`):
+
+| Item | Value |
+|---|---|
+| URL | <https://github.com/DuhItzAniket/Glypharis/releases/download/v1.0/glypharis-v1.tar.gz> |
+| Archive size | 82,975,077 bytes |
+| Archive SHA-256 | `3b90c1c74147747d7474a86b550e198f0df83d447961bd6aec88d4c24846541d` |
+| `manifest.json` SHA-256 | `875357a6346e8b1f989005fa96c557b00bf687461043368dc5e3dc532839f037` |
+| Top folder | `glypharis-v1` |
+
+```python
+from glypharis import GlypharisOCR, download_model
+
+path = download_model("glypharis-v1")  # verified, then placed in the first models folder
+ocr = GlypharisOCR.from_pretrained("glypharis-v1")
+```
+
+`download_model` refuses an unknown name, returns an installed bundle whose manifest matches the pin
+without a network call, never overwrites a bundle with another manifest unless `force=True` is given,
+and does nothing over the network when `offline=True` or `GLYPHARIS_OFFLINE` is set. Every failure is
+a `ModelDownloadError` (`glypharis/hub.py`).
+
+Where v1 is published:
+
+| Channel | What it holds | Terms |
+|---|---|---|
+| PyPI, [`glypharis` 1.0.0](https://pypi.org/project/glypharis/) | The code (Python `>=3.11.4,<3.12`); no weights | Apache-2.0 |
+| GitHub release [`v1.0`](https://github.com/DuhItzAniket/Glypharis/releases/tag/v1.0) | The weights archive `glypharis-v1.tar.gz`, the only source `download_model` uses | CC BY-SA 4.0, with attribution to HierText and Open Images |
+| Hugging Face, [`DuhItzAniket/glypharis-v1`](https://huggingface.co/DuhItzAniket/glypharis-v1) | A mirror of the same files, with its own model card (`release/huggingface/README.md`); the package does not fetch from it | CC BY-SA 4.0, as above |
+| Zenodo, DOI [10.5281/zenodo.24433864](https://doi.org/10.5281/zenodo.24433864) | The code and documentation; no weights | Apache-2.0, with the exceptions [NOTICE](../NOTICE) lists |
+
+The ImageNet-initialised detector backbone is a disclosed exception to the commercial-use rule of
+[ADR-0009](decisions/ADR-0009-no-synthtext.md)
+([ADR-0014](decisions/ADR-0014-weights-and-backbone-terms.md)): the ImageNet-1K terms do not clearly
+allow commercial use. The weights are not described as cleared for commercial use. The owner decided
+to publish without qualified legal advice; the terms above are a record of that decision, not a
+legal conclusion.
+
+### Sizes and runtimes
 
 | File | Parameters | Release `.pt` (MiB) | fp32 ONNX (MiB) |
 |---|---|---|---|

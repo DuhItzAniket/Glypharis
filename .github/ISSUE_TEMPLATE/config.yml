@@ -1,0 +1,8 @@
+blank_issues_enabled: false
+contact_links:
+  - name: Report a security vulnerability
+    url: https://github.com/DuhItzAniket/Glypharis/security/advisories/new
+    about: Report security problems privately through a security advisory, not in a public issue.
+  - name: Documentation
+    url: https://github.com/DuhItzAniket/Glypharis/blob/main/docs/README.md
+    about: The documentation index, grouped by audience (users, integrators, reproducers, researchers, maintainers).
