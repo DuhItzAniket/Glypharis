@@ -700,8 +700,8 @@ The repository does not contain:
 - Code: the code and the project's own text are under Apache-2.0 ([`LICENSE`](LICENSE),
   [`NOTICE`](NOTICE)), with the exceptions that `NOTICE` lists, among them the HierText-derived material
   (CC BY-SA 4.0), and the code is published on PyPI as `glypharis` 1.0.0. The licence does not cover the
-  weights, which are distributed separately under the terms above. Cite with [`CITATION.cff`](CITATION.cff);
-  a Zenodo DOI is added after the deposit.
+  weights, which are distributed separately under the terms above. Cite with [`CITATION.cff`](CITATION.cff)
+  (DOI [10.5281/zenodo.24433864](https://doi.org/10.5281/zenodo.24433864)).
 
 ## Licence checks
 

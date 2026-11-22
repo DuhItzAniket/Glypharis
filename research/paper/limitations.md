@@ -283,6 +283,6 @@ initialised from ImageNet weights, a disclosed exception to the project's commer
 (ADR-0009), because the ImageNet terms do not clearly allow commercial use, and the weights are not
 described as cleared for commercial use. The owner decided on 2026-11-22 to publish them under these
 terms without the qualified advice ADR-0014 had asked for; this is the project's chosen handling,
-not a legal conclusion. The phone candidate is not released. Cite with `CITATION.cff`; a Zenodo DOI
-is added after the deposit. FUNSD, IIIT5K and OmniDocBench were used for evaluation only, under
+not a legal conclusion. The phone candidate is not released. Cite with `CITATION.cff` (DOI
+10.5281/zenodo.24433864). FUNSD, IIIT5K and OmniDocBench were used for evaluation only, under
 their own terms (`DATASETS.md`).
