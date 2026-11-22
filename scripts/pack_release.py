@@ -36,6 +36,17 @@ same bytes is left as it is; one with other bytes is refused unless ``--overwrit
 ``--check-only`` writes nothing: it builds and checks the archive in memory, compares it with the
 archive and ``.sha256`` file in ``--out`` if they are there, and with the registry's pins once
 they are set. Exits 0 when every check passed, 1 otherwise.
+
+``--report <file>.json``, only with ``--check-only``, records that comparison: the archive's name,
+size and SHA-256, whether the fresh pack is identical to the archive and ``.sha256`` file in
+``--out``, the registry's pins and whether they match, the manifest pin, the notices' and
+``model_info.json``'s SHA-256, the code commit in ``model_info.json``, and the Python and zlib
+versions that built it. A one-line Markdown rendering goes beside it, with the suffix ``.md``. The
+report holds no local path and no time, so the same inputs give the same report; it is written
+whether or not the checks pass, never into ``--out``, and not at all when the pack is refused.
+
+    python scripts/pack_release.py --bundle runs/release/glypharis-v1 --out <folder> \\
+        --check-only --report reports/release/pack_check.json
 """
 
 from __future__ import annotations
@@ -45,13 +56,16 @@ import gzip
 import hashlib
 import io
 import json
+import platform
+import re
 import shutil
 import subprocess
 import sys
 import tarfile
 import tempfile
+import zlib
 from collections.abc import Sequence
-from dataclasses import dataclass
+from dataclasses import asdict, dataclass
 from pathlib import Path
 from typing import Any, Final
 
@@ -71,6 +85,9 @@ BUNDLE_FILES: Final = (
 NOTICE_FILES: Final = ("LICENSE-WEIGHTS", "NOTICE.md")
 INFO_FILE: Final = "model_info.json"
 INFO_FORMAT: Final = "glypharis-model-info-1"
+REPORT_FORMAT: Final = "glypharis-pack-check-1"
+# A drive letter or a home, temporary or mount folder: what a report must never hold.
+LOCAL_PATH: Final = re.compile(r"\b[A-Za-z]:[\\/]|(?<![\w.])/(?:home|Users|tmp|mnt|root)/")
 
 MTIME: Final = 0  # every member's modification time (1970-01-01T00:00:00Z)
 FILE_MODE: Final = 0o644
@@ -412,32 +429,143 @@ def write(packed: Packed, out: Path, *, overwrite: bool = False) -> tuple[Path, 
     return archive, status
 
 
-def check_existing(
+@dataclass(frozen=True)
+class Comparison:
+    """What ``--check-only`` compares a fresh pack with. ``None`` means there was nothing to
+    compare with: no archive or ``.sha256`` file in ``--out``, or no registry pin for this
+    manifest (the registry pins only the v1 manifest)."""
+
+    rebuilt_identical: bool | None  # the fresh pack against the archive in --out
+    sha256_file_matches: bool | None  # against the .sha256 file in --out, byte for byte
+    registry_manifest_sha256: str | None  # the registry entry's manifest pin
+    registry_bytes: int | None  # the registry's archive pins, when it pins this manifest
+    registry_sha256: str | None
+    registry_bytes_match: bool | None
+    registry_sha256_match: bool | None
+
+    @property
+    def passed(self) -> bool:
+        return False not in (
+            self.rebuilt_identical,
+            self.sha256_file_matches,
+            self.registry_bytes_match,
+            self.registry_sha256_match,
+        )
+
+
+def compare_existing(
     packed: Packed, out: Path, manifest_sha256: str = V1_MANIFEST_SHA256
-) -> list[str]:
-    """Differences between ``packed`` and what ``out`` holds, and the registry's pins once they are
-    set (only for the registered manifest)."""
+) -> Comparison:
     from glypharis.hub import REGISTRY
 
-    problems: list[str] = []
     archive, sums = out / ARCHIVE, out / f"{ARCHIVE}.sha256"
-    if archive.is_file() and archive.read_bytes() != packed.data:
-        problems.append(f"{archive} differs from a fresh pack")
-    if sums.is_file() and sums.read_text(encoding="ascii") != packed.sha256_line():
-        problems.append(f"{sums} does not hold {packed.sha256_line().strip()!r}")
     entry = REGISTRY.get(NAME)
+    pins: tuple[int, str] | None = None
     if (
         entry is not None
         and entry.manifest_sha256 == manifest_sha256
         and entry.bytes is not None
         and entry.archive_sha256 is not None
-        and (entry.bytes, entry.archive_sha256) != (packed.size, packed.sha256)
     ):
+        pins = (entry.bytes, entry.archive_sha256)
+    return Comparison(
+        rebuilt_identical=archive.read_bytes() == packed.data if archive.is_file() else None,
+        sha256_file_matches=(
+            sums.read_bytes() == packed.sha256_line().encode("ascii") if sums.is_file() else None
+        ),
+        registry_manifest_sha256=None if entry is None else entry.manifest_sha256,
+        registry_bytes=None if pins is None else pins[0],
+        registry_sha256=None if pins is None else pins[1],
+        registry_bytes_match=None if pins is None else pins[0] == packed.size,
+        registry_sha256_match=None if pins is None else pins[1] == packed.sha256,
+    )
+
+
+def problems_of(packed: Packed, out: Path, c: Comparison) -> list[str]:
+    """The differences in ``c`` as messages; empty exactly when ``c.passed``."""
+    problems: list[str] = []
+    if c.rebuilt_identical is False:
+        problems.append(f"{out / ARCHIVE} differs from a fresh pack")
+    if c.sha256_file_matches is False:
+        problems.append(f"{out / ARCHIVE}.sha256 does not hold {packed.sha256_line().strip()!r}")
+    if c.registry_bytes_match is False or c.registry_sha256_match is False:
         problems.append(
-            f"the registry pins {entry.bytes} bytes, SHA-256 {entry.archive_sha256}; a fresh "
+            f"the registry pins {c.registry_bytes} bytes, SHA-256 {c.registry_sha256}; a fresh "
             f"pack is {packed.size} bytes, SHA-256 {packed.sha256}"
         )
     return problems
+
+
+# ------------------------------------------------------------------------------------- report
+
+
+def check_report(packed: Packed, comparison: Comparison, manifest_sha256: str) -> dict[str, Any]:
+    """The ``--report`` record of one ``--check-only`` run: names, sizes, hashes and versions."""
+    code = json.loads(packed.sources[INFO_FILE].decode("utf-8"))["code"]
+    return {
+        "note": "Generated by scripts/pack_release.py --check-only --report; do not edit by hand. "
+        "No local paths.",
+        "format": REPORT_FORMAT,
+        "archive": ARCHIVE,
+        "bytes": packed.size,
+        "sha256": packed.sha256,
+        "members": list(packed.members),
+        "manifest_sha256": manifest_sha256,
+        "manifest_is_v1_pin": manifest_sha256 == V1_MANIFEST_SHA256,
+        **asdict(comparison),
+        "notices_sha256": {name: _sha(packed.sources[name]) for name in NOTICE_FILES},
+        "model_info_sha256": _sha(packed.sources[INFO_FILE]),
+        "code": {"tag": code["tag"], "commit": code["commit"]},
+        "python": platform.python_version(),
+        "zlib": zlib.ZLIB_RUNTIME_VERSION,
+        "passed": comparison.passed,
+    }
+
+
+def _yes_no(value: bool | None, missing: str) -> str:
+    return missing if value is None else ("yes" if value else "no")
+
+
+def render_report(report: dict[str, Any], source: str) -> str:
+    """The report as one line of Markdown; ``source`` is the JSON file's name."""
+    if report["registry_bytes_match"] is None and report["registry_sha256_match"] is None:
+        registry = "no pin for this manifest"
+    else:
+        registry = (
+            f"bytes {_yes_no(report['registry_bytes_match'], '-')}, "
+            f"SHA-256 {_yes_no(report['registry_sha256_match'], '-')}"
+        )
+    return (
+        f"`{report['archive']}` packed again in memory from the bundle: {report['bytes']:,} bytes, "
+        f"SHA-256 `{report['sha256']}`; identical to the archive in the out folder: "
+        f"{_yes_no(report['rebuilt_identical'], 'no archive there')}; `.sha256` file matches: "
+        f"{_yes_no(report['sha256_file_matches'], 'no file there')}; registry pins match: "
+        f"{registry}; manifest `{report['manifest_sha256']}`; code `{report['code']['tag']}` at "
+        f"`{report['code']['commit']}`; Python {report['python']}, zlib {report['zlib']}; "
+        f"{'passed' if report['passed'] else 'FAILED'}. Generated by scripts/pack_release.py "
+        f"from `{source}`; do not edit by hand.\n"
+    )
+
+
+def check_report_path(path: Path, out: Path) -> None:
+    if path.suffix != ".json":
+        raise PackError(f"{path}: the report must be a .json file")
+    if path.resolve().is_relative_to(out.resolve()):
+        raise PackError(f"{path}: the report must not go into the out folder {out}")
+
+
+def write_report(report: dict[str, Any], path: Path, out: Path) -> Path:
+    """Write ``report`` to ``path`` and its rendering beside it; returns the rendering's path."""
+    check_report_path(path, out)
+    text = json.dumps(report, indent=1, ensure_ascii=False) + "\n"
+    line = render_report(report, path.name)
+    if LOCAL_PATH.search(text) or LOCAL_PATH.search(line):
+        raise PackError("the report would hold a local path; nothing written")
+    md = path.with_suffix(".md")
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_text(text, encoding="utf-8", newline="\n")
+    md.write_text(line, encoding="utf-8", newline="\n")
+    return md
 
 
 # ---------------------------------------------------------------------------------------- cli
@@ -456,8 +584,18 @@ def main(argv: Sequence[str] | None = None) -> int:
     ap.add_argument(
         "--code-commit", default=None, help=f"the {CODE_TAG} commit (default: git rev-parse)"
     )
+    ap.add_argument(
+        "--report",
+        type=Path,
+        default=None,
+        help="with --check-only: a .json file for the check's record, with its .md beside it",
+    )
     args = ap.parse_args(argv)
+    if args.report is not None and not args.check_only:
+        ap.error("--report needs --check-only")
     try:
+        if args.report is not None:
+            check_report_path(args.report, args.out)
         packed = pack(
             args.bundle,
             manifest_sha256=args.manifest_sha256,
@@ -465,10 +603,16 @@ def main(argv: Sequence[str] | None = None) -> int:
             commit=args.code_commit,
         )
         if args.check_only:
-            problems = check_existing(packed, args.out, args.manifest_sha256)
+            comparison = compare_existing(packed, args.out, args.manifest_sha256)
+            problems = problems_of(packed, args.out, comparison)
             for p in problems:
                 print(f"FAIL {p}", file=sys.stderr)
             print(f"{ARCHIVE}: {packed.size} bytes, SHA-256 {packed.sha256} (nothing written)")
+            if args.report is not None:
+                report = check_report(packed, comparison, args.manifest_sha256)
+                md = write_report(report, args.report, args.out)
+                verdict = "passed" if report["passed"] else "FAILED"
+                print(f"{args.report.as_posix()}, {md.as_posix()}: {verdict}")
             return 1 if problems else 0
         archive, status = write(packed, args.out, overwrite=args.overwrite)
     except PackError as exc:

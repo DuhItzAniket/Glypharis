@@ -8,8 +8,10 @@ from __future__ import annotations
 import hashlib
 import io
 import json
+import platform
 import shutil
 import tarfile
+import zlib
 from pathlib import Path
 from typing import Any
 
@@ -238,6 +240,135 @@ def test_check_only_writes_nothing_and_compares(tiny, tmp_path):
     data = (out / pr.ARCHIVE).read_bytes()
     (out / pr.ARCHIVE).write_bytes(data[:-1] + bytes([data[-1] ^ 1]))
     assert _cli(tiny, out, "--check-only") == 1
+
+
+# ---------------------------------------------------------------------------- the check report
+
+
+def _report(tiny: dict[str, Any], out: Path, path: Path) -> tuple[int, dict[str, Any], str]:
+    code = _cli(tiny, out, "--check-only", "--report", str(path))
+    raw = path.read_bytes()
+    assert b"\r" not in raw and raw.endswith(b"\n")
+    return code, json.loads(raw), path.with_suffix(".md").read_text(encoding="utf-8")
+
+
+def test_check_only_report_records_the_comparison(tiny, tmp_path):
+    out = tmp_path / "out"
+    path = tmp_path / "reports" / "release" / "pack_check.json"
+
+    # Nothing in --out yet: the report says so, and --out stays untouched.
+    code, report, _ = _report(tiny, out, path)
+    assert code == 0 and not out.exists()
+    assert report["rebuilt_identical"] is None and report["sha256_file_matches"] is None
+    assert report["passed"] is True
+
+    assert _cli(tiny, out) == 0
+    packed = _pack(tiny)
+    code, report, md = _report(tiny, out, path)
+    assert code == 0
+    assert report["format"] == "glypharis-pack-check-1"
+    assert report["archive"] == "glypharis-v1.tar.gz"
+    assert report["bytes"] == packed.size == (out / pr.ARCHIVE).stat().st_size
+    assert report["sha256"] == packed.sha256
+    assert report["members"] == list(EXPECTED_MEMBERS)
+    assert report["rebuilt_identical"] is True and report["sha256_file_matches"] is True
+    assert report["manifest_sha256"] == tiny["manifest_sha"]
+    assert report["manifest_is_v1_pin"] is False
+    # The registry pins the v1 manifest only, so the tiny pack has no pin to match.
+    assert report["registry_manifest_sha256"] == hub.REGISTRY["glypharis-v1"].manifest_sha256
+    for key in (
+        "registry_bytes",
+        "registry_sha256",
+        "registry_bytes_match",
+        "registry_sha256_match",
+    ):
+        assert report[key] is None, key
+    assert report["notices_sha256"] == {
+        name: _sha((pr.NOTICES_DIR / name).read_bytes()) for name in pr.NOTICE_FILES
+    }
+    assert report["model_info_sha256"] == _sha(packed.sources[pr.INFO_FILE])
+    assert report["code"] == {"tag": "v1-code", "commit": COMMIT}
+    assert report["python"] == platform.python_version()
+    assert report["zlib"] == zlib.ZLIB_RUNTIME_VERSION
+    assert report["passed"] is True
+
+    # One line of Markdown, and the same inputs give the same files.
+    assert md.endswith("\n") and md.count("\n") == 1
+    assert f"{packed.size:,} bytes" in md and packed.sha256 in md and COMMIT in md
+    assert "out folder: yes" in md and "passed" in md and "`pack_check.json`" in md
+    before = path.read_bytes(), md
+    assert _report(tiny, out, path)[0] == 0
+    assert (path.read_bytes(), path.with_suffix(".md").read_text(encoding="utf-8")) == before
+
+    # No local path: not the temporary folders, the bundle, --out or home.
+    for text in (path.read_text(encoding="utf-8"), md):
+        assert pr.LOCAL_PATH.search(text) is None
+        for place in (tmp_path, tiny["bundle"], out, Path.home()):
+            assert str(place) not in text and place.as_posix() not in text
+
+    # A changed archive is recorded, and the check fails; the report is still written.
+    data = (out / pr.ARCHIVE).read_bytes()
+    (out / pr.ARCHIVE).write_bytes(data[:-1] + bytes([data[-1] ^ 1]))
+    code, report, md = _report(tiny, out, path)
+    assert code == 1
+    assert report["rebuilt_identical"] is False and report["sha256_file_matches"] is True
+    assert report["passed"] is False and "FAILED" in md
+
+
+def test_check_only_report_compares_the_registry_pins(tiny, tmp_path):
+    packed = _pack(tiny)
+    path = tmp_path / "report" / "pack_check.json"
+
+    def entry(size: int, sha256: str) -> hub.ModelEntry:
+        return hub.ModelEntry(
+            name="glypharis-v1",
+            url="https://example.invalid/glypharis-v1.tar.gz",
+            archive=pr.ARCHIVE,
+            bytes=size,
+            archive_sha256=sha256,
+            manifest_sha256=tiny["manifest_sha"],
+            top_folder="glypharis-v1",
+        )
+
+    with hub.override_registry(entry(packed.size, packed.sha256)):
+        code, report, md = _report(tiny, tmp_path / "out", path)
+    assert code == 0
+    assert (report["registry_bytes"], report["registry_sha256"]) == (packed.size, packed.sha256)
+    assert report["registry_manifest_sha256"] == tiny["manifest_sha"]
+    assert report["registry_bytes_match"] is True and report["registry_sha256_match"] is True
+    assert "registry pins match: bytes yes, SHA-256 yes" in md
+
+    with hub.override_registry(entry(packed.size + 1, packed.sha256)):
+        code, report, md = _report(tiny, tmp_path / "out", path)
+    assert code == 1
+    assert report["registry_bytes"] == packed.size + 1
+    assert report["registry_bytes_match"] is False and report["registry_sha256_match"] is True
+    assert report["passed"] is False and "bytes no, SHA-256 yes" in md
+
+
+def test_check_only_report_refusals(tiny, tmp_path):
+    out = tmp_path / "out"
+    with pytest.raises(SystemExit):
+        _cli(tiny, out, "--report", str(tmp_path / "r.json"))  # needs --check-only
+    assert _cli(tiny, out, "--check-only", "--report", str(tmp_path / "r.md")) == 1
+    out.mkdir()
+    assert _cli(tiny, out, "--check-only", "--report", str(out / "r.json")) == 1
+    assert sorted(p.name for p in tmp_path.iterdir()) == ["out"]
+    assert list(out.iterdir()) == []
+
+    # A refused pack writes no report.
+    bundle = _copy(tiny, tmp_path)
+    (bundle / "detector.pt").unlink()
+    assert _cli(tiny, out, "--check-only", "--report", str(tmp_path / "r.json"), bundle=bundle) == 1
+    assert not (tmp_path / "r.json").exists()
+
+    # The last guard: a report that would hold a local path is not written.
+    packed = _pack(tiny)
+    report = pr.check_report(packed, pr.compare_existing(packed, out), tiny["manifest_sha"])
+    for place in ("C:/Users/someone/models", "D:\\runs", "/home/someone/models", "/tmp/x/"):
+        with pytest.raises(pr.PackError, match="local path"):
+            pr.write_report({**report, "note": place}, tmp_path / "x" / "r.json", out)
+    assert not (tmp_path / "x").exists()
 
 
 def test_notice_line_endings_are_checked(tiny, tmp_path):
