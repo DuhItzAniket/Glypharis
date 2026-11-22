@@ -2,9 +2,9 @@
 
 | | |
 |---|---|
-| Version | 1.3 (Phase 23 registration, 2026-11-22: Phase 23 status, effort and three §8 deviations; 1.2 added the Phase 22 scope) |
+| Version | 1.4 (Phase 23, pull request B, 2026-11-22: Phase 23 status, the licence questions and the D4 deviation after the owner's decision to publish the weights; 1.3 registered Phase 23; 1.2 added the Phase 22 scope) |
 | Date | 2026-11-18 (first version 2026-10-10) |
-| Status | Phases 0 to 22 complete; Phase 23 in progress (plan registered) ([PHASE_STATUS](PHASE_STATUS.md)) |
+| Status | Phases 0 to 22 complete; Phase 23 in progress (Part 1 merged; pull request B open) ([PHASE_STATUS](PHASE_STATUS.md)) |
 | Companion docs | [ROADMAP](ROADMAP.md) · [ARCHITECTURE](ARCHITECTURE.md) · [EXPERIMENT_PROTOCOL](EXPERIMENT_PROTOCOL.md) · [RISK_REGISTER](RISK_REGISTER.md) · [DATASETS](../DATASETS.md) · [MODEL_CARD](../MODEL_CARD.md) · [EXPERIMENTS](../EXPERIMENTS.md) · [WORKFLOW](WORKFLOW.md) · [decisions/](decisions/) |
 
 This is the working plan for building GLYPHARIS: a lightweight document OCR engine (text-line detector +
@@ -459,23 +459,29 @@ Phases 0 to 21 have passed their gates, including the re-runs of 17, 18 and 20 o
   registered.
 
 ### Phase 23 — Release v1.0
-- **Status:** in progress, plan registered 2026-11-22. The plan, with the owner's decisions of
-  2026-11-22, is in [PHASE_STATUS](PHASE_STATUS.md), Phase 23.
+- **Status:** in progress (Part 1 merged; pull request B open). The plan, registered on 2026-11-22,
+  and the owner's decisions of 2026-11-22 are in [PHASE_STATUS](PHASE_STATUS.md), Phase 23; the
+  steps of release day are in [RELEASE_RUNBOOK](RELEASE_RUNBOOK.md).
 - **Preconditions:** tests and CI pass; training pipeline, inference and export verified; docs complete;
   model artifact verified (hash + equivalence).
 - **Tasks:** release notes, version bump, tagged GitHub release with the model artifact (or download script
   if the artifact is too large for a release asset), with licence terms that respect the training data
   (see DATASETS.md §Licensing implications).
-- **Status of the licence questions:** No weights are distributed; release is Phase 23. The owner decided
-  both points on 2026-11-18 ([ADR-0014](decisions/ADR-0014-weights-and-backbone-terms.md)); this is the
-  project's chosen handling, not a legal conclusion, and the v1 weights are not called cleared for
-  commercial use:
+- **Status of the licence questions:** v1.0 is the release of v1 (GW-REC-034 with GW-DET-001): the
+  code under Apache-2.0, published on PyPI as `glypharis` 1.0.0, and the v1 weights as the asset
+  `glypharis-v1.tar.gz` of the GitHub release `v1.0`, which `glypharis.download_model` fetches and
+  checks against pinned hashes. The owner decided the two points about the weights on 2026-11-18
+  ([ADR-0014](decisions/ADR-0014-weights-and-backbone-terms.md)); this is the project's chosen
+  handling, not a legal conclusion, and the v1 weights are not described as cleared for commercial
+  use:
   - GW-DET-001, initialised from ImageNet weights, stays v1's detector as a disclosed exception to
     ADR-0009's commercial-use rule;
-  - the weights' intended terms are CC BY-SA 4.0 with attribution to HierText and Open Images, given
-    HierText's share-alike licence. Intended terms under ADR-0014, effective only if released.
+  - the weights are distributed under CC BY-SA 4.0 with attribution to HierText and Open Images,
+    given HierText's share-alike licence. The owner decided on 2026-11-22 to publish them under
+    these terms without the qualified advice ADR-0014 had asked for (ADR-0014, Phase 23 outcome).
 
-  The code licence, PyPI package, Zenodo DOI and `CITATION.cff`: To be settled in Phase 23.
+  The code licence is Apache-2.0 (PHASE_STATUS Phase 23, D2). Cite with `CITATION.cff`; a Zenodo
+  DOI is added after the deposit. The phone candidate is not released (D7).
 - **Publishing** (added 2026-10-31 at the owner's request):
   - a `LICENSE` for the code and a `CITATION.cff`. The owner leans towards Apache-2.0; the choice is
     settled before release, after the owner has taken advice on any patent filing, because Apache-2.0
@@ -498,7 +504,7 @@ Phases 0 to 21 have passed their gates, including the re-runs of 17, 18 and 20 o
 |---|---|---|
 | The code licence (Apache-2.0) is chosen in Phase 23 without waiting for patent advice | Owner decision of 2026-11-22: the repository has been public since 2026-10-09 | PHASE_STATUS Phase 23, D2 |
 | "Fetched on first use" is an explicit `glypharis.download_model` and a fetch by the two commands; `from_pretrained` never reaches the network | `from_pretrained` is a frozen v1 path, and a library should not make network calls inside a host application unasked | PHASE_STATUS Phase 23, D6 |
-| v1.0 is held until the weights can be published; no code-only release without a new owner decision | Owner decision of 2026-11-22: the weights wait for qualified advice (ADR-0014) | PHASE_STATUS Phase 23, D4 |
+| The v1 weights are published under ADR-0014's terms without the qualified advice ADR-0014 had asked for; v1.0 ships with its model, and a code-only release would still need a new owner decision | Owner decision of the night of 2026-11-22, which replaced the one of earlier that day to hold v1.0 until the advice. The project's chosen handling, not a legal conclusion; ADR-0014 still asks for the advice before the consumer application is sold | PHASE_STATUS Phase 23, D4 and the owner decisions of 2026-11-22, night; [ADR-0014](decisions/ADR-0014-weights-and-backbone-terms.md), Phase 23 outcome |
 | Added **GlyphSynth** (document-style synthetic data) next to SynthText | HierText and SynthText are scene-text-oriented; the target is document pages. Makes RQ2 a domain-vs-scale study. | ADR-0003 |
 | Recognizer works on **lines**, not words | Document text is line-structured; CTC handles long lines | ADR-0002 |
 | DocVQA demoted to reference-only | Its OCR transcriptions are machine-generated, not human ground truth | ADR-0005, DATASETS.md |
@@ -534,7 +540,7 @@ Phases 0 to 21 have passed their gates, including the re-runs of 17, 18 and 20 o
 | `data/DATASET_MANIFEST.yaml` is not regenerated in Phase 21 | The per-dataset manifests under `data/manifests/` hold the current values; `DATASETS.md` maps each required field to the manifest that holds it | PHASE_STATUS, Phase 21 |
 | The Phase 21 number check also covers `MODEL_CARD.md` and `DATASETS.md` | WORKFLOW §6 applies to every document | PHASE_STATUS, Phase 21 |
 | Phase 22 also evaluates the fused-attention build and records the phone-measurement gap | Owner decision of 2026-11-18. A new version, not v1. Evaluated in Phase 22: the candidate `fused-single-line` (GW-EFF-013) met H11 (GW-E2E-021); its networks were measured on two phones (GW-EFF-015) | ADR-0011, Phase 22 above, [FINAL_VALIDATION](FINAL_VALIDATION.md) |
-| v1's detector is initialised from ImageNet weights although ADR-0009 asks that sources allow commercial use | Owner decision of 2026-11-18: a disclosed exception, not a legal conclusion. Intended terms under ADR-0014, effective only if released | [ADR-0014](decisions/ADR-0014-weights-and-backbone-terms.md), Phase 23 above, `DATASETS.md`, ADR-0007, ADR-0009 |
+| v1's detector is initialised from ImageNet weights although ADR-0009 asks that sources allow commercial use | Owner decision of 2026-11-18: a disclosed exception, not a legal conclusion. v1.0 distributes the weights under ADR-0014's terms, CC BY-SA 4.0 with attribution to HierText and Open Images, and does not describe them as cleared for commercial use | [ADR-0014](decisions/ADR-0014-weights-and-backbone-terms.md), Phase 23 above, `DATASETS.md`, ADR-0007, ADR-0009 |
 | `git grep "before v0.1"` still finds the old licence note in `data/sources.yaml`, `data/manifests/imagenet_backbones.json` and `data/DATASET_MANIFEST.yaml` | They record the note as written at download, and the number trace cites `imagenet_backbones.json` by hash, so Phase 21 leaves them alone. ADR-0014 and `DATASETS.md` carry the current statement; a later data pass may regenerate them | ADR-0014, PHASE_STATUS Phase 21 item 2 |
 
 ## 9. Traceability (brief section → where it is handled)

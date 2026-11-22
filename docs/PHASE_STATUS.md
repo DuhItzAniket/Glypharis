@@ -33,7 +33,7 @@ Phases run in the order set by [ADR-0008](decisions/ADR-0008-usable-engine-first
 | 20 | Production engineering | **COMPLETE** | `phase-20`, `v0.1` |
 | 21 | Research package | **COMPLETE** | `phase-21` |
 | 22 | Final validation | **COMPLETE** | `phase-22` |
-| 23 | Release v1.0 | **IN PROGRESS** (Part 1 ready; gate: CI, merge A) | — |
+| 23 | Release v1.0 | **IN PROGRESS** (Part 1 merged; pull request B open) | — |
 
 ---
 
@@ -4613,11 +4613,16 @@ tag `phase-22` (merge re-created with the noreply identity; same tree and parent
 
 ## Phase 23 — Release v1.0
 
-**Status:** in progress. Part 1 (items 1 to 12) is done on `phase/23-release`, and its gate (item 13:
-push, CI, the owner's merge A) is open. Nothing is published or uploaded, and the weights have not left
-this machine. Opened on `phase/23-release` from `97f6cde`, the Phase 22 completion record on top of
-`main` at `b6f14a2` (tag `phase-22`). The plan below was registered on 2026-11-22 and is kept as
-written; the amendments and the progress record at the end say what changed and what happened.
+**Status:** in progress. Part 1 (items 1 to 13) is merged: pull request #29, merge commit `9005263`,
+CI green on `main`, and the release workflow's dry run on `main` created nothing. Part 2 is on
+`phase/23-release-final` from `9005263`, where item 14 is prepared for pull request B. The owner
+decided on the night of 2026-11-22 to publish the weights under ADR-0014's terms without the qualified
+advice (D4 as changed, below). Nothing is published or uploaded, no tag `v1.0` exists, and the weights
+have not left this machine; that happens only in the release-day steps of
+[RELEASE_RUNBOOK](RELEASE_RUNBOOK.md), each on the owner's go. Opened on `phase/23-release` from
+`97f6cde`, the Phase 22 completion record on top of `main` at `b6f14a2` (tag `phase-22`). The plan
+below was registered on 2026-11-22 and is kept as written; the amendments, the owner decisions and the
+progress records at the end say what changed and what happened.
 
 **Objective:** make v1 releasable and, only with the owner's go for each step, release it
 (`docs/IMPLEMENTATION_PLAN.md`, Phase 23):
@@ -4931,9 +4936,90 @@ publication.
 | Diagnostics | GW-E2E-022, GW-REC-046, GW-DET-008 reports; the three generated-file checks pass |
 | Documentation | this record, `research/experiments.md`, the release documents |
 | Git diff inspection | no data, weights, checkpoints or secrets; the v1 paths equal `v1-code` |
-| Commit, push | on `phase/23-release` |
-| CI | pending on the pull request |
-| Merge A and the dry run on `main` | the owner's merge; then the release workflow's dry run |
+| Commit, push | on `phase/23-release`, head `465e103` |
+| CI | done: green on the branch (run 44955100971), on the pull request (run 44955102949) and on `main` at `9005263` (run 44958358666) |
+| Merge A and the dry run on `main` | done: pull request #29 merged as `9005263`; the dry run on `main` (run 44958368361) created nothing |
+
+**Progress (2026-11-22): Part 1 merged.**
+
+- Pull request #29 (`phase/23-release`, head `465e103`) was merged by the owner. The merge commit was
+  re-created with the noreply identity as `9005263`, with the same tree and parents (`b6f14a2`,
+  `465e103`).
+- CI was green on the branch (run 44955100971), on the pull request (run 44955102949) and on `main` at
+  `9005263` (run 44958358666), including the jobs `test` and `package`. The earlier CI failures on
+  `7eb93a7`, `baf104b` and `c4cad2c` (runs 44952673116, 44953606450 and 44954758408, and the pull
+  request run 44954793313) came from `ruff format` checking the Python code blocks in
+  `docs/INTEGRATION.md`, and were fixed in `465e103`.
+- The release workflow's dry run on `main` with the would-be tag `v1.0` (run 44958368361): `check-build`
+  passed; `draft-release` and `pypi` were skipped; no release and no tag was created. This closes item
+  13 and the release-ready exit criteria 1 to 5.
+- `phase/23-release-final` was created from `9005263` for Part 2.
+
+**Owner decisions (2026-11-22, night).**
+
+| # | Decision |
+|---|---|
+| D4 (changed) | **The v1 weights are published under ADR-0014's terms without the qualified advice ADR-0014 had asked for.** This is the owner's own decision and the project's chosen handling, not a legal conclusion. The terms do not change: CC BY-SA 4.0 with attribution to HierText and Open Images; the ImageNet-initialised detector stays a disclosed exception to ADR-0009's commercial-use rule; the weights are never described as cleared for commercial use. The weight notices in `release/weights/` and the archive do not change, so the pinned archive (82,975,077 bytes, SHA-256 `3b90c1c7…`, matched after a local fetch in GW-E2E-022) stays. It replaces D4 as written above: v1.0 is no longer held for the advice. ADR-0014 records the outcome, and `docs/ADVISER_BRIEF.md` is kept as the record of the open questions. Recorded in IMPLEMENTATION_PLAN §8. |
+| D8 (creator name) | The creator name is the GitHub handle `DuhItzAniket` everywhere: `CITATION.cff`, the `authors` of `pyproject.toml` and Zenodo. No real name and no email. |
+| D8 (environment) | The GitHub environment `pypi` exists, with the owner as required reviewer and deployments only from tags `v*`. |
+| D8 (accounts) | The owner added the PyPI pending publisher (project `glypharis`, workflow `release.yml`, environment `pypi`) and switched on the Zenodo GitHub integration; its `release` webhook on the repository is active. |
+| — | Every local folder is kept. |
+
+These change how item 14 is entered, not the rest of the plan: "once the owner confirms the advice"
+now reads "after the owner's decision of 2026-11-22", and the qualified advice named in the
+Objective's point 4, in the heading of Part 2 and in step 6 of the order of work is no longer waited
+for. Item 7's repack does not arise, since the notices do not change. Every upload and publication
+still needs the owner's go for that item (Fixed rules).
+
+**Amendment (2026-11-22, night).**
+
+- *Item 15 (2026-11-22, the owner's request):* a Hugging Face mirror `DuhItzAniket/glypharis-v1` of
+  the archive's files, uploaded after the GitHub release is published and only on the owner's go,
+  with `release/huggingface/README.md` as its model card; its files are checked against the manifest
+  hashes after upload; the package does not use it. It is optional, and the steps are
+  [RELEASE_RUNBOOK](RELEASE_RUNBOOK.md) step 6b. Like any mirror, it needs its own go (Fixed rules);
+  the go for the weights upload of item 15b does not cover it.
+
+**Progress (2026-11-22): item 14 prepared.** Pull request B, on `phase/23-release-final`, changes the
+documents and the release lint and guards together, as item 14 asks, so that they state what v1.0
+distributes and under which terms. Nothing is published until the release-day steps.
+
+- *Wording.* The sentences that encoded the pre-release state ("No weights are distributed; release
+  is Phase 23.", "Intended terms under ADR-0014, effective only if released.", "To be settled in
+  Phase 23.", "not yet published" for the model) are replaced with what v1.0 distributes: the code
+  under Apache-2.0, published on PyPI as `glypharis` 1.0.0, and the v1 weights as the asset
+  `glypharis-v1.tar.gz` of the GitHub release `v1.0`, fetched by `glypharis.download_model` and
+  checked against pinned hashes, under CC BY-SA 4.0 with attribution to HierText and Open Images, the
+  ImageNet exception disclosed and the weights not described as cleared for commercial use. The phone
+  candidate is not released (D7). Cite with `CITATION.cff`; a Zenodo DOI is added after the deposit.
+  The documents are those item 14 lists (ADR-0014 with its Phase 23 outcome among them), the
+  release documents of Part 1 (the PyPI description, the integration guide, the release notes, the
+  changelog), the adviser brief's note, `NOTICE` (which ships in the wheel and the sdist),
+  `docs/RISK_REGISTER.md` (R-05), the release evidence table and this record; `research/experiments.md`
+  needed no change. `research/research_log.md` is
+  append-only and is not rewritten.
+- *Lint and summary guards.* The `trace_numbers` release lint and its tests change with the wording,
+  and so do the scope lines of `scripts/experiment_summary.py` and the generated `EXPERIMENTS.md`; the
+  three generated-file checks must pass.
+- *Registry.* The `published` flag of the `glypharis-v1` entry in `glypharis/hub.py` is switched on,
+  with its tests. From the merge of pull request B until the release is published, a fetch of
+  `glypharis-v1` from its registered address fails with a download error, since the asset is not yet
+  public.
+- *Archive.* Unchanged, with its pin. `scripts/pack_release.py --check-only --report` packs the real
+  bundle again in memory and compares; `reports/release/pack_check.json` records the second pack as
+  byte-identical to the archive, its `.sha256` file and the registry pins. This closes the Part 1 gap
+  that no report recorded a second pack of the real bundle.
+- *Runbook.* [`docs/RELEASE_RUNBOOK.md`](RELEASE_RUNBOOK.md) gives the release-day steps in order,
+  with who does each, what to check and what to do on a failure: (1) the owner creates the PyPI
+  pending publisher and switches on the Zenodo GitHub integration; (2) the owner merges pull request
+  B; (3) the merge commit is re-created with the noreply identity if needed, and `v1.0` is set on it
+  and never moved; (4) stage 1 off dry run creates the draft release with the code files; (5) the
+  archive and `glypharis-v1.tar.gz.sha256` are uploaded to the draft from this machine (no overwrite)
+  and checked by downloading them again; (6) the owner publishes the draft, approves the PyPI job in
+  the environment `pypi`, and Zenodo archives the release; (6b) optional, on its own go, the Hugging
+  Face mirror (amendment above); (7) GW-E2E-023 verifies from a clean environment; (8) the close-out
+  branch adds the DOI and the completion record. If a channel is deferred, item 17 restores the
+  wording for it.
 
 **Limits this plan cannot remove**
 
@@ -4943,3 +5029,7 @@ publication.
 - Only Python 3.11 on the tested platforms; the package installs the default PyTorch build for the
   platform, which may differ from the one v1 was evaluated with.
 - The phone candidate is not released, and no on-device reader exists.
+
+*Note (2026-11-22, night).* The second limit no longer holds for v1.0: the owner decided to publish
+the weights without the advice (D4 as changed). The advice is still missing, and ADR-0014 still asks
+for it before the consumer application is sold.

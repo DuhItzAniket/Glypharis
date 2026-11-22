@@ -1,5 +1,13 @@
 # Brief for a qualified adviser: terms for the GLYPHARIS v1 weights
 
+> **Note (2026-11-22).** The owner decided on 2026-11-22 to publish the v1 weights under
+> ADR-0014's terms without taking this advice
+> ([ADR-0014](decisions/ADR-0014-weights-and-backbone-terms.md), "Phase 23 outcome"; PHASE_STATUS,
+> Phase 23, D4 as changed that night). That is the project's chosen handling, not a legal
+> conclusion. No adviser has answered the questions below. The brief is kept as written, as the
+> record of the questions that remain open; ADR-0014 still asks for qualified advice before the
+> consumer application is sold.
+
 This brief is for the project owner to give to a qualified adviser before any model weights are
 published (Phase 23, item 10; [ADR-0014](decisions/ADR-0014-weights-and-backbone-terms.md), "Revisit
 if"). It sets out the facts and the questions. **It is not legal advice**, and nothing in it is a
