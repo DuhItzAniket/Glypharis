@@ -4,6 +4,34 @@ Append one row **every time** a held-out test split or external benchmark is eva
 Allowed phases: 5 (baselines), 14 (external evaluation), 22 (final validation).
 Any other access must be justified in the "Reason" column and discussed in the paper's limitations.
 
+## Reads by companion projects
+
+Test-set reads made by other projects with GLYPHARIS output. They are not GLYPHARIS experiments, change
+nothing in this repository and are listed here because the GDC protocol logs every GDC read in both
+projects. GLYPHARIS's own reads are the table below, which `glypharis.eval.access` appends to.
+
+- **2026-11-23, LECTRIS LX-TEST-001** (LECTRIS Phase 13, its registered test of hypotheses H1, H2 and
+  H3, run once; LECTRIS code at `7527e49`).
+  - Set: GDC 1.1, the frozen `data/processed/gdc/pages_test.jsonl.gz` (106 pages, 8,606 lines),
+    SHA-256 `c4227f1ae6d0aa856c3e64a2bcf55325840343df48dc6810b104e62a6f092af5`, equal to `pages_sha256`
+    in `data/manifests/gdc/gdc_v1.json` (frozen 2026-10-22).
+  - Engine: GLYPHARIS `glypharis_v1` from the clean 1.0 install, PyTorch backend on the CPU, run once over
+    the 106 captures with `glypharis-ocr --format json`; both LECTRIS reads used that one output.
+  - Ground truth as in `glypharis/eval/page_metrics.py`: 8,372 lines count, 234 lines and 455 ignore
+    regions are don't care.
+  - Read-only: nothing in this repository changed, and no GDC text, image or output went into the LECTRIS
+    repository (page ids, SHA-256 hashes and aggregate scores only).
+  - Outcome: the run exposed a bug in LECTRIS's own scoring (a hyphen-rejoining step in how its
+    reference text is built); the run is kept but marked invalid for LECTRIS's corrected-output rows.
+    Report: LECTRIS `reports/LX-TEST-001/`.
+- **2026-11-23, LECTRIS LX-TEST-002** (LECTRIS's registered full re-run after that bug fix, which its
+  implementation plan allows for Phase 13; LECTRIS code at `e722231`).
+  - Same set, the same GLYPHARIS output (GLYPHARIS was not run again), pairs and frozen model packs.
+  - Report: LECTRIS `reports/LX-TEST-002/` (LECTRIS pull request #34). Headline, as LECTRIS scores it:
+    GLYPHARIS's CER on GDC is 21.35% (normalised track, lines matched by IoU >= 0.5), and
+    LECTRIS-standard lowers it by 0.02 points [0.01, 0.04] at a 0.012% harm rate. This is LECTRIS's
+    metric, not GLYPHARIS's page CER.
+
 | Date | Split / benchmark | Experiment ID | Checkpoint | Phase | Reason |
 |---|---|---|---|---|---|
 | 2026-10-21 | gdc test | GW-BASE-002 | ppocr_mobile (rec) | 5 | Phase 5 baseline |
